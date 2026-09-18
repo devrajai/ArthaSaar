@@ -4,73 +4,83 @@ Single source of truth. Any AI session starts here. Owner: Dev (mobile-only, And
 Repo: devrajai/market-brain | Sister project: devrajai/ipo-terminal (read its PROJECT_BRAIN.md too)
 
 ## Mission
-Dev's personal market intelligence brain — the "backend of a personal Aladdin".
-FULL Indian market coverage, 100% free sources, fully automatic.
+Dev's personal market intelligence brain — a "poor-man's BlackRock Aladdin / Sharekhan TX3
+quality terminal". FULL Indian market coverage, 100% free sources, fully automatic. Dev will
+wait for perfection on DATA (daily reliability, zero issues) before the website — data first,
+website second.
 
 ## Hard Rules (from Dev)
 - NO paid APIs ever. Free sources only.
 - Sarvam AI assistant is the ONLY developer (no GPT, no other AI).
 - Dev is on weekly message limits — build in phases, be efficient, never redo work.
 - All times IST (Asia/Kolkata). Dates dd/mm/yy in user-facing content.
-- This repo is DATA + BRAIN backend. A site can be added later (GitHub Pages ready).
+- PERMANENT UI: Liquid Glass design (see below) — every future page/site uses it.
 
-## Architecture — updated 18/09/26 night (PHASE 2 added)
+## PERMANENT UI — Liquid Glass Design System (approved by Dev 18/09/26)
+- Dark mode default + light mode toggle (pill switch, saved in localStorage 'mb-theme')
+- Frosted translucent cards WITHOUT backdrop-filter on content cards; backdrop-filter ONLY on
+  the sticky header (nested glass layers caused the card-through-header glitch on Android
+  Chrome — NEVER put backdrop-filter on cards again; header gets opaque --hdr-bg + blur)
+- Live IST clock + date + market status badge (PRE-OPEN 9:00-9:15 / OPEN / CLOSED)
+- Fonts: Plus Jakarta Sans (body) + Azeret Mono (numbers/labels)
+- Palette: bg dark #080d17→#0b1220 (light #e7edf5→#dde6f2), accents emerald #10b981 (up),
+  rose #f43f5e (down), amber #f5a623 (gold/IPO), teal #14b8a6 (brand), floating blurred orbs
+  (teal/navy/amber, 8-16% opacity) behind everything
+- Components: KPI cards w/ count-up animation, index grid cards, pre-open breadth bars,
+  gainers/losers tables, IPO cards w/ GMP highlight + featured IPO banner, system status rows
+- Reference implementation: /workspace/notes/today_updates_dashboard.html (durable) —
+  'Today_Updates_LiquidGlass.html' delivered 18/09/26 (scroll bug fixed same day)
+
+## Architecture — updated 18/09/26 late (Phase 2 + fixes)
 ### Workflows
-- .github/workflows/morning-brain.yml — 9:20 AM IST Mon-Fri: pre-open movers + FII/DII + index changes
+- .github/workflows/morning-brain.yml — 9:20 AM IST Mon-Fri: phase2_collect
 - .github/workflows/brain-collect.yml — 18:35 & 21:05 IST Mon-Sat: full pipeline
-
+- BOTH have rebase-and-retry git push (5 attempts, 15s apart) — fixes the 18/09 race where
+  morning + evening runs collided and one run's data was lost
 ### Scripts
-- scripts/brain_collect.py — FULL universe: 2,305 stocks (Nifty 500 tier 1 + 1,804 others tier 2)
-  from nsearchives.nseindia.com CSVs. History in data/history/, technicals (EMA20/200, RSI14, MACD,
-  52w/200d, volume, consecutive days) -> data/brain-screener.json/.csv + data/breadth.json
-- scripts/indices_collect.py — ALL 139 NSE indices (allIndices API w/ yearHigh/Low PE PB) + BSE Sensex
-  via Yahoo ^BSESN -> data/indices-all.json
-- scripts/phase2_collect.py — PHASE 2:
-  1. Pre-open movers: NSE market-data-pre-open?key=ALL (2,180 stocks, IEP, %chg, purpose)
-     -> data/preopen.json (buckets >=1..5% both sides, top20 gainers/losers, corp action alerts)
-  2. FII/DII flows: NSE fiidiiTradeReact -> data/fii-dii.json (buy/sell/net Cr per category)
-  3. Index add/remove: diffs tier-1 universe daily vs data/nifty500-prev.json -> data/index-changes.json
-- scripts/budget_study.py — Nifty ±10-day windows around budgets 2015-2026 -> data/budget-study.json
-- scripts/fundamentals_collect.py — yfinance staggered (300/run, 10-day refresh): PE, PB, ROE, ROA,
-  D/E, heldPercentInsiders (≈promoter), heldPercentInstitutions (≈FII+DII), marketCap, beta,
-  dividendYield, margins, growth, cash, debt, sector -> data/fundamentals.json
+- scripts/brain_collect.py — 2,305 stocks (Nifty 500 tier 1 + 1,804 tier 2) → brain-screener,
+  breadth, history (Actions-verified 18/09: full run ~10 min)
+- scripts/indices_collect.py — all 139 NSE indices + Sensex → indices-all.json
+- scripts/phase2_collect.py — pre-open movers (2,180 stk) → preopen.json; FII/DII → fii-dii.json;
+  index add/remove diff → index-changes.json (baseline nifty500-prev.json)
+- scripts/budget_study.py — budget-day Nifty ±10-day windows 2015-2026
+- scripts/fundamentals_collect.py — yfinance staggered 300/run → fundamentals.json
 
-### Google Sheet "Market Brain Hub — Screener + Budget Study" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
-Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks, Daily_Digest_Archive,
-Dividend_Calendar (Dev's handwritten monthly dividend stock notes — Jan: TCS/Wipro/HCL/Axis; Jul: MRF/
-Hindalco/HZL/TCS/Coal India; Sep: Cipla/Coal India — verify + extend freely)
+### Google Sheet "Market Brain Hub" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
+Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks,
+Daily_Digest_Archive, Dividend_Calendar (Dev's handwritten monthly dividend stocks)
 
-### Dev's study notes (PDFs received 18/09/26)
-- Advance.pdf: 36 pages handwritten market course notes (broker structure, limit/market orders, IPO
-  truth, market psychology: buyer/seller, market cycles, bull/bear phases, technical basics, market
-  participants: corporates 4.3%, DII 0.1%, FII 6.1%, individuals 26.8%, brokers 57.8%) — foundation
-  for future Education Library phase
-- sensex_history.pdf: 9 pages handwritten Sensex history study
-- Divided_stocks_list.pdf: monthly dividend stocks -> already in Dividend_Calendar tab
+### Dev's study notes (all received 18/09/26)
+- Advance.pdf: 36 pages course notes (broker structure, market psychology, participants
+  breakdown, bull/bear phases) → data/education.json devs_collected_rules
+- sensex_history.pdf: 9 pages Sensex history study
+- Divided_stocks_list.pdf: monthly dividend calendar → Dividend_Calendar tab
+- data/education.json: books (12), podcasts (5), YouTube (4), free courses (5),
+  Dev's collected rules (6) — feeds website Learn section
 
 ### Cron
-- Daily digest 6:30 PM IST covers BOTH repos + appends to sheet Daily_Digest_Archive. Includes
-  FII/DII flows, pre-open highlights, fundamental insight, IPO status, movers.
+Daily digest 6:30 PM IST covers both repos + appends to sheet. Includes FII/DII flows,
+pre-open highlights, fundamental insight, IPO status, index changes.
 
-## Data Source Facts (learned the hard way)
-- nsearchives.nseindia.com CSVs work from datacenter IPs (nifty500list.csv, EQUITY_L.csv: 2,578 stocks,
-  EQ 2,302 / BE 249 / BZ 27 — skip BE/BZ)
-- www.nseindia.com/api/allIndices WORKS from datacenters (139 indices)
-- www.nseindia.com/api/market-data-pre-open?key=ALL WORKS (2,180 stocks w/ metadata.symbol, iep,
-  pChange, purpose)
-- www.nseindia.com/api/fiidiiTradeReact WORKS (FII/FPI + DII buy/sell/net Cr)
-- www.nseindia.com/api/equity-stockIndices needs cookies (403/404 from datacenters) — do NOT use
-- Yahoo chart API: rate-limits sustained calls (429) — short sleeps, self-heal across runs
-- Stooq: /q/d/l/?s={sym.lower()}&i=d — history fallback
-- yfinance: .info fundamentals; ROCE not available — ROE+ROA proxy
+## Data Source Facts
+- nsearchives.nseindia.com CSVs work from datacenter IPs (EQUITY_L.csv 2,578 → keep EQ only)
+- www.nseindia.com/api/allIndices WORKS (139 indices)
+- /api/market-data-pre-open?key=ALL WORKS (2,180 stocks, metadata.symbol/iep/pChange/purpose)
+- /api/fiidiiTradeReact WORKS (FII/FPI + DII buy/sell/net Cr)
+- /api/equity-stockIndices needs cookies — do NOT use
+- Yahoo chart API rate-limits (429) — short sleeps, tier priority, self-heal across runs
+- yfinance works on Actions runners (fundamentals step succeeded 18/09)
 
 ## Roadmap
 - Phase 1 DONE: full-market screener + all indices + budget study + fundamentals
-- Phase 2 DONE (18/09/26): pre-open movers, FII/DII flows, index add/remove detection, dividend calendar
-- Phase 3: super-investor portfolios (Kedia/Damani/Jhunjhunwala), AMFI MF data, panchang calendar
-- Phase 4: watchlist + education library (use Advance.pdf notes) + dashboard site on GitHub Pages
+- Phase 2 DONE: pre-open movers, FII/DII flows, index add/remove, dividend calendar
+- Phase 3: super-investor portfolios, AMFI MF data, panchang calendar
+- Phase 4 WEBSITE (Dev-approved, WAIT for data reliability confirmation first):
+  GitHub Pages site in Liquid Glass UI, FULL of data — today's dashboard sections + screener
+  tables, budget study, education library (books/podcasts/articles + Dev's rules), articles.
+  Aladdin/TX3-level ambition: as much data as free sources allow.
 
 ## Conventions
 - All data in data/ as JSON. Commit via github-actions bot.
-- If a script fails partially, it still writes what it got — never lose a day of data.
-- Sandbox: keep build scripts in /workspace/notes/ (durable); /scratch/work wiped on restart
+- If a script fails partially, write what it got — never lose a day.
+- Sandbox: build scripts in /workspace/notes/ (durable); /scratch wiped on restart.

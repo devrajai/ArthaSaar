@@ -14,42 +14,63 @@ FULL Indian market coverage, 100% free sources, fully automatic.
 - All times IST (Asia/Kolkata). Dates dd/mm/yy in user-facing content.
 - This repo is DATA + BRAIN backend. A site can be added later (GitHub Pages ready).
 
-## Architecture — updated 18/09/26 evening (FULL MARKET upgrade)
-Workflow .github/workflows/brain-collect.yml — runs 18:35 IST and 21:05 IST Mon-Sat (2 runs/day, self-healing):
-- scripts/brain_collect.py — FULL universe: 2,305 stocks = Nifty 500 (tier 1, priority, with industry) + 1,804 other NSE EQ-series stocks (tier 2)
-  - Sources: nsearchives.nseindia.com ind_nifty500list.csv + EQUITY_L.csv (both verified from datacenter IPs)
-  - History per symbol data/history/SYMBOL.json (Yahoo .NS 1y daily, Stooq fallback, incremental append)
-  - Symbols already current today are skipped instantly — extra runs continue where previous stopped (self-healing bootstrap)
-  - Computes: price, 1d%, 52w/200d high-low, % from 52w high, EMA20/200, above EMA200, RSI14 (Wilder), MACD 12/26/9, vol vs 20d avg, consecutive up/down days
-  - Outputs: data/brain-screener.json + .csv (sorted by change%), data/breadth.json, data/universe.json (with tier field)
-- scripts/indices_collect.py — ALL 139 NSE indices (allIndices API, with yearHigh/Low, PE, PB) + BSE Sensex via Yahoo ^BSESN -> data/indices-all.json
-- scripts/budget_study.py — Nifty ±10 trading-day windows around every budget 2015-2026 -> data/budget-study.json
-- scripts/fundamentals_collect.py — yfinance staggered fundamentals (300/run, refresh if >10 days old):
-  PE, PB, ROE, ROA, D/E, heldPercentInsiders (≈promoter), heldPercentInstitutions (≈FII+DII), marketCap, beta, dividendYield, profitMargins, revenueGrowth, earningsGrowth, freeCashflow, totalCash, totalDebt, sector, industry -> data/fundamentals.json
-- Google Sheet "Market Brain Hub — Screener + Budget Study" (ID: 1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
-  - Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks, Daily_Digest_Archive
-- Daily digest cron 6:30 PM IST covers BOTH repos + appends digest to the sheet's Daily_Digest_Archive tab
+## Architecture — updated 18/09/26 night (PHASE 2 added)
+### Workflows
+- .github/workflows/morning-brain.yml — 9:20 AM IST Mon-Fri: pre-open movers + FII/DII + index changes
+- .github/workflows/brain-collect.yml — 18:35 & 21:05 IST Mon-Sat: full pipeline
 
-## Bootstrap expectations (be honest with Dev)
-- Prices/technicals: tier 1 (Nifty 500) completes in 1-2 runs; full 2,305 takes ~2-4 days across runs (Yahoo rate limits)
-- Fundamentals: ~600/day across 2 runs -> full coverage in ~4 days, then stays fresh (10-day staggered refresh)
-- If data/breadth.json 'stocks' count is growing daily, the system is healthy
+### Scripts
+- scripts/brain_collect.py — FULL universe: 2,305 stocks (Nifty 500 tier 1 + 1,804 others tier 2)
+  from nsearchives.nseindia.com CSVs. History in data/history/, technicals (EMA20/200, RSI14, MACD,
+  52w/200d, volume, consecutive days) -> data/brain-screener.json/.csv + data/breadth.json
+- scripts/indices_collect.py — ALL 139 NSE indices (allIndices API w/ yearHigh/Low PE PB) + BSE Sensex
+  via Yahoo ^BSESN -> data/indices-all.json
+- scripts/phase2_collect.py — PHASE 2:
+  1. Pre-open movers: NSE market-data-pre-open?key=ALL (2,180 stocks, IEP, %chg, purpose)
+     -> data/preopen.json (buckets >=1..5% both sides, top20 gainers/losers, corp action alerts)
+  2. FII/DII flows: NSE fiidiiTradeReact -> data/fii-dii.json (buy/sell/net Cr per category)
+  3. Index add/remove: diffs tier-1 universe daily vs data/nifty500-prev.json -> data/index-changes.json
+- scripts/budget_study.py — Nifty ±10-day windows around budgets 2015-2026 -> data/budget-study.json
+- scripts/fundamentals_collect.py — yfinance staggered (300/run, 10-day refresh): PE, PB, ROE, ROA,
+  D/E, heldPercentInsiders (≈promoter), heldPercentInstitutions (≈FII+DII), marketCap, beta,
+  dividendYield, margins, growth, cash, debt, sector -> data/fundamentals.json
 
-## Data Source Facts
-- nsearchives.nseindia.com CSVs work from datacenter IPs; www.nseindia.com/api/equity-stockIndices needs cookies (403/404) — do NOT rely on it
+### Google Sheet "Market Brain Hub — Screener + Budget Study" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
+Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks, Daily_Digest_Archive,
+Dividend_Calendar (Dev's handwritten monthly dividend stock notes — Jan: TCS/Wipro/HCL/Axis; Jul: MRF/
+Hindalco/HZL/TCS/Coal India; Sep: Cipla/Coal India — verify + extend freely)
+
+### Dev's study notes (PDFs received 18/09/26)
+- Advance.pdf: 36 pages handwritten market course notes (broker structure, limit/market orders, IPO
+  truth, market psychology: buyer/seller, market cycles, bull/bear phases, technical basics, market
+  participants: corporates 4.3%, DII 0.1%, FII 6.1%, individuals 26.8%, brokers 57.8%) — foundation
+  for future Education Library phase
+- sensex_history.pdf: 9 pages handwritten Sensex history study
+- Divided_stocks_list.pdf: monthly dividend stocks -> already in Dividend_Calendar tab
+
+### Cron
+- Daily digest 6:30 PM IST covers BOTH repos + appends to sheet Daily_Digest_Archive. Includes
+  FII/DII flows, pre-open highlights, fundamental insight, IPO status, movers.
+
+## Data Source Facts (learned the hard way)
+- nsearchives.nseindia.com CSVs work from datacenter IPs (nifty500list.csv, EQUITY_L.csv: 2,578 stocks,
+  EQ 2,302 / BE 249 / BZ 27 — skip BE/BZ)
 - www.nseindia.com/api/allIndices WORKS from datacenters (139 indices)
-- EQUITY_L.csv: 2,578 stocks total, EQ series 2,302 (investable), BE 249, BZ 27 (skip BE/BZ — Yahoo doesn't cover them well)
-- Yahoo chart API: rate-limits sustained rapid calls (429) — keep sleeps short, self-heal across runs
-- Stooq: https://stooq.com/q/d/l/?s={sym.lower()}&i=d — daily history fallback
-- yfinance: handles Yahoo crumb auth; .info gives screener-style fundamentals; ROCE is NOT available — use ROE+ROA as proxy
+- www.nseindia.com/api/market-data-pre-open?key=ALL WORKS (2,180 stocks w/ metadata.symbol, iep,
+  pChange, purpose)
+- www.nseindia.com/api/fiidiiTradeReact WORKS (FII/FPI + DII buy/sell/net Cr)
+- www.nseindia.com/api/equity-stockIndices needs cookies (403/404 from datacenters) — do NOT use
+- Yahoo chart API: rate-limits sustained calls (429) — short sleeps, self-heal across runs
+- Stooq: /q/d/l/?s={sym.lower()}&i=d — history fallback
+- yfinance: .info fundamentals; ROCE not available — ROE+ROA proxy
 
 ## Roadmap
-- Phase 1 DONE: full-market screener + all indices + budget study + fundamentals engine
-- Phase 2: pre-open movers 9:00-9:15, index add/remove tracking, FII/DII daily flows
-- Phase 3: super-investor portfolios (Kedia/Damani/Jhunjhunwala via quarterly shareholding), AMFI MF data, panchang calendar
-- Phase 4: watchlist + dashboard site on GitHub Pages
+- Phase 1 DONE: full-market screener + all indices + budget study + fundamentals
+- Phase 2 DONE (18/09/26): pre-open movers, FII/DII flows, index add/remove detection, dividend calendar
+- Phase 3: super-investor portfolios (Kedia/Damani/Jhunjhunwala), AMFI MF data, panchang calendar
+- Phase 4: watchlist + education library (use Advance.pdf notes) + dashboard site on GitHub Pages
 
 ## Conventions
-- All data in data/ as JSON (+CSV mirrors). Commit via github-actions bot.
+- All data in data/ as JSON. Commit via github-actions bot.
 - If a script fails partially, it still writes what it got — never lose a day of data.
-- Sandbox: keep build scripts in /workspace/notes/ (durable); /scratch/work is wiped on restart
+- Sandbox: keep build scripts in /workspace/notes/ (durable); /scratch/work wiped on restart

@@ -38,6 +38,9 @@ jobs:
       - name: Collect all India indices (139 NSE + Sensex)
         run: python scripts/indices_collect.py
 
+      - name: Collect pre-open + FII/DII flows + index changes
+        run: python scripts/phase2_collect.py
+
       - name: Update budget day study
         run: python scripts/budget_study.py
 

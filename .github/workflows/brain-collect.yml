@@ -2,8 +2,11 @@ name: Daily Brain Collect
 
 on:
   schedule:
-    # 18:05 IST Mon-Fri (after market close, data settled)
-    - cron: '5 13 * * 1-5'
+    # Run 1: 18:35 IST Mon-Sat (after market close, data settled)
+    - cron: '5 13 * * 1-6'
+    # Run 2: 21:05 IST Mon-Sat (second pass — self-heals anything run 1 missed,
+    # and advances the staggered fundamentals refresh)
+    - cron: '35 15 * * 1-6'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +19,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,11 +29,20 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Collect Nifty 500 data and compute screener
+      - name: Install dependencies
+        run: pip install yfinance
+
+      - name: Collect full-market prices + technicals (~2,300 stocks)
         run: python scripts/brain_collect.py
+
+      - name: Collect all India indices (139 NSE + Sensex)
+        run: python scripts/indices_collect.py
 
       - name: Update budget day study
         run: python scripts/budget_study.py
+
+      - name: Collect fundamentals (staggered, ~300/run)
+        run: python scripts/fundamentals_collect.py
 
       - name: Commit brain data
         run: |

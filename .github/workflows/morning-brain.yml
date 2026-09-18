@@ -1,0 +1,42 @@
+name: Morning Brain (Pre-Open Movers)
+
+on:
+  schedule:
+    # 9:20 AM IST Mon-Fri — right after the 9:00-9:15 pre-open session
+    - cron: '50 3 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: morning-brain
+  cancel-in-progress: false
+
+jobs:
+  morning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Capture pre-open movers + FII/DII + index changes
+        run: python scripts/phase2_collect.py
+
+      - name: Commit morning data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A data
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: morning pre-open + FII/DII snapshot'
+            git push
+          fi

@@ -1,140 +1,119 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — daily data collector for the FULL Indian market (~2,300 stocks).
+MARKET BRAIN — full-market price history + technicals.
 
-What it does (self-healing, idempotent — safe to run every day):
-  1. Universe = Nifty 500 (tier 1, priority) + every other NSE EQ-series stock
-     (tier 2). Sources: NSE archives CSVs (verified working, no key).
-     -> data/universe.json
-  2. For every symbol, maintains a local price history (data/history/SYMBOL.json):
-     - missing/stale -> fetch 1 year daily candles from Yahoo (fallback: Stooq)
-     - exists -> append only the missing recent days
-     - symbols already current today are skipped instantly, so extra runs
-       continue where the previous run stopped (self-healing bootstrap)
-  3. Computes screener metrics per symbol:
-     price, 1d change%, 52w high/low, 200d high/low, % from 52w high,
-     EMA20, EMA200, price vs EMA200, RSI14, MACD line/signal/hist,
-     volume vs 20d average, consecutive up/down days.
-     -> data/brain-screener.json + data/brain-screener.csv
-  4. Computes market breadth summary -> data/breadth.json
+Universe: 2,305 stocks (Nifty 500 tier 1 + NSE EQ-series others tier 2)
+from nsearchives.nseindia.com CSVs (works from datacenter IPs).
 
-Rate-limit friendly: short sleeps between Yahoo calls, exponential backoff on
-429, stops a source after repeated failures and retries next run (self-healing).
-No API keys. No paid services.
+History: BATCHED yfinance downloads (100 symbols per call, period=1y).
+Plain urllib Yahoo calls get blocked from datacenter IPs — yfinance handles
+the cookie/crumb dance (proven working for fundamentals on Actions runners).
+Stooq CSV remains the per-symbol fallback. Local per-symbol history lives in
+data/history/SYMBOL.json (merged, capped at ~400 rows).
+
+Technicals per stock: price, change%, 52w high/low, 200d high/low, % from
+52w high, EMA20, EMA200, above-EMA200 flag, RSI14, MACD (line/signal/hist),
+volume vs 20d avg, consecutive up/down days.
+
+Outputs: data/brain-screener.json (+ .csv mirror), data/breadth.json.
+Self-healing: a failed batch just means those stocks keep yesterday's history.
 """
 import csv
+import datetime as dt
 import io
 import json
-import time
-import datetime as dt
 import sys
+import time
 from pathlib import Path
 from urllib.request import Request, urlopen
-from urllib.error import HTTPError, URLError
-from urllib.parse import quote
+
+import yfinance as yf
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 HIST = DATA / "history"
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
-
-HIST_KEEP_DAYS = 400          # ~1.5 years rolling window
-MAX_YAHOO_FAILURES = 60       # stop hammering after this many consecutive failures
-
-
-# ---------------------------------------------------------------- utilities
-def get(url, timeout=25):
-    req = Request(url, headers={"User-Agent": UA,
-                                "Accept": "application/json,text/csv,*/*"})
-    with urlopen(req, timeout=timeout) as r:
-        return r.read().decode("utf-8")
+HIST_KEEP_DAYS = 400
+BATCH = 100          # symbols per yfinance download call
+NIFTY500_CSV = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
+EQUITY_CSV = "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv"
 
 
-def try_get(url, retries=2, sleep=3):
-    for i in range(retries + 1):
-        try:
-            return get(url)
-        except HTTPError as e:
-            if e.code == 429 and i < retries:
-                time.sleep(sleep * (i + 1))
-                continue
-            return None
-        except (URLError, TimeoutError, OSError):
-            if i == retries:
-                return None
-            time.sleep(sleep)
-    return None
+def try_get(url, timeout=25):
+    try:
+        req = Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
+        with urlopen(req, timeout=timeout) as r:
+            return r.read().decode("utf-8", "replace")
+    except Exception:  # noqa: BLE001
+        return None
 
 
 # ---------------------------------------------------------------- universe
 def fetch_universe():
-    """FULL Indian market: Nifty 500 first (tier 1, priority), then every
-    other NSE EQ-series stock (tier 2). ~2,300 symbols total."""
-    uni, seen = [], set()
-    # tier 1 — Nifty 500 (industry data included)
-    txt = try_get("https://nsearchives.nseindia.com/content/indices/"
-                 "ind_nifty500list.csv")
+    uni = []
+    seen = set()
+    txt = try_get(NIFTY500_CSV)
     if txt:
         for r in csv.DictReader(io.StringIO(txt)):
             sym = (r.get("Symbol") or "").strip()
-            if not sym or sym in seen:
-                continue
-            seen.add(sym)
-            uni.append({
-                "symbol": sym,
-                "company": (r.get("Company Name") or "").strip(),
-                "industry": (r.get("Industry") or "").strip(),
-                "tier": 1,
-            })
+            if sym and sym not in seen:
+                seen.add(sym)
+                uni.append({"symbol": sym,
+                            "company": (r.get("Company Name") or "").strip(),
+                            "industry": (r.get("Industry") or "").strip(),
+                            "tier": 1})
     n500 = len(uni)
-    # tier 2 — every remaining NSE EQ-series stock (full market)
-    txt2 = try_get("https://nsearchives.nseindia.com/content/equities/"
-                   "EQUITY_L.csv")
-    if txt2:
-        for r in csv.DictReader(io.StringIO(txt2)):
-            sym = (r.get("SYMBOL") or "").strip()
-            series = (r.get(" SERIES") or r.get("Series") or "").strip()
-            if not sym or series != "EQ" or sym in seen:
-                continue
-            seen.add(sym)
-            uni.append({
-                "symbol": sym,
-                "company": (r.get("NAME OF COMPANY") or "").strip(),
-                "industry": "",
-                "tier": 2,
-            })
+    txt = try_get(EQUITY_CSV)
+    if txt:
+        for r in csv.DictReader(io.StringIO(txt)):
+            sym, series = (r.get("SYMBOL") or "").strip(), (r.get(" SERIES") or r.get("SERIES") or "").strip()
+            if sym and series == "EQ" and sym not in seen:
+                seen.add(sym)
+                uni.append({"symbol": sym,
+                            "company": (r.get("NAME OF COMPANY") or "").strip(),
+                            "industry": "",
+                            "tier": 2})
     print(f"universe: {n500} nifty500 + {len(uni) - n500} others = {len(uni)}")
     return uni or None
 
 
 # ---------------------------------------------------------------- history
-def yahoo_daily(symbol):
-    """Daily candles from Yahoo chart API -> list of {date, close, volume}."""
-    url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
-           f"{quote(symbol)}.NS?range=1y&interval=1d")
-    txt = try_get(url)
-    if not txt:
-        return None
+def yahoo_batch(symbols):
+    """Batched daily candles via yfinance -> {symbol: [{date, close, volume}]}"""
+    out = {}
     try:
-        res = json.loads(txt)["chart"]["result"][0]
-        ts = res.get("timestamp") or []
-        q = res["indicators"]["quote"][0]
-        out = []
-        for i, t in enumerate(ts):
-            c = q["close"][i]
-            if c is None:
-                continue
-            d = dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%Y-%m-%d")
-            out.append({"date": d, "close": round(c, 2),
-                        "volume": q["volume"][i] or 0})
-        return out or None
-    except Exception:  # noqa: BLE001
-        return None
+        df = yf.download(" ".join(symbols) + ".NS", period="1y", interval="1d",
+                         group_by="ticker", threads=True, progress=False,
+                         auto_adjust=True)
+    except Exception as e:  # noqa: BLE001
+        print(f"  batch failed: {e}")
+        return out
+    if df is None or df.empty:
+        return out
+    multi = isinstance(df.columns, __import__("pandas").MultiIndex)
+    for s in symbols:
+        try:
+            sub = df[s] if multi else df
+            sub = sub.dropna(subset=["Close"])
+            rows = []
+            for date, r in sub.iterrows():
+                c = r["Close"]
+                if c is None or c != c:
+                    continue
+                v = r.get("Volume", 0)
+                rows.append({"date": date.strftime("%Y-%m-%d"),
+                             "close": round(float(c), 2),
+                             "volume": int(v or 0)})
+            if rows:
+                out[s] = rows
+        except Exception:  # noqa: BLE001
+            continue
+    return out
 
 
 def stooq_daily(symbol):
-    """Fallback history from Stooq CSV."""
+    """Fallback history from Stooq CSV (no .NS suffix)."""
     txt = try_get(f"https://stooq.com/q/d/l/?s={symbol.lower()}&i=d")
     if not txt or not txt.lower().startswith("date"):
         return None
@@ -224,7 +203,7 @@ def macd(closes):
 
 
 def consecutive_days(closes):
-    """+N = N straight up days, -N = N straight down days."""
+    "+N = N straight up days, -N = N straight down days."
     n = 0
     for i in range(len(closes) - 1, 0, -1):
         if closes[i] > closes[i - 1]:
@@ -292,31 +271,36 @@ def main():
             print("FATAL: no universe available")
             sys.exit(1)
 
-    yf_fails = 0
+    # ---- batched history refresh (tier 1 first so the index is prioritised)
+    syms = [m["symbol"] for m in uni]
+    for start in range(0, len(syms), BATCH):
+        chunk = syms[start:start + BATCH]
+        fresh = yahoo_batch(chunk)
+        got = len(fresh)
+        missing = [s for s in chunk if s not in fresh]
+        # merge + save
+        for s, rows in fresh.items():
+            old = load_hist(s)
+            save_hist(s, merge_hist(old, rows))
+        # stooq fallback for stragglers (max 10 per batch to stay fast)
+        for s in missing[:10]:
+            rows = stooq_daily(s)
+            if rows:
+                old = load_hist(s)
+                save_hist(s, merge_hist(old, rows))
+                got += 1
+        print(f"history {start + len(chunk)}/{len(syms)} "
+              f"(batch {got}/{len(chunk)} updated)")
+        time.sleep(1.0)
+
+    # ---- analyse everything we have history for
     results = []
-    for i, m in enumerate(uni):
-        sym = m["symbol"]
-        rows = load_hist(sym)
-        today = dt.date.today().strftime("%Y-%m-%d")
-        needs = rows is None or (rows and rows[-1]["date"] < today)
-        if needs and yf_fails < MAX_YAHOO_FAILURES:
-            fresh = yahoo_daily(sym)
-            if fresh is None:
-                fresh = stooq_daily(sym)
-            if fresh is None:
-                yf_fails += 1
-                time.sleep(0.3)
-            else:
-                rows = merge_hist(rows, fresh)
-                save_hist(sym, rows)
-                yf_fails = 0
-            time.sleep(0.25)
+    for m in uni:
+        rows = load_hist(m["symbol"])
         if rows:
-            a = analyse(sym, m, rows)
+            a = analyse(m["symbol"], m, rows)
             if a:
                 results.append(a)
-        if i % 100 == 0:
-            print(f"...{i}/{len(uni)} symbols processed")
 
     results.sort(key=lambda x: x["change_pct"], reverse=True)
     (DATA / "brain-screener.json").write_text(

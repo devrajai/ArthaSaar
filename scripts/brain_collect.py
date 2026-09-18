@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — daily data collector for Nifty 500 universe.
+MARKET BRAIN — daily data collector for the FULL Indian market (~2,300 stocks).
 
 What it does (self-healing, idempotent — safe to run every day):
-  1. Fetches the Nifty 500 constituent list (symbol + company + industry) from
-     NSE archives CSV. -> data/universe.json
+  1. Universe = Nifty 500 (tier 1, priority) + every other NSE EQ-series stock
+     (tier 2). Sources: NSE archives CSVs (verified working, no key).
+     -> data/universe.json
   2. For every symbol, maintains a local price history (data/history/SYMBOL.json):
      - missing/stale -> fetch 1 year daily candles from Yahoo (fallback: Stooq)
      - exists -> append only the missing recent days
+     - symbols already current today are skipped instantly, so extra runs
+       continue where the previous run stopped (self-healing bootstrap)
   3. Computes screener metrics per symbol:
      price, 1d change%, 52w high/low, 200d high/low, % from 52w high,
      EMA20, EMA200, price vs EMA200, RSI14, MACD line/signal/hist,
@@ -15,14 +18,13 @@ What it does (self-healing, idempotent — safe to run every day):
      -> data/brain-screener.json + data/brain-screener.csv
   4. Computes market breadth summary -> data/breadth.json
 
-Rate-limit friendly: 0.4s between Yahoo calls, exponential backoff on 429,
-stops a source after repeated failures and retries next run (self-healing).
+Rate-limit friendly: short sleeps between Yahoo calls, exponential backoff on
+429, stops a source after repeated failures and retries next run (self-healing).
 No API keys. No paid services.
 """
 import csv
 import io
 import json
-import math
 import time
 import datetime as dt
 import sys
@@ -67,27 +69,47 @@ def try_get(url, retries=2, sleep=3):
 
 # ---------------------------------------------------------------- universe
 def fetch_universe():
-    """Nifty 500 list from NSE archives (free, no key)."""
+    """FULL Indian market: Nifty 500 first (tier 1, priority), then every
+    other NSE EQ-series stock (tier 2). ~2,300 symbols total."""
+    uni, seen = [], set()
+    # tier 1 — Nifty 500 (industry data included)
     txt = try_get("https://nsearchives.nseindia.com/content/indices/"
-                  "ind_nifty500list.csv")
-    if not txt:
-        return None
-    rows = list(csv.DictReader(io.StringIO(txt)))
-    uni = []
-    for r in rows:
-        sym = (r.get("Symbol") or "").strip()
-        if not sym:
-            continue
-        uni.append({
-            "symbol": sym,
-            "company": (r.get("Company Name") or "").strip(),
-            "industry": (r.get("Industry") or "").strip(),
-        })
+                 "ind_nifty500list.csv")
+    if txt:
+        for r in csv.DictReader(io.StringIO(txt)):
+            sym = (r.get("Symbol") or "").strip()
+            if not sym or sym in seen:
+                continue
+            seen.add(sym)
+            uni.append({
+                "symbol": sym,
+                "company": (r.get("Company Name") or "").strip(),
+                "industry": (r.get("Industry") or "").strip(),
+                "tier": 1,
+            })
+    n500 = len(uni)
+    # tier 2 — every remaining NSE EQ-series stock (full market)
+    txt2 = try_get("https://nsearchives.nseindia.com/content/equities/"
+                   "EQUITY_L.csv")
+    if txt2:
+        for r in csv.DictReader(io.StringIO(txt2)):
+            sym = (r.get("SYMBOL") or "").strip()
+            series = (r.get(" SERIES") or r.get("Series") or "").strip()
+            if not sym or series != "EQ" or sym in seen:
+                continue
+            seen.add(sym)
+            uni.append({
+                "symbol": sym,
+                "company": (r.get("NAME OF COMPANY") or "").strip(),
+                "industry": "",
+                "tier": 2,
+            })
+    print(f"universe: {n500} nifty500 + {len(uni) - n500} others = {len(uni)}")
     return uni or None
 
 
 # ---------------------------------------------------------------- history
-def yahoo_daily(symbol, days=400):
+def yahoo_daily(symbol):
     """Daily candles from Yahoo chart API -> list of {date, close, volume}."""
     url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
            f"{quote(symbol)}.NS?range=1y&interval=1d")
@@ -235,6 +257,7 @@ def analyse(symbol, meta, rows):
         "symbol": symbol,
         "company": meta.get("company", ""),
         "industry": meta.get("industry", ""),
+        "tier": meta.get("tier", 1),
         "price": price,
         "change_pct": round((price - prev) / prev * 100, 2),
         "high_52w": max(w52),
@@ -261,7 +284,6 @@ def main():
     uni = fetch_universe()
     if uni:
         (DATA / "universe.json").write_text(json.dumps(uni, ensure_ascii=False))
-        print(f"universe: {len(uni)} symbols")
     else:
         if (DATA / "universe.json").exists():
             uni = json.loads((DATA / "universe.json").read_text())
@@ -283,17 +305,17 @@ def main():
                 fresh = stooq_daily(sym)
             if fresh is None:
                 yf_fails += 1
-                time.sleep(0.4)
+                time.sleep(0.3)
             else:
                 rows = merge_hist(rows, fresh)
                 save_hist(sym, rows)
                 yf_fails = 0
-            time.sleep(0.4)
+            time.sleep(0.25)
         if rows:
             a = analyse(sym, m, rows)
             if a:
                 results.append(a)
-        if i % 50 == 0:
+        if i % 100 == 0:
             print(f"...{i}/{len(uni)} symbols processed")
 
     results.sort(key=lambda x: x["change_pct"], reverse=True)

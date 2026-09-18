@@ -18,10 +18,12 @@ website second.
 
 ## PERMANENT UI — Liquid Glass Design System (approved by Dev 18/09/26)
 - Dark mode default + light mode toggle (pill switch, saved in localStorage 'mb-theme')
-- Frosted translucent cards WITHOUT backdrop-filter on content cards; backdrop-filter ONLY on
-  the sticky header (nested glass layers caused the card-through-header glitch on Android
-  Chrome — NEVER put backdrop-filter on cards again; header gets opaque --hdr-bg + blur)
-- Live IST clock + date + market status badge (PRE-OPEN 9:00-9:15 / OPEN / CLOSED)
+- ZERO position:sticky and ZERO backdrop-filter ANYWHERE (Dev's confirmed rule after TWO
+  rounds of screen-recorded feedback, 18/09/26 night: the header bar must scroll away with
+  the page like every other card — NOTHING stays pinned/floating on top while scrolling).
+  Cards use translucent gradient backgrounds only; they look glass without any blur filter.
+- Header at top: brand + live IST clock + date + market status badge (PRE-OPEN 9:00-9:15 /
+  OPEN / CLOSED) + theme toggle — as a normal in-flow card, not sticky.
 - Fonts: Plus Jakarta Sans (body) + Azeret Mono (numbers/labels)
 - Palette: bg dark #080d17→#0b1220 (light #e7edf5→#dde6f2), accents emerald #10b981 (up),
   rose #f43f5e (down), amber #f5a623 (gold/IPO), teal #14b8a6 (brand), floating blurred orbs
@@ -29,17 +31,18 @@ website second.
 - Components: KPI cards w/ count-up animation, index grid cards, pre-open breadth bars,
   gainers/losers tables, IPO cards w/ GMP highlight + featured IPO banner, system status rows
 - Reference implementation: /workspace/notes/today_updates_dashboard.html (durable) —
-  'Today_Updates_LiquidGlass.html' delivered 18/09/26 (scroll bug fixed same day)
+  'Today_Updates_LiquidGlass_v3.html' delivered 18/09/26 (v3 = header un-pinned, final)
 
-## Architecture — updated 18/09/26 late (Phase 2 + fixes)
+## Architecture — updated 18/09/26 night (Phase 2 + fixes)
 ### Workflows
 - .github/workflows/morning-brain.yml — 9:20 AM IST Mon-Fri: phase2_collect
 - .github/workflows/brain-collect.yml — 18:35 & 21:05 IST Mon-Sat: full pipeline
 - BOTH have rebase-and-retry git push (5 attempts, 15s apart) — fixes the 18/09 race where
   morning + evening runs collided and one run's data was lost
 ### Scripts
-- scripts/brain_collect.py — 2,305 stocks (Nifty 500 tier 1 + 1,804 tier 2) → brain-screener,
-  breadth, history (Actions-verified 18/09: full run ~10 min)
+- scripts/brain_collect.py — 2,305 stocks (Nifty 500 tier 1 + 1,804 tier 2). History via
+  BATCHED yfinance downloads (100 symbols/call — plain urllib Yahoo is blocked on runners,
+  v1 of this script produced 0 technicals). Universe from nsearchives CSVs.
 - scripts/indices_collect.py — all 139 NSE indices + Sensex → indices-all.json
 - scripts/phase2_collect.py — pre-open movers (2,180 stk) → preopen.json; FII/DII → fii-dii.json;
   index add/remove diff → index-changes.json (baseline nifty500-prev.json)
@@ -55,12 +58,15 @@ Daily_Digest_Archive, Dividend_Calendar (Dev's handwritten monthly dividend stoc
   breakdown, bull/bear phases) → data/education.json devs_collected_rules
 - sensex_history.pdf: 9 pages Sensex history study
 - Divided_stocks_list.pdf: monthly dividend calendar → Dividend_Calendar tab
-- data/education.json: books (12), podcasts (5), YouTube (4), free courses (5),
+- data/education.json: books (12), podcasts (5), YouTube (5), free courses (5),
+  Dev's Inspiring Traders playlist (25 Abhishek Kar videos, indexed with titles),
   Dev's collected rules (6) — feeds website Learn section
 
 ### Cron
 Daily digest 6:30 PM IST covers both repos + appends to sheet. Includes FII/DII flows,
-pre-open highlights, fundamental insight, IPO status, index changes.
+pre-open highlights, fundamental insight, IPO status, index changes. Verify the screener
+is filling (run of 18/09 21:05 IST deployed the batched-yfinance fix — check breadth.json
+'stocks' count and report it to Dev).
 
 ## Data Source Facts
 - nsearchives.nseindia.com CSVs work from datacenter IPs (EQUITY_L.csv 2,578 → keep EQ only)
@@ -68,8 +74,10 @@ pre-open highlights, fundamental insight, IPO status, index changes.
 - /api/market-data-pre-open?key=ALL WORKS (2,180 stocks, metadata.symbol/iep/pChange/purpose)
 - /api/fiidiiTradeReact WORKS (FII/FPI + DII buy/sell/net Cr)
 - /api/equity-stockIndices needs cookies — do NOT use
-- Yahoo chart API rate-limits (429) — short sleeps, tier priority, self-heal across runs
-- yfinance works on Actions runners (fundamentals step succeeded 18/09)
+- Yahoo chart API via plain urllib: BLOCKED on datacenter/runner IPs — always use the
+  yfinance library (it handles cookies/crumb); batch 100 symbols per yf.download call
+- yfinance works on Actions runners (fundamentals + history, both proven 18/09)
+- YouTube oEmbed works for fetching video titles (used for the playlist index)
 
 ## Roadmap
 - Phase 1 DONE: full-market screener + all indices + budget study + fundamentals
@@ -77,8 +85,9 @@ pre-open highlights, fundamental insight, IPO status, index changes.
 - Phase 3: super-investor portfolios, AMFI MF data, panchang calendar
 - Phase 4 WEBSITE (Dev-approved, WAIT for data reliability confirmation first):
   GitHub Pages site in Liquid Glass UI, FULL of data — today's dashboard sections + screener
-  tables, budget study, education library (books/podcasts/articles + Dev's rules), articles.
-  Aladdin/TX3-level ambition: as much data as free sources allow.
+  tables, budget study, education library (books/podcasts/articles + Inspiring Traders
+  playlist + Dev's rules), articles. Aladdin/TX3-level ambition: as much data as free
+  sources allow.
 
 ## Conventions
 - All data in data/ as JSON. Commit via github-actions bot.

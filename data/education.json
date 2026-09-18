@@ -1,0 +1,46 @@
+{
+ "updated": "2026-09-18",
+ "purpose": "Dev's market education library — feeds the future website's Learn section. Curated, India-first, free-first.",
+ "books": [
+  {"title": "Coffee Can Investing", "author": "Saurabh Mukherjea", "why": "Low-risk approach to compounding wealth in Indian stocks", "level": "Beginner"},
+  {"title": "The Unusual Billionaires", "author": "Saurabh Mukherjea", "why": "What makes Indian companies compound for decades", "level": "Beginner"},
+  {"title": "How to Avoid Loss and Earn Consistently in the Stock Market", "author": "Prasenjit Paul", "why": "Practical Indian retail investing framework", "level": "Beginner"},
+  {"title": "Bulls, Bears and Other Beasts", "author": "Santosh Nair", "why": "India's market history told as stories — scams, crashes, booms", "level": "Beginner"},
+  {"title": "The Intelligent Investor", "author": "Benjamin Graham", "why": "The foundation of value investing (Warren Buffett's bible)", "level": "Intermediate"},
+  {"title": "One Up On Wall Street", "author": "Peter Lynch", "why": "Finding multi-baggers in everyday life", "level": "Intermediate"},
+  {"title": "The Psychology of Money", "author": "Morgan Housel", "why": "Behaviour matters more than knowledge", "level": "Beginner"},
+  {"title": "Dhandho Investor", "author": "Mohnish Pabrai", "why": "Low-risk, high-uncertainty bets, Indian-origin author", "level": "Intermediate"},
+  {"title": "Value Investing and Behavioral Finance", "author": "Parag Parikh", "why": "Indian markets + investor psychology", "level": "Intermediate"},
+  {"title": "The Thoughtful Investor", "author": "Basant Maheshwari", "why": "Indian market cycles and stock selection", "level": "Advanced"},
+  {"title": "Diamonds in the Dust", "author": "Saurabh Mukherjea et al.", "why": "Quality smallcap framework for India", "level": "Intermediate"},
+  {"title": "A Random Walk Down Wall Street", "author": "Burton Malkiel", "why": "Why most people can't beat the market — the other side", "level": "Intermediate"}
+ ],
+ "podcasts": [
+  {"name": "Paisa Vaisa", "host": "Anupam Gupta", "why": "India's best personal-finance podcast, market veterans weekly", "lang": "English/Hindi"},
+  {"name": "Capitalmind Podcast", "host": "Deepak Shenoy", "why": "Sharp market + macro commentary from a practitioner", "lang": "English"},
+  {"name": "Simply Save (Value Research)", "host": "Value Research team", "why": "Fund investing and personal finance basics", "lang": "English"},
+  {"name": "ET Markets Podcast", "host": "The Economic Times", "why": "Daily quick market wrap", "lang": "English"},
+  {"name": "Moneycontrol Market Podcast", "host": "Moneycontrol", "why": "Daily news + interviews with India's top investors", "lang": "English"}
+ ],
+ "youtube": [
+  {"name": "Pranjal Kamra (Finology)", "why": "Value investing basics in simple Hindi", "lang": "Hindi"},
+  {"name": "CA Rachana Ranade", "why": "Stock analysis + market concepts, huge Indian library", "lang": "English/Hindi"},
+  {"name": "SOIC", "why": "Deep sector research, long-form quality", "lang": "Hindi/English"},
+  {"name": "Zerodha Varsity (YouTube)", "why": "Companion videos to the free Varsity course", "lang": "English"}
+ ],
+ "free_courses_and_articles": [
+  {"name": "Zerodha Varsity", "url": "https://varsity.zerodha.com", "why": "THE free structured market education — 20+ modules from basics to options. Read this first."},
+  {"name": "SEBI Investor Awareness", "url": "https://investor.sebi.gov.in", "why": "Official investor education, grievance help, how to avoid fraud"},
+  {"name": "Aswath Damodaran's Valuation Course", "url": "https://pages.stern.nyu.edu/~adamodar/", "why": "World's best valuation professor, all NYU material free"},
+  {"name": "NSE India Market Data & Reports", "url": "https://www.nseindia.com/reports-indices-historical-index-data", "why": "Learn to read the exchange's own data"},
+  {"name": "Screener.in", "url": "https://www.screener.in", "why": "Free Indian stock fundamentals + company annual report reading practice"}
+ ],
+ "devs_collected_rules": [
+  {"rule": "When a stock doubles, sell half — the remaining half becomes free of cost", "source": "YouTube quote saved by Dev 18/09/26", "note": "personal collection"},
+  {"rule": "Hold the free-of-cost half for ten years", "source": "YouTube quote saved by Dev 18/09/26", "note": "personal collection"},
+  {"rule": "January: cash in · February: keep cash · March: reinvest · April–September: weekly SIP · November–December: plan exit", "source": "YouTube quote saved by Dev 18/09/26", "note": "seasonal heuristic — folk wisdom, not a verified strategy"},
+  {"rule": "Market participants: brokers(pro) 57.8%, individuals 26.8%, FII 6.1%, corporates 4.3%, others 4.9%, DII 0.1% (May 2023 data)", "source": "Dev's course notes (Advance.pdf)", "note": "retail is a small player — smart money moves the market"},
+  {"rule": "30 trading sessions ≈ 45 calendar days", "source": "Dev's course notes (Advance.pdf)", "note": ""},
+  {"rule": "Phase-3 bull tops are driven by external factors (geopolitics, US panic) — professionals create panic where retail holds average positions", "source": "Dev's course notes (Advance.pdf)", "note": ""}
+ ]
+}

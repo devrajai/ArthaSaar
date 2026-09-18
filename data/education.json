@@ -26,7 +26,8 @@
   {"name": "Pranjal Kamra (Finology)", "why": "Value investing basics in simple Hindi", "lang": "Hindi"},
   {"name": "CA Rachana Ranade", "why": "Stock analysis + market concepts, huge Indian library", "lang": "English/Hindi"},
   {"name": "SOIC", "why": "Deep sector research, long-form quality", "lang": "Hindi/English"},
-  {"name": "Zerodha Varsity (YouTube)", "why": "Companion videos to the free Varsity course", "lang": "English"}
+  {"name": "Zerodha Varsity (YouTube)", "why": "Companion videos to the free Varsity course", "lang": "English"},
+  {"name": "Abhishek Kar", "why": "Amazing Traders series — legendary trader stories in Hindi (see inspiring_traders below)", "lang": "Hindi"}
  ],
  "free_courses_and_articles": [
   {"name": "Zerodha Varsity", "url": "https://varsity.zerodha.com", "why": "THE free structured market education — 20+ modules from basics to options. Read this first."},
@@ -35,6 +36,38 @@
   {"name": "NSE India Market Data & Reports", "url": "https://www.nseindia.com/reports-indices-historical-index-data", "why": "Learn to read the exchange's own data"},
   {"name": "Screener.in", "url": "https://www.screener.in", "why": "Free Indian stock fundamentals + company annual report reading practice"}
  ],
+ "inspiring_traders": {
+  "note": "Dev's curated 'Inspiring Traders' playlist — legendary trader stories, saved 18/09/26. Use for motivation + case studies of how great traders think (and how most blew up).",
+  "playlist": "https://youtube.com/playlist?list=PLyEvUpwXRAdPUT7VpaVblOxAVxAdGwmWU",
+  "channel": "Abhishek Kar (Hindi)",
+  "videos": [
+   {"title": "Real story of Bobby Axelrod | 100000 crore", "url": "https://youtu.be/E123YfsNdtI"},
+   {"title": "Traders ne banaye 4000 CRORE", "url": "https://youtu.be/cRsUkx3fwJs"},
+   {"title": "Hedge Funds ka Badshah — Bill Ackman | Billionaire", "url": "https://youtu.be/Z_P8SLop3Aw"},
+   {"title": "Flash Crash 4000 crore profit | Navinder Singh", "url": "https://youtu.be/0kuemAq8cmk"},
+   {"title": "Dan Zanger: Trader who made 29000% returns in 2 years", "url": "https://youtu.be/XFJ-rqPlXGs"},
+   {"title": "Hedge Funds | Share bazaar ke arabpatiyon ki kahani", "url": "https://youtu.be/TOjnJh1tEr0"},
+   {"title": "George Soros: Man who made 2500 Cr in a SINGLE DAY!", "url": "https://youtu.be/Ugko0Y7VnCY"},
+   {"title": "Rahul ne banaye 11 Crore!", "url": "https://youtu.be/-3h8AjzxXZg"},
+   {"title": "Top TRADER jisne banaye 300000x returns!", "url": "https://youtu.be/5A3iiIig1U4"},
+   {"title": "Jesse Livermore — 0 to 10000 Crore! In Hindi", "url": "https://youtu.be/PjVCKDsGz3Y"},
+   {"title": "5 Tips from Radhakishan Damani", "url": "https://youtu.be/0iZTfMFaEOQ"},
+   {"title": "Jim Simons Trade Secrets in Hindi", "url": "https://youtu.be/967sIwYgwB0"},
+   {"title": "Professional trader VS Retail Trader — 1 Attitude", "url": "https://youtu.be/-dOjDNlsCmQ"},
+   {"title": "Amazing Traders 1 — Takashi Kotegawa made 153 Mill $", "url": "https://youtu.be/sD74lT_XTLQ"},
+   {"title": "Vishwa ke sabse kaushal TRADERS!", "url": "https://youtu.be/rvNhw_Y15TY"},
+   {"title": "Crores via TRADING: Rakesh Jhunjhunwala", "url": "https://youtu.be/c2vI5IklD7o"},
+   {"title": "Amazing Traders: Paul Tudor", "url": "https://youtu.be/w8egCFlDM3Y"},
+   {"title": "Wall Street ka sabse khatarnak Trader: David Tepper", "url": "https://youtu.be/7eYz36Ni48g"},
+   {"title": "Billionaire ka dost: Charlie Munger's Secret to Rs 20,000 Crore!", "url": "https://youtu.be/iJJMbN-CKVk"},
+   {"title": "36000 Crore Ka Option Trading Scam | Jane Street Exposed | SEBI", "url": "https://youtu.be/iHPuzV-d5kE"},
+   {"title": "5 Shocking Mistakes Poor People Make that Keep Them Broke", "url": "https://youtu.be/Fzd_vl-kuoQ", "by": "Shobha Rana"},
+   {"title": "Sabse khatarnak BILLIONAIRE TRADER", "url": "https://youtu.be/BcRm4iwDVMY"},
+   {"title": "The BEST trader in the world — Jesse Livermore", "url": "https://youtu.be/Ik1cB6vGtto"},
+   {"title": "When all doubted Warren Buffett — The Salomon Brothers CASE STUDY", "url": "https://youtu.be/k3BBH4raFA4"},
+   {"title": "Stock Trader turned 1.5 Lakh into 4000 Crore using Price Action", "url": "https://youtu.be/B5w2zlqn6IE"}
+  ]
+ },
  "devs_collected_rules": [
   {"rule": "When a stock doubles, sell half — the remaining half becomes free of cost", "source": "YouTube quote saved by Dev 18/09/26", "note": "personal collection"},
   {"rule": "Hold the free-of-cost half for ten years", "source": "YouTube quote saved by Dev 18/09/26", "note": "personal collection"},

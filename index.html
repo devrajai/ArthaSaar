@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070c17">
+<title>MARKET BRAIN — Dev's Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38'%3E%3Crect width='38' height='38' rx='11' fill='%235aa7ff'/%3E%3Ctext x='19' y='25' font-family='monospace' font-size='15' font-weight='bold' fill='white' text-anchor='middle'%3EMB%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand-row">
+    <div class="logo">MB</div>
+    <div>
+      <h1>MARKET BRAIN</h1>
+      <div class="tagline">Dev's personal terminal · 2,305 stocks · 139 indices · crypto · IPO</div>
+    </div>
+    <div class="header-right">
+      <div class="clockbox">
+        <div id="clock">--:--:--</div>
+        <div id="clockdate">— IST</div>
+      </div>
+      <span class="pill" id="mktPill"><span class="dot" id="mktDot"></span><span id="mktTxt">NSE</span></span>
+      <button id="themeBtn" aria-label="Toggle theme">☀</button>
+    </div>
+  </div>
+  <nav>
+    <div class="tabs" id="tabs">
+      <a class="tab active" href="#dash">Dashboard</a>
+      <a class="tab" href="#indices">Indices</a>
+      <a class="tab" href="#screener">Screener</a>
+      <a class="tab" href="#fundamentals">Fundamentals</a>
+      <a class="tab" href="#ipo">IPO</a>
+      <a class="tab" href="#crypto">Crypto</a>
+      <a class="tab" href="#ai">AI Forecast</a>
+      <a class="tab" href="#filings">Filings</a>
+      <a class="tab" href="#learn">Learn</a>
+      <a class="tab" href="#studies">Studies</a>
+      <a class="tab" href="#mynotes">My Notes</a>
+    </div>
+  </nav>
+  <div class="meta-row">
+    <span id="dataFresh">loading…</span>
+    <button id="refreshBtn">⟳ refresh</button>
+  </div>
+</header>
+
+<section id="dash">
+  <h2>Dashboard</h2>
+  <div class="grid g3" id="kpiRow"></div>
+  <div class="grid g2" style="margin-top:10px">
+    <div class="card">
+      <div class="subhead">Market Breadth — 2,000+ stocks</div>
+      <div id="breadthBox"></div>
+    </div>
+    <div class="card">
+      <div class="subhead">FII / DII Flows</div>
+      <div id="fiiBox"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="subhead">Pre-open Movers (9:00–9:15 IST)</div>
+    <div id="preopenBox"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="subhead">Crypto Snapshot</div>
+      <div id="cryptoMini"></div>
+    </div>
+    <div class="card">
+      <div class="subhead">TimesFM 21-day AI Outlook</div>
+      <div id="aiMini"></div>
+    </div>
+  </div>
+</section>
+
+<section id="indices">
+  <h2>Indices — 139 tracked</h2>
+  <div class="controls">
+    <input id="idxSearch" type="search" placeholder="Search index name…">
+  </div>
+  <div class="card flat" style="padding:0">
+    <div class="tblwrap" style="border:none;margin:0">
+      <table><thead><tr><th>Index</th><th>Price</th><th>Chg%</th><th>52w Pos</th><th>PE</th><th>PB</th></tr></thead>
+      <tbody id="idxBody"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<section id="screener">
+  <h2>Screener — full market technicals</h2>
+  <div class="controls">
+    <input id="scrSearch" type="search" placeholder="Search symbol / company…">
+    <select id="scrTier"><option value="0">All tiers</option><option value="1">Tier 1 (Nifty 500)</option><option value="2">Tier 2</option></select>
+    <select id="scrRsi"><option value="all">RSI: all</option><option value="os">Oversold <30</option><option value="lt40">Weak <40</option><option value="gt60">Strong >60</option><option value="ob">Overbought >70</option></select>
+    <select id="scrEma"><option value="all">EMA200: all</option><option value="above">Above EMA200</option><option value="below">Below EMA200</option></select>
+    <select id="scrSort"><option value="chg">Sort: Chg% ▼</option><option value="rsi">Sort: RSI ▲</option><option value="rsid">RSI ▼</option><option value="52w">Near 52w low</option><option value="vol">Volume spike</option><option value="up">Near 52w high</option></select>
+  </div>
+  <div class="card flat" style="padding:0">
+    <div class="tblwrap" style="border:none;margin:0">
+      <table><thead><tr><th>Symbol</th><th>Price</th><th>Chg%</th><th>RSI14</th><th>vs 52wH</th><th>EMA200</th><th>Vol×</th><th>Streak</th></tr></thead>
+      <tbody id="scrBody"></tbody></table>
+    </div>
+  </div>
+  <div id="scrCount" class="footer-note"></div>
+  <button class="morebtn" id="scrMore">show more ▾</button>
+</section>
+
+<section id="fundamentals">
+  <h2>Fundamentals — Nifty 500 quality + value</h2>
+  <div class="controls">
+    <input id="fndSearch" type="search" placeholder="Search symbol…">
+    <select id="fndPE"><option value="0">PE: any</option><option value="10">< 10</option><option value="15">< 15</option><option value="20">< 20</option><option value="30">< 30</option></select>
+    <select id="fndROE"><option value="0">ROE: any</option><option value="15">> 15%</option><option value="20">> 20%</option><option value="25">> 25%</option></select>
+    <button class="chip" id="fndValue">Value screen: PE<20 · ROE>15</button>
+  </div>
+  <div class="card flat" style="padding:0">
+    <div class="tblwrap" style="border:none;margin:0">
+      <table><thead><tr><th>Symbol</th><th>PE</th><th>PB</th><th>ROE</th><th>D/E</th><th>Insiders</th><th>Institutions</th></tr></thead>
+      <tbody id="fndBody"></tbody></table>
+    </div>
+  </div>
+  <div id="fndCount" class="footer-note"></div>
+  <button class="morebtn" id="fndMore">show more ▾</button>
+</section>
+
+<section id="ipo">
+  <h2>IPO Terminal</h2>
+  <div id="ipoBox"></div>
+</section>
+
+<section id="crypto">
+  <h2>Crypto Watch — top 100</h2>
+  <div class="grid g3" id="cryptoGlobal"></div>
+  <div class="card"><div class="subhead">Fear & Greed</div><div id="fgBox"></div></div>
+  <div class="controls" style="margin-top:12px">
+    <input id="crySearch" type="search" placeholder="Search coin…">
+  </div>
+  <div class="card flat" style="padding:0">
+    <div class="tblwrap" style="border:none;margin:0">
+      <table><thead><tr><th>#</th><th>Coin</th><th>Price $</th><th>24h</th><th>7d</th><th>30d</th><th>Mcap $B</th><th>vs ATH</th></tr></thead>
+      <tbody id="cryBody"></tbody></table>
+    </div>
+  </div>
+  <button class="morebtn" id="cryMore">show more ▾</button>
+</section>
+
+<section id="ai">
+  <h2>AI Forecast — Google TimesFM 3.0</h2>
+  <div class="card"><div id="aiHead"></div></div>
+  <div class="grid g2" id="aiGrid"></div>
+</section>
+
+<section id="filings">
+  <h2>Company Filings — tier-1, last 7 days</h2>
+  <div class="controls" id="filChips"></div>
+  <div id="filBox"></div>
+</section>
+
+<section id="learn">
+  <h2>Learn — Dev's education library</h2>
+  <div id="eduBox"></div>
+</section>
+
+<section id="studies">
+  <h2>Studies — Sensex 46 years · Budget days</h2>
+  <div class="card" id="sensexCard"></div>
+  <div class="card" id="budgetCard"></div>
+</section>
+
+<section id="mynotes">
+  <h2>My Notes — Dev's course notes (Advance.pdf)</h2>
+  <div id="notesBox"></div>
+</section>
+
+<footer>
+  MARKET BRAIN · built by Sarvam AI for Dev · data auto-updates: stocks 3×/day · crypto every 6h · TimesFM Sundays
+  · TimesFM is statistical, not a trading signal · all numbers delayed/EOD, not live ticks.
+  <div class="flinks">
+    <a href="https://docs.google.com/spreadsheets/d/1zdqNSE_1DGCGeh2xQ0ltSULo4ubW4cm_w06K_MFMVjI/edit" target="_blank" rel="noopener">Market Data Hub (Sheets)</a>
+    <a href="https://docs.google.com/spreadsheets/d/1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc/edit" target="_blank" rel="noopener">Brain Hub (Sheets)</a>
+    <a href="https://github.com/devrajai/market-brain" target="_blank" rel="noopener">GitHub repo</a>
+  </div>
+</footer>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

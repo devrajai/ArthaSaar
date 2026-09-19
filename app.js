@@ -90,7 +90,7 @@ function renderDash() {
       '<div class="statline"><span>RSI < 40 (weak)</span><b class="neg">' + d.rsi_below_40 + "</b></div>" +
       '<div class="statline"><span>Up 3+ days</span><b class="pos">' + d.up_3plus_days + "</b>" +
       "<span>Down 3+ days</span><b class=\"neg\">" + d.down_3plus_days + "</b></div>" +
-      '<div class="statline"><span>Near 52w high</span><b>' + d.near_52w_high + "</b>" +
+      '<div class="statline"><span>Near 52w high</span><b>' + d.near_52w_high + "</b></div>" +
       "<span>Volume spike 2×</span><b>" + d.volume_spike_2x + "</b></div>";
   }, fail("breadthBox")));
   P.push(jload("fii-dii").then((d) => {
@@ -265,7 +265,7 @@ function renderFundamentals() {
           nf2(v.debtToEquity) + "</td><td>" +
           (v.heldPercentInsiders == null ? "—" : (v.heldPercentInsiders * 100).toFixed(1) + "%") +
           "</td><td>" + (v.heldPercentInstitutions == null ? "—" :
-            (v.heldPercentInstitutions * 100).toFixed(1) + "%") + "</td></tr>";
+          (v.heldPercentInstitutions * 100).toFixed(1) + "%") + "</td></tr>";
       }).join("");
       $("#fndMore").style.display = fndShown < L.length ? "block" : "none";
     };
@@ -398,7 +398,7 @@ function renderFilings() {
       const L = active === "All" ? fils : fils.filter((f) => f.category === active);
       L.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
       $("#filBox").innerHTML = L.slice(0, 60).map((f) =>
-        '<details class="gl"><summary><span class="sym">' + esc(f.symbol) + "</span> — " +
+        '<details class="gl"><summary><span class="sym">' + esc(f.symbol) + " — " +
         esc((f.subject || f.nse_desc || "").slice(0, 90)) +
         '<span class="badge-tier" style="margin-left:auto">' + esc(f.date) + " · " +
         esc(f.category) + "</span></summary><ul>" +
@@ -501,9 +501,131 @@ function renderNotes() {
   }, fail("notesBox"));
 }
 
+/* ---------- deep fundamentals (screener.in weekly) ---------- */
+let dfData = null, dfShown = 0;
+function renderDeepFund() {
+  if (dfData) return;
+  $("dfBody").innerHTML = '<tr><td colspan="12" class="loading">loading deep fundamentals…</td></tr>';
+  jload("screener-fundamentals").then((d) => {
+    dfData = d;
+    const keys = () => Object.keys(d.stocks || {});
+    const draw = () => {
+      const q = $("dfSearch").value.trim().toLowerCase();
+      const pe = +$("dfPE").value, roce = +$("dfROCE").value, sort = $("dfSort").value;
+      let L = keys().filter((k) => {
+        const v = d.stocks[k] || {};
+        if (q && !k.toLowerCase().includes(q)) return false;
+        if (pe && !(v["Stock P/E"] != null && v["Stock P/E"] < pe)) return false;
+        if (roce && !(v.ROCE != null && v.ROCE > roce)) return false;
+        return true;
+      });
+      const g = (x) => (x == null ? -1e9 : x);
+      L.sort((x, y) => {
+        const A = d.stocks[x] || {}, B = d.stocks[y] || {};
+        if (sort === "roce") return g(B.ROCE) - g(A.ROCE);
+        if (sort === "pe") return g(A["Stock P/E"] == null ? 1e9 : A["Stock P/E"]) - g(B["Stock P/E"] == null ? 1e9 : B["Stock P/E"]);
+        if (sort === "growth") return g(B["Net Profit_yoy"]) - g(A["Net Profit_yoy"]);
+        if (sort === "prom") return g(B.promoters_pct) - g(A.promoters_pct);
+        return g(B["Market Cap"]) - g(A["Market Cap"]);
+      });
+      $("dfCount").textContent = L.length + " of " + keys().length + " Nifty-500 stocks · showing " + Math.min(dfShown, L.length) + " · screener.in weekly";
+      $("dfBody").innerHTML = L.slice(0, dfShown).map((k) => {
+        const v = d.stocks[k] || {};
+        const yoy = (x) => (x == null ? "—" : '<span class="' + pctCls(x) + '">' + sign(x, 1) + "</span>");
+        const pl = v.pledge_pct;
+        return '<tr><td class="sym">' + esc(k) + "</td><td>" + nf2(v["Market Cap"]) +
+          "</td><td>" + nf2(v["Stock P/E"]) + "</td><td>" + nf2(v.ROCE) +
+          "</td><td>" + nf2(v.ROE) + "</td><td>" + nf2(v["Dividend Yield"]) +
+          "</td><td>" + (v.promoters_pct == null ? "—" : v.promoters_pct.toFixed(1) + "%") +
+          "</td><td>" + (v.fii_pct == null ? "—" : v.fii_pct.toFixed(1) + "%") +
+          "</td><td>" + (v.dii_pct == null ? "—" : v.dii_pct.toFixed(1) + "%") +
+          "</td><td>" + yoy(v.Sales_yoy) + "</td><td>" + yoy(v["Net Profit_yoy"]) +
+          "</td><td>" + (pl == null ? "—" : '<span class="' + (pl > 5 ? "neg" : "neu") + '">' + pl.toFixed(1) + "%</span>") + "</td></tr>";
+      }).join("");
+      $("dfMore").style.display = dfShown < L.length ? "block" : "none";
+    };
+    dfShown = 60; draw();
+    ["dfSearch", "dfPE", "dfROCE", "dfSort"].forEach((id) =>
+      $("#" + id).addEventListener("input", () => { dfShown = 60; draw(); }));
+    $("dfQuality").onclick = () => {
+      $("dfPE").value = "20"; $("dfROCE").value = "15"; $("dfSort").value = "growth";
+      dfShown = 60; draw();
+    };
+    $("dfMore").onclick = () => { dfShown += 100; draw(); };
+  }, fail("dfBody"));
+}
+
+/* ---------- futures ---------- */
+function renderFutures() {
+  $("futIdx").innerHTML = '<div class="loading">loading futures…</div>';
+  jload("futures").then((d) => {
+    $("futIdx").innerHTML = (d.indices || []).map((i) =>
+      '<div class="card"><div class="subhead">' + esc(i.symbol) + " futures — spot " + nf2(i.underlying) + "</div>" +
+      '<div class="tblwrap"><table><thead><tr><th>Expiry</th><th>Close</th><th>Open interest</th><th>OI change</th><th>Volume</th></tr></thead><tbody>' +
+      (i.contracts || []).map((c) => "<tr><td>" + esc(c.expiry) + "</td><td>" + nf2(c.close) +
+        "</td><td>" + c.oi.toLocaleString("en-IN") + "</td><td>" +
+        (c.oi_chg > 0 ? '<span class="pos">+' : c.oi_chg < 0 ? '<span class="neg">' : '<span class="neu">') +
+        c.oi_chg.toLocaleString("en-IN") + "</span></td><td>" + c.volume.toLocaleString("en-IN") + "</td></tr>").join("") +
+      "</tbody></table></div></div>").join("");
+    $("futBody").innerHTML = (d.stocks || []).map((s) =>
+      '<tr><td class="sym">' + esc(s.symbol) + "</td><td>" + esc(s.expiry) + "</td><td>" + nf2(s.close) +
+      "</td><td>" + nf2(s.underlying) + "</td><td>" +
+      (s.basis_pct == null ? "—" : '<span class="' + pctCls(s.basis_pct) + '">' + sign(s.basis_pct) + "</span>") +
+      "</td><td>" + s.oi.toLocaleString("en-IN") + "</td><td>" +
+      (s.oi_chg > 0 ? '<span class="pos">+' : s.oi_chg < 0 ? '<span class="neg">' : '<span class="neu">') +
+      s.oi_chg.toLocaleString("en-IN") + "</span></td></tr>").join("");
+    $("futNote").textContent = (d.stock_count || 0) + " F&O stocks · data of " + esc(d.date || "") + " · EOD bhavcopy — India has 3 monthly contracts at a time, no yearly futures";
+  }, fail("futIdx"));
+}
+
+/* ---------- global ---------- */
+function renderGlobal() {
+  jload("global").then((d) => {
+    const items = d.items || [];
+    const byN = (n) => items.filter((x) => x.name === n)[0];
+    $("globKpi").innerHTML = ["S&P 500", "Gold (COMEX)", "Crude Oil WTI", "USD-INR"]
+      .map((n) => kpi(n, byN(n))).join("");
+    $("globBody").innerHTML = items.map((s) => {
+      const hl = (s.high_52w && s.low_52w) ? nf2(s.high_52w) + " / " + nf2(s.low_52w) : "—";
+      const c = s.chg_pct;
+      return "<tr><td>" + esc(s.name) + "</td><td>" + nf2(s.price) + "</td><td>" +
+        (c == null ? "—" : '<span class="' + pctCls(c) + '">' + sign(c) + "</span>") +
+        '</td><td class="num">' + hl + "</td></tr>";
+    }).join("");
+    $("globNote").textContent = "updated " + esc((d.updated || "").slice(0, 16)) + " UTC · refreshed every 6h · yfinance (free)";
+  }, fail("globBody"));
+}
+
+/* ---------- news ---------- */
+let newsTopic = "All";
+function renderNews() {
+  $("newsBox").innerHTML = '<div class="loading">loading news…</div>';
+  jload("news").then((d) => {
+    const items = d.items || [];
+    const topics = ["All"].concat(Array.from(new Set(items.map((x) => x.topic).filter(Boolean))));
+    const draw = () => {
+      const L = newsTopic === "All" ? items : items.filter((x) => x.topic === newsTopic);
+      $("newsChips").innerHTML = topics.map((t) =>
+        '<button class="chip" data-t="' + esc(t) + '"' +
+        (t === newsTopic ? ' style="border-color:var(--border2);color:var(--text);background:var(--glass2)"' : "") +
+        ">" + esc(t) + "</button>").join("");
+      $("newsChips").querySelectorAll(".chip").forEach((b) =>
+        b.onclick = () => { newsTopic = b.getAttribute("data-t"); draw(); });
+      $("newsBox").innerHTML = L.slice(0, 60).map((n) =>
+        '<div class="card"><div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
+        '<span class="pill">' + esc(n.topic || "News") + "</span>" +
+        '<span class="footer-note">' + esc((n.time || "").slice(0, 16)) + "</span></div>" +
+        '<div style="margin:6px 0"><a href="' + esc(n.link || n.url || "#") + '" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;font-weight:600">' + esc(n.title) + "</a></div>" +
+        '<div class="footer-note">' + esc(n.source || "") + "</div></div>").join("") ||
+        '<div class="note">no items</div>';
+    };
+    draw();
+  }, fail("newsBox"));
+}
+
 /* ---------- lazy section loading ---------- */
 const loaders = {dash: renderDash, indices: renderIndices, screener: renderScreener,
-  fundamentals: renderFundamentals, ipo: renderIPO, crypto: renderCrypto, ai: renderAI,
+  fundamentals: renderFundamentals, deepfund: renderDeepFund, futures: renderFutures, ipo: renderIPO, crypto: renderCrypto, global: renderGlobal, news: renderNews, ai: renderAI,
   filings: renderFilings, learn: renderLearn, studies: renderStudies, mynotes: renderNotes};
 const loaded = new Set(["dash"]);
 renderDash();

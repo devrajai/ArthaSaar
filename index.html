@@ -36,8 +36,12 @@
       <a class="tab" href="#indices">Indices</a>
       <a class="tab" href="#screener">Screener</a>
       <a class="tab" href="#fundamentals">Fundamentals</a>
+      <a class="tab" href="#deepfund">Deep Fund</a>
+      <a class="tab" href="#futures">Futures</a>
       <a class="tab" href="#ipo">IPO</a>
       <a class="tab" href="#crypto">Crypto</a>
+      <a class="tab" href="#global">Global</a>
+      <a class="tab" href="#news">News</a>
       <a class="tab" href="#ai">AI Forecast</a>
       <a class="tab" href="#filings">Filings</a>
       <a class="tab" href="#learn">Learn</a>
@@ -128,6 +132,52 @@
   </div>
   <div id="fndCount" class="footer-note"></div>
   <button class="morebtn" id="fndMore">show more ▾</button>
+</section>
+
+<section id="deepfund">
+  <h2>Deep Fundamentals — Screener.in weekly</h2>
+  <div class="controls">
+    <input id="dfSearch" type="search" placeholder="Search stock name / symbol…" style="flex:2;min-width:150px">
+    <select id="dfPE"><option value="0">PE: any</option><option value="10">< 10</option><option value="15">< 15</option><option value="20">< 20</option><option value="30">< 30</option></select>
+    <select id="dfROCE"><option value="0">ROCE: any</option><option value="15">> 15%</option><option value="20">> 20%</option><option value="25">> 25%</option></select>
+    <select id="dfSort"><option value="mcap">Sort: MCap</option><option value="roce">ROCE</option><option value="pe">P/E</option><option value="growth">Profit YoY</option><option value="prom">Promoter %</option></select>
+    <button class="chip" id="dfQuality">Quality: PE<20 · ROCE>15 · Profit↑</button>
+  </div>
+  <div class="card flat" style="padding:0">
+    <div class="tblwrap" style="border:none;margin:0">
+      <table><thead><tr><th>Symbol</th><th>MCap ₹Cr</th><th>P/E</th><th>ROCE</th><th>ROE</th><th>DivY</th><th>Prom</th><th>FII</th><th>DII</th><th>Sales YoY</th><th>Profit YoY</th><th>Pledge</th></tr></thead>
+      <tbody id="dfBody"></tbody></table>
+    </div>
+  </div>
+  <div id="dfCount" class="footer-note"></div>
+  <button class="morebtn" id="dfMore">show more ▾</button>
+</section>
+
+<section id="futures">
+  <h2>Futures — F&O Contract Chain</h2>
+  <div id="futIdx"></div>
+  <div class="card">
+    <div class="subhead">Top Stock Futures — near month, by open interest</div>
+    <div class="tblwrap"><table><thead><tr><th>Symbol</th><th>Expiry</th><th>Fut close</th><th>Spot</th><th>Basis</th><th>Open interest</th><th>OI chg</th></tr></thead>
+    <tbody id="futBody"></tbody></table></div>
+    <div class="footer-note" id="futNote"></div>
+  </div>
+</section>
+
+<section id="global">
+  <h2>Global Markets</h2>
+  <div class="grid g3" id="globKpi"></div>
+  <div class="card">
+    <div class="tblwrap"><table><thead><tr><th>Market</th><th>Price</th><th>Chg</th><th>52w H / L</th></tr></thead>
+    <tbody id="globBody"></tbody></table></div>
+    <div class="footer-note" id="globNote"></div>
+  </div>
+</section>
+
+<section id="news">
+  <h2>News — India Market</h2>
+  <div class="controls" id="newsChips"></div>
+  <div id="newsBox"></div>
 </section>
 
 <section id="ipo">

@@ -1,0 +1,54 @@
+name: Global Watch
+on:
+  schedule:
+    # every 6 hours: 7:15 AM, 1:15 PM, 7:15 PM, 1:15 AM IST (7:15 AM captures US close)
+    - cron: '45 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: global-watch
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install deps
+        run: pip install yfinance
+
+      - name: Collect global markets (US indices, commodities, FX)
+        run: python scripts/global_collect.py
+
+      - name: Collect India market news (Google News RSS)
+        run: python scripts/news_collect.py
+
+      - name: Commit global + news data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A data
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: global watch + news data'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              echo "Push failed (attempt $i) — rebasing and retrying in 15s"
+              sleep 15
+            done
+            echo 'ERROR: could not push after 5 attempts'; exit 1
+          fi

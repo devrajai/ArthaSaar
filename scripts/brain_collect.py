@@ -8,6 +8,9 @@ from nsearchives.nseindia.com CSVs (works from datacenter IPs).
 History: BATCHED yfinance downloads (100 symbols per call, period=1y).
 Plain urllib Yahoo calls get blocked from datacenter IPs — yfinance handles
 the cookie/crumb dance (proven working for fundamentals on Actions runners).
+FIX 19/09/26: every symbol needs its own .NS suffix (a bare string join
+broke ~99% of tickers); rate-limit aware retry with backoff; 3s between
+batches; zero-division guards in analyse().
 Stooq CSV remains the per-symbol fallback. Local per-symbol history lives in
 data/history/SYMBOL.json (merged, capped at ~400 rows).
 
@@ -79,22 +82,56 @@ def fetch_universe():
 
 
 # ---------------------------------------------------------------- history
-def yahoo_batch(symbols):
-    """Batched daily candles via yfinance -> {symbol: [{date, close, volume}]}"""
+def _ticker(sym):
+    return sym if sym.endswith(".NS") else sym + ".NS"
+
+
+def yahoo_batch(symbols, retries=3):
+    """Batched daily candles via yfinance -> {symbol: [{date, close, volume}]}.
+    Every NSE symbol needs its own .NS suffix (a bare join broke this
+    before). Yahoo rate-limits datacenter IPs, so yfinance reports failed
+    downloads instead of raising — detect and retry those with backoff."""
     out = {}
-    try:
-        df = yf.download(" ".join(symbols) + ".NS", period="1y", interval="1d",
-                         group_by="ticker", threads=True, progress=False,
-                         auto_adjust=True)
-    except Exception as e:  # noqa: BLE001
-        print(f"  batch failed: {e}")
+    todo = list(symbols)
+    attempt = 0
+    parts = []
+    while todo and attempt <= retries:
+        tickers = [_ticker(s) for s in todo]
+        try:
+            part = yf.download(tickers, period="1y", interval="1d",
+                               group_by="ticker", threads=True, progress=False,
+                               auto_adjust=True)
+        except Exception as e:  # noqa: BLE001
+            print(f"  batch failed: {e}")
+            break
+        if part is not None and not part.empty:
+            parts.append(part)
+        cols = set()
+        for p in parts:
+            if isinstance(p.columns, __import__("pandas").MultiIndex):
+                cols |= {c for c in p.columns.get_level_values(0)}
+            else:
+                cols |= set(todo)
+        still = [s for s in todo if _ticker(s) not in cols]
+        got_now = len(todo) - len(still)
+        if not still or attempt == retries:
+            todo = still
+            break
+        # yfinance likely rate-limited the missing ones — back off, retry
+        wait = 90 * (attempt + 1)
+        print(f"  {len(still)} missing after attempt {attempt + 1} "
+              f"(got {got_now}), sleeping {wait}s")
+        time.sleep(wait)
+        todo = still
+        attempt += 1
+    if not parts:
         return out
-    if df is None or df.empty:
-        return out
-    multi = isinstance(df.columns, __import__("pandas").MultiIndex)
+    pandas = __import__("pandas")
+    df = parts[0] if len(parts) == 1 else pandas.concat(parts, axis=1)
+    multi = isinstance(df.columns, pandas.MultiIndex)
     for s in symbols:
         try:
-            sub = df[s] if multi else df
+            sub = df[_ticker(s)] if multi else df
             sub = sub.dropna(subset=["Close"])
             rows = []
             for date, r in sub.iterrows():
@@ -238,12 +275,12 @@ def analyse(symbol, meta, rows):
         "industry": meta.get("industry", ""),
         "tier": meta.get("tier", 1),
         "price": price,
-        "change_pct": round((price - prev) / prev * 100, 2),
+        "change_pct": round((price - prev) / prev * 100, 2) if prev else 0,
         "high_52w": max(w52),
         "low_52w": min(w52),
         "high_200d": max(d200),
         "low_200d": min(d200),
-        "from_52w_high_pct": round((price / max(w52) - 1) * 100, 2),
+        "from_52w_high_pct": round((price / max(w52) - 1) * 100, 2) if max(w52) else 0,
         "ema20": round(e20, 2) if e20 else None,
         "ema200": round(e200, 2) if e200 else None,
         "above_ema200": bool(e200 and price > e200),
@@ -291,7 +328,7 @@ def main():
                 got += 1
         print(f"history {start + len(chunk)}/{len(syms)} "
               f"(batch {got}/{len(chunk)} updated)")
-        time.sleep(1.0)
+        time.sleep(3.0)
 
     # ---- analyse everything we have history for
     results = []

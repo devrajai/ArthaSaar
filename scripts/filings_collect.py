@@ -34,8 +34,8 @@ REFERER = "https://www.nseindia.com/companies-listing/corporate-filings-announce
 KEEP_DAYS = 7
 
 CATS = [
+    ("AGM", r"\bagm\b|annual general meeting|annual report|voting result|scrutinizer|postal ballot|proceedings of annual"),
     ("Results", r"result|financial performance"),
-    ("AGM", r"\bagm\b|annual general meeting|annual report"),
     ("Board Meeting", r"board meeting|meeting of the board"),
     ("Investor Presentation", r"investor presentation|earnings call|conference call|presentation"),
     ("Shareholding", r"shareholding|share holding pattern"),

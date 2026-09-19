@@ -1,5 +1,4 @@
 name: Daily Brain Collect
-
 on:
   schedule:
     # Run 1: 18:35 IST Mon-Sat (after market close, data settled)
@@ -40,6 +39,9 @@ jobs:
 
       - name: Collect pre-open + FII/DII flows + index changes
         run: python scripts/phase2_collect.py
+
+      - name: Collect corporate filings (results/AGM/presentations)
+        run: python scripts/filings_collect.py
 
       - name: Update budget day study
         run: python scripts/budget_study.py

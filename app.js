@@ -165,6 +165,23 @@ function renderDash() {
 }
 
 /* ---------- indices ---------- */
+const IDX_SHORT = {"NIFTY 50": "NIFTY", "NIFTY BANK": "BANK", "INDIA VIX": "VIX",
+  "NIFTY MIDCAP 100": "MIDCAP", "NIFTY SMALLCAP 100": "SMALLCAP", "NIFTY NEXT 50": "NEXT 50",
+  "NIFTY MIDCAP 150": "MIDCAP 150", "NIFTY SMALLCAP 250": "SMALLCAP 250",
+  "NIFTY FINANCIAL SERVICES": "FIN SERV", "NIFTY FIN SERVICE": "FIN SERV",
+  "NIFTY SERV SECTOR": "SERV SEC", "NIFTY DIVIDEND OPPS 50": "DIV OPPS",
+  "NIFTY LOW VOLATILITY 50": "LOW VOL 50", "NIFTY HIGH BETA 50": "HI BETA 50",
+  "NIFTY ALPHA 50": "ALPHA 50", "NIFTY QUALITY 30": "QUALITY 30", "NIFTY VALUE 20": "VALUE 20",
+  "NIFTY GROWSECT 15": "GROW SEC 15", "NIFTY PSU BANK": "PSU BANK",
+  "NIFTY PRIVATE BANK": "PVT BANK", "NIFTY BANKING": "BANKING"};
+function idxShort(n) {
+  if (IDX_SHORT[n]) return IDX_SHORT[n];
+  return String(n)
+    .replace(/^(S&P CNX |S&P BSE |CNX |BSE |NSE )/, "")
+    .replace(/^(NIFTY|NIFTY50) ?/, "")
+    .replace(/ (INDEX|TR|PR)$/, "")
+    .replace(/ (50|100|150|200|250|500|1000)$/, "") || String(n);
+}
 function renderIndices() {
   jload("indices-all").then((d) => {
     const body = $("#idxBody"), all = d.indices || [];
@@ -174,7 +191,7 @@ function renderIndices() {
       body.innerHTML = list.map((i) => {
         const pos = (i.year_high && i.year_high > i.year_low) ?
           Math.round((i.price - i.year_low) / (i.year_high - i.year_low) * 100) : null;
-        return "<tr><td>" + esc(i.index) + "</td><td>" + nf2(i.price) +
+        return '<tr><td class="idxnm"><span class="sym">' + esc(idxShort(i.index)) + '</span><span class="cname">' + esc(i.index) + "</span></td><td>" + nf2(i.price) +
           '</td><td class="' + pctCls(i.change_pct) + '">' + sign(i.change_pct) +
           "</td><td>" + (pos == null ? "—" : pos + "%") +
           "</td><td>" + esc(i.pe || "—") + "</td><td>" + esc(i.pb || "—") + "</td></tr>";

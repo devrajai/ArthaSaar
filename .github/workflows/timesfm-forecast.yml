@@ -30,7 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install "timesfm[torch]" yfinance
 
-      - name: Run TimesFM 3.0 forecasts (88 series: indices + top 50 stocks + crypto + global)
+      - name: Run TimesFM 3.0 forecasts (88 series — indices, top 50 stocks, crypto, global)
         run: python scripts/timesfm_forecast.py
 
       - name: Commit forecast data

@@ -113,6 +113,54 @@ def ff_week():
     return ded
 
 
+def gen_india_events():
+    """India data releases follow fixed monthly patterns (MoSPI/CBIC/DGFT).
+    Dates are the usual release days - marked 'expected' to stay honest."""
+    from datetime import date
+    out = []
+    today = date.today()
+    months = [0, 1, 2]  # this + next 2 months
+
+    def add(y, m, d, title, impact, note="expected date"):
+        try:
+            dt = date(y, m, d)
+        except ValueError:
+            return
+        if dt < today or (dt - today).days > 60:
+            return
+        out.append({"title": title + " (" + note + ")",
+                    "country": "INR",
+                    "date_ist": dt.isoformat(),
+                    "time_ist": "17:30" if "17:30" else "",
+                    "impact": impact, "forecast": "", "previous": ""})
+
+    y, m = today.year, today.month
+    for off in months:
+        mm, yy = m + off, y
+        while mm > 12:
+            mm -= 12
+            yy += 1
+        # monthly releases around the 12th (CPI + IIP)
+        add(yy, mm, 12, "India CPI inflation (MoSPI)", "High")
+        add(yy, mm, 12, "India IIP industrial production", "Medium")
+        # trade data ~15th
+        add(yy, mm, 15, "India trade balance / exports-imports", "Medium")
+        # auto sales on the 1st
+        nm, ny = mm + 1, yy
+        if nm > 12:
+            nm, ny = 1, ny + 1
+        add(ny, nm, 1, "India monthly auto sales numbers", "Medium")
+        # quarterly GDP: last working day of Feb, May, Aug, Nov
+        if mm in (2, 5, 8, 11):
+            if mm == 2:
+                last = 28
+            elif mm in (5, 8, 11):
+                import calendar
+                last = calendar.monthrange(yy, mm)[1]
+            add(yy, mm, last, "India quarterly GDP release", "High")
+    return out
+
+
 def earnings():
     """Upcoming quarterly-result dates: top Indian stocks + US mega caps."""
     out = []
@@ -157,7 +205,9 @@ def main():
     DATA.mkdir(exist_ok=True)
     print("=== events collect ===")
     week = ff_week()
-    print(f"week events total (this+next): {len(week)}")
+    week.extend(gen_india_events())
+    week.sort(key=lambda x: (x["date_ist"], x["time_ist"]))
+    print(f"week events total (this+next+india): {len(week)}")
     print("sample:", week[:3] if week else "none")
 
     print("=== earnings ===")

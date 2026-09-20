@@ -15,7 +15,7 @@ concurrency:
 jobs:
   forecast:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install "timesfm[torch]" yfinance
 
-      - name: Run TimesFM 3.0 forecasts (indices + top stocks + crypto)
+      - name: Run TimesFM 3.0 forecasts (88 series: indices + top 50 stocks + crypto + global)
         run: python scripts/timesfm_forecast.py
 
       - name: Commit forecast data
@@ -41,7 +41,7 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes.'
           else
-            git commit -m 'chore: timesfm 3.0 weekly forecasts'
+            git commit -m 'chore: timesfm 3.0 weekly forecasts (88 series)'
             for i in 1 2 3 4 5; do
               if git pull --rebase --autostash origin main && git push; then
                 echo 'Pushed successfully'; exit 0

@@ -787,9 +787,7 @@ function drawCompany(d) {
     (off ? '<div class="card"><div class="subhead">Management</div>' + off + "</div>" : "") +
     '<div class="card"><div class="subhead">Quarterly results (Rs Cr)</div>' + coTbl(d.quarters, 6) + "</div>" +
     '<div class="card"><div class="subhead">Profit and Loss — yearly (Rs Cr)</div>' + coTbl(d.profit_loss, 6) + "</div>" +
-    '<div class="card"><div class="subhead">Shareholding (%)</div>' + coTbl(d.shareholding, 6) + "</div>" +
-    '<div class="footer-note">source: <a href="' + esc(d.url) + '" target="_blank" rel="noopener">screener.in</a> + yfinance · updated ' +
-    esc((d.updated || "").slice(0, 16)) + " · educational use only</div>";
+    '<div class="card"><div class="subhead">Shareholding (%)</div>' + coTbl(d.shareholding, 6) + "</div>";
 }
 function renderCompany(sym) {
   const res = $("#coResults"), body = $("#coBody");

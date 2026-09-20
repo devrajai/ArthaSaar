@@ -734,6 +734,70 @@ function renderNews() {
   }, fail("newsBox"));
 }
 
+/* ---------- events calendar ---------- */
+let evFilter = "All";
+function renderEvents() {
+  $("#evBox").innerHTML = '<div class="loading">loading event calendar…</div>';
+  jload("events").then((d) => {
+    const draw = () => {
+      const W = d.week || [], K = d.key_dates || [], E = d.earnings || [];
+      const chips = ["All", "High", "US", "India", "Earnings"];
+      $("#evChips").innerHTML = chips.map((c) =>
+        '<button class="chip' + (evFilter === c ? " on" : "") + '" data-ev="' + c + '">' + c + "</button>").join("");
+      $("#evChips").querySelectorAll(".chip").forEach((b) =>
+        b.onclick = () => { evFilter = b.getAttribute("data-ev"); draw(); });
+      const CNAME = {USD: "US", EUR: "EU", GBP: "UK", JPY: "Japan", CNY: "China",
+        INR: "India", ALL: "All", CAD: "Canada", AUD: "Australia", CHF: "Swiss", NZD: "NZ", IND: "India"};
+      const dot = (imp) => '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 4px;vertical-align:middle;background:' +
+        (imp === "High" ? "#fb5c7d" : imp === "Medium" ? "#f7b955" : "#5d6f88") + '"></span>';
+      let html = "";
+      if (evFilter !== "Earnings") {
+        let list = W.slice();
+        if (evFilter === "High") list = list.filter((e) => e.impact === "High");
+        if (evFilter === "US") list = list.filter((e) => e.country === "USD");
+        if (evFilter === "India") list = list.filter((e) => e.country === "INR" || e.country === "IND" || e.country === "ALL");
+        const byDate = {};
+        list.forEach((e) => { (byDate[e.date_ist] = byDate[e.date_ist] || []).push(e); });
+        const today = new Date().toISOString().slice(0, 10);
+        Object.keys(byDate).sort().forEach((dt) => {
+          const dd = new Date(dt + "T12:00:00");
+          const label = dt === today ? "🔵 TODAY" :
+            dd.toLocaleDateString("en-IN", {weekday: "short", day: "numeric", month: "short"});
+          html += '<div class="card"><div class="subhead">' + esc(label) + "</div>" +
+            byDate[dt].map((e) =>
+              '<div class="statline"><span>' + esc(e.time_ist || "all day") + dot(e.impact) +
+              esc(CNAME[e.country] || e.country) + "</span><b style=\"text-align:right\">" + esc(e.title) +
+              (e.forecast ? ' <span style="color:var(--dim)">exp ' + esc(e.forecast) + " · prev " + esc(e.previous || "?") + "</span>" : "") +
+              "</b></div>").join("") + "</div>";
+        });
+      }
+      if (evFilter === "All" || evFilter === "High" || evFilter === "US" || evFilter === "India") {
+        const K2 = K.filter((k) => (evFilter === "High" ? k.impact === "High" :
+          evFilter === "US" ? k.country === "USD" :
+          evFilter === "India" ? k.country === "IND" : true));
+        if (K2.length) html += '<div class="hgroup">KEY DATES — FED · RBI · BUDGET · ELECTIONS</div><div class="card">' +
+          K2.map((k) => '<div class="statline"><span>' + esc(k.date) + (k.date_end && k.date_end !== k.date ? " → " + esc(k.date_end) : "") +
+            dot(k.impact) + esc(CNAME[k.country] || k.country) + "</span><b style=\"text-align:right\">" + esc(k.title) + "</b></div>").join("") + "</div>";
+      }
+      if (evFilter === "All" || evFilter === "Earnings" || evFilter === "US" || evFilter === "India") {
+        const E2 = E.filter((e) => (evFilter === "US" ? e.country === "US" : evFilter === "India" ? e.country === "IN" : true));
+        if (E2.length) {
+          const byDate = {};
+          E2.forEach((e) => { (byDate[e.date] = byDate[e.date] || []).push(e); });
+          html += '<div class="hgroup">UPCOMING QUARTERLY RESULTS</div>' +
+            Object.keys(byDate).sort().map((dt) =>
+              '<div class="card"><div class="subhead">' + esc(dt) + "</div>" +
+              byDate[dt].map((e) => '<div class="statline"><span>' + (e.country === "IN" ?
+                '<a href="#company/' + esc(e.symbol) + '">' + esc(e.symbol) + "</a>" : esc(e.symbol)) +
+                (e.country === "US" ? " (US)" : "") + "</span><b style=\"text-align:right;color:var(--dim)\">quarterly result</b></div>").join("") + "</div>").join("");
+        }
+      }
+      $("#evBox").innerHTML = html + '<div class="footer-note">all times IST · economic calendar: this week + next week · refreshed daily 6:10 AM IST · Fed/RBI/budget dates from official calendars</div>';
+    };
+    draw();
+  }, fail("evBox"));
+}
+
 /* ---------- company cards ---------- */
 let coIndex = null;
 function coSearchDraw() {
@@ -808,7 +872,7 @@ function renderCompany(sym) {
 }
 
 /* ---------- app-style view router ---------- */
-const loaders = {dash: renderDash, indices: renderIndices, screener: renderScreener,
+const loaders = {dash: renderDash, indices: renderIndices, screener: renderScreener, events: renderEvents,
   fundamentals: renderFundamentals, deepfund: renderDeepFund, futures: renderFutures, ipo: renderIPO, crypto: renderCrypto, global: renderGlobal, news: renderNews, ai: renderAI,
   filings: renderFilings, learn: renderLearn, studies: renderStudies, mynotes: renderNotes};
 const loaded = new Set([]);

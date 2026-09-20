@@ -15,7 +15,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -34,11 +34,13 @@ jobs:
             echo 'No changes.'
           else
             git commit -m 'chore: company cards weekly (screener.in + yfinance)'
-            for i in 1 2 3 4 5; do
-              if git pull --rebase --autostash origin main && git push; then
+            for i in 1 2 3 4 5 6 7 8; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
                 echo 'Pushed successfully'; exit 0
               fi
-              sleep 15
+              git rebase --abort || true
+              git pull --rebase --autostash -X theirs origin main && git push && exit 0
+              sleep 20
             done
             echo 'ERROR: push failed'; exit 1
           fi

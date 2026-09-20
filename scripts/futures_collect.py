@@ -2,7 +2,9 @@
 """F&O futures collector — NSE UDiFF bhavcopy (free, no key).
 Gives the full monthly contract chain for index futures (NIFTY, BANKNIFTY, ...)
 and the near-month contract for top stock futures by open interest.
-Output: data/futures.json — feeds the website Futures tab.
+Also computes NIFTY Put/Call Ratio (OI + volume) and max pain from the
+options (IDO) rows in the same file.
+Output: data/futures.json — feeds the website Futures tab + Dashboard.
 
 Note: NSE lists only 3 monthly expiries at a time (near/next/far) — there are
 no yearly-dated futures in India; this file captures every active expiry.
@@ -98,6 +100,45 @@ def main():
             s["basis_pct"] = round((s["close"] - s["underlying"])
                                    / s["underlying"] * 100, 2)
 
+    # ---- options analytics (IDO rows): Nifty PCR + max pain ----
+    ido = [r for r in rows if r["FinInstrmTp"] == "IDO"]
+    oint = lambda r: int(num(r["OpnIntrst"]) or 0)
+    ovat = lambda r: int(num(r["TtlTradgVol"]) or 0)
+    pcr = {}
+    try:
+        nifty = [r for r in ido if r["TckrSymb"] == "NIFTY"]
+        ce_oi = sum(oint(r) for r in nifty if r["OptnTp"] == "CE")
+        pe_oi = sum(oint(r) for r in nifty if r["OptnTp"] == "PE")
+        ce_v = sum(ovat(r) for r in nifty if r["OptnTp"] == "CE")
+        pe_v = sum(ovat(r) for r in nifty if r["OptnTp"] == "PE")
+        all_ce = sum(oint(r) for r in ido if r["OptnTp"] == "CE")
+        all_pe = sum(oint(r) for r in ido if r["OptnTp"] == "PE")
+        # max pain on nearest expiry
+        from collections import defaultdict
+        nearest = min(set(r["XpryDt"] for r in nifty))
+        near = [r for r in nifty if r["XpryDt"] == nearest]
+        ois = defaultdict(lambda: {"CE": 0, "PE": 0})
+        for r in near:
+            ois[num(r["StrkPric"])][r["OptnTp"]] += oint(r)
+        strikes = sorted(ois)
+        max_pain = None
+        if strikes:
+            max_pain = int(min(strikes, key=lambda S: sum(
+                o["CE"] * max(0, S - K) + o["PE"] * max(0, K - S)
+                for K, o in ois.items())))
+        pcr = {
+            "nifty_pcr_oi": round(pe_oi / ce_oi, 3) if ce_oi else None,
+            "nifty_pcr_vol": round(pe_v / ce_v, 3) if ce_v else None,
+            "nifty_call_oi": ce_oi, "nifty_put_oi": pe_oi,
+            "all_index_pcr_oi": round(all_pe / all_ce, 3) if all_ce else None,
+            "nifty_max_pain": max_pain,
+            "nifty_expiry": nearest,
+            "nifty_spot": fnum(nifty[0], "UndrlygPric") if nifty else None,
+        }
+        print("PCR:", pcr)
+    except Exception as e:  # noqa: BLE001
+        print("PCR computation failed:", e)
+
     payload = {
         "updated": datetime.now(timezone.utc).isoformat(),
         "date": used.strftime("%d-%m-%Y"),
@@ -105,6 +146,7 @@ def main():
                  "active monthly expiry. India has no yearly-dated futures — "
                  "3 monthly contracts exist at a time."),
         "indices": [{"symbol": k, **v} for k, v in sorted(indices.items())],
+        "pcr": pcr,
         "stocks": stocks[:80],
         "stock_count": len(stocks),
     }

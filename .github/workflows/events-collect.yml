@@ -1,0 +1,45 @@
+name: Events Calendar
+on:
+  schedule:
+    # daily 6:10 AM IST — day's economic calendar fresh before market
+    - cron: '10 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: events-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install deps
+        run: pip install requests yfinance
+      - name: Collect global event calendar
+        run: python scripts/events_collect.py
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A data/events.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: daily global event calendar'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 15
+            done
+            echo 'ERROR: push failed'; exit 1
+          fi

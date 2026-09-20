@@ -235,8 +235,8 @@ function renderScreener() {
       const L = filteredStocks();
       $("#scrCount").textContent = L.length + " stocks match · showing " + Math.min(scrShown, L.length);
       $("#scrBody").innerHTML = L.slice(0, scrShown).map((s) =>
-        "<tr><td><span class=\"sym\">" + esc(s.symbol) +
-        '<span class="cname">' + esc(s.company || "") + "</span></span></td>" +
+        "<tr><td><span class=\"sym\"><a href=\"#company/" + esc(s.symbol) + "\">" + esc(s.symbol) + "</a>" +
+        '<span class="cname">' + esc(s.company || "") + "</span></a></span></td>" +
         "<td>" + nf2(s.price) + '</td><td class="' + pctCls(s.change_pct) + '">' +
         sign(s.change_pct) + "</td><td>" + nf2(s.rsi14) + "</td><td>" +
         (s.from_52w_high_pct == null ? "—" : s.from_52w_high_pct + "%") +
@@ -276,7 +276,7 @@ function renderFundamentals() {
       $("#fndCount").textContent = L.length + " stocks · showing " + Math.min(fndShown, L.length);
       $("#fndBody").innerHTML = L.slice(0, fndShown).map((k) => {
         const v = d[k] || {};
-        return "<tr><td class=\"sym\">" + esc(k) + "</td><td>" + nf2(v.trailingPE) +
+        return "<tr><td class=\"sym\"><a href=\"#company/" + esc(k) + "\">" + esc(k) + "</a></td><td>" + nf2(v.trailingPE) +
           "</td><td>" + nf2(v.priceToBook) + "</td><td>" +
           (v.returnOnEquity == null ? "—" :
             (v.returnOnEquity * 100).toFixed(1) + "%") + "</td><td>" +
@@ -629,7 +629,7 @@ function renderDeepFund() {
         const v = d.stocks[k] || {};
         const yoy = (x) => (x == null ? "—" : '<span class="' + pctCls(x) + '">' + sign(x, 1) + "</span>");
         const pl = v.pledge_pct;
-        return '<tr><td class="sym">' + esc(k) + "</td><td>" + nf2(v["Market Cap"]) +
+        return '<tr><td class="sym"><a href="#company/' + esc(k) + '">' + esc(k) + "</a></td><td>" + nf2(v["Market Cap"]) +
           "</td><td>" + nf2(v["Stock P/E"]) + "</td><td>" + nf2(v.ROCE) +
           "</td><td>" + nf2(v.ROE) + "</td><td>" + nf2(v["Dividend Yield"]) +
           "</td><td>" + (v.promoters_pct == null ? "—" : v.promoters_pct.toFixed(1) + "%") +
@@ -719,6 +719,81 @@ function renderNews() {
   }, fail("newsBox"));
 }
 
+/* ---------- company cards ---------- */
+let coIndex = null;
+function coSearchDraw() {
+  const q = $("#coSearch").value.trim().toUpperCase();
+  const body = $("#coResults");
+  if (!q) { body.innerHTML = '<div class="note">Type a stock name or symbol — tap a result to open its full company card.</div>'; return; }
+  const keys = Object.keys(coIndex || {}).filter((k) => !k.startsWith("_"));
+  const L = keys.filter((k) => k.includes(q) ||
+    (coIndex[k].name || "").toUpperCase().includes(q)).slice(0, 15);
+  body.innerHTML = L.map((k) => '<a class="co-res" href="#company/' + esc(k) + '"><b>' +
+    esc(k) + "</b> · " + esc(coIndex[k].name) + '<span class="t-sb"> ' +
+    esc(coIndex[k].sector || "") + "</span></a>").join("") || '<div class="note">no match</div>';
+}
+function coTbl(rows, last) {
+  if (!rows || !rows.length) return '<div class="note">no data</div>';
+  const R = rows.filter((r) => r.length > 1);
+  if (!R.length) return '<div class="note">no data</div>';
+  const trim = (r) => (r.length > last + 1 ? [r[0]].concat(r.slice(-last)) : r);
+  const shown = R.map(trim);
+  const width = shown[0].length;
+  const hcells = shown[0].slice(1).map((x) => "<th>" + esc(x) + "</th>").join("");
+  const bodyRows = shown.slice(1).filter((r) => r.length === width).map((r) =>
+    "<tr><td class=\"lbl\">" + esc(r[0].replace(/\s*\+$/, "")) + "</td>" +
+    r.slice(1).map((c) => "<td>" + esc(c) + "</td>").join("") + "</tr>").join("");
+  return '<div class="tblwrap"><table><thead><tr><th></th>' + hcells + "</tr></thead><tbody>" +
+    bodyRows + "</tbody></table></div>";
+}
+function drawCompany(d) {
+  const box = $("#coBody");
+  const p = d.profile || {};
+  const top = d.top || {};
+  const kpis = ["Market Cap", "Current Price", "Stock P/E", "ROCE", "ROE", "Dividend Yield", "Book Value", "High / Low"]
+    .filter((k) => top[k]).map((k) =>
+      '<div class="kpi"><div class="k-name">' + esc(k.toUpperCase()) + '</div><div class="k-val" style="font-size:14.5px">' + esc(top[k]) + "</div></div>").join("");
+  const off = (p.officers || []).map((o) =>
+    '<div class="statline"><span>' + esc(o.title) + '</span><b style="text-align:right">' +
+    esc(o.name) + (o.age ? " · " + o.age : "") + "</b></div>").join("");
+  box.innerHTML =
+    '<div class="card"><div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
+    '<b style="font-size:16px">' + esc(d.name) + '</b><span class="badge-tier">' + esc(d.symbol) + "</span></div>" +
+    '<div class="note" style="margin-top:4px">' + esc(p.sector || "") + " · " + esc(p.industry || "") +
+    (p.employees ? " · " + Number(p.employees).toLocaleString("en-IN") + " employees" : "") + "</div>" +
+    (p.website ? '<div class="note" style="margin-top:4px"><a href="' + esc(p.website) +
+      '" target="_blank" rel="noopener">' + esc(p.website.replace(/^https?:\/\//, "")) + " ↗</a></div>" : "") + "</div>" +
+    '<div class="grid g3" style="margin-top:10px">' + kpis + "</div>" +
+    (p.summary ? '<div class="card"><div class="subhead">Company story</div><div class="note">' +
+      esc(p.summary) + "</div></div>" : "") +
+    (d.about ? '<div class="card"><div class="subhead">About</div><div class="note">' + esc(d.about) + "</div></div>" : "") +
+    (d.key_points ? '<div class="card"><div class="subhead">Key points</div><details class="gl"><summary>show</summary><ul><li>' +
+      esc(d.key_points) + "</li></ul></details></div>" : "") +
+    (off ? '<div class="card"><div class="subhead">Management</div>' + off + "</div>" : "") +
+    '<div class="card"><div class="subhead">Quarterly results (Rs Cr)</div>' + coTbl(d.quarters, 6) + "</div>" +
+    '<div class="card"><div class="subhead">Profit and Loss — yearly (Rs Cr)</div>' + coTbl(d.profit_loss, 6) + "</div>" +
+    '<div class="card"><div class="subhead">Shareholding (%)</div>' + coTbl(d.shareholding, 6) + "</div>" +
+    '<div class="footer-note">source: <a href="' + esc(d.url) + '" target="_blank" rel="noopener">screener.in</a> + yfinance · updated ' +
+    esc((d.updated || "").slice(0, 16)) + " · educational use only</div>";
+}
+function renderCompany(sym) {
+  const res = $("#coResults"), body = $("#coBody");
+  if (!sym) {
+    body.innerHTML = "";
+    if (!coIndex) {
+      jload("company-index").then((d) => { coIndex = d; coSearchDraw(); },
+        () => { coIndex = {}; coSearchDraw(); });
+    } else coSearchDraw();
+    return;
+  }
+  res.innerHTML = "";
+  body.innerHTML = '<div class="loading">loading company card…</div>';
+  jload("companies/" + sym.toUpperCase()).then(drawCompany, function () {
+    body.innerHTML = '<div class="note">No company card for ' + esc(sym) +
+      " yet — cards are being built for all Nifty 500 stocks (weekly). Try RELIANCE, TCS, HDFCBANK, INFY…</div>";
+  });
+}
+
 /* ---------- app-style view router ---------- */
 const loaders = {dash: renderDash, indices: renderIndices, screener: renderScreener,
   fundamentals: renderFundamentals, deepfund: renderDeepFund, futures: renderFutures, ipo: renderIPO, crypto: renderCrypto, global: renderGlobal, news: renderNews, ai: renderAI,
@@ -737,8 +812,11 @@ function showView(id) {
 }
 function routeFromHash() {
   const h = (location.hash || "").replace("#/", "#");
-  const id = h.replace("#", "") || "home";
+  const parts = h.replace("#", "").split("/");
+  const id = parts[0] || "home";
   showView(id);
+  if (id === "company") renderCompany(parts[1] || "");
 }
 window.addEventListener("hashchange", routeFromHash);
+$("#coSearch").addEventListener("input", () => { if (!location.hash || location.hash.indexOf("#company") === 0) coSearchDraw(); });
 routeFromHash();

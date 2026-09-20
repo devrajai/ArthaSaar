@@ -382,18 +382,33 @@ function sparkline(path) {
 }
 function renderAI() {
   jload("timesfm_forecasts").then((d) => {
+    const F = d.forecasts || [];
+    const up = F.filter((f) => f.direction === "up").length;
     $("#aiHead").innerHTML = '<div class="kv"><span>Model</span><b>' + esc(d.model) +
-      "</b><span>Forecast</span><b>" + esc(d.horizon_days) + " trading days ahead (weekly, Sundays)</b>" +
+      "</b><span>Coverage</span><b>" + F.length + " series — indices, top 50 stocks, crypto, global</b>" +
+      "<span>Forecast</span><b>" + esc(d.horizon_days) + " trading days ahead (weekly, Sundays)</b>" +
       "<span>Updated</span><b>" + esc((d.updated || "").slice(0, 10)) + "</b>" +
-      '<span>Context</span><b>last ' + esc(d.context_days) + " daily closes</b></div>" +
+      '<span>Bias</span><b>' + up + " up · " + (F.length - up) + " down / flat</b></div>" +
       '<div class="note" style="margin-top:8px">' + esc(d.disclaimer) + "</div>";
-    $("#aiGrid").innerHTML = (d.forecasts || []).map((f) =>
+    const catName = {index: "Indices", stock: "Top 50 stocks", crypto: "Crypto top 10", global: "Global and FX"};
+    const card = (f) =>
       '<div class="kpi"><div class="k-name">' + esc(f.name) + "</div>" +
-      '<div class="k-val" style="font-size:15px">$' + nf2(f.as_of_last_close) + " → " +
+      '<div class="k-val" style="font-size:15px">' + nf2(f.as_of_last_close) + " → " +
       nf2(f.median_end) + "</div>" +
       '<div class="k-chg ' + pctCls(f.median_chg_pct) + '">median ' + sign(f.median_chg_pct) +
       ' · band <span class="neg">' + sign(f.low10_chg_pct, 1) + "</span> … <span class=\"pos\">" +
-      sign(f.high90_chg_pct, 1) + "</span></div>" + sparkline(f.median_path) + "</div>").join("");
+      sign(f.high90_chg_pct, 1) + "</span></div>" + sparkline(f.median_path) + "</div>";
+    if (F.some((f) => f.cat)) {
+      $("#aiGrid").className = "";
+      $("#aiGrid").innerHTML = ["index", "stock", "crypto", "global"].map((c) => {
+        const L = F.filter((f) => f.cat === c);
+        if (!L.length) return "";
+        return '<div class="hgroup">' + (catName[c] || c) + " (" + L.length + ")</div>" +
+          '<div class="grid g2">' + L.map(card).join("") + "</div>";
+      }).join("");
+    } else {
+      $("#aiGrid").innerHTML = F.map(card).join("");
+    }
   }, fail("aiGrid"));
 }
 
@@ -704,7 +719,7 @@ function renderNews() {
       $("#newsChips").innerHTML = topics.map((t) =>
         '<button class="chip" data-t="' + esc(t) + '"' +
         (t === newsTopic ? ' style="border-color:var(--border2);color:var(--text);background:var(--glass2)"' : "") +
-        ">" + esc(t) + "</button>").join("");
+        ">" + esc(t) + ">" + "</button>").join("");
       $("#newsChips").querySelectorAll(".chip").forEach((b) =>
         b.onclick = () => { newsTopic = b.getAttribute("data-t"); draw(); });
       $("#newsBox").innerHTML = L.slice(0, 60).map((n) =>

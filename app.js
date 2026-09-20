@@ -1,6 +1,7 @@
 /* MARKET BRAIN app — fetches live repo JSON, renders all sections.
    No libraries. Mobile-first. No sticky, no backdrop-filter. */
 "use strict";
+if (window.MB_LOCKED) throw new Error("locked");
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g,
   (c) => ({"&":"\u0026amp;","<":"\u0026lt;",">":"\u0026gt;",'"':"\u0026quot;","'":"\u0026#39;"}[c]));
@@ -413,13 +414,91 @@ function renderFilings() {
   }, fail("filBox"));
 }
 
-/* ---------- education ---------- */
+/* ---------- learn: education hub ---------- */
+let lcData = null, eduData = null, learnTab = "course", stratType = "intraday";
 function renderLearn() {
-  $("#eduBox").innerHTML = '<div class="loading">loading library…</div>';
-  jload("education").then((e) => {
+  $("#eduBox").innerHTML = '<div class="loading">loading learning hub…</div>';
+  const P = [];
+  P.push(jload("learn-content").then((d) => { lcData = d; }, () => {}));
+  P.push(jload("education").then((d) => { eduData = d; }, () => {}));
+  Promise.allSettled(P).then(drawLearn);
+}
+function learnChips() {
+  const tabs = [["course", "Course"], ["strategies", "Strategies"], ["glossary", "Glossary"],
+    ["rules", "Rules"], ["psychology", "Psychology"], ["selection", "Pick Stocks"],
+    ["media", "Videos & Books"]];
+  $("#learnChips").innerHTML = tabs.map(([id, label]) =>
+    '<button class="chip' + (learnTab === id ? " on" : "") + '" data-lt="' + id + '">' + label + "</button>").join("");
+  $("#learnChips").querySelectorAll(".chip").forEach((b) =>
+    b.onclick = () => { learnTab = b.dataset.lt; drawLearn(); });
+}
+function drawLearn() {
+  learnChips();
+  const box = $("#eduBox");
+  const d = lcData || {};
+  const ul = (items) => '<ul style="margin:8px 0 4px 16px;font-size:13px;line-height:1.7">' +
+    items.map((x) => "<li>" + esc(x) + "</li>").join("") + "</ul>";
+  if (learnTab === "course") {
+    const lvl = (name, key) => (d.levels && d.levels[key] ?
+      '<div class="card"><div class="subhead">' + name + " (" + d.levels[key].length + ")</div>" +
+      ul(d.levels[key]) + "</div>" : "");
+    box.innerHTML =
+      '<div class="note" style="margin-bottom:10px">' + esc(d.note || "") +
+      " Read in order: Beginner first, then Intermediate, then Advanced.</div>" +
+      lvl("Beginner — first 6 months", "beginner") +
+      lvl("Intermediate — 6 to 18 months", "intermediate") +
+      lvl("Advanced — 18 months plus", "advanced") +
+      (d.quick_tips ? '<div class="card"><div class="subhead">Quick tips — one line each</div>' +
+        ul(d.quick_tips) + "</div>" : "");
+  } else if (learnTab === "glossary") {
+    box.innerHTML = '<div class="controls"><input id="glosSearch" type="search" placeholder="Search a word… e.g. ROCE, OI, circuit"></div><div id="glosBox"></div>';
+    const drawG = () => {
+      const q = $("#glosSearch").value.trim().toLowerCase();
+      const L = (d.glossary || []).filter((x) => !q ||
+        x.term.toLowerCase().includes(q) || x.meaning.toLowerCase().includes(q));
+      $("#glosBox").innerHTML = L.map((x) =>
+        '<details class="gl"><summary><span class="sym">' + esc(x.term) +
+        "</span></summary><ul><li>" + esc(x.meaning) + "</li></ul></details>").join("") ||
+        '<div class="note">no match</div>';
+    };
+    drawG();
+    $("#glosSearch").oninput = drawG;
+  } else if (learnTab === "rules") {
+    box.innerHTML = (d.rules || []).map((x) =>
+      '<details class="gl"><summary><span class="sym">' + esc(x.rule) +
+      "</span></summary><ul><li>Why: " + esc(x.why) + "</li></ul></details>").join("");
+  } else if (learnTab === "psychology") {
+    box.innerHTML = (d.psychology || []).map((x) =>
+      '<details class="gl"><summary><span class="sym">' + esc(x.topic) +
+      "</span></summary><ul><li>" + esc(x.point) + "</li></ul></details>").join("");
+  } else if (learnTab === "strategies") {
+    const types = [["intraday", "Intraday"], ["short_term", "Swing"], ["long_term", "Long term"],
+      ["options", "Options"], ["futures", "Futures"]];
+    const st = (d.strategies || {})[stratType] || [];
+    box.innerHTML = '<div class="controls">' + types.map(([k, n]) =>
+      '<button class="chip' + (stratType === k ? " on" : "") + '" data-st="' + k + '">' + n + "</button>").join("") + "</div>" +
+      st.map((s) => '<div class="card"><div style="font-weight:600;font-size:14px;margin-bottom:6px">' +
+        esc(s.name) + ' <span class="badge-tier">' + esc(s.level || "") + "</span></div>" +
+        '<div class="kv"><span>How</span><b style="text-align:right">' + esc(s.how) + "</b>" +
+        '<span>When</span><b style="text-align:right">' + esc(s.when) + "</b>" +
+        '<span>Risk</span><b style="text-align:right">' + esc(s.risk) + "</b></div></div>").join("") ||
+        '<div class="note">choose a trading style above</div>';
+    box.querySelectorAll("[data-st]").forEach((b) =>
+      b.onclick = () => { stratType = b.getAttribute("data-st"); drawLearn(); });
+  } else if (learnTab === "selection") {
+    const sel = d.stock_selection || {};
+    const list = (title, key) => (sel[key] ?
+      '<div class="card"><div class="subhead">' + title + " (" + sel[key].length + " checks)</div>" +
+      ul(sel[key]) + "</div>" : "");
+    box.innerHTML =
+      list("Intraday stock selection — 10-point checklist", "intraday_checklist") +
+      list("Short-term / swing selection — 10-point checklist", "short_term_checklist") +
+      list("Long-term investment selection — 12-point checklist", "long_term_checklist");
+  } else if (learnTab === "media") {
+    const e = eduData || {};
     const dl = (t, items) => items && items.length ?
       '<div class="card"><div class="subhead">' + t + " (" + items.length + ")</div>" +
-      items.map((x) => "<details class=\"gl\"><summary>" + esc(x.title || x.name || x.rule) +
+      items.map((x) => '<details class="gl"><summary>' + esc(x.title || x.name || x.rule) +
       "</summary><ul>" +
       (x.author ? "<li>by " + esc(x.author) + "</li>" : "") +
       (x.host ? "<li>host: " + esc(x.host) + "</li>" : "") +
@@ -433,7 +512,7 @@ function renderLearn() {
     const ma = e.market_analysis_videos || {};
     const pl = e.devs_learning_playlists || {};
     const it = e.inspiring_traders || {};
-    $("#eduBox").innerHTML =
+    box.innerHTML = '<div class="note" style="margin-bottom:10px">Dev\'s collected library — books, podcasts, videos.</div>' +
       dl("Books", e.books) + dl("Podcasts", e.podcasts) + dl("YouTube channels", e.youtube) +
       dl("Free courses & articles", e.free_courses_and_articles) +
       dl("My collected rules", e.devs_collected_rules) +
@@ -456,7 +535,7 @@ function renderLearn() {
         esc(it.note || "") + '</div><ul style="margin:8px 0 4px 16px;font-size:12.5px;color:var(--dim)">' +
         '<li>channel: ' + esc(it.channel || "—") + '</li><li><a href="' + esc(it.playlist) +
         '" target="_blank" rel="noopener">open playlist ↗</a></li></ul></div>' : "");
-  }, fail("eduBox"));
+  }
 }
 
 /* ---------- studies ---------- */
@@ -623,16 +702,26 @@ function renderNews() {
   }, fail("newsBox"));
 }
 
-/* ---------- lazy section loading ---------- */
+/* ---------- app-style view router ---------- */
 const loaders = {dash: renderDash, indices: renderIndices, screener: renderScreener,
   fundamentals: renderFundamentals, deepfund: renderDeepFund, futures: renderFutures, ipo: renderIPO, crypto: renderCrypto, global: renderGlobal, news: renderNews, ai: renderAI,
   filings: renderFilings, learn: renderLearn, studies: renderStudies, mynotes: renderNotes};
-const loaded = new Set(["dash"]);
-renderDash();
-const io = new IntersectionObserver((es) => {
-  es.forEach((e) => { if (e.isIntersecting && !loaded.has(e.target.id)) {
-    loaded.add(e.target.id);
-    try { loaders[e.target.id] && loaders[e.target.id](); } catch (err) { console.error(err); }
-  } });
-}, {rootMargin: "400px"});
-document.querySelectorAll("section[id]").forEach((s) => io.observe(s));
+const loaded = new Set([]);
+const views = document.querySelectorAll("section[id]");
+function showView(id) {
+  let found = false;
+  views.forEach((s) => { const on = s.id === id; s.style.display = on ? "" : "none"; if (on) found = true; });
+  if (!found) { views.forEach((s) => { s.style.display = s.id === "home" ? "" : "none"; }); id = "home"; }
+  if (id !== "home" && !loaded.has(id) && loaders[id]) {
+    loaded.add(id);
+    try { loaders[id](); } catch (err) { console.error(err); }
+  }
+  window.scrollTo(0, 0);
+}
+function routeFromHash() {
+  const h = (location.hash || "").replace("#/", "#");
+  const id = h.replace("#", "") || "home";
+  showView(id);
+}
+window.addEventListener("hashchange", routeFromHash);
+routeFromHash();

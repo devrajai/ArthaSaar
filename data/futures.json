@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-19T16:32:18.401420+00:00",
+ "updated": "2026-09-20T17:54:13.630887+00:00",
  "date": "18-09-2026",
  "note": "NSE F&O futures (EOD bhavcopy). Index futures show every active monthly expiry. India has no yearly-dated futures \u2014 3 monthly contracts exist at a time.",
  "indices": [
@@ -166,6 +166,16 @@
    ]
   }
  ],
+ "pcr": {
+  "nifty_pcr_oi": 1.062,
+  "nifty_pcr_vol": 0.992,
+  "nifty_call_oi": 303849150,
+  "nifty_put_oi": 322763055,
+  "all_index_pcr_oi": 1.05,
+  "nifty_max_pain": 23350,
+  "nifty_expiry": "2026-09-22",
+  "nifty_spot": 23346.4
+ },
  "stocks": [
   {
    "symbol": "IDEA",

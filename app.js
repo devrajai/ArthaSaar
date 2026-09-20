@@ -159,6 +159,21 @@ function renderDash() {
       '<div class="statline"><span>Bias</span><b>' + ups + " up / " + (F.length - ups) +
       ' down</b></div><div class="note" style="margin-top:4px">statistical bands — not signals</div>';
   }, fail("aiMini")));
+  P.push(Promise.all([jload("indices-all"), jload("futures")]).then(([ix, f]) => {
+    fresh.push("PCR " + esc(f.date || ""));
+    const vix = idxByName(ix.indices || [], "INDIA VIX");
+    const pcr = f.pcr || {};
+    const row = (label, val, cls) => '<div class="statline"><span>' + label + "</span><b" +
+      (cls ? ' class="' + cls + '"' : "") + ' style="text-align:right">' + val + "</b></div>";
+    $("#vixBox").innerHTML =
+      row("India VIX", vix ? nf2(vix.price) + " (" + sign(vix.change_pct) + ")" : "—",
+        vix ? pctCls(vix.change_pct) : "") +
+      row("Nifty PCR (OI)", pcr.nifty_pcr_oi != null ? pcr.nifty_pcr_oi : "—") +
+      row("Nifty PCR (volume)", pcr.nifty_pcr_vol != null ? pcr.nifty_pcr_vol : "—") +
+      row("Nifty max pain", pcr.nifty_max_pain != null ? nf2(pcr.nifty_max_pain) : "—") +
+      '<div class="note" style="margin-top:6px">PCR > 1.2: heavy put buying (fear) · PCR < 0.7: heavy call buying (greed). Max pain = strike where option writers lose least on ' +
+      esc(pcr.nifty_expiry || "expiry") + ".</div>";
+  }, fail("vixBox")));
   Promise.allSettled(P).then(() => {
     $("#dataFresh").textContent = "data: " + fresh.join(" · ");
   });
@@ -734,6 +749,147 @@ function renderNews() {
   }, fail("newsBox"));
 }
 
+/* ---------- sector heatmap ---------- */
+function renderHeatmap() {
+  $("#hmBody").innerHTML = '<div class="loading">loading sector map…</div>';
+  jload("indices-all").then((d) => {
+    const byn = {};
+    (d.indices || []).forEach((i) => byn[i.index] = i);
+    const SECTORS = [["IT", "NIFTY IT"], ["Bank", "NIFTY BANK"], ["PSU Bank", "NIFTY PSU BANK"],
+      ["Pvt Bank", "NIFTY PRIVATE BANK"], ["Auto", "NIFTY AUTO"], ["Pharma", "NIFTY PHARMA"],
+      ["FMCG", "NIFTY FMCG"], ["Metal", "NIFTY METAL"], ["Energy", "NIFTY ENERGY"],
+      ["Realty", "NIFTY REALTY"], ["Media", "NIFTY MEDIA"], ["Infra", "NIFTY INFRA"],
+      ["Fin Serv", "NIFTY FINANCIAL SERVICES"], ["Oil & Gas", "NIFTY OIL & GAS"],
+      ["Cons Dur", "NIFTY CONSUMER DURABLES"], ["Services", "NIFTY SERV SECTOR"],
+      ["Healthcare", "NIFTY HEALTHCARE INDEX"], ["Midcap 50", "NIFTY MIDCAP 50"],
+      ["Smallcap 100", "NIFTY SMALLCAP 100"], ["Next 50", "NIFTY NEXT 50"]];
+    const cell = (label, name) => {
+      const i = byn[name];
+      if (!i || i.change_pct == null) return "";
+      const c = i.change_pct;
+      const a = Math.min(0.7, 0.14 + Math.abs(c) / 1.6);
+      const bg = c >= 0 ? "rgba(45,212,167," + a + ")" : "rgba(251,92,125," + a + ")";
+      return '<a href="#indices" style="text-decoration:none;color:#fff;border-radius:12px;padding:12px 6px;' +
+        'display:flex;flex-direction:column;align-items:center;gap:3px;background:' + bg + '">' +
+        '<span style="font-size:12.5px;font-weight:600">' + esc(label) + "</span>" +
+        '<span style="font-size:16px;font-weight:700">' + sign(c, 2) + "</span>" +
+        '<span style="font-size:10.5px;opacity:.85">' + nf2(i.price) + "</span></a>";
+    };
+    const grid = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' +
+      SECTORS.map((s) => cell(s[0], s[1])).join("") + "</div>";
+    const up = SECTORS.filter((s) => byn[s[1]] && byn[s[1]].change_pct > 0).length;
+    $("#hmBody").innerHTML = grid +
+      '<div class="footer-note">' + up + " of " + SECTORS.filter((s) => byn[s[1]]).length +
+      " sector indices green · darker = bigger move · updated " + esc((d.updated || "").slice(0, 16)) + " UTC</div>";
+  }, fail("hmBody"));
+}
+
+/* ---------- TradingView charts ---------- */
+let tvSym = "RELIANCE", tvIv = "D";
+function tvSymbol(x) {
+  x = (x || "").trim().toUpperCase();
+  if (!x) return "NSE:RELIANCE";
+  if (x.indexOf(":") !== -1) return x;
+  if (/^(NIFTY|BANKNIFTY|MIDCPNIFTY|FINNIFTY|NIFTYNXT50)$/.test(x)) return "NSE:" + x;
+  if (/^(SENSEX|BANKEX)$/.test(x)) return "BSE:" + x;
+  if (/^(BTC|ETH|SOL|XRP|BNB|DOGE|ADA)$/.test(x)) return "BINANCE:" + x + "USDT";
+  if (x === "GOLD") return "MCX:GOLD1!";
+  return "NSE:" + x;
+}
+function renderCharts() {
+  const ivs = [["1", "1 min"], ["5", "5 min"], ["15", "15 min"], ["60", "1 hour"], ["D", "Daily"]];
+  $("#chIv").innerHTML = ivs.map((v) =>
+    '<button class="chip' + (tvIv === v[0] ? " on" : "") + '" data-iv="' + v[0] + '">' + v[1] + "</button>").join("");
+  $("#chIv").querySelectorAll(".chip").forEach((b) =>
+    b.onclick = () => { tvIv = b.getAttribute("data-iv"); renderCharts(); });
+  const draw = () => {
+    tvSym = $("#chSym").value.trim() || tvSym;
+    const full = tvSymbol(tvSym);
+    $("#tvBox").innerHTML = '<div id="tvchart" style="height:430px;border-radius:12px;overflow:hidden"></div>' +
+      '<div class="footer-note" style="margin-top:6px">showing ' + esc(full) + " · interval " +
+      (ivs.find((v) => v[0] === tvIv) || ["", tvIv])[1] + "</div>";
+    const mk = () => {
+      if (!window.TradingView || !window.TradingView.widget) return false;
+      new window.TradingView.widget({
+        symbol: full, interval: tvIv,
+        theme: document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark",
+        style: "1", locale: "en", timezone: "Asia/Kolkata",
+        container_id: "tvchart", autosize: true,
+        hide_side_toolbar: true, allow_symbol_change: false,
+      });
+      return true;
+    };
+    if (!mk()) {
+      const s = document.createElement("script");
+      s.src = "https://s3.tradingview.com/tv.js";
+      s.onload = () => setTimeout(mk, 60);
+      s.onerror = () => { $("#tvBox").innerHTML = '<div class="note">chart could not load — check internet and tap Load again</div>'; };
+      document.head.appendChild(s);
+    }
+  };
+  draw();
+  $("#chGo").onclick = () => { tvSym = $("#chSym").value.trim(); draw(); };
+  $("#chSym").onkeydown = (e) => { if (e.key === "Enter") draw(); };
+}
+
+/* ---------- portfolio tracker (localStorage) ---------- */
+function pfLoad() {
+  try { return JSON.parse(localStorage.getItem("mb-pf") || "[]"); } catch (e) { return []; }
+}
+function pfSave(x) {
+  try { localStorage.setItem("mb-pf", JSON.stringify(x)); } catch (e) {}
+}
+function renderPortfolio() {
+  $("#pfBody").innerHTML = '<tr><td colspan="9" class="loading">loading holdings…</td></tr>';
+  jload("brain-screener").then((d) => {
+    const bysym = {};
+    (d.stocks || []).forEach((s) => bysym[s.symbol] = s);
+    const draw = () => {
+      const pf = pfLoad();
+      if (!pf.length) {
+        $("#pfBody").innerHTML = '<tr><td colspan="9" class="loading">no holdings yet — add your first stock above</td></tr>';
+        $("#pfNote").textContent = "";
+        return;
+      }
+      let tc = 0, tv = 0;
+      const rows = pf.map((h, i) => {
+        const s = bysym[h.sym] || {};
+        const last = s.price != null ? s.price : h.buy;
+        const val = last * h.qty, cost = h.buy * h.qty, pnl = val - cost;
+        const pPct = cost ? pnl / cost * 100 : 0;
+        tc += cost; tv += val;
+        return '<tr><td class="sym"><a href="#company/' + esc(h.sym) + '">' + esc(h.sym) + "</a></td>" +
+          "<td>" + h.qty + "</td><td>" + nf2(h.buy) + "</td><td>" + nf2(last) + "</td>" +
+          '<td class="' + pctCls(s.change_pct) + '">' + sign(s.change_pct) + "</td>" +
+          "<td>" + nf2(val) + '</td><td class="' + pctCls(pnl) + '">' + (pnl > 0 ? "+" : "") + nf2(pnl) +
+          '</td><td class="' + pctCls(pPct) + '">' + sign(pPct) + "</td>" +
+          '<td><button class="chip" data-del="' + i + '" style="padding:2px 8px">✕</button></td></tr>';
+      }).join("");
+      const tp = tv - tc;
+      $("#pfBody").innerHTML = rows +
+        '<tr><td colspan="5"><b>TOTAL</b></td><td><b>' + nf2(tv) + '</b></td>' +
+        '<td class="' + pctCls(tp) + '"><b>' + (tp > 0 ? "+" : "") + nf2(tp) + "</b></td>" +
+        '<td class="' + pctCls(tc ? tp / tc * 100 : 0) + '"><b>' + sign(tc ? tp / tc * 100 : 0) + "</b></td><td></td></tr>";
+      $("#pfNote").textContent = pf.length + " holdings · invested ₹" + nf2(tc) +
+        " · current ₹" + nf2(tv) + " · prices are yesterday's close (EOD)";
+      $("#pfBody").querySelectorAll("[data-del]").forEach((b) =>
+        b.onclick = () => { const p = pfLoad(); p.splice(+b.getAttribute("data-del"), 1); pfSave(p); draw(); });
+    };
+    draw();
+    $("#pfAdd").onclick = () => {
+      const sym = $("#pfSym").value.trim().toUpperCase();
+      const qty = parseFloat($("#pfQty").value), buy = parseFloat($("#pfBuy").value);
+      if (!sym || !qty || !buy) { $("#pfNote").textContent = "fill symbol, qty and buy price first"; return; }
+      if (!bysym[sym]) { $("#pfNote").textContent = "symbol not found in market data (try RELIANCE, TCS…)"; return; }
+      const pf = pfLoad();
+      pf.push({sym: sym, qty: qty, buy: buy});
+      pfSave(pf);
+      $("#pfSym").value = ""; $("#pfQty").value = ""; $("#pfBuy").value = "";
+      draw();
+    };
+  }, fail("pfBody"));
+}
+
 /* ---------- events calendar ---------- */
 let evFilter = "All";
 function renderEvents() {
@@ -872,7 +1028,8 @@ function renderCompany(sym) {
 }
 
 /* ---------- app-style view router ---------- */
-const loaders = {dash: renderDash, indices: renderIndices, screener: renderScreener, events: renderEvents,
+const loaders = {dash: renderDash, indices: renderIndices, heatmap: renderHeatmap, screener: renderScreener, events: renderEvents,
+  charts: renderCharts, portfolio: renderPortfolio,
   fundamentals: renderFundamentals, deepfund: renderDeepFund, futures: renderFutures, ipo: renderIPO, crypto: renderCrypto, global: renderGlobal, news: renderNews, ai: renderAI,
   filings: renderFilings, learn: renderLearn, studies: renderStudies, mynotes: renderNotes};
 const loaded = new Set([]);

@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — TimesFM 3.0 weekly forecasts (Phase 5).
+MARKET BRAIN — TimesFM 3.0 weekly forecasts (expanded coverage).
 
-Google Research's TimesFM 3.0 (330M params, released Aug 2026) is a zero-shot
-time-series foundation model. This script:
+Google Research's TimesFM 3.0 (330M params) is a zero-shot time-series
+foundation model. This script:
 
-  1. Downloads ~2 years of daily closes (Yahoo Finance) for key indices,
-     top stocks and crypto.
+  1. Downloads ~2 years of daily closes (Yahoo Finance) for:
+     - all major Indian indices + sectoral indices
+     - global (S&P 500, Nasdaq, gold, crude) + USD-INR
+     - crypto top 10
+     - top 50 Indian stocks by market cap (from screener-fundamentals.json)
   2. Runs TimesFM 3.0 on CPU (free GitHub Actions runner) to forecast the
      next 21 daily steps (~1 month) with 10th-90th percentile bands.
   3. Saves data/timesfm_forecasts.json for the daily digest + website.
@@ -31,24 +34,82 @@ DATA = ROOT / "data"
 
 HORIZON = 21          # ~1 month of trading days
 CONTEXT = 512         # last N daily closes fed to the model
+TOP_STOCKS = 50       # top N stocks by market cap
 
 SERIES = {
+    # -- Indian indices --
     "^NSEI": "Nifty 50",
     "^NSEBANK": "Bank Nifty",
     "^BSESN": "Sensex",
+    "^CNXIT": "Nifty IT",
+    "^CNXAUTO": "Nifty Auto",
+    "^CNXPHARMA": "Nifty Pharma",
+    "^CNXFMCG": "Nifty FMCG",
+    "^CNXMETAL": "Nifty Metal",
+    "^CNXENERGY": "Nifty Energy",
+    "^CNXPSUBANK": "Nifty PSU Bank",
+    "^CNXREALTY": "Nifty Realty",
+    "^NSEMDCP50": "Nifty Midcap 50",
+    "^INDIAVIX": "India VIX",
+    # -- global & FX --
+    "^GSPC": "S&P 500",
+    "^NDX": "Nasdaq 100",
+    "GC=F": "Gold (COMEX)",
+    "CL=F": "Crude Oil WTI",
+    "INR=X": "USD-INR",
+    # -- crypto top 10 --
     "BTC-USD": "Bitcoin",
     "ETH-USD": "Ethereum",
+    "BNB-USD": "BNB",
+    "XRP-USD": "XRP",
+    "SOL-USD": "Solana",
+    "ADA-USD": "Cardano",
+    "DOGE-USD": "Dogecoin",
+    "TRX-USD": "TRON",
+    "LINK-USD": "Chainlink",
+    "AVAX-USD": "Avalanche",
+    # -- anchor stocks (names for the biggest, rest come from top-50) --
     "RELIANCE.NS": "Reliance Industries",
     "TCS.NS": "TCS",
     "HDFCBANK.NS": "HDFC Bank",
     "ICICIBANK.NS": "ICICI Bank",
     "INFY.NS": "Infosys",
-    "ITC.NS": "ITC",
+    "BHARTIARTL.NS": "Bharti Airtel",
     "LT.NS": "Larsen & Toubro",
     "SBIN.NS": "State Bank of India",
-    "BHARTIARTL.NS": "Bharti Airtel",
+    "ITC.NS": "ITC",
     "HINDUNILVR.NS": "Hindustan Unilever",
 }
+
+
+def categorize(sym):
+    if "-USD" in sym:
+        return "crypto"
+    if sym == "INR=X" or sym in ("^GSPC", "^NDX", "GC=F", "CL=F"):
+        return "global"
+    if sym.startswith("^"):
+        return "index"
+    return "stock"
+
+
+def add_top_stocks():
+    """Merge top-N stocks by market cap from screener-fundamentals.json."""
+    try:
+        fund = json.loads((DATA / "screener-fundamentals.json").read_text())
+        stocks = fund.get("stocks", {})
+        ranked = sorted(stocks.items(),
+                        key=lambda kv: (kv[1].get("Market Cap") or 0),
+                        reverse=True)
+        added = 0
+        for sym, _v in ranked:
+            if added >= TOP_STOCKS:
+                break
+            key = sym + ".NS"
+            if key not in SERIES:
+                SERIES[key] = sym
+                added += 1
+    except Exception as e:  # noqa: BLE001
+        print("top-50 stocks load failed:", e)
 
 
 def fetch_closes(symbol, period="2y"):
@@ -69,6 +130,8 @@ def main():
     from timesfm3 import ModelConfig, TimesFM3Forecaster
 
     DATA.mkdir(exist_ok=True)
+    add_top_stocks()
+    print(f"series to forecast: {len(SERIES)}")
 
     # 1. fetch history
     hist, failed = {}, []
@@ -82,6 +145,7 @@ def main():
     if not hist:
         print("FATAL: no series fetched")
         return
+    print(f"fetched {len(hist)} series, {len(failed)} failed")
 
     # 2. load TimesFM 3.0 (CPU)
     print("loading google/timesfm-3.0-pytorch on CPU ...")
@@ -89,7 +153,7 @@ def main():
                       per_core_batch_size=8, device="cpu")
     forecaster = TimesFM3Forecaster(cfg)
 
-    # 3. forecast
+    # 3. forecast (batched)
     syms = list(hist)
     outs = list(forecaster.predict_batch(
         contexts=[np.asarray(hist[s], dtype=np.float32) for s in syms],
@@ -108,6 +172,7 @@ def main():
         results.append({
             "symbol": sym,
             "name": SERIES[sym],
+            "cat": categorize(sym),
             "as_of_last_close": round(last, 2),
             "horizon_days": HORIZON,
             "median_end": round(med_end, 2),
@@ -121,10 +186,8 @@ def main():
                           else "down" if pct(med_end) and pct(med_end) < -1
                           else "flat"),
         })
-        print(f"  {SERIES[sym]:<22} 21d median {pct(med_end):+.1f}% "
-              f"(10-90% band {pct(q10_end):+.1f}% .. {pct(q90_end):+.1f}%)")
 
-    results.sort(key=lambda r: (r["median_chg_pct"] or 0), reverse=True)
+    results.sort(key=lambda r: (r["cat"], -(r["median_chg_pct"] or 0)))
     payload = {
         "model": "google/timesfm-3.0-pytorch",
         "updated": datetime.now(timezone.utc).isoformat(),

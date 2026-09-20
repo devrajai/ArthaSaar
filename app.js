@@ -719,7 +719,7 @@ function renderNews() {
       $("#newsChips").innerHTML = topics.map((t) =>
         '<button class="chip" data-t="' + esc(t) + '"' +
         (t === newsTopic ? ' style="border-color:var(--border2);color:var(--text);background:var(--glass2)"' : "") +
-        ">" + esc(t) + ">" + "</button>").join("");
+        ">" + esc(t) + "</button>").join("");
       $("#newsChips").querySelectorAll(".chip").forEach((b) =>
         b.onclick = () => { newsTopic = b.getAttribute("data-t"); draw(); });
       $("#newsBox").innerHTML = L.slice(0, 60).map((n) =>

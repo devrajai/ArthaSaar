@@ -86,6 +86,10 @@
 .t-sb{font-size:10px;color:var(--dim,#7b8aa2);line-height:1.3}
 .backbtn{display:inline-block;margin-bottom:10px;padding:6px 14px;border-radius:999px;border:1px solid var(--border,rgba(255,255,255,.12));background:var(--glass2,rgba(255,255,255,.05));color:var(--dim,#7b8aa2);text-decoration:none;font-size:12px;font-weight:500}
 .learnchip{border-color:#5aa7ff}
+.co-res{display:flex;gap:8px;align-items:baseline;padding:10px 12px;margin-bottom:8px;background:var(--glass2,rgba(255,255,255,.045));border:1px solid var(--border,rgba(255,255,255,.09));border-radius:12px;color:inherit;text-decoration:none;font-size:13px;flex-wrap:wrap}
+.co-res b{font-family:'IBM Plex Mono',monospace}
+.sym a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--dim,#7b8aa2)}
+td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -115,6 +119,7 @@
 
 <section id="home">
   <div class="homegrid">
+    <a class="tile" href="#company" style="grid-column:1/-1;flex-direction:row;align-items:center;gap:12px"><span class="t-ic">🏢</span><span><span class="t-nm">Company Card — search any stock</span><br><span class="t-sb">story · management · growth · results · shareholding</span></span></a>
     <div class="hgroup">MARKETS</div>
     <a class="tile" href="#dash"><span class="t-ic">📊</span><span class="t-nm">Dashboard</span><span class="t-sb">today at a glance</span></a>
     <a class="tile" href="#indices"><span class="t-ic">📈</span><span class="t-nm">Indices</span><span class="t-sb">139 tracked</span></a>
@@ -239,6 +244,16 @@
   </div>
   <div id="dfCount" class="footer-note"></div>
   <button class="morebtn" id="dfMore">show more ▾</button>
+</section>
+
+<section id="company" style="display:none">
+  <a class="backbtn" href="#home">⌂ Home</a>
+  <h2>Company Card</h2>
+  <div class="controls">
+    <input id="coSearch" type="search" placeholder="Search company… e.g. RELIANCE, TCS, Tata">
+  </div>
+  <div id="coResults"></div>
+  <div id="coBody"></div>
 </section>
 
 <section id="futures" style="display:none">

@@ -1,6 +1,7 @@
-/* mf.js — MF Tracker: AMFI daily NAV + full fund detail (year-by-year returns,
-   vs Nifty, SIP backtest) + Top Performers + SIP calc + My MF + guide. */
+/* mft.js — MF Tracker (renamed from mf.js to bypass stale cache): AMFI daily NAV + full fund detail
+   (year-by-year returns, vs Nifty + Gold, SIP backtest with custom amount) + Top Performers + SIP calc + My MF + guide. */
 (function () {
+  if (window.__MB_MF) return; window.__MB_MF = 1;
   var t = document.querySelector('a.tile[href="#fundamentals"]');
   if (t) t.insertAdjacentHTML("afterend",
     '<a class="tile" href="#mf"><span class="t-ic">📊</span><span class="t-nm">MF Tracker</span><span class="t-sb">nav · sip · my funds</span></a>');

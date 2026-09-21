@@ -1,4 +1,4 @@
-/* MARKET BRAIN loader — pulls in the app in strict order (v=h: retry + skip on error).
+/* MARKET BRAIN loader — pulls in the app in strict order (v=i: retry + skip on error, mf renamed mft).
    oldapp.js (main app) then patches (screener fix, TimesFM AI view, trade tools,
    learn + stage + guide + desktop, smart brain, MF tracker). */
 (function () {
@@ -10,7 +10,7 @@
     window.__MB_INTERVALS.push(id);
     return id;
   };
-  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js", "brandfix.js", "tools.js", "tools1b.js", "tools2.js", "tools3.js", "tools4.js", "tools5.js", "learnfix.js", "stagefix.js", "guidefix.js", "guide2.js", "deskfix.js", "bluefix2.js", "inputfix.js", "smart.js", "mf.js", "learnadd.js"];
+  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js", "brandfix.js", "tools.js", "tools1b.js", "tools2.js", "tools3.js", "tools4.js", "tools5.js", "learnfix.js", "stagefix.js", "guidefix.js", "guide2.js", "deskfix.js", "bluefix2.js", "inputfix.js", "smart.js", "mft.js", "learnadd.js"];
   var i = 0, tries = {};
   function banner(msg) {
     try {

@@ -54,25 +54,37 @@ if os.path.exists("data/mf.json"):
         pass
 
 funds, seen, cat, house = [], set(), "", ""
+def pdate(x):
+    try:
+        return dt.datetime.strptime(x.strip(), "%d-%b-%Y").date()
+    except Exception:
+        return None
+today = dt.date.today()
 for line in raw.splitlines():
     line = line.strip()
     if not line:
         continue
     if ";" not in line:
-        if line.endswith("Schemes") or "Schemes(" in line or line.endswith("Schemes)"):
+        if "Schemes" in line and "(" in line:
             cat = cat_short(line)
-        elif line.startswith("Advisor:"):
-            house = line.replace("Advisor:", "").strip()[:28]
+        elif "Mutual Fund" in line or "Asset Management" in line or line.endswith("Trust") or line.endswith("Trustees"):
+            house = line[:30]
         continue
-    p = line.split(";")
-    if len(p) < 6 or not p[0].isdigit():
+    p = [x.strip() for x in line.split(";")]
+    if len(p) < 8 or not p[0].isdigit():
         continue
+    d = pdate(p[7]) if len(p) > 7 else None
+    if d is None or (today - d).days > 30:
+        continue  # stale/dead option
     try:
-        nav = round(float(p[4]), 4)
+        nav = round(float(p[6]), 4)
     except ValueError:
         continue
-    code, name = p[0], p[3].strip()[:56]
-    if code in seen or not nav or "Close" in (cat or ""):
+    name = (p[3] + " \u00b7 " + p[4] + " \u00b7 " + p[5]).strip(" \u00b7")[:60] if p[3] else ""
+    code = p[0]
+    if not code or not name or code in seen or not nav:
+        continue
+    if "Close" in (cat or ""):
         continue
     seen.add(code)
     chg = None

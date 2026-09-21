@@ -157,8 +157,7 @@ function renderIPO() {
         '">' + esc(x.status) + "</span>" : "") + "</div>" +
       '<div class="kv" style="margin-top:8px">' +
       "<span>Price band</span><b>" + esc(x.price || "—") + "</b>" +
-      "<span>Lot</span><b>" + esc(x.lot || "—") + "</b><" +
-      "span>" + esc(x.lot || "—") + "</b></span>";
+      "<span>Lot</span><b>" + esc(x.lot || "—") + "</b></span>";
     const live = ipos.filter((x) => !/list/i.test(x.status || ""));
     const done = ipos.filter((x) => /list/i.test(x.status || ""));
     $("#ipoBox").innerHTML =

@@ -22,7 +22,7 @@
   var pc = function (v) { return v == null ? "—" : '<span class="' + (v >= 0 ? "pos" : "neg") + '">' + (v >= 0 ? "+" : "") + v + "%</span>"; };
   var pc2 = function (v) { return v == null ? "—" : '<b class="' + (v >= 0 ? "pos" : "neg") + '">' + (v >= 0 ? "+" : "") + v + "%</b>"; };
   var nf2 = function (v) { return "\u20B9" + Math.round(v).toLocaleString("en-IN"); };
-  var FUNDS = [], NIFTY_Y = null;
+  var FUNDS = [], NIFTY_Y = null, MFTOP = null, CUR_HIST = null;
 
   function niftyYearly() {
     if (NIFTY_Y) return NIFTY_Y;
@@ -53,14 +53,14 @@
 
   function sipBacktest(hist, amt, years) {
     var months = [];
-    for (var i = hist.length - 1; i >= 0; i--) {
+    for (var i = hist.length - 1; i >= 0; i--) {   // oldest -> newest
       var p = (hist[i].date || "").split("-");
       if (p.length !== 3) continue;
       var key = p[2] + "-" + p[1];
-      if (!months.length || months[months.length - 1].key !== key) months.push({ key: key, nav: +hist[i].nav });
+      if (!months.length || months[months.length - 1].key !== key) months.push({ key: key, nav: +hist[i].nav, y: +p[2], m: +p[1] });
     }
     if (months.length < years * 12 + 1) return null;
-    months = months.slice(-(years * 12 + 1), months.length - 1);
+    months = months.slice(-(years * 12 + 1), months.length - 1); // buy months
     var units = 0, inv = 0;
     months.forEach(function (mm) { units += amt / mm.nav; inv += amt; });
     var val = units * (+hist[0].nav);
@@ -99,6 +99,7 @@
     var box = $("#mfHist");
     fetch("https://api.mfapi.in/mf/" + code).then(function (r) { return r.json(); }).then(function (d) {
       var hist = (d && d.data) || [];
+      CUR_HIST = hist;
       if (hist.length < 30) { box.textContent = "chart data nahi mili"; return; }
       var lastN = hist.slice(0, 365).reverse().map(function (x) { return +x.nav; });
       var yr = yearRows(hist), nY = NIFTY_Y || {};
@@ -106,20 +107,41 @@
         var w = Math.min(100, Math.abs(r.r) * 2.2);
         var cls = r.r >= 0 ? "pos" : "neg";
         var bg = r.r >= 0 ? "linear-gradient(90deg,#22c55e,#4ade80)" : "linear-gradient(90deg,#ef4444,#f87171)";
-        var nv = nY[r.y] != null ? ' <span style="opacity:.55">Nifty ' + (nY[r.y] >= 0 ? "+" : "") + nY[r.y].toFixed(0) + "%</span>" : "";
+        var gy = (MFTOP && MFTOP.bench && MFTOP.bench.gold && MFTOP.bench.gold.y && MFTOP.bench.gold.y[r.y] != null) ? MFTOP.bench.gold.y[r.y] : null;
+        var nv = (nY[r.y] != null || gy != null) ? ' <span style="opacity:.55">' +
+          (nY[r.y] != null ? "Nifty " + (nY[r.y] >= 0 ? "+" : "") + nY[r.y].toFixed(0) + "%" : "") +
+          (nY[r.y] != null && gy != null ? " · " : "") +
+          (gy != null ? "Gold " + (gy >= 0 ? "+" : "") + gy.toFixed(0) + "%" : "") + "</span>" : "";
         return '<div style="display:flex;align-items:center;gap:8px;margin:3px 0">' +
           '<span style="width:38px;font-size:11px;opacity:.8">' + r.y + "</span>" +
           '<span style="flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden"><i style="display:block;width:' + w.toFixed(0) + '%;height:100%;border-radius:5px;background:' + bg + '"></i></span>' +
           '<span class="' + cls + '" style="width:56px;text-align:right;font-size:12px">' + (r.r >= 0 ? "+" : "") + r.r.toFixed(1) + "%</span></div>" +
           '<div class="note" style="margin:-1px 0 2px 46px;font-size:10px">' + nv + "</div>";
       }).join("");
-      var sip = sipBacktest(hist, 5000, 3);
       var m = (d.meta || {});
-      box.innerHTML = (lastN.length > 30 ? sparkline(lastN) : "") + trailHtml(hist) +
+      var bn = (MFTOP && MFTOP.bench) || {};
+      var bnNote = (bn.gold && bn.gold.r3 != null) || (bn.silver && bn.silver.r3 != null) ?
+        '<div class="note" style="margin-top:4px">usi samay: Gold 3Y ' + (bn.gold && bn.gold.r3 != null ? pc2(bn.gold.r3.toFixed(1)) : "—") +
+        " · Silver 3Y " + (bn.silver && bn.silver.r3 != null ? pc2(bn.silver.r3.toFixed(1)) : "—") + "</div>" : "";
+      var sipDef = sipBacktest(hist, 5000, 3);
+      box.innerHTML = (lastN.length > 30 ? sparkline(lastN) : "") + trailHtml(hist) + bnNote +
         (yr.length ? '<div class="subhead" style="margin-top:10px">Year-by-Year</div>' + bars : "") +
-        (sip ? '<div class="note" style="margin-top:8px">SIP test — \u20B95,000/month 3 saal: invested <b>' + nf2(sip.inv) + "</b> \u2192 value <b class='pos'>" + nf2(sip.val) + "</b> (" + (sip.pct >= 0 ? "+" : "") + sip.pct.toFixed(0) + "%)</div>" : "") +
+        '<div class="subhead" style="margin-top:10px">SIP test — apna amount daalo</div>' +
+        '<div class="note" style="margin:6px 0">\u20B9/mahina <input id="mfSAmt" type="number" value="5000" min="100" step="100" style="width:90px;padding:6px 8px;border-radius:8px;border:1px solid var(--border2,rgba(255,255,255,.12));background:var(--glass2,rgba(255,255,255,.05));color:inherit"> ' +
+        'saal <select id="mfSYrs" style="padding:6px 8px;border-radius:8px;border:1px solid var(--border2,rgba(255,255,255,.12));background:var(--glass2,rgba(255,255,255,.05));color:inherit"><option>3</option><option>5</option><option>10</option></select> ' +
+        '<button class="chip on" id="mfSGo">batao</button></div>' +
+        '<div id="mfSOut" class="note">' + (sipDef ? "invested <b>" + nf2(sipDef.inv) + "</b> \u2192 value <b class='pos'>" + nf2(sipDef.val) + "</b> (" + (sipDef.pct >= 0 ? "+" : "") + sipDef.pct.toFixed(0) + "%)" : "itni history nahi hai") + "</div>" +
+        (sipDef ? '<div class="note" style="margin-top:4px">\u20B9100/month wale mini-SIP ke liye bhi same % return milega — amount badal ke dekho</div>' : "") +
         '<div class="note" style="margin-top:8px">' + esc2(m.fund_house || f.h || "") + (m.scheme_category ? " · " + esc2(m.scheme_category) : "") + "</div>" +
         '<div class="note" style="margin-top:6px">AUM / expense ratio / holdings / fund manager — free data mein nahi milte, <a style="color:var(--blue,#5aa7ff)" target="_blank" rel="noopener" href="https://www.google.com/search?q=' + encodeURIComponent((f.n || "").split(" \u00b7 ")[0] + " mutual fund AUM expense ratio portfolio holdings") + '">yahan dekho \u2192</a></div>';
+      var goBtn = document.querySelector("#mfSGo");
+      if (goBtn) goBtn.onclick = function () {
+        var amt = Math.max(100, +document.querySelector("#mfSAmt").value || 100);
+        var yr2 = +document.querySelector("#mfSYrs").value || 3;
+        var r2 = sipBacktest(CUR_HIST, amt, yr2);
+        var o2 = document.querySelector("#mfSOut");
+        if (o2) o2.innerHTML = r2 ? "invested <b>" + nf2(r2.inv) + "</b> \u2192 value <b class='" + (r2.pct >= 0 ? "pos" : "neg") + "'>" + nf2(r2.val) + "</b> (" + (r2.pct >= 0 ? "+" : "") + r2.pct.toFixed(0) + "%)" : "itni history nahi hai";
+      };
     }).catch(function () { box.textContent = "history offline — NAV upar wala pakka hai"; });
     $("#mfAddBtn").onclick = function () {
       var u = parseFloat($("#mfU").value);
@@ -135,6 +157,7 @@
 
   function renderTop() {
     jload("mf-top").then(function (d) {
+      MFTOP = d;
       var nf = (d.nifty || {}), rows = d.funds || [];
       if (!rows.length) { $("#mfTop").innerHTML = '<div class="subhead">\uD83C\uDFC6 Top Performers</div><div class="note">data aaj raat banega — kal subah se dikhega</div>'; return; }
       $("#mfTop").innerHTML = '<div class="subhead">\uD83C\uDFC6 Top Performers — popular Direct-Growth funds (3Y return se sorted)</div>' +
@@ -144,7 +167,10 @@
           return '<tr data-mc="' + esc2(r.c) + '"><td class="note">' + esc2(r.n).slice(0, 40) + "</td><td>" + pc(r.r1) + "</td><td><b>" + pc(r.r3) + "</b></td><td>" + pc(r.r5) + "</td>" +
             '<td>' + (beat == null ? "—" : '<b class="' + (beat >= 0 ? "pos" : "neg") + '">' + (beat >= 0 ? "✓ +" : "✗ ") + beat.toFixed(0) + "</b>") + "</td></tr>";
         }).join("") + "</tbody></table></div>" +
-        '<div class="note" style="margin-top:6px">Nifty 3Y: ' + (nf.r3 != null ? "+" + nf.r3 + "%" : "—") + " · roz raat update · ye 34 popular funds hain, poora market nahi</div>";
+        '<div class="note" style="margin-top:6px">Nifty 3Y: ' + (nf.r3 != null ? "+" + nf.r3 + "%" : "—") +
+        ((d.bench || {}).gold ? " · Gold 3Y: +" + (d.bench.gold.r3 != null ? d.bench.gold.r3 : "—") + "%" : "") +
+        ((d.bench || {}).silver ? " · Silver 3Y: +" + (d.bench.silver.r3 != null ? d.bench.silver.r3 : "—") + "%" : "") +
+        " · roz raat update · ye 34 popular funds hain, poora market nahi</div>";
       $("#mfTop").querySelectorAll("[data-mc]").forEach(function (tr) {
         tr.onclick = function () { showFund(tr.getAttribute("data-mc")); window.scrollTo(0, 0); };
       });

@@ -3,6 +3,7 @@
 Reads data/mf.json (AMFI), picks a curated list of well-known Direct-Growth
 funds, fetches full NAV history from api.mfapi.in (free, no key) and computes
 trailing returns. Nifty side comes from data/index-history.json (monthly %).
+Also computes gold/silver benchmarks (SBI Gold Fund, UTI Silver ETF).
 Output: data/mf-top.json (small, for the site's Top Performers card).
 """
 import json, time, datetime as dt, urllib.request
@@ -88,10 +89,37 @@ for code, f in sel.items():
 
 rows = [r for r in rows if r["r3"] is not None]
 rows.sort(key=lambda r: -(r["r3"] or -999))
+
+# ---- gold / silver benchmarks (MF NAV history as proxy) ----
+BENCH = {"gold": "SBI GOLD FUND", "silver": "UTI Silver Exchange Traded Fund"}
+bench = {}
+for bk, kw in BENCH.items():
+    for f in mf.get("funds", []):
+        n = f.get("n") or ""
+        if kw.lower() in n.lower() and "direct" in n.lower() and "growth" in n.lower() and "idcw" not in n.lower():
+            try:
+                d = jget("https://api.mfapi.in/mf/%s" % f["c"])
+                hist = (d or {}).get("data") or []
+                if len(hist) >= 250:
+                    byY = {}
+                    for x in reversed(hist):  # oldest -> newest: last write = year-end NAV
+                        byY[x["date"].split("-")[2]] = float(x["nav"])
+                    ys = sorted(byY)
+                    yr = {}
+                    for j in range(1, len(ys)):
+                        yr[ys[j]] = round((byY[ys[j]] / byY[ys[j - 1]] - 1) * 100, 1)
+                    yr = {k2: v2 for k2, v2 in sorted(yr.items())[-9:]}
+                    bench[bk] = {"c": f["c"], "r1": trailing(hist, 365), "r3": trailing(hist, 1095),
+                                 "r5": trailing(hist, 1825), "y": yr}
+            except Exception:
+                pass
+            break
+
 out = {"updated": dt.datetime.now(dt.timezone.utc).isoformat(),
        "count": len(rows),
        "nifty": {"r1": nifty_trailing(12), "r3": nifty_trailing(36), "r5": nifty_trailing(60)},
        "funds": rows,
+       "bench": bench,
        "failed": failed[:10]}
 json.dump(out, open("data/mf-top.json", "w"), ensure_ascii=False, separators=(",", ":"))
 print("mf-top.json: %d funds, %d failed" % (len(rows), len(failed)))

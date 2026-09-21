@@ -1,8 +1,10 @@
-/* guidefix.js — chart: direct TradingView iframe (symbol in URL, cannot default) + focus outline fix */
+/* guidefix.js — chart: direct TradingView iframe (symbol in URL, cannot default) + US tickers + blue-border kill */
 (function () {
+  var US = { AAPL:"NASDAQ", MSFT:"NASDAQ", GOOGL:"NASDAQ", AMZN:"NASDAQ", NVDA:"NASDAQ", TSLA:"NASDAQ", META:"NASDAQ", AMD:"NASDAQ", INTC:"NASDAQ", NFLX:"NASDAQ", PYPL:"NASDAQ", COIN:"NASDAQ", MSTR:"NASDAQ", PLTR:"NASDAQ", QQQ:"NASDAQ", BABA:"NYSE", BAC:"NYSE", JPM:"NYSE", WMT:"NYSE", KO:"NYSE", DIS:"NYSE", V:"NYSE", MA:"NYSE", UBER:"NYSE", SPY:"AMEX" };
   function tvFull(sym) {
-    if (typeof tvSymbol === "function") return tvSymbol(sym);
     var x = (sym || "").trim().toUpperCase();
+    if (x && US[x]) return US[x] + ":" + x;
+    if (typeof tvSymbol === "function") return tvSymbol(sym);
     return x ? "NSE:" + x : "NSE:RELIANCE";
   }
   function tvDraw(sym) {
@@ -16,7 +18,7 @@
       "&timezone=" + encodeURIComponent("Asia/Kolkata") +
       "&hide_side_toolbar=true&allow_symbol_change=false&withdateranges=true&save_image=false&hideideas=1";
     box.innerHTML = '<iframe src="' + src + '" allowtransparency="true" frameborder="0" scrolling="no" style="width:100%;height:460px;border:0;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03)"></iframe>' +
-      '<div class="footer-note" style="margin-top:6px">showing ' + esc(full) + " · " + (labels[iv] || iv) + " · chart by TradingView</div>";
+      '<div class="footer-note" style="margin-top:6px">showing ' + esc(full) + " · " + (labels[iv] || iv) + " · chart by TradingView · US: AAPL, TSLA, NVDA… type any</div>";
   }
   window.renderCharts2 = function () {
     window.__mbIv = window.__mbIv || "D";
@@ -30,7 +32,7 @@
         window.__mbIv = b.getAttribute("data-iv");
         var v = $("#chSym").value.trim(); if (v) window.__mbSym = v;
         tvDraw(window.__mbSym);
-      }
+      };
     });
     tvDraw(window.__mbSym);
     $("#chGo").onclick = function () {
@@ -47,8 +49,8 @@
     };
   };
   if (typeof loaders !== "undefined") loaders.charts = window.renderCharts2;
-  /* blue-line fix: no focus outline / tap highlight on tappable rows */
+  /* blue-border kill: focus outlines, tap highlights, AND tile :active blue (stuck border) */
   var st = document.createElement("style");
-  st.textContent = "summary{outline:none;-webkit-tap-highlight-color:transparent}summary:focus{outline:none}button:focus{outline:none}a:focus{outline:none}details{border:0}.chip{-webkit-tap-highlight-color:transparent}";
+  st.textContent = "summary{outline:none;-webkit-tap-highlight-color:transparent}summary:focus{outline:none}button:focus{outline:none}a:focus{outline:none}a:focus-visible{outline:none}details{border:0}.chip{-webkit-tap-highlight-color:transparent}.tile{outline:none;-webkit-tap-highlight-color:transparent}.tile:focus{outline:none}.tile:focus-visible{outline:none}.tile:active{border-color:rgba(255,255,255,.22)!important}";
   document.head.appendChild(st);
 })();

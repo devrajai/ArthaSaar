@@ -73,8 +73,9 @@ website second.
 ### LIVE Telegram routing (21/09/26 — the names that ACTUALLY run)
 - Secrets that run the messages: TG_TOKEN (bot token) + TG_CHAT_ID (market msgs via
   telegram.yml) + TG_CHAT_ID_IPO (IPO digest 8:45 AM via telegram-ipo.yml; fallback = TG_CHAT_ID)
-- Both TG_CHAT_ID and TG_CHAT_ID_IPO = "1392604324,1148261593" = Dev + Nandan pithadiya
-  (@Dev_pithadiya). Both get EVERYTHING (market + IPO).
+- Both TG_CHAT_ID and TG_CHAT_ID_IPO = "1392604324,1148261593,1785489570,1182983939" =
+  Dev + Nandan pithadiya (@Dev_pithadiya) + Hemant (____Hemant) + Solanki (@Rahul3573).
+  All 4 get EVERYTHING (market + IPO). Verified sent to 4 chats 21/09/26.
 - To add a person: they must /start the bot first (Telegram blocks bots messaging strangers),
   run "Telegram Who" workflow (telegram-who.yml) to see their chat_id, then update BOTH secrets
   with comma-separated ids (encrypt via repo public key + PyNaCl sealed box, push via GitHub MCP

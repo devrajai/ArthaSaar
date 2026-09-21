@@ -10,7 +10,7 @@
     window.__MB_INTERVALS.push(id);
     return id;
   };
-  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js"];
+  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js", "brandfix.js"];
   var i = 0;
   function next() {
     if (i >= files.length) return;

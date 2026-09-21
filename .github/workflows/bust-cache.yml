@@ -1,0 +1,28 @@
+name: bust-app-cache
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  bust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: add version to app.js script tag
+        run: |
+          python3 - << 'EOF'
+          s = open("index.html", encoding="utf-8").read()
+          old = '<script src="app.js"></script>'
+          new = '<script src="app.js?v=21sep26a"></script>'
+          assert s.count(old) == 1, "script tag not found exactly once"
+          open("index.html", "w", encoding="utf-8").write(s.replace(old, new))
+          print("version tag added")
+          EOF
+      - name: commit and push
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add index.html
+          git commit -m "chore: version app.js script tag (cache bust)" || echo "nothing to commit"
+          for i in 1 2 3; do git push && break; git pull --rebase -X theirs || true; done

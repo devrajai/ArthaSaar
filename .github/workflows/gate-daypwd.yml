@@ -1,0 +1,35 @@
+name: gate-daypwd
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: day-wise password gate
+        run: |
+          python3 - << 'EOF'
+          s = open("index.html", encoding="utf-8").read()
+          o1 = 'var HASH = "b811a679d90e2cfdd9996aaa2a37610af14bb604cb3492b6ed15914411885edb";'
+          n1 = 'var HASHES = {"Mon":"7184d2d400b396ecaa14869ccd83ebee2b3fdb7acf16c58dbc0f5142fa671ee3","Tue":"d42a7655afd29f3a6e9f72c1dcb9c2f684d1a95f4206cb9b45658bb9e3177043","Wed":"630dce059f5cd2cbadfd39f3574fb7949aca80f0098c5190f8c84c796730a50f","Thu":"fca347c997c97633d45abd220122fcc2626bdcff938864d4a672a087e7754531","Fri":"c10757fab8cbffce19db48ad56ab4fa6d67e8129eebe09fcd695663fa59f8b94","Sat":"fa969388cf79d5c9e9990d84cbfaea0590150448f02ab144016fcd0ef87ed43c","Sun":"988db4661fc7114ed31a8c910e0b49bd15d75d65230f6395b4061d6f3d236d0e"};\n  var HASH = HASHES[["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]];'
+          assert s.count(o1) == 1, "hash line not found"
+          s = s.replace(o1, n1)
+          o2 = 'ok = localStorage.getItem("mb-gate") === "OK"'
+          assert s.count(o2) == 1, "gate check not found"
+          s = s.replace(o2, 'ok = localStorage.getItem("mb-gate") === new Date().toDateString()')
+          o3 = 'localStorage.setItem("mb-gate", "OK")'
+          assert s.count(o3) == 1, "gate set not found"
+          s = s.replace(o3, 'localStorage.setItem("mb-gate", new Date().toDateString())')
+          open("index.html", "w", encoding="utf-8").write(s)
+          print("day-password gate installed")
+          EOF
+      - name: commit and push
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add index.html
+          git commit -m "feat: day-wise password gate (roz 12 baje badalta hai)" || echo "nothing to commit"
+          for i in 1 2 3; do git push && break; git pull --rebase -X theirs || true; done

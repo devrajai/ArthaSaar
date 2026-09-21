@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+"""mf_collect.py — AMFI se saare Indian mutual funds ka daily NAV data.
+Source: https://amfiindia.com/spages/NAVAll.txt (free, no key).
+Output: data/mf.json  — compact list for the MF Tracker section.
+Runs on GitHub Actions daily. Prev NAV from yesterday's mf.json -> day change.
+"""
+import json, datetime as dt, urllib.request, os, re
+
+URL = "https://amfiindia.com/spages/NAVAll.txt"
+
+def cat_short(sec):
+    # "Open Ended Schemes(Equity Scheme - Large Cap Fund)" -> "Equity - Large Cap"
+    m = re.match(r"\w+ Ended Schemes\((.+?)\)", sec)
+    if not m:
+        return sec[:24]
+    c = m.group(1)
+    c = c.replace("Schemes", "").replace("Scheme", "")
+    if "-" in c:
+        parts = [p.strip() for p in c.split("-", 1)]
+        head = parts[0].split()[0] if parts[0].split() else ""
+        return (head + " - " + parts[1])[:28]
+    return c.strip()[:28]
+
+req = urllib.request.Request(URL, headers={"User-Agent": "Mozilla/5.0"})
+raw = urllib.request.urlopen(req, timeout=120).read().decode("utf-8", "ignore")
+
+prev = {}
+if os.path.exists("data/mf.json"):
+    try:
+        for f in json.load(open("data/mf.json")).get("funds", []):
+            prev[str(f["c"])] = f["v"]
+    except Exception:
+        pass
+
+funds, seen, cat, house = [], set(), "", ""
+for line in raw.splitlines():
+    line = line.strip()
+    if not line:
+        continue
+    if ";" not in line:
+        if line.endswith("Schemes") or "Schemes(" in line or line.endswith("Schemes)"):
+            cat = cat_short(line)
+        elif line.startswith("Advisor:"):
+            house = line.replace("Advisor:", "").strip()[:28]
+        continue
+    p = line.split(";")
+    if len(p) < 6 or not p[0].isdigit():
+        continue
+    try:
+        nav = round(float(p[4]), 4)
+    except ValueError:
+        continue
+    code, name = p[0], p[3].strip()[:56]
+    if code in seen or not nav or "Close" in (cat or ""):
+        continue
+    seen.add(code)
+    chg = None
+    pv = prev.get(code)
+    if pv and pv > 0:
+        chg = round((nav / pv - 1) * 100, 2)
+    funds.append({"c": code, "n": name, "v": nav, "h": house, "k": cat, "p": chg})
+
+out = {"updated": dt.datetime.now(dt.timezone.utc).isoformat(),
+       "count": len(funds), "funds": funds,
+       "note": "Source: AMFI NAVAll (free). Fund-manager details free mein nahi milte — sirf house/category."}
+with open("data/mf.json", "w") as f:
+    json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
+print("mf.json written: %d funds" % len(funds))

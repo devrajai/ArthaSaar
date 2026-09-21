@@ -1,0 +1,39 @@
+name: MF Collect (AMFI NAV)
+on:
+  schedule:
+    # 21:45 IST Mon-Sat — AMFI NAVAll publishes late evening (NAV ~23:00 latest;
+    # most funds updated by then). Second safety run at 05:15 IST.
+    - cron: '15 16 * * 1-6'
+    - cron: '45 23 * * 1-6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mf-collect
+  cancel-in-progress: false
+
+jobs:
+  mf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: run mf collector
+        run: |
+          python3 scripts/mf_collect.py
+          python3 -c "import json; d=json.load(open('data/mf.json')); assert d.get('count',0) > 5000, 'too few funds: %s' % d.get('count')"
+      - name: commit if changed
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/mf.json
+          if git diff --cached --quiet; then echo "no change"; else
+            git commit -m "data: mf nav refresh ($(date -u +%d-%b-%Y))"
+            for i in 1 2 3; do git push && break; git pull --rebase -X theirs || true; done
+          fi

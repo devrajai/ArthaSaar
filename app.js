@@ -1,6 +1,6 @@
-/* MARKET BRAIN loader — pulls in the app in strict order:
-   oldapp.js (main app) then patches (screener fix, TimesFM 3.0 AI view,
-   AM/PM clock + dd/mm/yy dates, trade tools, learn + stage + guide + desktop). */
+/* MARKET BRAIN loader — pulls in the app in strict order (v=h: retry + skip on error).
+   oldapp.js (main app) then patches (screener fix, TimesFM AI view, trade tools,
+   learn + stage + guide + desktop, smart brain, MF tracker). */
 (function () {
   "use strict";
   var __origSI = window.setInterval;
@@ -11,14 +11,28 @@
     return id;
   };
   var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js", "brandfix.js", "tools.js", "tools1b.js", "tools2.js", "tools3.js", "tools4.js", "tools5.js", "learnfix.js", "stagefix.js", "guidefix.js", "guide2.js", "deskfix.js", "bluefix2.js", "inputfix.js", "smart.js", "mf.js", "learnadd.js"];
-  var i = 0;
+  var i = 0, tries = {};
+  function banner(msg) {
+    try {
+      var d = document.createElement("div");
+      d.textContent = msg;
+      d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;font:12px/1.6 sans-serif;padding:3px 8px;text-align:center";
+      (document.body || document.documentElement).appendChild(d);
+    } catch (e) {}
+  }
   function next() {
     if (i >= files.length) return;
+    var f = files[i++];
     var s = document.createElement("script");
-    s.src = files[i++] + "?t=" + Date.now();
+    s.src = f + "?t=" + Date.now();
     s.async = false;
-    s.onload = next;
-    s.onerror = function () { console.error("MB load failed: " + s.src); };
+    s.onload = function () { tries[f] = 0; next(); };
+    s.onerror = function () {
+      tries[f] = (tries[f] || 0) + 1;
+      if (tries[f] <= 2) { i--; setTimeout(next, 500); return; }
+      banner("\u26A0 " + f + " load fail — page ek baar refresh karo");
+      next();
+    };
     document.head.appendChild(s);
   }
   next();

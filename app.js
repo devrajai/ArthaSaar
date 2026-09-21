@@ -15,7 +15,7 @@
   function next() {
     if (i >= files.length) return;
     var s = document.createElement("script");
-    s.src = files[i++];
+    s.src = files[i++] + "?t=" + Date.now();
     s.async = false;
     s.onload = next;
     s.onerror = function () { console.error("MB load failed: " + s.src); };

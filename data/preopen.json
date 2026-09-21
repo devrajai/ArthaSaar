@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-21T13:24:11.849047+00:00",
+ "updated": "2026-09-21T15:49:44.845298+00:00",
  "stocks": 2425,
  "gainer_buckets": {
   "up_ge_1pct": 448,
@@ -279,16 +279,6 @@
    "purpose": null
   },
   {
-   "symbol": "AMDIND",
-   "iep": 60.1,
-   "last_price": 60.1,
-   "prev_close": 63.26,
-   "change_pct": -5,
-   "year_high": 74.39,
-   "year_low": 33.77,
-   "purpose": null
-  },
-  {
    "symbol": "VILINBIO",
    "iep": 55.1,
    "last_price": 55.1,
@@ -319,6 +309,16 @@
    "purpose": null
   },
   {
+   "symbol": "AMDIND",
+   "iep": 60.1,
+   "last_price": 60.1,
+   "prev_close": 63.26,
+   "change_pct": -5,
+   "year_high": 74.39,
+   "year_low": 33.77,
+   "purpose": null
+  },
+  {
    "symbol": "MVKAGRO",
    "iep": 232.1,
    "last_price": 232.1,
@@ -326,16 +326,6 @@
    "change_pct": -4.99,
    "year_high": 819,
    "year_low": 152.05,
-   "purpose": null
-  },
-  {
-   "symbol": "QUALIANCE",
-   "iep": 182.75,
-   "last_price": 182.75,
-   "prev_close": 192.35,
-   "change_pct": -4.99,
-   "year_high": 236.1,
-   "year_low": 192.35,
    "purpose": null
   },
   {
@@ -356,6 +346,16 @@
    "change_pct": -4.99,
    "year_high": 157,
    "year_low": 131.46,
+   "purpose": null
+  },
+  {
+   "symbol": "QUALIANCE",
+   "iep": 182.75,
+   "last_price": 182.75,
+   "prev_close": 192.35,
+   "change_pct": -4.99,
+   "year_high": 236.1,
+   "year_low": 192.35,
    "purpose": null
   },
   {
@@ -389,16 +389,6 @@
    "purpose": null
   },
   {
-   "symbol": "SAMHI",
-   "iep": 154.01,
-   "last_price": 154.01,
-   "prev_close": 161.98,
-   "change_pct": -4.92,
-   "year_high": 217.3,
-   "year_low": 127,
-   "purpose": null
-  },
-  {
    "symbol": "MYSORPETRO",
    "iep": 123.6,
    "last_price": 123.6,
@@ -406,6 +396,16 @@
    "change_pct": -4.92,
    "year_high": 182.03,
    "year_low": 111,
+   "purpose": null
+  },
+  {
+   "symbol": "SAMHI",
+   "iep": 154.01,
+   "last_price": 154.01,
+   "prev_close": 161.98,
+   "change_pct": -4.92,
+   "year_high": 217.3,
+   "year_low": 127,
    "purpose": null
   },
   {

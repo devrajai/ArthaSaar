@@ -2,8 +2,8 @@ name: Telegram Alerts
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * 1-5"    # 09:30 IST — market open
-    - cron: "50 10 * * 1-5"  # 16:20 IST — market close
+    - cron: "50 3 * * 1-5"    # 09:20 IST — market open summary
+    - cron: "30 10 * * 1-5"  # 16:00 IST — market close summary
 concurrency:
   group: telegram
   cancel-in-progress: false

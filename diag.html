@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MB diag</title></head>
+<body style="font:13px/1.5 monospace;background:#0b0d12;color:#cdd3e0;padding:12px">
+<pre id="r">testing files…</pre>
+<script>
+var files = ["oldapp.js","scrfix.js","scrfix2.js","aifix.js","aifix2.js","aifix3.js","mbpatch.js","dtfix.js","brandfix.js","tools.js","tools1b.js","tools2.js","tools3.js","tools4.js","tools5.js","learnfix.js","stagefix.js","guidefix.js","guide2.js","deskfix.js","bluefix2.js","inputfix.js","smart.js","mft.js","learnadd.js","style.css","index.html"];
+var out = [], i = 0;
+function next() {
+  if (i >= files.length) { document.getElementById("r").textContent = "DIAG-DONE\n" + out.join("\n"); return; }
+  var f = files[i++];
+  fetch(f + "?t=" + Date.now()).then(function (r) {
+    return r.text().then(function (t) {
+      out.push(f + " | " + r.status + " | " + t.length + "b" + (t.length === 0 ? " | EMPTY!!" : " | ok"));
+      next();
+    });
+  }).catch(function (e) { out.push(f + " | FETCH-FAIL | " + String(e).slice(0, 60)); next(); });
+}
+next();
+</script></body></html>

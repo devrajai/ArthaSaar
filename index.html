@@ -13,7 +13,7 @@
 <script>
 /* ---------- privacy gate ---------- */
 (function () {
-  var HASH = "402050bf47fafdda98bb3680ffe9423a597f06e1aa61065993b5cd7c8574e2dc";
+  var HASH = "b811a679d90e2cfdd9996aaa2a37610af14bb604cb3492b6ed15914411885edb";
   var ok = false;
   try { ok = localStorage.getItem("mb-gate") === "OK"; } catch (e) {}
   try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate"); ok = false; } } catch (e) {}

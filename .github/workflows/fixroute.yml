@@ -1,0 +1,21 @@
+name: fixroute
+on:
+  workflow_dispatch
+concurrency:
+  group: fixroute
+  cancel-in-progress: false
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/fix_route.py
+      - run: node --check mft.js && node --check oldapp.js
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add mft.js oldapp.js index.html
+          git commit -m "fix: router views snapshot bug + mft.js quote repair + static mf section (v=k)"
+          git push

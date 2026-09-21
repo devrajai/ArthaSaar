@@ -130,7 +130,7 @@ tbody tr:hover{background:var(--glass2)}
 .controls input,.controls select{font-family:var(--font);font-size:13px;padding:8px 10px;
   border-radius:10px;border:1px solid var(--border);background:var(--glass2);color:var(--text);outline:none}
 .controls input{flex:1;min-width:140px}
-.controls input:focus,.controls select:focus{border-color:var(--blue)}
+.controls input:focus,.controls select:focus{border-color:var(--border2)}
 .chip{font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:99px;
   border:1px solid var(--border);background:var(--glass);color:var(--dim);cursor:pointer}
 .chip.on{background:var(--blue-dim);color:var(--blue);border-color:var(--blue)}

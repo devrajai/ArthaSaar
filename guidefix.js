@@ -1,27 +1,22 @@
-/* guidefix.js — chart fix (modern TradingView embed), summary outline fix, site guide card */
+/* guidefix.js — chart: direct TradingView iframe (symbol in URL, cannot default) + focus outline fix */
 (function () {
-  /* 1. charts: replace legacy tv.js with official advanced-chart embed, rebuilt per symbol */
-  var ivLabels = { "1": "1 min", "5": "5 min", "15": "15 min", "60": "1 hour", "D": "Daily" };
+  function tvFull(sym) {
+    if (typeof tvSymbol === "function") return tvSymbol(sym);
+    var x = (sym || "").trim().toUpperCase();
+    return x ? "NSE:" + x : "NSE:RELIANCE";
+  }
   function tvDraw(sym) {
-    var full = (typeof tvSymbol === "function" ? tvSymbol(sym) : "NSE:" + sym);
-    var box = $("#tvBox");
+    var full = tvFull(sym), box = $("#tvBox");
     if (!box) return;
-    box.innerHTML = '<div class="tradingview-widget-container" style="height:430px;border-radius:12px;overflow:hidden">' +
-      '<div class="tradingview-widget-container__widget" style="height:100%"></div></div>' +
-      '<div class="footer-note" style="margin-top:6px">showing ' + esc(full) + " · " + (ivLabels[window.__mbIv || "D"] || window.__mbIv || "D") + "</div>";
-    var s = document.createElement("script");
-    s.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    s.async = true;
-    s.type = "text/javascript";
-    s.innerHTML = JSON.stringify({
-      autosize: true, symbol: full, interval: window.__mbIv || "D",
-      timezone: "Asia/Kolkata",
-      theme: document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark",
-      style: "1", locale: "en",
-      hide_side_toolbar: true, allow_symbol_change: false,
-      support_host: "https://www.tradingview.com"
-    });
-    box.insertBefore(s, box.firstChild);
+    var iv = window.__mbIv || "D";
+    var labels = { "1": "1 min", "5": "5 min", "15": "15 min", "60": "1 hour", "D": "Daily" };
+    var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    var src = "https://s.tradingview.com/widgetembed/?symbol=" + encodeURIComponent(full) +
+      "&interval=" + encodeURIComponent(iv) + "&theme=" + theme + "&style=1&locale=en" +
+      "&timezone=" + encodeURIComponent("Asia/Kolkata") +
+      "&hide_side_toolbar=true&allow_symbol_change=false&withdateranges=true&save_image=false&hideideas=1";
+    box.innerHTML = '<iframe src="' + src + '" allowtransparency="true" frameborder="0" scrolling="no" style="width:100%;height:460px;border:0;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03)"></iframe>' +
+      '<div class="footer-note" style="margin-top:6px">showing ' + esc(full) + " · " + (labels[iv] || iv) + " · chart by TradingView</div>";
   }
   window.renderCharts2 = function () {
     window.__mbIv = window.__mbIv || "D";
@@ -33,9 +28,9 @@
     $("#chIv").querySelectorAll(".chip").forEach(function (b) {
       b.onclick = function () {
         window.__mbIv = b.getAttribute("data-iv");
-        window.__mbSym = $("#chSym").value.trim() || window.__mbSym;
-        window.renderCharts2();
-      };
+        var v = $("#chSym").value.trim(); if (v) window.__mbSym = v;
+        tvDraw(window.__mbSym);
+      }
     });
     tvDraw(window.__mbSym);
     $("#chGo").onclick = function () {
@@ -43,12 +38,17 @@
       if (v) window.__mbSym = v;
       tvDraw(window.__mbSym);
     };
-    $("#chSym").onkeydown = function (e) { if (e.key === "Enter") { var v = $("#chSym").value.trim(); if (v) window.__mbSym = v; tvDraw(window.__mbSym); } };
+    $("#chSym").onkeydown = function (e) {
+      if (e.key === "Enter") {
+        var v = $("#chSym").value.trim();
+        if (v) window.__mbSym = v;
+        tvDraw(window.__mbSym);
+      }
+    };
   };
   if (typeof loaders !== "undefined") loaders.charts = window.renderCharts2;
-
-  /* 2. blue-line fix: no focus outline / tap highlight on details summaries */
+  /* blue-line fix: no focus outline / tap highlight on tappable rows */
   var st = document.createElement("style");
-  st.textContent = "summary{outline:none;-webkit-tap-highlight-color:transparent}summary:focus{outline:none}details{border:0}";
+  st.textContent = "summary{outline:none;-webkit-tap-highlight-color:transparent}summary:focus{outline:none}button:focus{outline:none}a:focus{outline:none}details{border:0}.chip{-webkit-tap-highlight-color:transparent}";
   document.head.appendChild(st);
 })();

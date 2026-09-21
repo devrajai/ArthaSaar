@@ -211,6 +211,7 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
     <select id="scrRsi"><option value="all">RSI: all</option><option value="os">Oversold <30</option><option value="lt40">Weak <40</option><option value="gt60">Strong >60</option><option value="ob">Overbought >70</option></select>
     <select id="scrEma"><option value="all">EMA200: all</option><option value="above">Above EMA200</option><option value="below">Below EMA200</option></select>
     <select id="scrSort"><option value="chg">Sort: Chg% ▼</option><option value="rsi">Sort: RSI ▲</option><option value="rsid">RSI ▼</option><option value="52w">Near 52w low</option><option value="vol">Volume spike</option><option value="up">Near 52w high</option></select>
+    <button class="chip" id="scrAI">AI 🔮 bullish</button>
   </div>
   <div class="card flat" style="padding:0">
     <div class="tblwrap" style="border:none;margin:0">
@@ -247,7 +248,7 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
   <div class="controls">
     <input id="dfSearch" type="search" placeholder="Search stock name / symbol…" style="flex:2;min-width:150px">
     <select id="dfPE"><option value="0">PE: any</option><option value="10">< 10</option><option value="15">< 15</option><option value="20">< 20</option><option value="30">< 30</option></select>
-    <select id="dfROCE"><option value="0">ROCE: any</option><option value="15">> 15%</option><option value="20">> 20%</option><option value="25">> 25%</option></select>
+    <select id="dfROCE"><option value="0">ROE: any</option><option value="15">> 15%</option><option value="20">> 20%</option><option value="25">> 25%</option></select>
     <select id="dfSort"><option value="mcap">Sort: MCap</option><option value="roce">ROCE</option><option value="pe">P/E</option><option value="growth">Profit YoY</option><option value="prom">Promoter %</option></select>
     <button class="chip" id="dfQuality">Quality: PE<20 · ROCE>15 · Profit↑</button>
   </div>

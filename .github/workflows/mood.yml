@@ -1,0 +1,22 @@
+name: AI Mood
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2,8,14,20 * * *"
+concurrency:
+  group: mood
+  cancel-in-progress: false
+jobs:
+  mood:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/mood_collect.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/mood.json
+          git commit -m "data: AI mood update" || echo "no change"
+          git push

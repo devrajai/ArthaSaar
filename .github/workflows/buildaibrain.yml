@@ -1,0 +1,21 @@
+name: buildaibrain
+on:
+  workflow_dispatch
+concurrency:
+  group: buildaibrain
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/build_aibrain.py
+      - run: node --check aibrain.js && node --check app.js
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add aibrain.js index.html app.js
+          git commit -m "feat: AI Brain section (mood meter + crash warning + TimesFM report card + sector rotation) v=l"
+          git push

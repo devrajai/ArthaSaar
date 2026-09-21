@@ -142,7 +142,7 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
     <a class="tile" href="#portfolio"><span class="t-ic">💼</span><span class="t-nm">Portfolio</span><span class="t-sb">my holdings · P&L</span></a>
     <div class="hgroup">LEARN</div>
     <a class="tile learnchip" href="#learn"><span class="t-ic">📚</span><span class="t-nm">Learn</span><span class="t-sb">strategies · glossary · rules</span></a>
-    <a class="tile" href="#studies"><span class="t-ic">🧪</span><span class="t-nm">Studies</span><span class="t-sb">Sensex 46 yrs</span></a>
+    <a class="tile" href="#studies"><span class="t-ic">🧪</span><span class="t-nm">Studies</span><span class="t-sb">history heatmap</span></a>
     <a class="tile" href="#mynotes"><span class="t-ic">📝</span><span class="t-nm">My Notes</span><span class="t-sb">course notes</span></a>
   </div>
 </section>
@@ -197,7 +197,8 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 
 <section id="heatmap" style="display:none">
   <a class="backbtn" href="#home">⌂ Home</a>
-  <h2>Sector Heatmap — today's winners by sector</h2>
+  <h2>Heatmaps — sectors · all indices · stocks</h2>
+  <div class="controls" id="hmChips"></div>
   <div id="hmBody"></div>
 </section>
 
@@ -286,6 +287,10 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
       <tbody id="pfBody"></tbody>
     </table></div>
     <div class="footer-note" id="pfNote"></div>
+  </div>
+  <div class="card">
+    <div class="subhead">Risk & Scenario — market girega to kitna girega?</div>
+    <div id="pfRisk"></div>
   </div>
 </section>
 
@@ -385,7 +390,8 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 
 <section id="studies" style="display:none">
   <a class="backbtn" href="#home">⌂ Home</a>
-  <h2>Studies — Sensex 46 years · Budget days</h2>
+  <h2>Studies — history heatmap · Sensex years · Budget days</h2>
+  <div class="card" id="histCard"></div>
   <div class="card" id="sensexCard"></div>
   <div class="card" id="budgetCard"></div>
 </section>
@@ -396,7 +402,7 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
   <div id="notesBox"></div>
 </section>
 
-<footer>
+<footer style="text-align:center">
   Market Brain By : Dev Raj with Sarvam Ai 😎😂
 </footer>
 

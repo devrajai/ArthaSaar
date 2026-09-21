@@ -12,8 +12,7 @@
     '<div id="mfRes" style="margin-top:8px"></div></div>' +
     '<div class="card" id="mfCard"></div>' +
     '<div class="card" id="mfSip"></div>' +
-    '<div class="card" id="mfPf"></div>' +
-    '<div class="note" style="margin:6px 2px 0">Source: AMFI (free, daily). Fund-manager ki personal history free mein nahi milti — house + category dikhta hai. Advice nahi.</div>';
+    '<div class="card" id="mfPf"></div>';
   var ft = document.querySelector("footer");
   if (ft) ft.parentNode.insertBefore(sec, ft); else document.body.appendChild(sec);
 

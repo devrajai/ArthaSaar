@@ -1,0 +1,45 @@
+name: Index History Collect
+on:
+  schedule:
+    # Sunday 7:55 AM IST — weekly refresh keeps current month up to date
+    - cron: '25 2 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: index-history-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install deps
+        run: pip install yfinance
+      - name: Collect index monthly history
+        run: python scripts/index_history_collect.py
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/index-history.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: index history (monthly returns)'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 15
+            done
+            echo 'ERROR: push failed'; exit 1
+          fi

@@ -1,0 +1,35 @@
+name: Telegram Day Analysis
+
+on:
+  schedule:
+    # 3:45 PM IST Mon-Fri — 15 min after market close (15:30)
+    - cron: '15 10 * * 1-5'
+  workflow_dispatch:
+
+concurrency:
+  group: telegram
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install yfinance (Sensex fallback)
+        run: pip install -q yfinance
+
+      - name: Send day analysis
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/telegram_brain.py afternoon

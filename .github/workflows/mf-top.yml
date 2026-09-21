@@ -1,0 +1,37 @@
+name: MF Top Performers
+on:
+  schedule:
+    # 22:15 IST Mon-Sat — after mf-collect (21:45 IST) has refreshed NAVs
+    - cron: '45 16 * * 1-6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mf-top
+  cancel-in-progress: false
+
+jobs:
+  top:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: compute top performers
+        run: |
+          python3 scripts/mf_top.py
+          python3 -c "import json; d=json.load(open('data/mf-top.json')); assert d.get('count',0) >= 15, 'too few: %s' % d.get('count')"
+      - name: commit if changed
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/mf-top.json
+          if git diff --cached --quiet; then echo "no change"; else
+            git commit -m "data: mf-top refresh ($(date -u +%d-%b-%Y))"
+            for i in 1 2 3; do git push && break; git pull --rebase -X theirs || true; done
+          fi

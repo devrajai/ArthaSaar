@@ -1,5 +1,5 @@
-/* mf.js — MF Tracker: AMFI se saare funds ka daily NAV + search + fund detail
-   (mfapi.in history, 1Y/3Y returns) + SIP/lumpsum calculator + My MF holdings. */
+/* mf.js — MF Tracker: AMFI daily NAV + full fund detail (year-by-year returns,
+   vs Nifty, SIP backtest) + Top Performers + SIP calc + My MF + guide. */
 (function () {
   var t = document.querySelector('a.tile[href="#fundamentals"]');
   if (t) t.insertAdjacentHTML("afterend",
@@ -11,15 +11,160 @@
     '<input id="mfQ" placeholder="e.g. bluechip / hdfc / 120502" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid var(--border2,var(--border,rgba(255,255,255,.12)));background:var(--glass2,rgba(255,255,255,.05));color:inherit;font-size:14px">' +
     '<div id="mfRes" style="margin-top:8px"></div></div>' +
     '<div class="card" id="mfCard"></div>' +
+    '<div class="card" id="mfTop"></div>' +
     '<div class="card" id="mfSip"></div>' +
-    '<div class="card" id="mfPf"></div>';
+    '<div class="card" id="mfPf"></div>' +
+    '<div class="card" id="mfGuide"></div>';
   var ft = document.querySelector("footer");
   if (ft) ft.parentNode.insertBefore(sec, ft); else document.body.appendChild(sec);
 
   var esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>]/g, function (c) { return "\x26#x" + c.charCodeAt(0).toString(16) + ";"; }); };
   var pc = function (v) { return v == null ? "—" : '<span class="' + (v >= 0 ? "pos" : "neg") + '">' + (v >= 0 ? "+" : "") + v + "%</span>"; };
-  var nf2 = function (v) { return "\u20B9" + (Math.round(v * 100) / 100).toLocaleString("en-IN"); };
-  var FUNDS = [];
+  var pc2 = function (v) { return v == null ? "—" : '<b class="' + (v >= 0 ? "pos" : "neg") + '">' + (v >= 0 ? "+" : "") + v + "%</b>"; };
+  var nf2 = function (v) { return "\u20B9" + Math.round(v).toLocaleString("en-IN"); };
+  var FUNDS = [], NIFTY_Y = null;
+
+  function niftyYearly() {
+    if (NIFTY_Y) return NIFTY_Y;
+    jload("index-history").then(function (d) {
+      var row = (d.indices || []).filter(function (x) { return x.key === "nifty"; })[0];
+      if (!row) return;
+      var out = {};
+      Object.keys(row.years || {}).forEach(function (y) {
+        var r = 1, c = 0;
+        Object.keys(row.years[y]).forEach(function (m) { r *= 1 + (row.years[y][m] || 0) / 100; c++; });
+        out[y] = c ? (r - 1) * 100 : null;
+      });
+      NIFTY_Y = out;
+    }).catch(function () {});
+  }
+
+  function yearRows(hist) {
+    var byY = {};
+    for (var i = hist.length - 1; i >= 0; i--) {
+      var p = (hist[i].date || "").split("-");
+      if (p.length === 3) byY[p[2]] = +hist[i].nav;
+    }
+    var ys = Object.keys(byY).sort();
+    var rows = [];
+    for (var j = 1; j < ys.length; j++) rows.push({ y: ys[j], r: (byY[ys[j]] / byY[ys[j - 1]] - 1) * 100 });
+    return rows.slice(-8);
+  }
+
+  function sipBacktest(hist, amt, years) {
+    var months = [];
+    for (var i = hist.length - 1; i >= 0; i--) {
+      var p = (hist[i].date || "").split("-");
+      if (p.length !== 3) continue;
+      var key = p[2] + "-" + p[1];
+      if (!months.length || months[months.length - 1].key !== key) months.push({ key: key, nav: +hist[i].nav });
+    }
+    if (months.length < years * 12 + 1) return null;
+    months = months.slice(-(years * 12 + 1), months.length - 1);
+    var units = 0, inv = 0;
+    months.forEach(function (mm) { units += amt / mm.nav; inv += amt; });
+    var val = units * (+hist[0].nav);
+    return { inv: inv, val: val, pct: (val / inv - 1) * 100 };
+  }
+
+  function trailHtml(hist) {
+    function ret(days) {
+      var now = +hist[0].nav, cut = new Date(hist[0].date.split("-").reverse().join("-")).getTime() - days * 864e5, last = null;
+      for (var i = hist.length - 1; i >= 0; i--) {
+        var d = new Date(hist[i].date.split("-").reverse().join("-")).getTime();
+        if (d <= cut) last = +hist[i].nav; else break;
+      }
+      return last ? (now / last - 1) * 100 : null;
+    }
+    var parts = [];
+    [["1Y", 365], ["3Y", 1095], ["5Y", 1825], ["10Y", 3650]].forEach(function (p) {
+      var v = ret(p[1]);
+      if (v != null) parts.push(p[0] + " " + pc2(v.toFixed(1)));
+    });
+    return parts.length ? '<div class="note" style="margin-top:6px">returns: ' + parts.join(" · ") + "</div>" : "";
+  }
+
+  function showFund(code) {
+    var f = null;
+    FUNDS.forEach(function (x) { if (x.c === code) f = x; });
+    if (!f) return;
+    $("#mfCard").innerHTML = '<div class="subhead">' + esc2(f.n) + "</div>" +
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:4px 0">' +
+      '<div><div class="note">NAV</div><div style="font-size:24px;font-weight:700">\u20B9' + f.v + "</div></div>" +
+      '<div><div class="note">aaj</div><div style="font-size:24px;font-weight:700">' + pc(f.p) + "</div></div></div>" +
+      '<div class="note">' + esc2(f.h || "—") + " · " + esc2(f.k || "—") + "</div>" +
+      '<div class="note" style="margin-top:8px">units: <input id="mfU" type="number" placeholder="units" style="width:90px;padding:6px 8px;border-radius:8px;border:1px solid var(--border2,rgba(255,255,255,.12));background:var(--glass2,rgba(255,255,255,.05));color:inherit"> ' +
+      '<button class="chip on" id="mfAddBtn">add to My MF</button></div>' +
+      '<div id="mfHist" class="note" style="margin-top:8px">history load ho rahi…</div>';
+    var box = $("#mfHist");
+    fetch("https://api.mfapi.in/mf/" + code).then(function (r) { return r.json(); }).then(function (d) {
+      var hist = (d && d.data) || [];
+      if (hist.length < 30) { box.textContent = "chart data nahi mili"; return; }
+      var lastN = hist.slice(0, 365).reverse().map(function (x) { return +x.nav; });
+      var yr = yearRows(hist), nY = NIFTY_Y || {};
+      var bars = yr.map(function (r) {
+        var w = Math.min(100, Math.abs(r.r) * 2.2);
+        var cls = r.r >= 0 ? "pos" : "neg";
+        var bg = r.r >= 0 ? "linear-gradient(90deg,#22c55e,#4ade80)" : "linear-gradient(90deg,#ef4444,#f87171)";
+        var nv = nY[r.y] != null ? ' <span style="opacity:.55">Nifty ' + (nY[r.y] >= 0 ? "+" : "") + nY[r.y].toFixed(0) + "%</span>" : "";
+        return '<div style="display:flex;align-items:center;gap:8px;margin:3px 0">' +
+          '<span style="width:38px;font-size:11px;opacity:.8">' + r.y + "</span>" +
+          '<span style="flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden"><i style="display:block;width:' + w.toFixed(0) + '%;height:100%;border-radius:5px;background:' + bg + '"></i></span>' +
+          '<span class="' + cls + '" style="width:56px;text-align:right;font-size:12px">' + (r.r >= 0 ? "+" : "") + r.r.toFixed(1) + "%</span></div>" +
+          '<div class="note" style="margin:-1px 0 2px 46px;font-size:10px">' + nv + "</div>";
+      }).join("");
+      var sip = sipBacktest(hist, 5000, 3);
+      var m = (d.meta || {});
+      box.innerHTML = (lastN.length > 30 ? sparkline(lastN) : "") + trailHtml(hist) +
+        (yr.length ? '<div class="subhead" style="margin-top:10px">Year-by-Year</div>' + bars : "") +
+        (sip ? '<div class="note" style="margin-top:8px">SIP test — \u20B95,000/month 3 saal: invested <b>' + nf2(sip.inv) + "</b> \u2192 value <b class='pos'>" + nf2(sip.val) + "</b> (" + (sip.pct >= 0 ? "+" : "") + sip.pct.toFixed(0) + "%)</div>" : "") +
+        '<div class="note" style="margin-top:8px">' + esc2(m.fund_house || f.h || "") + (m.scheme_category ? " · " + esc2(m.scheme_category) : "") + "</div>" +
+        '<div class="note" style="margin-top:6px">AUM / expense ratio / holdings / fund manager — free data mein nahi milte, <a style="color:var(--blue,#5aa7ff)" target="_blank" rel="noopener" href="https://www.google.com/search?q=' + encodeURIComponent((f.n || "").split(" \u00b7 ")[0] + " mutual fund AUM expense ratio portfolio holdings") + '">yahan dekho \u2192</a></div>';
+    }).catch(function () { box.textContent = "history offline — NAV upar wala pakka hai"; });
+    $("#mfAddBtn").onclick = function () {
+      var u = parseFloat($("#mfU").value);
+      if (!u || u <= 0) { box.textContent = "units daalo pehle"; return; }
+      var p = mbTool.nload("mb-pf");
+      p.push({ c: f.c, n: f.n, u: u, nav: f.v });
+      mbTool.nsave("mb-pf", p);
+      $("#mfU").value = "";
+      renderPf();
+      box.textContent = "added to My MF ✓";
+    };
+  }
+
+  function renderTop() {
+    jload("mf-top").then(function (d) {
+      var nf = (d.nifty || {}), rows = d.funds || [];
+      if (!rows.length) { $("#mfTop").innerHTML = '<div class="subhead">\uD83C\uDFC6 Top Performers</div><div class="note">data aaj raat banega — kal subah se dikhega</div>'; return; }
+      $("#mfTop").innerHTML = '<div class="subhead">\uD83C\uDFC6 Top Performers — popular Direct-Growth funds (3Y return se sorted)</div>' +
+        '<div class="tblwrap"><table><thead><tr><th>Fund</th><th>1Y</th><th>3Y</th><th>5Y</th><th>vs Nifty</th></tr></thead><tbody>' +
+        rows.map(function (r) {
+          var beat = (r.r3 != null && nf.r3 != null) ? r.r3 - nf.r3 : null;
+          return '<tr data-mc="' + esc2(r.c) + '"><td class="note">' + esc2(r.n).slice(0, 40) + "</td><td>" + pc(r.r1) + "</td><td><b>" + pc(r.r3) + "</b></td><td>" + pc(r.r5) + "</td>" +
+            '<td>' + (beat == null ? "—" : '<b class="' + (beat >= 0 ? "pos" : "neg") + '">' + (beat >= 0 ? "✓ +" : "✗ ") + beat.toFixed(0) + "</b>") + "</td></tr>";
+        }).join("") + "</tbody></table></div>" +
+        '<div class="note" style="margin-top:6px">Nifty 3Y: ' + (nf.r3 != null ? "+" + nf.r3 + "%" : "—") + " · roz raat update · ye 34 popular funds hain, poora market nahi</div>";
+      $("#mfTop").querySelectorAll("[data-mc]").forEach(function (tr) {
+        tr.onclick = function () { showFund(tr.getAttribute("data-mc")); window.scrollTo(0, 0); };
+      });
+    }).catch(function () { $("#mfTop").innerHTML = ""; });
+  }
+
+  function renderGuide() {
+    $("#mfGuide").innerHTML = '<div class="subhead">\uD83E\uDDED Best MF kaise chunein?</div>' +
+      '<div class="note" style="margin-top:6px">· <b>Category pehle decide karo</b> — Large Cap (sthair), Flexi (all-round), Mid/Small (tez but risky), Index (sasta, Nifty-jaisa), Gold (safety).<br>' +
+      "· <b>3-5 saal ka record dekho</b> — 1 saal ka top fund luck bhi ho sakta hai. Top Performers table mein 3Y dekho, Nifty se kitna aage (vs Nifty column).<br>" +
+      "· <b>Direct Plan + Growth</b> lo — Regular plan ka commission ~1% har saal katata hai.<br>" +
+      "· <b>Index fund vs active</b> — agar fund 3-5 saal se Nifty ko beat nahi kar raha to sasta Index fund hi better hai.<br>" +
+      "· <b>SIP best hai beginners ke liye</b> — timing ka tension khatam, roz/fixed date auto-invest.<br>" +
+      "· Ek hi category ke 10 fund mat le — 2-3 achhe fund kaafi hain.</div>" +
+      '<div class="subhead" style="margin-top:12px">MF vs ETF — kya lena hai?</div>' +
+      '<div class="note" style="margin-top:6px">· <b>Index MF</b>: SIP auto, NAV ek rate (no spread), demat account nahi chahiye. Best for SIP.<br>" +
+      "· <b>ETF</b>: exchange par stock ki tarah kharido — intraday price, sasta expense, but liquidity kam aur demat chahiye. Best for lumpsum + bade amounts.<br>" +
+      "· Simple rule: <b>SIP karoge → Index MF. Lumpsum ho → bade ETF (Nifty BeES jaise)</b>.</div>" +
+      '<div class="note" style="margin-top:10px"><b>Honest note:</b> AUM, expense ratio, portfolio holdings (sector/stocks %) aur fund manager ki details free data mein available nahi hain — wo fund ke page ya AMC site par dekhna (fund card mein link hai). Ye terminal sirf free data dikhata hai — invest karne se pehle khud verify karo.</div>';
+  }
 
   function renderPf() {
     var pf = mbTool.nload("mb-pf");
@@ -39,59 +184,10 @@
     var tp = tv - tc;
     box.innerHTML = '<div class="subhead">My MF Holdings</div><div class="tblwrap"><table><thead><tr><th>Fund</th><th>Units</th><th>Avg ₹</th><th>NAV ₹</th><th>Day</th><th>Value</th><th></th></tr></thead><tbody>' + rows +
       '<tr><td colspan="5"><b>TOTAL</b></td><td><b>' + nf2(tv) + '</b></td><td></td></tr></tbody></table></div>' +
-      '<div class="note">invested ' + nf2(tc) + " · value " + nf2(tv) + " · P&L <b class='" + (tp >= 0 ? "pos" : "neg") + "'>" + (tp >= 0 ? "+" : "−") + nf2(Math.abs(tp)).slice(0) + "</b></div>";
+      '<div class="note">invested ' + nf2(tc) + " · value " + nf2(tv) + " · P&L <b class='" + (tp >= 0 ? "pos" : "neg") + "'>" + (tp >= 0 ? "+" : "\u2212") + nf2(Math.abs(tp)) + "</b></div>";
     box.querySelectorAll("[data-mdel]").forEach(function (b) {
       b.onclick = function () { var p = mbTool.nload("mb-pf"); p.splice(+b.getAttribute("data-mdel"), 1); mbTool.nsave("mb-pf", p); renderPf(); };
     });
-  }
-
-  function returnsFrom(hist) {
-    if (!hist || hist.length < 30) return "";
-    var navs = hist.map(function (x) { return +x.nav; });
-    var last = navs[0], oneY = null, threeY = null;
-    hist.forEach(function (x, i) {
-      var d = new Date(x.date.split("-").reverse().join("-"));
-      var days = (Date.now() - d.getTime()) / 864e5;
-      if (oneY === null && days >= 365 && days < 400) oneY = navs[i];
-      if (threeY === null && days >= 1095 && days < 1130) threeY = navs[i];
-    });
-    var out = [];
-    if (oneY) out.push("1Y <b class='pos'>" + ((last / oneY - 1) * 100).toFixed(1) + "%</b>");
-    if (threeY) out.push("3Y <b class='pos'>" + ((last / threeY - 1) * 100).toFixed(1) + "%</b>");
-    return out.length ? '<div class="note" style="margin-top:6px">returns: ' + out.join(" · ") + "</div>" : "";
-  }
-
-  function showFund(code) {
-    var f = null;
-    FUNDS.forEach(function (x) { if (x.c === code) f = x; });
-    if (!f) return;
-    $("#mfCard").innerHTML = '<div class="subhead">' + esc2(f.n) + "</div>" +
-      '<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:4px 0">' +
-      '<div><div class="note">NAV</div><div style="font-size:24px;font-weight:700">\u20B9' + f.v + "</div></div>" +
-      '<div><div class="note">aaj</div><div style="font-size:24px;font-weight:700">' + pc(f.p) + "</div></div></div>" +
-      '<div class="note">' + esc2(f.h || "—") + " · " + esc2(f.k || "—") + "</div>" +
-      '<div class="note" style="margin-top:8px">units: <input id="mfU" type="number" placeholder="units" style="width:90px;padding:6px 8px;border-radius:8px;border:1px solid var(--border2,rgba(255,255,255,.12));background:var(--glass2,rgba(255,255,255,.05));color:inherit"> ' +
-      '<button class="chip on" id="mfAddBtn">add to My MF</button></div>' +
-      '<div id="mfHist" class="note" style="margin-top:8px">history load ho rahi…</div>';
-    var box = $("#mfHist");
-    fetch("https://api.mfapi.in/mf/" + code).then(function (r) { return r.json(); }).then(function (d) {
-      var hist = (d && d.data) || [];
-      if (!hist.length) { box.textContent = "chart data nahi mili"; return; }
-      var lastN = hist.slice(0, 365).reverse().map(function (x) { return +x.nav; });
-      var m = (d.meta || {});
-      box.innerHTML = (lastN.length > 30 ? sparkline(lastN) : "") + returnsFrom(hist) +
-        '<div class="note" style="margin-top:4px">' + esc2(m.fund_house || f.h || "") + (m.scheme_category ? " · " + esc2(m.scheme_category) : "") + "</div>";
-    }).catch(function () { box.textContent = "history offline — NAV upar wala pakka hai"; });
-    $("#mfAddBtn").onclick = function () {
-      var u = parseFloat($("#mfU").value);
-      if (!u || u <= 0) { box.textContent = "units daalo pehle"; return; }
-      var p = mbTool.nload("mb-pf");
-      p.push({ c: f.c, n: f.n, u: u, nav: f.v });
-      mbTool.nsave("mb-pf", p);
-      $("#mfU").value = "";
-      renderPf();
-      box.textContent = "added to My MF ✓";
-    };
   }
 
   function search(q) {
@@ -130,12 +226,15 @@
   }
 
   loaders.mf = function () {
+    niftyYearly();
     jload("mf").then(function (d) {
       FUNDS = (d.funds || []).filter(function (f) { return f.v; });
       $("#mfRes").innerHTML = "<div class='note'>" + (d.count || FUNDS.length).toLocaleString("en-IN") + " funds ready — naam likho upar</div>";
     }).catch(function () {
       $("#mfRes").innerHTML = "<div class='note'>MF data load nahi hua — thodi der baad try karo</div>";
     });
+    renderTop();
+    renderGuide();
     renderPf();
     sipCard();
     var q = null;

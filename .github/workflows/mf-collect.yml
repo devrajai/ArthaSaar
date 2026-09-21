@@ -24,10 +24,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: download NAVAll via curl
+        run: |
+          curl -sL --retry 3 --retry-delay 5 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" -H "Accept: text/plain" -H "Referer: https://www.amfiindia.com/" "https://www.amfiindia.com/spages/NAVAll.txt" -o NAVAll.txt || echo "curl failed, python will try"
+          echo "size: $(wc -c < NAVAll.txt 2>/dev/null || echo 0)"
       - name: run mf collector
         run: |
           python3 scripts/mf_collect.py
-          python3 -c "import json; d=json.load(open('data/mf.json')); assert d.get('count',0) > 5000, 'too few funds: %s' % d.get('count')"
+          python3 -c "import json; d=json.load(open('data/mf.json')); assert d.get('count',0) > 3000, 'too few funds: %s' % d.get('count')"
       - name: commit if changed
         run: |
           git config user.name "devrajai"

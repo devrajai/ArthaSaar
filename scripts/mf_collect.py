@@ -21,8 +21,29 @@ def cat_short(sec):
         return (head + " - " + parts[1])[:28]
     return c.strip()[:28]
 
-req = urllib.request.Request(URL, headers={"User-Agent": "Mozilla/5.0"})
-raw = urllib.request.urlopen(req, timeout=120).read().decode("utf-8", "ignore")
+def fetch():
+    try:
+        raw = open("NAVAll.txt", encoding="utf-8", errors="ignore").read()
+        if ";" in raw:
+            print("using pre-downloaded NAVAll.txt")
+            return raw
+    except Exception:
+        pass
+    for url in ("https://www.amfiindia.com/spages/NAVAll.txt", "https://amfiindia.com/spages/NAVAll.txt"):
+        try:
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+                "Accept": "text/plain,*/*", "Accept-Language": "en-US,en;q=0.9",
+                "Referer": "https://www.amfiindia.com/"})
+            raw = urllib.request.urlopen(req, timeout=120).read().decode("utf-8", "ignore")
+            if ";" in raw:
+                return raw
+            print("WARN bad response from %s: %r" % (url, raw[:120]))
+        except Exception as e:
+            print("WARN %s: %s" % (url, e))
+    raise SystemExit("AMFI download failed")
+
+raw = fetch()
 
 prev = {}
 if os.path.exists("data/mf.json"):

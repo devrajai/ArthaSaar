@@ -1,8 +1,8 @@
 name: TimesFM Forecasts
 on:
   schedule:
-    # weekly, Sunday 8:05 PM IST (after Friday close + weekend data settled)
-    - cron: '35 14 * * 0'
+    # daily 8:35 PM IST — fresh forecast every night after all EOD data is in
+    - cron: '35 14 * * *'
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   forecast:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install "timesfm[torch]" yfinance
 
-      - name: Run TimesFM 3.0 forecasts (88 series — indices, top 50 stocks, crypto, global)
+      - name: Run TimesFM 3.0 forecasts — 88 series, multi-horizon 7d to 3m
         run: python scripts/timesfm_forecast.py
 
       - name: Commit forecast data
@@ -41,12 +41,12 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes.'
           else
-            git commit -m 'chore: timesfm 3.0 weekly forecasts (88 series)'
+            git commit -m 'chore: timesfm 3.0 daily forecasts (multi-horizon + accuracy)'
             for i in 1 2 3 4 5; do
-              if git pull --rebase --autostash origin main && git push; then
+              if git pull --rebase --autostash -X theirs origin main && git push; then
                 echo 'Pushed successfully'; exit 0
               fi
-              echo "Push failed (attempt $i) — rebasing and retrying in 15s"
+              git rebase --abort || true
               sleep 15
             done
             echo 'ERROR: could not push after 5 attempts'; exit 1

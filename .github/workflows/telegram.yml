@@ -1,0 +1,20 @@
+name: Telegram Alerts
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * 1-5"    # 09:30 IST — market open
+    - cron: "50 10 * * 1-5"  # 16:20 IST — market close
+concurrency:
+  group: telegram
+  cancel-in-progress: false
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/telegram_alert.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}

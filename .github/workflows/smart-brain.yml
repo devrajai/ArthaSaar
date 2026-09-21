@@ -1,0 +1,37 @@
+name: Smart Brain (auto-analysis)
+on:
+  schedule:
+    # 20:55 IST Mon-Sat — after brain-collect (18:35/21:05) and timesfm (20:35) settle
+    - cron: '25 15 * * 1-6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: smart-brain
+cancel-in-progress: false
+
+jobs:
+  brain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: run smart brain
+        run: |
+          python3 scripts/smart_brain.py
+          python3 -c "import json; d=json.load(open('data/smart-brain.json')); assert d.get('guess') and 'bull' in d, 'bad output'"
+      - name: commit if changed
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/smart-brain.json
+          if git diff --cached --quiet; then echo "no change"; else
+            git commit -m "data: smart-brain refresh ($(date -u +%d-%b-%Y))"
+            for i in 1 2 3; do git push && break; git pull --rebase -X theirs || true; done
+          fi

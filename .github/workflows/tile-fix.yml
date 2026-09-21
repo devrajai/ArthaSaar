@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-          with:
-            ref: main
+        with:
+          ref: main
       - name: fix tile active blue border + ROCE label + bump version
         run: |
           python3 - << 'EOF'

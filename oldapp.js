@@ -1194,6 +1194,7 @@ const loaders = {dash: renderDash, indices: renderIndices, heatmap: renderHeatma
 const loaded = new Set([]);
 const views = document.querySelectorAll("section[id]");
 function showView(id) {
+  var views = document.querySelectorAll("section[id]");
   let found = false;
   views.forEach((s) => { const on = s.id === id; s.style.display = on ? "" : "none"; if (on) found = true; });
   if (!found) { views.forEach((s) => { s.style.display = s.id === "home" ? "" : "none"; }); id = "home"; }

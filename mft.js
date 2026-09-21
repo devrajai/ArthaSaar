@@ -7,8 +7,11 @@
     if (t) t.insertAdjacentHTML("afterend",
       '<a class="tile" href="#mf"><span class="t-ic">📊</span><span class="t-nm">MF Tracker</span><span class="t-sb">nav · sip · my funds</span></a>');
   }
-  var sec = document.createElement("section");
-  sec.id = "mf"; sec.style.display = "none";
+  var sec = document.getElementById("mf");
+  if (sec) sec.style.display = "none";
+  if (!sec) {
+    sec = document.createElement("section");
+    sec.id = "mf"; sec.style.display = "none";
   sec.innerHTML = '<a class="backbtn" href="#home">⌂ Home</a><h2>MF Tracker</h2>' +
     '<div class="card"><div class="subhead">Fund dhoondo — naam ya code</div>' +
     '<input id="mfQ" placeholder="e.g. bluechip / hdfc / 120502" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid var(--border2,var(--border,rgba(255,255,255,.12)));background:var(--glass2,rgba(255,255,255,.05));color:inherit;font-size:14px">' +
@@ -20,6 +23,7 @@
     '<div class="card" id="mfGuide"></div>';
   var ft = document.querySelector("footer");
   if (ft) ft.parentNode.insertBefore(sec, ft); else document.body.appendChild(sec);
+  }
 
   var esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>]/g, function (c) { return "\x26#x" + c.charCodeAt(0).toString(16) + ";"; }); };
   var pc = function (v) { return v == null ? "—" : '<span class="' + (v >= 0 ? "pos" : "neg") + '">' + (v >= 0 ? "+" : "") + v + "%</span>"; };
@@ -189,7 +193,7 @@
       "· <b>SIP best hai beginners ke liye</b> — timing ka tension khatam, roz/fixed date auto-invest.<br>" +
       "· Ek hi category ke 10 fund mat le — 2-3 achhe fund kaafi hain.</div>" +
       '<div class="subhead" style="margin-top:12px">MF vs ETF — kya lena hai?</div>' +
-      '<div class="note" style="margin-top:6px">· <b>Index MF</b>: SIP auto, NAV ek rate (no spread), demat account nahi chahiye. Best for SIP.<br>" +
+      '<div class="note" style="margin-top:6px">· <b>Index MF</b>: SIP auto, NAV ek rate (no spread), demat account nahi chahiye. Best for SIP.<br>' +
       "· <b>ETF</b>: exchange par stock ki tarah kharido — intraday price, sasta expense, but liquidity kam aur demat chahiye. Best for lumpsum + bade amounts.<br>" +
       "· Simple rule: <b>SIP karoge → Index MF. Lumpsum ho → bade ETF (Nifty BeES jaise)</b>.</div>" +
       '<div class="note" style="margin-top:10px"><b>Honest note:</b> AUM, expense ratio, portfolio holdings (sector/stocks %) aur fund manager ki details free data mein available nahi hain — wo fund ke page ya AMC site par dekhna (fund card mein link hai). Ye terminal sirf free data dikhata hai — invest karne se pehle khud verify karo.</div>';

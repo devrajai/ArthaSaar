@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """
-TELEGRAM IPO — daily IPO Terminal digest for Dev.
+TELEGRAM IPO — daily IPO Terminal digest.
 
-Runs in the market-brain repo (reuses its TG_TOKEN / TG_CHAT_ID secrets) but
-reads IPO data from the ipo-terminal repo via public raw URLs, so no new
-secrets are needed.
+Runs in the market-brain repo (uses its TG_TOKEN secret) and reads IPO data
+from the ipo-terminal repo via public raw URLs.
+
+Recipients: TG_CHAT_ID_IPO secret if set (comma-separated list), else falls
+back to TG_CHAT_ID. Put someone ONLY in TG_CHAT_ID_IPO -> they get only the
+IPO digest. Put them ONLY in TG_CHAT_ID -> only market messages.
+In both -> they get both.
 
 Message (sent ~8:45 AM IST daily via .github/workflows/telegram-ipo.yml):
   - IPOs closing today / allotment & listing today
@@ -199,12 +203,16 @@ def main():
         return
 
     token = os.environ.get("TG_TOKEN")
-    chat = os.environ.get("TG_CHAT_ID")
-    if not token or not chat:
+    # IPO recipients: TG_CHAT_ID_IPO if set (comma-separated), else TG_CHAT_ID.
+    chats = [c.strip() for c in os.environ.get("TG_CHAT_ID_IPO",
+             os.environ.get("TG_CHAT_ID", "")).split(",") if c.strip()]
+    if not token or not chats:
         print("Missing TG_TOKEN / TG_CHAT_ID")
         sys.exit(1)
-    ok = all(send(token, chat, m) for m in msgs)
-    print("sent" if ok else "FAILED")
+    ok = True
+    for chat in chats:
+        ok = all(send(token, chat, m) for m in msgs) and ok
+    print("sent to %d chat(s)" % len(chats) if ok else "FAILED")
     sys.exit(0 if ok else 1)
 
 

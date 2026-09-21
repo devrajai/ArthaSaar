@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: smart-brain
-cancel-in-progress: false
+  cancel-in-progress: false
 
 jobs:
   brain:

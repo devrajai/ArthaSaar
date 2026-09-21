@@ -2,9 +2,9 @@
 """
 TELEGRAM IPO — daily IPO Terminal digest for Dev.
 
-Runs in the market-brain repo (reuses its TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID
-secrets) but reads IPO data from the ipo-terminal repo via public raw URLs,
-so no new secrets are needed.
+Runs in the market-brain repo (reuses its TG_TOKEN / TG_CHAT_ID secrets) but
+reads IPO data from the ipo-terminal repo via public raw URLs, so no new
+secrets are needed.
 
 Message (sent ~8:45 AM IST daily via .github/workflows/telegram-ipo.yml):
   - IPOs closing today / allotment & listing today
@@ -92,14 +92,14 @@ def main():
         s = smap.get(norm(name)) or {}
         t = s.get("total") or (nmap.get(norm(name)) or {}).get("subscription") or ""
         t = t.strip()
-        return "" if t in ("—", "-") else t
+        return "" if t in ("\u2014", "-") else t
 
     def gmp_of(x):
         g = str(x.get("gmp") or "").strip()
-        if not g or g in ("—", "-"):
+        if not g or g in ("\u2014", "-"):
             return ""
         p = str(x.get("gmp_pct") or "").strip().rstrip("%")
-        return g + (f" ({p}%)" if p and p not in ("—", "-") else "")
+        return g + (f" ({p}%)" if p and p not in ("\u2014", "-") else "")
 
     closing, listed_today, allot_today, open_now, opening_soon = [], [], [], [], []
     for x in ipos:
@@ -128,9 +128,9 @@ def main():
         board = x.get("board") or ""
         tag = " SME" if str(board).lower() == "sme" else ""
         s = f"<b>{name}</b>{tag}"
-        if band and band != "—":
+        if band and band != "\u2014":
             s += f" • {band}"
-        if lot and lot not in ("—", ""):
+        if lot and lot not in ("\u2014", ""):
             try:
                 s += f" • lot {int(float(lot))}"
             except Exception:  # noqa: BLE001
@@ -198,10 +198,10 @@ def main():
             print(m)
         return
 
-    token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    chat = os.environ.get("TELEGRAM_CHAT_ID")
+    token = os.environ.get("TG_TOKEN")
+    chat = os.environ.get("TG_CHAT_ID")
     if not token or not chat:
-        print("Missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID")
+        print("Missing TG_TOKEN / TG_CHAT_ID")
         sys.exit(1)
     ok = all(send(token, chat, m) for m in msgs)
     print("sent" if ok else "FAILED")

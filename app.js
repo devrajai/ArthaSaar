@@ -586,7 +586,48 @@ function drawLearn() {
 }
 
 /* ---------- studies ---------- */
+let histIx = "nifty";
+function drawHist(d) {
+  const I = d.indices || [];
+  if (!I.length) { $("#histCard").innerHTML = ""; return; }
+  const ix = I.find((x) => x.key === histIx) || I[0];
+  const MN = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+  let rows = "";
+  const greens = Object.values(ix.yearly || {}).filter((v) => v > 0).length;
+  const yrs = Object.keys(ix.years || {}).sort().reverse();
+  yrs.forEach((y) => {
+    const mm = ix.years[y];
+    rows += '<tr><td style="font-weight:600;white-space:nowrap">' + y + "</td>";
+    for (let i = 1; i <= 12; i++) {
+      const v = mm[String(i).padStart(2, "0")];
+      if (v == null) rows += '<td style="background:rgba(255,255,255,.03)">\u2014</td>';
+      else {
+        const a = Math.min(0.75, 0.12 + Math.abs(v) / 9);
+        rows += '<td style="background:' + (v >= 0 ? "rgba(45,212,167," : "rgba(251,92,125,") + a +
+          ');font-size:9.5px;color:#fff;text-align:center;padding:4px 2px;white-space:nowrap">' +
+          (v > 0 ? "+" : "") + v.toFixed(1) + "</td>";
+      }
+    }
+    const yr = ix.yearly[y];
+    rows += '<td style="font-weight:700;white-space:nowrap" class="' + pctCls(yr) + '">' +
+      (yr > 0 ? "+" : "") + yr.toFixed(1) + "</td></tr>";
+  });
+  $("#histCard").innerHTML = '<div class="subhead">' + esc(ix.name) +
+    " \u2014 monthly returns heatmap (since " + esc(ix.first) + ") \u00b7 " +
+    greens + " of " + Object.keys(ix.yearly || {}).length + " years green</div>" +
+    '<div class="controls">' + I.map((x) =>
+      '<button class="chip' + (histIx === x.key ? " on" : "") + '" data-hix="' + x.key + '">' +
+      esc(x.name) + "</button>").join("") + "</div>" +
+    '<div class="tblwrap"><table style="min-width:460px"><thead><tr><th>Yr</th>' +
+    MN.map((m) => "<th>" + m + "</th>").join("") + "<th>Yr%</th></tr></thead><tbody>" + rows +
+    "</tbody></table></div>" +
+    '<div class="footer-note">green = up month, red = down month \u00b7 darker = bigger move \u00b7 swipe table sideways for all months \u00b7 source yfinance monthly closes (free)</div>';
+  $("#histCard").querySelectorAll("[data-hix]").forEach((b) =>
+    b.onclick = () => { histIx = b.getAttribute("data-hix"); drawHist(d); });
+}
 function renderStudies() {
+  jload("index-history").then(drawHist, () => { $("#histCard").innerHTML =
+    '<div class="loading load-err">history unavailable</div>'; });
   Promise.allSettled([jload("devs_notes_digest"), jload("budget-study")]).then(([D, B]) => {
     if (D.status === "fulfilled") {
       const s = (D.value.sensex_history_dev_study || {}).years || [];
@@ -749,9 +790,67 @@ function renderNews() {
   }, fail("newsBox"));
 }
 
-/* ---------- sector heatmap ---------- */
+/* ---------- heatmaps (sectors / all indices / sector stocks) ---------- */
+let hmTab = "Sectors";
+const HM_BETA = {Bank: 1.25, "Fin Serv": 1.2, IT: 0.85, Auto: 1.15, Pharma: 0.7, Healthcare: 0.7,
+  FMCG: 0.55, Metal: 1.4, Energy: 1.1, "Oil & Gas": 1.1, Realty: 1.5, Infra: 1.2,
+  Media: 1.3, "Cons Dur": 1.05};
+function hmCell(label, chg, sub, href) {
+  if (chg == null) {
+    return '<a href="' + href + '" style="text-decoration:none;color:var(--dim);border-radius:12px;padding:12px 6px;' +
+      'display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.05)">' +
+      '<span style="font-size:12.5px;font-weight:600">' + esc(label) + "</span>" +
+      '<span style="font-size:16px;font-weight:700">\u2014</span>' +
+      '<span style="font-size:10.5px;opacity:.7">no EOD data</span></a>';
+  }
+  const a = Math.min(0.7, 0.14 + Math.abs(chg) / 1.6);
+  const bg = chg >= 0 ? "rgba(45,212,167," + a + ")" : "rgba(251,92,125," + a + ")";
+  return '<a href="' + href + '" style="text-decoration:none;color:#fff;border-radius:12px;padding:12px 6px;' +
+    'display:flex;flex-direction:column;align-items:center;gap:3px;background:' + bg + '">' +
+    '<span style="font-size:12.5px;font-weight:600">' + esc(label) + "</span>" +
+    '<span style="font-size:16px;font-weight:700">' + (chg > 0 ? "+" : "") + chg.toFixed(2) + "%</span>" +
+    '<span style="font-size:10.5px;opacity:.85">' + esc(sub) + "</span></a>";
+}
+const hmGrid = (cells) => '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' +
+  cells.join("") + "</div>";
 function renderHeatmap() {
-  $("#hmBody").innerHTML = '<div class="loading">loading sector map…</div>';
+  const chips = jload("constituents").then((c) => {
+    const secs = Object.keys(c.sectors || {});
+    const all = ["Sectors", "All Indices"].concat(secs);
+    $("#hmChips").innerHTML = all.map((s) =>
+      '<button class="chip' + (hmTab === s ? " on" : "") + '" data-hm="' + esc(s) + '">' + esc(s) + "</button>").join("");
+    $("#hmChips").querySelectorAll(".chip").forEach((b) =>
+      b.onclick = () => { hmTab = b.getAttribute("data-hm"); renderHeatmap(); });
+  }, () => { $("#hmChips").innerHTML = ""; });
+  $("#hmBody").innerHTML = '<div class="loading">loading heatmap\u2026</div>';
+  if (hmTab === "All Indices") {
+    jload("indices-all").then((d) => {
+      const L = d.indices || [];
+      const up = L.filter((i) => i.change_pct > 0).length;
+      $("#hmBody").innerHTML = hmGrid(L.map((i) =>
+        hmCell(idxShort(i.index), i.change_pct, nf2(i.price), "#indices"))) +
+        '<div class="footer-note">' + up + " of " + L.length +
+        " indices green \u00b7 darker = bigger move \u00b7 updated " + esc((d.updated || "").slice(0, 16)) + " UTC</div>";
+    }, fail("hmBody"));
+    return;
+  }
+  if (hmTab !== "Sectors") {
+    Promise.all([chips, jload("constituents"), jload("brain-screener")]).then(([, c, s]) => {
+      const bysym = {};
+      (s.stocks || []).forEach((x) => bysym[x.symbol] = x);
+      const list = (c.sectors || {})[hmTab] || [];
+      const up = list.filter((x) => bysym[x.symbol] && bysym[x.symbol].change_pct > 0).length;
+      const withData = list.filter((x) => bysym[x.symbol]).length;
+      $("#hmBody").innerHTML = hmGrid(list.map((x) => {
+        const st = bysym[x.symbol];
+        return hmCell(x.symbol, st ? st.change_pct : null,
+          st ? nf2(st.price) : "\u2014", "#company/" + x.symbol);
+      })) + '<div class="footer-note">' + up + " of " + withData + " " + esc(hmTab) +
+        " stocks green \u00b7 EOD prices \u00b7 tap a tile for its company card \u00b7 " +
+        list.length + " members (NSE " + esc(hmTab) + " index)</div>";
+    }, fail("hmBody"));
+    return;
+  }
   jload("indices-all").then((d) => {
     const byn = {};
     (d.indices || []).forEach((i) => byn[i.index] = i);
@@ -763,24 +862,13 @@ function renderHeatmap() {
       ["Cons Dur", "NIFTY CONSUMER DURABLES"], ["Services", "NIFTY SERV SECTOR"],
       ["Healthcare", "NIFTY HEALTHCARE INDEX"], ["Midcap 50", "NIFTY MIDCAP 50"],
       ["Smallcap 100", "NIFTY SMALLCAP 100"], ["Next 50", "NIFTY NEXT 50"]];
-    const cell = (label, name) => {
-      const i = byn[name];
-      if (!i || i.change_pct == null) return "";
-      const c = i.change_pct;
-      const a = Math.min(0.7, 0.14 + Math.abs(c) / 1.6);
-      const bg = c >= 0 ? "rgba(45,212,167," + a + ")" : "rgba(251,92,125," + a + ")";
-      return '<a href="#indices" style="text-decoration:none;color:#fff;border-radius:12px;padding:12px 6px;' +
-        'display:flex;flex-direction:column;align-items:center;gap:3px;background:' + bg + '">' +
-        '<span style="font-size:12.5px;font-weight:600">' + esc(label) + "</span>" +
-        '<span style="font-size:16px;font-weight:700">' + sign(c, 2) + "</span>" +
-        '<span style="font-size:10.5px;opacity:.85">' + nf2(i.price) + "</span></a>";
-    };
-    const grid = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' +
-      SECTORS.map((s) => cell(s[0], s[1])).join("") + "</div>";
     const up = SECTORS.filter((s) => byn[s[1]] && byn[s[1]].change_pct > 0).length;
-    $("#hmBody").innerHTML = grid +
-      '<div class="footer-note">' + up + " of " + SECTORS.filter((s) => byn[s[1]]).length +
-      " sector indices green · darker = bigger move · updated " + esc((d.updated || "").slice(0, 16)) + " UTC</div>";
+    $("#hmBody").innerHTML = hmGrid(SECTORS.map((s) => {
+      const i = byn[s[1]];
+      return hmCell(s[0], i ? i.change_pct : null, i ? nf2(i.price) : "\u2014", "#indices");
+    })) + '<div class="footer-note">' + up + " of " + SECTORS.filter((s) => byn[s[1]]).length +
+      " sector indices green \u00b7 darker = bigger move \u00b7 updated " +
+      esc((d.updated || "").slice(0, 16)) + " UTC</div>";
   }, fail("hmBody"));
 }
 
@@ -885,13 +973,85 @@ function renderPortfolio() {
       pf.push({sym: sym, qty: qty, buy: buy});
       pfSave(pf);
       $("#pfSym").value = ""; $("#pfQty").value = ""; $("#pfBuy").value = "";
-      draw();
+      draw(); drawRisk();
     };
+    const sectorOf = (sym) => {
+      try {
+        const ci = JSON.parse(localStorage.getItem("mb-coidx") || "null");
+        if (ci && ci[sym] && ci[sym].sector) return ci[sym].sector;
+      } catch (e) {}
+      return null;
+    };
+    const drawRisk = () => {
+      const pf = pfLoad();
+      const box = $("#pfRisk");
+      if (!pf.length) {
+        box.innerHTML = '<div class="note">add holdings above first \u2014 then this tool shows what a crash does to your money</div>';
+        return;
+      }
+      let val = 0;
+      const rows = pf.map((h) => {
+        const st = bysym[h.sym] || {};
+        const last = st.price != null ? st.price : h.buy;
+        const v = last * h.qty;
+        val += v;
+        return {sym: h.sym, v: v, sector: sectorOf(h.sym)};
+      });
+      const betaOf = (s) => (s && HM_BETA[s] != null ? HM_BETA[s] : 1);
+      let wb = 0;
+      rows.forEach((r) => { wb += betaOf(r.sector) * r.v; });
+      wb = val ? wb / val : 1;
+      const scen = (dp) => {
+        let chg = 0;
+        rows.forEach((r) => { chg += dp / 100 * betaOf(r.sector) * r.v; });
+        return chg;
+      };
+      const S = [["Nifty -10% \u00b7 mild correction", -10],
+        ["Nifty -20% \u00b7 bear market", -20],
+        ["Nifty -35% \u00b7 COVID-type crash", -35],
+        ["Nifty +10% \u00b7 rally", 10]];
+      const cd = parseFloat(($("#pfDrop") || {}).value);
+      if (!isNaN(cd) && cd !== 0) S.push(["Your scenario \u00b7 Nifty " + (cd > 0 ? "+" : "") + cd + "%", cd]);
+      box.innerHTML =
+        '<div class="statline"><span>Portfolio value (EOD)</span><b>\u20b9' + nf2(val) + "</b></div>" +
+        '<div class="statline"><span>Portfolio beta (sector est.)</span><b>' + wb.toFixed(2) + "</b></div>" +
+        '<div class="tblwrap"><table><thead><tr><th>Scenario</th><th>Est. P&L \u20b9</th><th>%</th></tr></thead><tbody>' +
+        S.map(([nm, dp]) => {
+          const l = scen(dp);
+          return "<tr><td>" + esc(nm) + '</td><td class="' + pctCls(l) + '">' + (l > 0 ? "+" : "") +
+            nf2(l) + '</td><td class="' + pctCls(l) + '">' + (l > 0 ? "+" : "") +
+            (val ? (l / val * 100).toFixed(1) : "0") + "%</td></tr>";
+        }).join("") + "</tbody></table></div>" +
+        '<div class="controls" style="margin-top:8px">' +
+        '<input id="pfDrop" type="number" placeholder="custom \u00b7 Nifty % \u00b7 e.g. -15" style="flex:2;min-width:130px">' +
+        '<button class="chip" id="pfDropBtn">simulate</button></div>' +
+        '<div class="note" style="margin-top:6px">beta ~1 = moves like market, >1 falls more, <1 falls less. Sector estimates: Metal 1.4 \u00b7 Realty 1.5 \u00b7 Bank 1.25 \u00b7 IT 0.85 \u00b7 FMCG 0.55 \u00b7 rest ~1.0 \u00b7 rough guide, not advice</div>';
+      $("#pfDropBtn").onclick = drawRisk;
+      $("#pfDrop").onkeydown = (e) => { if (e.key === "Enter") drawRisk(); };
+    };
+    drawRisk();
+    jload("company-index").then((c) => {
+      try { localStorage.setItem("mb-coidx", JSON.stringify(c)); } catch (e) {}
+      drawRisk();
+    }, () => {});
   }, fail("pfBody"));
 }
 
 /* ---------- events calendar ---------- */
 let evFilter = "All";
+const dmy = (iso) => {
+  const p = String(iso || "").split("-");
+  return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0].slice(2) : (iso || "\u2014");
+};
+const t12 = (t) => {
+  if (!t || t === "all day") return t || "\u2014";
+  const m = /(\d{1,2}):(\d{2})/.exec(String(t));
+  if (!m) return t;
+  let h = +m[1];
+  const ap = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  return h + ":" + m[2] + " " + ap;
+};
 function renderEvents() {
   $("#evBox").innerHTML = '<div class="loading">loading event calendar…</div>';
   jload("events").then((d) => {
@@ -916,12 +1076,11 @@ function renderEvents() {
         list.forEach((e) => { (byDate[e.date_ist] = byDate[e.date_ist] || []).push(e); });
         const today = new Date().toISOString().slice(0, 10);
         Object.keys(byDate).sort().forEach((dt) => {
-          const dd = new Date(dt + "T12:00:00");
-          const label = dt === today ? "🔵 TODAY" :
-            dd.toLocaleDateString("en-IN", {weekday: "short", day: "numeric", month: "short"});
+          const label = dt === today ? "🔵 TODAY \u00b7 " + dmy(dt) :
+            new Date(dt + "T12:00:00").toLocaleDateString("en-IN", {weekday: "short"}) + " " + dmy(dt);
           html += '<div class="card"><div class="subhead">' + esc(label) + "</div>" +
             byDate[dt].map((e) =>
-              '<div class="statline"><span>' + esc(e.time_ist || "all day") + dot(e.impact) +
+              '<div class="statline"><span>' + t12(e.time_ist) + dot(e.impact) +
               esc(CNAME[e.country] || e.country) + "</span><b style=\"text-align:right\">" + esc(e.title) +
               (e.forecast ? ' <span style="color:var(--dim)">exp ' + esc(e.forecast) + " · prev " + esc(e.previous || "?") + "</span>" : "") +
               "</b></div>").join("") + "</div>";
@@ -932,7 +1091,7 @@ function renderEvents() {
           evFilter === "US" ? k.country === "USD" :
           evFilter === "India" ? k.country === "IND" : true));
         if (K2.length) html += '<div class="hgroup">KEY DATES — FED · RBI · BUDGET · ELECTIONS</div><div class="card">' +
-          K2.map((k) => '<div class="statline"><span>' + esc(k.date) + (k.date_end && k.date_end !== k.date ? " → " + esc(k.date_end) : "") +
+          K2.map((k) => '<div class="statline"><span>' + dmy(k.date) + (k.date_end && k.date_end !== k.date ? " \u2192 " + dmy(k.date_end) : "") +
             dot(k.impact) + esc(CNAME[k.country] || k.country) + "</span><b style=\"text-align:right\">" + esc(k.title) + "</b></div>").join("") + "</div>";
       }
       if (evFilter === "All" || evFilter === "Earnings" || evFilter === "US" || evFilter === "India") {
@@ -942,7 +1101,7 @@ function renderEvents() {
           E2.forEach((e) => { (byDate[e.date] = byDate[e.date] || []).push(e); });
           html += '<div class="hgroup">UPCOMING QUARTERLY RESULTS</div>' +
             Object.keys(byDate).sort().map((dt) =>
-              '<div class="card"><div class="subhead">' + esc(dt) + "</div>" +
+              '<div class="card"><div class="subhead">' + dmy(dt) + "</div>" +
               byDate[dt].map((e) => '<div class="statline"><span>' + (e.country === "IN" ?
                 '<a href="#company/' + esc(e.symbol) + '">' + esc(e.symbol) + "</a>" : esc(e.symbol)) +
                 (e.country === "US" ? " (US)" : "") + "</span><b style=\"text-align:right;color:var(--dim)\">quarterly result</b></div>").join("") + "</div>").join("");
@@ -1052,5 +1211,12 @@ function routeFromHash() {
   if (id === "company") renderCompany(parts[1] || "");
 }
 window.addEventListener("hashchange", routeFromHash);
+/* refresh should always open clean at home \u2014 no pre-selected section */
+(function () {
+  const h = location.hash || "";
+  if (h && h.indexOf("#company") !== 0 && h !== "#lock") {
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  }
+})();
 $("#coSearch").addEventListener("input", () => { if (!location.hash || location.hash.indexOf("#company") === 0) coSearchDraw(); });
 routeFromHash();

@@ -1,6 +1,6 @@
-/* bluefix2.js — kills every non-design blue line:
-   tile :active stuck blue border, input/select focus blue borders (search boxes,
-   gate password), selected chip bright blue border, details markers, tap highlights */
+/* bluefix2.js — kill remaining blue sources (also in guidefix.js; belt and suspenders):
+   selected chip bright blue border -> soft filled pill, details markers, tap highlight,
+   tile :active stuck blue border */
 (function () {
   var st = document.createElement("style");
   st.textContent =
@@ -10,9 +10,6 @@
     "summary::marker{content:\"\"}" +
     "*{-webkit-tap-highlight-color:rgba(0,0,0,0)}" +
     ".tile:focus,.tile:focus-visible{outline:none}" +
-    ".tile:active{border-color:rgba(255,255,255,.22)!important}" +
-    ".controls input:focus,.controls select:focus{border-color:var(--border2)!important}" +
-    "#gInp:focus{border-color:rgba(255,255,255,.28)!important}" +
-    "input:focus,select:focus,textarea:focus{outline:none}";
+    ".tile:active{border-color:rgba(255,255,255,.22)!important}";
   document.head.appendChild(st);
 })();

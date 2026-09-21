@@ -1,8 +1,16 @@
 /* MARKET BRAIN loader — pulls in the app in strict order:
-   oldapp.js (main app) then patches (screener fix, TimesFM 3.0 AI view). */
+   oldapp.js (main app) then patches (screener fix, TimesFM 3.0 AI view,
+   AM/PM clock + dd/mm/yy dates). */
 (function () {
   "use strict";
-  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js"];
+  var __origSI = window.setInterval;
+  window.__MB_INTERVALS = [];
+  window.setInterval = function (fn, ms) {
+    var id = __origSI(fn, ms);
+    window.__MB_INTERVALS.push(id);
+    return id;
+  };
+  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js"];
   var i = 0;
   function next() {
     if (i >= files.length) return;

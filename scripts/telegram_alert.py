@@ -15,13 +15,11 @@ now = dt.datetime.now(IST)
 if not mode:
     mode = "close" if now.hour >= 15 else "open"
 
-
 def jload(p):
     try:
         return json.load(open(p))
     except Exception:
         return {}
-
 
 def http_json(url):
     try:
@@ -29,7 +27,6 @@ def http_json(url):
         return json.loads(urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore"))
     except Exception:
         return None
-
 
 def yahoo(sym):
     d = http_json("https://query1.finance.yahoo.com/v8/finance/chart/%s?range=5d&interval=1d" % sym)
@@ -39,20 +36,16 @@ def yahoo(sym):
     except Exception:
         return None, None
 
-
 def esc(s):
     return str(s).replace("&", "&").replace("<", "<").replace(">", ">")
-
 
 def pct(p, pc):
     if p and pc:
         return (p / pc - 1) * 100.0
     return None
 
-
 def sgn(v):
     return "+" if v >= 0 else ""
-
 
 sb = jload("data/smart-brain.json")
 br = jload("data/breadth.json")
@@ -164,7 +157,6 @@ if bear:
     L.append("\U0001F428 <b>Bear:</b> " + " \u00b7 ".join("%s %s" % (esc(b.get("symbol")), b.get("score")) for b in bear))
 
 L.append("")
-L.append('<a href="https://devrajai.github.io/market-brain/">\U0001F4A5 poora terminal yahan</a>')
 
 msg = "\n".join(L)
 print("mode=%s len=%d chats=%d" % (mode, len(msg), len(CHATS)))

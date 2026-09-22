@@ -1,26 +1,21 @@
-name: Morning Digest
+name: Power Pack 2 Wiring
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 2 * * 1-5'
 permissions:
   contents: write
 jobs:
-  digest:
+  wire:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 scripts/digest.py
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+      - run: python3 scripts/fix_power2.py
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/fii-history.json
-          git commit -m "data: fii history update" || echo "no change"
+          git add app.js index.html
+          git commit -m "feat: movement analysis + fii/dii + portfolio + charts + mf verdict + finance basics" || echo "no change"
           git pull --rebase || true
           git push

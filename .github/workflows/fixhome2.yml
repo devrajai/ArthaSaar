@@ -1,0 +1,21 @@
+name: Fix Home 2
+on:
+  workflow_dispatch
+concurrency:
+  group: fixhome2
+  cancel-in-progress: false
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/fix_home2.py
+      - run: node --check homefix.js
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add index.html style.css homefix.js
+          git commit -m "revert: home back to tile grid; learn topics single horizontal line + scroll hide"
+          git push

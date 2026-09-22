@@ -1,0 +1,21 @@
+name: Gate Plain 6h Fix
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/fix_gate2.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add index.html mbguide.js
+          git commit -m "fix: plain 6h password rule (asks during market too when 6h elapsed)" || echo "no change"
+          git pull --rebase || true
+          git push

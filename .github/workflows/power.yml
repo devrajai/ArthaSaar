@@ -15,11 +15,14 @@ jobs:
           python-version: '3.12'
       - run: python3 scripts/radar_collect.py
       - run: python3 scripts/dividends_collect.py || true
+      - run: python3 scripts/bullish_scan.py
       - run: python3 scripts/fix_power.py
+      - run: python3 scripts/fix_money.py
+      - run: python3 scripts/fix_bullish.py
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/radar.json data/dividends.json app.js index.html
-          git commit -m "feat: power pack (radar, dividends, tools cards)" || echo "no change"
+          git add data/radar.json data/dividends.json data/bullish.json app.js index.html
+          git commit -m "feat: bullish scanner (week/month/year/long-term scores)" || echo "no change"
           git pull --rebase || true
           git push

@@ -20,6 +20,11 @@ jobs:
             -keyalg RSA -keysize 2048 -validity 10950 \
             -storepass MarketBrain2026 -keypass MarketBrain2026 \
             -dname "CN=Market Brain, OU=Dev, O=Dev Raj, L=India, ST=India, C=IN"
+      - name: Configure bubblewrap paths
+        run: |
+          mkdir -p $HOME/.bubblewrap
+          printf '{"jdkPath": "%s", "androidSdkPath": "%s"}\n' "$JAVA_HOME" "$ANDROID_HOME" > $HOME/.bubblewrap/config.json
+          cat $HOME/.bubblewrap/config.json
       - name: Build TWA APK
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: MarketBrain2026

@@ -1,0 +1,25 @@
+name: Smart Alerts
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4,5,6,7,8,9,10 * * 1-5"
+concurrency:
+  group: alert
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/smart_alert.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/alert-state.json
+          git commit -m "data: alert state" || echo "no change"
+          git push

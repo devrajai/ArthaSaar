@@ -1,0 +1,22 @@
+name: Backtest
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 16 * * 1-5"
+concurrency:
+  group: backtest
+  cancel-in-progress: false
+jobs:
+  bt:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/backtest.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/backtest.json
+          git commit -m "data: strategy backtest" || echo "no change"
+          git push

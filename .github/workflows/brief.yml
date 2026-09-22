@@ -1,0 +1,19 @@
+name: Morning Brief
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 1 * * 1-5"
+concurrency:
+  group: brief
+  cancel-in-progress: false
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/morning_brief.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}

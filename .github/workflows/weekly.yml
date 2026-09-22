@@ -1,0 +1,19 @@
+name: Sunday Report Card
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 4 * * 0"
+concurrency:
+  group: weekly
+  cancel-in-progress: false
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/weekly_card.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}

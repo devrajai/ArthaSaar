@@ -1,0 +1,20 @@
+name: Patch Telegram Msg
+on:
+  workflow_dispatch
+concurrency:
+  group: patchtelegram
+  cancel-in-progress: false
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/patch_telegram.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add scripts/telegram_alert.py
+          git commit -m "fix: remove terminal link from open message"
+          git push

@@ -38,5 +38,5 @@ earn = [e for e in (ev.get("earnings") or []) if str(e.get("date_ist") or e.get(
 if earn:
     L.append("\U0001F4BC Aaj results: " + ", ".join(str(e.get("symbol") or e.get("name") or "?") for e in earn[:6]))
 L.append("")
-L.append("sirf data, tip nahi - khud verify karo")
+L.append("sirf data, analysis nahi - khud verify karo")
 send("\n".join(L))

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""daily_digest.py - 21:10 IST: kya badla aaj - 52w highs/lows, movers, volume garam, mood, breadth, FII."""
+"""daily_digest.py - 21:10 IST: kya badla aaj - 52w highs/lows, movers, volume garam, mood, breadth, FII, social buzz."""
 import sys, datetime
 sys.path.insert(0, "scripts")
 from tghelp import jload, send, crash_score, status
@@ -38,4 +38,8 @@ if fii is not None:
     L.append("\U0001F4B8 FII %+.0f Cr | DII %+.0f Cr" % (fii, dii or 0))
 st, _ = status(score)
 L.append("\U0001F6A8 Crash score: %d/100 (%s)" % (score, st))
+soc = jload("data/social.json")
+tr = (soc.get("trending") or [])[:4]
+if tr:
+    L.append("\U0001F4E3 Social buzz: " + " - ".join("%s (%d, %d%% pos)" % (t["sym"], t["n"], t["pos_pct"]) for t in tr))
 send("\n".join(L))

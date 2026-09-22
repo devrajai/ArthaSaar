@@ -1,0 +1,22 @@
+name: Social Scan
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * 1-5"
+concurrency:
+  group: social
+  cancel-in-progress: false
+jobs:
+  social:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/social_scan.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/social.json
+          git commit -m "data: social scan" || echo "no change"
+          git push

@@ -1,0 +1,22 @@
+name: AI Stock Scores
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 17 * * 1-5"
+concurrency:
+  group: scores
+  cancel-in-progress: false
+jobs:
+  scores:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/stock_scores.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/stock-scores.json
+          git commit -m "data: AI stock scores" || echo "no change"
+          git push

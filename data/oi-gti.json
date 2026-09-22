@@ -1,0 +1,165 @@
+{
+ "updated": "2026-09-22T10:20:33.137222",
+ "date": "21-09-2026",
+ "source": "NSE F&O bhavcopy (EOD)",
+ "symbols": {
+  "NIFTY 50": {
+   "spot": 23414.3,
+   "expiry": "22 Sep",
+   "put_wall": 23400,
+   "put_wall_oi": 16079830,
+   "call_wall": 23500,
+   "call_wall_oi": 11625445,
+   "pcr": 1.46,
+   "max_pain": 23400,
+   "total_oi": 370194370,
+   "chain": [
+    {
+     "strike": 23250,
+     "ce": 1252095,
+     "ce_chg": -559650,
+     "pe": 7922005,
+     "pe_chg": 1431300
+    },
+    {
+     "strike": 23300,
+     "ce": 3889340,
+     "ce_chg": -3530345,
+     "pe": 15827240,
+     "pe_chg": 3140670
+    },
+    {
+     "strike": 23350,
+     "ce": 2567695,
+     "ce_chg": -2387905,
+     "pe": 10091640,
+     "pe_chg": 4948580
+    },
+    {
+     "strike": 23400,
+     "ce": 8603270,
+     "ce_chg": -164970,
+     "pe": 16079830,
+     "pe_chg": 11292515
+    },
+    {
+     "strike": 23450,
+     "ce": 6430060,
+     "ce_chg": 2570165,
+     "pe": 6357650,
+     "pe_chg": 5661045
+    },
+    {
+     "strike": 23500,
+     "ce": 11625445,
+     "ce_chg": 2399280,
+     "pe": 5052580,
+     "pe_chg": 2647320
+    },
+    {
+     "strike": 23550,
+     "ce": 6234865,
+     "ce_chg": 2579525,
+     "pe": 856895,
+     "pe_chg": 594360
+    }
+   ],
+   "gti": {
+    "day_poc": 23399,
+    "SD": [
+     23342,
+     23367
+    ],
+    "SS": [
+     23541,
+     23566
+    ],
+    "golden": 23352
+   },
+   "combo": {
+    "support": "PUT wall 23400 (GTI SD 23354 se alag)",
+    "resistance": "CALL wall 23500 (GTI SS 23553 se alag)",
+    "verdict": "PCR 1.46 > 1 - put writers hawaldaar, bullish bias. Spot 23414 walls ke beech mein (23400 - 23500) - rangebound"
+   }
+  },
+  "BANKNIFTY": {
+   "spot": 56470.7,
+   "expiry": "29 Sep",
+   "put_wall": 57500,
+   "put_wall_oi": 1392240,
+   "call_wall": 58000,
+   "call_wall_oi": 1609650,
+   "pcr": 0.97,
+   "max_pain": 57000,
+   "total_oi": 32611920,
+   "chain": [
+    {
+     "strike": 56200,
+     "ce": 106320,
+     "ce_chg": -30780,
+     "pe": 234390,
+     "pe_chg": 6390
+    },
+    {
+     "strike": 56300,
+     "ce": 174420,
+     "ce_chg": -33900,
+     "pe": 284670,
+     "pe_chg": -27690
+    },
+    {
+     "strike": 56400,
+     "ce": 210000,
+     "ce_chg": 25680,
+     "pe": 254940,
+     "pe_chg": 85920
+    },
+    {
+     "strike": 56500,
+     "ce": 670620,
+     "ce_chg": 43350,
+     "pe": 769920,
+     "pe_chg": 95700
+    },
+    {
+     "strike": 56600,
+     "ce": 294540,
+     "ce_chg": 146070,
+     "pe": 229170,
+     "pe_chg": 79680
+    },
+    {
+     "strike": 56700,
+     "ce": 205260,
+     "ce_chg": 47220,
+     "pe": 140880,
+     "pe_chg": 3420
+    },
+    {
+     "strike": 56800,
+     "ce": 239460,
+     "ce_chg": -4770,
+     "pe": 111300,
+     "pe_chg": 9060
+    }
+   ],
+   "gti": {
+    "day_poc": 56469,
+    "SD": [
+     56120,
+     56202
+    ],
+    "SS": [
+     56778,
+     56860
+    ],
+    "golden": 56383
+   },
+   "combo": {
+    "support": "PUT wall 57500 (GTI SD 56161 se alag)",
+    "resistance": "CALL wall 58000 (GTI SS 56819 se alag)",
+    "verdict": "PCR 0.97 - neutral range (put vs call barabar). Spot PUT wall 57500 ke neeche/par - support test ho raha"
+   }
+  }
+ }
+}

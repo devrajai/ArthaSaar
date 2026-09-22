@@ -490,8 +490,6 @@ function drawLearn() {
       '<div class="card"><div class="subhead">' + name + " (" + d.levels[key].length + ")</div>" +
       ul(d.levels[key]) + "</div>" : "");
     box.innerHTML =
-      '<div class="note" style="margin-bottom:10px">' + esc(d.note || "") +
-      " Read in order: Beginner first, then Intermediate, then Advanced.</div>" +
       lvl("Beginner — first 6 months", "beginner") +
       lvl("Intermediate — 6 to 18 months", "intermediate") +
       lvl("Advanced — 18 months plus", "advanced") +

@@ -18,6 +18,7 @@
     '<div class="note" style="margin-top:10px"><b>📊 MF Tracker</b> - ab kaam karta hai: naam ya code se search, NAV + returns, My MF holdings, SIP calculator.</div>' +
     '<div class="note" style="margin-top:10px"><b>📣 Social Buzz</b> - Reddit se stocks ke social mentions, Daily Digest mein line aati hai.</div>');
   var gd = glCard("newToolsGuide", "Naye Tools - kaise use karein",
+    '<div class="note" style="margin-top:8px">📖 <b>Market Brain Learning Hub</b> — written in simple English for Dev. Educational only, not investment advice. Read in order: Beginner first, then Intermediate, then Advanced.<br>Educational analysis only — not SEBI-registered investment advice.</div>' +
     '<div class="note" style="margin-top:8px"><b>🧠 Smart Brain</b> - roz raat 8:55 baje update.<br>' +
     '<b>Kal ka Guess</b>: mood 0-100. 55+ = bull side, 45- = weak.<br>' +
     '<b>Confluence</b>: har stock ka score - AI + EMA200 + RSI + OI sab agree karein to strong. +60 ya -60 cross dekho.<br>' +

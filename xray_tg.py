@@ -55,7 +55,6 @@ def main():
     L.append("GTI nearest: {} | Blood bath: {}".format(near[0], round(sd[0]) if sd[0] else "-"))
     L.append("")
     L.append("SL rule: level break hua to trade mat pakdo, SL strict rakhna.")
-    L.append("Full X-Ray: devrajai.github.io/market-brain (Market Today)")
     msg = "\n".join(L)
     print(msg)
 

@@ -33,6 +33,7 @@ jobs:
           cat $HOME/.bubblewrap/config.json
       - name: Build TWA APK
         env:
+          ANDROID_SDK_ROOT: /tmp/mbsdk
           BUBBLEWRAP_KEYSTORE_PASSWORD: MarketBrain2026
           BUBBLEWRAP_KEY_PASSWORD: MarketBrain2026
         run: |

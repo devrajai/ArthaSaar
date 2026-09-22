@@ -181,6 +181,6 @@ footer .flinks{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
 .hchip:visited{color:var(--text)}
 
 /* --- learn topics: single horizontal line --- */
-#learnChips{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding:6px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#learnChips{display:flex;flex-wrap:wrap;gap:8px;padding:6px 2px 12px}
 #learnChips::-webkit-scrollbar{display:none}
 #learnChips .chip{flex:0 0 auto;white-space:nowrap}

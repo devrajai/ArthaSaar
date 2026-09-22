@@ -1,4 +1,4 @@
-/* gti.js - GTI Zones card (Manish ka Ghost Trade Indicator math) in Global section */
+/* gti.js - GTI Zones card (Manish ka Ghost Trade Indicator math) - ab dedicated #gti section mein */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var DATA = null;
@@ -31,17 +31,25 @@
     var box = document.getElementById("gtiCard");
     if (!box) return;
     box.innerHTML =
-      '<div class="subhead">GTI Zones - demand/supply + POC (36 symbols)</div>' +
+      '<div class="subhead">GTI Zones - Manish ka Ghost Trade Indicator (36 symbols)</div>' +
       '<div class="note" style="margin:8px 0 4px">NIFTY 50 & BANKNIFTY ke live zones:</div>' +
       '<div id="gtiSymBox"></div>' +
       '<input id="gtiQ" placeholder="stock likho - RELIANCE, TCS, SBIN..." style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:inherit;font-size:14px;margin-top:8px">' +
-      '<div class="footer-note">zones roz shaam update - TradingView wale GTI indicator ka python version</div>';
+      "        <div class=\"footer-note\" style=\"margin-top:6px\">SD/WD/WS/SS/POC matlab:</div>" +
+        '<div class="note" style="font-size:12px;line-height:1.7">' +
+        '<b style="color:#77f37b">SD</b> = Strong Demand (sabse neeche, tagda support - yahan se uthna best entry) · ' +
+        '<b style="color:#77f37b">WD</b> = Weak Demand (halke wala support) · ' +
+        '<b style="color:#ff8b8b">WS</b> = Weak Supply (halka resistance) · ' +
+        '<b style="color:#ff8b8b">SS</b> = Strong Supply (sabse upar, tagda resistance) · ' +
+        '<b style="color:#1E90FF">POC</b> = Point of Control (jahan sabse zyada business hua - magnet level, price wapas aana chahta hai). Manish ka rule: buying zone mein sirf BUY, selling zone mein sirf SELL, target = opposite zone.' +
+        "</div>" +
+      '<div class="footer-note">zones roz shaam update - Manish ka GTI math (podcast-verified)</div>';
     symCard("NIFTY 50");
     var q = document.getElementById("gtiQ");
     q.addEventListener("change", function () { symCard(q.value.trim().toUpperCase()); });
   }
   function mount() {
-    var sec = document.querySelector("section#global");
+    var sec = document.querySelector("#gtiMount") || document.querySelector("section#global");
     if (!sec || document.getElementById("gtiCard")) return;
     var card = document.createElement("div");
     card.className = "card"; card.id = "gtiCard";

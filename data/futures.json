@@ -1,45 +1,45 @@
 {
- "updated": "2026-09-21T13:56:47.185960+00:00",
- "date": "21-09-2026",
+ "updated": "2026-09-22T13:56:53.439071+00:00",
+ "date": "22-09-2026",
  "note": "NSE F&O futures (EOD bhavcopy). Index futures show every active monthly expiry. India has no yearly-dated futures \u2014 3 monthly contracts exist at a time.",
  "indices": [
   {
    "symbol": "BANKNIFTY",
-   "underlying": 56470.65,
+   "underlying": 56215.55,
    "contracts": [
     {
      "expiry": "2026-09-29",
-     "close": 56636.6,
-     "oi": 1963470,
-     "oi_chg": -82230,
-     "volume": 10609
+     "close": 56491.2,
+     "oi": 1912860,
+     "oi_chg": -50610,
+     "volume": 13339
     },
     {
      "expiry": "2026-10-27",
-     "close": 56918.4,
-     "oi": 372450,
-     "oi_chg": 38160,
-     "volume": 2383
+     "close": 56763.8,
+     "oi": 464220,
+     "oi_chg": 91770,
+     "volume": 4894
     },
     {
      "expiry": "2026-11-23",
-     "close": 57231.8,
-     "oi": 64470,
-     "oi_chg": 3480,
-     "volume": 494
+     "close": 57061.8,
+     "oi": 70830,
+     "oi_chg": 6360,
+     "volume": 740
     }
    ]
   },
   {
    "symbol": "FINNIFTY",
-   "underlying": 25524.7,
+   "underlying": 25417.95,
    "contracts": [
     {
      "expiry": "2026-09-29",
-     "close": 25592.4,
-     "oi": 42900,
-     "oi_chg": 60,
-     "volume": 34
+     "close": 25551.0,
+     "oi": 33660,
+     "oi_chg": -9240,
+     "volume": 278
     },
     {
      "expiry": "2026-10-27",
@@ -59,68 +59,68 @@
   },
   {
    "symbol": "MIDCPNIFTY",
-   "underlying": 14504.25,
+   "underlying": 14544.3,
    "contracts": [
     {
      "expiry": "2026-09-29",
-     "close": 14521.4,
-     "oi": 2795400,
-     "oi_chg": 17520,
-     "volume": 1142
+     "close": 14544.3,
+     "oi": 2730840,
+     "oi_chg": -64560,
+     "volume": 1990
     },
     {
      "expiry": "2026-10-27",
-     "close": 14561.7,
-     "oi": 126720,
-     "oi_chg": 6840,
-     "volume": 232
+     "close": 14578.1,
+     "oi": 151080,
+     "oi_chg": 24360,
+     "volume": 1110
     },
     {
      "expiry": "2026-11-23",
-     "close": 14613.6,
-     "oi": 20760,
-     "oi_chg": 2640,
-     "volume": 33
+     "close": 14635.1,
+     "oi": 22920,
+     "oi_chg": 2160,
+     "volume": 42
     }
    ]
   },
   {
    "symbol": "NIFTY",
-   "underlying": 23414.3,
+   "underlying": 23329.0,
    "contracts": [
     {
      "expiry": "2026-09-29",
-     "close": 23446.3,
-     "oi": 16921060,
-     "oi_chg": -500565,
-     "volume": 25078
+     "close": 23394.6,
+     "oi": 16280810,
+     "oi_chg": -640250,
+     "volume": 44281
     },
     {
      "expiry": "2026-10-27",
-     "close": 23544.3,
-     "oi": 4401670,
-     "oi_chg": 452205,
-     "volume": 12869
+     "close": 23501.6,
+     "oi": 5057520,
+     "oi_chg": 655850,
+     "volume": 18310
     },
     {
      "expiry": "2026-11-23",
-     "close": 23656.4,
-     "oi": 1025180,
-     "oi_chg": 325,
-     "volume": 1392
+     "close": 23602.5,
+     "oi": 1100775,
+     "oi_chg": 75595,
+     "volume": 2955
     }
    ]
   },
   {
    "symbol": "NIFTYFPI",
-   "underlying": 1524.25,
+   "underlying": 1519.6,
    "contracts": [
     {
      "expiry": "2026-09-29",
-     "close": 1534.0,
-     "oi": 39600,
-     "oi_chg": 0,
-     "volume": 2
+     "close": 1524.0,
+     "oi": 40700,
+     "oi_chg": 1100,
+     "volume": 3
     },
     {
      "expiry": "2026-10-27",
@@ -140,762 +140,762 @@
   },
   {
    "symbol": "NIFTYNXT50",
-   "underlying": 72083.95,
+   "underlying": 71804.05,
    "contracts": [
     {
      "expiry": "2026-09-29",
-     "close": 72201.6,
-     "oi": 17250,
-     "oi_chg": -450,
-     "volume": 62
+     "close": 72038.2,
+     "oi": 17375,
+     "oi_chg": 125,
+     "volume": 94
     },
     {
      "expiry": "2026-10-27",
-     "close": 72520.0,
-     "oi": 1325,
-     "oi_chg": 75,
-     "volume": 10
+     "close": 72331.6,
+     "oi": 2025,
+     "oi_chg": 700,
+     "volume": 41
     },
     {
      "expiry": "2026-11-23",
-     "close": 75632.6,
-     "oi": 0,
-     "oi_chg": 0,
-     "volume": 0
+     "close": 73000.0,
+     "oi": 25,
+     "oi_chg": 25,
+     "volume": 1
     }
    ]
   }
  ],
  "pcr": {
-  "nifty_pcr_oi": 1.203,
-  "nifty_pcr_vol": 0.969,
-  "nifty_call_oi": 320043620,
-  "nifty_put_oi": 385011855,
-  "all_index_pcr_oi": 1.18,
-  "nifty_max_pain": 23400,
+  "nifty_pcr_oi": 0.912,
+  "nifty_pcr_vol": 1.034,
+  "nifty_call_oi": 401754150,
+  "nifty_put_oi": 366299490,
+  "all_index_pcr_oi": 0.911,
+  "nifty_max_pain": 23350,
   "nifty_expiry": "2026-09-22",
-  "nifty_spot": 23414.3
+  "nifty_spot": 23329.0
  },
  "stocks": [
   {
    "symbol": "IDEA",
    "expiry": "2026-09-29",
-   "close": 13.87,
-   "underlying": 13.84,
-   "oi": 5622009075,
-   "oi_chg": -157459425,
-   "basis_pct": 0.22
+   "close": 14.29,
+   "underlying": 14.27,
+   "oi": 5543029200,
+   "oi_chg": -78979875,
+   "basis_pct": 0.14
   },
   {
    "symbol": "YESBANK",
    "expiry": "2026-09-29",
-   "close": 23.2,
-   "underlying": 23.17,
-   "oi": 938007100,
-   "oi_chg": -18597800,
-   "basis_pct": 0.13
+   "close": 23.24,
+   "underlying": 23.2,
+   "oi": 912816100,
+   "oi_chg": -25191000,
+   "basis_pct": 0.17
   },
   {
    "symbol": "SUZLON",
    "expiry": "2026-09-29",
-   "close": 43.53,
-   "underlying": 43.35,
-   "oi": 410057600,
-   "oi_chg": -4394200,
-   "basis_pct": 0.42
-  },
-  {
-   "symbol": "IDFCFIRSTB",
-   "expiry": "2026-09-29",
-   "close": 85.77,
-   "underlying": 85.79,
-   "oi": 356966925,
-   "oi_chg": -14728700,
-   "basis_pct": -0.02
+   "close": 43.13,
+   "underlying": 43.0,
+   "oi": 384708400,
+   "oi_chg": -25349200,
+   "basis_pct": 0.3
   },
   {
    "symbol": "CANBK",
    "expiry": "2026-09-29",
-   "close": 123.84,
-   "underlying": 123.7,
-   "oi": 335745000,
-   "oi_chg": -8842500,
-   "basis_pct": 0.11
+   "close": 123.07,
+   "underlying": 122.9,
+   "oi": 325221750,
+   "oi_chg": -10523250,
+   "basis_pct": 0.14
+  },
+  {
+   "symbol": "IDFCFIRSTB",
+   "expiry": "2026-09-29",
+   "close": 85.72,
+   "underlying": 85.37,
+   "oi": 321935250,
+   "oi_chg": -35031675,
+   "basis_pct": 0.41
   },
   {
    "symbol": "HDFCBANK",
    "expiry": "2026-09-29",
-   "close": 741.05,
-   "underlying": 739.5,
-   "oi": 317952700,
-   "oi_chg": -18624450,
-   "basis_pct": 0.21
+   "close": 742.05,
+   "underlying": 738.61,
+   "oi": 284966500,
+   "oi_chg": -32986200,
+   "basis_pct": 0.47
   },
   {
    "symbol": "NMDC",
    "expiry": "2026-09-29",
-   "close": 80.28,
-   "underlying": 79.8,
-   "oi": 290850750,
-   "oi_chg": -24873750,
-   "basis_pct": 0.6
+   "close": 80.15,
+   "underlying": 80.19,
+   "oi": 270303750,
+   "oi_chg": -20547000,
+   "basis_pct": -0.05
   },
   {
    "symbol": "TATASTEEL",
    "expiry": "2026-09-29",
-   "close": 183.69,
-   "underlying": 183.4,
-   "oi": 261483750,
-   "oi_chg": -4325750,
-   "basis_pct": 0.16
+   "close": 185.7,
+   "underlying": 184.97,
+   "oi": 220866250,
+   "oi_chg": -40617500,
+   "basis_pct": 0.39
   },
   {
    "symbol": "PNB",
    "expiry": "2026-09-29",
-   "close": 118.07,
-   "underlying": 118.0,
-   "oi": 227400000,
-   "oi_chg": -3560000,
-   "basis_pct": 0.06
+   "close": 117.35,
+   "underlying": 116.9,
+   "oi": 217384000,
+   "oi_chg": -10016000,
+   "basis_pct": 0.38
   },
   {
    "symbol": "WIPRO",
    "expiry": "2026-09-29",
-   "close": 164.21,
-   "underlying": 164.56,
-   "oi": 207564000,
-   "oi_chg": 729000,
-   "basis_pct": -0.21
-  },
-  {
-   "symbol": "JIOFIN",
-   "expiry": "2026-09-29",
-   "close": 231.01,
-   "underlying": 229.99,
-   "oi": 187720350,
-   "oi_chg": -8189750,
-   "basis_pct": 0.44
+   "close": 166.02,
+   "underlying": 165.99,
+   "oi": 186624000,
+   "oi_chg": -20940000,
+   "basis_pct": 0.02
   },
   {
    "symbol": "ADANIPOWER",
    "expiry": "2026-09-29",
-   "close": 206.87,
-   "underlying": 206.59,
-   "oi": 183069950,
-   "oi_chg": -2371400,
-   "basis_pct": 0.14
+   "close": 207.79,
+   "underlying": 206.96,
+   "oi": 180883150,
+   "oi_chg": -2186800,
+   "basis_pct": 0.4
+  },
+  {
+   "symbol": "JIOFIN",
+   "expiry": "2026-09-29",
+   "close": 230.68,
+   "underlying": 230.68,
+   "oi": 178383800,
+   "oi_chg": -9336550,
+   "basis_pct": 0.0
   },
   {
    "symbol": "KOTAKBANK",
    "expiry": "2026-09-29",
-   "close": 416.65,
-   "underlying": 414.8,
-   "oi": 151144000,
-   "oi_chg": -4094000,
-   "basis_pct": 0.45
+   "close": 413.95,
+   "underlying": 412.65,
+   "oi": 145190000,
+   "oi_chg": -5954000,
+   "basis_pct": 0.32
   },
   {
    "symbol": "ITC",
    "expiry": "2026-09-29",
-   "close": 267.55,
-   "underlying": 267.01,
-   "oi": 143338875,
-   "oi_chg": -4623000,
-   "basis_pct": 0.2
+   "close": 265.55,
+   "underlying": 265.76,
+   "oi": 138270825,
+   "oi_chg": -5068050,
+   "basis_pct": -0.08
   },
   {
    "symbol": "ETERNAL",
    "expiry": "2026-09-29",
-   "close": 335.4,
-   "underlying": 335.89,
-   "oi": 138040700,
-   "oi_chg": -2056400,
-   "basis_pct": -0.15
-  },
-  {
-   "symbol": "GMRAIRPORT",
-   "expiry": "2026-09-29",
-   "close": 98.52,
-   "underlying": 98.7,
-   "oi": 136716975,
-   "oi_chg": -2364525,
-   "basis_pct": -0.18
+   "close": 341.55,
+   "underlying": 342.0,
+   "oi": 135848500,
+   "oi_chg": -2192200,
+   "basis_pct": -0.13
   },
   {
    "symbol": "IOC",
    "expiry": "2026-09-29",
-   "close": 137.02,
-   "underlying": 136.53,
-   "oi": 135724875,
-   "oi_chg": -2496000,
-   "basis_pct": 0.36
-  },
-  {
-   "symbol": "SAIL",
-   "expiry": "2026-09-29",
-   "close": 175.91,
-   "underlying": 177.25,
-   "oi": 134123900,
-   "oi_chg": -3134900,
-   "basis_pct": -0.76
-  },
-  {
-   "symbol": "MOTHERSON",
-   "expiry": "2026-09-29",
-   "close": 162.9,
-   "underlying": 162.91,
-   "oi": 133990050,
-   "oi_chg": -2343150,
-   "basis_pct": -0.01
+   "close": 138.07,
+   "underlying": 137.8,
+   "oi": 135120375,
+   "oi_chg": -604500,
+   "basis_pct": 0.2
   },
   {
    "symbol": "NHPC",
    "expiry": "2026-09-29",
-   "close": 76.01,
-   "underlying": 75.8,
-   "oi": 133829200,
-   "oi_chg": 1702750,
-   "basis_pct": 0.28
+   "close": 76.48,
+   "underlying": 76.01,
+   "oi": 133606800,
+   "oi_chg": -222400,
+   "basis_pct": 0.62
+  },
+  {
+   "symbol": "GMRAIRPORT",
+   "expiry": "2026-09-29",
+   "close": 98.06,
+   "underlying": 98.34,
+   "oi": 131946075,
+   "oi_chg": -4770900,
+   "basis_pct": -0.28
   },
   {
    "symbol": "BANKBARODA",
    "expiry": "2026-09-29",
-   "close": 234.63,
-   "underlying": 233.65,
-   "oi": 133143075,
-   "oi_chg": -4138875,
-   "basis_pct": 0.42
+   "close": 234.34,
+   "underlying": 234.34,
+   "oi": 131525550,
+   "oi_chg": -1617525,
+   "basis_pct": 0.0
+  },
+  {
+   "symbol": "MOTHERSON",
+   "expiry": "2026-09-29",
+   "close": 162.65,
+   "underlying": 161.77,
+   "oi": 131056500,
+   "oi_chg": -2933550,
+   "basis_pct": 0.54
+  },
+  {
+   "symbol": "SAIL",
+   "expiry": "2026-09-29",
+   "close": 175.54,
+   "underlying": 174.01,
+   "oi": 122933200,
+   "oi_chg": -11190700,
+   "basis_pct": 0.88
   },
   {
    "symbol": "ASHOKLEY",
    "expiry": "2026-09-29",
-   "close": 161.54,
-   "underlying": 161.75,
-   "oi": 122545000,
-   "oi_chg": -405000,
-   "basis_pct": -0.13
+   "close": 161.33,
+   "underlying": 160.75,
+   "oi": 119940000,
+   "oi_chg": -2605000,
+   "basis_pct": 0.36
   },
   {
    "symbol": "RELIANCE",
    "expiry": "2026-09-29",
-   "close": 1251.6,
-   "underlying": 1247.4,
-   "oi": 121595500,
-   "oi_chg": -2242500,
-   "basis_pct": 0.34
+   "close": 1245.1,
+   "underlying": 1240.41,
+   "oi": 113251500,
+   "oi_chg": -8344000,
+   "basis_pct": 0.38
   },
   {
    "symbol": "NTPC",
    "expiry": "2026-09-29",
-   "close": 327.3,
-   "underlying": 326.4,
-   "oi": 112369500,
-   "oi_chg": -745500,
-   "basis_pct": 0.28
-  },
-  {
-   "symbol": "BANDHANBNK",
-   "expiry": "2026-09-29",
-   "close": 180.01,
-   "underlying": 178.99,
-   "oi": 102452400,
-   "oi_chg": -3589200,
-   "basis_pct": 0.57
+   "close": 327.55,
+   "underlying": 327.79,
+   "oi": 109221000,
+   "oi_chg": -3148500,
+   "basis_pct": -0.07
   },
   {
    "symbol": "INOXWIND",
    "expiry": "2026-09-29",
-   "close": 77.9,
-   "underlying": 77.46,
-   "oi": 102400000,
-   "oi_chg": -2681600,
-   "basis_pct": 0.57
+   "close": 78.01,
+   "underlying": 77.9,
+   "oi": 101414400,
+   "oi_chg": -985600,
+   "basis_pct": 0.14
   },
   {
-   "symbol": "NBCC",
+   "symbol": "BANDHANBNK",
    "expiry": "2026-09-29",
-   "close": 83.27,
-   "underlying": 83.14,
-   "oi": 93964000,
-   "oi_chg": 409500,
-   "basis_pct": 0.16
-  },
-  {
-   "symbol": "ICICIBANK",
-   "expiry": "2026-09-29",
-   "close": 1349.4,
-   "underlying": 1344.99,
-   "oi": 93955400,
-   "oi_chg": -87500,
-   "basis_pct": 0.33
-  },
-  {
-   "symbol": "COALINDIA",
-   "expiry": "2026-09-29",
-   "close": 414.0,
-   "underlying": 414.7,
-   "oi": 93097350,
-   "oi_chg": -1089450,
-   "basis_pct": -0.17
-  },
-  {
-   "symbol": "PFC",
-   "expiry": "2026-09-29",
-   "close": 346.45,
-   "underlying": 344.75,
-   "oi": 93065700,
-   "oi_chg": -665600,
-   "basis_pct": 0.49
+   "close": 184.53,
+   "underlying": 184.7,
+   "oi": 97599600,
+   "oi_chg": -4852800,
+   "basis_pct": -0.09
   },
   {
    "symbol": "SWIGGY",
    "expiry": "2026-09-29",
-   "close": 273.5,
-   "underlying": 272.7,
-   "oi": 92772050,
-   "oi_chg": 2339650,
-   "basis_pct": 0.29
+   "close": 285.3,
+   "underlying": 284.06,
+   "oi": 94221100,
+   "oi_chg": 1449050,
+   "basis_pct": 0.44
   },
   {
-   "symbol": "INDUSTOWER",
+   "symbol": "ICICIBANK",
    "expiry": "2026-09-29",
-   "close": 377.6,
-   "underlying": 377.65,
-   "oi": 89766800,
-   "oi_chg": -3740000,
-   "basis_pct": -0.01
+   "close": 1344.9,
+   "underlying": 1339.6,
+   "oi": 92416100,
+   "oi_chg": -1539300,
+   "basis_pct": 0.4
   },
   {
-   "symbol": "AMBUJACEM",
+   "symbol": "NBCC",
    "expiry": "2026-09-29",
-   "close": 392.7,
-   "underlying": 390.78,
-   "oi": 89437200,
-   "oi_chg": -1579200,
-   "basis_pct": 0.49
+   "close": 81.84,
+   "underlying": 81.9,
+   "oi": 92235000,
+   "oi_chg": -1729000,
+   "basis_pct": -0.07
   },
   {
-   "symbol": "BEL",
+   "symbol": "COALINDIA",
    "expiry": "2026-09-29",
-   "close": 399.1,
-   "underlying": 398.5,
-   "oi": 87955275,
-   "oi_chg": -2956875,
-   "basis_pct": 0.15
+   "close": 427.75,
+   "underlying": 428.01,
+   "oi": 90517500,
+   "oi_chg": -2579850,
+   "basis_pct": -0.06
+  },
+  {
+   "symbol": "PFC",
+   "expiry": "2026-09-29",
+   "close": 345.8,
+   "underlying": 345.81,
+   "oi": 90188800,
+   "oi_chg": -2876900,
+   "basis_pct": -0.0
   },
   {
    "symbol": "IRFC",
    "expiry": "2026-09-29",
-   "close": 80.1,
-   "underlying": 80.22,
-   "oi": 86962750,
-   "oi_chg": -363475,
-   "basis_pct": -0.15
+   "close": 80.08,
+   "underlying": 79.99,
+   "oi": 90038725,
+   "oi_chg": 3075975,
+   "basis_pct": 0.11
   },
   {
-   "symbol": "UNIONBANK",
+   "symbol": "AMBUJACEM",
    "expiry": "2026-09-29",
-   "close": 178.27,
-   "underlying": 178.08,
-   "oi": 86756550,
-   "oi_chg": -1101825,
-   "basis_pct": 0.11
+   "close": 387.2,
+   "underlying": 386.89,
+   "oi": 87674400,
+   "oi_chg": -1762800,
+   "basis_pct": 0.08
   },
   {
    "symbol": "AXISBANK",
    "expiry": "2026-09-29",
-   "close": 1249.0,
-   "underlying": 1250.0,
-   "oi": 86527500,
-   "oi_chg": -763750,
-   "basis_pct": -0.08
+   "close": 1247.6,
+   "underlying": 1242.7,
+   "oi": 84868125,
+   "oi_chg": -1659375,
+   "basis_pct": 0.39
   },
   {
    "symbol": "IREDA",
    "expiry": "2026-09-29",
-   "close": 110.46,
-   "underlying": 111.0,
-   "oi": 85866400,
-   "oi_chg": -1751175,
-   "basis_pct": -0.49
+   "close": 110.05,
+   "underlying": 110.19,
+   "oi": 84653700,
+   "oi_chg": -1212700,
+   "basis_pct": -0.13
   },
   {
-   "symbol": "SBIN",
+   "symbol": "BEL",
    "expiry": "2026-09-29",
-   "close": 996.0,
-   "underlying": 996.0,
-   "oi": 80668500,
-   "oi_chg": -708000,
-   "basis_pct": 0.0
+   "close": 396.95,
+   "underlying": 397.9,
+   "oi": 84461175,
+   "oi_chg": -3494100,
+   "basis_pct": -0.24
+  },
+  {
+   "symbol": "UNIONBANK",
+   "expiry": "2026-09-29",
+   "close": 178.25,
+   "underlying": 178.0,
+   "oi": 83645775,
+   "oi_chg": -3110775,
+   "basis_pct": 0.14
   },
   {
    "symbol": "SAGILITY",
    "expiry": "2026-09-29",
-   "close": 46.08,
-   "underlying": 45.95,
-   "oi": 79056000,
-   "oi_chg": -1008000,
-   "basis_pct": 0.28
+   "close": 45.76,
+   "underlying": 45.6,
+   "oi": 78732000,
+   "oi_chg": -324000,
+   "basis_pct": 0.35
   },
   {
-   "symbol": "TMPV",
+   "symbol": "SBIN",
    "expiry": "2026-09-29",
-   "close": 301.45,
-   "underlying": 301.65,
-   "oi": 79049600,
-   "oi_chg": -936000,
+   "close": 987.8,
+   "underlying": 987.0,
+   "oi": 78210000,
+   "oi_chg": -2458500,
+   "basis_pct": 0.08
+  },
+  {
+   "symbol": "INDUSTOWER",
+   "expiry": "2026-09-29",
+   "close": 381.85,
+   "underlying": 382.1,
+   "oi": 76540800,
+   "oi_chg": -13226000,
    "basis_pct": -0.07
   },
   {
    "symbol": "IEX",
    "expiry": "2026-09-29",
-   "close": 113.65,
-   "underlying": 113.82,
-   "oi": 76825350,
-   "oi_chg": -913500,
-   "basis_pct": -0.15
+   "close": 113.0,
+   "underlying": 112.92,
+   "oi": 75111450,
+   "oi_chg": -1713900,
+   "basis_pct": 0.07
   },
   {
-   "symbol": "BANKINDIA",
+   "symbol": "TMPV",
    "expiry": "2026-09-29",
-   "close": 138.41,
-   "underlying": 138.63,
-   "oi": 74791600,
-   "oi_chg": -1279200,
+   "close": 299.5,
+   "underlying": 299.97,
+   "oi": 74358400,
+   "oi_chg": -4691200,
    "basis_pct": -0.16
   },
   {
    "symbol": "INFY",
    "expiry": "2026-09-29",
-   "close": 1043.1,
-   "underlying": 1038.5,
-   "oi": 74407600,
-   "oi_chg": 160800,
-   "basis_pct": 0.44
-  },
-  {
-   "symbol": "FEDERALBNK",
-   "expiry": "2026-09-29",
-   "close": 333.05,
-   "underlying": 332.0,
-   "oi": 72955000,
-   "oi_chg": -930000,
-   "basis_pct": 0.32
+   "close": 1029.8,
+   "underlying": 1029.4,
+   "oi": 71072000,
+   "oi_chg": -3335600,
+   "basis_pct": 0.04
   },
   {
    "symbol": "CROMPTON",
    "expiry": "2026-09-29",
-   "close": 225.91,
-   "underlying": 225.05,
-   "oi": 72594750,
-   "oi_chg": -451500,
-   "basis_pct": 0.38
+   "close": 223.05,
+   "underlying": 222.03,
+   "oi": 70973650,
+   "oi_chg": -1621100,
+   "basis_pct": 0.46
   },
   {
-   "symbol": "VBL",
+   "symbol": "FEDERALBNK",
    "expiry": "2026-09-29",
-   "close": 426.5,
-   "underlying": 425.01,
-   "oi": 72306525,
-   "oi_chg": -1494300,
-   "basis_pct": 0.35
+   "close": 328.1,
+   "underlying": 327.0,
+   "oi": 69885000,
+   "oi_chg": -3070000,
+   "basis_pct": 0.34
   },
   {
-   "symbol": "BHEL",
+   "symbol": "BANKINDIA",
    "expiry": "2026-09-29",
-   "close": 435.75,
-   "underlying": 433.4,
-   "oi": 71460375,
-   "oi_chg": -181125,
-   "basis_pct": 0.54
+   "close": 137.44,
+   "underlying": 137.01,
+   "oi": 69752800,
+   "oi_chg": -5038800,
+   "basis_pct": 0.31
   },
   {
    "symbol": "MANAPPURAM",
    "expiry": "2026-09-29",
-   "close": 315.3,
-   "underlying": 315.1,
-   "oi": 70155000,
-   "oi_chg": -246000,
-   "basis_pct": 0.06
+   "close": 319.15,
+   "underlying": 319.3,
+   "oi": 69675000,
+   "oi_chg": -480000,
+   "basis_pct": -0.05
+  },
+  {
+   "symbol": "VBL",
+   "expiry": "2026-09-29",
+   "close": 429.75,
+   "underlying": 430.0,
+   "oi": 69592050,
+   "oi_chg": -2714475,
+   "basis_pct": -0.06
   },
   {
    "symbol": "GAIL",
    "expiry": "2026-09-29",
-   "close": 173.44,
-   "underlying": 172.61,
-   "oi": 67315100,
-   "oi_chg": 1214100,
-   "basis_pct": 0.48
+   "close": 172.22,
+   "underlying": 171.84,
+   "oi": 66761300,
+   "oi_chg": -553800,
+   "basis_pct": 0.22
+  },
+  {
+   "symbol": "BHEL",
+   "expiry": "2026-09-29",
+   "close": 426.3,
+   "underlying": 425.81,
+   "oi": 64971375,
+   "oi_chg": -6489000,
+   "basis_pct": 0.12
   },
   {
    "symbol": "TATAPOWER",
    "expiry": "2026-09-29",
-   "close": 367.0,
-   "underlying": 367.14,
-   "oi": 65506650,
-   "oi_chg": -922200,
-   "basis_pct": -0.04
+   "close": 367.85,
+   "underlying": 367.0,
+   "oi": 63873950,
+   "oi_chg": -1632700,
+   "basis_pct": 0.23
   },
   {
    "symbol": "POWERGRID",
    "expiry": "2026-09-29",
-   "close": 267.05,
-   "underlying": 266.1,
-   "oi": 62301000,
-   "oi_chg": -1713800,
-   "basis_pct": 0.36
+   "close": 267.25,
+   "underlying": 265.95,
+   "oi": 60902600,
+   "oi_chg": -1398400,
+   "basis_pct": 0.49
   },
   {
    "symbol": "VEDL",
    "expiry": "2026-09-29",
-   "close": 260.0,
-   "underlying": 260.5,
-   "oi": 60691250,
-   "oi_chg": -859050,
-   "basis_pct": -0.19
-  },
-  {
-   "symbol": "VMM",
-   "expiry": "2026-09-29",
-   "close": 101.91,
-   "underlying": 101.65,
-   "oi": 58258200,
-   "oi_chg": -805100,
-   "basis_pct": 0.26
+   "close": 262.45,
+   "underlying": 262.99,
+   "oi": 59538950,
+   "oi_chg": -1152300,
+   "basis_pct": -0.21
   },
   {
    "symbol": "BAJFINANCE",
    "expiry": "2026-09-29",
-   "close": 1025.5,
-   "underlying": 1021.31,
-   "oi": 54375750,
-   "oi_chg": -628500,
-   "basis_pct": 0.41
+   "close": 1013.1,
+   "underlying": 1008.8,
+   "oi": 54279750,
+   "oi_chg": -96000,
+   "basis_pct": 0.43
+  },
+  {
+   "symbol": "VMM",
+   "expiry": "2026-09-29",
+   "close": 104.35,
+   "underlying": 104.03,
+   "oi": 54213300,
+   "oi_chg": -4044900,
+   "basis_pct": 0.31
   },
   {
    "symbol": "ONGC",
    "expiry": "2026-09-29",
-   "close": 235.05,
-   "underlying": 235.63,
-   "oi": 53946000,
-   "oi_chg": -1235250,
-   "basis_pct": -0.25
+   "close": 235.5,
+   "underlying": 236.13,
+   "oi": 51556500,
+   "oi_chg": -2389500,
+   "basis_pct": -0.27
   },
   {
    "symbol": "BIOCON",
    "expiry": "2026-09-29",
-   "close": 395.35,
-   "underlying": 395.0,
-   "oi": 51315000,
-   "oi_chg": -927500,
-   "basis_pct": 0.09
-  },
-  {
-   "symbol": "LICI",
-   "expiry": "2026-09-29",
-   "close": 399.75,
-   "underlying": 400.0,
-   "oi": 48602400,
-   "oi_chg": -981400,
-   "basis_pct": -0.06
+   "close": 391.15,
+   "underlying": 390.0,
+   "oi": 49855000,
+   "oi_chg": -1460000,
+   "basis_pct": 0.29
   },
   {
    "symbol": "RECLTD",
    "expiry": "2026-09-29",
-   "close": 311.15,
-   "underlying": 310.2,
-   "oi": 48338325,
-   "oi_chg": -1515150,
-   "basis_pct": 0.31
-  },
-  {
-   "symbol": "BHARTIARTL",
-   "expiry": "2026-09-29",
-   "close": 1829.6,
-   "underlying": 1830.2,
-   "oi": 47657225,
-   "oi_chg": -765225,
-   "basis_pct": -0.03
+   "close": 308.45,
+   "underlying": 307.11,
+   "oi": 47262600,
+   "oi_chg": -1075725,
+   "basis_pct": 0.44
   },
   {
    "symbol": "LTF",
    "expiry": "2026-09-29",
-   "close": 307.85,
-   "underlying": 307.82,
-   "oi": 47387250,
-   "oi_chg": 114750,
-   "basis_pct": 0.01
+   "close": 304.1,
+   "underlying": 304.85,
+   "oi": 47254500,
+   "oi_chg": -132750,
+   "basis_pct": -0.25
+  },
+  {
+   "symbol": "BHARTIARTL",
+   "expiry": "2026-09-29",
+   "close": 1820.7,
+   "underlying": 1817.2,
+   "oi": 46474950,
+   "oi_chg": -1182275,
+   "basis_pct": 0.19
+  },
+  {
+   "symbol": "LICI",
+   "expiry": "2026-09-29",
+   "close": 404.05,
+   "underlying": 404.54,
+   "oi": 46414200,
+   "oi_chg": -2188200,
+   "basis_pct": -0.12
   },
   {
    "symbol": "HINDALCO",
    "expiry": "2026-09-29",
-   "close": 980.2,
-   "underlying": 981.21,
-   "oi": 44648100,
-   "oi_chg": -993300,
-   "basis_pct": -0.1
+   "close": 977.1,
+   "underlying": 973.0,
+   "oi": 41675900,
+   "oi_chg": -2972200,
+   "basis_pct": 0.42
   },
   {
    "symbol": "HDFCLIFE",
    "expiry": "2026-09-29",
-   "close": 561.35,
-   "underlying": 559.28,
-   "oi": 44199100,
-   "oi_chg": -1382700,
-   "basis_pct": 0.37
+   "close": 561.7,
+   "underlying": 559.2,
+   "oi": 41241200,
+   "oi_chg": -2957900,
+   "basis_pct": 0.45
   },
   {
    "symbol": "DLF",
    "expiry": "2026-09-29",
-   "close": 659.6,
-   "underlying": 660.24,
-   "oi": 41052350,
-   "oi_chg": -1014600,
-   "basis_pct": -0.1
-  },
-  {
-   "symbol": "NATIONALUM",
-   "expiry": "2026-09-29",
-   "close": 352.3,
-   "underlying": 352.5,
-   "oi": 39798750,
-   "oi_chg": -129375,
-   "basis_pct": -0.06
-  },
-  {
-   "symbol": "JSWSTEEL",
-   "expiry": "2026-09-29",
-   "close": 1274.5,
-   "underlying": 1268.62,
-   "oi": 38922525,
-   "oi_chg": -60750,
-   "basis_pct": 0.46
-  },
-  {
-   "symbol": "INDUSINDBK",
-   "expiry": "2026-09-29",
-   "close": 961.1,
-   "underlying": 956.0,
-   "oi": 38095400,
-   "oi_chg": -129500,
-   "basis_pct": 0.53
-  },
-  {
-   "symbol": "HINDPETRO",
-   "expiry": "2026-09-29",
-   "close": 359.0,
-   "underlying": 357.6,
-   "oi": 37671075,
-   "oi_chg": -575100,
-   "basis_pct": 0.39
+   "close": 668.15,
+   "underlying": 669.5,
+   "oi": 39160900,
+   "oi_chg": -1891450,
+   "basis_pct": -0.2
   },
   {
    "symbol": "RBLBANK",
    "expiry": "2026-09-29",
-   "close": 403.3,
-   "underlying": 402.4,
-   "oi": 37084000,
-   "oi_chg": -377825,
-   "basis_pct": 0.22
+   "close": 424.35,
+   "underlying": 423.19,
+   "oi": 38579425,
+   "oi_chg": 1495425,
+   "basis_pct": 0.27
   },
   {
-   "symbol": "RVNL",
+   "symbol": "NATIONALUM",
    "expiry": "2026-09-29",
-   "close": 209.69,
-   "underlying": 209.73,
-   "oi": 35366100,
-   "oi_chg": 359975,
-   "basis_pct": -0.02
+   "close": 352.7,
+   "underlying": 352.19,
+   "oi": 38298750,
+   "oi_chg": -1500000,
+   "basis_pct": 0.14
+  },
+  {
+   "symbol": "INDUSINDBK",
+   "expiry": "2026-09-29",
+   "close": 956.6,
+   "underlying": 955.0,
+   "oi": 37115400,
+   "oi_chg": -980000,
+   "basis_pct": 0.17
+  },
+  {
+   "symbol": "JSWSTEEL",
+   "expiry": "2026-09-29",
+   "close": 1271.6,
+   "underlying": 1267.0,
+   "oi": 36912375,
+   "oi_chg": -2010150,
+   "basis_pct": 0.36
+  },
+  {
+   "symbol": "HINDPETRO",
+   "expiry": "2026-09-29",
+   "close": 361.95,
+   "underlying": 360.69,
+   "oi": 36362925,
+   "oi_chg": -1308150,
+   "basis_pct": 0.35
   },
   {
    "symbol": "ABCAPITAL",
    "expiry": "2026-09-29",
-   "close": 403.0,
-   "underlying": 403.4,
-   "oi": 35206700,
-   "oi_chg": -954800,
-   "basis_pct": -0.1
+   "close": 397.2,
+   "underlying": 397.0,
+   "oi": 35380300,
+   "oi_chg": 173600,
+   "basis_pct": 0.05
+  },
+  {
+   "symbol": "RVNL",
+   "expiry": "2026-09-29",
+   "close": 212.17,
+   "underlying": 211.07,
+   "oi": 34419000,
+   "oi_chg": -947100,
+   "basis_pct": 0.52
   },
   {
    "symbol": "PATANJALI",
    "expiry": "2026-09-29",
-   "close": 397.95,
-   "underlying": 396.2,
-   "oi": 34210800,
-   "oi_chg": 203175,
-   "basis_pct": 0.44
+   "close": 404.5,
+   "underlying": 404.04,
+   "oi": 33456150,
+   "oi_chg": -754650,
+   "basis_pct": 0.11
   },
   {
    "symbol": "NYKAA",
    "expiry": "2026-09-29",
-   "close": 337.15,
-   "underlying": 335.99,
-   "oi": 33706250,
-   "oi_chg": 165625,
-   "basis_pct": 0.35
+   "close": 333.0,
+   "underlying": 333.55,
+   "oi": 33300000,
+   "oi_chg": -406250,
+   "basis_pct": -0.16
   },
   {
    "symbol": "MAHABANK",
    "expiry": "2026-09-29",
-   "close": 82.42,
-   "underlying": 82.2,
-   "oi": 30478500,
-   "oi_chg": -143000,
-   "basis_pct": 0.27
-  },
-  {
-   "symbol": "HINDZINC",
-   "expiry": "2026-09-29",
-   "close": 592.1,
-   "underlying": 591.73,
-   "oi": 29855700,
-   "oi_chg": 175175,
-   "basis_pct": 0.06
+   "close": 82.7,
+   "underlying": 82.4,
+   "oi": 30316000,
+   "oi_chg": -162500,
+   "basis_pct": 0.36
   },
   {
    "symbol": "PETRONET",
    "expiry": "2026-09-29",
-   "close": 288.35,
-   "underlying": 287.5,
-   "oi": 29537400,
-   "oi_chg": -77900,
-   "basis_pct": 0.3
+   "close": 283.1,
+   "underlying": 281.75,
+   "oi": 29296100,
+   "oi_chg": -241300,
+   "basis_pct": 0.48
   },
   {
-   "symbol": "DABUR",
+   "symbol": "HINDZINC",
    "expiry": "2026-09-29",
-   "close": 388.15,
-   "underlying": 386.8,
-   "oi": 29273750,
-   "oi_chg": 331250,
-   "basis_pct": 0.35
-  },
-  {
-   "symbol": "UPL",
-   "expiry": "2026-09-29",
-   "close": 562.35,
-   "underlying": 559.9,
-   "oi": 28532235,
-   "oi_chg": -241190,
-   "basis_pct": 0.44
+   "close": 591.9,
+   "underlying": 590.5,
+   "oi": 29261575,
+   "oi_chg": -594125,
+   "basis_pct": 0.24
   },
   {
    "symbol": "BPCL",
    "expiry": "2026-09-29",
-   "close": 313.35,
-   "underlying": 312.08,
-   "oi": 28086475,
-   "oi_chg": -367350,
-   "basis_pct": 0.41
+   "close": 313.75,
+   "underlying": 313.6,
+   "oi": 28821175,
+   "oi_chg": 734700,
+   "basis_pct": 0.05
+  },
+  {
+   "symbol": "DABUR",
+   "expiry": "2026-09-29",
+   "close": 388.2,
+   "underlying": 388.1,
+   "oi": 28516250,
+   "oi_chg": -757500,
+   "basis_pct": 0.03
+  },
+  {
+   "symbol": "UPL",
+   "expiry": "2026-09-29",
+   "close": 558.55,
+   "underlying": 559.9,
+   "oi": 28018690,
+   "oi_chg": -513545,
+   "basis_pct": -0.24
   },
   {
    "symbol": "JSWENERGY",
    "expiry": "2026-09-29",
-   "close": 518.2,
-   "underlying": 517.0,
-   "oi": 27425400,
-   "oi_chg": -222525,
-   "basis_pct": 0.23
+   "close": 519.8,
+   "underlying": 518.0,
+   "oi": 27109350,
+   "oi_chg": -316050,
+   "basis_pct": 0.35
   }
  ],
  "stock_count": 210

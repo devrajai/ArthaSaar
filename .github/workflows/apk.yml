@@ -20,10 +20,16 @@ jobs:
             -keyalg RSA -keysize 2048 -validity 10950 \
             -storepass MarketBrain2026 -keypass MarketBrain2026 \
             -dname "CN=Market Brain, OU=Dev, O=Dev Raj, L=India, ST=India, C=IN"
-      - name: Configure bubblewrap paths
+      - name: Configure bubblewrap SDK
         run: |
           mkdir -p $HOME/.bubblewrap
-          printf '{"jdkPath": "%s", "androidSdkPath": "%s"}\n' "$JAVA_HOME" "$ANDROID_HOME" > $HOME/.bubblewrap/config.json
+          MB=/tmp/mbsdk
+          mkdir -p $MB/tools
+          for d in "$ANDROID_HOME"/*; do ln -sfn "$d" "$MB/$(basename $d)"; done
+          ln -sfn "$ANDROID_HOME/cmdline-tools/latest/bin" "$MB/tools/bin"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;29.0.2" > /dev/null
+          printf '{"jdkPath": "%s", "androidSdkPath": "%s"}\n' "$JAVA_HOME" "$MB" > $HOME/.bubblewrap/config.json
           cat $HOME/.bubblewrap/config.json
       - name: Build TWA APK
         env:
@@ -33,7 +39,7 @@ jobs:
           mkdir -p /tmp/apkbuild
           cp twa-manifest.json /tmp/apkbuild/
           cd /tmp/apkbuild
-          bubblewrap build --skipPwaValidation
+          yes | bubblewrap build --skipPwaValidation
       - name: Commit APK to repo
         run: |
           cp /tmp/apkbuild/app-release-signed.apk market-brain.apk

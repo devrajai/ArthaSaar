@@ -31,8 +31,8 @@
     t.insertBefore(c, t.firstChild);
     var h = '<div class="subhead">Market Brain Guide (How to use sab kuch)</div>';
     h += block("LOGIN / PASSWORD", [
-      "Password din ke hisaab se badalta hai - shaam tak wahi rehta hai. Din me ek baar poochta hai, phir yaad rakhta hai.",
-      "Format: Devisbest + number + day. Jaise Monday = Devisbest1Mon, Sunday = Devisbest7Sun.",
+      "Password har roz same rehta hai. Ek baar daalo - 6 ghante tak yaad rakhta hai, phir dobara poochta hai.",
+      "Market hours (9 AM - 3:30 PM) me kabhi dobara nahi poochta - ek entry me poora market session chalta hai.",
       "Logout karne ke liye top par #lock button."
     ], "rgba(240,180,41,.7)");
     SECTIONS.forEach(function (s) {

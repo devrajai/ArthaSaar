@@ -41,9 +41,11 @@ def main():
         with open("data/fii-history.json", "w") as f:
             json.dump(hist, f)
     L = ["Market Brain Morning - " + datetime.now().strftime("%a %d %b"), ""]
-    z = str(n.get("zone", "?")).upper()
+    near = n.get("nearest") or ["?"]
+    z = str(near[0]).upper()
     chgs = "{:+.2f}%".format(nifty_chg) if nifty_chg is not None else "?"
-    L.append("NIFTY: " + chgs + " | GTI zone: " + z + (" (compressed!)" if n.get("compressed") else ""))
+    comp = (n.get("compression") or {}).get("compressed")
+    L.append("NIFTY: " + chgs + " | GTI nearest zone: " + z + (" (COMPRESSED!)" if comp else ""))
     if fc is not None:
         L.append("Kal: FII {:+.0f} Cr | DII {:+.0f} Cr".format(fc, dc))
     if g:

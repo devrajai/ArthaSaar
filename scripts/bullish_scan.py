@@ -79,7 +79,7 @@ def tech_score(s, radar, gti):
     g = gti.get(sym)
     if g:
         rsi = g.get("rsi") or 50
-        zone = (g.get("zone") or "").lower()
+        zone = str((g.get("nearest") or [""])[0]).lower()
         z = 10
         if "sd" in zone:
             z = 26

@@ -60,7 +60,7 @@
       (DATA.indices || IDX).forEach(function (name) {
         var g = (GTI.symbols || {})[name];
         if (!g) return;
-        var z = String(g.zone || "").toUpperCase();
+        var z = String((g.nearest || ["?"])[0]).toUpperCase();
         var bull = z.indexOf("SD") >= 0, bear = z.indexOf("SS") >= 0;
         h += '<span style="padding:4px 10px;border-radius:8px;border:1px solid ' +
           (bull ? "rgba(119,243,123,.4);background:rgba(119,243,123,.1)" : bear ? "rgba(255,139,139,.4);background:rgba(255,139,139,.1)" : "rgba(255,255,255,.12)") +

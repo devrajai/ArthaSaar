@@ -71,8 +71,7 @@ if "siteTopicsCard" not in s:
              ("#mynotes", "📝", "My Notes")]
     inner = '<div style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px">' + "".join(
         '<a class="hchip" href="%s">%s %s</a>' % (h, ic, nm) for h, ic, nm in chips) + "</div>"
-    tp = ('  var tp = glCard("siteTopicsCard", "🗺️ Sab Topics - poori site",
-'
+    tp = ('  var tp = glCard("siteTopicsCard", "🗺️ Sab Topics - poori site",\n'
           "    '" + inner + "');\n")
     a5 = "  var first = sec.querySelector(\".card\");"
     assert a5 in s, "first anchor missing"

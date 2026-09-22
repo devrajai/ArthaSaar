@@ -58,11 +58,18 @@ def main():
     L.append("Rule of the day: pehle zone, phir trade - zone ke bina trade = lottery.")
     msg = "\n".join(L)
     tok = os.environ.get("TG_TOKEN")
-    chat = os.environ.get("TG_CHAT_ID")
-    if tok and chat:
-        data = json.dumps({"chat_id": chat, "text": msg}).encode()
-        req = urllib.request.Request(TG.format(tok), data=data, headers={"Content-Type": "application/json"})
-        print(urllib.request.urlopen(req, timeout=30).status)
+    chats = [c.strip() for c in os.environ.get("TG_CHAT_ID", "").split(",") if c.strip()]
+    if tok and chats:
+        ok = 0
+        for chat in chats:
+            try:
+                data = json.dumps({"chat_id": chat, "text": msg}).encode()
+                req = urllib.request.Request(TG.format(tok), data=data, headers={"Content-Type": "application/json"})
+                urllib.request.urlopen(req, timeout=30)
+                ok += 1
+            except Exception as e:
+                print("send fail", chat, str(e)[:60])
+        print("sent to", ok, "of", len(chats))
     else:
         print("no TG creds; message:\n" + msg)
 

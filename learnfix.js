@@ -24,9 +24,9 @@
      "Top point par panic sell hota hai; bottom zone hold hota hai. Buyer lambe time tak position hold kar sakta hai."]
   ];
   var el = document.getElementById("eduBox");
-  var card = document.createElement("div");
-  card.className = "card"; card.id = "devNoteCard";
-  card.innerHTML = '<div class="subhead">My Notebook — own rules (Advance.pdf)</div>' +
+  var card = document.createElement("details");
+  card.className = "gl"; card.id = "devNoteCard"; card.style.marginTop = "12px";
+  card.innerHTML = '<summary><b>My Notebook — own rules (Advance.pdf)</b></summary>' +
     B.map(function (x) {
       return '<details style="margin:8px 0"><summary><b>' + esc(x[0]) + '</b> <span class="footer-note">— ' + esc(x[1]) + '</span></summary><div class="note" style="margin-top:6px">' + x[2] + '</div></details>';
     }).join("") +

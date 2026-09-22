@@ -29,12 +29,16 @@
     '<b>SIP Calculator</b>: monthly amount, saal, return % - kitna banega.</div>' +
     '<div class="note" style="margin-top:10px"><b>💼 Portfolio Night Report</b> - aaj ka P&L, kaun diya/liya, 90-din value graph.</div>' +
     '<div class="note" style="margin-top:10px"><b>📖 Rules reminder</b> - signals final nahi hote. Confluence score dekho, Company Card se fundamentals check karo, stop-loss ke saath hi trade karo.</div>');
+  var tp = glCard("siteTopicsCard", "🗺️ Sab Topics - poori site",
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px"><a class="hchip" href="#company">🏢 Company Card</a><a class="hchip" href="#dash">📊 Dashboard</a><a class="hchip" href="#indices">📈 Indices</a><a class="hchip" href="#heatmap">🔥 Sector Map</a><a class="hchip" href="#screener">🔍 Screener</a><a class="hchip" href="#fundamentals">🏢 Fundamentals</a><a class="hchip" href="#mf">📊 MF Tracker</a><a class="hchip" href="#deepfund">💎 Deep Fund</a><a class="hchip" href="#filings">📄 Filings</a><a class="hchip" href="#futures">🧾 Futures</a><a class="hchip" href="#ipo">🚀 IPO</a><a class="hchip" href="#ai">🤖 AI Forecast</a><a class="hchip" href="#aibrain">🧠 AI Brain</a><a class="hchip" href="#crypto">🪙 Crypto</a><a class="hchip" href="#global">🌍 Global</a><a class="hchip" href="#news">📰 News</a><a class="hchip" href="#events">📅 Events</a><a class="hchip" href="#portfolio">💼 Portfolio</a><a class="hchip" href="#learn">📚 Learn</a><a class="hchip" href="#studies">🧪 Studies</a><a class="hchip" href="#mynotes">📝 My Notes</a></div>');
   var first = sec.querySelector(".card");
   if (first) {
     sec.insertBefore(wn, first);
     sec.insertBefore(gd, wn.nextSibling);
+    sec.insertBefore(tp, gd.nextSibling);
   } else {
     sec.appendChild(wn);
     sec.appendChild(gd);
+    sec.appendChild(tp);
   }
 })();

@@ -1,24 +1,6 @@
 {
- "updated": "2026-09-21T00:29:35.486215+00:00",
+ "updated": "2026-09-22T00:28:41.243576+00:00",
  "week": [
-  {
-   "title": "Bank Holiday",
-   "country": "JPY",
-   "date_ist": "2026-09-21",
-   "time_ist": "04:30",
-   "impact": "Holiday",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "Rightmove HPI m/m",
-   "country": "GBP",
-   "date_ist": "2026-09-21",
-   "time_ist": "04:31",
-   "impact": "Low",
-   "forecast": "",
-   "previous": "-2.0%"
-  },
   {
    "title": "Credit Card Spending y/y",
    "country": "NZD",
@@ -97,7 +79,7 @@
    "date_ist": "2026-09-22",
    "time_ist": "11:30",
    "impact": "Low",
-   "forecast": "15.4B",
+   "forecast": "15.2B",
    "previous": "1.8B"
   },
   {
@@ -115,7 +97,7 @@
    "date_ist": "2026-09-22",
    "time_ist": "15:30",
    "impact": "Low",
-   "forecast": "-34",
+   "forecast": "-33",
    "previous": "-25"
   },
   {
@@ -151,7 +133,7 @@
    "date_ist": "2026-09-22",
    "time_ist": "19:30",
    "impact": "Low",
-   "forecast": "5",
+   "forecast": "2",
    "previous": "4"
   },
   {
@@ -241,7 +223,7 @@
    "date_ist": "2026-09-23",
    "time_ist": "12:45",
    "impact": "Medium",
-   "forecast": "48.4",
+   "forecast": "48.3",
    "previous": "48.4"
   },
   {
@@ -250,7 +232,7 @@
    "date_ist": "2026-09-23",
    "time_ist": "13:00",
    "impact": "Medium",
-   "forecast": "54.0",
+   "forecast": "54.1",
    "previous": "54.1"
   },
   {
@@ -286,7 +268,7 @@
    "date_ist": "2026-09-23",
    "time_ist": "14:00",
    "impact": "Medium",
-   "forecast": "51.4",
+   "forecast": "51.5",
    "previous": "51.5"
   },
   {
@@ -313,7 +295,7 @@
    "date_ist": "2026-09-23",
    "time_ist": "19:15",
    "impact": "Low",
-   "forecast": "53.4",
+   "forecast": "53.6",
    "previous": "53.2"
   },
   {
@@ -322,7 +304,7 @@
    "date_ist": "2026-09-23",
    "time_ist": "19:15",
    "impact": "Low",
-   "forecast": "56.0",
+   "forecast": "55.8",
    "previous": "56.8"
   },
   {
@@ -340,7 +322,7 @@
    "date_ist": "2026-09-23",
    "time_ist": "20:00",
    "impact": "Low",
-   "forecast": "",
+   "forecast": "-0.6M",
    "previous": "-0.6M"
   },
   {
@@ -367,7 +349,7 @@
    "date_ist": "2026-09-24",
    "time_ist": "07:00",
    "impact": "High",
-   "forecast": "20.9K",
+   "forecast": "22.5K",
    "previous": "-15.8K"
   },
   {
@@ -421,7 +403,7 @@
    "date_ist": "2026-09-24",
    "time_ist": "13:30",
    "impact": "Low",
-   "forecast": "89.0",
+   "forecast": "89.1",
    "previous": "88.8"
   },
   {
@@ -448,7 +430,7 @@
    "date_ist": "2026-09-24",
    "time_ist": "15:30",
    "impact": "Low",
-   "forecast": "-50",
+   "forecast": "-42",
    "previous": "-48"
   },
   {
@@ -484,8 +466,17 @@
    "date_ist": "2026-09-24",
    "time_ist": "18:00",
    "impact": "Low",
-   "forecast": "-259B",
+   "forecast": "-258B",
    "previous": "-227B"
+  },
+  {
+   "title": "FOMC Member Barkin Speaks",
+   "country": "USD",
+   "date_ist": "2026-09-24",
+   "time_ist": "18:00",
+   "impact": "Low",
+   "forecast": "",
+   "previous": ""
   },
   {
    "title": "FOMC Member Hammack Speaks",
@@ -538,7 +529,7 @@
    "date_ist": "2026-09-24",
    "time_ist": "19:30",
    "impact": "Low",
-   "forecast": "619K",
+   "forecast": "615K",
    "previous": "607K"
   },
   {
@@ -556,7 +547,7 @@
    "date_ist": "2026-09-24",
    "time_ist": "20:00",
    "impact": "Low",
-   "forecast": "",
+   "forecast": "52B",
    "previous": "44B"
   },
   {
@@ -576,6 +567,15 @@
    "impact": "Holiday",
    "forecast": "",
    "previous": ""
+  },
+  {
+   "title": "BOJ Core CPI y/y",
+   "country": "JPY",
+   "date_ist": "2026-09-25",
+   "time_ist": "10:30",
+   "impact": "Low",
+   "forecast": "1.5%",
+   "previous": "1.6%"
   },
   {
    "title": "German GfK Consumer Climate",
@@ -628,7 +628,7 @@
    "date_ist": "2026-09-25",
    "time_ist": "18:00",
    "impact": "Low",
-   "forecast": "0.5%",
+   "forecast": "0.6%",
    "previous": "0.4%"
   },
   {
@@ -646,7 +646,7 @@
    "date_ist": "2026-09-25",
    "time_ist": "19:30",
    "impact": "Medium",
-   "forecast": "47.5",
+   "forecast": "47.4",
    "previous": "47.8"
   },
   {
@@ -957,6 +957,12 @@
   {
    "symbol": "ITC",
    "ticker": "ITC.NS",
+   "country": "IN",
+   "date": "2026-10-29"
+  },
+  {
+   "symbol": "MARUTI",
+   "ticker": "MARUTI.NS",
    "country": "IN",
    "date": "2026-10-29"
   },

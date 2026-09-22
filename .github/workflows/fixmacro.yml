@@ -1,0 +1,21 @@
+name: Fix Macro
+on:
+  workflow_dispatch
+concurrency:
+  group: fixmacro
+  cancel-in-progress: false
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/fix_macro.py
+      - run: node --check app.js
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add app.js index.html
+          git commit -m "macro pulse + gti zones cards live"
+          git push

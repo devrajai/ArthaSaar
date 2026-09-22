@@ -1,0 +1,24 @@
+name: GTI Zones
+on:
+  schedule:
+    - cron: '25 13 * * 1-5'
+  workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  gti:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q yfinance
+      - run: python3 scripts/gti.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/gti.json
+          git commit -m "data: gti zones" || echo "no change"
+          git pull --rebase || true
+          git push

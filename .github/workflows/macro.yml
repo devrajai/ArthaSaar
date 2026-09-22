@@ -1,0 +1,28 @@
+name: Macro Pulse
+on:
+  schedule:
+    - cron: '35 1 * * 1-5'
+  workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  macro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q yfinance
+      - run: python3 scripts/macro.py
+      - run: python3 scripts/send_macro.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/macro.json
+          git commit -m "data: macro pulse" || echo "no change"
+          git pull --rebase || true
+          git push

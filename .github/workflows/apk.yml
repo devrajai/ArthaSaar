@@ -1,0 +1,44 @@
+name: Build Android APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: npm install -g @bubblewrap/cli
+      - name: Create signing key
+        run: |
+          keytool -genkeypair -v -keystore /tmp/marketbrain.keystore -alias marketbrain \
+            -keyalg RSA -keysize 2048 -validity 10950 \
+            -storepass MarketBrain2026 -keypass MarketBrain2026 \
+            -dname "CN=Market Brain, OU=Dev, O=Dev Raj, L=India, ST=India, C=IN"
+      - name: Build TWA APK
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: MarketBrain2026
+          BUBBLEWRAP_KEY_PASSWORD: MarketBrain2026
+        run: |
+          mkdir -p /tmp/apkbuild
+          cp twa-manifest.json /tmp/apkbuild/
+          cd /tmp/apkbuild
+          bubblewrap build --skipPwaValidation
+      - name: Commit APK to repo
+        run: |
+          cp /tmp/apkbuild/app-release-signed.apk market-brain.apk
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add market-brain.apk
+          git commit -m "build: Market Brain Android APK v1.0" || echo "no change"
+          git pull --rebase || true
+          git push
+      - uses: actions/upload-artifact@v4
+        with:
+          name: market-brain-apk
+          path: market-brain.apk

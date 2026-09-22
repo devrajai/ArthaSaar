@@ -1,0 +1,39 @@
+{
+  "packageId": "ai.devraj.marketbrain",
+  "host": "devrajai.github.io",
+  "name": "Market Brain",
+  "launcherName": "Market Brain",
+  "display": "standalone",
+  "themeColor": "#070C17",
+  "themeColorDark": "#070C17",
+  "navigationColor": "#070C17",
+  "navigationColorDark": "#070C17",
+  "navigationDividerColor": "#070C17",
+  "navigationDividerColorDark": "#070C17",
+  "backgroundColor": "#070C17",
+  "enableNotifications": false,
+  "startUrl": "/market-brain/",
+  "iconUrl": "https://devrajai.github.io/market-brain/icon-512.png",
+  "maskableIconUrl": "https://devrajai.github.io/market-brain/icon-512.png",
+  "monochromeIconUrl": "https://devrajai.github.io/market-brain/icon-512.png",
+  "webManifestUrl": "https://devrajai.github.io/market-brain/manifest.json",
+  "shortcuts": [],
+  "signingKey": {
+    "path": "/tmp/marketbrain.keystore",
+    "alias": "marketbrain"
+  },
+  "appVersion": "1",
+  "appVersionName": "1.0",
+  "splashScreenFadeOutDuration": 300,
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScreenUrl": "",
+  "minSdkVersion": 23,
+  "orientation": "default"
+}

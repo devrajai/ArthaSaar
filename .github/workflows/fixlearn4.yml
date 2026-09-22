@@ -1,0 +1,21 @@
+name: Fix Learn 4
+on:
+  workflow_dispatch
+concurrency:
+  group: fixlearn4
+  cancel-in-progress: false
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/fix_learn4.py
+      - run: node --check guide2.js && node --check learnadd.js
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add guide2.js learnadd.js index.html
+          git commit -m "learn: about-market-brain full details card collapsible (remove duplicate)"
+          git push

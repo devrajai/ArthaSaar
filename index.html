@@ -15,13 +15,8 @@
 (function () {
   var HASH = "c79a400771acb2dc2c6102ac7fc6c666e4ab79971d5b0e24d0e8c9802c5d1737";
   var SIX_H = 6 * 3600 * 1000;
-  function gateExp(t) {
-    var e = t + SIX_H, d = new Date(e), m = d.getHours() * 60 + d.getMinutes();
-    if (m >= 540 && m <= 930) { d.setHours(15); d.setMinutes(31); d.setSeconds(0); d.setMilliseconds(0); e = d.getTime(); }
-    return e;
-  }
   var ok = false;
-  try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = Date.now() < gateExp(gt); } catch (e) {}
+  try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = (Date.now() - gt) < SIX_H; } catch (e) {}
   try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate-ts"); localStorage.removeItem("mb-gate"); ok = false; } } catch (e) {}
   if (ok) return;
   window.MB_LOCKED = true;
@@ -420,7 +415,7 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 </footer>
 
 </div>
-<script src="app.js?v=21sep26a7"></script>
+<script src="app.js?v=21sep26a8"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>

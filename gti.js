@@ -1,4 +1,4 @@
-/* gti.js - GTI Zones card (Manish ka Ghost Trade Indicator math) - ab dedicated #gti section mein */
+/* gti.js - GTI Zones card (Manish ka Ghost Trade Indicator math) - dedicated #gti section */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var DATA = null;
@@ -23,6 +23,15 @@
     if (s.week_zones) {
       h += '<div class="note" style="margin-top:8px"><b>Weekly zones</b> (open ' + esc(s.week_open) + ' · POC ' + esc(s.week_poc) + ")</div>";
       for (var j = 0; j < order.length; j++) h += zoneRow(order[j], s.week_zones[order[j]], s.price);
+    }
+    if (s.compression && s.compression.compressed) {
+      h += '<div class="note" style="margin-top:8px;background:rgba(255,165,0,.15);border:1px solid rgba(255,165,0,.4);border-radius:8px;padding:8px"><b style="color:#ffb84d">COMPRESSION</b> - day POC aur week POC bilkul paas hain. Zones kaam nahi karenge - levels par trade karo, blast expected (Nifty min 200-300 pts).</div>';
+    }
+    if (s.grid) {
+      h += '<div class="note" style="margin-top:6px">300-pt grid: <b>' + esc(s.grid.level) + "</b> (" + esc(s.grid.dist_pct) + "% door) - bade players ka level</div>";
+    }
+    if (s.gann) {
+      h += '<div class="note" style="margin-top:6px"><b>Gann/Fib levels</b> (aaj ka H ' + esc(s.gann.day_h) + " / L " + esc(s.gann.day_l) + "): 50% = <b>" + esc(s.gann.p50) + "</b> | 38.2% = " + esc(s.gann.fib382) + " | 61.8% = " + esc(s.gann.fib618) + "</div>";
     }
     h += '<div class="footer-note">SD/WD = demand (neeche support) · WS/SS = supply (upar resistance) · GTI: Manish ka zone math</div>';
     host.innerHTML = h;

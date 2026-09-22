@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """gti.py - GTI (Ghost Trade Indicator) zones: demand/supply + POC
 for NIFTY/BANKNIFTY + top F&O stocks. Market Mindset math from the
-original Pine script, ported to Python. Output: data/gti.json"""
+original Pine script, ported to Python. Output: data/gti.json
+v2: + compression detection, 300-pt grid, Gann levels, TG zone alert."""
 import json, math, os, datetime
 
 OUT = "data/gti.json"
@@ -15,7 +16,6 @@ STOCKS = ["RELIANCE", "HDFCBANK", "ICICIBANK", "SBIN", "AXISBANK", "INFY",
           "ONGC", "POWERGRID", "SUNPHARMA", "TITAN", "ULTRACEMCO"]
 
 PHI = 1.618034
-
 def atr(hist, n=20):
     """ATR(n) over [high, low, close] lists (simple TR average)."""
     if len(hist) < n + 1:
@@ -94,9 +94,31 @@ def compute(sym):
             d = pct(price, mid)
             if near is None or abs(d) < abs(near[1]):
                 near = [name + " " + str(int(mid)), d]
+    # compression: day POC, week POC aur price sab paas (Manish rule)
+    compression = None
+    if dz and wz and dpoc and wpoc:
+        d1 = abs(price - dpoc) / price * 100
+        d2 = abs(dpoc - wpoc) / price * 100
+        compression = {"day_poc_dist_pct": round(d1, 2), "week_gap_pct": round(d2, 2),
+                       "compressed": bool(d1 < 0.15 and d2 < 0.2)}
+    # 300-point grid (bade players ke levels)
+    grid = None
+    if price > 300:
+        lvl = round(price / 300.0) * 300
+        grid = {"level": lvl, "dist_pct": round((price - lvl) / lvl * 100, 1)}
+    # Gann levels: aaj ke high/low ka 50% + fib retracement
+    dh, dl = last[2], last[3]
+    rng = dh - dl
+    gann = None
+    if rng > 0:
+        gann = {"day_h": round(dh, 1), "day_l": round(dl, 1),
+                "p50": round(dl + rng * 0.5, 1),
+                "fib382": round(dl + rng * 0.382, 1),
+                "fib618": round(dl + rng * 0.618, 1)}
     return {"price": price, "day_open": P, "day_poc": dpoc, "day_zones": dz,
             "week_open": P_w, "week_poc": wpoc, "week_zones": wz,
-            "nearest": near}
+            "nearest": near, "compression": compression, "grid": grid,
+            "gann": gann}
 
 def iso_week(dstr):
     return datetime.date.fromisoformat(dstr).isocalendar()[:2]
@@ -117,6 +139,38 @@ def main():
     with open(OUT, "w") as f:
         json.dump(out, f, indent=1)
     print("gti.json written:", len(out["symbols"]), "symbols |", len(out["errors"]), "errors")
+    tg_alert(out)
+
+def tg_alert(out):
+    import urllib.request, os
+    tok = os.environ.get("TG_TOKEN", "")
+    ids = os.environ.get("TG_CHAT_ID", "")
+    if not tok or not ids:
+        return
+    n = out["symbols"].get("NIFTY 50")
+    if not n or not n.get("day_zones"):
+        return
+    z, p = n["day_zones"], n["price"]
+    hit = None
+    for nm in ["SD", "WD", "WS", "SS"]:
+        if z[nm][0] <= p <= z[nm][1]:
+            hit = nm
+    if not hit:
+        return
+    full = {"SD": "Strong DEMAND (tagda support - buying zone)", "WD": "Weak Demand",
+            "WS": "Weak Supply", "SS": "Strong SUPPLY (tagda resistance - selling zone)"}[hit]
+    msg = ("*GTI ALERT*\nNIFTY 50 ab " + hit + " zone mein hai: " + str(z[hit][0]) + " - " + str(z[hit][1]) +
+           "\n(" + full + ")\nPrice: " + str(p) + " | Day POC: " + str(n.get("day_poc")) +
+           "\nManish rule: buying zone mein BUY, selling zone mein SELL, target = opposite zone")
+    for cid in [x.strip() for x in ids.split(",") if x.strip()]:
+        try:
+            data = json.dumps({"chat_id": cid, "text": msg, "parse_mode": "Markdown"}).encode()
+            req = urllib.request.Request("https://api.telegram.org/bot" + tok + "/sendMessage", data=data,
+                                         headers={"Content-Type": "application/json"})
+            urllib.request.urlopen(req, timeout=20).read()
+        except Exception as e:
+            print("tg fail", str(e)[:50])
+    print("GTI TG alert sent:", hit)
 
 if __name__ == "__main__":
     main()

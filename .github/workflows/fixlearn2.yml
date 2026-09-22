@@ -1,0 +1,21 @@
+name: Fix Learn 2
+on:
+  workflow_dispatch
+concurrency:
+  group: fixlearn2
+  cancel-in-progress: false
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/fix_learn2.py
+      - run: node --check learnfold.js && node --check learnfix.js && node --check learnadd.js && node --check app.js
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add learnfold.js learnfix.js learnadd.js app.js index.html
+          git commit -m "learn: all cards collapsible (beginner/intermediate/advanced/tips/notebook) + sab topics card"
+          git push

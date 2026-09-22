@@ -1,8 +1,8 @@
 name: Macro Pulse
 on:
+  workflow_dispatch:
   schedule:
     - cron: '35 1 * * 1-5'
-  workflow_dispatch
 permissions:
   contents: write
 jobs:

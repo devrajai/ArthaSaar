@@ -21,9 +21,9 @@
     ["Portfolio", "apne holdings add karo — live P&L (EOD prices se)"],
     ["Learn + Studies + My Notes", "strategies, glossary, aapka notebook (stage rules, SL hunting, dead cat bounce), Sensex 1979-2024 history, budget-day study"]
   ];
-  var card = document.createElement("div");
-  card.className = "card"; card.id = "siteGuideCard";
-  card.innerHTML = '<div class="subhead">About Market Brain — kya hai, kya data hai, kaise kaam karta hai</div>' +
+  var card = document.createElement("details");
+  card.className = "gl"; card.id = "siteGuideCard"; card.style.marginTop = "12px";
+  card.innerHTML = '<summary><b>About Market Brain — kya hai, kya data hai, kaise kaam karta hai</b></summary>' +
     '<div class="note" style="margin-bottom:10px">Ye aapka personal market terminal hai — <b>100% free sources</b> se (NSE/BSE bhavcopy, yfinance, TradingView, chartink, RBI/Fed calendars). Data <b>GitHub Actions</b> se roz automatically collect hota hai (koi PC nahi chahiye). Mobile-first hai — phone par hi bana hai. Password-locked private site hai.</div>' +
     '<div class="note" style="margin-bottom:10px"><b>Data refresh timings (IST):</b> stocks/indices/crypto/news ~roz subah-dopahar · futures EOD ~18:50 · events 6:10 AM · AI TimesFM 8:35 PM · fundamentals weekly · sab kuch automatic.</div>' +
     S.map(function (x) { return "<details style=\"margin:6px 0\"><summary><b>" + esc(x[0]) + "</b></summary><div class=\"note\" style=\"margin-top:5px\">" + esc(x[1]) + "</div></details>"; }).join("") +

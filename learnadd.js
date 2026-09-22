@@ -29,18 +29,12 @@
     '<b>SIP Calculator</b>: monthly amount, saal, return % - kitna banega.</div>' +
     '<div class="note" style="margin-top:10px"><b>💼 Portfolio Night Report</b> - aaj ka P&L, kaun diya/liya, 90-din value graph.</div>' +
     '<div class="note" style="margin-top:10px"><b>📖 Rules reminder</b> - signals final nahi hote. Confluence score dekho, Company Card se fundamentals check karo, stop-loss ke saath hi trade karo.</div>');
-  var ab = glCard("aboutCard", "ℹ️ About Market Brain - kya hai, kya data hai, kaise kaam karta hai",
-    '<div class="note" style="margin-top:8px"><b>Kya hai?</b> - Ye tumhara personal market terminal hai, 100% free sources se: NSE/BSE bhavcopy, yfinance, TradingView, chartink, RBI/Fed calendars. Mobile-first hai, password-locked private site.</div>' +
-    '<div class="note" style="margin-top:10px"><b>Kya data hai?</b> - 2,300+ stocks, 139 indices, 100 crypto coins, F&O futures, filings, IPO, mutual funds, news, events, AI forecasts (TimesFM) - sab browser mein khulta hai, data raw JSON se.</div>' +
-    '<div class="note" style="margin-top:10px"><b>Kaise kaam karta hai?</b> - GitHub Actions roz automatically data collect karta hai (koi PC on karne ki zarurat nahi). Timings (IST): stocks/indices/crypto/news roz subah-dopahar; futures EOD ~6:50 PM; events 6:10 AM; AI TimesFM 8:35 PM; fundamentals weekly; Smart Brain 8:55 PM. Sab automatic.</div>');
-  var first = sec.querySelector(".card");
+var first = sec.querySelector(".card");
   if (first) {
     sec.insertBefore(wn, first);
     sec.insertBefore(gd, wn.nextSibling);
-    sec.insertBefore(ab, gd.nextSibling);
   } else {
     sec.appendChild(wn);
     sec.appendChild(gd);
-    sec.appendChild(ab);
   }
 })();

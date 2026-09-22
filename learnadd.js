@@ -14,7 +14,7 @@
     '<div class="note" style="margin-top:8px"><b>🧠 AI Brain</b> - 4 naye cards: Market Mood Meter (news sentiment 0-100), Crash Warning System (VIX + FII + breadth ka risk score), TimesFM Report Card (accuracy - 9 Oct se), Sector Rotation.</div>' +
     '<div class="note" style="margin-top:10px"><b>🏆 AI Scores</b> - har stock ko 1-10 score (Technical 60% + Fundamental 40%): RSI, EMA200, MACD, volume + PE, ROE, karza, growth. Roz raat update.</div>' +
     '<div class="note" style="margin-top:10px"><b>💡 Monthly AI Stock Ideas</b> - har mahine 1 tareekh ko Telegram par top 5 stocks: reasons + Entry/Stop/Target + swing ya positional approach.</div>' +
-    '<div class="note" style="margin-top:10px"><b>📱 Telegram bot</b> - roz ka schedule: 7:00 AM AI Brief, 9:20 AM Market Open, hourly alerts (market hours), 4:00 PM Close, 9:10 PM Daily Digest, Sunday Report Card + IPO digest. Abhi 5 members.</div>' +
+    '<div class="note" style="margin-top:10px"><b>📱 Telegram bot</b> - roz ka schedule: 7:00 AM AI Brief, 9:20 AM Market Open, hourly alerts (market hours), 4:00 PM Close, 9:10 PM Daily Digest, Sunday Report Card + IPO digest.</div>' +
     '<div class="note" style="margin-top:10px"><b>📊 MF Tracker</b> - ab kaam karta hai: naam ya code se search, NAV + returns, My MF holdings, SIP calculator.</div>' +
     '<div class="note" style="margin-top:10px"><b>📣 Social Buzz</b> - Reddit se stocks ke social mentions, Daily Digest mein line aati hai.</div>');
   var gd = glCard("newToolsGuide", "Naye Tools - kaise use karein",
@@ -29,16 +29,18 @@
     '<b>SIP Calculator</b>: monthly amount, saal, return % - kitna banega.</div>' +
     '<div class="note" style="margin-top:10px"><b>💼 Portfolio Night Report</b> - aaj ka P&L, kaun diya/liya, 90-din value graph.</div>' +
     '<div class="note" style="margin-top:10px"><b>📖 Rules reminder</b> - signals final nahi hote. Confluence score dekho, Company Card se fundamentals check karo, stop-loss ke saath hi trade karo.</div>');
-  var tp = glCard("siteTopicsCard", "🗺️ Sab Topics - poori site",
-    '<div style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px"><a class="hchip" href="#company">🏢 Company Card</a><a class="hchip" href="#dash">📊 Dashboard</a><a class="hchip" href="#indices">📈 Indices</a><a class="hchip" href="#heatmap">🔥 Sector Map</a><a class="hchip" href="#screener">🔍 Screener</a><a class="hchip" href="#fundamentals">🏢 Fundamentals</a><a class="hchip" href="#mf">📊 MF Tracker</a><a class="hchip" href="#deepfund">💎 Deep Fund</a><a class="hchip" href="#filings">📄 Filings</a><a class="hchip" href="#futures">🧾 Futures</a><a class="hchip" href="#ipo">🚀 IPO</a><a class="hchip" href="#ai">🤖 AI Forecast</a><a class="hchip" href="#aibrain">🧠 AI Brain</a><a class="hchip" href="#crypto">🪙 Crypto</a><a class="hchip" href="#global">🌍 Global</a><a class="hchip" href="#news">📰 News</a><a class="hchip" href="#events">📅 Events</a><a class="hchip" href="#portfolio">💼 Portfolio</a><a class="hchip" href="#learn">📚 Learn</a><a class="hchip" href="#studies">🧪 Studies</a><a class="hchip" href="#mynotes">📝 My Notes</a></div>');
+  var ab = glCard("aboutCard", "ℹ️ About Market Brain - kya hai, kya data hai, kaise kaam karta hai",
+    '<div class="note" style="margin-top:8px"><b>Kya hai?</b> - Ye tumhara personal market terminal hai, 100% free sources se: NSE/BSE bhavcopy, yfinance, TradingView, chartink, RBI/Fed calendars. Mobile-first hai, password-locked private site.</div>' +
+    '<div class="note" style="margin-top:10px"><b>Kya data hai?</b> - 2,300+ stocks, 139 indices, 100 crypto coins, F&O futures, filings, IPO, mutual funds, news, events, AI forecasts (TimesFM) - sab browser mein khulta hai, data raw JSON se.</div>' +
+    '<div class="note" style="margin-top:10px"><b>Kaise kaam karta hai?</b> - GitHub Actions roz automatically data collect karta hai (koi PC on karne ki zarurat nahi). Timings (IST): stocks/indices/crypto/news roz subah-dopahar; futures EOD ~6:50 PM; events 6:10 AM; AI TimesFM 8:35 PM; fundamentals weekly; Smart Brain 8:55 PM. Sab automatic.</div>');
   var first = sec.querySelector(".card");
   if (first) {
     sec.insertBefore(wn, first);
     sec.insertBefore(gd, wn.nextSibling);
-    sec.insertBefore(tp, gd.nextSibling);
+    sec.insertBefore(ab, gd.nextSibling);
   } else {
     sec.appendChild(wn);
     sec.appendChild(gd);
-    sec.appendChild(tp);
+    sec.appendChild(ab);
   }
 })();

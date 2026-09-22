@@ -172,3 +172,10 @@ footer .flinks{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
 .footer-note{font-size:10.5px;color:var(--faint);font-family:var(--mono);margin-top:6px}
 .badge-tier{font-family:var(--mono);font-size:9px;padding:1px 6px;border-radius:5px;
   background:var(--amber-dim);color:var(--amber);vertical-align:middle;margin-left:5px}
+
+/* --- home horizontal chip row --- */
+.hrow{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding:6px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.hrow::-webkit-scrollbar{display:none}
+.hchip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap}
+.hchip:active{background:var(--glass2);border-color:var(--border2)}
+.hchip:visited{color:var(--text)}

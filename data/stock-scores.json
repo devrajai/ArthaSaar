@@ -1,145 +1,89 @@
 {
- "updated": "2026-09-22T10:31:25.262548+05:30",
+ "updated": "2026-09-22T23:08:14.782983+05:30",
  "scale": "1-10, higher = better. Technical 60% + Fundamental 40%. Gyaan nahi, hisaab.",
  "top": [
   {
-   "sym": "AGI",
+   "sym": "JSFB",
    "t": 10.0,
-   "f": 9.0,
-   "total": 9.6,
+   "f": 10.0,
+   "total": 10.0,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 4.2x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "EMMVEE",
-   "t": 10.0,
-   "f": 9.0,
-   "total": 9.6,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 5.3x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "MANBA",
-   "t": 10.0,
-   "f": 9.0,
-   "total": 9.6,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 4.9x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "AMBIKCO",
-   "t": 9.5,
-   "f": 9.0,
-   "total": 9.3,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.9x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "REFEX",
-   "t": 9.5,
-   "f": 8.0,
-   "total": 8.9,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 12.4x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "OMAXAUTO",
-   "t": 9.5,
-   "f": 8.0,
-   "total": 8.9,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.8x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "GVPIL",
-   "t": 9.5,
-   "f": 8.0,
-   "total": 8.9,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.9x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "VRAJ",
-   "t": 9.5,
-   "f": 8.0,
-   "total": 8.9,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.6x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "ONEPOINT",
-   "t": 10.0,
-   "f": 7.0,
-   "total": 8.8,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 2.3x",
-    "3-din streak"
+    "volume 1.5x",
+    "5-din streak"
    ]
   },
   {
    "sym": "GNFC",
-   "t": 8.0,
+   "t": 8.5,
    "f": 10.0,
-   "total": 8.8,
+   "total": 9.1,
+   "r": [
+    "RSI garam",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 1.9x",
+    "4-din streak"
+   ]
+  },
+  {
+   "sym": "AGI",
+   "t": 9.0,
+   "f": 9.0,
+   "total": 9.0,
+   "r": [
+    "RSI garam",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 2.0x",
+    "4-din streak"
+   ]
+  },
+  {
+   "sym": "MANBA",
+   "t": 9.0,
+   "f": 9.0,
+   "total": 9.0,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "3-din streak",
-    "PE 8.3 sasta"
+    "volume 3.5x",
+    "52w high ke paas"
+   ]
+  },
+  {
+   "sym": "BAJAJHLDNG",
+   "t": 8.5,
+   "f": 9.5,
+   "total": 8.9,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 1.7x",
+    "PE 14.2 sasta"
+   ]
+  },
+  {
+   "sym": "ENGINERSIN",
+   "t": 8.5,
+   "f": 9.0,
+   "total": 8.7,
+   "r": [
+    "RSI garam",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 3.3x",
+    "4-din streak"
    ]
   },
   {
@@ -148,124 +92,82 @@
    "f": 9.0,
    "total": 8.7,
    "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.7x",
-    "PE 20.9 theek"
-   ]
-  },
-  {
-   "sym": "NORTHARC",
-   "t": 8.5,
-   "f": 9.0,
-   "total": 8.7,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "4-din streak",
-    "52w high ke paas"
-   ]
-  },
-  {
-   "sym": "AYE",
-   "t": 8.5,
-   "f": 9.0,
-   "total": 8.7,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "4-din streak",
-    "52w high ke paas"
-   ]
-  },
-  {
-   "sym": "ACE",
-   "t": 8.5,
-   "f": 9.0,
-   "total": 8.7,
-   "r": [
     "RSI garam",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 1.8x",
-    "5-din streak"
+    "volume 2.3x",
+    "3-din streak"
    ]
   },
   {
-   "sym": "PATINTLOG",
+   "sym": "RPTECH",
    "t": 9.0,
    "f": 8.0,
    "total": 8.6,
    "r": [
-    "RSI garam",
+    "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 4.7x",
-    "4-din streak"
+    "volume 2.0x",
+    "52w high ke paas"
    ]
   },
   {
-   "sym": "TAINWALCHM",
-   "t": 10.0,
-   "f": 6.5,
+   "sym": "COALINDIA",
+   "t": 9.0,
+   "f": 8.0,
    "total": 8.6,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 7.4x",
-    "4-din streak"
+    "volume 1.5x",
+    "52w high ke paas"
    ]
   },
   {
-   "sym": "BAJAJHLDNG",
-   "t": 8.0,
-   "f": 9.5,
+   "sym": "VIDHIING",
+   "t": 9.0,
+   "f": 8.0,
    "total": 8.6,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 1.8x",
+    "52w high ke paas"
+   ]
+  },
+  {
+   "sym": "KTKBANK",
+   "t": 7.5,
+   "f": 10.0,
+   "total": 8.5,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD negative",
+    "EMA20 ke upar",
+    "volume 1.5x",
+    "52w high ke paas"
+   ]
+  },
+  {
+   "sym": "BUILDPRO",
+   "t": 8.5,
+   "f": 8.5,
+   "total": 8.5,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
     "3-din streak",
-    "PE 14.2 sasta"
-   ]
-  },
-  {
-   "sym": "SUDARCOLOR",
-   "t": 9.5,
-   "f": 7.0,
-   "total": 8.5,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.6x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "ORIENTCER",
-   "t": 9.5,
-   "f": 7.0,
-   "total": 8.5,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 2.2x",
-    "4-din streak"
+    "52w high ke paas"
    ]
   },
   {
@@ -278,8 +180,8 @@
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 2.2x",
-    "3-din streak"
+    "volume 1.6x",
+    "4-din streak"
    ]
   },
   {
@@ -297,62 +199,6 @@
    ]
   },
   {
-   "sym": "MAHSEAMLES",
-   "t": 7.5,
-   "f": 10.0,
-   "total": 8.5,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "52w high ke paas",
-    "PE 13.0 sasta"
-   ]
-  },
-  {
-   "sym": "CASTROLIND",
-   "t": 7.5,
-   "f": 10.0,
-   "total": 8.5,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "52w high ke paas",
-    "PE 18.4 sasta"
-   ]
-  },
-  {
-   "sym": "CONCORDBIO",
-   "t": 9.0,
-   "f": 7.5,
-   "total": 8.4,
-   "r": [
-    "RSI garam",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 3.9x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "RSWM",
-   "t": 10.0,
-   "f": 6.0,
-   "total": 8.4,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 5.3x",
-    "4-din streak"
-   ]
-  },
-  {
    "sym": "ANTELOPUS",
    "t": 7.5,
    "f": 9.8,
@@ -367,49 +213,49 @@
    ]
   },
   {
-   "sym": "GLOBE",
-   "t": 8.5,
-   "f": 8.0,
-   "total": 8.3,
-   "r": [
-    "RSI garam",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 8.4x",
-    "4-din streak"
-   ]
-  },
-  {
-   "sym": "USHAMART",
-   "t": 8.5,
-   "f": 8.0,
-   "total": 8.3,
-   "r": [
-    "RSI garam",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 3.1x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "LICHSGFIN",
-   "t": 8.5,
-   "f": 8.0,
-   "total": 8.3,
+   "sym": "SANGHVIMOV",
+   "t": 8.0,
+   "f": 9.0,
+   "total": 8.4,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "4-din streak",
+    "5-din streak",
+    "PE 19.0 sasta"
+   ]
+  },
+  {
+   "sym": "SRHHYPOLTD",
+   "t": 8.0,
+   "f": 9.0,
+   "total": 8.4,
+   "r": [
+    "RSI garam",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 6.7x",
     "52w high ke paas"
    ]
   },
   {
-   "sym": "LPDC",
+   "sym": "LCL",
+   "t": 8.5,
+   "f": 8.0,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD negative",
+    "EMA20 ke upar",
+    "volume 1.5x",
+    "4-din streak"
+   ]
+  },
+  {
+   "sym": "RAIN",
    "t": 8.5,
    "f": 8.0,
    "total": 8.3,
@@ -418,8 +264,22 @@
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 1.9x",
-    "PE 11.2 sasta"
+    "5-din streak",
+    "52w high ke paas"
+   ]
+  },
+  {
+   "sym": "DPABHUSHAN",
+   "t": 8.5,
+   "f": 8.0,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 1.7x",
+    "PE 12.7 sasta"
    ]
   },
   {
@@ -432,8 +292,106 @@
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 1.8x",
+    "volume 2.2x",
     "PE 13.6 sasta"
+   ]
+  },
+  {
+   "sym": "VADILALIND",
+   "t": 8.5,
+   "f": 8.0,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD negative",
+    "EMA20 ke upar",
+    "volume 2.5x",
+    "3-din streak"
+   ]
+  },
+  {
+   "sym": "SUNDARMFIN",
+   "t": 8.5,
+   "f": 8.0,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 1.7x",
+    "PE 23.5 theek"
+   ]
+  },
+  {
+   "sym": "MGEL",
+   "t": 8.5,
+   "f": 8.0,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 3.4x",
+    "PE 10.9 sasta"
+   ]
+  },
+  {
+   "sym": "GVPIL",
+   "t": 8.5,
+   "f": 8.0,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 1.7x",
+    "PE 12.3 sasta"
+   ]
+  },
+  {
+   "sym": "GOCLCORP",
+   "t": 7.5,
+   "f": 9.5,
+   "total": 8.3,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "52w high ke paas",
+    "PE 8.2 sasta"
+   ]
+  },
+  {
+   "sym": "ONEPOINT",
+   "t": 9.0,
+   "f": 7.0,
+   "total": 8.2,
+   "r": [
+    "RSI garam",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 4.5x",
+    "4-din streak"
+   ]
+  },
+  {
+   "sym": "IKS",
+   "t": 10.0,
+   "f": 5.5,
+   "total": 8.2,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 2.9x",
+    "3-din streak"
    ]
   },
   {
@@ -446,78 +404,8 @@
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 1.6x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "CHOICEIN",
-   "t": 10.0,
-   "f": 5.5,
-   "total": 8.2,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
     "volume 2.4x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "INDHOTEL",
-   "t": 10.0,
-   "f": 5.5,
-   "total": 8.2,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "volume 1.7x",
-    "3-din streak"
-   ]
-  },
-  {
-   "sym": "GNA",
-   "t": 8.5,
-   "f": 7.8,
-   "total": 8.2,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "3-din streak",
-    "52w high ke paas"
-   ]
-  },
-  {
-   "sym": "MAYURUNIQ",
-   "t": 7.0,
-   "f": 10.0,
-   "total": 8.2,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD positive",
-    "EMA20 ke upar",
-    "PE 15.6 sasta",
-    "margin 20%"
-   ]
-  },
-  {
-   "sym": "JSFB",
-   "t": 7.0,
-   "f": 10.0,
-   "total": 8.2,
-   "r": [
-    "RSI healthy",
-    "EMA200 ke upar",
-    "MACD negative",
-    "EMA20 ke upar",
-    "4-din streak",
-    "52w high ke paas"
+    "4-din streak"
    ]
   },
   {
@@ -530,36 +418,148 @@
     "EMA200 ke upar",
     "MACD negative",
     "EMA20 ke upar",
-    "4-din streak",
+    "5-din streak",
     "52w high ke paas"
    ]
   },
   {
-   "sym": "GPTHEALTH",
-   "t": 9.0,
-   "f": 7.0,
-   "total": 8.2,
+   "sym": "PCJEWELLER",
+   "t": 7.5,
+   "f": 9.0,
+   "total": 8.1,
+   "r": [
+    "RSI garam",
+    "EMA200 ke upar",
+    "MACD negative",
+    "EMA20 ke upar",
+    "volume 1.9x",
+    "3-din streak"
+   ]
+  },
+  {
+   "sym": "YESBANK",
+   "t": 7.5,
+   "f": 9.0,
+   "total": 8.1,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 1.7x",
-    "52w high ke paas"
+    "52w high ke paas",
+    "PE 19.3 sasta"
    ]
   },
   {
-   "sym": "BHAGYANGR",
-   "t": 9.0,
-   "f": 7.0,
-   "total": 8.2,
+   "sym": "INDNIPPON",
+   "t": 7.5,
+   "f": 9.0,
+   "total": 8.1,
    "r": [
     "RSI healthy",
     "EMA200 ke upar",
     "MACD positive",
     "EMA20 ke upar",
-    "volume 1.8x",
+    "52w high ke paas",
+    "PE 24.8 theek"
+   ]
+  },
+  {
+   "sym": "EMMVEE",
+   "t": 7.5,
+   "f": 9.0,
+   "total": 8.1,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "52w high ke paas",
+    "PE 17.8 sasta"
+   ]
+  },
+  {
+   "sym": "NORTHARC",
+   "t": 7.5,
+   "f": 9.0,
+   "total": 8.1,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "52w high ke paas",
+    "PE 11.7 sasta"
+   ]
+  },
+  {
+   "sym": "AYE",
+   "t": 7.5,
+   "f": 9.0,
+   "total": 8.1,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "52w high ke paas",
+    "PE 19.1 sasta"
+   ]
+  },
+  {
+   "sym": "STEELCAS",
+   "t": 9.0,
+   "f": 6.5,
+   "total": 8.0,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 9.3x",
     "52w high ke paas"
+   ]
+  },
+  {
+   "sym": "MUKANDLTD",
+   "t": 10.0,
+   "f": 5.0,
+   "total": 8.0,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 2.3x",
+    "3-din streak"
+   ]
+  },
+  {
+   "sym": "MUNJALSHOW",
+   "t": 10.0,
+   "f": 5.0,
+   "total": 8.0,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 5.9x",
+    "3-din streak"
+   ]
+  },
+  {
+   "sym": "NGIL",
+   "t": 10.0,
+   "f": 5.0,
+   "total": 8.0,
+   "r": [
+    "RSI healthy",
+    "EMA200 ke upar",
+    "MACD positive",
+    "EMA20 ke upar",
+    "volume 6.0x",
+    "4-din streak"
    ]
   }
  ]

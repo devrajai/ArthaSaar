@@ -1,4 +1,4 @@
-/* economypulse.js - Economy Pulse: 6 govt indicators (GST, Rail, Ports, Auto, EPFO, Power) in Global section */
+/* economypulse.js - Economy Pulse: 6 govt indicators (GST, Rail, Ports, Auto, EPFO, Power) in Global section (top) */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
 
@@ -40,7 +40,8 @@
     if (!sec || document.getElementById("mbEconPulse")) return;
     var c = document.createElement("details");
     c.className = "card"; c.id = "mbEconPulse"; c.style.marginTop = "14px";
-    sec.appendChild(c);
+    var h2 = sec.querySelector("h2");
+    if (h2 && h2.parentNode) sec.insertBefore(c, h2.nextSibling); else sec.appendChild(c);
     try { build(c); } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();

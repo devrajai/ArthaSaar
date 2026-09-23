@@ -1,24 +1,23 @@
-name: Economy Pulse
+name: Circuit Scanner
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 2 * * *'  # 7:40 AM IST daily
+    - cron: '0 12 * * 1-5'  # 5:30 PM IST daily weekdays
 permissions:
   contents: write
 jobs:
-  econpulse:
+  circuits:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 scripts/economy_pulse.py
-      - run: sed -i 's/v=21sep26a20/v=21sep26a21/' index.html || true
+      - run: python3 scripts/circuits.py
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/economy-pulse.json index.html || true
-          git commit -m "data: economy pulse + v=a21" || echo "no change"
+          git add data/circuits.json || true
+          git commit -m "data: circuit scanner" || echo "no change"
           git pull --rebase || true
           git push

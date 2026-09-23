@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""economy_pulse.py - Economy Pulse card data: 11 indicators (GST, Rail, Ports,
-Auto, EPFO, Power, GDP, CPI, PMI, Core, FII). Values/yoy MANUALLY VERIFIED
-(regex removed - it produced garbage); only headlines auto-fetch from Google
-News RSS daily. FII monthly bars in 'm' field (NSDL data, manual update)."""
+"""economy_pulse.py - Economy Pulse card data: 15 indicators (GST, Rail, Ports,
+Auto, EPFO, Power, GDP, CPI, PMI, Core, FII, UPI, IIP, Forex, Trade).
+Values/yoy MANUALLY VERIFIED (regex removed - it produced garbage); only
+headlines auto-fetch from Google News RSS daily. FII monthly bars in 'm'
+field (NSDL data, manual update)."""
 import json, os, re, time, urllib.request, urllib.parse
 from datetime import datetime, timedelta, timezone
 
@@ -22,6 +23,10 @@ QUERIES = {
     "pmi": ("India PMI manufacturing services HSBC", ["pmi", "purchasing"]),
     "core": ("India core sector growth index industries", ["core", "infrastructure output", "ici", "industrial"]),
     "fii": ("FPI FII buying selling Indian equities crore month", ["fii", "fpi", "foreign"]),
+    "upi": ("UPI transactions NPCI monthly crore billion", ["upi"]),
+    "iip": ("India IIP index industrial production growth", ["iip", "industrial production"]),
+    "fx": ("India forex reserves RBI billion record", ["forex", "reserves"]),
+    "trade": ("India merchandise exports trade deficit billion monthly", ["export", "trade deficit", "imports"]),
 }
 
 def fetch_headlines(q, must, days=30, n=4):
@@ -75,7 +80,7 @@ def main():
         byid[iid] = it
         time.sleep(1.0)
 
-    order = ["gst", "rail", "port", "auto", "epfo", "power", "gdp", "cpi", "pmi", "core", "fii"]
+    order = ["gst", "rail", "port", "auto", "epfo", "power", "gdp", "cpi", "pmi", "core", "fii", "upi", "iip", "fx", "trade"]
     ind = [byid.get(k, {}) for k in order]
     out = {
         "updated": NOW.strftime("%d %b %Y, %H:%M IST"),

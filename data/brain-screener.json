@@ -1,6 +1,6 @@
 {
- "updated": "2026-09-23T13:25:42.692018+00:00",
- "count": 2108,
+ "updated": "2026-09-23T15:50:16.094384+00:00",
+ "count": 2109,
  "stocks": [
   {
    "symbol": "WHIRLPOOL",
@@ -12007,6 +12007,29 @@
    "vol_vs_avg20": 1.08,
    "consec_days": 3,
    "history_days": 254
+  },
+  {
+   "symbol": "HEGAM",
+   "company": "HEG Advanced Materials Ltd.",
+   "industry": "Capital Goods",
+   "tier": 1,
+   "price": 237.3,
+   "change_pct": 1.89,
+   "high_52w": 739.25,
+   "low_52w": 215.05,
+   "high_200d": 739.25,
+   "low_200d": 215.05,
+   "from_52w_high_pct": -67.9,
+   "ema20": 365.45,
+   "ema200": 547.35,
+   "above_ema200": false,
+   "rsi14": 21.47,
+   "macd": -114.965,
+   "macd_signal": -106.109,
+   "macd_hist": -8.856,
+   "vol_vs_avg20": 0.58,
+   "consec_days": 1,
+   "history_days": 252
   },
   {
    "symbol": "VMM",
@@ -34787,7 +34810,7 @@
    "change_pct": -0.15,
    "high_52w": 162005.81,
    "low_52w": 122381.4,
-   "high_200d": 153628.81,
+   "high_200d": 153628.8,
    "low_200d": 122381.4,
    "from_52w_high_pct": -23.1,
    "ema20": 127766.64,
@@ -41617,7 +41640,7 @@
    "price": 5604.5,
    "change_pct": -0.88,
    "high_52w": 7119.61,
-   "low_52w": 4697.86,
+   "low_52w": 4697.85,
    "high_200d": 7119.61,
    "low_200d": 4934.09,
    "from_52w_high_pct": -21.28,

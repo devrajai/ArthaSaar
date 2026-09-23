@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""circuits.py v2 - Upper/Lower Circuit Scanner + 7-day history:
+"""circuits.py v3 - Upper/Lower Circuit Scanner + 7-day history + all-stock search:
 - Roz ka UC/LC list (close=high/low, 1-20% bands)
 - Har stock ka past 7 trading day ka % change (d7)
 - 7 din me kitni baar same-side circuit laga (h)
 - Roz ka UC/LC count trend (tr)
+- 'all' dict: sab NSE stocks ka 7-din data (search ke liye)
 Source (free): nsearchives.nseindia.com bhavcopy (UDiFF). Output: data/circuits.json"""
 import csv, io, json, os, sys, urllib.request, zipfile
 from datetime import datetime, timedelta, timezone
@@ -116,7 +117,23 @@ def main():
 
     tr = [{"d": hd["d"].strftime("%d %b"), "uc": len(hd["uc"]), "lc": len(hd["lc"])} for hd in hist]
 
+    # sab stocks ka 7-din history (search ke liye): sym -> [d1..d7, flags"012", uc_hits, lc_hits, last_close]
+    all_stocks = {}
+    for sym, x in st.items():
+        if not sym:
+            continue
+        vals = []
+        flags = []
+        for hd in hist:
+            p = hd["pct"].get(sym)
+            vals.append(round(p, 1) if p is not None else None)
+            flags.append("1" if sym in hd["uc"] else ("2" if sym in hd["lc"] else "0"))
+        u = sum(1 for c in flags if c == "1")
+        l = sum(1 for c in flags if c == "2")
+        all_stocks[sym] = vals + ["".join(flags), u, l, round(x["c"], 1)]
+
     data = {
+        "all": all_stocks,
         "updated": used.strftime("%d %b %Y"),
         "note": "Upper circuit = close high pe lock (sellers khatam). Lower = close low pe lock. 1-20% band-wise. Bars = past 7 din ka daily %. 7d = us din me kitni baar circuit laga. NSE bhavcopy se. Indicative only.",
         "n_uc": len(uc_set), "n_lc": len(lc_set),
@@ -127,6 +144,7 @@ def main():
     with open("data/circuits.json", "w") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     print("OK wrote data/circuits.json -", used, "- UC:", len(uc_set), "LC:", len(lc_set),
+          "| all stocks:", len(all_stocks),
           "| 7d trend:", [(t["d"], t["uc"], t["lc"]) for t in tr])
 
 if __name__ == "__main__":

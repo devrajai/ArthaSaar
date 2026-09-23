@@ -1,12 +1,12 @@
 {
- "updated": "2026-09-22T18:51:30.268110+00:00",
+ "updated": "2026-09-23T00:52:22.758957+00:00",
  "count": 13,
  "items": [
   {
    "name": "S&P 500",
    "symbol": "^GSPC",
-   "price": 7771.65,
-   "chg_pct": 0.09,
+   "price": 7764.64,
+   "chg_pct": -0.0,
    "high_52w": 7798.99,
    "low_52w": 6343.72,
    "as_of": "2026-09-22"
@@ -14,17 +14,17 @@
   {
    "name": "Nasdaq Composite",
    "symbol": "^IXIC",
-   "price": 27245.56,
-   "chg_pct": 0.46,
-   "high_52w": 27245.56,
+   "price": 27244.28,
+   "chg_pct": 0.45,
+   "high_52w": 27244.28,
    "low_52w": 20794.64,
    "as_of": "2026-09-22"
   },
   {
    "name": "Dow Jones",
    "symbol": "^DJI",
-   "price": 51900.33,
-   "chg_pct": -0.29,
+   "price": 51863.69,
+   "chg_pct": -0.36,
    "high_52w": 54349.12,
    "low_52w": 45166.64,
    "as_of": "2026-09-22"
@@ -50,8 +50,8 @@
   {
    "name": "Gold (COMEX)",
    "symbol": "GC=F",
-   "price": 4389.2,
-   "chg_pct": 0.12,
+   "price": 4394.1,
+   "chg_pct": 0.23,
    "high_52w": 5318.4,
    "low_52w": 3768.1,
    "as_of": "2026-09-22"
@@ -59,8 +59,8 @@
   {
    "name": "Silver (COMEX)",
    "symbol": "SI=F",
-   "price": 67.32,
-   "chg_pct": 2.26,
+   "price": 67.9,
+   "chg_pct": 3.16,
    "high_52w": 115.08,
    "low_52w": 43.78,
    "as_of": "2026-09-22"
@@ -68,8 +68,8 @@
   {
    "name": "Crude Oil WTI",
    "symbol": "CL=F",
-   "price": 90.57,
-   "chg_pct": -5.44,
+   "price": 90.06,
+   "chg_pct": -5.97,
    "high_52w": 112.95,
    "low_52w": 55.27,
    "as_of": "2026-09-22"
@@ -77,8 +77,8 @@
   {
    "name": "Natural Gas",
    "symbol": "NG=F",
-   "price": 3.12,
-   "chg_pct": 10.16,
+   "price": 3.17,
+   "chg_pct": 11.71,
    "high_52w": 7.46,
    "low_52w": 2.52,
    "as_of": "2026-09-22"
@@ -86,8 +86,8 @@
   {
    "name": "USD-INR",
    "symbol": "USDINR=X",
-   "price": 95.58,
-   "chg_pct": -0.45,
+   "price": 95.71,
+   "chg_pct": -0.31,
    "high_52w": 96.88,
    "low_52w": 87.74,
    "as_of": "2026-09-22"
@@ -95,8 +95,8 @@
   {
    "name": "Dollar Index (DXY)",
    "symbol": "DX-Y.NYB",
-   "price": 100.61,
-   "chg_pct": 0.17,
+   "price": 100.56,
+   "chg_pct": 0.13,
    "high_52w": 101.61,
    "low_52w": 96.22,
    "as_of": "2026-09-22"
@@ -113,9 +113,9 @@
   {
    "name": "Copper",
    "symbol": "HG=F",
-   "price": 6.87,
-   "chg_pct": 2.75,
-   "high_52w": 6.87,
+   "price": 6.89,
+   "chg_pct": 3.06,
+   "high_52w": 6.89,
    "low_52w": 4.57,
    "as_of": "2026-09-22"
   }

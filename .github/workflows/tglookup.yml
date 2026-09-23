@@ -1,0 +1,29 @@
+name: TG Lookup User
+on:
+  workflow_dispatch:
+jobs:
+  lookup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -s "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/getUpdates" > up.json
+          python3 - << 'EOF'
+          import json
+          d = json.load(open('up.json'))
+          print('ok:', d.get('ok'))
+          seen = {}
+          for u in d.get('result', []):
+              for k in ('message', 'edited_message', 'channel_post', 'my_chat_member'):
+                  m = u.get(k)
+                  if not m:
+                      continue
+                  ch = m.get('chat', {})
+                  usr = m.get('from', m.get('new_chat_member', {}))
+                  if ch.get('id'):
+                      seen[ch['id']] = (usr.get('username') or usr.get('first_name') or '?', ch.get('type'), m.get('date', 0))
+          print('CHATS FOUND:')
+          for cid, (nm, typ, dt) in sorted(seen.items(), key=lambda x: -x[1][2]):
+              print(cid, '|', nm, '|', typ, '|', dt)
+          if not seen:
+              print('NO CHATS - user has not messaged the bot recently')
+          EOF

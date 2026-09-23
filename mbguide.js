@@ -30,9 +30,7 @@
     c.className = "card"; c.id = "mbGuide"; c.style.marginTop = "14px";
     t.insertBefore(c, t.firstChild);
     var h = '<div class="subhead">Market Brain Guide (How to use sab kuch)</div>';
-    h += block("LOGIN / PASSWORD", [
-      "Password har roz same rehta hai. Ek baar daalo - 6 ghante tak yaad rakhta hai, phir dobara poochta hai.",
-      "Har 6 ghante me ek baar poochta hai - market time (9-3:30) me bhi agar 6 ghante ho gaye to ek baar pooch lega, phir wapas 6 ghante chalu.",
+    h += block("LOGOUT", [
       "Logout karne ke liye top par #lock button."
     ], "rgba(240,180,41,.7)");
     SECTIONS.forEach(function (s) {

@@ -36,15 +36,6 @@
     SECTIONS.forEach(function (s) {
       h += '<div style="margin-top:14px;padding:9px 13px;border-radius:9px;background:rgba(255,255,255,.03);border-left:3px solid rgba(159,176,196,.5)"><div style="font-size:13px;font-weight:600">' + s[0] + '</div><div style="font-size:12.5px;opacity:.8;margin-top:4px;line-height:1.5">' + esc(s[1]) + "</div></div>";
     });
-    h += block("TELEGRAM (kam notifications)", [
-      "Morning Digest - 8 AM (FII/DII, GTI zone, top picks, news). Bas itna hi spam - baaki sab website pe jab chaho dekho.",
-      "Birthday wishes + important IPO/macro alerts kabhi kabhi."
-    ]);
-    h += block("MOBILE APP", [
-      "Android: market-brain.apk download karo (site par link). iPhone: Safari -> Share -> Add to Home Screen.",
-      "App me bhi same password chalta hai."
-    ]);
-    h += block("LATEST UPDATES", UPDATES, "rgba(119,243,123,.6)");
     h += '<div class="note" style="margin-top:10px;font-size:11.5px;opacity:.55">Market Brain By : Dev Raj with Sarvam Ai. Data free sources se - levels aur bias hai, guarantee nahi. SL hamesha.</div>';
     c.innerHTML = h;
   }

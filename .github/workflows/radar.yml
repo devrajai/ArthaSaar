@@ -1,0 +1,25 @@
+name: Big Player Radar + Stage Detector
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 12 * * 1-5'  # 6:20 PM IST daily
+permissions:
+  contents: write
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/bigplayer.py
+      - run: python3 scripts/stages.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/bigplayer.json data/stages.json || true
+          git commit -m "data: big player radar + stage detector" || echo "no change"
+          git pull --rebase || true
+          git push

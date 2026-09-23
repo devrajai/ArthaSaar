@@ -14,11 +14,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 scripts/economy_pulse.py
-      - run: sed -i 's/v=21sep26a18/v=21sep26a19/' index.html || true
+      - run: sed -i 's/v=21sep26a19/v=21sep26a20/' index.html || true
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
           git add data/economy-pulse.json index.html || true
-          git commit -m "data: economy pulse + v=a19" || echo "no change"
+          git commit -m "data: economy pulse + v=a20" || echo "no change"
           git pull --rebase || true
           git push

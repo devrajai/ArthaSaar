@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""economy_pulse.py - Economy Pulse card data: 8 govt indicators (GST, Rail, Ports,
-Auto, EPFO, Power, GDP, CPI). Values/yoy MANUALLY VERIFIED (regex removed - it
-produced garbage); only headlines auto-fetch from Google News RSS daily."""
+"""economy_pulse.py - Economy Pulse card data: 11 indicators (GST, Rail, Ports,
+Auto, EPFO, Power, GDP, CPI, PMI, Core, FII). Values/yoy MANUALLY VERIFIED
+(regex removed - it produced garbage); only headlines auto-fetch from Google
+News RSS daily. FII monthly bars in 'm' field (NSDL data, manual update)."""
 import json, os, re, time, urllib.request, urllib.parse
 from datetime import datetime, timedelta, timezone
 
@@ -18,6 +19,9 @@ QUERIES = {
     "power": ("India power demand peak electricity", ["power", "electricity", "gigawatt", " demand"]),
     "gdp": ("India GDP growth quarterly MoSPI", ["gdp"]),
     "cpi": ("India retail inflation CPI MoSPI", ["inflation", "cpi"]),
+    "pmi": ("India PMI manufacturing services HSBC", ["pmi", "purchasing"]),
+    "core": ("India core sector growth index industries", ["core", "infrastructure output", "ici", "industrial"]),
+    "fii": ("FPI FII buying selling Indian equities crore month", ["fii", "fpi", "foreign"]),
 }
 
 def fetch_headlines(q, must, days=30, n=4):
@@ -71,7 +75,7 @@ def main():
         byid[iid] = it
         time.sleep(1.0)
 
-    order = ["gst", "rail", "port", "auto", "epfo", "power", "gdp", "cpi"]
+    order = ["gst", "rail", "port", "auto", "epfo", "power", "gdp", "cpi", "pmi", "core", "fii"]
     ind = [byid.get(k, {}) for k in order]
     out = {
         "updated": NOW.strftime("%d %b %Y, %H:%M IST"),

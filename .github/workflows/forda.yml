@@ -1,24 +1,23 @@
-name: Economy Pulse
+name: F&O Radar
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 2 * * *'  # 7:40 AM IST daily
+    - cron: '0 13 * * 1-5'  # 6:30 PM IST daily weekdays
 permissions:
   contents: write
 jobs:
-  econpulse:
+  forda:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 scripts/economy_pulse.py
-      - run: sed -i 's/v=21sep26a21/v=21sep26a22/' index.html || true
+      - run: python3 scripts/forda.py
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/economy-pulse.json index.html || true
-          git commit -m "data: economy pulse + v=a22" || echo "no change"
+          git add data/forda.json || true
+          git commit -m "data: F&O radar" || echo "no change"
           git pull --rebase || true
           git push

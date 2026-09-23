@@ -1,67 +1,67 @@
 {
- "updated": "2026-09-22T14:28:52.188415",
- "date": "22-09-2026",
+ "updated": "2026-09-23T14:29:20.256368",
+ "date": "23-09-2026",
  "source": "NSE F&O bhavcopy (EOD)",
  "symbols": {
   "NIFTY 50": {
-   "spot": 23329.0,
-   "expiry": "22 Sep",
-   "put_wall": 23300,
-   "put_wall_oi": 21927165,
-   "call_wall": 23350,
-   "call_wall_oi": 22289345,
-   "pcr": 0.88,
-   "max_pain": 23350,
-   "total_oi": 366641080,
+   "spot": 23446.8,
+   "expiry": "29 Sep",
+   "put_wall": 23000,
+   "put_wall_oi": 12675765,
+   "call_wall": 24000,
+   "call_wall_oi": 15299505,
+   "pcr": 1.02,
+   "max_pain": 23500,
+   "total_oi": 348862385,
    "chain": [
     {
-     "strike": 23200,
-     "ce": 1578395,
-     "ce_chg": -477750,
-     "pe": 8935355,
-     "pe_chg": -2303665
-    },
-    {
-     "strike": 23250,
-     "ce": 1452100,
-     "ce_chg": 200005,
-     "pe": 10031255,
-     "pe_chg": 2109250
-    },
-    {
      "strike": 23300,
-     "ce": 9379760,
-     "ce_chg": 5490420,
-     "pe": 21927165,
-     "pe_chg": 6099925
+     "ce": 4160390,
+     "ce_chg": -1106625,
+     "pe": 9210500,
+     "pe_chg": 2287155
     },
     {
      "strike": 23350,
-     "ce": 22289345,
-     "ce_chg": 19721650,
-     "pe": 13565565,
-     "pe_chg": 3473925
+     "ce": 1590875,
+     "ce_chg": -728520,
+     "pe": 3979495,
+     "pe_chg": 2053870
     },
     {
      "strike": 23400,
-     "ce": 20674745,
-     "ce_chg": 12071475,
-     "pe": 6969560,
-     "pe_chg": -9110270
+     "ce": 7592975,
+     "ce_chg": 370175,
+     "pe": 11594765,
+     "pe_chg": 5483205
     },
     {
      "strike": 23450,
-     "ce": 11610755,
-     "ce_chg": 5180695,
-     "pe": 2548455,
-     "pe_chg": -3809195
+     "ce": 3861715,
+     "ce_chg": 2054845,
+     "pe": 3733080,
+     "pe_chg": 2901210
     },
     {
      "strike": 23500,
-     "ce": 12785305,
-     "ce_chg": 1159860,
-     "pe": 1413295,
-     "pe_chg": -3639285
+     "ce": 10282090,
+     "ce_chg": 1302600,
+     "pe": 7820345,
+     "pe_chg": 1875965
+    },
+    {
+     "strike": 23550,
+     "ce": 4034875,
+     "ce_chg": 2491710,
+     "pe": 711815,
+     "pe_chg": 437060
+    },
+    {
+     "strike": 23600,
+     "ce": 6948305,
+     "ce_chg": 2687555,
+     "pe": 1825135,
+     "pe_chg": 472745
     }
    ],
    "gti": {
@@ -77,70 +77,70 @@
     "golden": 23352
    },
    "combo": {
-    "support": "PUT wall 23300 (GTI SD 23354 se alag)",
-    "resistance": "CALL wall 23350 (GTI SS 23553 se alag)",
-    "verdict": "PCR 0.88 - neutral range (put vs call barabar). Spot 23329 walls ke beech mein (23300 - 23350) - rangebound"
+    "support": "PUT wall 23000 (GTI SD 23354 se alag)",
+    "resistance": "CALL wall 24000 (GTI SS 23553 se alag)",
+    "verdict": "PCR 1.02 - neutral range (put vs call barabar). Spot 23446 walls ke beech mein (23000 - 24000) - rangebound"
    }
   },
   "BANKNIFTY": {
-   "spot": 56215.6,
+   "spot": 56548.9,
    "expiry": "29 Sep",
    "put_wall": 57500,
-   "put_wall_oi": 1312200,
-   "call_wall": 58000,
-   "call_wall_oi": 1599060,
-   "pcr": 0.92,
+   "put_wall_oi": 1314750,
+   "call_wall": 57500,
+   "call_wall_oi": 1970520,
+   "pcr": 0.93,
    "max_pain": 57000,
-   "total_oi": 32476770,
+   "total_oi": 33985560,
    "chain": [
     {
-     "strike": 55900,
-     "ce": 68340,
-     "ce_chg": -2970,
-     "pe": 165150,
-     "pe_chg": 11850
-    },
-    {
-     "strike": 56000,
-     "ce": 402180,
-     "ce_chg": 28860,
-     "pe": 853320,
-     "pe_chg": -147420
-    },
-    {
-     "strike": 56100,
-     "ce": 71970,
-     "ce_chg": -3090,
-     "pe": 179850,
-     "pe_chg": 11550
-    },
-    {
      "strike": 56200,
-     "ce": 182520,
-     "ce_chg": 76200,
-     "pe": 206940,
-     "pe_chg": -27450
+     "ce": 103140,
+     "ce_chg": -79380,
+     "pe": 305520,
+     "pe_chg": 98580
     },
     {
      "strike": 56300,
-     "ce": 267090,
-     "ce_chg": 92670,
-     "pe": 248550,
-     "pe_chg": -36120
+     "ce": 181560,
+     "ce_chg": -85530,
+     "pe": 341910,
+     "pe_chg": 93360
     },
     {
      "strike": 56400,
-     "ce": 353880,
-     "ce_chg": 143880,
-     "pe": 286080,
-     "pe_chg": 31140
+     "ce": 260430,
+     "ce_chg": -93450,
+     "pe": 387840,
+     "pe_chg": 101760
     },
     {
      "strike": 56500,
-     "ce": 977310,
-     "ce_chg": 306690,
-     "pe": 809400,
-     "pe_chg": 39480
+     "ce": 883830,
+     "ce_chg": -93480,
+     "pe": 969270,
+     "pe_chg": 159870
+    },
+    {
+     "strike": 56600,
+     "ce": 356160,
+     "ce_chg": 50220,
+     "pe": 409110,
+     "pe_chg": 237990
+    },
+    {
+     "strike": 56700,
+     "ce": 451320,
+     "ce_chg": 131340,
+     "pe": 301800,
+     "pe_chg": 131940
+    },
+    {
+     "strike": 56800,
+     "ce": 371460,
+     "ce_chg": 93720,
+     "pe": 145590,
+     "pe_chg": 41790
     }
    ],
    "gti": {
@@ -157,8 +157,8 @@
    },
    "combo": {
     "support": "PUT wall 57500 (GTI SD 56161 se alag)",
-    "resistance": "CALL wall 58000 (GTI SS 56819 se alag)",
-    "verdict": "PCR 0.92 - neutral range (put vs call barabar). Spot PUT wall 57500 ke neeche/par - support test ho raha"
+    "resistance": "CALL wall 57500 (GTI SS 56819 se alag)",
+    "verdict": "PCR 0.93 - neutral range (put vs call barabar). Spot PUT wall 57500 ke neeche/par - support test ho raha"
    }
   }
  }

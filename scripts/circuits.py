@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""circuits.py v3 - Upper/Lower Circuit Scanner + 7-day history + all-stock search:
+"""circuits.py v4 - Circuit Scanner + 7-day history + all-stock search + NSE band changes:
 - Roz ka UC/LC list (close=high/low, 1-20% bands)
-- Har stock ka past 7 trading day ka % change (d7)
-- 7 din me kitni baar same-side circuit laga (h)
+- Har stock ka past 7 trading day ka % change (d7) + circuit flags
 - Roz ka UC/LC count trend (tr)
-- 'all' dict: sab NSE stocks ka 7-din data (search ke liye)
-Source (free): nsearchives.nseindia.com bhavcopy (UDiFF). Output: data/circuits.json"""
+- 'all' dict: sab NSE stocks ka 7-din data + current circuit band (search ke liye)
+- 'bands': NSE roz ka circuit band change list (surveillance decisions) + 7-din history
+Sources (free): nsearchives.nseindia.com bhavcopy UDiFF + eq_band_changes + sec_list. Output: data/circuits.json"""
 import csv, io, json, os, sys, urllib.request, zipfile
 from datetime import datetime, timedelta, timezone
 
@@ -53,6 +53,44 @@ def classify(st):
         elif x["c"] == x["l"] and ch <= -0.9:
             lc.add(sym)
     return pct, uc, lc
+
+def band_changes_for(d):
+    """NSE roz ka eq_band_changes file: kaunsa stock kis % se kis % me gaya"""
+    url = "https://nsearchives.nseindia.com/content/equities/eq_band_changes_%s.csv" % d.strftime("%d%m%Y")
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        raw = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore")
+        rows = list(csv.DictReader(io.StringIO(raw)))
+    except Exception:
+        return None
+    out = []
+    for r in rows:
+        s, f, t = (r.get("Symbol") or "").strip(), (r.get("From") or "").strip(), (r.get("To") or "").strip()
+        if not s:
+            continue
+        try:
+            out.append({"s": s, "n": (r.get("Security Name") or "")[:28], "f": f, "t": t})
+        except (ValueError, KeyError):
+            continue
+    return out
+
+def sec_bands_for(d):
+    """NSE sec_list file: har stock ka current circuit band"""
+    url = "https://nsearchives.nseindia.com/content/equities/sec_list_%s.csv" % d.strftime("%d%m%Y")
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        raw = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore")
+        rows = list(csv.DictReader(io.StringIO(raw)))
+    except Exception:
+        return None
+    m = {}
+    for r in rows:
+        s = (r.get("Symbol") or "").strip()
+        if not s:
+            continue
+        b = (r.get("Band") or "").strip()
+        m[s] = "nb" if "no band" in b.lower() else b
+    return m or None
 
 def main():
     # 7 trading days ikkatha karo (aaj/latest se peeche)
@@ -117,7 +155,8 @@ def main():
 
     tr = [{"d": hd["d"].strftime("%d %b"), "uc": len(hd["uc"]), "lc": len(hd["lc"])} for hd in hist]
 
-    # sab stocks ka 7-din history (search ke liye): sym -> [d1..d7, flags"012", uc_hits, lc_hits, last_close]
+    # sab stocks ka 7-din history (search ke liye): sym -> [d1..d7, flags"012", uc_hits, lc_hits, last_close, band]
+    bands_map = sec_bands_for(used)
     all_stocks = {}
     for sym, x in st.items():
         if not sym:
@@ -130,10 +169,24 @@ def main():
             flags.append("1" if sym in hd["uc"] else ("2" if sym in hd["lc"] else "0"))
         u = sum(1 for c in flags if c == "1")
         l = sum(1 for c in flags if c == "2")
-        all_stocks[sym] = vals + ["".join(flags), u, l, round(x["c"], 1)]
+        all_stocks[sym] = vals + ["".join(flags), u, l, round(x["c"], 1), (bands_map or {}).get(sym, "?")]
+
+    # NSE circuit band changes (roz ka + 7-din history)
+    bhist = []
+    for dt, _x in days:
+        ch = band_changes_for(dt)
+        if ch is not None:
+            bhist.append({"d": dt.strftime("%d %b"), "n": len(ch), "list": ch})
+    today_ch = bhist[-1]["list"] if bhist else []
+    bands = {
+        "updated": used.strftime("%d %b %Y"),
+        "ch": today_ch,
+        "hist": bhist,
+    }
 
     data = {
         "all": all_stocks,
+        "bands": bands,
         "updated": used.strftime("%d %b %Y"),
         "note": "Upper circuit = close high pe lock (sellers khatam). Lower = close low pe lock. 1-20% band-wise. Bars = past 7 din ka daily %. 7d = us din me kitni baar circuit laga. NSE bhavcopy se. Indicative only.",
         "n_uc": len(uc_set), "n_lc": len(lc_set),
@@ -145,6 +198,7 @@ def main():
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     print("OK wrote data/circuits.json -", used, "- UC:", len(uc_set), "LC:", len(lc_set),
           "| all stocks:", len(all_stocks),
+          "| band changes aaj:", len(today_ch), "| bands map:", len(bands_map) if bands_map else 0,
           "| 7d trend:", [(t["d"], t["uc"], t["lc"]) for t in tr])
 
 if __name__ == "__main__":

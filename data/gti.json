@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-23T13:32:48.729725",
+ "updated": "2026-09-22T13:32:44.246934",
  "symbols": {
   "NIFTY 50": {
-   "price": 23446.8,
-   "day_open": 23352,
+   "price": 23329.0,
+   "day_open": 23454,
    "day_poc": 23399,
    "day_zones": {
     "SD": [
-     23240,
-     23265
+     23342,
+     23367
     ],
     "WD": [
-     23309,
-     23324
+     23411,
+     23426
     ],
     "WS": [
-     23380,
-     23395
+     23482,
+     23497
     ],
     "SS": [
-     23439,
-     23464
+     23541,
+     23566
     ]
    },
    "week_open": 23330,
@@ -44,46 +44,46 @@
     ]
    },
    "nearest": [
-    "SS 23451",
-    -0.0
+    "SD 23354",
+    -0.1
    ],
    "compression": {
-    "day_poc_dist_pct": 0.2,
+    "day_poc_dist_pct": 0.3,
     "week_gap_pct": 0.2,
     "compressed": false
    },
    "grid": {
     "level": 23400,
-    "dist_pct": 0.2
+    "dist_pct": -0.3
    },
    "gann": {
-    "day_h": 23466.9,
-    "day_l": 23349.6,
-    "p50": 23408.2,
-    "fib382": 23394.4,
-    "fib618": 23422.1
+    "day_h": 23489.0,
+    "day_l": 23285.8,
+    "p50": 23387.4,
+    "fib382": 23363.4,
+    "fib618": 23411.4
    }
   },
   "BANKNIFTY": {
-   "price": 56548.9,
-   "day_open": 56210,
+   "price": 56215.55,
+   "day_open": 56490,
    "day_poc": 56469,
    "day_zones": {
     "SD": [
-     55841,
-     55923
+     56120,
+     56202
     ],
     "WD": [
-     56069,
-     56120
+     56348,
+     56399
     ],
     "WS": [
-     56300,
-     56351
+     56581,
+     56632
     ],
     "SS": [
-     56497,
-     56579
+     56778,
+     56860
     ]
    },
    "week_open": 56362,
@@ -107,46 +107,46 @@
     ]
    },
    "nearest": [
-    "SS 56538",
-    0.0
+    "SD 56161",
+    0.1
    ],
    "compression": {
-    "day_poc_dist_pct": 0.14,
+    "day_poc_dist_pct": 0.45,
     "week_gap_pct": 0.15,
-    "compressed": true
+    "compressed": false
    },
    "grid": {
-    "level": 56400,
-    "dist_pct": 0.3
+    "level": 56100,
+    "dist_pct": 0.2
    },
    "gann": {
-    "day_h": 56623.8,
-    "day_l": 56209.6,
-    "p50": 56416.7,
-    "fib382": 56367.9,
-    "fib618": 56465.6
+    "day_h": 56671.1,
+    "day_l": 56106.9,
+    "p50": 56389.0,
+    "fib382": 56322.5,
+    "fib618": 56455.6
    }
   },
   "RELIANCE": {
-   "price": 1248.0,
-   "day_open": 1242,
+   "price": 1240.4,
+   "day_open": 1248,
    "day_poc": 1243,
    "day_zones": {
     "SD": [
-     1229,
-     1232
+     1235,
+     1238
     ],
     "WD": [
-     1237,
-     1239
+     1243,
+     1245
     ],
     "WS": [
-     1245,
-     1247
+     1251,
+     1253
     ],
     "SS": [
-     1252,
-     1255
+     1258,
+     1261
     ]
    },
    "week_open": 1234,
@@ -170,46 +170,46 @@
     ]
    },
    "nearest": [
-    "WS 1246",
-    0.2
+    "SD 1236",
+    0.3
    ],
    "compression": {
-    "day_poc_dist_pct": 0.4,
+    "day_poc_dist_pct": 0.21,
     "week_gap_pct": 0.48,
     "compressed": false
    },
    "grid": {
     "level": 1200,
-    "dist_pct": 4.0
+    "dist_pct": 3.4
    },
    "gann": {
-    "day_h": 1252.8,
-    "day_l": 1238.9,
-    "p50": 1245.9,
-    "fib382": 1244.2,
-    "fib618": 1247.5
+    "day_h": 1251.9,
+    "day_l": 1237.4,
+    "p50": 1244.7,
+    "fib382": 1242.9,
+    "fib618": 1246.4
    }
   },
   "HDFCBANK": {
-   "price": 737.25,
-   "day_open": 736,
-   "day_poc": 742,
+   "price": 738.6,
+   "day_open": 739,
+   "day_poc": 737,
    "day_zones": {
     "SD": [
-     725,
-     727
+     729,
+     731
     ],
     "WD": [
-     732,
-     733
+     735,
+     736
     ],
     "WS": [
-     739,
-     740
+     742,
+     743
     ],
     "SS": [
-     745,
-     747
+     747,
+     749
     ]
    },
    "week_open": 731,
@@ -233,46 +233,46 @@
     ]
    },
    "nearest": [
-    "WS 739",
-    -0.3
+    "WD 735",
+    0.4
    ],
    "compression": {
-    "day_poc_dist_pct": 0.64,
-    "week_gap_pct": 2.44,
+    "day_poc_dist_pct": 0.22,
+    "week_gap_pct": 1.76,
     "compressed": false
    },
    "grid": {
     "level": 600,
-    "dist_pct": 22.9
+    "dist_pct": 23.1
    },
    "gann": {
-    "day_h": 742.8,
-    "day_l": 734.0,
-    "p50": 738.4,
-    "fib382": 737.4,
-    "fib618": 739.4
+    "day_h": 749.3,
+    "day_l": 738.6,
+    "p50": 743.9,
+    "fib382": 742.7,
+    "fib618": 745.2
    }
   },
   "ICICIBANK": {
-   "price": 1340.0,
-   "day_open": 1340,
-   "day_poc": 1340,
+   "price": 1339.6,
+   "day_open": 1343,
+   "day_poc": 1346,
    "day_zones": {
     "SD": [
-     1328,
-     1331
+     1330,
+     1333
     ],
     "WD": [
-     1335,
-     1337
+     1338,
+     1340
     ],
     "WS": [
-     1343,
-     1345
+     1346,
+     1348
     ],
     "SS": [
-     1349,
-     1352
+     1353,
+     1356
     ]
    },
    "week_open": 1348,
@@ -296,46 +296,46 @@
     ]
    },
    "nearest": [
-    "WD 1336",
-    0.3
+    "WD 1339",
+    0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 0.0,
-    "week_gap_pct": 1.19,
+    "day_poc_dist_pct": 0.48,
+    "week_gap_pct": 0.75,
     "compressed": false
    },
    "grid": {
     "level": 1200,
-    "dist_pct": 11.7
+    "dist_pct": 11.6
    },
    "gann": {
-    "day_h": 1344.5,
-    "day_l": 1333.5,
-    "p50": 1339.0,
-    "fib382": 1337.7,
-    "fib618": 1340.3
+    "day_h": 1347.2,
+    "day_l": 1333.8,
+    "p50": 1340.5,
+    "fib382": 1338.9,
+    "fib618": 1342.1
    }
   },
   "SBIN": {
-   "price": 994.1,
-   "day_open": 987,
-   "day_poc": 989,
+   "price": 987.0,
+   "day_open": 999,
+   "day_poc": 994,
    "day_zones": {
     "SD": [
-     977,
-     979
-    ],
-    "WD": [
-     983,
-     984
-    ],
-    "WS": [
-     990,
+     989,
      991
     ],
-    "SS": [
+    "WD": [
      995,
-     997
+     996
+    ],
+    "WS": [
+     1002,
+     1003
+    ],
+    "SS": [
+     1007,
+     1009
     ]
    },
    "week_open": 994,
@@ -359,46 +359,46 @@
     ]
    },
    "nearest": [
-    "SS 996",
-    -0.2
+    "SD 990",
+    -0.3
    ],
    "compression": {
-    "day_poc_dist_pct": 0.51,
-    "week_gap_pct": 0.1,
+    "day_poc_dist_pct": 0.71,
+    "week_gap_pct": 0.61,
     "compressed": false
    },
    "grid": {
     "level": 900,
-    "dist_pct": 10.5
+    "dist_pct": 9.7
    },
    "gann": {
-    "day_h": 996.4,
-    "day_l": 986.4,
-    "p50": 991.4,
-    "fib382": 990.2,
-    "fib618": 992.6
+    "day_h": 1000.1,
+    "day_l": 981.3,
+    "p50": 990.7,
+    "fib382": 988.5,
+    "fib618": 992.9
    }
   },
   "AXISBANK": {
-   "price": 1243.2,
-   "day_open": 1242,
-   "day_poc": 1246,
+   "price": 1242.7,
+   "day_open": 1245,
+   "day_poc": 1249,
    "day_zones": {
     "SD": [
-     1226,
-     1230
+     1229,
+     1233
     ],
     "WD": [
-     1236,
-     1238
+     1239,
+     1241
     ],
     "WS": [
-     1246,
-     1248
+     1249,
+     1251
     ],
     "SS": [
-     1254,
-     1258
+     1257,
+     1261
     ]
    },
    "week_open": 1248,
@@ -422,12 +422,12 @@
     ]
    },
    "nearest": [
-    "WS 1247",
-    -0.3
+    "WD 1240",
+    0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 0.23,
-    "week_gap_pct": 0.08,
+    "day_poc_dist_pct": 0.51,
+    "week_gap_pct": 0.32,
     "compressed": false
    },
    "grid": {
@@ -435,33 +435,33 @@
     "dist_pct": 3.6
    },
    "gann": {
-    "day_h": 1252.0,
-    "day_l": 1238.9,
-    "p50": 1245.5,
-    "fib382": 1243.9,
-    "fib618": 1247.0
+    "day_h": 1255.6,
+    "day_l": 1240.1,
+    "p50": 1247.8,
+    "fib382": 1246.0,
+    "fib618": 1249.7
    }
   },
   "INFY": {
-   "price": 1020.5,
-   "day_open": 1022,
-   "day_poc": 1030,
+   "price": 1029.4,
+   "day_open": 1038,
+   "day_poc": 1038,
    "day_zones": {
     "SD": [
-     1006,
-     1010
+     1021,
+     1025
     ],
     "WD": [
-     1016,
-     1018
+     1032,
+     1034
     ],
     "WS": [
-     1026,
-     1028
+     1042,
+     1044
     ],
     "SS": [
-     1034,
-     1038
+     1051,
+     1055
     ]
    },
    "week_open": 1042,
@@ -485,46 +485,46 @@
     ]
    },
    "nearest": [
-    "WD 1017",
-    0.3
+    "WD 1033",
+    -0.3
    ],
    "compression": {
-    "day_poc_dist_pct": 0.93,
-    "week_gap_pct": 3.14,
+    "day_poc_dist_pct": 0.84,
+    "week_gap_pct": 2.33,
     "compressed": false
    },
    "grid": {
     "level": 900,
-    "dist_pct": 13.4
+    "dist_pct": 14.4
    },
    "gann": {
-    "day_h": 1029.4,
-    "day_l": 1015.1,
-    "p50": 1022.2,
-    "fib382": 1020.6,
-    "fib618": 1023.9
+    "day_h": 1041.0,
+    "day_l": 1019.2,
+    "p50": 1030.1,
+    "fib382": 1027.5,
+    "fib618": 1032.7
    }
   },
   "TCS": {
-   "price": 2089.6,
-   "day_open": 2099,
-   "day_poc": 2113,
+   "price": 2105.0,
+   "day_open": 2135,
+   "day_poc": 2116,
    "day_zones": {
     "SD": [
-     2060,
-     2069
+     2096,
+     2105
     ],
     "WD": [
-     2084,
-     2089
+     2120,
+     2125
     ],
     "WS": [
-     2109,
-     2114
+     2145,
+     2150
     ],
     "SS": [
-     2129,
-     2138
+     2165,
+     2174
     ]
    },
    "week_open": 2090,
@@ -548,46 +548,46 @@
     ]
    },
    "nearest": [
-    "WD 2086",
-    0.1
+    "SD 2100",
+    0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 1.12,
-    "week_gap_pct": 3.01,
+    "day_poc_dist_pct": 0.52,
+    "week_gap_pct": 2.85,
     "compressed": false
    },
    "grid": {
     "level": 2100,
-    "dist_pct": -0.5
+    "dist_pct": 0.2
    },
    "gann": {
-    "day_h": 2104.2,
-    "day_l": 2077.6,
-    "p50": 2090.9,
-    "fib382": 2087.8,
-    "fib618": 2094.0
+    "day_h": 2135.2,
+    "day_l": 2098.2,
+    "p50": 2116.7,
+    "fib382": 2112.3,
+    "fib618": 2121.1
    }
   },
   "TECHM": {
-   "price": 1557.0,
-   "day_open": 1540,
-   "day_poc": 1547,
+   "price": 1551.6,
+   "day_open": 1554,
+   "day_poc": 1548,
    "day_zones": {
     "SD": [
-     1512,
-     1518
+     1526,
+     1532
     ],
     "WD": [
-     1529,
-     1533
+     1543,
+     1547
     ],
     "WS": [
-     1547,
-     1551
+     1561,
+     1565
     ],
     "SS": [
-     1562,
-     1568
+     1576,
+     1582
     ]
    },
    "week_open": 1529,
@@ -611,30 +611,30 @@
     ]
    },
    "nearest": [
-    "WS 1549",
-    0.5
+    "WD 1545",
+    0.4
    ],
    "compression": {
-    "day_poc_dist_pct": 0.64,
-    "week_gap_pct": 1.09,
+    "day_poc_dist_pct": 0.23,
+    "week_gap_pct": 1.03,
     "compressed": false
    },
    "grid": {
     "level": 1500,
-    "dist_pct": 3.8
+    "dist_pct": 3.4
    },
    "gann": {
-    "day_h": 1558.0,
-    "day_l": 1539.3,
-    "p50": 1548.7,
-    "fib382": 1546.4,
-    "fib618": 1550.9
+    "day_h": 1558.7,
+    "day_l": 1530.9,
+    "p50": 1544.8,
+    "fib382": 1541.5,
+    "fib618": 1548.1
    }
   },
   "WIPRO": {
-   "price": 164.9,
+   "price": 166.0,
    "day_open": 165,
-   "day_poc": 165,
+   "day_poc": 164,
    "day_zones": {
     "SD": [
      163,
@@ -674,43 +674,43 @@
     ]
    },
    "nearest": [
-    "WD 164",
-    0.5
+    "WS 166",
+    0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 0.06,
-    "week_gap_pct": 1.82,
+    "day_poc_dist_pct": 1.2,
+    "week_gap_pct": 2.41,
     "compressed": false
    },
    "grid": null,
    "gann": {
-    "day_h": 165.7,
-    "day_l": 164.1,
-    "p50": 164.9,
-    "fib382": 164.7,
-    "fib618": 165.1
+    "day_h": 166.0,
+    "day_l": 163.2,
+    "p50": 164.6,
+    "fib382": 164.3,
+    "fib618": 164.9
    }
   },
   "LT": {
-   "price": 3929.9,
-   "day_open": 3870,
-   "day_poc": 3888,
+   "price": 3866.4,
+   "day_open": 3920,
+   "day_poc": 3899,
    "day_zones": {
     "SD": [
-     3834,
-     3842
+     3884,
+     3892
     ],
     "WD": [
-     3856,
-     3861
+     3906,
+     3911
     ],
     "WS": [
-     3879,
-     3884
+     3929,
+     3934
     ],
     "SS": [
-     3898,
-     3906
+     3948,
+     3956
     ]
    },
    "week_open": 3885,
@@ -734,46 +734,46 @@
     ]
    },
    "nearest": [
-    "SS 3902",
-    0.7
+    "SD 3888",
+    -0.6
    ],
    "compression": {
-    "day_poc_dist_pct": 1.07,
-    "week_gap_pct": 0.18,
+    "day_poc_dist_pct": 0.84,
+    "week_gap_pct": 0.47,
     "compressed": false
    },
    "grid": {
     "level": 3900,
-    "dist_pct": 0.8
+    "dist_pct": -0.9
    },
    "gann": {
-    "day_h": 3945.0,
-    "day_l": 3870.0,
-    "p50": 3907.5,
-    "fib382": 3898.7,
-    "fib618": 3916.3
+    "day_h": 3930.5,
+    "day_l": 3866.0,
+    "p50": 3898.2,
+    "fib382": 3890.6,
+    "fib618": 3905.9
    }
   },
   "ITC": {
-   "price": 270.15,
-   "day_open": 266,
+   "price": 265.8,
+   "day_open": 268,
    "day_poc": 266,
    "day_zones": {
     "SD": [
-     262,
-     263
-    ],
-    "WD": [
-     265,
+     264,
      265
     ],
-    "WS": [
+    "WD": [
      267,
      267
     ],
-    "SS": [
+    "WS": [
      269,
-     270
+     269
+    ],
+    "SS": [
+     271,
+     272
     ]
    },
    "week_open": 264,
@@ -797,43 +797,43 @@
     ]
    },
    "nearest": [
-    "SS 269",
-    0.2
+    "WD 267",
+    -0.4
    ],
    "compression": {
-    "day_poc_dist_pct": 1.54,
-    "week_gap_pct": 1.11,
+    "day_poc_dist_pct": 0.08,
+    "week_gap_pct": 1.13,
     "compressed": false
    },
    "grid": null,
    "gann": {
-    "day_h": 271.0,
-    "day_l": 265.1,
-    "p50": 268.1,
-    "fib382": 267.4,
-    "fib618": 268.8
+    "day_h": 268.2,
+    "day_l": 264.8,
+    "p50": 266.5,
+    "fib382": 266.1,
+    "fib618": 266.9
    }
   },
   "BHARTIARTL": {
-   "price": 1833.2,
-   "day_open": 1818,
-   "day_poc": 1822,
+   "price": 1817.2,
+   "day_open": 1834,
+   "day_poc": 1836,
    "day_zones": {
     "SD": [
-     1800,
-     1804
+     1816,
+     1820
     ],
     "WD": [
-     1811,
-     1813
+     1827,
+     1830
     ],
     "WS": [
-     1823,
-     1825
+     1838,
+     1841
     ],
     "SS": [
-     1832,
-     1836
+     1848,
+     1852
     ]
    },
    "week_open": 1855,
@@ -857,46 +857,46 @@
     ]
    },
    "nearest": [
-    "SS 1834",
+    "SD 1818",
     -0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 0.61,
-    "week_gap_pct": 2.51,
+    "day_poc_dist_pct": 1.03,
+    "week_gap_pct": 1.76,
     "compressed": false
    },
    "grid": {
     "level": 1800,
-    "dist_pct": 1.8
+    "dist_pct": 1.0
    },
    "gann": {
-    "day_h": 1836.7,
-    "day_l": 1818.0,
-    "p50": 1827.3,
-    "fib382": 1825.1,
-    "fib618": 1829.6
+    "day_h": 1836.3,
+    "day_l": 1813.0,
+    "p50": 1824.7,
+    "fib382": 1821.9,
+    "fib618": 1827.4
    }
   },
   "KOTAKBANK": {
-   "price": 413.25,
-   "day_open": 415,
-   "day_poc": 414,
+   "price": 412.65,
+   "day_open": 416,
+   "day_poc": 417,
    "day_zones": {
     "SD": [
-     409,
-     410
+     410,
+     411
     ],
     "WD": [
-     413,
-     414
+     414,
+     415
     ],
     "WS": [
-     416,
-     417
+     417,
+     418
     ],
     "SS": [
-     420,
-     421
+     421,
+     422
     ]
    },
    "week_open": 415,
@@ -920,46 +920,46 @@
     ]
    },
    "nearest": [
-    "WD 413",
-    -0.1
+    "WD 414",
+    -0.4
    ],
    "compression": {
-    "day_poc_dist_pct": 0.18,
-    "week_gap_pct": 0.0,
+    "day_poc_dist_pct": 1.05,
+    "week_gap_pct": 0.73,
     "compressed": false
    },
    "grid": {
     "level": 300,
-    "dist_pct": 37.8
+    "dist_pct": 37.5
    },
    "gann": {
-    "day_h": 417.2,
-    "day_l": 411.4,
-    "p50": 414.3,
-    "fib382": 413.6,
-    "fib618": 415.0
+    "day_h": 417.8,
+    "day_l": 412.5,
+    "p50": 415.2,
+    "fib382": 414.6,
+    "fib618": 415.8
    }
   },
   "TATASTEEL": {
-   "price": 190.82,
-   "day_open": 185,
+   "price": 184.97,
+   "day_open": 184,
    "day_poc": 185,
    "day_zones": {
     "SD": [
-     181,
-     182
+     180,
+     181
     ],
     "WD": [
-     184,
-     184
+     183,
+     183
     ],
     "WS": [
-     186,
-     186
+     185,
+     185
     ],
     "SS": [
-     188,
-     189
+     187,
+     188
     ]
    },
    "week_open": 185,
@@ -983,43 +983,43 @@
     ]
    },
    "nearest": [
-    "SS 188",
-    1.2
+    "WS 185",
+    -0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 3.05,
+    "day_poc_dist_pct": 0.02,
     "week_gap_pct": 0.0,
-    "compressed": false
+    "compressed": true
    },
    "grid": null,
    "gann": {
-    "day_h": 191.5,
-    "day_l": 184.9,
-    "p50": 188.2,
-    "fib382": 187.4,
-    "fib618": 189.0
+    "day_h": 185.5,
+    "day_l": 183.1,
+    "p50": 184.3,
+    "fib382": 184.0,
+    "fib618": 184.6
    }
   },
   "ADANIENT": {
-   "price": 2993.2,
-   "day_open": 3016,
-   "day_poc": 3001,
+   "price": 2997.0,
+   "day_open": 2995,
+   "day_poc": 2988,
    "day_zones": {
     "SD": [
-     2951,
-     2965
+     2927,
+     2942
     ],
     "WD": [
-     2991,
-     3000
+     2969,
+     2978
     ],
     "WS": [
-     3032,
-     3041
+     3012,
+     3021
     ],
     "SS": [
-     3067,
-     3081
+     3048,
+     3063
     ]
    },
    "week_open": 2996,
@@ -1043,46 +1043,46 @@
     ]
    },
    "nearest": [
-    "WD 2995",
-    -0.1
+    "WS 3016",
+    -0.6
    ],
    "compression": {
-    "day_poc_dist_pct": 0.26,
-    "week_gap_pct": 0.1,
+    "day_poc_dist_pct": 0.3,
+    "week_gap_pct": 0.53,
     "compressed": false
    },
    "grid": {
     "level": 3000,
-    "dist_pct": -0.2
+    "dist_pct": -0.1
    },
    "gann": {
-    "day_h": 3023.9,
-    "day_l": 2978.2,
-    "p50": 3001.0,
-    "fib382": 2995.7,
-    "fib618": 3006.4
+    "day_h": 3026.1,
+    "day_l": 2979.6,
+    "p50": 3002.9,
+    "fib382": 2997.4,
+    "fib618": 3008.3
    }
   },
   "ADANIPORTS": {
-   "price": 1807.3,
-   "day_open": 1799,
-   "day_poc": 1798,
+   "price": 1795.0,
+   "day_open": 1796,
+   "day_poc": 1784,
    "day_zones": {
     "SD": [
-     1764,
-     1772
+     1761,
+     1769
     ],
     "WD": [
-     1786,
-     1791
+     1783,
+     1788
     ],
     "WS": [
-     1807,
-     1812
+     1804,
+     1809
     ],
     "SS": [
-     1826,
-     1834
+     1823,
+     1831
     ]
    },
    "week_open": 1794,
@@ -1106,46 +1106,46 @@
     ]
    },
    "nearest": [
-    "WS 1809",
-    -0.1
+    "WD 1785",
+    0.5
    ],
    "compression": {
-    "day_poc_dist_pct": 0.51,
-    "week_gap_pct": 0.72,
+    "day_poc_dist_pct": 0.61,
+    "week_gap_pct": 0.06,
     "compressed": false
    },
    "grid": {
     "level": 1800,
-    "dist_pct": 0.4
+    "dist_pct": -0.3
    },
    "gann": {
-    "day_h": 1810.1,
-    "day_l": 1790.5,
-    "p50": 1800.3,
-    "fib382": 1798.0,
-    "fib618": 1802.6
+    "day_h": 1812.7,
+    "day_l": 1786.1,
+    "p50": 1799.4,
+    "fib382": 1796.3,
+    "fib618": 1802.5
    }
   },
   "ASIANPAINT": {
-   "price": 2455.0,
-   "day_open": 2469,
-   "day_poc": 2453,
+   "price": 2448.5,
+   "day_open": 2475,
+   "day_poc": 2448,
    "day_zones": {
     "SD": [
-     2442,
-     2448
+     2449,
+     2455
     ],
     "WD": [
-     2459,
-     2463
+     2465,
+     2469
     ],
     "WS": [
-     2475,
-     2479
+     2481,
+     2485
     ],
     "SS": [
-     2490,
-     2496
+     2495,
+     2501
     ]
    },
    "week_open": 2450,
@@ -1169,46 +1169,46 @@
     ]
    },
    "nearest": [
-    "WD 2461",
-    -0.2
+    "SD 2452",
+    -0.1
    ],
    "compression": {
-    "day_poc_dist_pct": 0.08,
-    "week_gap_pct": 0.49,
+    "day_poc_dist_pct": 0.02,
+    "week_gap_pct": 0.29,
     "compressed": false
    },
    "grid": {
     "level": 2400,
-    "dist_pct": 2.3
+    "dist_pct": 2.0
    },
    "gann": {
-    "day_h": 2471.9,
-    "day_l": 2448.2,
-    "p50": 2460.0,
-    "fib382": 2457.3,
-    "fib618": 2462.8
+    "day_h": 2475.1,
+    "day_l": 2435.6,
+    "p50": 2455.4,
+    "fib382": 2450.7,
+    "fib618": 2460.0
    }
   },
   "BAJFINANCE": {
-   "price": 1043.2,
-   "day_open": 1035,
-   "day_poc": 1014,
+   "price": 1008.8,
+   "day_open": 1025,
+   "day_poc": 1027,
    "day_zones": {
     "SD": [
-     1022,
-     1025
+     1012,
+     1015
     ],
     "WD": [
-     1030,
-     1032
+     1020,
+     1022
     ],
     "WS": [
-     1038,
-     1040
+     1028,
+     1030
     ],
     "SS": [
-     1045,
-     1048
+     1035,
+     1038
     ]
    },
    "week_open": 1035,
@@ -1232,28 +1232,28 @@
     ]
    },
    "nearest": [
-    "SS 1046",
-    -0.3
+    "SD 1013",
+    -0.5
    ],
    "compression": {
-    "day_poc_dist_pct": 2.8,
-    "week_gap_pct": 1.44,
+    "day_poc_dist_pct": 1.8,
+    "week_gap_pct": 0.2,
     "compressed": false
    },
    "grid": {
     "level": 900,
-    "dist_pct": 15.9
+    "dist_pct": 12.1
    },
    "gann": {
-    "day_h": 1043.2,
-    "day_l": 1022.0,
-    "p50": 1032.6,
-    "fib382": 1030.1,
-    "fib618": 1035.1
+    "day_h": 1029.2,
+    "day_l": 1005.0,
+    "p50": 1017.1,
+    "fib382": 1014.2,
+    "fib618": 1020.0
    }
   },
   "BPCL": {
-   "price": 315.75,
+   "price": 313.6,
    "day_open": 315,
    "day_poc": 313,
    "day_zones": {
@@ -1295,46 +1295,46 @@
     ]
    },
    "nearest": [
-    "WS 316",
-    -0.2
+    "WD 313",
+    0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 0.87,
-    "week_gap_pct": 1.27,
+    "day_poc_dist_pct": 0.19,
+    "week_gap_pct": 1.28,
     "compressed": false
    },
    "grid": {
     "level": 300,
-    "dist_pct": 5.2
+    "dist_pct": 4.5
    },
    "gann": {
-    "day_h": 315.9,
-    "day_l": 312.5,
-    "p50": 314.2,
-    "fib382": 313.8,
-    "fib618": 314.6
+    "day_h": 318.2,
+    "day_l": 308.1,
+    "p50": 313.2,
+    "fib382": 312.0,
+    "fib618": 314.4
    }
   },
   "CIPLA": {
-   "price": 1383.0,
-   "day_open": 1382,
-   "day_poc": 1379,
+   "price": 1384.1,
+   "day_open": 1386,
+   "day_poc": 1390,
    "day_zones": {
     "SD": [
-     1368,
-     1371
+     1371,
+     1374
     ],
     "WD": [
-     1376,
-     1378
+     1380,
+     1382
     ],
     "WS": [
-     1386,
-     1388
+     1390,
+     1392
     ],
     "SS": [
-     1393,
-     1396
+     1398,
+     1401
     ]
    },
    "week_open": 1383,
@@ -1358,46 +1358,46 @@
     ]
    },
    "nearest": [
-    "WS 1387",
-    -0.3
+    "WD 1381",
+    0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 0.29,
-    "week_gap_pct": 0.07,
+    "day_poc_dist_pct": 0.43,
+    "week_gap_pct": 0.87,
     "compressed": false
    },
    "grid": {
     "level": 1500,
-    "dist_pct": -7.8
+    "dist_pct": -7.7
    },
    "gann": {
-    "day_h": 1387.0,
-    "day_l": 1371.8,
-    "p50": 1379.4,
-    "fib382": 1377.6,
-    "fib618": 1381.2
+    "day_h": 1388.7,
+    "day_l": 1364.5,
+    "p50": 1376.6,
+    "fib382": 1373.7,
+    "fib618": 1379.5
    }
   },
   "COALINDIA": {
-   "price": 424.55,
-   "day_open": 428,
-   "day_poc": 425,
+   "price": 428.0,
+   "day_open": 425,
+   "day_poc": 414,
    "day_zones": {
     "SD": [
-     421,
-     423
+     419,
+     420
     ],
     "WD": [
-     425,
-     426
+     422,
+     423
     ],
     "WS": [
-     430,
-     431
+     427,
+     428
     ],
     "SS": [
-     433,
-     435
+     430,
+     431
     ]
    },
    "week_open": 412,
@@ -1421,46 +1421,46 @@
     ]
    },
    "nearest": [
-    "WD 425",
-    -0.2
+    "WS 427",
+    0.1
    ],
    "compression": {
-    "day_poc_dist_pct": 0.11,
-    "week_gap_pct": 2.12,
+    "day_poc_dist_pct": 3.27,
+    "week_gap_pct": 0.47,
     "compressed": false
    },
    "grid": {
     "level": 300,
-    "dist_pct": 41.5
+    "dist_pct": 42.7
    },
    "gann": {
-    "day_h": 429.4,
-    "day_l": 421.5,
-    "p50": 425.5,
-    "fib382": 424.5,
-    "fib618": 426.4
+    "day_h": 428.8,
+    "day_l": 419.6,
+    "p50": 424.2,
+    "fib382": 423.1,
+    "fib618": 425.3
    }
   },
   "DRREDDY": {
-   "price": 1211.2,
-   "day_open": 1210,
-   "day_poc": 1211,
+   "price": 1211.0,
+   "day_open": 1207,
+   "day_poc": 1198,
    "day_zones": {
     "SD": [
-     1193,
-     1197
+     1190,
+     1194
     ],
     "WD": [
-     1204,
-     1206
+     1201,
+     1203
     ],
     "WS": [
-     1214,
-     1216
+     1211,
+     1213
     ],
     "SS": [
-     1223,
-     1227
+     1220,
+     1224
     ]
    },
    "week_open": 1185,
@@ -1484,12 +1484,12 @@
     ]
    },
    "nearest": [
-    "WS 1215",
-    -0.3
+    "WS 1212",
+    -0.1
    ],
    "compression": {
-    "day_poc_dist_pct": 0.02,
-    "week_gap_pct": 2.97,
+    "day_poc_dist_pct": 1.07,
+    "week_gap_pct": 1.9,
     "compressed": false
    },
    "grid": {
@@ -1497,33 +1497,33 @@
     "dist_pct": 0.9
    },
    "gann": {
-    "day_h": 1220.5,
-    "day_l": 1205.9,
-    "p50": 1213.2,
-    "fib382": 1211.5,
-    "fib618": 1214.9
+    "day_h": 1222.0,
+    "day_l": 1201.2,
+    "p50": 1211.6,
+    "fib382": 1209.1,
+    "fib618": 1214.1
    }
   },
   "EICHERMOT": {
-   "price": 7470.0,
-   "day_open": 7468,
-   "day_poc": 7470,
+   "price": 7427.0,
+   "day_open": 7519,
+   "day_poc": 7524,
    "day_zones": {
     "SD": [
-     7396,
-     7412
+     7446,
+     7462
     ],
     "WD": [
-     7440,
-     7450
+     7491,
+     7501
     ],
     "WS": [
-     7486,
-     7496
+     7537,
+     7547
     ],
     "SS": [
-     7524,
-     7540
+     7576,
+     7592
     ]
    },
    "week_open": 7550,
@@ -1547,46 +1547,46 @@
     ]
    },
    "nearest": [
-    "WD 7445",
-    0.3
+    "SD 7454",
+    -0.4
    ],
    "compression": {
-    "day_poc_dist_pct": 0.0,
-    "week_gap_pct": 0.37,
+    "day_poc_dist_pct": 1.31,
+    "week_gap_pct": 0.35,
     "compressed": false
    },
    "grid": {
     "level": 7500,
-    "dist_pct": -0.4
+    "dist_pct": -1.0
    },
    "gann": {
-    "day_h": 7485.0,
-    "day_l": 7414.0,
-    "p50": 7449.5,
-    "fib382": 7441.1,
-    "fib618": 7457.9
+    "day_h": 7555.0,
+    "day_l": 7427.0,
+    "p50": 7491.0,
+    "fib382": 7475.9,
+    "fib618": 7506.1
    }
   },
   "GRASIM": {
-   "price": 3188.5,
-   "day_open": 3138,
-   "day_poc": 3145,
+   "price": 3128.2,
+   "day_open": 3171,
+   "day_poc": 3183,
    "day_zones": {
     "SD": [
-     3101,
-     3109
+     3133,
+     3141
     ],
     "WD": [
-     3124,
-     3129
+     3156,
+     3161
     ],
     "WS": [
-     3147,
-     3152
+     3181,
+     3186
     ],
     "SS": [
-     3167,
-     3175
+     3201,
+     3209
     ]
    },
    "week_open": 3205,
@@ -1610,46 +1610,46 @@
     ]
    },
    "nearest": [
-    "SS 3171",
-    0.6
+    "SD 3137",
+    -0.3
    ],
    "compression": {
-    "day_poc_dist_pct": 1.36,
-    "week_gap_pct": 2.26,
+    "day_poc_dist_pct": 1.75,
+    "week_gap_pct": 1.09,
     "compressed": false
    },
    "grid": {
-    "level": 3300,
-    "dist_pct": -3.4
+    "level": 3000,
+    "dist_pct": 4.3
    },
    "gann": {
-    "day_h": 3190.0,
-    "day_l": 3127.1,
-    "p50": 3158.6,
-    "fib382": 3151.1,
-    "fib618": 3166.0
+    "day_h": 3180.8,
+    "day_l": 3125.0,
+    "p50": 3152.9,
+    "fib382": 3146.3,
+    "fib618": 3159.5
    }
   },
   "HINDALCO": {
-   "price": 1003.8,
-   "day_open": 980,
-   "day_poc": 976,
+   "price": 973.0,
+   "day_open": 987,
+   "day_poc": 984,
    "day_zones": {
     "SD": [
-     966,
-     969
+     973,
+     976
     ],
     "WD": [
-     975,
-     977
+     982,
+     984
     ],
     "WS": [
-     983,
-     985
+     990,
+     992
     ],
     "SS": [
-     991,
-     994
+     998,
+     1001
     ]
    },
    "week_open": 987,
@@ -1673,46 +1673,46 @@
     ]
    },
    "nearest": [
-    "SS 992",
-    1.1
+    "SD 974",
+    -0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 2.77,
-    "week_gap_pct": 0.5,
+    "day_poc_dist_pct": 1.13,
+    "week_gap_pct": 0.31,
     "compressed": false
    },
    "grid": {
     "level": 900,
-    "dist_pct": 11.5
+    "dist_pct": 8.1
    },
    "gann": {
-    "day_h": 1003.8,
-    "day_l": 978.2,
-    "p50": 991.0,
-    "fib382": 988.0,
-    "fib618": 994.0
+    "day_h": 987.5,
+    "day_l": 967.1,
+    "p50": 977.3,
+    "fib382": 974.9,
+    "fib618": 979.7
    }
   },
   "HINDUNILVR": {
-   "price": 1950.0,
-   "day_open": 1938,
-   "day_poc": 1941,
+   "price": 1933.8,
+   "day_open": 1952,
+   "day_poc": 1951,
    "day_zones": {
     "SD": [
-     1921,
-     1925
+     1935,
+     1939
     ],
     "WD": [
-     1932,
-     1934
+     1946,
+     1948
     ],
     "WS": [
-     1942,
-     1944
+     1956,
+     1958
     ],
     "SS": [
-     1951,
-     1955
+     1965,
+     1969
     ]
    },
    "week_open": 1940,
@@ -1736,46 +1736,46 @@
     ]
    },
    "nearest": [
-    "SS 1953",
+    "SD 1937",
     -0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 0.46,
-    "week_gap_pct": 0.21,
+    "day_poc_dist_pct": 0.89,
+    "week_gap_pct": 0.31,
     "compressed": false
    },
    "grid": {
     "level": 1800,
-    "dist_pct": 8.3
+    "dist_pct": 7.4
    },
    "gann": {
-    "day_h": 1954.0,
-    "day_l": 1936.0,
-    "p50": 1945.0,
-    "fib382": 1942.9,
-    "fib618": 1947.1
+    "day_h": 1956.8,
+    "day_l": 1933.8,
+    "p50": 1945.3,
+    "fib382": 1942.6,
+    "fib618": 1948.0
    }
   },
   "JSWSTEEL": {
-   "price": 1297.8,
-   "day_open": 1273,
-   "day_poc": 1270,
+   "price": 1267.0,
+   "day_open": 1275,
+   "day_poc": 1275,
    "day_zones": {
     "SD": [
-     1257,
-     1261
+     1258,
+     1262
     ],
     "WD": [
-     1267,
-     1269
+     1269,
+     1271
     ],
     "WS": [
-     1277,
-     1279
+     1279,
+     1281
     ],
     "SS": [
-     1285,
-     1289
+     1288,
+     1292
     ]
    },
    "week_open": 1281,
@@ -1799,46 +1799,46 @@
     ]
    },
    "nearest": [
-    "SS 1287",
-    0.8
+    "WD 1270",
+    -0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 2.14,
-    "week_gap_pct": 0.77,
+    "day_poc_dist_pct": 0.63,
+    "week_gap_pct": 1.18,
     "compressed": false
    },
    "grid": {
     "level": 1200,
-    "dist_pct": 8.1
+    "dist_pct": 5.6
    },
    "gann": {
-    "day_h": 1304.0,
-    "day_l": 1270.8,
-    "p50": 1287.4,
-    "fib382": 1283.5,
-    "fib618": 1291.3
+    "day_h": 1277.5,
+    "day_l": 1264.4,
+    "p50": 1271.0,
+    "fib382": 1269.4,
+    "fib618": 1272.5
    }
   },
   "MARUTI": {
-   "price": 12230.0,
-   "day_open": 12240,
-   "day_poc": 12202,
+   "price": 12190.0,
+   "day_open": 12155,
+   "day_poc": 12170,
    "day_zones": {
     "SD": [
-     12117,
-     12144
+     12032,
+     12059
     ],
     "WD": [
-     12193,
-     12210
+     12108,
+     12125
     ],
     "WS": [
-     12270,
-     12287
+     12185,
+     12202
     ],
     "SS": [
-     12336,
-     12363
+     12251,
+     12278
     ]
    },
    "week_open": 12129,
@@ -1862,28 +1862,28 @@
     ]
    },
    "nearest": [
-    "WD 12201",
-    0.2
+    "WS 12193",
+    -0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 0.23,
-    "week_gap_pct": 0.19,
+    "day_poc_dist_pct": 0.16,
+    "week_gap_pct": 0.45,
     "compressed": false
    },
    "grid": {
     "level": 12300,
-    "dist_pct": -0.6
+    "dist_pct": -0.9
    },
    "gann": {
-    "day_h": 12255.0,
-    "day_l": 12106.0,
-    "p50": 12180.5,
-    "fib382": 12162.9,
-    "fib618": 12198.1
+    "day_h": 12275.0,
+    "day_l": 12142.0,
+    "p50": 12208.5,
+    "fib382": 12192.8,
+    "fib618": 12224.2
    }
   },
   "NTPC": {
-   "price": 326.0,
+   "price": 327.8,
    "day_open": 326,
    "day_poc": 327,
    "day_zones": {
@@ -1892,12 +1892,12 @@
      323
     ],
     "WD": [
-     324,
+     325,
      325
     ],
     "WS": [
      327,
-     328
+     327
     ],
     "SS": [
      329,
@@ -1925,28 +1925,28 @@
     ]
    },
    "nearest": [
-    "WD 324",
-    0.5
+    "WS 327",
+    0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 0.31,
+    "day_poc_dist_pct": 0.24,
     "week_gap_pct": 0.0,
     "compressed": false
    },
    "grid": {
     "level": 300,
-    "dist_pct": 8.7
+    "dist_pct": 9.3
    },
    "gann": {
-    "day_h": 329.4,
-    "day_l": 325.0,
-    "p50": 327.2,
-    "fib382": 326.7,
+    "day_h": 329.0,
+    "day_l": 325.5,
+    "p50": 327.3,
+    "fib382": 326.9,
     "fib618": 327.7
    }
   },
   "ONGC": {
-   "price": 236.9,
+   "price": 236.13,
    "day_open": 236,
    "day_poc": 235,
    "day_zones": {
@@ -1989,42 +1989,42 @@
    },
    "nearest": [
     "WS 237",
-    -0.0
+    -0.4
    ],
    "compression": {
-    "day_poc_dist_pct": 0.8,
+    "day_poc_dist_pct": 0.48,
     "week_gap_pct": 0.42,
     "compressed": false
    },
    "grid": null,
    "gann": {
-    "day_h": 236.9,
-    "day_l": 234.2,
-    "p50": 235.5,
-    "fib382": 235.2,
-    "fib618": 235.9
+    "day_h": 236.4,
+    "day_l": 233.8,
+    "p50": 235.1,
+    "fib382": 234.8,
+    "fib618": 235.4
    }
   },
   "POWERGRID": {
-   "price": 270.2,
-   "day_open": 266,
+   "price": 265.95,
+   "day_open": 267,
    "day_poc": 267,
    "day_zones": {
     "SD": [
-     263,
-     264
-    ],
-    "WD": [
-     265,
+     264,
      265
     ],
+    "WD": [
+     266,
+     266
+    ],
     "WS": [
-     267,
-     267
+     268,
+     268
     ],
     "SS": [
-     268,
-     269
+     269,
+     270
     ]
    },
    "week_open": 268,
@@ -2048,43 +2048,43 @@
     ]
    },
    "nearest": [
-    "SS 268",
-    0.6
+    "WD 266",
+    -0.0
    ],
    "compression": {
-    "day_poc_dist_pct": 1.18,
-    "week_gap_pct": 0.37,
+    "day_poc_dist_pct": 0.39,
+    "week_gap_pct": 0.38,
     "compressed": false
    },
    "grid": null,
    "gann": {
-    "day_h": 270.9,
+    "day_h": 268.3,
     "day_l": 266.0,
-    "p50": 268.4,
-    "fib382": 267.8,
-    "fib618": 269.0
+    "p50": 267.1,
+    "fib382": 266.8,
+    "fib618": 267.4
    }
   },
   "SUNPHARMA": {
-   "price": 1865.0,
-   "day_open": 1846,
-   "day_poc": 1855,
+   "price": 1846.4,
+   "day_open": 1869,
+   "day_poc": 1864,
    "day_zones": {
     "SD": [
-     1824,
-     1829
+     1847,
+     1852
     ],
     "WD": [
-     1838,
-     1841
+     1861,
+     1864
     ],
     "WS": [
-     1851,
-     1854
+     1874,
+     1877
     ],
     "SS": [
-     1863,
-     1868
+     1886,
+     1891
     ]
    },
    "week_open": 1832,
@@ -2108,46 +2108,46 @@
     ]
    },
    "nearest": [
-    "SS 1865",
-    -0.0
+    "SD 1849",
+    -0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 0.54,
-    "week_gap_pct": 0.38,
+    "day_poc_dist_pct": 0.95,
+    "week_gap_pct": 0.87,
     "compressed": false
    },
    "grid": {
     "level": 1800,
-    "dist_pct": 3.6
+    "dist_pct": 2.6
    },
    "gann": {
-    "day_h": 1869.6,
-    "day_l": 1844.0,
-    "p50": 1856.8,
-    "fib382": 1853.8,
-    "fib618": 1859.8
+    "day_h": 1876.4,
+    "day_l": 1842.3,
+    "p50": 1859.4,
+    "fib382": 1855.3,
+    "fib618": 1863.4
    }
   },
   "TITAN": {
-   "price": 4880.0,
-   "day_open": 4928,
-   "day_poc": 4924,
+   "price": 4928.5,
+   "day_open": 4876,
+   "day_poc": 4845,
    "day_zones": {
     "SD": [
-     4873,
-     4885
+     4826,
+     4837
     ],
     "WD": [
-     4907,
-     4915
+     4857,
+     4864
     ],
     "WS": [
-     4941,
-     4949
+     4888,
+     4895
     ],
     "SS": [
-     4971,
-     4983
+     4915,
+     4926
     ]
    },
    "week_open": 4816,
@@ -2171,46 +2171,46 @@
     ]
    },
    "nearest": [
-    "SD 4879",
-    0.0
+    "SS 4920",
+    0.2
    ],
    "compression": {
-    "day_poc_dist_pct": 0.9,
-    "week_gap_pct": 1.31,
+    "day_poc_dist_pct": 1.69,
+    "week_gap_pct": 0.3,
     "compressed": false
    },
    "grid": {
     "level": 4800,
-    "dist_pct": 1.7
+    "dist_pct": 2.7
    },
    "gann": {
-    "day_h": 4951.0,
-    "day_l": 4852.5,
-    "p50": 4901.8,
-    "fib382": 4890.1,
-    "fib618": 4913.4
+    "day_h": 4982.0,
+    "day_l": 4862.5,
+    "p50": 4922.2,
+    "fib382": 4908.1,
+    "fib618": 4936.4
    }
   },
   "ULTRACEMCO": {
-   "price": 11155.0,
-   "day_open": 11050,
-   "day_poc": 11047,
+   "price": 11000.0,
+   "day_open": 11100,
+   "day_poc": 11076,
    "day_zones": {
     "SD": [
-     10923,
-     10951
+     10975,
+     11003
     ],
     "WD": [
-     11001,
-     11018
+     11052,
+     11069
     ],
     "WS": [
-     11082,
-     11099
+     11131,
+     11148
     ],
     "SS": [
-     11149,
-     11177
+     11197,
+     11225
     ]
    },
    "week_open": 11014,
@@ -2234,24 +2234,24 @@
     ]
    },
    "nearest": [
-    "SS 11163",
-    -0.1
+    "SD 10989",
+    0.1
    ],
    "compression": {
-    "day_poc_dist_pct": 0.97,
-    "week_gap_pct": 1.28,
+    "day_poc_dist_pct": 0.69,
+    "week_gap_pct": 1.56,
     "compressed": false
    },
    "grid": {
     "level": 11100,
-    "dist_pct": 0.5
+    "dist_pct": -0.9
    },
    "gann": {
-    "day_h": 11198.0,
-    "day_l": 11044.0,
-    "p50": 11121.0,
-    "fib382": 11102.8,
-    "fib618": 11139.2
+    "day_h": 11142.0,
+    "day_l": 11000.0,
+    "p50": 11071.0,
+    "fib382": 11054.2,
+    "fib618": 11087.8
    }
   }
  },

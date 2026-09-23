@@ -1,4 +1,4 @@
-/* circuit.js v3 - Circuit Scanner + stock search: koi bhi stock type karo -> 7-din up/down % + circuit history. #screener top */
+/* circuit.js v4 - Circuit Scanner + stock search + NSE band change flash. #screener top */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var DATA = null, DAYS = [];
@@ -52,12 +52,42 @@
     return h + '</div>';
   }
 
+  // ============ NSE BAND CHANGE FLASH ============
+  function bandAlert(b) {
+    if (!b || !b.ch) return "";
+    var ch = b.ch;
+    var h = '<div style="margin-top:10px;padding:10px 12px;border-radius:11px;background:rgba(255,139,139,.1);border:1.5px solid rgba(255,139,139,.55)">' +
+      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b style="font-size:13.5px;color:#ff8b8b">\uD83D\uDEA8 NSE ne circuit band BADLE - ' + ch.length + ' stock' + (ch.length > 1 ? 's' : '') + '</b>' +
+      '<span style="font-size:10px;opacity:.5">' + esc(b.updated) + ' \u00b7 surveillance decision, broker-only info</span></div>';
+    ch.forEach(function (c) {
+      var f = parseFloat(c.f), t = parseFloat(c.t);
+      var tight = !isNaN(f) && !isNaN(t) && t < f;
+      h += '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12.5px;flex-wrap:wrap">' +
+        '<b style="min-width:86px">' + esc(c.s) + '</b>' +
+        '<span style="min-width:44px;opacity:.6">' + esc(c.f) + '%</span>\u2192' +
+        '<b style="min-width:44px;color:' + (tight ? "#ff8b8b" : "#77f37b") + '">' + esc(c.t) + '%</b>' +
+        '<span style="font-size:10px;font-weight:700;color:' + (tight ? "#ff8b8b" : "#77f37b") + '">' + (tight ? "TIGHT (risk/monitoring)" : "LOOSE (zyada move possible)") + '</span>' +
+        '<span style="margin-left:auto;font-size:10px;opacity:.45">' + esc(c.n) + '</span></div>';
+    });
+    h += '<div class="note" style="margin-top:5px;font-size:10.5px;opacity:.6">Band = din bhar max move limit. NSE/SEBI ye roz badalta hai - broker ko pata chalta hai, normal apps me nahi dikhta. Tight = stock par monitoring badhi.</div>';
+    if (b.hist && b.hist.length > 1) {
+      h += '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:11.5px;opacity:.7">7-din ka band changes</summary><div>';
+      b.hist.forEach(function (hd) {
+        h += '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11.5px"><b>' + esc(hd.d) + '</b> \u00b7 ' + hd.n + ' change' + (hd.n > 1 ? 's' : '') +
+          (hd.n ? ' \u2014 ' + hd.list.map(function (c) { return esc(c.s) + ' ' + esc(c.f) + '%\u2192' + esc(c.t) + '%'; }).join(', ') : ' (koi change nahi)') + '</div>';
+      });
+      h += '</div></details>';
+    }
+    h += '</div>';
+    return h;
+  }
+
   // ============ STOCK DETAIL (search/tap) ============
-  // all[sym] = [d1..d7, flags, u, l, close]
+  // all[sym] = [d1..d7, flags, u, l, close, band]
   function detailHtml(sym) {
     var a = DATA.all[sym];
     if (!a) return "";
-    var d7 = a.slice(0, 7), fl = String(a[7] || "0000000"), u = a[8] || 0, l = a[9] || 0, c = a[10];
+    var d7 = a.slice(0, 7), fl = String(a[7] || "0000000"), u = a[8] || 0, l = a[9] || 0, c = a[10], band = a[11] || "?";
     var vals = d7.filter(function (v) { return v != null; });
     var mx = 1;
     vals.forEach(function (v) { mx = Math.max(mx, Math.abs(v)); });
@@ -68,6 +98,7 @@
       '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><b style="font-size:16px;color:rgba(240,180,41,.95)">' + esc(sym) + '</b>' +
       '<span style="font-size:13px;opacity:.85">\u20B9' + esc(c) + '</span>' +
       '<span style="font-size:12px;font-weight:700;color:' + (net >= 0 ? "#77f37b" : "#ff8b8b") + '">' + (net >= 0 ? "+" : "") + net.toFixed(1) + '% (7-din net)</span>' +
+      '<span style="font-size:11px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,.08)">' + (band === "nb" ? "no band (F&O)" : band === "?" ? "" : "band " + esc(band) + "%") + '</span>' +
       '<span style="margin-left:auto;font-size:16px;cursor:pointer;opacity:.6" id="csDetX">\u2715</span></div>';
     h += '<div style="display:flex;align-items:stretch;gap:3px;height:64px;margin-top:10px">';
     d7.forEach(function (v, i) {
@@ -164,6 +195,7 @@
     var d = DATA;
     DAYS = (d.tr || []).map(function (t) { return t.d; });
     var h = '<div class="note" style="margin-top:8px">' + esc(d.updated) + ' \u00b7 ' + d.n_uc + ' upper + ' + d.n_lc + ' lower circuit stocks. Stock pe tap = 7-din detail. (indicative, advice nahi)</div>';
+    h += bandAlert(d.bands);
     h += '<div style="margin-top:10px;display:flex;gap:6px;align-items:center">' +
       '<input id="csSearch" type="text" placeholder="\uD83D\uDD0D stock likho - RELIANCE, TATA..." style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid rgba(240,180,41,.5);background:rgba(255,255,255,.07);color:#fff;font-size:14px;outline:none" autocomplete="off" autocapitalize="characters">' +
       '<span style="font-size:11px;opacity:.5">' + (d.all ? Object.keys(d.all).length : 0) + ' stocks</span></div>' +
@@ -188,7 +220,7 @@
   }
 
   function build(card) {
-    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\u26A1 CIRCUIT SCANNER</b> <span style="font-size:11px;opacity:.65">upper \u00b7 lower \u00b7 search \u00b7 7-din history</span></summary>' +
+    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\u26A1 CIRCUIT SCANNER</b> <span style="font-size:11px;opacity:.65">upper \u00b7 lower \u00b7 band changes \u00b7 search</span></summary>' +
       '<div id="csBody" class="note" style="margin-top:8px">loading circuits...</div>';
     fetch("data/circuits.json").then(function (r) { return r.json(); }).then(function (d) {
       DATA = d; render(document.getElementById("csBody"));

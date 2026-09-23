@@ -40,14 +40,24 @@
       return (c.sym + " " + c.q).toLowerCase().indexOf(q) >= 0;
     });
     var h = "";
-    if (!q) h += '<div class="note" style="margin-top:8px">Spike = aaj ke articles vs pichle 6 din ka avg (1.5x+ = dhyan do). Bars = 7 din ka volume, last bar aaj. Sentiment headline keywords se (indica-tive, advice nahi). Tap = top headlines.</div>';
+    if (!q) h += '<div class="note" style="margin-top:8px">Spike = aaj ke articles vs pichle 6 din ka avg (1.5x+ = dhyan do). Bars = 7 din ka volume, last bar aaj. Sentiment headline keywords se (indicative, advice nahi). Tap = top headlines. Guide upar tap karke padho.</div>';
     if (!list.length) h += '<div class="note" style="margin-top:10px">koi match nahi mila</div>';
     list.forEach(function (c) { h += row(c); });
     box.innerHTML = h;
   }
 
   function build(card) {
+    var guide = '<details style="margin-top:8px"><summary style="cursor:pointer;padding:8px 12px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:13px"><b>\u2753 SPIKE GUIDE</b> <span style="font-size:11px;opacity:.6">kaise padhein \u00b7 buy/sell/hold</span></summary>' +
+      '<div class="note" style="padding:6px 14px 10px 14px;line-height:1.7">' +
+      '<b style="color:rgba(240,180,41,.9)">Spike</b> = aaj ke articles vs pichle 6 din ka avg. Spike khud neutral hai - direction <b>sentiment</b> batata hai:' +
+      '<div style="margin-top:6px;padding:7px 10px;border-radius:8px;background:rgba(119,243,123,.08);border:1px solid rgba(119,243,123,.3)">📈 <b>Spike 2x+ positive</b> (upgrade, order win, record profit): achhi khabar - short-term momentum (1-3 din swing / BTST) ka chance. Par gap-up me chase mat karo, price pe entry dekho. Holders: hold.</div>' +
+      '<div style="margin-top:6px;padding:7px 10px;border-radius:8px;background:rgba(255,139,139,.08);border:1px solid rgba(255,139,139,.3)">📉 <b>Spike 2x+ negative</b> (probe, fraud, crash, downgrade): buri khabar - exit/avoid. F&O trader short dekh sakta hai (risky). Holders: headline padho, SL strict.</div>' +
+      '<div style="margin-top:6px;padding:7px 10px;border-radius:8px;background:rgba(159,176,196,.08);border:1px solid rgba(159,176,196,.3)">▸ <b>Spike 2x+ neutral</b>: kuch bada aa raha (result, order, policy) - wait & watch. 1.5-2x = medium, <1.5x = normal.</div>' +
+      '<div style="margin-top:8px"><b style="color:rgba(240,180,41,.9)">Sentiment score</b> (-100 se +100): +50 se upar = strong positive, -50 se neeche = strong negative, beech me = mixed/neutral. Headline keywords se - indicative, guarantee nahi.</div>' +
+      '<div style="margin-top:8px"><b style="color:rgba(240,180,41,.9)">Timeframe:</b> spike ka asar mostly 1-3 din (BTST/swing). Positional/long-term ke liye sentiment kam, <b>Market Brain Score</b> (Screener) zyada matter karta hai. Intraday ke liye news akela kaafi nahi - price action + volume + OI chahiye.</div>' +
+      '<div style="margin-top:8px;opacity:.6">Rule: news aane tak price me baat ban chuki hoti hai - entry SL ke saath, sirf spike pe blind trade nahi.</div></div></details>';
     card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83D\uDCCA NEWS VOLUME</b> <span style="font-size:11px;opacity:.65">7-day spike \u00b7 sentiment \u00b7 Nifty 40</span></summary>' +
+      guide +
       '<div id="nvSearch" style="margin-top:10px"><input id="nvQ" placeholder="company search... (RELIANCE, TCS)" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:inherit;font-size:13px;outline:none"></div>' +
       '<div id="nvBody" class="note" style="margin-top:8px">loading news volume...</div>';
     var inp = document.getElementById("nvQ");

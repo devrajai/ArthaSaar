@@ -1,0 +1,21 @@
+name: Learn Expand 22 + Guide Cleanup
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/fix_learn4.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add financelearn.js mbguide.js index.html
+          git commit -m "feat: finance basics 22 concepts + guide cleanup" || echo "no change"
+          git pull --rebase || true
+          git push

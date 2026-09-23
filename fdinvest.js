@@ -57,7 +57,7 @@
       h += '<details style="margin-top:8px"><summary style="cursor:pointer;padding:8px 12px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:14px"><b>' + esc(v[0]) + '</b></summary><div class="note" style="padding:6px 14px 2px 14px">' + esc(v[1]) + '</div></details>';
     });
     h += '<div class="note" style="margin-top:10px;font-size:11.5px;opacity:.75">SFB = small finance bank, RBI regulated, DICGC insurance 5 lakh/bank - bada amount multiple banks me todo. Bank rates badalti rehti hain, booking se pehle bank site check kar lena. Post office rates har quarter (Jan/Apr/Jul/Oct) announce hote hain.</div>';
-    card.innerHTML = '<summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:6px 2px"><b style="font-size:15px">🏦 FD vs Post Office - Kaunsa Best? (Sep 2026)</b><span style="font-size:11px;opacity:.6;white-space:nowrap">tap to open</span></summary>' + h;
+    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">🏦 FD vs POST OFFICE</b> <span style="font-size:11px;opacity:.65">best rates \u00b7 Sep 2026</span></summary>' + h;
   }
   function mount() {
     var sec = document.querySelector("section#learn");

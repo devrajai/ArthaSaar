@@ -1,4 +1,4 @@
-/* financelearn.js - Finance Basics 22 concepts - LEVELS edition (beginner->pro), sequential 1-22. #learn */
+/* financelearn.js - Finance Basics 22 concepts - course button edition. #learn */
 (function () {
   var G = [
     ["🟢 BEGINNER - shuru yahan se (7)", "rgba(126,231,135,.85)"],
@@ -41,7 +41,7 @@
           '<div class="note" style="padding:6px 14px 2px 14px">' + esc(t[2]) + '</div></details>';
       });
     });
-    card.innerHTML = '<summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:6px 2px"><b style="font-size:15px">📚 Finance Basics - 22 Concepts (Beginner se Pro)</b><span style="font-size:11px;opacity:.6;white-space:nowrap">tap to open</span></summary>' + h;
+    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">📚 COURSE</b> <span style="font-size:11px;opacity:.65">22 concepts \u00b7 Beginner se Pro</span></summary>' + h;
   }
   function mount() {
     var sec = document.querySelector("section#learn");

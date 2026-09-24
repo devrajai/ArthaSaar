@@ -1,0 +1,26 @@
+name: Daily News Digest
+on:
+  schedule:
+    - cron: '30 15 * * *'  # 9:00 PM IST daily (authentic news summary)
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TG_TOKEN: ${{ secrets.TG_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/newsdigest.py
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/news-digest.json
+          git commit -m "data: news digest (authentic, cross-verified)" || echo "no change"
+          git pull --rebase || true
+          git push

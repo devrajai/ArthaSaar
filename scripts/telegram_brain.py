@@ -31,6 +31,7 @@ import datetime as dt
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.parse import quote
+from rotpts import rotline
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -229,7 +230,7 @@ def sec_timesfm():
     if not rot:
         return None
     return ("🔮 <b>TimesFM 21-day rotation</b>\n" + "\n".join(
-        f"• {r['name']}: {pct(r.get('chg30'))} (conf {r.get('conf', '?')}%)"
+        f"• {rotline(r, tf)} (conf {r.get('conf', '?')}%)"
         for r in rot))
 
 

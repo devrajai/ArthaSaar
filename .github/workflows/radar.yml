@@ -9,6 +9,8 @@ jobs:
   radar:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      TG_TOKEN: ${{ secrets.TG_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,10 +20,11 @@ jobs:
       - run: python3 scripts/greeks.py || true
       - run: python3 scripts/global.py || true
       - run: python3 scripts/stages.py || true
+      - run: python3 scripts/stress.py || true
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/bigplayer.json data/greeks.json data/world.json data/stages.json || true
-          git commit -m "data: big player radar + greeks + global + stage detector" || echo "no change"
+          git add data/bigplayer.json data/greeks.json data/world.json data/stages.json data/stress.json || true
+          git commit -m "data: big player radar + greeks + global + stage detector + stress" || echo "no change"
           git pull --rebase || true
           git push

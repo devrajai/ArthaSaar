@@ -113,6 +113,58 @@ def group_stories(items):
     return groups
 
 
+def xray():
+    # MARKET X-RAY (video-style): Nifty open/close pattern + FII/DII ka Puppato game
+    x = {}
+    try:
+        req = urllib.request.Request('https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?range=5d&interval=1d', headers=UA)
+        j = json.loads(urllib.request.urlopen(req, timeout=20).read().decode('utf-8'))
+        r = j['chart']['result'][0]
+        q = r['indicators']['quote'][0]
+        rows = [(r['timestamp'][i], q['open'][i], q['high'][i], q['low'][i], q['close'][i])
+                for i in range(len(r['timestamp'])) if q['open'][i] and q['close'][i]]
+        if len(rows) >= 2:
+            t, o, h, l, c = rows[-1]
+            pt, po, ph, pl, pc = rows[-2]
+            chg = round((c - pc) / pc * 100, 2)
+            gap_up = o >= pc
+            red_close = c < o
+            if gap_up and red_close:
+                pat = 'gap-up open, RED close - opening strength gayab, sellers jeete'
+            elif (not gap_up) and (c > o):
+                pat = 'gap-down open, GREEN close - dar bech ke wapas khareeda gaya'
+            elif gap_up and (not red_close):
+                pat = 'gap-up open, green close - bulls ka din'
+            else:
+                pat = 'gap-down open, red close - pure selling pressure'
+            x = {'o': round(o), 'h': round(h), 'l': round(l), 'c': round(c), 'chg': chg, 'pattern': pat}
+    except Exception as e:
+        print('WARN xray nifty fail', e)
+    # FII/DII + streak
+    try:
+        fd = json.loads((DATA / 'fii-dii.json').read_text(encoding='utf-8'))
+        cats = fd.get('categories') or {}
+        x['fii'] = round((cats.get('FII/FPI') or {}).get('net_cr') or 0)
+        x['dii'] = round((cats.get('DII') or {}).get('net_cr') or 0)
+    except Exception as e:
+        print('WARN xray fii fail', e)
+    try:
+        fh = json.loads((DATA / 'fii-history.json').read_text(encoding='utf-8'))
+        last5 = fh[-5:]
+        neg = 0
+        for row in reversed(last5):
+            if (row.get('fii') or 0) < 0:
+                neg += 1
+            else:
+                break
+        x['fii_streak'] = neg
+        if last5:
+            x['puppato'] = 1 if (last5[-1].get('fii') or 0) < 0 and (last5[-1].get('dii') or 0) > 0 else 0
+    except Exception as e:
+        print('WARN xray history fail', e)
+    return x
+
+
 def main():
     cats = []
     used_tk = []
@@ -148,7 +200,8 @@ def main():
     for c in cats:
         for s_ in c['stories']:
             s_.pop('tk', None)
-    out = {'u': NOW.strftime('%d %b %Y, %H:%M IST'), 'cats': cats}
+    X = xray()
+    out = {'u': NOW.strftime('%d %b %Y, %H:%M IST'), 'cats': cats, 'xray': X}
     DATA.mkdir(exist_ok=True)
     (DATA / 'news-digest.json').write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding='utf-8')
     print('news-digest.json written')
@@ -156,6 +209,15 @@ def main():
     # TG message
     NL = chr(10)
     msg = '*MARKET BRAIN NEWS*' + NL + NOW.strftime('%A, %d %b') + ' - sirf sach, no masala' + NL
+    if X.get('c') is not None:
+        gr = X['chg'] >= 0
+        msg += NL + '*MARKET X-RAY*' + NL
+        msg += 'NIFTY ' + str(X['c']) + ' (' + ('+' if gr else '') + str(X['chg']) + '%) - O ' + str(X['o']) + ' | H ' + str(X['h']) + ' | L ' + str(X['l']) + NL
+        msg += X.get('pattern') or ''
+        msg += NL + 'FII: ' + ('Buy ' if (X.get('fii') or 0) >= 0 else 'Sell ') + chr(8377) + str(abs(X.get('fii') or 0)) + ' Cr | DII: ' + ('Buy ' if (X.get('dii') or 0) >= 0 else 'Sell ') + chr(8377) + str(abs(X.get('dii') or 0)) + ' Cr'
+        if (X.get('fii_streak') or 0) >= 3:
+            msg += NL + 'FII ne lagatar ' + str(X['fii_streak']) + ' din becha' + (' - DII sara maal le raha hai (Puppato)' if X.get('puppato') else '')
+        msg += NL
     EMO = {'INDIA MARKETS': '\U0001F1EE\U0001F1F3', 'ECONOMY/POLICY': '\U0001F4B9',
            'GLOBAL': '\U0001F30D', 'GEOPOLITICS': '\U0001F6A8', 'AUTHENTIC WIRE': '\U0001F9F5'}
     for c in cats:

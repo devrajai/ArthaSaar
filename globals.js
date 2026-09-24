@@ -35,7 +35,7 @@
       h += '<div style="font-size:12px;font-weight:700;margin-top:12px;opacity:.8">\uD83D\uDD70 COMMODITIES + FX</div>';
       d.cmd.forEach(function (x) { h += row2(x); });
       h += '<div style="margin-top:12px;padding:8px 12px;border-radius:10px;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.35)">' +
-        '<div style="font-size:13px;font-weight:700">\uD83E\uDED GLOBAL\u2192INDIA ENGINE (90 din ka data)</div>' +
+        '<div style="font-size:13px;font-weight:700">\uD83E\uDDED GLOBAL\u2192INDIA ENGINE (90 din ka data)</div>' +
         '<div style="font-size:11px;opacity:.7;margin-top:3px">"Aaj wahan girra, kal India pe kya asar?" \u2014 next-day lag correlation, 90 din ke EOD closes se</div>';
       var seen = {};
       d.corr.slice(0, 6).forEach(function (c) {

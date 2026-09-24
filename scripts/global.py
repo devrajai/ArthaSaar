@@ -3,6 +3,7 @@
 - Duniya ke indices + commodities ka EOD data (Yahoo Finance free API, 1 saal)
 - GLOBAL->INDIA CORRELATION ENGINE: har global market ka NIFTY/sector pe asar
   (same-day + NEXT-DAY lag correlation + shock stats)
+Output: data/world.json (data/global.json parallel session ka hai - mat chhedo)
 Note: EOD data hai (market close ke baad). Live feed nahi - honest indicative analysis."""
 import json, math, urllib.request, urllib.parse
 from datetime import datetime, timezone, timedelta
@@ -120,9 +121,9 @@ def main():
     out["corr"] = sorted([c for c in cors if c["l"] is not None], key=lambda x: -abs(x["l"] or 0))
     out["shock"] = shock
     out["updated"] = IST.strftime("%d %b %Y, %H:%M IST")
-    with open("data/global.json", "w") as f:
+    with open("data/world.json", "w") as f:
         json.dump(out, f, separators=(",", ":"))
-    print("OK global: idx=%d cmd=%d corr=%d shock=%d | %s" % (len(out["idx"]), len(out["cmd"]), len(out["corr"]), len(shock), out["updated"]))
+    print("OK world: idx=%d cmd=%d corr=%d shock=%d | %s" % (len(out["idx"]), len(out["cmd"]), len(out["corr"]), len(shock), out["updated"]))
 
 if __name__ == "__main__":
     main()

@@ -19,10 +19,10 @@
         '<div style="font-size:10.5px;opacity:.6;margin-top:2px">' + esc(d.u) + ' \u00b7 stress >= 60 pe TG alert milta hai</div></div>';
       if (d.nifty && d.nifty.c) h += '<div style="text-align:center;font-size:11.5px;opacity:.75;margin-top:6px">NIFTY \u20B9' + esc(d.nifty.c) + " \u00b7 200-DMA \u20B9" + esc(d.nifty.dma) + " (" + esc((c.dma || {}).d) + "%)</div>";
       h += '<div style="margin-top:10px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)">';
-      if (c.dma) h += bar("NIFTY vs 200-DMA", c.dma.s, 30, (c.dma.d > 0 ? "+" : "") + esc(c.dma.d) + "%");
-      if (c.vix) h += bar("VIX (dar level)", c.vix.s, 25, "VIX " + esc(c.vix.v));
-      if (c.s4) h += bar("Stage-4 stocks (girti trend)", c.s4.s, 25, esc(c.s4.p) + "% (" + esc(c.s4.n) + ")");
-      if (c.fii) h += bar("FII selling streak", c.fii.s, 20, esc(c.fii.n) + " din");
+      if (c.dma) h += bar("NIFTY vs 200-DMA \u00b7 " + esc(c.dma.s) + "/30 pts", c.dma.s, 30, (c.dma.d > 0 ? "+" : "") + esc(c.dma.d) + "%");
+      if (c.vix) h += bar("VIX (dar) \u00b7 " + esc(c.vix.s) + "/25 pts", c.vix.s, 25, "VIX " + esc(c.vix.v));
+      if (c.s4) h += bar("Stage-4 stocks \u00b7 " + esc(c.s4.s) + "/25 pts", c.s4.s, 25, esc(c.s4.p) + "% (" + esc(c.s4.n) + ")");
+      if (c.fii) h += bar("FII selling streak \u00b7 " + esc(c.fii.s) + "/20 pts", c.fii.s, 20, esc(c.fii.n) + " din");
       h += '</div><div style="font-size:10.5px;opacity:.6;margin-top:8px">\uD83D\uDDA4 History: 2008 me NIFTY -60% (wapsi ~5 saal), 2020 me -38% (wapsi ~6 mahine). 0-29 normal, 30-54 alert, 55-74 high, 75+ danger. <b>Indicator hai, prediction nahi</b> \u2014 position sizing khud decide karo.</div>';
       b.innerHTML = h;
     }).catch(function () {

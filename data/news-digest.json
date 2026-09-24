@@ -1,20 +1,9 @@
 {
- "u": "24 Sep 2026, 14:19 IST",
+ "u": "24 Sep 2026, 15:13 IST",
  "cats": [
   {
    "name": "INDIA MARKETS",
    "stories": [
-    {
-     "t": "National Stock Exchange of India Rises in Trading Debut",
-     "n": 3,
-     "srcs": [
-      "Business Standard",
-      "BusinessLine",
-      "WSJ"
-     ],
-     "age": 0.9,
-     "x": 1
-    },
     {
      "t": "Stock Market Crash Live: Nifty, Sensex At Over Three-Month Low; L&T Finance, Max Financial Fall Up To 12%",
      "n": 2,
@@ -22,8 +11,27 @@
       "Livemint",
       "NDTV Profit"
      ],
-     "age": 0.5,
+     "age": 1.4,
      "x": 1
+    },
+    {
+     "t": "National Stock Exchange of India Rises in Trading Debut",
+     "n": 2,
+     "srcs": [
+      "Business Standard",
+      "WSJ"
+     ],
+     "age": 1.8,
+     "x": 1
+    },
+    {
+     "t": "India's NSE lists after decade-long wait; valued at $48 billion",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 3.3,
+     "x": 0
     },
     {
      "t": "Watch India’s Biggest Stock Exchange Finally Goes Public",
@@ -31,16 +39,7 @@
      "srcs": [
       "Bloomberg.com"
      ],
-     "age": 3.1,
-     "x": 0
-    },
-    {
-     "t": "As NSE lists, a look at debut performance of India's largest IPOs",
-     "n": 1,
-     "srcs": [
-      "reuters.com"
-     ],
-     "age": 3.6,
+     "age": 4.0,
      "x": 0
     }
    ]
@@ -55,7 +54,7 @@
       "Business Standard",
       "ThePrint"
      ],
-     "age": 18.2,
+     "age": 19.2,
      "x": 1
     }
    ]
@@ -75,7 +74,7 @@
       "NBC News",
       "The New York Times"
      ],
-     "age": 8.3,
+     "age": 1.3,
      "x": 1
     }
    ]
@@ -84,42 +83,54 @@
    "name": "AUTHENTIC WIRE",
    "stories": [
     {
+     "t": "EXCLUSIVE: Amazon bets $3 billion on India's fast-delivery boom, sources say",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 0.6,
+     "x": 0
+    },
+    {
      "t": "India insurance reform tanks distributors with commission squeeze",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 1.3,
+     "age": 2.2,
      "x": 0
     },
     {
      "t": "Explainer: India's insurance overhaul: What changes and why it matters",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 1.6,
+     "age": 2.5,
      "x": 0
     },
     {
-     "t": "India takes battle against junk food to shops near schools",
+     "t": "India's Adani Group to invest $10.4 billion in West Bengal",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 1.7,
-     "x": 0
-    },
-    {
-     "t": "US and Indian top diplomats discuss Russia sanctions bill signed by Trump",
-     "n": 1,
-     "srcs": [
-      "reuters.com"
-     ],
-     "age": 5.0,
+     "age": 2.9,
      "x": 0
     }
    ]
   }
- ]
+ ],
+ "xray": {
+  "o": 23222,
+  "h": 23282,
+  "l": 23046,
+  "c": 23075,
+  "chg": -1.59,
+  "pattern": "gap-down open, red close - pure selling pressure",
+  "fii": 1617,
+  "dii": 2341,
+  "fii_streak": 0,
+  "puppato": 0
+ }
 }

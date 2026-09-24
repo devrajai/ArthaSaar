@@ -96,6 +96,14 @@ def cr(v):
         return "?"
     return f"+₹{v:,.0f} Cr" if v >= 0 else f"−₹{abs(v):,.0f} Cr"
 
+def bs(v):
+    # FII/DII ke liye: Buy/Sell word (Dev ka rule: sirf +/- nahi)
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return "?"
+    return f"Buy ₹{v:,.0f} Cr" if v >= 0 else f"Sell ₹{abs(v):,.0f} Cr"
+
 
 # ---------------------------------------------------------------- data fetch
 def _sensex_yfinance():
@@ -177,7 +185,7 @@ def sec_fii_dii(prefix="yesterday"):
     if fii is None and dii is None:
         return None
     return (f"💸 <b>FII/DII ({prefix})</b>\n"
-            f"FII: <b>{cr(fii)}</b>  |  DII: <b>{cr(dii)}</b>")
+            f"FII: <b>{bs(fii)}</b>  |  DII: <b>{bs(dii)}</b>")
 
 
 def sec_preopen():
@@ -276,7 +284,7 @@ def sec_fii_dii_today():
     if "FII/FPI" not in f and "DII" not in f:
         return None
     return (f"💸 <b>FII/DII today (cash)</b>\n"
-            f"FII: <b>{cr(f.get('FII/FPI'))}</b>  |  DII: <b>{cr(f.get('DII'))}</b>")
+            f"FII: <b>{bs(f.get('FII/FPI'))}</b>  |  DII: <b>{bs(f.get('DII'))}</b>")
 
 
 # ---------------------------------------------------------------- send

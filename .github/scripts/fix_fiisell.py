@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-# fix_fiisell.py v2 - telegram_brain.py me FII/DII ke +/- ki jagah BUY/SELL words
-# (v2: quote-safe - double quotes chr(34) se bante hain, JSON push safe)
+# fix_fiisell.py v3 - telegram_brain.py patches (one-shot, idempotent):
+# 1) FII/DII: +/- ki jagah BUY/SELL words (bs() helper)
+# 2) Rotation line: % ke saath index POINTS (rotpts.rotline use)
+# (quote-safe: double quotes chr(34) se bante hain, JSON push safe)
 TB = 'scripts/telegram_brain.py'
 Q = chr(34)
 NL = chr(10)
+SQ = chr(39)
 
 
 def main():
@@ -28,6 +31,15 @@ def main():
         if old in s:
             s = s.replace(old, new)
             changed.append(old)
+    if 'from rotpts import' not in s:
+        imp = 'from urllib.parse import quote' + NL
+        assert imp in s, 'import anchor missing'
+        s = s.replace(imp, imp + 'from rotpts import rotline' + NL)
+        changed.append('rotpts import')
+    old_rot = '{r[' + SQ + 'name' + SQ + ']}: {pct(r.get(' + SQ + 'chg30' + SQ + '))}'
+    if old_rot in s:
+        s = s.replace(old_rot, '{rotline(r, tf)}')
+        changed.append('rotation pts')
     open(TB, 'w', encoding='utf-8').write(s)
     print('telegram_brain.py:', ', '.join(changed) if changed else 'already patched')
 

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-24T14:19:18.264699+00:00",
+  "updated_at": "2026-09-24T15:00:15.166248+00:00",
   "india": [
     {
       "name": "Nifty 50",
@@ -100,7 +100,15 @@
       "change_pct": -0.8
     }
   ],
-  "world": [],
+  "world": [
+    {
+      "price": 51221.94,
+      "change": -289.65,
+      "change_pct": -0.56,
+      "name": "Dow Jones (US)",
+      "symbol": "^DJI"
+    }
+  ],
   "commodities": [],
   "fx": [
     {
@@ -114,159 +122,355 @@
   "derived": {},
   "sheet_listed_ipos": [
     [
-      "IPO Name",
-      "Ticker",
-      "Issue Price (₹)",
-      "Listing Date",
-      "Listing Price (₹)",
-      "Listing Gain %",
-      "Current Price",
-      "Current Gain %"
-    ],
-    [
-      "ESDS Software Solutions",
-      "NSE:ESDS",
-      "236",
-      "19/10/22",
-      "212",
-      "-10.17",
-      "1858",
-      "687.29"
-    ],
-    [
-      "Tata Technologies",
-      "NSE:TATATECH",
-      "500",
-      "30/11/23",
-      "1200",
-      "140",
-      "717",
-      "43.4"
-    ],
-    [
-      "Manika Plastech",
-      "",
-      "42",
-      "21/09/26",
+      "INDIA IPO TRACKER QUICK STATS",
       "",
       "",
       "",
       ""
     ],
     [
-      "NSE of India",
+      "Currently Open IPOs",
+      "9",
       "",
-      "1785",
-      "24/09/26",
+      "",
+      ""
+    ],
+    [
+      "Upcoming IPOs",
+      "16",
+      "",
+      "",
+      ""
+    ],
+    [
+      "Closed (awaiting listing)",
+      "22",
+      "",
+      "",
+      ""
+    ],
+    [
+      "Listed (all-time archive)",
+      "92",
+      "",
+      "",
+      ""
+    ],
+    [
+      "SETUP INSTRUCTIONS - one time, about 5 minutes",
       "",
       "",
       "",
       ""
     ],
     [
-      "HOW TO USE",
-      "After an IPO lists, type its NSE ticker in column B (e.g. NSE:NAME). Current price and gain update automatically.",
+      "1",
+      "In this spreadsheet, click: Extensions > Apps Script",
       "",
       "",
+      ""
+    ],
+    [
+      "2",
+      "Delete any code shown, and paste the ENTIRE script from the file 'IPO_Tracker_AppsScript.gs' (shared in the chat)",
+      "",
+      "",
+      ""
+    ],
+    [
+      "3",
+      "Click the Save (floppy disk) icon",
+      "",
+      "",
+      ""
+    ],
+    [
+      "4",
+      "In the toolbar dropdown, select the function 'updateAll' and click Run",
+      "",
+      "",
+      ""
+    ],
+    [
+      "5",
+      "Google will ask for authorization: Review permissions > choose your account > Advanced > Go to project > Allow",
+      "",
+      "",
+      ""
+    ],
+    [
+      "6",
+      "If the first run filled the tabs with data, it works. If there is an error, note the message and ask in chat",
+      "",
+      "",
+      ""
+    ],
+    [
+      "7",
+      "For automation: in the left sidebar of the Apps Script editor, click the clock icon (Triggers)",
+      "",
+      "",
+      ""
+    ],
+    [
+      "8",
+      "Add Trigger > function: updateAll > event source: Time-driven > type: Day timer > 8am to 9am > Save",
+      "",
+      "",
+      ""
+    ],
+    [
+      "DONE - the sheet now updates itself every morning automatically. No AI, no cost, no server.",
       "",
       "",
       "",
       ""
     ],
     [
-      "",
-      "For SME IPOs use NSE: or BSE: prefix if supported, otherwise prices show —",
-      "",
+      "NOTES",
       "",
       "",
       "",
+      ""
+    ],
+    [
+      "Data sources: Chittorgarh / NSE India. GMP is unofficial grey-market data and can be manipulated - verify with the RHP before investing.",
       "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "If a website changes its layout, the script may need a fix - come back to the chat and ask for an updated version.",
+      "",
+      "",
+      "DIAGNOSTICS",
+      ""
+    ],
+    [
+      "Last automated run",
+      "18/09/2026 16:21 - 42 IPOs found | fundamentals refreshed | sheets synced",
+      "",
+      "Mainboard [https://www.chittorgarh.com/] OK: 155206 chars, 48 rows scanned, 35 IPO rows matched",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "Mainboard [https://www.chittorgarh.com/ipo/ipo_dashboard.asp] OK: 149933 chars, 44 rows scanned, 7 IPO rows matched",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "SME [https://www.chittorgarh.com/ipo/ipo_dashboard.asp?a=sme] OK: 150537 chars, 44 rows scanned, 0 IPO rows matched",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "PT Mainboard sample: [Company Name | Listed On | Issue Price | Listing Day Close | Listing Day Gain | Current Price | Profit/Loss]",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "Listed Mainboard [https://www.chittorgarh.com/ipo/ipo_perf_tracker.asp] OK: 83 rows scanned, 0 moved, 0 added",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "PT SME sample: [Company Name | Listed On | Issue Price | Listing Day Close | Listing Day Gain | Current Price | Profit/Loss]",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "Listed SME [https://www.chittorgarh.com/ipo/ipo_perf_tracker.asp?exchange=sme] OK: 143 rows scanned, 0 moved, 0 added",
       ""
     ]
   ],
   "sheet_corporate_actions": [
     [
-      "Date",
-      "Type",
-      "Company / Event",
-      "Details",
-      "Source"
+      "INDIA IPO TRACKER QUICK STATS",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "18/09/26",
-      "IPO Close",
-      "Hero Motors, Jindal Supremo, SS Retail",
-      "Subscription closes today",
-      "NSE"
+      "Currently Open IPOs",
+      "9",
+      "",
+      "",
+      ""
     ],
     [
-      "18/09/26",
-      "IPO Open",
-      "Axiom Gas Engineering (SME)",
-      "Subscription opens",
-      "Economic Times"
+      "Upcoming IPOs",
+      "16",
+      "",
+      "",
+      ""
     ],
     [
-      "21/09/26",
-      "IPO Close",
-      "NSE India, Sonasel, SpectraA, Kheria",
-      "Subscription closes",
-      "NSE"
+      "Closed (awaiting listing)",
+      "22",
+      "",
+      "",
+      ""
     ],
     [
-      "21/09/26",
-      "Listing",
-      "Manika Plastech",
-      "NSE SME listing",
-      "NSE"
+      "Listed (all-time archive)",
+      "92",
+      "",
+      "",
+      ""
     ],
     [
-      "21/09/26",
-      "IPO Open",
-      "FX Multitech, Robokidz (SME)",
-      "Subscription opens",
-      "Economic Times"
+      "SETUP INSTRUCTIONS - one time, about 5 minutes",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "22/09/26",
-      "Allotment",
-      "NSE of India",
-      "Allotment expected",
-      "Registrar"
+      "1",
+      "In this spreadsheet, click: Extensions > Apps Script",
+      "",
+      "",
+      ""
     ],
     [
-      "23/09/26",
-      "IPO Open",
-      "S. K. Offset (SME)",
-      "Subscription opens",
-      "Economic Times"
+      "2",
+      "Delete any code shown, and paste the ENTIRE script from the file 'IPO_Tracker_AppsScript.gs' (shared in the chat)",
+      "",
+      "",
+      ""
     ],
     [
-      "23/09/26",
-      "Refund/Credit",
-      "NSE of India",
-      "Refunds begin + shares credited",
-      "Registrar"
+      "3",
+      "Click the Save (floppy disk) icon",
+      "",
+      "",
+      ""
     ],
     [
-      "24/09/26",
-      "Listing",
-      "National Stock Exchange of India",
-      "Mainboard listing — biggest Indian exchange IPO",
-      "NSE"
+      "4",
+      "In the toolbar dropdown, select the function 'updateAll' and click Run",
+      "",
+      "",
+      ""
     ],
     [
-      "Oct 2026",
-      "Results",
-      "Q2 FY27 earnings season",
-      "TCS typically kicks off mid-October",
-      "Trend"
+      "5",
+      "Google will ask for authorization: Review permissions > choose your account > Advanced > Go to project > Allow",
+      "",
+      "",
+      ""
+    ],
+    [
+      "6",
+      "If the first run filled the tabs with data, it works. If there is an error, note the message and ask in chat",
+      "",
+      "",
+      ""
+    ],
+    [
+      "7",
+      "For automation: in the left sidebar of the Apps Script editor, click the clock icon (Triggers)",
+      "",
+      "",
+      ""
+    ],
+    [
+      "8",
+      "Add Trigger > function: updateAll > event source: Time-driven > type: Day timer > 8am to 9am > Save",
+      "",
+      "",
+      ""
+    ],
+    [
+      "DONE - the sheet now updates itself every morning automatically. No AI, no cost, no server.",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "NOTES",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "Data sources: Chittorgarh / NSE India. GMP is unofficial grey-market data and can be manipulated - verify with the RHP before investing.",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "If a website changes its layout, the script may need a fix - come back to the chat and ask for an updated version.",
+      "",
+      "",
+      "DIAGNOSTICS",
+      ""
+    ],
+    [
+      "Last automated run",
+      "18/09/2026 16:21 - 42 IPOs found | fundamentals refreshed | sheets synced",
+      "",
+      "Mainboard [https://www.chittorgarh.com/] OK: 155206 chars, 48 rows scanned, 35 IPO rows matched",
+      ""
     ],
     [
       "",
-      "Add dividends, bonus, splits, buybacks, board meetings, results dates as announced. The website auto-pulls this tab every 5 min once the bridge is enabled.",
       "",
       "",
+      "Mainboard [https://www.chittorgarh.com/ipo/ipo_dashboard.asp] OK: 149933 chars, 44 rows scanned, 7 IPO rows matched",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "SME [https://www.chittorgarh.com/ipo/ipo_dashboard.asp?a=sme] OK: 150537 chars, 44 rows scanned, 0 IPO rows matched",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "PT Mainboard sample: [Company Name | Listed On | Issue Price | Listing Day Close | Listing Day Gain | Current Price | Profit/Loss]",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "Listed Mainboard [https://www.chittorgarh.com/ipo/ipo_perf_tracker.asp] OK: 83 rows scanned, 0 moved, 0 added",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "PT SME sample: [Company Name | Listed On | Issue Price | Listing Day Close | Listing Day Gain | Current Price | Profit/Loss]",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "Listed SME [https://www.chittorgarh.com/ipo/ipo_perf_tracker.asp?exchange=sme] OK: 143 rows scanned, 0 moved, 0 added",
       ""
     ]
   ]

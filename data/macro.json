@@ -1,14 +1,14 @@
 {
- "updated": "2026-09-23T01:42:41.745062",
+ "updated": "2026-09-24T01:44:04.952804",
  "today": {
-  "date": "2026-09-23",
-  "crude": 90.09,
-  "dxy": 100.63,
-  "gold": 4380.0,
-  "us10y": 4.97,
-  "usdinr": 95.58,
-  "spx": 7764.64,
-  "fii_net_cr": -3810.0
+  "date": "2026-09-24",
+  "crude": 91.5,
+  "dxy": 101.14,
+  "gold": 4332.1,
+  "us10y": 5.11,
+  "usdinr": 95.73,
+  "spx": 7706.03,
+  "fii_net_cr": 1617.5
  },
  "history": [
   {
@@ -30,13 +30,22 @@
    "usdinr": 95.58,
    "spx": 7764.64,
    "fii_net_cr": -3810.0
+  },
+  {
+   "date": "2026-09-24",
+   "crude": 91.5,
+   "dxy": 101.14,
+   "gold": 4332.1,
+   "us10y": 5.11,
+   "usdinr": 95.73,
+   "spx": 7706.03,
+   "fii_net_cr": 1617.5
   }
  ],
- "streak_fii_sell_days": 2,
- "score": 0,
+ "streak_fii_sell_days": 0,
+ "score": -1,
  "verdict": "NEUTRAL - mixed signals. Normal, par alert raho.",
  "signals": [
-  "dollar index strong +0.98%",
-  "S&P strong +2.36%"
+  "dollar index strong +1.49%"
  ]
 }

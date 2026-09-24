@@ -10,7 +10,7 @@
     window.__MB_INTERVALS.push(id);
     return id;
   };
-  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js", "brandfix.js", "tools.js", "tools1b.js", "tools2.js", "tools3.js", "tools4.js", "tools5.js", "learnfix.js", "stagefix.js", "guidefix.js", "deskfix.js", "bluefix2.js", "inputfix.js", "smart.js", "mft.js", "learnadd.js", "aibrain.js", "homefix.js", "learnfold.js", "macro.js", "gti.js", "manish.js", "gtiinfo.js", "oi.js", "powerpack.js", "money.js", "history.js", "bullish.js", "movement.js", "power2.js", "financelearn.js", "peers.js", "xray.js", "fdinvest.js", "newsvolume.js", "economypulse.js", "mbscore.js", "circuit.js", "bank.js", "stage.js", "bigplayer.js", "greeks.js", "forda.js" ];
+  var files = ["oldapp.js", "scrfix.js", "scrfix2.js", "aifix.js", "aifix2.js", "aifix3.js", "mbpatch.js", "dtfix.js", "brandfix.js", "tools.js", "tools1b.js", "tools2.js", "tools3.js", "tools4.js", "tools5.js", "learnfix.js", "stagefix.js", "guidefix.js", "deskfix.js", "bluefix2.js", "inputfix.js", "smart.js", "mft.js", "learnadd.js", "aibrain.js", "homefix.js", "learnfold.js", "macro.js", "gti.js", "manish.js", "gtiinfo.js", "oi.js", "powerpack.js", "money.js", "history.js", "bullish.js", "movement.js", "power2.js", "financelearn.js", "peers.js", "xray.js", "fdinvest.js", "newsvolume.js", "economypulse.js", "mbscore.js", "circuit.js", "bank.js", "stage.js", "bigplayer.js", "greeks.js", "globals.js", "forda.js" ];
   var i = 0, tries = {};
   function banner(msg) {
     try {

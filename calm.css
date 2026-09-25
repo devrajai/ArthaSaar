@@ -1,0 +1,82 @@
+/* ============================================================
+   calm.css — ARTHASAAR CALM TERMINAL overlay (v3 approved)
+   Light blue = calm · light green = growth · soft amber = action · soft red = risk
+   Overlay hai — saare purane class names kaam karte rahenge.
+   NO backdrop-filter, NO position:sticky (locked rules)
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ---------- dark (default) ---------- */
+:root{
+  --bg0:#0a0f14; --bg1:#0e141c; --bg2:#121a24;
+  --glass:rgba(160,215,255,.045); --glass2:rgba(160,215,255,.075);
+  --border:rgba(160,215,255,.09); --border2:rgba(160,215,255,.15);
+  --text:#e2eaf2; --dim:#93a4b5; --faint:#5e707f;
+  --up:#7ce3a8;  --up-dim:rgba(124,227,168,.12);
+  --down:#ff7a80; --down-dim:rgba(255,122,128,.11);
+  --amber:#ffd27a; --amber-dim:rgba(255,210,122,.11);
+  --blue:#7cc4ff; --blue-dim:rgba(124,196,255,.11);
+  --vio:#b3a1ff; --vio-dim:rgba(179,161,255,.12);
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+  --font:'Space Grotesk','IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono','SF Mono',monospace;
+}
+/* ---------- light ---------- */
+[data-theme="light"]{
+  --bg0:#eef4f9; --bg1:#f4f8fb; --bg2:#ffffff;
+  --glass:rgba(255,255,255,.72); --glass2:rgba(255,255,255,.94);
+  --border:rgba(20,60,100,.12); --border2:rgba(20,60,100,.20);
+  --text:#132330; --dim:#4d6275; --faint:#8296a8;
+  --up:#0f9d58;  --up-dim:rgba(15,157,88,.11);
+  --down:#d63940; --down-dim:rgba(214,57,64,.10);
+  --amber:#a96f00; --amber-dim:rgba(169,111,0,.11);
+  --blue:#1f7ac2; --blue-dim:rgba(31,122,194,.10);
+  --vio:#6a4fe0; --vio-dim:rgba(106,79,224,.11);
+  --shadow:0 10px 26px rgba(30,60,100,.14);
+}
+
+body{
+  background-image:
+    radial-gradient(900px 440px at 85% -120px, rgba(124,196,255,.07), transparent 70%),
+    radial-gradient(700px 380px at 0% 25%, rgba(124,227,168,.05), transparent 70%) !important;
+  padding-bottom:30px;
+}
+
+/* ---------- header brand ---------- */
+header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.55em}
+header h1 em{font-style:normal;color:var(--blue)}
+header .logo{background:none !important;border:none !important;color:transparent !important;font-size:0 !important;
+  width:46px;height:52px;padding:0 !important;display:flex;align-items:center}
+header .logo svg{width:46px;height:52px}
+.as-rline{height:2px;border-radius:2px;margin:2px 0 10px;
+  background:linear-gradient(90deg,var(--blue),var(--up))}
+header .tagline{color:var(--faint);letter-spacing:.06em}
+
+/* ---------- ticker tape ---------- */
+.as-tape{overflow:hidden;background:var(--glass);border:1px solid var(--border);border-radius:9px;
+  margin:10px 0;padding:8px 0}
+.as-tape-in{display:flex;gap:26px;white-space:nowrap;animation:asmv 28s linear infinite;
+  font-family:var(--mono);font-size:10.5px;width:max-content}
+@keyframes asmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.as-tape-in b{color:var(--dim);font-weight:500;letter-spacing:.05em}
+.as-tape-in .t{font-weight:600}
+.as-tape-in .u{color:var(--up)}.as-tape-in .d{color:var(--down)}
+
+/* ---------- status bar ---------- */
+.as-status{position:fixed;left:0;right:0;bottom:0;display:flex;z-index:60;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.05em;color:#fff;opacity:.95}
+.as-status i{flex:1;padding:5px 4px;text-align:center;font-style:normal}
+.as-status .s1{background:var(--down)}
+.as-status .s2{background:var(--amber);color:#231a00}
+.as-status .s3{background:var(--up)}
+.as-status .s4{background:var(--blue)}
+
+/* ---------- terminal polish ---------- */
+section h2{font-family:var(--mono);letter-spacing:.16em;font-size:.8em;color:var(--dim)}
+.card{border-radius:13px}
+summary{border-radius:11px}
+table{font-family:var(--mono)}
+th{letter-spacing:.1em;font-size:.68em;color:var(--amber)}
+button{font-family:var(--font)}
+.kpi .k-val,.k-val{font-variant-numeric:tabular-nums}
+.subhead{font-family:var(--mono);letter-spacing:.14em;color:var(--faint)}

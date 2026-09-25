@@ -1,8 +1,8 @@
-/* themefix.js v8 - ARTHASAAR PREMIUM (reference header + radars, no tagline):
+/* themefix.js v9 - ARTHASAAR PREMIUM (reference header + radars, event tile on top, no small words):
    1) calm.css inject  2) infinity logo  3) favicon fix  4) ARtha-SAAR brand
    5) LIGHT/DARK pill button  6) gradient rline
    7) ticker tape  8) hero NIFTY panel (+SENSEX from global.json)
-   9) forecast radar (replaces AI head card)  10) event radar section + tile */
+   9) forecast radar (replaces AI head card)  10) event radar on top of events section */
 (function () {
   "use strict";
 
@@ -185,15 +185,12 @@
         var up = f.direction === "up" || c > 0;
         rows += "<div class='as-fr'><span>" + w + "</span><b class='" + (up ? "u" : "d") + "'>" +
           (c >= 0 ? "+" : "") + c.toFixed(1) + "% 21d" +
-          (f.direction === "up" ? " ▲" : f.direction === "down" ? " ▼" : " ●") +
-          "<i class='c'>conf " + (f.confidence || "—") + "</i></b></div>";
+          (f.direction === "up" ? " ▲" : f.direction === "down" ? " ▼" : " ●") + "</b></div>";
       });
       var F = d.forecasts || [];
       var nUp = F.filter(function (f) { return f.direction === "up"; }).length;
-      el.innerHTML = "<div class='as-fr as-frt'><span>FORECAST RADAR — TimesFM</span><b>" +
-        nUp + "▲ " + (F.length - nUp) + "▼</b></div>" + rows +
-        "<div class='as-evm' style='margin-top:8px'>updated " + String(d.updated || "").slice(0, 10) +
-        " · 82 series · scenario bands — not trading signals</div>";
+      el.innerHTML = "<div class='as-fr as-frt'><span>FORECAST RADAR</span><b>" +
+        nUp + "▲ " + (F.length - nUp) + "▼</b></div>" + rows;
     }).catch(function () {});
   }
 
@@ -223,44 +220,46 @@
       });
       var html = "";
       var nOpen = fut.filter(function (e) { return e.type === "OPEN"; }).length;
-      html += "<div class='as-fr as-frt'><span>EVENT RADAR — IPO calendar</span><b>" + nOpen + " open · " + (fut.length - nOpen) + " close</b></div>";
+      html += "<div class='as-fr as-frt'><span>EVENT</span><b>" + nOpen + " open · " + (fut.length - nOpen) + " close</b></div>";
       Object.keys(mk).slice(0, 10).forEach(function (k) {
-        html += "<div class='as-evh'><span>" + k + "</span><span>" + mk[k].length + " events</span></div>";
+        html += "<div class='as-evh'><span>" + k + "</span></div>";
         mk[k].forEach(function (e) {
           html += "<div class='as-evr'><span class='as-evb " + String(e.type || "").toLowerCase() + "'>" + e.type + "</span>" +
             "<span class='as-evn'>" + String(e.name || "").replace(/ Limited$| Ltd$/i, "") + "</span></div>";
         });
       });
       if (!fut.length) html += "<div class='as-evm'>koi upcoming event data nahi</div>";
-      html += "<div class='as-evm' style='margin-top:8px'>source NSE · daily sync · pipeline events</div>";
       var card = document.getElementById("evCard");
       if (card) card.innerHTML = html;
     }).catch(function () {});
   }
 
   function buildEvents() {
-    if (document.getElementById("evCard")) { eventRadar(); return; }
-    /* tile after AI Brain */
-    var ab = document.querySelector('a.tile[href="#aibrain"]');
-    if (ab && ab.parentNode) {
-      var t = document.createElement("a");
-      t.className = "tile";
-      t.href = "#events";
-      t.innerHTML = "<span class='t-ic'>📅</span><span class='t-nm'>Event Radar</span><span class='t-sb'>ipo open · close · calendar</span>";
-      ab.parentNode.insertBefore(t, ab.nextSibling);
+    /* existing Events tile: only the word "Event", moved to TOP of homegrid */
+    var tile = document.querySelector('a.tile[href="#events"]');
+    var hg = document.querySelector("section#home .homegrid");
+    if (tile) {
+      var nm = tile.querySelector(".t-nm");
+      if (nm) nm.textContent = "Event";
+      if (hg) {
+        tile.style.cssText = "grid-column:1/-1;flex-direction:row;align-items:center;gap:12px";
+        hg.insertBefore(tile, hg.firstChild);
+      }
     }
-    /* section before footer */
-    var ft = document.querySelector(".wrap > footer");
-    var host = ft || document.querySelector(".wrap");
-    if (host) {
-      var s = document.createElement("section");
-      s.id = "events";
-      s.style.display = "none";
-      s.innerHTML = '<a class="backbtn" href="#home">Home</a><h2>Event Radar</h2><div class="card" id="evCard"></div>';
-      if (ft) host.parentNode.insertBefore(s, ft);
-      else host.appendChild(s);
-      eventRadar();
+    /* radar card on TOP inside the existing events section (before global calendar) */
+    if (!document.getElementById("evCard")) {
+      var sec = document.querySelector("section#events");
+      if (sec) {
+        var h2 = sec.querySelector("h2");
+        if (h2) h2.textContent = "Event";
+        var card = document.createElement("div");
+        card.className = "card";
+        card.id = "evCard";
+        if (h2 && h2.nextSibling) sec.insertBefore(card, h2.nextSibling);
+        else sec.appendChild(card);
+      }
     }
+    eventRadar();
   }
 
   /* ---------- status bar REMOVED (user request 25 Sep) — purana ho to hatao ---------- */

@@ -1,5 +1,5 @@
 /* ============================================================
-   calm.css v6 — ARTHASAAR PREMIUM (compact header) (full new look, 25 Sep)
+   calm.css v7 — ARTHASAAR PREMIUM (compact header + radars) (full new look, 25 Sep)
    Pro arrangement: command-bar header · desk summary · 2-col tiles
    numbered sections · dense tables · mono micro-labels.
    Palette: light blue = calm · light green = growth · amber = action · red = risk
@@ -209,3 +209,20 @@ a{color:var(--blue)}
   letter-spacing:.14em;color:var(--faint);margin-bottom:3px}
 .as-hc b{font-family:var(--mono);font-size:10.5px;font-weight:700}
 .as-hc b.u{color:var(--up)} .as-hc b.d{color:var(--down)}
+
+/* ---------- forecast + event radar ---------- */
+.as-fr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--hair2)}
+.as-fr:last-child{border-bottom:none}
+.as-fr span{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em}
+.as-fr b{font-family:var(--mono);font-size:10.5px;font-weight:700;white-space:nowrap}
+.as-fr b.u{color:var(--up)} .as-fr b.d{color:var(--down)}
+.as-fr .c{color:var(--faint);font-size:8px;font-weight:500;margin-left:7px;font-style:normal}
+.as-frt{border-bottom:1px solid var(--hair)}
+.as-evh{display:flex;justify-content:space-between;margin:12px 0 4px;font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--faint)}
+.as-evr{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--hair2)}
+.as-evr:last-child{border-bottom:none}
+.as-evb{font-family:var(--mono);font-size:7.5px;font-weight:700;letter-spacing:.06em;padding:3px 7px;border-radius:5px;flex:0 0 auto}
+.as-evb.open{background:var(--up-dim);color:var(--up)}
+.as-evb.close{background:rgba(224,110,110,.12);color:#e08c8c}
+.as-evn{font-size:11px;font-weight:600;line-height:1.25}
+.as-evm{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:.04em}

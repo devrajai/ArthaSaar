@@ -1,4 +1,4 @@
-/* ARTHASAAR loader — pulls in the app in strict order (v=i: retry + skip on error, mf renamed mft).
+/* ARTHASAAR loader — v12: stable ?v= URLs (cache-friendly) + 4 retries with backoff.
    oldapp.js (main app) then patches (screener fix, TimesFM AI view, trade tools,
    learn + stage + guide + desktop, smart brain, MF tracker). */
 (function () {
@@ -24,12 +24,12 @@
     if (i >= files.length) return;
     var f = files[i++];
     var s = document.createElement("script");
-    s.src = f + "?t=" + Date.now();
+    s.src = f + "?v=as12";
     s.async = false;
     s.onload = function () { tries[f] = 0; next(); };
     s.onerror = function () {
       tries[f] = (tries[f] || 0) + 1;
-      if (tries[f] <= 2) { i--; setTimeout(next, 500); return; }
+      if (tries[f] <= 4) { i--; setTimeout(next, 400 * tries[f]); return; }
       banner("\u26A0 " + f + " load fail — page ek baar refresh karo");
       next();
     };

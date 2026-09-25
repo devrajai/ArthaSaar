@@ -310,9 +310,27 @@ btn.classList.toggle('show',y>300);}
 window.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(function(){apply();ticking=false;});},{passive:true});
 apply();})();
 </script>
-<script src="scripts/ipo-detection.js"></script><script src="scripts/ipo-forecast.js"></script>
-<script src="scripts/ipo-coach.js"></script>
-<script src="scripts/ipo-sparkline.js"></script>
-<script src="scripts/ipo-protools.js"></script><script src="scripts/merge-tools.js"></script>
+<script>
+/* v12: sequential loader with retry (flaky mobile networks ke liye) */
+(function () {
+  var files = ["scripts/ipo-detection.js", "scripts/ipo-forecast.js", "scripts/ipo-coach.js",
+    "scripts/ipo-sparkline.js", "scripts/ipo-protools.js", "scripts/merge-tools.js"];
+  var i = 0, tries = {};
+  function next() {
+    if (i >= files.length) return;
+    var f = files[i++];
+    var s = document.createElement("script");
+    s.src = f;
+    s.onload = function () { tries[f] = 0; next(); };
+    s.onerror = function () {
+      tries[f] = (tries[f] || 0) + 1;
+      if (tries[f] <= 4) { i--; setTimeout(next, 400 * tries[f]); return; }
+      next();
+    };
+    document.head.appendChild(s);
+  }
+  next();
+})();
+</script>
 </body>
 </html>

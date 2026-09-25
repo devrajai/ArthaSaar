@@ -1,7 +1,8 @@
-/* themefix.js v5 - ARTHASAAR PREMIUM (reference header):
+/* themefix.js v7 - ARTHASAAR PREMIUM (reference header + radars):
    1) calm.css inject  2) infinity logo  3) favicon fix  4) ARtha-SAAR brand
    5) MARKET·INTELLIGENCE tagline  6) LIGHT/DARK pill button  7) gradient rline
-   8) ticker tape  9) hero NIFTY panel (+SENSEX from global.json) */
+   8) ticker tape  9) hero NIFTY panel (+SENSEX from global.json)
+   10) forecast radar (replaces AI head card)  11) event radar section + tile */
 (function () {
   "use strict";
 
@@ -167,6 +168,101 @@
     }).catch(function () {});
   }
 
+
+  /* ---------- FORECAST RADAR (replaces AI head card) ---------- */
+  function radarHead() {
+    fetch("data/timesfm_forecasts.json").then(function (r) { return r.json(); }).then(function (d) {
+      var el = document.getElementById("aiHead");
+      if (!el || !d || !d.forecasts) return;
+      var by = {};
+      (d.forecasts || []).forEach(function (f) { by[f.name] = f; });
+      var want = ["Nifty 50", "Bank Nifty", "Sensex", "Nifty IT", "India VIX", "Gold (COMEX)", "Bitcoin", "Ethereum", "USD-INR"];
+      var rows = "";
+      want.forEach(function (w) {
+        var f = by[w];
+        if (!f) return;
+        var c = Number(f.median_chg_pct) || 0;
+        var up = f.direction === "up" || c > 0;
+        rows += "<div class='as-fr'><span>" + w + "</span><b class='" + (up ? "u" : "d") + "'>" +
+          (c >= 0 ? "+" : "") + c.toFixed(1) + "% 21d" +
+          (f.direction === "up" ? " ▲" : f.direction === "down" ? " ▼" : " ●") +
+          "<i class='c'>conf " + (f.confidence || "—") + "</i></b></div>";
+      });
+      var F = d.forecasts || [];
+      var nUp = F.filter(function (f) { return f.direction === "up"; }).length;
+      el.innerHTML = "<div class='as-fr as-frt'><span>FORECAST RADAR — TimesFM</span><b>" +
+        nUp + "▲ " + (F.length - nUp) + "▼</b></div>" + rows +
+        "<div class='as-evm' style='margin-top:8px'>updated " + String(d.updated || "").slice(0, 10) +
+        " · 82 series · scenario bands — not trading signals</div>";
+    }).catch(function () {});
+  }
+
+  function watchAIHead() {
+    var el = document.getElementById("aiHead");
+    if (!el) return;
+    radarHead();
+    var ob = new MutationObserver(function () {
+      if (el.innerHTML.indexOf("FORECAST RADAR") !== 0) radarHead();
+    });
+    ob.observe(el, { childList: true, subtree: true });
+  }
+
+  /* ---------- EVENT RADAR (ipo open/close pipeline events) ---------- */
+  function eventRadar() {
+    fetch("ipo/data/terminal-events.json").then(function (r) { return r.json(); }).then(function (d) {
+      var evs = (d && d.events) || [];
+      var today = new Date();
+      function iso(dt) { return dt.toISOString().slice(0, 10); }
+      var t = iso(today);
+      var fut = evs.filter(function (e) { return e.date >= t; })
+                   .sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+      var mk = {};
+      fut.forEach(function (e) {
+        var k = e.date === t ? "AAJ" : e.date === iso(new Date(today.getTime() + 864e5)) ? "KAL" : e.date.slice(8) + "/" + e.date.slice(5, 7);
+        (mk[k] = mk[k] || []).push(e);
+      });
+      var html = "";
+      var nOpen = fut.filter(function (e) { return e.type === "OPEN"; }).length;
+      html += "<div class='as-fr as-frt'><span>EVENT RADAR — IPO calendar</span><b>" + nOpen + " open · " + (fut.length - nOpen) + " close</b></div>";
+      Object.keys(mk).slice(0, 10).forEach(function (k) {
+        html += "<div class='as-evh'><span>" + k + "</span><span>" + mk[k].length + " events</span></div>";
+        mk[k].forEach(function (e) {
+          html += "<div class='as-evr'><span class='as-evb " + String(e.type || "").toLowerCase() + "'>" + e.type + "</span>" +
+            "<span class='as-evn'>" + String(e.name || "").replace(/ Limited$| Ltd$/i, "") + "</span></div>";
+        });
+      });
+      if (!fut.length) html += "<div class='as-evm'>koi upcoming event data nahi</div>";
+      html += "<div class='as-evm' style='margin-top:8px'>source NSE · daily sync · pipeline events</div>";
+      var card = document.getElementById("evCard");
+      if (card) card.innerHTML = html;
+    }).catch(function () {});
+  }
+
+  function buildEvents() {
+    if (document.getElementById("evCard")) { eventRadar(); return; }
+    /* tile after AI Brain */
+    var ab = document.querySelector('a.tile[href="#aibrain"]');
+    if (ab && ab.parentNode) {
+      var t = document.createElement("a");
+      t.className = "tile";
+      t.href = "#events";
+      t.innerHTML = "<span class='t-ic'>📅</span><span class='t-nm'>Event Radar</span><span class='t-sb'>ipo open · close · calendar</span>";
+      ab.parentNode.insertBefore(t, ab.nextSibling);
+    }
+    /* section before footer */
+    var ft = document.querySelector(".wrap > footer");
+    var host = ft || document.querySelector(".wrap");
+    if (host) {
+      var s = document.createElement("section");
+      s.id = "events";
+      s.style.display = "none";
+      s.innerHTML = '<a class="backbtn" href="#home">Home</a><h2>Event Radar</h2><div class="card" id="evCard"></div>';
+      if (ft) host.parentNode.insertBefore(s, ft);
+      else host.appendChild(s);
+      eventRadar();
+    }
+  }
+
   /* ---------- status bar REMOVED (user request 25 Sep) — purana ho to hatao ---------- */
   function rmstatus() {
     try {
@@ -175,7 +271,7 @@
     } catch (e) {}
   }
 
-  function boot() { if (window.MB_LOCKED) return; rmstatus(); apply(); ticker(); desk(); }
+  function boot() { if (window.MB_LOCKED) return; rmstatus(); apply(); ticker(); desk(); watchAIHead(); buildEvents(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
   setTimeout(boot, 2500);

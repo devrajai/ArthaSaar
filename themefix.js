@@ -1,8 +1,8 @@
-/* themefix.js v7 - ARTHASAAR PREMIUM (reference header + radars):
+/* themefix.js v8 - ARTHASAAR PREMIUM (reference header + radars, no tagline):
    1) calm.css inject  2) infinity logo  3) favicon fix  4) ARtha-SAAR brand
-   5) MARKET·INTELLIGENCE tagline  6) LIGHT/DARK pill button  7) gradient rline
-   8) ticker tape  9) hero NIFTY panel (+SENSEX from global.json)
-   10) forecast radar (replaces AI head card)  11) event radar section + tile */
+   5) LIGHT/DARK pill button  6) gradient rline
+   7) ticker tape  8) hero NIFTY panel (+SENSEX from global.json)
+   9) forecast radar (replaces AI head card)  10) event radar section + tile */
 (function () {
   "use strict";
 
@@ -48,7 +48,7 @@
     } catch (e) {}
     try {
       var tg = document.querySelector("header .tagline");
-      if (tg) tg.textContent = "MARKET · INTELLIGENCE";
+      if (tg) tg.style.display = "none";
     } catch (e) {}
     /* gradient rline under header (reference) + ticker tape */
     try {

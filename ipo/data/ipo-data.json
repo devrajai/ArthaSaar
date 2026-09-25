@@ -1,10 +1,10 @@
 {
   "source": "google-sheet-ipo-tracker",
-  "updated_at": "2026-09-25T06:39:48.341403+00:00",
+  "updated_at": "2026-09-25T09:21:40.426759+00:00",
   "sources": {
     "GOOGLE_SHEET": {
       "ok": true,
-      "records": 161,
+      "records": 163,
       "errors": []
     }
   },
@@ -41,8 +41,11 @@
       "source": "NSE",
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
+      "sub_qib": "0.00",
+      "sub_nii": "1.22",
+      "sub_retail": "1.18",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "german-green-steel-and-power-limited",
@@ -77,7 +80,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "runwal-enterprises-limited",
@@ -111,8 +114,11 @@
       "source": "NSE",
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
+      "sub_qib": "0.48",
+      "sub_nii": "0.06",
+      "sub_retail": "0.10",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "acevector-limited",
@@ -147,7 +153,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "a-one-steels-india-limited",
@@ -182,7 +188,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "moneyview-limited",
@@ -217,7 +223,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "armee-infotech-limited",
@@ -237,14 +243,14 @@
       "fresh": "—",
       "ofs": "—",
       "pe": "—",
-      "roe": "28.52%",
-      "roce": "24.10%",
-      "rev": "₹1410.09 Cr",
-      "pat": "₹45.47 Cr",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
       "ebitda": "—",
-      "de": "0.96",
-      "growth": "7%",
-      "prom": "92.72%",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
       "status": "open",
       "exchange": "NSE",
       "symbol": "ARMEE",
@@ -252,7 +258,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "elevate-campuses-limited",
@@ -273,13 +279,13 @@
       "ofs": "—",
       "pe": "—",
       "roe": "—",
-      "roce": "6.42%",
-      "rev": "₹603.39 Cr",
-      "pat": "₹173.76 Cr",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
       "ebitda": "—",
-      "de": "4.98",
-      "growth": "53%",
-      "prom": "100.0%",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
       "status": "open",
       "exchange": "NSE",
       "symbol": "ELEVATE",
@@ -287,7 +293,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "swastika-infra-limited",
@@ -307,14 +313,14 @@
       "fresh": "—",
       "ofs": "—",
       "pe": "—",
-      "roe": "35.44%",
-      "roce": "25.76%",
-      "rev": "₹505.57 Cr",
-      "pat": "₹41.43 Cr",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
       "ebitda": "—",
-      "de": "0.73",
-      "growth": "43%",
-      "prom": "76.51%",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
       "status": "open",
       "exchange": "NSE",
       "symbol": "SWASTIKAIN",
@@ -322,7 +328,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "adroit-industries-india-limited",
@@ -342,14 +348,14 @@
       "fresh": "—",
       "ofs": "—",
       "pe": "—",
-      "roe": "22.54%",
-      "roce": "19.01%",
-      "rev": "₹143.04 Cr",
-      "pat": "₹26.16 Cr",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
       "ebitda": "—",
-      "de": "0.41",
-      "growth": "5%",
-      "prom": "96.1%",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
       "status": "open",
       "exchange": "NSE",
       "symbol": "ADROITIND",
@@ -357,7 +363,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "bench-mark-infotech-services-limited",
@@ -392,7 +398,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "himalayan-solar-limited",
@@ -427,7 +433,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "green-asia-impex-limited",
@@ -462,7 +468,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "coreintegra-consulting-services-limited",
@@ -497,7 +503,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "pooja-logistics-limited",
@@ -532,7 +538,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "varmora-granito-limited",
@@ -567,7 +573,7 @@
       "source_url": "https://www.nseindia.com/market-data/all-upcoming-issues-ipo",
       "gmp_stale": false,
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "srit-india-limited",
@@ -603,7 +609,7 @@
       "gmp_stale": false,
       "min_investment": "₹14,950",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "shah-investor-s-home-limited",
@@ -639,7 +645,75 @@
       "gmp_stale": false,
       "min_investment": "₹14,195",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
+    },
+    {
+      "id": "paramount-syntex-ltd-sme",
+      "name": "Paramount Syntex Ltd. SME",
+      "type": "SME",
+      "price": "₹119 – ₹127",
+      "lot": "1000",
+      "size": "₹81.79 Cr",
+      "open": "30/09/26",
+      "close": "—",
+      "listing": "—",
+      "sub": "—",
+      "gmp": "—",
+      "gmp_pct": "—",
+      "est_list": "—",
+      "sector": "—",
+      "fresh": "—",
+      "ofs": "—",
+      "pe": "—",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
+      "ebitda": "—",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
+      "status": "upcoming",
+      "exchange": "NSE/BSE",
+      "symbol": "",
+      "source": "Economic Times",
+      "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
+      "status_auto": true,
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
+    },
+    {
+      "id": "dove-soft-ltd-sme",
+      "name": "Dove Soft Ltd. SME",
+      "type": "SME",
+      "price": "₹104 – ₹111",
+      "lot": "1200",
+      "size": "₹73.26 Cr",
+      "open": "30/09/26",
+      "close": "—",
+      "listing": "—",
+      "sub": "—",
+      "gmp": "—",
+      "gmp_pct": "—",
+      "est_list": "—",
+      "sector": "—",
+      "fresh": "—",
+      "ofs": "—",
+      "pe": "—",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
+      "ebitda": "—",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
+      "status": "upcoming",
+      "exchange": "NSE/BSE",
+      "symbol": "",
+      "source": "Economic Times",
+      "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
+      "status_auto": true,
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "omara-ventures-india-ltd-sme",
@@ -673,7 +747,7 @@
       "source": "Economic Times",
       "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "black-opal-consultants-ltd-sme",
@@ -707,7 +781,7 @@
       "source": "Economic Times",
       "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "everestims-technologies-ltd-sme",
@@ -741,7 +815,75 @@
       "source": "Economic Times",
       "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
+    },
+    {
+      "id": "vans-electroengineerings-ltd-sme",
+      "name": "VANS Electroengineerings Ltd. SME",
+      "type": "SME",
+      "price": "₹112 – ₹118",
+      "lot": "1200",
+      "size": "₹33.98 Cr",
+      "open": "29/09/26",
+      "close": "—",
+      "listing": "—",
+      "sub": "—",
+      "gmp": "—",
+      "gmp_pct": "—",
+      "est_list": "—",
+      "sector": "—",
+      "fresh": "—",
+      "ofs": "—",
+      "pe": "—",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
+      "ebitda": "—",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
+      "status": "upcoming",
+      "exchange": "NSE/BSE",
+      "symbol": "",
+      "source": "Economic Times",
+      "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
+      "status_auto": true,
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
+    },
+    {
+      "id": "papadmalji-agro-foods-ltd-sme",
+      "name": "Papadmalji Agro Foods Ltd. SME",
+      "type": "SME",
+      "price": "₹69 – ₹72",
+      "lot": "1600",
+      "size": "₹20.18 Cr",
+      "open": "29/09/26",
+      "close": "—",
+      "listing": "—",
+      "sub": "—",
+      "gmp": "—",
+      "gmp_pct": "—",
+      "est_list": "—",
+      "sector": "—",
+      "fresh": "—",
+      "ofs": "—",
+      "pe": "—",
+      "roe": "—",
+      "roce": "—",
+      "rev": "—",
+      "pat": "—",
+      "ebitda": "—",
+      "de": "—",
+      "growth": "—",
+      "prom": "—",
+      "status": "upcoming",
+      "exchange": "NSE/BSE",
+      "symbol": "",
+      "source": "Economic Times",
+      "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
+      "status_auto": true,
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "acme-universal-safezone-9-ltd-sme",
@@ -775,75 +917,7 @@
       "source": "Economic Times",
       "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
       "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
-    },
-    {
-      "id": "pind-hospitality-ltd-sme",
-      "name": "Pind Hospitality Ltd. SME",
-      "type": "SME",
-      "price": "₹93 – ₹99",
-      "lot": "1200",
-      "size": "₹17.82 Cr",
-      "open": "28/09/26",
-      "close": "—",
-      "listing": "—",
-      "sub": "—",
-      "gmp": "—",
-      "gmp_pct": "—",
-      "est_list": "—",
-      "sector": "—",
-      "fresh": "—",
-      "ofs": "—",
-      "pe": "—",
-      "roe": "—",
-      "roce": "—",
-      "rev": "—",
-      "pat": "—",
-      "ebitda": "—",
-      "de": "—",
-      "growth": "—",
-      "prom": "—",
-      "status": "upcoming",
-      "exchange": "NSE/BSE",
-      "symbol": "",
-      "source": "Economic Times",
-      "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
-      "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
-    },
-    {
-      "id": "shivchem-agro-ltd-sme",
-      "name": "Shivchem Agro Ltd. SME",
-      "type": "SME",
-      "price": "₹59 – ₹62",
-      "lot": "2000",
-      "size": "₹14.01 Cr",
-      "open": "28/09/26",
-      "close": "—",
-      "listing": "—",
-      "sub": "—",
-      "gmp": "—",
-      "gmp_pct": "—",
-      "est_list": "—",
-      "sector": "—",
-      "fresh": "—",
-      "ofs": "—",
-      "pe": "—",
-      "roe": "—",
-      "roce": "—",
-      "rev": "—",
-      "pat": "—",
-      "ebitda": "—",
-      "de": "—",
-      "growth": "—",
-      "prom": "—",
-      "status": "upcoming",
-      "exchange": "NSE/BSE",
-      "symbol": "",
-      "source": "Economic Times",
-      "source_url": "https://economictimes.indiatimes.com/markets/ipo/upcoming",
-      "status_auto": true,
-      "status_checked_at": "2026-09-25T11:56:26.718165+05:30"
+      "status_checked_at": "2026-09-25T14:51:13.983419+05:30"
     },
     {
       "id": "national-stock-exchange-of-india-ltd",
@@ -867,7 +941,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/nse-ipo/3151/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695245+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786182+00:00"
     },
     {
       "id": "sonaselection-india-ltd",
@@ -891,7 +965,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/sonaselection-india-ipo/2805/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695040+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786044+00:00"
     },
     {
       "id": "ss-retail-ltd",
@@ -915,7 +989,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/ss-retail-ipo/2822/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695067+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786073+00:00"
     },
     {
       "id": "jindal-supreme-india-ltd",
@@ -939,7 +1013,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695101+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786096+00:00"
     },
     {
       "id": "hero-motors-ltd",
@@ -963,7 +1037,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/hero-motors-ipo/2225/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695123+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786119+00:00"
     },
     {
       "id": "spectraa-technology-solutions-ltd",
@@ -987,7 +1061,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/spectraa-technology-solutions-ipo/2950/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695143+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786141+00:00"
     },
     {
       "id": "kheria-autocomp-ltd",
@@ -1011,7 +1085,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/kheria-autocomp-ipo/2760/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695162+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786161+00:00"
     },
     {
       "id": "axiom-gas-engineering-ltd",
@@ -1035,7 +1109,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/axiom-gas-engineering-ipo/2193/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.695269+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.786204+00:00"
     },
     {
       "id": "a-one-steels-india-ltd",
@@ -1059,7 +1133,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/a-one-steels-ipo/2000/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916741+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985486+00:00"
     },
     {
       "id": "armee-infotech-ltd",
@@ -1083,7 +1157,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/armee-infotech-ipo/2140/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916777+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985525+00:00"
     },
     {
       "id": "varmora-granito-ltd",
@@ -1107,7 +1181,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/varmora-granito-ipo/2563/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916799+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985549+00:00"
     },
     {
       "id": "s-k-offset-ltd",
@@ -1131,7 +1205,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/skoffset-ipo/3150/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916819+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985571+00:00"
     },
     {
       "id": "liqvd-digital-india-ltd",
@@ -1155,7 +1229,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/liqvd-digital-ipo/2750/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916839+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985593+00:00"
     },
     {
       "id": "sai-urja-indo-ventures-ltd",
@@ -1179,7 +1253,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/sai-urja-indo-ipo/2655/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916859+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985614+00:00"
     },
     {
       "id": "anand-seamless-ltd",
@@ -1203,7 +1277,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/anand-seamless-ipo/3080/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916877+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985635+00:00"
     },
     {
       "id": "himalaya-nutravedics-india-ltd",
@@ -1227,7 +1301,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/himalaya-nutravedics-ipo/2970/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916896+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985657+00:00"
     },
     {
       "id": "robokidz-eduventures-ltd",
@@ -1251,7 +1325,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/robokidz-eduventures-ipo/3205/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916915+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985678+00:00"
     },
     {
       "id": "fx-multitech-ltd",
@@ -1275,7 +1349,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/fx-multitech-ipo/2849/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916933+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985738+00:00"
     },
     {
       "id": "vivekanand-cotspin-ltd",
@@ -1299,7 +1373,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/vivekanand-cotspin-ipo/2062/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916952+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985762+00:00"
     },
     {
       "id": "adroit-industries-india-ltd",
@@ -1323,7 +1397,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/adroit-industries-ipo/3007/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916972+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985785+00:00"
     },
     {
       "id": "elevate-campuses-ltd",
@@ -1347,7 +1421,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/elevate-campuses-ipo/2647/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.916991+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985806+00:00"
     },
     {
       "id": "swastika-infra-ltd",
@@ -1371,7 +1445,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/swastika-infra-ipo/2287/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.917010+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985827+00:00"
     },
     {
       "id": "unitec-fibres-ltd",
@@ -1395,7 +1469,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/unitec-fibres-ipo/3171/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.917029+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985849+00:00"
     },
     {
       "id": "pooja-logistics-ltd",
@@ -1419,7 +1493,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/pooja-logistics-ipo/2724/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:47.917048+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:39.985872+00:00"
     },
     {
       "id": "manika-plastech-ltd",
@@ -1443,7 +1517,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/manika-plastech-ipo/2483/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.114948+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193589+00:00"
     },
     {
       "id": "veegaland-developers-ltd",
@@ -1467,7 +1541,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/veegaland-developers-ipo/2834/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.114991+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193626+00:00"
     },
     {
       "id": "rentomojo-ltd",
@@ -1491,7 +1565,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/rentomojo-ipo/2971/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115011+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193647+00:00"
     },
     {
       "id": "asset-reconstruction-co-india-ltd",
@@ -1515,7 +1589,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115031+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193668+00:00"
     },
     {
       "id": "manipal-payment-identity-solutions-manipal-cards-ltd",
@@ -1539,7 +1613,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/manipal-payment-and-identity-solutions-ipo/2524/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115050+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193734+00:00"
     },
     {
       "id": "steamhouse-india-ltd",
@@ -1563,7 +1637,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/steamhouse-india-ipo/2514/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115068+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193762+00:00"
     },
     {
       "id": "lcc-projects-ltd",
@@ -1587,7 +1661,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/lcc-projects-ipo/2086/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115085+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193782+00:00"
     },
     {
       "id": "karamtara-engineering-ltd",
@@ -1611,7 +1685,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115103+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193801+00:00"
     },
     {
       "id": "injecto-polymers-ltd",
@@ -1635,7 +1709,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/injecto-polymers-ipo/2625/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115120+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193819+00:00"
     },
     {
       "id": "century-business-media-ltd",
@@ -1659,7 +1733,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/century-business-media-ipo/2604/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115137+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193838+00:00"
     },
     {
       "id": "maharaja-speedex-india-ltd",
@@ -1683,7 +1757,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/maharaja-speedex-ipo/3089/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115155+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193858+00:00"
     },
     {
       "id": "om-galaxy-ltd",
@@ -1707,7 +1781,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/om-galaxy-ipo/2987/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115217+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193876+00:00"
     },
     {
       "id": "raksan-transformers-ltd",
@@ -1731,7 +1805,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/raksan-transformers-ipo/2767/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115252+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193895+00:00"
     },
     {
       "id": "panchatv-bharat-ltd",
@@ -1755,7 +1829,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/panchatv-bharat-ipo/2373/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115270+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193913+00:00"
     },
     {
       "id": "infrax-renewable-ltd",
@@ -1779,7 +1853,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115288+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193934+00:00"
     },
     {
       "id": "vinod-texworld-ltd",
@@ -1803,7 +1877,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115306+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193953+00:00"
     },
     {
       "id": "amtech-esters-ltd",
@@ -1827,7 +1901,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115323+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.193973+00:00"
     },
     {
       "id": "kanohar-electricals-ltd",
@@ -1851,7 +1925,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/kanohar-electricals-ipo/2856/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115401+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.194056+00:00"
     },
     {
       "id": "vama-wovenfab-ltd",
@@ -1875,7 +1949,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/vama-wovenfab-ipo/2709/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115362+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.194014+00:00"
     },
     {
       "id": "quanto-agroworld-ltd",
@@ -1899,7 +1973,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/quanto-agroworld-ipo/2390/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115381+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.194034+00:00"
     },
     {
       "id": "shakti-polytarp-ltd",
@@ -1923,7 +1997,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "https://www.chittorgarh.com/ipo/shakti-polytarp-ipo/2427/",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.115419+00:00"
+      "gmp_updated_at": "2026-09-25T09:21:40.194075+00:00"
     },
     {
       "id": "deepa-jewellers-ltd",
@@ -1947,7 +2021,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338365+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425311+00:00",
       "listingPrice": 221.0,
       "gainPercent": 24.9,
       "gainRupees": 44.0
@@ -1974,7 +2048,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338464+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425349+00:00",
       "listingPrice": 239.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -2001,7 +2075,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338503+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425370+00:00",
       "listingPrice": 112.1,
       "gainPercent": 90.0,
       "gainRupees": 53.099999999999994
@@ -2028,7 +2102,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338543+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425389+00:00",
       "listingPrice": 81.6,
       "gainPercent": -20.0,
       "gainRupees": -20.400000000000006
@@ -2055,7 +2129,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338585+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425406+00:00",
       "listingPrice": 539.02,
       "gainPercent": -6.3,
       "gainRupees": -35.98000000000002
@@ -2082,7 +2156,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338623+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425423+00:00",
       "listingPrice": 56.0,
       "gainPercent": 3.7,
       "gainRupees": 2.0
@@ -2109,7 +2183,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338658+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425439+00:00",
       "listingPrice": 140.0,
       "gainPercent": 52.2,
       "gainRupees": 48.0
@@ -2136,7 +2210,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338688+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425456+00:00",
       "listingPrice": 157.7,
       "gainPercent": 90.0,
       "gainRupees": 74.69999999999999
@@ -2163,7 +2237,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338715+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425473+00:00",
       "listingPrice": 225.2,
       "gainPercent": 12.6,
       "gainRupees": 25.19999999999999
@@ -2190,7 +2264,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338743+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425490+00:00",
       "listingPrice": 746.3,
       "gainPercent": 74.0,
       "gainRupees": 317.29999999999995
@@ -2217,7 +2291,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338773+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425509+00:00",
       "listingPrice": 139.0,
       "gainPercent": 3.0,
       "gainRupees": 4.0
@@ -2244,7 +2318,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338804+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425525+00:00",
       "listingPrice": 46.8,
       "gainPercent": -2.5,
       "gainRupees": -1.2000000000000028
@@ -2271,7 +2345,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338832+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425545+00:00",
       "listingPrice": 109.0,
       "gainPercent": 32.9,
       "gainRupees": 27.0
@@ -2298,7 +2372,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338859+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425562+00:00",
       "listingPrice": 150.0,
       "gainPercent": 66.7,
       "gainRupees": 60.0
@@ -2325,7 +2399,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338886+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425579+00:00",
       "listingPrice": 75.6,
       "gainPercent": -23.6,
       "gainRupees": -23.400000000000006
@@ -2352,7 +2426,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338913+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425596+00:00",
       "listingPrice": 111.0,
       "gainPercent": 9.9,
       "gainRupees": 10.0
@@ -2379,7 +2453,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338941+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425612+00:00",
       "listingPrice": 124.0,
       "gainPercent": -10.1,
       "gainRupees": -14.0
@@ -2406,7 +2480,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338970+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425629+00:00",
       "listingPrice": 72.0,
       "gainPercent": 35.9,
       "gainRupees": 19.0
@@ -2433,7 +2507,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338999+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425645+00:00",
       "listingPrice": 988.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -2460,7 +2534,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339026+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425661+00:00",
       "listingPrice": 99.0,
       "gainPercent": -2.9,
       "gainRupees": -3.0
@@ -2487,7 +2561,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339057+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425678+00:00",
       "listingPrice": 100.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -2514,7 +2588,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339086+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425712+00:00",
       "listingPrice": 956.0,
       "gainPercent": 21.3,
       "gainRupees": 168.0
@@ -2541,7 +2615,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339128+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425733+00:00",
       "listingPrice": 631.2,
       "gainPercent": 110.4,
       "gainRupees": 331.20000000000005
@@ -2568,7 +2642,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339165+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425750+00:00",
       "listingPrice": 185.2,
       "gainPercent": 15.8,
       "gainRupees": 25.19999999999999
@@ -2595,7 +2669,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339230+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425780+00:00",
       "listingPrice": 99.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -2622,7 +2696,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339265+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425809+00:00",
       "listingPrice": 162.0,
       "gainPercent": 40.3,
       "gainRupees": 41.0
@@ -2649,7 +2723,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339299+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425828+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -2676,7 +2750,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339335+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425846+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -2703,7 +2777,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339366+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425862+00:00",
       "listingPrice": 359.1,
       "gainPercent": 90.0,
       "gainRupees": 170.10000000000002
@@ -2730,7 +2804,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339396+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425883+00:00",
       "listingPrice": 230.0,
       "gainPercent": 74.2,
       "gainRupees": 98.0
@@ -2757,7 +2831,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339427+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425899+00:00",
       "listingPrice": 96.0,
       "gainPercent": 4.3,
       "gainRupees": 4.0
@@ -2784,7 +2858,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339461+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425917+00:00",
       "listingPrice": 458.0,
       "gainPercent": 60.7,
       "gainRupees": 173.0
@@ -2811,7 +2885,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339496+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425933+00:00",
       "listingPrice": 1193.8,
       "gainPercent": 37.1,
       "gainRupees": 322.79999999999995
@@ -2838,7 +2912,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339528+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425951+00:00",
       "listingPrice": 980.0,
       "gainPercent": 21.4,
       "gainRupees": 173.0
@@ -2865,7 +2939,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339560+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425965+00:00",
       "listingPrice": 165.0,
       "gainPercent": 17.9,
       "gainRupees": 25.0
@@ -2892,7 +2966,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339588+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425978+00:00",
       "listingPrice": 129.5,
       "gainPercent": 33.5,
       "gainRupees": 32.5
@@ -2919,7 +2993,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339619+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425991+00:00",
       "listingPrice": 285.0,
       "gainPercent": 34.4,
       "gainRupees": 73.0
@@ -2946,7 +3020,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339653+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426004+00:00",
       "listingPrice": 166.0,
       "gainPercent": 4.4,
       "gainRupees": 7.0
@@ -2973,7 +3047,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339687+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426018+00:00",
       "listingPrice": 180.0,
       "gainPercent": 2.9,
       "gainRupees": 5.0
@@ -3000,7 +3074,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339719+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426031+00:00",
       "listingPrice": 73.6,
       "gainPercent": 38.9,
       "gainRupees": 20.599999999999994
@@ -3027,7 +3101,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339748+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426044+00:00",
       "listingPrice": 135.0,
       "gainPercent": 43.6,
       "gainRupees": 41.0
@@ -3054,7 +3128,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339781+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426058+00:00",
       "listingPrice": 124.5,
       "gainPercent": 18.6,
       "gainRupees": 19.5
@@ -3081,7 +3155,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339810+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426072+00:00",
       "listingPrice": 70.0,
       "gainPercent": 16.7,
       "gainRupees": 10.0
@@ -3108,7 +3182,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339852+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426087+00:00",
       "listingPrice": 329.65,
       "gainPercent": 22.1,
       "gainRupees": 59.64999999999998
@@ -3135,7 +3209,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339882+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426101+00:00",
       "listingPrice": 158.0,
       "gainPercent": 21.5,
       "gainRupees": 28.0
@@ -3162,7 +3236,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339913+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426114+00:00",
       "listingPrice": 110.0,
       "gainPercent": 13.4,
       "gainRupees": 13.0
@@ -3189,7 +3263,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339942+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426130+00:00",
       "listingPrice": 120.0,
       "gainPercent": 25.0,
       "gainRupees": 24.0
@@ -3216,7 +3290,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339971+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426143+00:00",
       "listingPrice": 519.0,
       "gainPercent": 22.1,
       "gainRupees": 94.0
@@ -3243,7 +3317,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340001+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426156+00:00",
       "listingPrice": 170.0,
       "gainPercent": 6.9,
       "gainRupees": 11.0
@@ -3270,7 +3344,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340036+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426170+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -3297,7 +3371,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340071+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426184+00:00",
       "listingPrice": 470.0,
       "gainPercent": 56.1,
       "gainRupees": 169.0
@@ -3324,7 +3398,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340104+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426198+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -3351,7 +3425,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340137+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426211+00:00",
       "listingPrice": 265.3,
       "gainPercent": 32.0,
       "gainRupees": 64.30000000000001
@@ -3378,7 +3452,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340209+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426225+00:00",
       "listingPrice": 102.2,
       "gainPercent": 9.9,
       "gainRupees": 9.200000000000003
@@ -3405,7 +3479,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340250+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426238+00:00",
       "listingPrice": 394.0,
       "gainPercent": 9.4,
       "gainRupees": 34.0
@@ -3432,7 +3506,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340284+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426254+00:00",
       "listingPrice": 628.9,
       "gainPercent": 90.0,
       "gainRupees": 297.9
@@ -3459,7 +3533,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340318+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426267+00:00",
       "listingPrice": 703.0,
       "gainPercent": 45.0,
       "gainRupees": 218.0
@@ -3486,7 +3560,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340357+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426280+00:00",
       "listingPrice": 460.0,
       "gainPercent": 8.2,
       "gainRupees": 35.0
@@ -3513,7 +3587,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340389+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426293+00:00",
       "listingPrice": 130.1,
       "gainPercent": 2.4,
       "gainRupees": 3.0999999999999943
@@ -3540,7 +3614,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340416+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426306+00:00",
       "listingPrice": 504.0,
       "gainPercent": 18.9,
       "gainRupees": 80.0
@@ -3567,7 +3641,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340444+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426318+00:00",
       "listingPrice": 574.0,
       "gainPercent": 37.0,
       "gainRupees": 155.0
@@ -3594,7 +3668,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340472+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426333+00:00",
       "listingPrice": 205.0,
       "gainPercent": 9.6,
       "gainRupees": 18.0
@@ -3621,7 +3695,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340498+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426345+00:00",
       "listingPrice": 87.0,
       "gainPercent": 13.0,
       "gainRupees": 10.0
@@ -3648,7 +3722,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340524+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426358+00:00",
       "listingPrice": 610.0,
       "gainPercent": 6.3,
       "gainRupees": 36.0
@@ -3675,7 +3749,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340550+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426371+00:00",
       "listingPrice": 133.0,
       "gainPercent": 90.0,
       "gainRupees": 63.0
@@ -3702,7 +3776,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340582+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426384+00:00",
       "listingPrice": 418.0,
       "gainPercent": 90.0,
       "gainRupees": 198.0
@@ -3729,7 +3803,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340610+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426397+00:00",
       "listingPrice": 192.0,
       "gainPercent": 42.2,
       "gainRupees": 57.0
@@ -3756,7 +3830,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340638+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426409+00:00",
       "listingPrice": 187.0,
       "gainPercent": 35.5,
       "gainRupees": 49.0
@@ -3783,7 +3857,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340664+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426422+00:00",
       "listingPrice": 69.0,
       "gainPercent": 15.0,
       "gainRupees": 9.0
@@ -3810,7 +3884,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340689+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426435+00:00",
       "listingPrice": 89.0,
       "gainPercent": 6.0,
       "gainRupees": 5.0
@@ -3837,7 +3911,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340722+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426448+00:00",
       "listingPrice": 44.0,
       "gainPercent": 4.8,
       "gainRupees": 2.0
@@ -3864,7 +3938,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340749+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426461+00:00",
       "listingPrice": 54.4,
       "gainPercent": 2.6,
       "gainRupees": 1.3999999999999986
@@ -3891,7 +3965,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340775+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426473+00:00",
       "listingPrice": 156.8,
       "gainPercent": -20.0,
       "gainRupees": -39.19999999999999
@@ -3918,7 +3992,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340803+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426487+00:00",
       "listingPrice": 114.5,
       "gainPercent": 2.2,
       "gainRupees": 2.5
@@ -3945,7 +4019,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340829+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426500+00:00",
       "listingPrice": 166.0,
       "gainPercent": 67.7,
       "gainRupees": 67.0
@@ -3972,7 +4046,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340854+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426513+00:00",
       "listingPrice": 196.15,
       "gainPercent": 66.2,
       "gainRupees": 78.15
@@ -3999,7 +4073,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340882+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426525+00:00",
       "listingPrice": 68.0,
       "gainPercent": 3.0,
       "gainRupees": 2.0
@@ -4026,7 +4100,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340908+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426539+00:00",
       "listingPrice": 78.25,
       "gainPercent": 11.8,
       "gainRupees": 8.25
@@ -4053,7 +4127,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340934+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426551+00:00",
       "listingPrice": 269.0,
       "gainPercent": 25.7,
       "gainRupees": 55.0
@@ -4080,7 +4154,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340959+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426564+00:00",
       "listingPrice": 186.0,
       "gainPercent": 9.4,
       "gainRupees": 16.0
@@ -4107,7 +4181,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340988+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426577+00:00",
       "listingPrice": 242.0,
       "gainPercent": 7.6,
       "gainRupees": 17.0
@@ -4134,7 +4208,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341017+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426590+00:00",
       "listingPrice": 655.0,
       "gainPercent": 11.0,
       "gainRupees": 65.0
@@ -4161,7 +4235,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341045+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426603+00:00",
       "listingPrice": 283.1,
       "gainPercent": 90.0,
       "gainRupees": 134.10000000000002
@@ -4188,7 +4262,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341077+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426615+00:00",
       "listingPrice": 102.95,
       "gainPercent": -19.6,
       "gainRupees": -25.049999999999997
@@ -4215,7 +4289,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341107+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426630+00:00",
       "listingPrice": 395.2,
       "gainPercent": 90.0,
       "gainRupees": 187.2
@@ -4242,7 +4316,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341135+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426643+00:00",
       "listingPrice": 257.0,
       "gainPercent": -19.9,
       "gainRupees": -64.0
@@ -4269,7 +4343,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341165+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426656+00:00",
       "listingPrice": 211.0,
       "gainPercent": 3.9,
       "gainRupees": 8.0
@@ -4296,7 +4370,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341241+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426668+00:00",
       "listingPrice": 186.0,
       "gainPercent": 46.5,
       "gainRupees": 59.0
@@ -4323,7 +4397,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341272+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426681+00:00",
       "listingPrice": 151.0,
       "gainPercent": 46.6,
       "gainRupees": 48.0
@@ -4350,7 +4424,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341309+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426715+00:00",
       "listingPrice": 275.4,
       "gainPercent": 43.4,
       "gainRupees": 83.39999999999998
@@ -4377,7 +4451,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341340+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426730+00:00",
       "listingPrice": 48.0,
       "gainPercent": 6.7,
       "gainRupees": 3.0
@@ -4404,7 +4478,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341373+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426743+00:00",
       "listingPrice": 68.0,
       "gainPercent": -34.6,
       "gainRupees": -36.0
@@ -4433,7 +4507,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338365+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425311+00:00",
       "listingPrice": 221.0,
       "gainPercent": 24.9,
       "gainRupees": 44.0
@@ -4460,7 +4534,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338464+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425349+00:00",
       "listingPrice": 239.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -4487,7 +4561,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338503+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425370+00:00",
       "listingPrice": 112.1,
       "gainPercent": 90.0,
       "gainRupees": 53.099999999999994
@@ -4514,7 +4588,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338543+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425389+00:00",
       "listingPrice": 81.6,
       "gainPercent": -20.0,
       "gainRupees": -20.400000000000006
@@ -4541,7 +4615,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338585+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425406+00:00",
       "listingPrice": 539.02,
       "gainPercent": -6.3,
       "gainRupees": -35.98000000000002
@@ -4568,7 +4642,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338623+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425423+00:00",
       "listingPrice": 56.0,
       "gainPercent": 3.7,
       "gainRupees": 2.0
@@ -4595,7 +4669,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338658+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425439+00:00",
       "listingPrice": 140.0,
       "gainPercent": 52.2,
       "gainRupees": 48.0
@@ -4622,7 +4696,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338688+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425456+00:00",
       "listingPrice": 157.7,
       "gainPercent": 90.0,
       "gainRupees": 74.69999999999999
@@ -4649,7 +4723,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338715+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425473+00:00",
       "listingPrice": 225.2,
       "gainPercent": 12.6,
       "gainRupees": 25.19999999999999
@@ -4676,7 +4750,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338743+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425490+00:00",
       "listingPrice": 746.3,
       "gainPercent": 74.0,
       "gainRupees": 317.29999999999995
@@ -4703,7 +4777,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338773+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425509+00:00",
       "listingPrice": 139.0,
       "gainPercent": 3.0,
       "gainRupees": 4.0
@@ -4730,7 +4804,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338804+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425525+00:00",
       "listingPrice": 46.8,
       "gainPercent": -2.5,
       "gainRupees": -1.2000000000000028
@@ -4757,7 +4831,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338832+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425545+00:00",
       "listingPrice": 109.0,
       "gainPercent": 32.9,
       "gainRupees": 27.0
@@ -4784,7 +4858,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338859+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425562+00:00",
       "listingPrice": 150.0,
       "gainPercent": 66.7,
       "gainRupees": 60.0
@@ -4811,7 +4885,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338886+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425579+00:00",
       "listingPrice": 75.6,
       "gainPercent": -23.6,
       "gainRupees": -23.400000000000006
@@ -4838,7 +4912,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "2026-09-17",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338913+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425596+00:00",
       "listingPrice": 111.0,
       "gainPercent": 9.9,
       "gainRupees": 10.0
@@ -4865,7 +4939,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338941+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425612+00:00",
       "listingPrice": 124.0,
       "gainPercent": -10.1,
       "gainRupees": -14.0
@@ -4892,7 +4966,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338970+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425629+00:00",
       "listingPrice": 72.0,
       "gainPercent": 35.9,
       "gainRupees": 19.0
@@ -4919,7 +4993,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.338999+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425645+00:00",
       "listingPrice": 988.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -4946,7 +5020,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339026+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425661+00:00",
       "listingPrice": 99.0,
       "gainPercent": -2.9,
       "gainRupees": -3.0
@@ -4973,7 +5047,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339057+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425678+00:00",
       "listingPrice": 100.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -5000,7 +5074,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339086+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425712+00:00",
       "listingPrice": 956.0,
       "gainPercent": 21.3,
       "gainRupees": 168.0
@@ -5027,7 +5101,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339128+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425733+00:00",
       "listingPrice": 631.2,
       "gainPercent": 110.4,
       "gainRupees": 331.20000000000005
@@ -5054,7 +5128,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339165+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425750+00:00",
       "listingPrice": 185.2,
       "gainPercent": 15.8,
       "gainRupees": 25.19999999999999
@@ -5081,7 +5155,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339230+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425780+00:00",
       "listingPrice": 99.0,
       "gainPercent": 0.0,
       "gainRupees": 0.0
@@ -5108,7 +5182,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339265+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425809+00:00",
       "listingPrice": 162.0,
       "gainPercent": 40.3,
       "gainRupees": 41.0
@@ -5135,7 +5209,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339299+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425828+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -5162,7 +5236,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339335+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425846+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -5189,7 +5263,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339366+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425862+00:00",
       "listingPrice": 359.1,
       "gainPercent": 90.0,
       "gainRupees": 170.10000000000002
@@ -5216,7 +5290,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339396+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425883+00:00",
       "listingPrice": 230.0,
       "gainPercent": 74.2,
       "gainRupees": 98.0
@@ -5243,7 +5317,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339427+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425899+00:00",
       "listingPrice": 96.0,
       "gainPercent": 4.3,
       "gainRupees": 4.0
@@ -5270,7 +5344,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339461+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425917+00:00",
       "listingPrice": 458.0,
       "gainPercent": 60.7,
       "gainRupees": 173.0
@@ -5297,7 +5371,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339496+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425933+00:00",
       "listingPrice": 1193.8,
       "gainPercent": 37.1,
       "gainRupees": 322.79999999999995
@@ -5324,7 +5398,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339528+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425951+00:00",
       "listingPrice": 980.0,
       "gainPercent": 21.4,
       "gainRupees": 173.0
@@ -5351,7 +5425,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339560+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425965+00:00",
       "listingPrice": 165.0,
       "gainPercent": 17.9,
       "gainRupees": 25.0
@@ -5378,7 +5452,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339588+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425978+00:00",
       "listingPrice": 129.5,
       "gainPercent": 33.5,
       "gainRupees": 32.5
@@ -5405,7 +5479,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339619+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.425991+00:00",
       "listingPrice": 285.0,
       "gainPercent": 34.4,
       "gainRupees": 73.0
@@ -5432,7 +5506,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339653+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426004+00:00",
       "listingPrice": 166.0,
       "gainPercent": 4.4,
       "gainRupees": 7.0
@@ -5459,7 +5533,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339687+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426018+00:00",
       "listingPrice": 180.0,
       "gainPercent": 2.9,
       "gainRupees": 5.0
@@ -5486,7 +5560,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339719+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426031+00:00",
       "listingPrice": 73.6,
       "gainPercent": 38.9,
       "gainRupees": 20.599999999999994
@@ -5513,7 +5587,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339748+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426044+00:00",
       "listingPrice": 135.0,
       "gainPercent": 43.6,
       "gainRupees": 41.0
@@ -5540,7 +5614,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339781+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426058+00:00",
       "listingPrice": 124.5,
       "gainPercent": 18.6,
       "gainRupees": 19.5
@@ -5567,7 +5641,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339810+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426072+00:00",
       "listingPrice": 70.0,
       "gainPercent": 16.7,
       "gainRupees": 10.0
@@ -5594,7 +5668,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339852+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426087+00:00",
       "listingPrice": 329.65,
       "gainPercent": 22.1,
       "gainRupees": 59.64999999999998
@@ -5621,7 +5695,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339882+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426101+00:00",
       "listingPrice": 158.0,
       "gainPercent": 21.5,
       "gainRupees": 28.0
@@ -5648,7 +5722,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339913+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426114+00:00",
       "listingPrice": 110.0,
       "gainPercent": 13.4,
       "gainRupees": 13.0
@@ -5675,7 +5749,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339942+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426130+00:00",
       "listingPrice": 120.0,
       "gainPercent": 25.0,
       "gainRupees": 24.0
@@ -5702,7 +5776,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.339971+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426143+00:00",
       "listingPrice": 519.0,
       "gainPercent": 22.1,
       "gainRupees": 94.0
@@ -5729,7 +5803,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340001+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426156+00:00",
       "listingPrice": 170.0,
       "gainPercent": 6.9,
       "gainRupees": 11.0
@@ -5756,7 +5830,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340036+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426170+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -5783,7 +5857,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340071+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426184+00:00",
       "listingPrice": 470.0,
       "gainPercent": 56.1,
       "gainRupees": 169.0
@@ -5810,7 +5884,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340104+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426198+00:00",
       "listingPrice": null,
       "gainPercent": null,
       "gainRupees": null
@@ -5837,7 +5911,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340137+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426211+00:00",
       "listingPrice": 265.3,
       "gainPercent": 32.0,
       "gainRupees": 64.30000000000001
@@ -5864,7 +5938,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340209+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426225+00:00",
       "listingPrice": 102.2,
       "gainPercent": 9.9,
       "gainRupees": 9.200000000000003
@@ -5891,7 +5965,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340250+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426238+00:00",
       "listingPrice": 394.0,
       "gainPercent": 9.4,
       "gainRupees": 34.0
@@ -5918,7 +5992,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340284+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426254+00:00",
       "listingPrice": 628.9,
       "gainPercent": 90.0,
       "gainRupees": 297.9
@@ -5945,7 +6019,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340318+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426267+00:00",
       "listingPrice": 703.0,
       "gainPercent": 45.0,
       "gainRupees": 218.0
@@ -5972,7 +6046,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340357+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426280+00:00",
       "listingPrice": 460.0,
       "gainPercent": 8.2,
       "gainRupees": 35.0
@@ -5999,7 +6073,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340389+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426293+00:00",
       "listingPrice": 130.1,
       "gainPercent": 2.4,
       "gainRupees": 3.0999999999999943
@@ -6026,7 +6100,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340416+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426306+00:00",
       "listingPrice": 504.0,
       "gainPercent": 18.9,
       "gainRupees": 80.0
@@ -6053,7 +6127,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340444+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426318+00:00",
       "listingPrice": 574.0,
       "gainPercent": 37.0,
       "gainRupees": 155.0
@@ -6080,7 +6154,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340472+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426333+00:00",
       "listingPrice": 205.0,
       "gainPercent": 9.6,
       "gainRupees": 18.0
@@ -6107,7 +6181,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340498+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426345+00:00",
       "listingPrice": 87.0,
       "gainPercent": 13.0,
       "gainRupees": 10.0
@@ -6134,7 +6208,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340524+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426358+00:00",
       "listingPrice": 610.0,
       "gainPercent": 6.3,
       "gainRupees": 36.0
@@ -6161,7 +6235,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340550+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426371+00:00",
       "listingPrice": 133.0,
       "gainPercent": 90.0,
       "gainRupees": 63.0
@@ -6188,7 +6262,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340582+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426384+00:00",
       "listingPrice": 418.0,
       "gainPercent": 90.0,
       "gainRupees": 198.0
@@ -6215,7 +6289,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340610+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426397+00:00",
       "listingPrice": 192.0,
       "gainPercent": 42.2,
       "gainRupees": 57.0
@@ -6242,7 +6316,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340638+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426409+00:00",
       "listingPrice": 187.0,
       "gainPercent": 35.5,
       "gainRupees": 49.0
@@ -6269,7 +6343,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340664+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426422+00:00",
       "listingPrice": 69.0,
       "gainPercent": 15.0,
       "gainRupees": 9.0
@@ -6296,7 +6370,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340689+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426435+00:00",
       "listingPrice": 89.0,
       "gainPercent": 6.0,
       "gainRupees": 5.0
@@ -6323,7 +6397,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340722+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426448+00:00",
       "listingPrice": 44.0,
       "gainPercent": 4.8,
       "gainRupees": 2.0
@@ -6350,7 +6424,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340749+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426461+00:00",
       "listingPrice": 54.4,
       "gainPercent": 2.6,
       "gainRupees": 1.3999999999999986
@@ -6377,7 +6451,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340775+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426473+00:00",
       "listingPrice": 156.8,
       "gainPercent": -20.0,
       "gainRupees": -39.19999999999999
@@ -6404,7 +6478,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340803+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426487+00:00",
       "listingPrice": 114.5,
       "gainPercent": 2.2,
       "gainRupees": 2.5
@@ -6431,7 +6505,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340829+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426500+00:00",
       "listingPrice": 166.0,
       "gainPercent": 67.7,
       "gainRupees": 67.0
@@ -6458,7 +6532,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340854+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426513+00:00",
       "listingPrice": 196.15,
       "gainPercent": 66.2,
       "gainRupees": 78.15
@@ -6485,7 +6559,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340882+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426525+00:00",
       "listingPrice": 68.0,
       "gainPercent": 3.0,
       "gainRupees": 2.0
@@ -6512,7 +6586,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340908+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426539+00:00",
       "listingPrice": 78.25,
       "gainPercent": 11.8,
       "gainRupees": 8.25
@@ -6539,7 +6613,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340934+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426551+00:00",
       "listingPrice": 269.0,
       "gainPercent": 25.7,
       "gainRupees": 55.0
@@ -6566,7 +6640,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340959+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426564+00:00",
       "listingPrice": 186.0,
       "gainPercent": 9.4,
       "gainRupees": 16.0
@@ -6593,7 +6667,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.340988+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426577+00:00",
       "listingPrice": 242.0,
       "gainPercent": 7.6,
       "gainRupees": 17.0
@@ -6620,7 +6694,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341017+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426590+00:00",
       "listingPrice": 655.0,
       "gainPercent": 11.0,
       "gainRupees": 65.0
@@ -6647,7 +6721,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341045+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426603+00:00",
       "listingPrice": 283.1,
       "gainPercent": 90.0,
       "gainRupees": 134.10000000000002
@@ -6674,7 +6748,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341077+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426615+00:00",
       "listingPrice": 102.95,
       "gainPercent": -19.6,
       "gainRupees": -25.049999999999997
@@ -6701,7 +6775,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341107+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426630+00:00",
       "listingPrice": 395.2,
       "gainPercent": 90.0,
       "gainRupees": 187.2
@@ -6728,7 +6802,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341135+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426643+00:00",
       "listingPrice": 257.0,
       "gainPercent": -19.9,
       "gainRupees": -64.0
@@ -6755,7 +6829,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341165+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426656+00:00",
       "listingPrice": 211.0,
       "gainPercent": 3.9,
       "gainRupees": 8.0
@@ -6782,7 +6856,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341241+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426668+00:00",
       "listingPrice": 186.0,
       "gainPercent": 46.5,
       "gainRupees": 59.0
@@ -6809,7 +6883,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341272+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426681+00:00",
       "listingPrice": 151.0,
       "gainPercent": 46.6,
       "gainRupees": 48.0
@@ -6836,7 +6910,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341309+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426715+00:00",
       "listingPrice": 275.4,
       "gainPercent": 43.4,
       "gainRupees": 83.39999999999998
@@ -6863,7 +6937,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341340+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426730+00:00",
       "listingPrice": 48.0,
       "gainPercent": 6.7,
       "gainRupees": 3.0
@@ -6890,7 +6964,7 @@
       "source": "Google Sheet IPO Tracker",
       "source_url": "",
       "gmp_source": "IPO Ji / IPO360 / IPOSathi",
-      "gmp_updated_at": "2026-09-25T06:39:48.341373+00:00",
+      "gmp_updated_at": "2026-09-25T09:21:40.426743+00:00",
       "listingPrice": 68.0,
       "gainPercent": -34.6,
       "gainRupees": -36.0
@@ -6898,31 +6972,31 @@
   ],
   "news": [
     {
-      "title": "Orient Cables IPO Day 1: Subscribed 0.33x; Retail leads at 0.47x - scanx.trade",
+      "title": "Himalayan Solar IPO GMP, Grey Market Premium Today - IPO Watch",
       "date": "2026-09-25",
-      "source": "scanx.trade",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNSGpIQjVzcktJaUlna3lpOFZWaVlyeGZrS2ZJSXdrdDFZbm1ZQVdrVHE2MTh0R0IwdXNISWdQblpDVXBNMWpUMzdLTzE3a010OHE5Qk00WUtoYm80RjZjdk5rUzdkSkFJZVcxZzN2cERYSUFUX1pqbW84cXlMOVJ6Vy11VzdWVExkaVItYk8xSUx3RWNEQUpjSWVJRjBxV0lzMVZNRkJVUVlXOFhPRXN3?oc=5",
-      "published_at": "2026-09-25T06:07:56+00:00",
-      "topic": "IPO News",
-      "ipo_name": "Orient Cables (India) Limited",
-      "ipo_status": "open"
-    },
-    {
-      "title": "Himalayan Solar IPO Day 1: Subscribed 0.02x; Retail leads demand at 0.06x - scanx.trade",
-      "date": "2026-09-25",
-      "source": "scanx.trade",
-      "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQU3cxUlZLZTJHdk5RY245T1Rub1Eyd1dLVDN4TWplMXQxc0IzbFF2dzlFRUNwVWtxMXFsNlNaOFprVkktNWRrOHVSN0V2VEFUNFRtUngzazFDazRfNzFaQW00dUJDellJcG1PeWhEcXRjUVp1dE5rLV9RbU5rZDZSakV1UDRqeVQ3ZlpReE5ULURRLU5KaUtrYWJQZGpmR2JzMTRiSG5yb0l6bi1SajNWZ3BQZWFqZ0l0d2Nv?oc=5",
-      "published_at": "2026-09-25T05:59:56+00:00",
+      "source": "IPO Watch",
+      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE9nVUE1eUpIb1RaUm1lNGVJaUZvVlpJRGl0Q09NSG5MWHltVzl3MFcxVklsSjFqTFV6Uy1uRmU5dkpPX3lZSTV1amw5VVN3QjhkblhyQjd3dGtjSl83TVZublhUSGpHTkZKVm9YbjZSRGtuUQ?oc=5",
+      "published_at": "2026-09-25T08:37:40+00:00",
       "topic": "IPO News",
       "ipo_name": "Himalayan Solar Limited",
       "ipo_status": "open"
     },
     {
-      "title": "Swastika Infra Launches IPO of INR 128.50 crore - Wire & Cable India",
+      "title": "Ugandan national held with cocaine at Ahmedabad airport - DeshGujarat",
       "date": "2026-09-25",
-      "source": "Wire & Cable India",
-      "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5kTkNpMTJIM25INnZxMi1pSWJacUtfdUJEbzRJTlQ1aFFPbmJORTNrbFRBWldzVTlNTGJUSlFPQXVxVms0RDVqT21tYUZWaVVieUZNSlNqU3djNHZnWEhENktpcw?oc=5",
-      "published_at": "2026-09-25T05:54:09+00:00",
+      "source": "DeshGujarat",
+      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPSXNBMFhtUHZUcWs2OW5ZTlpnWWhYM0ZPbWJnTHpPMnRsS0ZIVjNzdFp1SU52WGhMeE5YOHIwcUQyMmo0dnh3UXVkTmRuQTBhbi1scWhQWURfY2ttV2t3Vm5jVUFWRmhxdlMtYWtWdUdRM3ZWV2tMNkNkU2RtbWlkNTN5bURNTGE1QTFHWVJCWWswZFNWOUE?oc=5",
+      "published_at": "2026-09-25T08:07:30+00:00",
+      "topic": "IPO News",
+      "ipo_name": "Elevate Campuses Limited",
+      "ipo_status": "open"
+    },
+    {
+      "title": "Swastika Infra IPO Subscription Status - IPO Watch",
+      "date": "2026-09-25",
+      "source": "IPO Watch",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1ncGFET18yYnY3Wm9DUzdROWFoekZVQ1ZoWTN6VWUxM0thT3ZRM0ptcWhzOUNEa3RfWXlIQUZTal9KXzRqeGJEb1dIUG82M0NoOWNvTmpvZlZaczVZc3c3SWtaOFhDcnlUaTdz?oc=5",
+      "published_at": "2026-09-25T07:56:19+00:00",
       "topic": "IPO News",
       "ipo_name": "Swastika Infra Limited",
       "ipo_status": "open"
@@ -6932,9 +7006,19 @@
       "date": "2026-09-25",
       "source": "IPO Watch",
       "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9hYklWeGgteUkyZEx3cXpCSHNSRi1LdTFxeEhSQ2NuVWo1MUxMRTBmOFZVV0RLTU0wT0NyN2w0YWdzRGhfTE5acFBRbXBBclpBbW45M011VExfOVdIYUNyeGktNlpJOXZZd3hJ?oc=5",
-      "published_at": "2026-09-25T02:15:28+00:00",
+      "published_at": "2026-09-25T08:17:18+00:00",
       "topic": "IPO News",
       "ipo_name": "Srit India Limited",
+      "ipo_status": "upcoming"
+    },
+    {
+      "title": "Shah Investor’s Home’s IPO Opens On 28 Sept - fintechbiznews.com",
+      "date": "2026-09-25",
+      "source": "fintechbiznews.com",
+      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPZnVSdlJkbDJIeG5ZOWhaZzBpMGVPaEZSZ2xockkzcnZ0Znp2d2hyWXJfS1ZMT2pzZWpiLXNVOTRSNkN1eHl5R3NXT1lSMDlqbklTM08tREJGdEhYR2ZLbVVjS1hjYVpvem9xMm9vTXBvUjVEMGxzU2MydGZPeElvM3RvRXFmMnR2RUVoRGVUYm9HTFBkXzRn?oc=5",
+      "published_at": "2026-09-25T06:25:03+00:00",
+      "topic": "IPO News",
+      "ipo_name": "Shah Investor's Home Limited",
       "ipo_status": "upcoming"
     },
     {
@@ -6943,16 +7027,6 @@
       "source": "fintechbiznews.com",
       "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPeDRKNWVtT0N2b1FJXzhDcnRDU3lJaG4wanptNEo5SmJhNmtxUU1KU2NMMnFOM1pHSEtvR2Yyc2pIcEVGU3Zob2lDZy1IR244YmtETWJtX0pkY3BiNjh6Qm5UXzVqNHcyR29WSENSTUpkbG5pcWQzVjRUdWNfcDVObUpB?oc=5",
       "published_at": "2026-09-24T16:19:33+00:00",
-      "topic": "IPO News",
-      "ipo_name": "Srit India Limited",
-      "ipo_status": "upcoming"
-    },
-    {
-      "title": "SRIT India IPO Date, Review, Price, Allotment Details - IPO Watch",
-      "date": "2026-09-23",
-      "source": "IPO Watch",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5pNV9JVWJ3Vm5lNDhwMTgwRVNfTzQwaTZtTW5sY1JJX2hwaDBVQm5GYzd5Rk9IRmJrUndLc1J5LUdyMVRHNnFaNlBYVQ?oc=5",
-      "published_at": "2026-09-23T18:40:42+00:00",
       "topic": "IPO News",
       "ipo_name": "Srit India Limited",
       "ipo_status": "upcoming"

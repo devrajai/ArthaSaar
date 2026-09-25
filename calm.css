@@ -1,5 +1,5 @@
 /* ============================================================
-   calm.css v5 — ARTHASAAR PREMIUM (reference header) (full new look, 25 Sep)
+   calm.css v6 — ARTHASAAR PREMIUM (compact header) (full new look, 25 Sep)
    Pro arrangement: command-bar header · desk summary · 2-col tiles
    numbered sections · dense tables · mono micro-labels.
    Palette: light blue = calm · light green = growth · amber = action · red = risk
@@ -45,15 +45,17 @@ body{
 
 /* ---------- header: command bar ---------- */
 header{border-bottom:1px solid var(--hair);padding:15px 0 12px}
-header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.45em;line-height:1.1}
+header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.2em;line-height:1.1}
+header h1::after{content:"";display:block;height:2px;border-radius:2px;margin-top:5px;
+  background:linear-gradient(90deg,var(--blue),var(--up))}
 header h1 em{font-style:normal;color:var(--blue)}
 header .logo{background:none !important;border:none !important;color:transparent !important;font-size:0 !important;
   width:44px;height:44px;padding:0 !important;display:flex;align-items:center;box-shadow:none !important}
 header .logo svg{width:44px;height:44px}
-header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase;font-size:7.5px;font-family:var(--mono)}
-#clock{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.02em}
-#clockdate{font-size:9px;color:var(--faint);font-family:var(--mono);letter-spacing:.06em}
-.meta-row{color:var(--faint);font-size:9px;letter-spacing:.04em;font-family:var(--mono)}
+header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase;font-size:6.5px;font-family:var(--mono)}
+.clockbox{display:none !important}
+.meta-row{display:none !important}
+.header-right{align-self:flex-start;margin-top:3px}
 .pill{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;padding:5px 9px;border-radius:6px;
   background:var(--panel2);border:1px solid var(--hair);color:var(--dim);font-weight:600}
 .dot{width:6px;height:6px}
@@ -74,7 +76,7 @@ header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase
 .as-tape{overflow:hidden;background:var(--panel);border:1px solid var(--hair);border-radius:9px;
   margin:10px 0;padding:8px 0}
 .as-tape-in{display:flex;gap:26px;white-space:nowrap;animation:asmv 28s linear infinite;
-  font-family:var(--mono);font-size:10.5px;width:max-content}
+  font-family:var(--mono);font-size:9.5px;width:max-content}
 @keyframes asmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .as-tape-in b{color:var(--dim);font-weight:500;letter-spacing:.05em}
 .as-tape-in .t{font-weight:600}
@@ -95,7 +97,7 @@ header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase
 
 /* ---------- home grid: pro tiles ---------- */
 .homegrid{grid-template-columns:repeat(2,1fr);gap:10px}
-.hgroup{display:flex;align-items:center;gap:10px;margin:20px 0 9px;font-size:9.5px;
+.hgroup{display:flex;align-items:center;gap:10px;margin:18px 0 8px;font-size:8.5px;
   letter-spacing:.24em;color:var(--faint);font-weight:600;font-family:var(--mono)}
 .hgroup::after{content:"";flex:1;height:1px;background:var(--hair)}
 .tile{display:grid;grid-template-columns:38px 1fr;grid-template-rows:auto auto;column-gap:11px;
@@ -103,9 +105,9 @@ header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase
   padding:13px;position:relative;box-shadow:none}
 .tile:active{border-color:var(--blue);background:var(--panel2)}
 .t-ic{grid-row:1/3;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-size:18px;background:linear-gradient(135deg,var(--blue-dim),var(--up-dim));border:1px solid var(--hair);flex:0 0 auto}
-.t-nm{grid-column:2;align-self:end;font-size:13.5px;font-weight:600;line-height:1.2}
-.t-sb{grid-column:2;align-self:start;font-size:8.5px;color:var(--faint);line-height:1.4;font-family:var(--mono);
+  font-size:16px;background:linear-gradient(135deg,var(--blue-dim),var(--up-dim));border:1px solid var(--hair);flex:0 0 auto}
+.t-nm{grid-column:2;align-self:end;font-size:12px;font-weight:600;line-height:1.2}
+.t-sb{grid-column:2;align-self:start;font-size:7.5px;color:var(--faint);line-height:1.4;font-family:var(--mono);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tile::after{content:"›";position:absolute;right:13px;top:50%;transform:translateY(-50%);
   color:var(--faint);font-family:var(--mono);font-size:17px}
@@ -114,7 +116,7 @@ header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase
 
 /* ---------- sections: numbered headers ---------- */
 section{counter-increment:sec}
-section h2{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--text);
+section h2{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--text);
   text-transform:uppercase;font-weight:700;margin-bottom:13px}
 section h2::before{content:"0" counter(sec);transform:none;width:auto;height:auto;border-radius:5px;
   background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);font-size:8.5px;
@@ -194,16 +196,16 @@ a{color:var(--blue)}
 /* ---------- hero panel ---------- */
 .as-hero{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--hair);
   border-radius:14px;padding:14px 14px 12px;margin:0 0 14px}
-.as-ht{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;
+.as-ht{display:flex;justify-content:space-between;font-family:var(--mono);font-size:7px;
   letter-spacing:.18em;color:var(--faint);margin-bottom:6px}
-.as-hv{font-family:'Space Grotesk',var(--font);font-size:27px;font-weight:700;letter-spacing:-.01em;
+.as-hv{font-family:'Space Grotesk',var(--font);font-size:23px;font-weight:700;letter-spacing:-.01em;
   margin-bottom:11px;font-variant-numeric:tabular-nums;line-height:1.1}
-.as-hv .u,.as-hv .d{font-size:13.5px;font-family:var(--mono);font-weight:600;margin-left:6px}
+.as-hv .u,.as-hv .d{font-size:12px;font-family:var(--mono);font-weight:600;margin-left:6px}
 .as-hv .u{color:var(--up)} .as-hv .d{color:var(--down)}
 .as-hg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);
   border:1px solid var(--hair);border-radius:10px;overflow:hidden}
 .as-hc{background:var(--panel);padding:8px 4px;text-align:center}
-.as-hc i{display:block;font-style:normal;font-family:var(--mono);font-size:7px;
+.as-hc i{display:block;font-style:normal;font-family:var(--mono);font-size:6.5px;
   letter-spacing:.14em;color:var(--faint);margin-bottom:3px}
-.as-hc b{font-family:var(--mono);font-size:11.5px;font-weight:700}
+.as-hc b{font-family:var(--mono);font-size:10.5px;font-weight:700}
 .as-hc b.u{color:var(--up)} .as-hc b.d{color:var(--down)}

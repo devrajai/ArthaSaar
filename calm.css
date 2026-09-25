@@ -1,5 +1,5 @@
 /* ============================================================
-   calm.css v4 — ARTHASAAR PREMIUM (full new look, 25 Sep)
+   calm.css v5 — ARTHASAAR PREMIUM (reference header) (full new look, 25 Sep)
    Pro arrangement: command-bar header · desk summary · 2-col tiles
    numbered sections · dense tables · mono micro-labels.
    Palette: light blue = calm · light green = growth · amber = action · red = risk
@@ -48,8 +48,8 @@ header{border-bottom:1px solid var(--hair);padding:15px 0 12px}
 header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.45em;line-height:1.1}
 header h1 em{font-style:normal;color:var(--blue)}
 header .logo{background:none !important;border:none !important;color:transparent !important;font-size:0 !important;
-  width:42px;height:48px;padding:0 !important;display:flex;align-items:center;box-shadow:none !important}
-header .logo svg{width:42px;height:48px}
+  width:44px;height:44px;padding:0 !important;display:flex;align-items:center;box-shadow:none !important}
+header .logo svg{width:44px;height:44px}
 header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase;font-size:7.5px;font-family:var(--mono)}
 #clock{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.02em}
 #clockdate{font-size:9px;color:var(--faint);font-family:var(--mono);letter-spacing:.06em}
@@ -60,18 +60,19 @@ header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase
 .dot.open{background:var(--up);box-shadow:0 0 6px var(--up)}
 .dot.closed{background:var(--down)}
 .dot.pre{background:var(--amber)}
-#themeBtn{font-family:var(--mono);font-size:13px;width:32px;height:32px;border-radius:8px;
-  background:var(--panel2);border:1px solid var(--hair);color:var(--dim)}
+#themeBtn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;width:auto;
+  height:32px;padding:0 13px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,var(--blue),var(--up));color:#0a1622}
 #refreshBtn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:5px 11px;border-radius:7px;
   background:linear-gradient(135deg,var(--blue),var(--up));border:none;color:#0a1622;font-weight:700}
-#themeBtn:active{border-color:var(--blue)}
 
-/* ---------- green line REMOVED ---------- */
-.as-rline{display:none !important}
+/* ---------- gradient rline (reference design) ---------- */
+.as-rline{height:2px;border-radius:2px;margin:2px 0 10px;
+  background:linear-gradient(90deg,var(--blue),var(--up))}
 
 /* ---------- ticker tape ---------- */
 .as-tape{overflow:hidden;background:var(--panel);border:1px solid var(--hair);border-radius:9px;
-  margin:12px 0;padding:8px 0}
+  margin:10px 0;padding:8px 0}
 .as-tape-in{display:flex;gap:26px;white-space:nowrap;animation:asmv 28s linear infinite;
   font-family:var(--mono);font-size:10.5px;width:max-content}
 @keyframes asmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}

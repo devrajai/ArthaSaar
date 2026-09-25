@@ -13,6 +13,7 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 # name -> yahoo symbol
 SERIES = {
     "S&P 500": "^GSPC",
+    "SENSEX": "^BSESN",
     "Nasdaq Composite": "^IXIC",
     "Dow Jones": "^DJI",
     "Nikkei 225": "^N225",

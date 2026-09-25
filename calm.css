@@ -1,7 +1,8 @@
 /* ============================================================
-   calm.css v2 — ARTHASAAR CALM TERMINAL "full clothes" (v3 approved mockup)
-   Light blue = calm · light green = growth · amber = action · red = risk
-   Panels + hairlines + Space Grotesk / IBM Plex Mono. Same data, naye kapde.
+   calm.css v3 — ARTHASAAR PRO (full new look, 25 Sep)
+   Pro arrangement: command-bar header · desk summary · 2-col tiles
+   numbered sections · dense tables · mono micro-labels.
+   Palette: light blue = calm · light green = growth · amber = action · red = risk
    Overlay hai — purane class names kaam karte rahenge.
    NO backdrop-filter, NO position:sticky (locked rules)
    ============================================================ */
@@ -42,33 +43,35 @@ body{
   padding-bottom:34px;
 }
 
-/* ---------- header ---------- */
-header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.5em}
+/* ---------- header: command bar ---------- */
+header{border-bottom:1px solid var(--hair);padding:15px 0 12px}
+header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.45em;line-height:1.1}
 header h1 em{font-style:normal;color:var(--blue)}
 header .logo{background:none !important;border:none !important;color:transparent !important;font-size:0 !important;
-  width:44px;height:50px;padding:0 !important;display:flex;align-items:center;box-shadow:none !important}
-header .logo svg{width:44px;height:50px}
-header .tagline{color:var(--faint);letter-spacing:.06em;font-size:9.5px}
+  width:42px;height:48px;padding:0 !important;display:flex;align-items:center;box-shadow:none !important}
+header .logo svg{width:42px;height:48px}
+header .tagline{color:var(--faint);letter-spacing:.22em;text-transform:uppercase;font-size:7.5px;font-family:var(--mono)}
 #clock{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.02em}
-#clockdate{font-size:9px;color:var(--faint);font-family:var(--mono)}
-.meta-row{color:var(--faint);font-size:9.5px}
-.pill{font-family:var(--mono);font-size:9px;letter-spacing:.08em;padding:5px 9px;border-radius:6px;
-  background:var(--panel);border:1px solid var(--hair);color:var(--dim)}
+#clockdate{font-size:9px;color:var(--faint);font-family:var(--mono);letter-spacing:.06em}
+.meta-row{color:var(--faint);font-size:9px;letter-spacing:.04em;font-family:var(--mono)}
+.pill{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;padding:5px 9px;border-radius:6px;
+  background:var(--panel2);border:1px solid var(--hair);color:var(--dim);font-weight:600}
 .dot{width:6px;height:6px}
 .dot.open{background:var(--up);box-shadow:0 0 6px var(--up)}
 .dot.closed{background:var(--down)}
 .dot.pre{background:var(--amber)}
-#themeBtn{font-family:var(--mono);font-size:13px;width:34px;height:34px;border-radius:8px;
-  background:var(--panel);border:1px solid var(--hair);color:var(--dim)}
-#refreshBtn{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;padding:5px 10px;border-radius:7px;
-  background:var(--panel);border:1px solid var(--hair);color:var(--dim)}
-#themeBtn:active,#refreshBtn:active{border-color:var(--blue)}
+#themeBtn{font-family:var(--mono);font-size:13px;width:32px;height:32px;border-radius:8px;
+  background:var(--panel2);border:1px solid var(--hair);color:var(--dim)}
+#refreshBtn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:5px 11px;border-radius:7px;
+  background:linear-gradient(135deg,var(--blue),var(--up));border:none;color:#0a1622;font-weight:700}
+#themeBtn:active{border-color:var(--blue)}
 
-/* ---------- gradient line + ticker (v1) ---------- */
-.as-rline{height:2px;border-radius:2px;margin:2px 0 10px;
-  background:linear-gradient(90deg,var(--blue),var(--up))}
+/* ---------- green line REMOVED ---------- */
+.as-rline{display:none !important}
+
+/* ---------- ticker tape ---------- */
 .as-tape{overflow:hidden;background:var(--panel);border:1px solid var(--hair);border-radius:9px;
-  margin:10px 0;padding:8px 0}
+  margin:12px 0;padding:8px 0}
 .as-tape-in{display:flex;gap:26px;white-space:nowrap;animation:asmv 28s linear infinite;
   font-family:var(--mono);font-size:10.5px;width:max-content}
 @keyframes asmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -76,62 +79,88 @@ header .tagline{color:var(--faint);letter-spacing:.06em;font-size:9.5px}
 .as-tape-in .t{font-weight:600}
 .as-tape-in .u{color:var(--up)}.as-tape-in .d{color:var(--down)}
 
-/* ---------- home grid ---------- */
-.homegrid{gap:9px}
-.hgroup{font-size:9.5px;letter-spacing:.22em;color:var(--faint);font-weight:600;font-family:var(--mono);margin:18px 0 3px}
-.tile{background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:13px 10px;gap:5px;
-  box-shadow:none}
-.tile:active{border-color:var(--blue)}
-.t-ic{font-size:19px;line-height:1}
-.t-nm{font-size:12.5px;font-weight:600;line-height:1.25}
-.t-sb{font-size:9.5px;color:var(--faint);line-height:1.35;font-family:var(--mono);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.backbtn{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:7px 12px;border-radius:7px;
-  border:1px solid var(--hair);background:var(--panel);color:var(--dim);font-weight:500}
+/* ---------- desk summary strip ---------- */
+.as-desk{background:var(--panel);border:1px solid var(--hair);border-radius:13px;overflow:hidden;margin:0 0 14px}
+.as-dh{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;
+  background:var(--panel2);border-bottom:1px solid var(--hair2)}
+.as-dh b{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--dim);font-weight:600}
+.as-dh span{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:.08em}
+.as-dg{display:grid;grid-template-columns:repeat(4,1fr)}
+.as-dc{padding:10px 4px 9px;text-align:center;border-right:1px solid var(--hair2)}
+.as-dc:last-child{border-right:none}
+.as-dl{font-family:var(--mono);font-size:7.5px;letter-spacing:.16em;color:var(--faint);margin-bottom:4px}
+.as-dv{font-family:var(--mono);font-size:12px;font-weight:700}
+.as-dv.u{color:var(--up)} .as-dv.d{color:var(--down)}
 
-/* ---------- sections / cards ---------- */
-section h2{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);
-  text-transform:uppercase;margin-bottom:11px}
-section h2::before{content:"";width:8px;height:8px;border-radius:2px;transform:none;
-  background:linear-gradient(135deg,var(--blue),var(--up))}
-.card{background:var(--panel);border:1px solid var(--hair);border-radius:13px;
-  box-shadow:none;padding:13px;margin-bottom:11px}
+/* ---------- home grid: pro tiles ---------- */
+.homegrid{grid-template-columns:repeat(2,1fr);gap:10px}
+.hgroup{display:flex;align-items:center;gap:10px;margin:20px 0 9px;font-size:9.5px;
+  letter-spacing:.24em;color:var(--faint);font-weight:600;font-family:var(--mono)}
+.hgroup::after{content:"";flex:1;height:1px;background:var(--hair)}
+.tile{display:grid;grid-template-columns:38px 1fr;grid-template-rows:auto auto;column-gap:11px;
+  align-items:center;background:var(--panel);border:1px solid var(--hair);border-radius:13px;
+  padding:13px;position:relative;box-shadow:none}
+.tile:active{border-color:var(--blue);background:var(--panel2)}
+.t-ic{grid-row:1/3;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;background:var(--panel2);border:1px solid var(--hair);flex:0 0 auto}
+.t-nm{grid-column:2;align-self:end;font-size:13.5px;font-weight:600;line-height:1.2}
+.t-sb{grid-column:2;align-self:start;font-size:8.5px;color:var(--faint);line-height:1.4;font-family:var(--mono);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile::after{content:"›";position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  color:var(--faint);font-family:var(--mono);font-size:17px}
+.backbtn{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:7px 13px;border-radius:7px;
+  border:1px solid var(--hair);background:var(--panel);color:var(--dim);font-weight:600;text-transform:uppercase}
+
+/* ---------- sections: numbered headers ---------- */
+section{counter-increment:sec}
+section h2{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--text);
+  text-transform:uppercase;font-weight:700;margin-bottom:13px}
+section h2::before{content:"0" counter(sec);transform:none;width:auto;height:auto;border-radius:5px;
+  background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);font-size:8.5px;
+  padding:2px 6px;letter-spacing:.08em}
+section h2::after{content:"";flex:1;height:1px;background:var(--hair);margin-left:4px}
+.card{background:var(--panel);border:1px solid var(--hair);border-radius:14px;
+  box-shadow:none;padding:14px;margin-bottom:12px}
 .card.flat{box-shadow:none}
-.subhead{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
+.subhead{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.18em;text-transform:uppercase;font-weight:600}
 .note{font-size:11.5px;color:var(--dim)}
 footer{border-top:1px solid var(--hair);color:var(--faint)}
 .footer-note{font-size:9.5px;font-family:var(--mono);color:var(--faint)}
 
 /* ---------- kpi ---------- */
-.kpi{background:var(--panel);border:1px solid var(--hair);border-radius:11px;padding:11px 8px;text-align:center}
-.kpi .k-name{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:.14em;font-weight:500}
-.kpi .k-val{font-family:var(--mono);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;margin:4px 0 2px}
+.kpi{background:var(--panel);border:1px solid var(--hair);border-radius:11px;padding:12px 8px;text-align:center}
+.kpi .k-name{font-family:var(--mono);font-size:7.5px;color:var(--faint);letter-spacing:.16em;font-weight:500}
+.kpi .k-val{font-family:'Space Grotesk',var(--font);font-size:19px;font-weight:700;
+  font-variant-numeric:tabular-nums;margin:5px 0 2px;letter-spacing:-.01em}
 .kpi .k-chg{font-family:var(--mono);font-size:10.5px;font-weight:600}
 
-/* ---------- controls / buttons ---------- */
-.controls input,.controls select{font-family:var(--mono);font-size:11.5px;padding:9px 11px;
+/* ---------- controls / buttons: pro ---------- */
+.controls input,.controls select{font-family:var(--mono);font-size:11px;padding:10px 12px;
   border-radius:8px;border:1px solid var(--hair);background:var(--panel2);color:var(--text)}
 .controls input:focus,.controls select:focus{border-color:var(--blue)}
-.chip{font-family:var(--mono);font-size:10.5px;padding:8px 13px;border-radius:7px;
-  border:1px solid var(--hair);background:var(--panel);color:var(--dim);font-weight:500;letter-spacing:.03em}
+.chip{font-family:var(--mono);font-size:9px;padding:9px 13px;border-radius:7px;
+  border:1px solid var(--hair);background:var(--panel);color:var(--dim);font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase}
 .chip.on{background:var(--blue-dim);color:var(--blue);border-color:var(--blue)}
-.morebtn{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;padding:11px;border-radius:9px;
-  border:1px dashed var(--border2);background:var(--panel);color:var(--dim)}
-nav .tab{font-family:var(--mono);font-size:11px;padding:8px 13px;border-radius:9px;
-  border:1px solid var(--hair);background:var(--panel);color:var(--dim);font-weight:500}
-nav .tab.active{color:var(--text);background:var(--panel2);border-color:var(--blue)}
-.hchip{font-family:var(--mono);font-size:10.5px;padding:9px 13px;border-radius:8px;
-  background:var(--panel);border:1px solid var(--hair);font-weight:500}
+.morebtn{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;padding:12px;border-radius:9px;
+  border:1px dashed var(--border2);background:var(--panel);color:var(--dim);text-transform:uppercase;font-weight:600}
+nav .tab{font-family:var(--mono);font-size:10px;padding:8px 14px;border-radius:8px;
+  border:1px solid var(--hair);background:var(--panel);color:var(--dim);font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase}
+nav .tab.active{color:var(--text);background:var(--blue-dim);border-color:var(--blue)}
+.hchip{font-family:var(--mono);font-size:10px;padding:9px 14px;border-radius:8px;
+  background:var(--panel);border:1px solid var(--hair);font-weight:600;letter-spacing:.06em}
 .hchip:active{background:var(--panel2);border-color:var(--blue)}
 
-/* ---------- tables ---------- */
+/* ---------- tables: dense pro ---------- */
 .tblwrap{border:1px solid var(--hair);border-radius:9px}
-table{font-family:var(--mono);font-size:11.5px}
-th{font-size:8.5px;letter-spacing:.1em;color:var(--dim);background:var(--panel2);
-  padding:9px 10px;border-bottom:1px solid var(--hair2)}
+table{font-family:var(--mono);font-size:11px}
+th{font-size:8px;letter-spacing:.14em;color:var(--dim);background:var(--panel2);
+  padding:9px 10px;border-bottom:1px solid var(--hair);text-transform:uppercase;font-weight:600}
 td{padding:9px 10px;font-weight:500;border-bottom:1px solid var(--hair2);font-variant-numeric:tabular-nums}
 td:first-child{font-weight:600}
-.sym{font-size:11px}
+tbody tr:nth-child(even){background:var(--hair2)}
+.sym{font-size:10.5px}
 .cname{font-size:9px;color:var(--faint)}
 .chg-badge{font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
 .chg-badge.pos{background:var(--up-dim);color:var(--up)}
@@ -158,7 +187,7 @@ details.gl summary::before{color:var(--blue)}
 a{color:var(--blue)}
 .pos{color:var(--up)} .neg{color:var(--down)} .neu{color:var(--dim)}
 
-/* ---------- status bar (v1) ---------- */
+/* ---------- status bar ---------- */
 .as-status{position:fixed;left:0;right:0;bottom:0;display:flex;z-index:60;
   font-family:var(--mono);font-size:8.5px;letter-spacing:.05em;color:#fff;opacity:.95}
 .as-status i{flex:1;padding:5px 4px;text-align:center;font-style:normal}

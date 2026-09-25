@@ -1,0 +1,21 @@
+name: Fix Theme 4 Pro
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump cache versions in index.html
+        run: |
+          python3 -c "s=open('index.html').read(); s=s.replace('calm.css?v=as3','calm.css?v=as4').replace('themefix.js?v=25sep26a43','themefix.js?v=25sep26a44'); open('index.html','w').write(s)"
+          grep -o 'calm.css?v=as[0-9]\|themefix.js?v=25sep26a[0-9]*' index.html
+      - name: Commit and push
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add calm.css themefix.js index.html
+          git commit -m "ui: ArthaSaar Pro — desk summary, pro tiles, numbered sections, rline removed (a44)" || echo "no changes"
+          git push

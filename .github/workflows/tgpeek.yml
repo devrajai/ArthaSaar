@@ -1,0 +1,25 @@
+name: TG Peek Updates
+on:
+  workflow_dispatch:
+jobs:
+  peek:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -s "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/getUpdates?limit=100" > up.json
+          python3 - << 'PYEOF'
+          import json
+          d = json.load(open('up.json'))
+          print('ok:', d.get('ok'))
+          for u in d.get('result', []):
+              for k in ('message', 'edited_message', 'my_chat_member'):
+                  m = u.get(k)
+                  if not m:
+                      continue
+                  ch = m.get('chat', {})
+                  usr = m.get('from', {})
+                  txt = m.get('text') or m.get('data') or ''
+                  print('CHAT:', ch.get('id'), '| user:', usr.get('username') or usr.get('first_name'), '| text:', repr(txt)[:60], '| date:', m.get('date'))
+          if not d.get('result'):
+              print('NO UPDATES')
+          PYEOF

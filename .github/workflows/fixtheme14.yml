@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  workflows: write
 jobs:
   fix:
     runs-on: ubuntu-latest
@@ -11,12 +10,16 @@ jobs:
       - uses: actions/checkout@v4
       - run: python .github/scripts/fix_tg.py
       - run: python .github/scripts/fix_theme14.py
+      - name: Workflow yml changes revert (GITHUB_TOKEN se workflow files push nahi hote)
+        run: |
+          git checkout -- .github/workflows || true
+          git clean -fd .github/workflows || true
       - name: Commit and push (retry ke saath)
         run: |
           git config user.name "actions-user"
           git config user.email "actions@github.com"
-          git add -A scripts .github/workflows index.html app.js oldapp.js themefix.js economypulse.js newsvolume.js news.js
-          git commit -m "feat: TG schedule v2 (9:15 IPO+preopen, 4PM close, 9:15PM night) + site v13 (retry, auto-refresh, clean tiles)" || echo "no changes"
+          git add -A scripts index.html app.js oldapp.js themefix.js economypulse.js newsvolume.js news.js
+          git commit -m "feat: TG scripts v2 + site v13 (retry, auto-refresh, clean tiles)" || echo "no changes"
           for i in 1 2 3 4 5 6 7 8; do
             if git pull --rebase --autostash origin main && git push; then
               echo "Pushed (attempt $i)"

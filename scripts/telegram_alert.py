@@ -88,13 +88,45 @@ oi_up.sort(key=lambda s: -abs(oi_pct(s)))
 oi_up = oi_up[:4]
 pcr = fu.get("pcr") or {}
 
+# ---- sector scoreboard (live, close mode) ----
+SECTORS = [("IT", "%5ECNXIT"), ("BANK", "%5ENSEBANK"), ("AUTO", "%5ECNXAUTO"),
+           ("PHARMA", "%5ECNXPHARMA"), ("FMCG", "%5ECNXFMCG"), ("METAL", "%5ECNXMETAL"),
+           ("REALTY", "%5ECNXREALTY"), ("ENERGY", "%5ECNXENERGY")]
+sec_rows = []
+for lbl, sy in SECTORS:
+    p2, c2 = yahoo(sy)
+    ch = pct(p2, c2)
+    if ch is not None:
+        sec_rows.append((lbl, ch))
+    time.sleep(0.12)
+sec_rows.sort(key=lambda r: -r[1])
+
+# ---- FII/DII today (cash, live from NSE; fallback file) ----
+fii_today = dii_today = None
+live = http_json("https://www.nseindia.com/api/fiidiiTradeReact")
+if isinstance(live, list) and not live:
+    live = None
+if isinstance(live, list) and fii_today == 0 and dii_today == 0:
+    fii_today = dii_today = None
+if isinstance(live, list):
+    for r in live:
+        try:
+            if r.get("category") == "FII/FPI":
+                fii_today = float(r.get("netValue", 0)) / 1e7
+            elif r.get("category") == "DII":
+                dii_today = float(r.get("netValue", 0)) / 1e7
+        except Exception:
+            pass
+
 L = []
 if mode == "open":
     L.append("\U0001F305 <b>ArthaSaar — Market Open</b>")
 else:
-    L.append("\U0001F306 <b>ArthaSaar — Market Close</b>")
+    L.append("\U0001F4CA <b>ArthaSaar — Day Analysis Close</b>")
 L.append(esc(now.strftime("%A, %d %b %Y")))
 L.append("")
+if mode != "open":
+    L.append("\U0001F3AF Close (15:30 IST)")
 
 row = []
 if nifty:
@@ -105,6 +137,17 @@ if sensex:
     row.append("SENSEX %s (%s%.2f%%)" % ("{:,.0f}".format(sensex), sgn(c or 0), c or 0))
 if row:
     L.append(" | ".join(row))
+if mode != "open" and sec_rows:
+    picks = (sec_rows[:2] + sec_rows[-2:]) if len(sec_rows) > 2 else sec_rows
+    L.append("\U0001F3ED Sector scoreboard")
+    L.append(" ".join(("%s %s: %s%.1f%%" % ("\U0001F7E2" if c >= 0 else "\U0001F534", l, sgn(c), c)) for l, c in picks))
+if mode != "open" and (fii_today is not None or dii_today is not None):
+    L.append("\U0001F4B8 FII/DII today (cash)")
+    L.append("FII: %s | DII: %s" % (
+        ("Sell \u20B9%s Cr" % "{:,.0f}".format(abs(fii_today)) if fii_today < 0
+         else "Buy \u20B9%s Cr" % "{:,.0f}".format(fii_today)) if fii_today is not None else "\u2014",
+        ("Sell \u20B9%s Cr" % "{:,.0f}".format(abs(dii_today)) if dii_today < 0
+         else "Buy \u20B9%s Cr" % "{:,.0f}".format(dii_today)) if dii_today is not None else "\u2014"))
 if pcr.get("nifty_pcr_oi") is not None:
     L.append("\U0001F3AF Nifty PCR %s | Max Pain %s" % (pcr.get("nifty_pcr_oi"), pcr.get("nifty_max_pain")))
 
@@ -135,7 +178,7 @@ if fd:
     cats = fd.get("categories") or {}
     fii = (cats.get("FII/FPI") or {}).get("net_cr")
     dii = (cats.get("DII") or {}).get("net_cr")
-    if fii is not None or dii is not None:
+    if (fii is not None or dii is not None) and (mode == "open" or fii_today is None):
         L.append("\U0001F4B8 FII %s Cr | DII %s Cr" % (
             ("%+.0f" % fii) if fii is not None else "—",
             ("%+.0f" % dii) if dii is not None else "—"))

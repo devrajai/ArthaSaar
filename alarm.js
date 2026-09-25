@@ -35,7 +35,8 @@
     if (!sec || document.getElementById("mbAlarm")) return;
     var c = document.createElement("details");
     c.className = "card"; c.id = "mbAlarm"; c.style.marginTop = "14px";
-    sec.appendChild(c);
+    var h2 = sec.querySelector("h2");
+    if (h2 && h2.parentNode) sec.insertBefore(c, h2.nextSibling); else sec.appendChild(c);
     try { build(c); } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Brain Score (TM) - per-stock 100-point combo:
+"""ArthaSaar Score (TM) - per-stock 100-point combo:
 Fundamentals 25 + Technicals 25 + News Sentiment 25 + Trend AI 25.
 Plus Smart Money Score 0-10 (FII/DII/promoter/pledge/accumulation) + red flags.
 Inputs (free, existing): screener-fundamentals.json, brain-screener.json,
@@ -170,7 +170,7 @@ def main():
     ranked = sorted(out.items(), key=lambda kv: -kv[1]["s"])
     res = {
         "updated": NOW.strftime("%d %b %Y, %H:%M IST"),
-        "note": "Market Brain Score = Fundamental 25 + Technical 25 + News Sentiment 25 + Trend AI 25 (MACD/volume machine signals; TimesFM index-level hai). Smart Money 0-10 = FII/DII/promoter/pledge/accumulation. Sentiment sirf 41 Nifty stocks ke liye live hai, baaki neutral 12.5. Indicative only - not advice.",
+        "note": "ArthaSaar Score = Fundamental 25 + Technical 25 + News Sentiment 25 + Trend AI 25 (MACD/volume machine signals; TimesFM index-level hai). Smart Money 0-10 = FII/DII/promoter/pledge/accumulation. Sentiment sirf 41 Nifty stocks ke liye live hai, baaki neutral 12.5. Indicative only - not advice.",
         "count": len(out),
         "stocks": out,
         "top": [k for k, _ in ranked[:30]],

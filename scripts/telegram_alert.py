@@ -90,9 +90,9 @@ pcr = fu.get("pcr") or {}
 
 L = []
 if mode == "open":
-    L.append("\U0001F305 <b>Market Brain — Market Open</b>")
+    L.append("\U0001F305 <b>ArthaSaar — Market Open</b>")
 else:
-    L.append("\U0001F306 <b>Market Brain — Market Close</b>")
+    L.append("\U0001F306 <b>ArthaSaar — Market Close</b>")
 L.append(esc(now.strftime("%A, %d %b %Y")))
 L.append("")
 

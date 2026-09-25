@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — global economic event calendar collector.
+ARTHASAAR — global economic event calendar collector.
 
 Builds data/events.json every day:
   1. This week + next week of market-moving events for ALL countries

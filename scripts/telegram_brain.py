@@ -2,7 +2,7 @@
 """
 TELEGRAM BRAIN — Dev's personal market bot.
 
-Two daily messages to Telegram from Market Brain's own data (no new APIs, no deps):
+Two daily messages to Telegram from ArthaSaar's own data (no new APIs, no deps):
 
   morning    ~9:25 AM IST, right after morning-brain workflow commits
              pre-open + FII/DII + global cues + Smart Brain call + TimesFM rotation
@@ -328,7 +328,7 @@ def deliver(sections, footer_note, title):
     now = ist_now()
     head = (f"<b>{title}</b> — "
             f"{now.strftime('%a')}, {now.strftime('%d/%m/%y')}"
-            f" · 🗾 Market Brain")
+            f" · 🗾 ArthaSaar")
     body = "\n\n".join(s for s in sections if s)
     if not body:
         body = "(no data sections survived — check workflows)"

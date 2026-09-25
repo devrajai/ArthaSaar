@@ -12,7 +12,7 @@ fu_map = {s.get("symbol"): s for s in (fu.get("stocks") or [])}
 ss = jload("data/stock-scores.json")
 
 now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))
-L = ["\U0001F4A1 <b>Market Brain - Monthly AI Stock Ideas</b>", now.strftime("%B %Y"), ""]
+L = ["\U0001F4A1 <b>ArthaSaar - Monthly AI Stock Ideas</b>", now.strftime("%B %Y"), ""]
 picked = 0
 for row in (ss.get("top") or []):
     sym = row.get("sym"); s = sc_map.get(sym)

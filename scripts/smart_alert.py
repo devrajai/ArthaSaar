@@ -47,7 +47,7 @@ if len(highs) >= 3 and state.get("high52") != key_date:
     state["high52"] = key_date
 
 if alerts:
-    msg = "\U0001F514 <b>Market Brain ALERT</b>\n" + now.strftime("%d %b, %H:%M IST") + "\n\n" + "\n".join("- " + (a if isinstance(a, str) else a[1]) for a in alerts)
+    msg = "\U0001F514 <b>ArthaSaar ALERT</b>\n" + now.strftime("%d %b, %H:%M IST") + "\n\n" + "\n".join("- " + (a if isinstance(a, str) else a[1]) for a in alerts)
     send(msg)
 else:
     print("no triggers")

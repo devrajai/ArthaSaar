@@ -1,4 +1,4 @@
-/* MARKET BRAIN app — fetches live repo JSON, renders all sections.
+/* ARTHASAAR app — fetches live repo JSON, renders all sections.
    No libraries. Mobile-first. No sticky, no backdrop-filter. */
 "use strict";
 if (window.MB_LOCKED) throw new Error("locked");

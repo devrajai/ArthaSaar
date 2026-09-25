@@ -208,7 +208,7 @@ def main():
 
     # TG message
     NL = chr(10)
-    msg = '*MARKET BRAIN NEWS*' + NL + NOW.strftime('%A, %d %b') + ' - sirf sach, no masala' + NL
+    msg = '*ARTHASAAR NEWS*' + NL + NOW.strftime('%A, %d %b') + ' - sirf sach, no masala' + NL
     if X.get('c') is not None:
         gr = X['chg'] >= 0
         msg += NL + '*MARKET X-RAY*' + NL

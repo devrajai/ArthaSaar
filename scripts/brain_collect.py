@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — full-market price history + technicals.
+ARTHASAAR — full-market price history + technicals.
 
 Universe: 2,305 stocks (Nifty 500 tier 1 + NSE EQ-series others tier 2)
 from nsearchives.nseindia.com CSVs (works from datacenter IPs).

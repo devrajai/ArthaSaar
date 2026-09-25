@@ -5,7 +5,7 @@ sys.path.insert(0, "scripts")
 from tghelp import jload, yahoo, send, crash_score, status
 
 now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))
-L = ["\U0001F4D8 <b>Market Brain - Sunday Report Card</b>", now.strftime("%d %b %Y"), ""]
+L = ["\U0001F4D8 <b>ArthaSaar - Sunday Report Card</b>", now.strftime("%d %b %Y"), ""]
 
 p, pc = yahoo("%5ENSEI", "7d")
 if p and pc:

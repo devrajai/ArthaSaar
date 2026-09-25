@@ -18,7 +18,7 @@ for f in (tf.get('forecasts') or []):
     if f.get('symbol') == '^NSEI':
         nif = f
 
-L = ['\U0001F305 <b>Market Brain - 7AM AI Brief</b>', now.strftime('%A, %d %b %Y'), '']
+L = ['\U0001F305 <b>ArthaSaar - 7AM AI Brief</b>', now.strftime('%A, %d %b %Y'), '']
 L.append('\U0001F4AC Mood: %s/100 (%s)' % (mood.get('overall', '-'), mood.get('tag', '-')))
 L.append('\U0001F6A8 Crash score: %d/100 - %s' % (score, st))
 if nif and nif.get('median_chg_pct') is not None:

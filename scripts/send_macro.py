@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # send_macro.py - MACRO PULSE TG message (oil/DXY/10Y/gold + verdict)
-# FII line hatayi gayi - wo Market Brain Morning me Buy/Sell words ke saath aata hai (duplicate avoid)
+# FII line hatayi gayi - wo ArthaSaar Morning me Buy/Sell words ke saath aata hai (duplicate avoid)
 # (quote-safe style: sirf single quotes, JSON push safe)
 import json, os, urllib.request
 

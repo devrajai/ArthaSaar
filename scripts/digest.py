@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""digest.py - Market Brain Morning Digest -> Telegram + FII history save."""
+"""digest.py - ArthaSaar Morning Digest -> Telegram + FII history save."""
 import json
 import os
 import urllib.request
@@ -40,7 +40,7 @@ def main():
         os.makedirs("data", exist_ok=True)
         with open("data/fii-history.json", "w") as f:
             json.dump(hist, f)
-    L = ["Market Brain Morning - " + datetime.now().strftime("%a %d %b"), ""]
+    L = ["ArthaSaar Morning - " + datetime.now().strftime("%a %d %b"), ""]
     near = n.get("nearest") or ["?"]
     z = str(near[0]).upper()
     chgs = "{:+.2f}%".format(nifty_chg) if nifty_chg is not None else "?"

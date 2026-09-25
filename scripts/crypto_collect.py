@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — crypto watch collector (Phase 4).
+ARTHASAAR — crypto watch collector (Phase 4).
 
 Free sources, no keys:
   1. CoinGecko public API (primary):

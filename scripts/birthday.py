@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """birthday.py - members.json se aaj ke birthday walo ko TG wish bhejo.
-v2: 'joined' date se 'Market Brain member since X' line bhi wish mein."""
+v2: 'joined' date se 'ArthaSaar member since X' line bhi wish mein."""
 import json, os, datetime, urllib.request
 
 def send(tok, cid, msg):
@@ -18,11 +18,11 @@ def member_since_line(joined):
         return ""
     days = (datetime.date.today() - j).days
     if days >= 365:
-        return "\nMarket Brain member: " + str(days // 365) + " saal se!"
+        return "\nArthaSaar member: " + str(days // 365) + " saal se!"
     if days >= 30:
-        return "\nMarket Brain member: " + str(days // 30) + " mahine se!"
+        return "\nArthaSaar member: " + str(days // 30) + " mahine se!"
     if days >= 1:
-        return "\nMarket Brain member: " + str(days) + " din se!"
+        return "\nArthaSaar member: " + str(days) + " din se!"
     return ""
 
 def main():
@@ -41,7 +41,7 @@ def main():
             try:
                 send(tok, m["chat_id"],
                      "*HAPPY BIRTHDAY " + name.upper() + "!* \U0001F382\U0001F389\n"
-                     "Market Brain family aapko bahut saari badhai deti hai!\n"
+                     "ArthaSaar family aapko bahut saari badhai deti hai!\n"
                      "Aapka naya saal full of profits aur green candles ho! \U0001F680\U0001F4B8"
                      + member_since_line(m.get("joined", "")))
                 print("bday wish sent:", name)

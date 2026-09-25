@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MARKET BRAIN — TimesFM 3.0 daily forecasts (multi-horizon).
+"""ARTHASAAR — TimesFM 3.0 daily forecasts (multi-horizon).
 
 Google Research's TimesFM 3.0 (330M params) zero-shot forecaster.
 

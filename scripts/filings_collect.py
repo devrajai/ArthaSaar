@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MARKET BRAIN — corporate filings collector (Phase 3).
+ARTHASAAR — corporate filings collector (Phase 3).
 
 Source: NSE /api/corporate-announcements?index=equities&from_date=D-M-Y&to_date=D-M-Y
 (verified 19/09/26: works from datacenter IPs with plain UA + Referer, no

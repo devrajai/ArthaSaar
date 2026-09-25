@@ -1,4 +1,4 @@
-# MARKET BRAIN — PROJECT BRAIN
+# ARTHASAAR — PROJECT BRAIN
 
 Single source of truth. Any AI session starts here. Owner: Dev (mobile-only, Android Chrome).
 Repo: devrajai/market-brain | Sister project: devrajai/ipo-terminal (read its PROJECT_BRAIN.md too)
@@ -81,7 +81,7 @@ website second.
   with comma-separated ids (encrypt via repo public key + PyNaCl sealed box, push via GitHub MCP
   GITHUB_CREATE_OR_UPDATE_A_REPOSITORY_SECRET).
 
-### Google Sheet "Market Brain Hub" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
+### Google Sheet "ArthaSaar Hub" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
 Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks,
 Daily_Digest_Archive, Dividend_Calendar (Dev's handwritten monthly dividend stocks)
 

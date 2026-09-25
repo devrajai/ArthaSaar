@@ -20,7 +20,7 @@ def make_icon(size):
     d.text((size // 2, int(size * 0.82)), "MB", font=f, fill=(240, 180, 41), anchor="mm")
     return img
 
-MANIFEST = '{"name":"Market Brain","short_name":"Market Brain","start_url":"./","scope":"./","display":"standalone","background_color":"#070c17","theme_color":"#070c17","description":"Market intelligence terminal - Indian markets, GTI, OI, AI forecasts","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'
+MANIFEST = '{"name":"ArthaSaar","short_name":"ArthaSaar","start_url":"./","scope":"./","display":"standalone","background_color":"#070c17","theme_color":"#070c17","description":"Market intelligence terminal - Indian markets, GTI, OI, AI forecasts","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'
 
 SW = ('var C="mb-v1";'
 'self.addEventListener("install",function(e){self.skipWaiting();e.waitUntil(caches.open(C).then(function(c){return c.addAll(["./","./style.css","./app.js","./manifest.json","./icon-192.png"]);}));});'

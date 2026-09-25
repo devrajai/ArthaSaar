@@ -1,4 +1,4 @@
-/* powerpack.js - Market Brain POWER PACK: Calculators + Greeks + Operator Radar + Dividends + Expiry Special
+/* powerpack.js - ArthaSaar POWER PACK: Calculators + Greeks + Operator Radar + Dividends + Expiry Special
    Sab cards section#tools mein mount hote hain */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }

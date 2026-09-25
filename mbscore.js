@@ -1,4 +1,4 @@
-/* mbscore.js - Market Brain Score (TM): 100-point combo (fundamentals + technicals + sentiment + trend AI) + Smart Money + red flags. #screener top */
+/* mbscore.js - ArthaSaar Score (TM): 100-point combo (fundamentals + technicals + sentiment + trend AI) + Smart Money + red flags. #screener top */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var DATA = null;
@@ -49,7 +49,7 @@
   }
 
   function build(card) {
-    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83E\uDDE0 MARKET BRAIN SCORE\u2122</b> <span style="font-size:11px;opacity:.65">100-point combo · smart money · red flags</span></summary>' +
+    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83E\uDDE0 ARTHASAAR SCORE\u2122</b> <span style="font-size:11px;opacity:.65">100-point combo · smart money · red flags</span></summary>' +
       '<div style="margin-top:10px"><input id="mbQ" placeholder="stock search... (RELIANCE, TATASTEEL)" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:inherit;font-size:13px;outline:none"></div>' +
       '<div id="mbBody" class="note" style="margin-top:8px">loading scores...</div>';
     var inp = document.getElementById("mbQ");

@@ -93,7 +93,7 @@ def main():
         if vix:
             m += "VIX (dar): %.1f\n" % vix
         m += "Stage-4 stocks: %.1f%% (%d)\nFII bech rahe: %d din lagaatar\n\n" % (pct, s4, streak)
-        m += "\u26A0\uFE0F Position size chhota rakho, risk control karo.\n\U0001F4CC Indicator hai, prediction nahi. (Market Brain by Dev)"
+        m += "\u26A0\uFE0F Position size chhota rakho, risk control karo.\n\U0001F4CC Indicator hai, prediction nahi. (ArthaSaar by Dev)"
         for mem in load("data/members.json", []):
             send(tok, mem.get("chat_id"), m)
         print("TG alerts sent (stress >= 60)")

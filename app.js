@@ -1,4 +1,4 @@
-/* MARKET BRAIN loader — pulls in the app in strict order (v=i: retry + skip on error, mf renamed mft).
+/* ARTHASAAR loader — pulls in the app in strict order (v=i: retry + skip on error, mf renamed mft).
    oldapp.js (main app) then patches (screener fix, TimesFM AI view, trade tools,
    learn + stage + guide + desktop, smart brain, MF tracker). */
 (function () {

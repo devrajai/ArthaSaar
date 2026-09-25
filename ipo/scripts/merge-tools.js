@@ -476,7 +476,7 @@
   }
 
   var group1 = new Group({
-    nav: 'decision', label: '\u{1F9E0} Smart Tools', def: 'allinone', hide: ['coach'],
+    nav: 'allinone', label: '\u{1F9E0} Smart Tools', def: 'allinone', hide: ['coach'],
     subs: [
       { id: 'allinone', label: '\u{1F4CA} All-in-One' },
       { id: 'protools', label: '\u{1F680} Pro Tools' }

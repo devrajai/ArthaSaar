@@ -235,16 +235,15 @@
   }
 
   function buildEvents() {
-    /* existing Events tile: only the word "Event", moved to TOP of homegrid */
+    /* existing Events tile: only the word "Event", placed in TRADING group NEXT TO IPO tile */
     var tile = document.querySelector('a.tile[href="#events"]');
     var hg = document.querySelector("section#home .homegrid");
     if (tile) {
       var nm = tile.querySelector(".t-nm");
       if (nm) nm.textContent = "Event";
-      if (hg) {
-        tile.style.cssText = "grid-column:1/-1;flex-direction:row;align-items:center;gap:12px";
-        hg.insertBefore(tile, hg.firstChild);
-      }
+      tile.style.cssText = "";
+      var ipo = document.querySelector('a.tile[href="ipo/"]');
+      if (hg && ipo && ipo.parentNode === hg) hg.insertBefore(tile, ipo.nextSibling);
     }
     /* radar card on TOP inside the existing events section (before global calendar) */
     if (!document.getElementById("evCard")) {

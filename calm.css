@@ -1,5 +1,5 @@
 /* ============================================================
-   calm.css v10 — ARTHASAAR PREMIUM (no brand underline) (full new look, 25 Sep)
+   calm.css v11 — ARTHASAAR PREMIUM (one-line header) (full new look, 25 Sep)
    Pro arrangement: command-bar header · desk summary · 2-col tiles
    numbered sections · dense tables · mono micro-labels.
    Palette: light blue = calm · light green = growth · amber = action · red = risk
@@ -44,7 +44,10 @@ body{
 }
 
 /* ---------- header: command bar ---------- */
-header{border-bottom:1px solid var(--hair);padding:15px 0 12px}
+header{border-bottom:1px solid var(--hair);padding:10px 0 6px}
+header .brand-row{flex-wrap:nowrap}
+header .brand-row>div:nth-child(2){min-width:0}
+header h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.2em;line-height:1.1}
 header h1::after{content:none}
 header h1 em{font-style:normal;color:var(--blue)}
@@ -54,21 +57,21 @@ header .logo svg{width:44px;height:44px}
 header .tagline{display:none !important;color:var(--faint);letter-spacing:.22em;text-transform:uppercase;font-size:6.5px;font-family:var(--mono)}
 .clockbox{display:none !important}
 .meta-row{display:none !important}
-.header-right{align-self:flex-start;margin-top:3px}
-.pill{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;padding:5px 9px;border-radius:6px;
+.header-right{align-self:center;margin-top:0;flex:0 0 auto;gap:6px}
+.pill{font-family:var(--mono);font-size:7px;letter-spacing:.08em;padding:3px 7px;border-radius:6px;
   background:var(--panel2);border:1px solid var(--hair);color:var(--dim);font-weight:600}
-.dot{width:6px;height:6px}
+.dot{width:5px;height:5px}
 .dot.open{background:var(--up);box-shadow:0 0 6px var(--up)}
 .dot.closed{background:var(--down)}
 .dot.pre{background:var(--amber)}
-#themeBtn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;width:auto;
-  height:32px;padding:0 13px;border-radius:8px;border:none;
+#themeBtn{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.06em;width:auto;
+  height:24px;padding:0 10px;border-radius:7px;border:none;
   background:linear-gradient(135deg,var(--blue),var(--up));color:#0a1622}
 #refreshBtn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:5px 11px;border-radius:7px;
   background:linear-gradient(135deg,var(--blue),var(--up));border:none;color:#0a1622;font-weight:700}
 
 /* ---------- gradient rline (reference design) ---------- */
-.as-rline{height:2px;border-radius:2px;margin:2px 0 10px;
+.as-rline{height:2px;border-radius:2px;margin:0 0 8px;
   background:linear-gradient(90deg,var(--blue),var(--up))}
 
 /* ---------- ticker tape ---------- */

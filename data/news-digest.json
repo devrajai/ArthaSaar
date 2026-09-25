@@ -1,43 +1,41 @@
 {
- "u": "24 Sep 2026, 21:09 IST",
+ "u": "25 Sep 2026, 21:08 IST",
  "cats": [
   {
    "name": "INDIA MARKETS",
    "stories": [
     {
-     "t": "NSE Shares Rise in Stock Market Debut After $2.4 Billion IPO",
+     "t": "India should allow exchanges to list on own platform, NSE chairman says",
      "n": 1,
      "srcs": [
-      "bloomberg.com"
+      "Reuters"
      ],
      "age": 5.0,
      "x": 0
     },
     {
-     "t": "India's NSE lists after decade-long wait; valued at $47 billion",
+     "t": "India shares log longest weekly losing run since 2020 as oil prices bite",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 14.1,
+     "age": 13.3,
+     "x": 0
+    },
+    {
+     "t": "NSE Shares Rise in Stock Market Debut After $2.4 Billion IPO",
+     "n": 1,
+     "srcs": [
+      "Bloomberg.com"
+     ],
+     "age": 29.0,
      "x": 0
     }
    ]
   },
   {
    "name": "ECONOMY/POLICY",
-   "stories": [
-    {
-     "t": "ADB, OECD, Fitch, S&P Global raise India's FY27 growth projection",
-     "n": 2,
-     "srcs": [
-      "ThePrint",
-      "business-standard.com"
-     ],
-     "age": 25.1,
-     "x": 1
-    }
-   ]
+   "stories": []
   },
   {
    "name": "GLOBAL",
@@ -45,72 +43,60 @@
   },
   {
    "name": "GEOPOLITICS",
-   "stories": [
-    {
-     "t": "U.S. and China Agree to Extend Trade Truce by 2 Months, Bessent Says",
-     "n": 3,
-     "srcs": [
-      "CNBC",
-      "NBC News",
-      "The New York Times"
-     ],
-     "age": 6.2,
-     "x": 1
-    }
-   ]
+   "stories": []
   },
   {
    "name": "AUTHENTIC WIRE",
    "stories": [
     {
-     "t": "India's 'cockroach' movement says it will launch protest if poll panel chief doesn't quit in 48 hours",
+     "t": "India orders crackdown on nicotine pouches, citing health risks, letter shows",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 4.5,
+     "age": 1.4,
      "x": 0
     },
     {
-     "t": "EXCLUSIVE: Amazon bets $3 billion on India's fast-delivery boom, sources say",
+     "t": "India's Elevate Campuses $219 million IPO fully subscribed on final day of bidding",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 6.3,
+     "age": 5.9,
      "x": 0
     },
     {
-     "t": "Explainer: India's insurance overhaul: What changes and why it matters",
+     "t": "Tata dispute sends India Inc scrambling to shore up shareholder rights",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 8.4,
+     "age": 6.8,
      "x": 0
     },
     {
-     "t": "HSBC plans India equity broking return after 13 years amid IPO boom, sources say",
+     "t": "India weighs mandatory blending of imported coal at power plants, sources say",
      "n": 1,
      "srcs": [
-      "reuters.com"
+      "Reuters"
      ],
-     "age": 8.6,
+     "age": 6.9,
      "x": 0
     }
    ]
   }
  ],
  "xray": {
-  "o": 23222,
-  "h": 23282,
-  "l": 23046,
-  "c": 23063,
-  "chg": -1.64,
-  "pattern": "gap-down open, red close - pure selling pressure",
-  "fii": 1617,
-  "dii": 2341,
-  "fii_streak": 0,
-  "puppato": 0
+  "o": 23035,
+  "h": 23163,
+  "l": 23021,
+  "c": 23140,
+  "chg": 0.34,
+  "pattern": "gap-down open, GREEN close - dar bech ke wapas khareeda gaya",
+  "fii": -3694,
+  "dii": 2838,
+  "fii_streak": 1,
+  "puppato": 1
  }
 }

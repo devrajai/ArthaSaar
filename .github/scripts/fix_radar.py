@@ -1,13 +1,15 @@
-#!/usr/bin/env python3
-# fix_radar.py - globals.js emoji escape fix (one-shot, idempotent)
-# GLOBAL->INDIA ENGINE header ka compass emoji: \uD83E\uDED (galath) -> \uD83E\uDDED (sahi)
-# quote-safe style: sirf single quotes
-P = 'globals.js'
+# fix_radar.py - app.js cache version bump for radars launch
+from pathlib import Path
 
-s = open(P, encoding='utf-8').read()
-if '\\uD83E\\uDED ' in s and '\\uD83E\\uDDED ' not in s:
-    s = s.replace('\\uD83E\\uDED ', '\\uD83E\\uDDED ')
-    open(P, 'w', encoding='utf-8').write(s)
-    print('globals.js: emoji escape fixed')
+p = Path('index.html')
+s = p.read_text(encoding='utf-8')
+old = 'app.js?v=21sep26a40'
+new = 'app.js?v=25sep26a41'
+if old in s:
+    s = s.replace(old, new)
+    p.write_text(s, encoding='utf-8')
+    print('bumped:', old, '->', new)
 else:
-    print('globals.js: already ok')
+    print('tag not found (already bumped?): current tags:')
+    import re
+    print(re.findall(r'app\.js\?v=\S+', s))

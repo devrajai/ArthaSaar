@@ -1,0 +1,47 @@
+name: Notion IPO sync
+on:
+  schedule:
+    - cron: '10 1 * * *'  # 6:40 AM IST daily
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ipo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Fetch Notion IPO Tracker
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: |
+          if [ -z "$NOTION_TOKEN" ]; then echo 'NOTION_TOKEN secret not set yet - skip'; exit 0; fi
+          node scripts/fetch-notion.mjs
+      - name: Merge into site data
+        run: |
+          if [ ! -s data/notion-data.json ]; then echo 'no notion data - skip'; exit 0; fi
+          python scripts/sync_from_pipeline.py
+      - name: Rebuild terminal state + events
+        run: |
+          if [ ! -s data/notion-data.json ]; then echo 'no notion data - skip'; exit 0; fi
+          python scripts/build_terminal_state.py || echo 'terminal state skipped'
+      - name: Commit
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/
+          git diff --cached --quiet && echo 'No changes' && exit 0
+          git commit -m 'data: notion IPO tracker sync'
+          git pull --rebase --autostash || true
+          git push

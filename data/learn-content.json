@@ -1,6 +1,6 @@
 {
  "updated": "2026-09-19",
- "note": "Market Brain Learning Hub — written in simple English for Dev. Educational only, not investment advice.",
+ "note": "ArthaSaar Learning Hub — written in simple English. Educational only, not investment advice.",
  "levels": {
   "beginner": [
    "Learn first, earn later. Spend at least 1 month only studying before real money.",
@@ -144,10 +144,10 @@
    {"name": "Breakout with Volume", "how": "Stock consolidating 2-6 weeks in a tight range, then closes above range top with 2x+ volume. Buy on breakout or first retest.", "when": "Market (Nifty) also in uptrend.", "risk": "Failed breakouts — stop loss just inside the range.", "level": "Intermediate"},
    {"name": "20-EMA Pullback in Uptrend", "how": "Stock above 20 and 50 EMA, rising steadily. Buy when it pulls back to the 20 EMA and shows a green candle. Stop below 50 EMA.", "when": "Healthy uptrends after a strong run.", "risk": "Deep corrections — exit if 50 EMA breaks.", "level": "Beginner"},
    {"name": "Support Bounce", "how": "Stock repeatedly taking support at the same level (2+ touches) and turning up with volume. Buy at support, stop just below it.", "when": "Range markets, quality large caps.", "risk": "Third or fourth touch often breaks — take the first bounce only.", "level": "Beginner"},
-   {"name": "Relative Strength vs Nifty", "how": "Compare the stock with Nifty over 3 months. Stock falling less in a fall, rising more in a rise = strong. Trade only the strongest 10.", "when": "Always — best filter in the Market Brain screener.", "risk": "Strength breaks when market crashes.", "level": "Intermediate"}
+   {"name": "Relative Strength vs Nifty", "how": "Compare the stock with Nifty over 3 months. Stock falling less in a fall, rising more in a rise = strong. Trade only the strongest 10.", "when": "Always — best filter in the ArthaSaar screener.", "risk": "Strength breaks when market crashes.", "level": "Intermediate"}
   ],
   "long_term": [
-   {"name": "Quality Compounders", "how": "Buy companies with ROCE above 15% for 5+ years, low debt, honest promoters, growing profits. Hold 5-10 years, add on falls.", "when": "Any time — you are buying businesses, not prices.", "risk": "Business quality falling — review results every quarter (Market Brain Deep Fund tab helps).", "level": "Beginner"},
+   {"name": "Quality Compounders", "how": "Buy companies with ROCE above 15% for 5+ years, low debt, honest promoters, growing profits. Hold 5-10 years, add on falls.", "when": "Any time — you are buying businesses, not prices.", "risk": "Business quality falling — review results every quarter (ArthaSaar Deep Fund tab helps).", "level": "Beginner"},
    {"name": "Reasonable Price for Quality", "how": "Even a great company is a bad stock at a crazy price. Wait for P/E below the stock's own 5-year average, or market crashes.", "when": "Corrections and bear markets — when others are scared.", "risk": "Great companies rarely become cheap — patience needed.", "level": "Intermediate"},
    {"name": "Sector Tailwind Investing", "how": "Pick a sector with a 5-10 year growth story (e.g. defence, power, electronics) and buy 2-3 quality leaders of that sector.", "when": "Early in the sector cycle, not after it has doubled.", "risk": "Sector story dying — policy change, technology shift.", "level": "Intermediate"},
    {"name": "Staggered Buying (SIP for stocks)", "how": "Never invest all at once. Divide into 6-12 parts, buy monthly or on every 5% fall. Removes timing tension.", "when": "Always for long-term buys.", "risk": "None — it is pure discipline.", "level": "Beginner"},
@@ -164,7 +164,7 @@
   "futures": [
    {"name": "Trend Following with Index Futures", "how": "Trade NIFTY futures in the direction of the daily trend with a stop loss. One lot, small size, strict stops.", "when": "Clear trending markets.", "risk": "Leverage cuts both ways — a 2% Nifty move = 100% of one lot margin on edge. Respect size.", "level": "Advanced"},
    {"name": "Rollover + OI Watching", "how": "Near expiry, watch rollover % and OI building in next month contracts. High rollover = trend expects to continue.", "when": "Expiry week (last Tuesday-Wednesday of the month).", "risk": "Rollover data is a hint, not a promise.", "level": "Advanced"},
-   {"name": "Cash-Futures Basis", "how": "When futures trade far above spot (high premium), institutions are greedy; far below (discount) = fear. Basis normalising often signals direction change.", "when": "Reading market mood — Market Brain Futures tab shows basis for 80 stocks.", "risk": "Interpretation tool, not a standalone signal.", "level": "Advanced"},
+   {"name": "Cash-Futures Basis", "how": "When futures trade far above spot (high premium), institutions are greedy; far below (discount) = fear. Basis normalising often signals direction change.", "when": "Reading market mood — ArthaSaar Futures tab shows basis for 80 stocks.", "risk": "Interpretation tool, not a standalone signal.", "level": "Advanced"},
    {"name": "Portfolio Hedge with Futures", "how": "If holding a large stock portfolio and expecting a fall, short NIFTY futures of equal value instead of selling shares (saves taxes and costs).", "when": "Events, global crashes, overvalued markets.", "risk": "If market rises instead, hedge loses while portfolio gains — a net wash, that is the design.", "level": "Advanced"}
   ]
  },
@@ -203,7 +203,7 @@
    "Valuation sane: P/E not far above its own 5-year average; compare with peers.",
    "Management honest: clean accounts, no SEBI cases, shareholder-friendly history.",
    "Buy in parts: staggered entries over months, add on market falls.",
-   "Review quarterly: read results (Market Brain files them to Notion automatically) — sell only if thesis breaks, never on price falls alone.",
+   "Review quarterly: read results (ArthaSaar files them to Notion automatically) — sell only if thesis breaks, never on price falls alone.",
    "Portfolio: 8-12 stocks across 5+ sectors. More is diworsification.",
    "Hold through noise: crashes are entry points, not exit points — IF the checklist still passes."
   ]

@@ -22,9 +22,9 @@ def main():
             msg += "\u2022 Stage-4 stocks: %s%% (%s) \u2014 %s/25 pts\n" % (c["s4"]["p"], c["s4"]["n"], c["s4"]["s"])
         if "fii" in c:
             msg += "\u2022 FII bech rahe: %s din \u2014 %s/20 pts\n\n" % (c["fii"]["n"], c["fii"]["s"])
-        msg += "Asli alert stress >= 60 pe roz shaam 6:20 baje aayega \u2014 position chhota karne ka signal.\n\U0001F4CC Indicator hai, prediction nahi. (Market Brain by Dev \U0001F60E)"
+        msg += "Asli alert stress >= 60 pe roz shaam 6:20 baje aayega \u2014 position chhota karne ka signal.\n\U0001F4CC Indicator hai, prediction nahi. (ArthaSaar \U0001F60E)"
     except Exception as e:
-        msg = "\U0001F9EA TEST alert \u2014 stress.json load nahi hua (%s). System chal raha hai! (Market Brain by Dev)" % e
+        msg = "\U0001F9EA TEST alert \u2014 stress.json load nahi hua (%s). System chal raha hai! (ArthaSaar)" % e
     for name, chat in TARGETS:
         data = json.dumps({"chat_id": chat, "text": msg}).encode()
         req = urllib.request.Request("https://api.telegram.org/bot%s/sendMessage" % TOKEN, data=data, headers={"Content-Type": "application/json"})

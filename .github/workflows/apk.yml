@@ -19,7 +19,7 @@ jobs:
           keytool -genkeypair -v -keystore /tmp/marketbrain.keystore -alias marketbrain \
             -keyalg RSA -keysize 2048 -validity 10950 \
             -storepass MarketBrain2026 -keypass MarketBrain2026 \
-            -dname "CN=Market Brain, OU=Dev, O=Dev Raj, L=India, ST=India, C=IN"
+            -dname "CN=ArthaSaar, OU=ArthaSaar, O=ArthaSaar, L=India, ST=India, C=IN"
       - name: Configure bubblewrap SDK
         run: |
           mkdir -p $HOME/.bubblewrap
@@ -47,7 +47,7 @@ jobs:
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
           git add market-brain.apk
-          git commit -m "build: Market Brain Android APK v1.0" || echo "no change"
+          git commit -m "build: ArthaSaar Android APK v1.0" || echo "no change"
           git pull --rebase || true
           git push
       - uses: actions/upload-artifact@v4

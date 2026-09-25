@@ -1,4 +1,4 @@
-# fix_brand2.py - rebrand leftovers: data files, TG alert text, APK cert, brandfix tagline.
+# fix_brand2.py - rebrand leftovers: data files, TG alert text, brandfix tagline.
 from pathlib import Path
 
 def sub(path, pairs):
@@ -28,12 +28,5 @@ for f in glob.glob('data/*.json'):
 # 3) test_alert.py: TG message identity
 sub('.github/scripts/test_alert.py', [('Market Brain by Dev', 'ArthaSaar')])
 
-# 4) apk.yml: signing cert name + commit msg (passwords untouched - signing continuity)
-sub('.github/workflows/apk.yml', [
-    ('CN=Market Brain, OU=Dev, O=Dev Raj', 'CN=ArthaSaar, OU=ArthaSaar, O=ArthaSaar'),
-    ('build: Market Brain Android APK', 'build: ArthaSaar Android APK')])
-
-# 5) mbscore.yml: workflow display name
-sub('.github/workflows/mbscore.yml', [('name: Market Brain Score', 'name: ArthaSaar Score')])
-
+# NOTE: apk.yml / mbscore.yml edits seedha API se hote hai (GITHUB_TOKEN workflow files push nahi kar sakta).
 print('DONE')

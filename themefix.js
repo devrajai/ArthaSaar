@@ -1,7 +1,7 @@
-/* themefix.js v4 - ARTHASAAR PREMIUM retheme:
-   1) calm.css inject  2) logo (Bhoomi-Jyoti: earth + flame)  3) favicon fix
-   4) ARtha-SAAR brand  5) ticker tape  6) hero NIFTY panel (status bar removed)
-   NO rline (removed on user request 25 Sep) */
+/* themefix.js v5 - ARTHASAAR PREMIUM (reference header):
+   1) calm.css inject  2) infinity logo  3) favicon fix  4) ARtha-SAAR brand
+   5) MARKET·INTELLIGENCE tagline  6) LIGHT/DARK pill button  7) gradient rline
+   8) ticker tape  9) hero NIFTY panel (+SENSEX from global.json) */
 (function () {
   "use strict";
 
@@ -13,26 +13,21 @@
     document.head.appendChild(l);
   } catch (e) {}
 
-  /* ---------- logo SVGs ---------- */
+  /* ---------- logo SVGs (infinity — reference design) ---------- */
   var GDEF = "<defs><linearGradient id='asg' x1='0' y1='0' x2='1' y2='1'>" +
     "<stop offset='0' stop-color='#7cc4ff'/><stop offset='1' stop-color='#7ce3a8'/></linearGradient></defs>";
-  var LOGO = "<svg viewBox='0 0 64 72' fill='none' xmlns='http://www.w3.org/2000/svg'>" + GDEF +
-    "<circle cx='32' cy='46' r='16' stroke='url(#asg)' stroke-width='3'/>" +
-    "<path d='M20 42c8 4 16 4 24 0' stroke='url(#asg)' stroke-width='1.4' opacity='.55'/>" +
-    "<path d='M22 52c6 3.5 14 3.5 20 0' stroke='url(#asg)' stroke-width='1.4' opacity='.55'/>" +
-    "<path d='M32 32c-6-4.5-7.5-10-4.5-15.5 1.2 3 2.4 4.2 4.5 5.4C31.5 12.8 33.6 8 38.5 4.5c-1.2 6.2-.3 9.3.8 12.4 1.6 5.2-1.7 11-7.3 15.1z' fill='url(#asg)'/>" +
-    "<circle cx='46' cy='12' r='1.8' fill='#7ce3a8'/><circle cx='18' cy='16' r='1.3' fill='#7cc4ff'/>" +
+  var INFPATH = "M32 32c-5-8-11-11-16-11C9 21 4 26 4 32s5 11 12 11c5 0 11-3 16-11z" +
+    "m0 0c5 8 11 11 16 11 7 0 12-5 12-11s-5-11-12-11c-5 0-11 3-16 11z";
+  var LOGO = "<svg viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'>" + GDEF +
+    "<path d='" + INFPATH + "' stroke='url(#asg)' stroke-width='3.4' stroke-linecap='round'/>" +
+    "<circle cx='10' cy='17' r='1.6' fill='#7cc4ff'/><circle cx='54' cy='47' r='1.6' fill='#7ce3a8'/>" +
+    "<path d='M20 44l6-6m4-4l6-6' stroke='url(#asg)' stroke-width='1.4' stroke-linecap='round' opacity='.5'/>" +
     "</svg>";
-  var FAV = "<svg viewBox='0 0 64 76' fill='none' xmlns='http://www.w3.org/2000/svg'>" + GDEF +
-    "<circle cx='32' cy='44' r='16' stroke='url(#asg)' stroke-width='3'/>" +
-    "<path d='M20 40c8 4 16 4 24 0' stroke='url(#asg)' stroke-width='1.4' opacity='.55'/>" +
-    "<path d='M22 50c6 3.5 14 3.5 20 0' stroke='url(#asg)' stroke-width='1.4' opacity='.55'/>" +
-    "<path d='M32 30c-6-4.5-7.5-10-4.5-15.5 1.2 3 2.4 4.2 4.5 5.4C31.5 10.8 33.6 6 38.5 2.5c-1.2 6.2-.3 9.3.8 12.4 1.6 5.2-1.7 11-7.3 15.1z' fill='url(#asg)'/>" +
-    "<circle cx='46' cy='10' r='1.8' fill='#7ce3a8'/>" +
-    "<text x='32' y='72' font-family='Space Grotesk,Arial,sans-serif' font-size='11' font-weight='700' letter-spacing='2.5' text-anchor='middle' fill='#7cc4ff'>SAAR</text>" +
+  var FAV = "<svg viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'>" + GDEF +
+    "<path d='" + INFPATH + "' stroke='url(#asg)' stroke-width='4' stroke-linecap='round'/>" +
     "</svg>";
 
-  /* ---------- 2) logo + 3) favicon + 4) brand ---------- */
+  /* ---------- apply header ---------- */
   function apply() {
     try {
       var lg = document.querySelector("header .logo");
@@ -50,21 +45,56 @@
       var gl = document.querySelector(".glogo");
       if (gl) gl.textContent = "AS";
     } catch (e) {}
-    /* ticker tape under header (sirf ek baar) */
     try {
-      if (!document.querySelector(".as-tape")) {
-        var hr = document.querySelector("header");
-        if (hr && hr.parentNode) {
+      var tg = document.querySelector("header .tagline");
+      if (tg) tg.textContent = "MARKET · INTELLIGENCE";
+    } catch (e) {}
+    /* gradient rline under header (reference) + ticker tape */
+    try {
+      var hr = document.querySelector("header");
+      if (hr && hr.parentNode) {
+        if (!document.querySelector(".as-rline")) {
+          var ln = document.createElement("div");
+          ln.className = "as-rline";
+          hr.parentNode.insertBefore(ln, hr.nextSibling);
+        }
+        if (!document.querySelector(".as-tape")) {
           var tp = document.createElement("div");
           tp.className = "as-tape";
           tp.innerHTML = "<div class='as-tape-in'><b>ARTHASAAR</b>&nbsp;<span class='t'>market ka saar · shanti se dekho</span></div>";
-          hr.parentNode.insertBefore(tp, hr.nextSibling);
+          hr.parentNode.insertBefore(tp, (document.querySelector(".as-rline") || hr).nextSibling);
+        }
+      }
+    } catch (e) {}
+    /* LIGHT/DARK pill */
+    try {
+      var tb = document.querySelector("#themeBtn");
+      if (tb) {
+        var sync = function () {
+          var light = document.documentElement.getAttribute("data-theme") === "light";
+          tb.textContent = light ? "◑ DARK" : "◐ LIGHT";
+        };
+        sync();
+        if (!window.__AS_THEME_OBS) {
+          window.__AS_THEME_OBS = new MutationObserver(sync);
+          window.__AS_THEME_OBS.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
         }
       }
     } catch (e) {}
   }
 
-  /* ---------- 5) ticker tape (live data) ---------- */
+  /* ---------- SENSEX from global.json (yahoo ^BSESN) ---------- */
+  function sensex(cb) {
+    fetch("data/global.json").then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.items) return cb(null);
+      for (var k = 0; k < d.items.length; k++) {
+        if (String(d.items[k].name || "").toUpperCase().indexOf("SENSEX") !== -1) return cb(d.items[k]);
+      }
+      cb(null);
+    }).catch(function () { cb(null); });
+  }
+
+  /* ---------- ticker tape ---------- */
   function ticker() {
     fetch("data/indices-all.json").then(function (r) { return r.json(); }).then(function (d) {
       var tp = document.querySelector(".as-tape");
@@ -85,11 +115,20 @@
         parts.push("<span><b>" + i.index + "</b> " + Number(i.price).toLocaleString("en-IN") + " <span class='t " + c + "'>" + (i.change_pct > 0 ? "+" : "") + (Number(i.change_pct) || 0).toFixed(2) + "%</span></span>");
       });
       var one = parts.join("");
-      tp.innerHTML = "<div class='as-tape-in'>" + one + one + "</div>";
+      var draw = function (sx) {
+        if (sx) {
+          var c2 = (sx.chg_pct || 0) > 0 ? "u" : "d";
+          var sv = (sx.chg_pct > 0 ? "+" : "") + Number(sx.chg_pct).toFixed(2) + "%";
+          var sSpan = "<span><b>SENSEX</b> " + Number(sx.price).toLocaleString("en-IN") + " <span class='t " + c2 + "'>" + sv + "</span></span>";
+          one = sSpan + one;
+        }
+        tp.innerHTML = "<div class='as-tape-in'>" + one + one + "</div>";
+      };
+      sensex(draw);
     }).catch(function () {});
   }
 
-  /* ---------- 6) hero NIFTY panel (home top) ---------- */
+  /* ---------- hero NIFTY panel (home top) ---------- */
   function desk() {
     fetch("data/indices-all.json").then(function (r) { return r.json(); }).then(function (d) {
       if (!d || !d.indices || !d.indices.length) return;
@@ -103,7 +142,6 @@
       var by = {};
       idx.forEach(function (i) { by[i.index] = i; });
       var n = by["NIFTY 50"] || idx[0];
-      var sen = by["SENSEX"];
       var v = by["INDIA VIX"];
       var chg = n ? (Number(n.change_pct) || 0) : 0;
       var el = document.createElement("div");
@@ -115,10 +153,17 @@
         "<div class='as-hg'>" +
         "<div class='as-hc'><i>TREND</i><b class='" + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "UP" : "DOWN") + "</b></div>" +
         "<div class='as-hc'><i>BREADTH</i><b class='" + (pos > idx.length / 2 ? "u" : "d") + "'>" + pos + "/" + idx.length + "</b></div>" +
-        "<div class='as-hc'><i>SENSEX</i><b>" + (sen ? Number(sen.price).toLocaleString("en-IN") : "—") + "</b></div>" +
+        "<div class='as-hc'><i>SENSEX</i><b id='as-sx'>—</b></div>" +
         "<div class='as-hc'><i>VIX</i><b class='" + (v && (Number(v.change_pct) || 0) < 0 ? "u" : "d") + "'>" + (v ? Number(v.price).toFixed(1) : "—") + "</b></div>" +
         "</div>";
       home.insertBefore(el, home.firstChild);
+      sensex(function (sx) {
+        var cell = document.getElementById("as-sx");
+        if (!cell) return;
+        if (!sx) { cell.textContent = "—"; return; }
+        cell.className = (Number(sx.chg_pct) || 0) >= 0 ? "u" : "d";
+        cell.textContent = Number(sx.price).toLocaleString("en-IN");
+      });
     }).catch(function () {});
   }
 
@@ -133,7 +178,6 @@
   function boot() { if (window.MB_LOCKED) return; rmstatus(); apply(); ticker(); desk(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
-  /* gate ke baad body replace ho sakta hai — thoda baad me dobara apply */
   setTimeout(boot, 2500);
   setTimeout(desk, 6000);
 })();

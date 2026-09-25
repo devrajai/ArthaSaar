@@ -1,6 +1,6 @@
-/* themefix.js v3 - ARTHASAAR PRO retheme:
+/* themefix.js v4 - ARTHASAAR PREMIUM retheme:
    1) calm.css inject  2) logo (Bhoomi-Jyoti: earth + flame)  3) favicon fix
-   4) ARtha-SAAR brand  5) ticker tape  6) desk summary strip  7) status bar
+   4) ARtha-SAAR brand  5) ticker tape  6) hero NIFTY panel (status bar removed)
    NO rline (removed on user request 25 Sep) */
 (function () {
   "use strict";
@@ -89,13 +89,13 @@
     }).catch(function () {});
   }
 
-  /* ---------- 6) desk summary strip (home top) ---------- */
+  /* ---------- 6) hero NIFTY panel (home top) ---------- */
   function desk() {
     fetch("data/indices-all.json").then(function (r) { return r.json(); }).then(function (d) {
       if (!d || !d.indices || !d.indices.length) return;
       var home = document.querySelector("section#home");
       if (!home) return;
-      var old = document.querySelector(".as-desk");
+      var old = document.querySelector(".as-hero");
       if (old && old.parentNode) old.parentNode.removeChild(old);
       var idx = d.indices;
       var pos = 0;
@@ -103,34 +103,34 @@
       var by = {};
       idx.forEach(function (i) { by[i.index] = i; });
       var n = by["NIFTY 50"] || idx[0];
+      var sen = by["SENSEX"];
       var v = by["INDIA VIX"];
       var chg = n ? (Number(n.change_pct) || 0) : 0;
       var el = document.createElement("div");
-      el.className = "as-desk";
+      el.className = "as-hero";
       var dt = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short" }).toUpperCase();
-      el.innerHTML = "<div class='as-dh'><b>DESK SUMMARY</b><span>" + dt + " · LIVE</span></div>" +
-        "<div class='as-dg'>" +
-        "<div class='as-dc'><div class='as-dl'>TREND</div><div class='as-dv " + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "UP" : "DOWN") + "</div></div>" +
-        "<div class='as-dc'><div class='as-dl'>BREADTH</div><div class='as-dv " + (pos > idx.length / 2 ? "u" : "d") + "'>" + pos + "/" + idx.length + "</div></div>" +
-        "<div class='as-dc'><div class='as-dl'>NIFTY</div><div class='as-dv'>" + (n ? Number(n.price).toLocaleString("en-IN") : "—") + "</div></div>" +
-        "<div class='as-dc'><div class='as-dl'>VIX</div><div class='as-dv " + (v && (Number(v.change_pct) || 0) < 0 ? "u" : "d") + "'>" + (v ? Number(v.price).toFixed(1) : "—") + "</div></div>" +
+      el.innerHTML = "<div class='as-ht'><span>NIFTY 50 · LIVE</span><span>" + dt + " IST</span></div>" +
+        "<div class='as-hv'>" + (n ? Number(n.price).toLocaleString("en-IN") : "—") +
+        "<span class='" + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "▲" : "▼") + " " + Math.abs(chg).toFixed(2) + "%</span></div>" +
+        "<div class='as-hg'>" +
+        "<div class='as-hc'><i>TREND</i><b class='" + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "UP" : "DOWN") + "</b></div>" +
+        "<div class='as-hc'><i>BREADTH</i><b class='" + (pos > idx.length / 2 ? "u" : "d") + "'>" + pos + "/" + idx.length + "</b></div>" +
+        "<div class='as-hc'><i>SENSEX</i><b>" + (sen ? Number(sen.price).toLocaleString("en-IN") : "—") + "</b></div>" +
+        "<div class='as-hc'><i>VIX</i><b class='" + (v && (Number(v.change_pct) || 0) < 0 ? "u" : "d") + "'>" + (v ? Number(v.price).toFixed(1) : "—") + "</b></div>" +
         "</div>";
       home.insertBefore(el, home.firstChild);
     }).catch(function () {});
   }
 
-  /* ---------- 7) status bar ---------- */
-  function statusbar() {
+  /* ---------- status bar REMOVED (user request 25 Sep) — purana ho to hatao ---------- */
+  function rmstatus() {
     try {
-      if (document.querySelector(".as-status")) return;
-      var s = document.createElement("div");
-      s.className = "as-status";
-      s.innerHTML = "<i class='s1'>EDUCATIONAL</i><i class='s2'>NOT ADVICE</i><i class='s3'>FREE SOURCES</i><i class='s4'>ARTHASAAR</i>";
-      (document.body || document.documentElement).appendChild(s);
+      var sb = document.querySelector(".as-status");
+      if (sb && sb.parentNode) sb.parentNode.removeChild(sb);
     } catch (e) {}
   }
 
-  function boot() { if (window.MB_LOCKED) return; apply(); statusbar(); ticker(); desk(); }
+  function boot() { if (window.MB_LOCKED) return; rmstatus(); apply(); ticker(); desk(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
   /* gate ke baad body replace ho sakta hai — thoda baad me dobara apply */

@@ -24,13 +24,13 @@
     if (i >= files.length) return;
     var f = files[i++];
     var s = document.createElement("script");
-    s.src = f + "?v=as13";
+    s.src = f + "?v=as14";
     s.async = false;
     s.onload = function () { tries[f] = 0; next(); };
     s.onerror = function () {
       tries[f] = (tries[f] || 0) + 1;
       if (tries[f] <= 4) { i--; setTimeout(next, 400 * tries[f]); return; }
-      banner("\u26A0 " + f + " load fail — page ek baar refresh karo");
+      
       next();
     };
     document.head.appendChild(s);

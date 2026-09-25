@@ -24,7 +24,7 @@
 
   function build(card) {
     card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(96,165,250,.13);border:1px solid rgba(96,165,250,.5);font-size:14.5px;text-align:center"><b style="color:rgba(125,180,255,.95)">\uD83C\uDF0D GLOBAL RADAR</b> <span style="font-size:11px;opacity:.65">world indices \u00b7 commodities \u00b7 India asar</span></summary>' +
-      '<div id="glBody" class="note" style="margin-top:8px">loading world...</div>';
+      '<div id="glBody" class="note" style="margin-top:8px"></div>';
     fetch("data/world.json").then(function (r) { return r.json(); }).then(function (d) {
       D = d;
       var b = document.getElementById("glBody");

@@ -84,20 +84,33 @@
     } catch (e) {}
   }
 
+  /* ---------- v14: fetch + auto-retry + 10-min memo (fail hote hi khud dobara, duplicate fetch nahi) ---------- */
+  var fmem = {};
+  function fjson(url, cb, n) {
+    var m = fmem[url], now = Date.now();
+    if (m && now - m.t < 600000) { cb(m.d); return; }
+    fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+      fmem[url] = { t: now, d: d }; cb(d);
+    }).catch(function () {
+      n = (n || 0) + 1;
+      if (n <= 4) setTimeout(function () { fjson(url, cb, n); }, 3000 * n);
+    });
+  }
+
   /* ---------- SENSEX from global.json (yahoo ^BSESN) ---------- */
   function sensex(cb) {
-    fetch("data/global.json").then(function (r) { return r.json(); }).then(function (d) {
+    fjson("data/global.json", function (d) {
       if (!d || !d.items) return cb(null);
       for (var k = 0; k < d.items.length; k++) {
         if (String(d.items[k].name || "").toUpperCase().indexOf("SENSEX") !== -1) return cb(d.items[k]);
       }
       cb(null);
-    }).catch(function () { cb(null); });
+    });
   }
 
   /* ---------- ticker tape ---------- */
   function ticker() {
-    fetch("data/indices-all.json").then(function (r) { return r.json(); }).then(function (d) {
+    fjson("data/indices-all.json", function (d) {
       var tp = document.querySelector(".as-tape");
       if (!tp || !d || !d.indices || !d.indices.length) return;
       var want = ["NIFTY 50", "NIFTY BANK", "SENSEX", "INDIA VIX", "NIFTY IT", "NIFTY MIDCAP 150", "NIFTY SMALLCAP 250", "NIFTY AUTO", "NIFTY METAL", "NIFTY FMCG"];
@@ -126,12 +139,12 @@
         tp.innerHTML = "<div class='as-tape-in'>" + one + one + "</div>";
       };
       sensex(draw);
-    }).catch(function () {});
+    });
   }
 
   /* ---------- hero NIFTY panel (home top) ---------- */
   function desk() {
-    fetch("data/indices-all.json").then(function (r) { return r.json(); }).then(function (d) {
+    fjson("data/indices-all.json", function (d) {
       if (!d || !d.indices || !d.indices.length) return;
       var home = document.querySelector("section#home");
       if (!home) return;
@@ -165,13 +178,13 @@
         cell.className = (Number(sx.chg_pct) || 0) >= 0 ? "u" : "d";
         cell.textContent = Number(sx.price).toLocaleString("en-IN");
       });
-    }).catch(function () {});
+    });
   }
 
 
   /* ---------- FORECAST RADAR (replaces AI head card) ---------- */
   function radarHead() {
-    fetch("data/timesfm_forecasts.json").then(function (r) { return r.json(); }).then(function (d) {
+    fjson("data/timesfm_forecasts.json", function (d) {
       var el = document.getElementById("aiHead");
       if (!el || !d || !d.forecasts) return;
       var by = {};
@@ -191,22 +204,34 @@
       var nUp = F.filter(function (f) { return f.direction === "up"; }).length;
       el.innerHTML = "<div class='as-fr as-frt'><span>FORECAST RADAR</span><b>" +
         nUp + "▲ " + (F.length - nUp) + "▼</b></div>" + rows;
-    }).catch(function () {});
+    });
   }
 
   function watchAIHead() {
     var el = document.getElementById("aiHead");
     if (!el) return;
     radarHead();
+    /* v14 BUGFIX: purana check (indexOf !== 0) har innerHTML change pe true hota tha
+       kyunki innerHTML "<div..." se shuru hota hai -> infinite fetch loop (site slow ho jaati thi).
+       Ab sirf tab refetch jab FORECAST RADAR content hi na ho. */
+    var busy = false;
     var ob = new MutationObserver(function () {
-      if (el.innerHTML.indexOf("FORECAST RADAR") !== 0) radarHead();
+      if (busy) return;
+      if (el.innerHTML.indexOf("FORECAST RADAR") === -1) {
+        busy = true;
+        setTimeout(function () { busy = false; }, 800);
+        radarHead();
+      }
     });
     ob.observe(el, { childList: true, subtree: true });
   }
 
-  /* ---------- EVENT RADAR (ipo open/close pipeline events) ---------- */
+  /* ---------- EVENT RADAR (ipo open/close pipeline events) ----------
+     v14: chevron button (open/close expand), closed+upcoming IPO ka pura info,
+     expand state auto-refresh ke baad bhi preserve */ 
+  var evOpenState = {};
   function eventRadar() {
-    fetch("ipo/data/terminal-events.json").then(function (r) { return r.json(); }).then(function (d) {
+    fjson("ipo/data/terminal-events.json", function (d) {
       var evs = (d && d.events) || [];
       var today = new Date();
       function iso(dt) { return dt.toISOString().slice(0, 10); }
@@ -219,23 +244,32 @@
         (mk[k] = mk[k] || []).push(e);
       });
       var byName = {};
-      fetch("ipo/data/ipo-data.json").then(function (r) { return r.json(); }).then(function (id) {
+      fjson("ipo/data/ipo-data.json", function (id) {
         (id.ipos || []).forEach(function (x) { byName[String(x.name || "").toLowerCase()] = x; });
         render();
-      }).catch(function () { render(); });
+      });
       function esc2(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+      function ok(v) { return v != null && v !== "" && v !== "—"; }
       function row(e) {
         var x = byName[String(e.name || "").toLowerCase()] || {};
         var open = String(e.type || "").toUpperCase() === "OPEN";
         var d = e.date ? e.date.slice(8) + "/" + e.date.slice(5, 7) : "";
         var nm2 = String(e.name || "").replace(/ Limited$| Ltd$/i, "");
         var bits = [];
-        if (x.price && x.price !== "—") bits.push("Price " + esc2(x.price));
-        if (x.lot && x.lot !== "—") bits.push("Lot " + esc2(x.lot));
-        if (x.gmp && x.gmp !== "—") bits.push("GMP " + esc2(x.gmp));
-        return '<details style="margin-top:6px"><summary style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:13.5px;flex-wrap:wrap">' +
+        if (ok(x.type)) bits.push(esc2(x.type));
+        if (ok(x.status)) bits.push("Status: " + esc2(x.status));
+        if (ok(x.price)) bits.push("Price " + esc2(x.price));
+        if (ok(x.lot)) bits.push("Lot " + esc2(x.lot));
+        if (ok(x.size)) bits.push("Size " + esc2(x.size));
+        if (ok(x.open) || ok(x.close)) bits.push("Dates " + esc2(ok(x.open) ? x.open : "—") + " → " + esc2(ok(x.close) ? x.close : "—"));
+        if (ok(x.listing)) bits.push("Listing " + esc2(x.listing));
+        if (ok(x.sub)) bits.push("Sub " + esc2(x.sub));
+        if (ok(x.gmp)) bits.push("GMP " + esc2(x.gmp));
+        return '<details data-ev="' + esc2(nm2) + '"' + (evOpenState[nm2] ? ' open' : '') + ' style="margin-top:6px">' +
+          '<summary style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:13.5px;flex-wrap:wrap;list-style:none">' +
           '<b>' + esc2(nm2) + '</b>' +
-          '<span style="margin-left:auto;font-weight:700;font-size:11.5px;color:' + (open ? "#77f37b" : "#ff8b8b") + '">' + esc2(e.type || "") + ' · ' + d + '</span></summary>' +
+          '<span style="margin-left:auto;font-weight:700;font-size:11.5px;color:' + (open ? "#77f37b" : "#ff8b8b") + '">' + esc2(e.type || "") + ' · ' + d + '</span>' +
+          '<span class="as-chev">▸</span></summary>' +
           '<div style="padding:6px 14px 10px 14px;font-size:12.5px;opacity:.85;line-height:1.6">' + (bits.join(" · ") || "IPO calendar event") + '</div></details>';
       }
       function render() {
@@ -248,9 +282,17 @@
         });
         if (!fut.length) html += "<div class='as-evm'>koi upcoming event data nahi</div>";
         var card = document.getElementById("evCard");
-        if (card) card.innerHTML = html;
+        if (card) {
+          card.innerHTML = html;
+          var ds = card.querySelectorAll("details[data-ev]");
+          for (var i = 0; i < ds.length; i++) {
+            (function (dd) {
+              dd.addEventListener("toggle", function () { evOpenState[dd.getAttribute("data-ev")] = dd.open; });
+            })(ds[i]);
+          }
+        }
       }
-    }).catch(function () {});
+    });
   }
 
   function buildEvents() {
@@ -300,10 +342,16 @@
     var m = ist.getHours() * 60 + ist.getMinutes();
     return ist.getDay() >= 1 && ist.getDay() <= 5 && m >= 555 && m <= 930;
   }
-  setInterval(function () {
-    try { ticker(); desk(); radarHead(); eventRadar(); } catch (e) {}
-  }, 900000);
-  setInterval(function () {
-    if (mktOpen()) { try { ticker(); desk(); radarHead(); eventRadar(); } catch (e) {} }
-  }, 180000);
+  /* v14: light refresh 3 min (market hours) / full refresh 15 min - SAB sections automatic */
+  function cycleLight() { try { ticker(); desk(); radarHead(); eventRadar(); } catch (e) {} }
+  function cycleFull() {
+    try {
+      fmem = {};
+      if (window.__MB_FLUSH) window.__MB_FLUSH();
+      if (window.__MB_RERENDER) window.__MB_RERENDER();
+    } catch (e) {}
+    cycleLight();
+  }
+  setInterval(cycleFull, 900000);
+  setInterval(function () { if (mktOpen()) cycleLight(); }, 180000);
 })();

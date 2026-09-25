@@ -62,7 +62,7 @@
     if (!sec || document.getElementById("gtiCard")) return;
     var card = document.createElement("div");
     card.className = "card"; card.id = "gtiCard";
-    card.innerHTML = '<div class="subhead">GTI Zones</div><div class="note">load ho raha hai...</div>';
+    card.innerHTML = '<div class="subhead">GTI Zones</div><div class="note"></div>';
     sec.appendChild(card);
     fetch("data/gti.json?t=" + Date.now()).then(function (r) { return r.json(); }).then(function (d) { DATA = d; render(); })
       .catch(function () {

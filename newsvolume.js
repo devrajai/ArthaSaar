@@ -59,7 +59,7 @@
     card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83D\uDCCA NEWS VOLUME</b></summary>' +
       guide +
       '<div id="nvSearch" style="margin-top:10px"><input id="nvQ" placeholder="company search... (RELIANCE, TCS)" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:inherit;font-size:13px;outline:none"></div>' +
-      '<div id="nvBody" class="note" style="margin-top:8px">loading news volume...</div>';
+      '<div id="nvBody" class="note" style="margin-top:8px"></div>';
     var inp = document.getElementById("nvQ");
     inp.addEventListener("input", function () { render(document.getElementById("nvBody"), inp.value); });
     fetch("data/news-volume.json").then(function (r) { return r.json(); }).then(function (d) {

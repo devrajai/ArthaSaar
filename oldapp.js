@@ -16,22 +16,49 @@ const agoUTC = (iso) => { try { return iso ? iso.slice(11, 16) + " UTC" : ""; } 
 const BASE = "./data/";
 const IPO_URL = "ipo/data/ipo-data.json"; // v13: local repo data (auto-update hota hai)
 const cache = {};
+/* v14: stale-while-revalidate - pehli baar network, uske baad Cache API se TURANT
+   (repeat visit pe data instant dikhta hai), background me fresh data aata rehta hai */
+const DC = (window.caches
+  ? caches.open("as-data-v1").catch(function () { return null; })
+  : Promise.resolve(null));
+function jsave(url, d) {
+  try {
+    DC.then(function (c) { if (c) c.put(url, new Response(JSON.stringify(d))); }).catch(function () {});
+  } catch (e) {}
+}
+window.__asTick = (function () {
+  var last = 0;
+  return function () {
+    var now = Date.now();
+    if (now - last < 60000) return;
+    last = now;
+    setTimeout(function () { try { window.__MB_RERENDER && window.__MB_RERENDER(); } catch (e) {} }, 3000);
+  };
+})();
 function jload(key, url) {
-  if (!cache[key]) cache[key] = (function attempt(n) {
-    return fetch((url || BASE + key + ".json") + "?t=" + Date.now())
+  if (cache[key]) return cache[key];
+  var u = url || BASE + key + ".json";
+  var net = (function attempt(n) {
+    return fetch(u + "?t=" + Date.now())
       .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((d) => { jsave(u, d); if (window.__asTick) window.__asTick(); return d; })
       .catch((e) => {
         if (n < 3) return new Promise((res) => setTimeout(res, 500 * (n + 1))).then(() => attempt(n + 1));
         delete cache[key];
         throw e;
       });
   })(0);
+  var cached = DC.then(function (c) { return c ? c.match(u) : null; })
+    .then(function (m) { return m ? m.json() : null; })
+    .catch(function () { return null; });
+  cache[key] = cached.then(function (pre) {
+    if (pre) { net.catch(function () {}); return pre; }
+    return net;
+  });
   return cache[key];
 }
 const fail = (id) => (e) => {
-  const n = document.getElementById(id);
-  if (n) n.innerHTML = '<div class="loading load-err">load failed — tap ⟳ refresh (' +
-    esc(e && e.message || "error") + ")</div>";
+  /* v14: silent - auto-retry + periodic refresh khud data laata hai, koi error text nahi */
 };
 
 /* ---------- theme / clock / market status ---------- */
@@ -249,7 +276,7 @@ function filteredStocks() {
 }
 function renderScreener() {
   if (scrData) return;
-  $("#scrBody").innerHTML = '<tr><td colspan="8" class="loading">loading 2,085 stocks…</td></tr>';
+  $("#scrBody").innerHTML = "";
   jload("brain-screener").then((d) => {
     scrData = d;
     const draw = () => {
@@ -280,7 +307,7 @@ function renderScreener() {
 let fndData = null, fndShown = 0;
 function renderFundamentals() {
   if (fndData) return;
-  $("#fndBody").innerHTML = '<tr><td colspan="7" class="loading">loading fundamentals…</td></tr>';
+  $("#fndBody").innerHTML = "";
   jload("fundamentals").then((d) => {
     fndData = d;
     const rows = () => Object.keys(d).filter((k) => !k.startsWith("_"));
@@ -321,7 +348,7 @@ function renderFundamentals() {
 
 /* ---------- IPO ---------- */
 function renderIPO() {
-  $("#ipoBox").innerHTML = '<div class="loading">loading IPO data…</div>';
+  $("#ipoBox").innerHTML = "";
   jload("ipo", IPO_URL).then((d) => {
     const ipos = d.ipos || [];
     const card = (x) => '<div class="card" style="margin-bottom:10px"><div style="display:flex;' +
@@ -435,7 +462,7 @@ function renderAI() {
 
 /* ---------- filings ---------- */
 function renderFilings() {
-  $("#filBox").innerHTML = '<div class="loading">loading filings…</div>';
+  $("#filBox").innerHTML = "";
   jload("filings").then((d) => {
     const fils = d.filings || [];
     const cats = [...new Set(fils.map((f) => f.category))].filter(Boolean);
@@ -470,7 +497,7 @@ function renderFilings() {
 /* ---------- learn: education hub ---------- */
 let lcData = null, eduData = null, learnTab = "course", stratType = "intraday";
 function renderLearn() {
-  $("#eduBox").innerHTML = '<div class="loading">loading learning hub…</div>';
+  $("#eduBox").innerHTML = "";
   const P = [];
   P.push(jload("learn-content").then((d) => { lcData = d; }, () => {}));
   P.push(jload("education").then((d) => { eduData = d; }, () => {}));
@@ -630,8 +657,7 @@ function drawHist(d) {
     b.onclick = () => { histIx = b.getAttribute("data-hix"); drawHist(d); });
 }
 function renderStudies() {
-  jload("index-history").then(drawHist, () => { $("#histCard").innerHTML =
-    '<div class="loading load-err">history unavailable</div>'; });
+  jload("index-history").then(drawHist, function () {});
   Promise.allSettled([jload("devs_notes_digest"), jload("budget-study")]).then(([D, B]) => {
     if (D.status === "fulfilled") {
       const s = (D.value.sensex_history_dev_study || {}).years || [];
@@ -663,7 +689,7 @@ function renderStudies() {
 
 /* ---------- my notes ---------- */
 function renderNotes() {
-  $("#notesBox").innerHTML = '<div class="loading">loading notes…</div>';
+  $("#notesBox").innerHTML = "";
   jload("devs_notes_digest").then((d) => {
     const topics = (d.course_notes_advance_pdf || []).map((t) =>
       '<details class="gl"><summary>' + esc(t.topic) + "</summary><ul>" +
@@ -676,7 +702,7 @@ function renderNotes() {
 let dfData = null, dfShown = 0;
 function renderDeepFund() {
   if (dfData) return;
-  $("#dfBody").innerHTML = '<tr><td colspan="12" class="loading">loading deep fundamentals…</td></tr>';
+  $("#dfBody").innerHTML = "";
   jload("screener-fundamentals").then((d) => {
     dfData = d;
     const keys = () => Object.keys(d.stocks || {});
@@ -728,7 +754,7 @@ function renderDeepFund() {
 
 /* ---------- futures ---------- */
 function renderFutures() {
-  $("#futIdx").innerHTML = '<div class="loading">loading futures…</div>';
+  $("#futIdx").innerHTML = "";
   jload("futures").then((d) => {
     $("#futIdx").innerHTML = (d.indices || []).map((i) =>
       '<div class="card"><div class="subhead">' + esc(i.symbol) + " futures — spot " + nf2(i.underlying) + "</div>" +
@@ -770,7 +796,7 @@ function renderGlobal() {
 /* ---------- news ---------- */
 let newsTopic = "All";
 function renderNews() {
-  $("#newsBox").innerHTML = '<div class="loading">loading news…</div>';
+  $("#newsBox").innerHTML = "";
   jload("news").then((d) => {
     const items = d.items || [];
     const topics = ["All"].concat(Array.from(new Set(items.map((x) => x.topic).filter(Boolean))));
@@ -826,7 +852,7 @@ function renderHeatmap() {
     $("#hmChips").querySelectorAll(".chip").forEach((b) =>
       b.onclick = () => { hmTab = b.getAttribute("data-hm"); renderHeatmap(); });
   }, () => { $("#hmChips").innerHTML = ""; });
-  $("#hmBody").innerHTML = '<div class="loading">loading heatmap\u2026</div>';
+  $("#hmBody").innerHTML = "";
   if (hmTab === "All Indices") {
     jload("indices-all").then((d) => {
       const L = d.indices || [];
@@ -932,7 +958,7 @@ function pfSave(x) {
   try { localStorage.setItem("mb-pf", JSON.stringify(x)); } catch (e) {}
 }
 function renderPortfolio() {
-  $("#pfBody").innerHTML = '<tr><td colspan="9" class="loading">loading holdings…</td></tr>';
+  $("#pfBody").innerHTML = "";
   jload("brain-screener").then((d) => {
     const bysym = {};
     (d.stocks || []).forEach((s) => bysym[s.symbol] = s);
@@ -1057,7 +1083,7 @@ const t12 = (t) => {
   return h + ":" + m[2] + " " + ap;
 };
 function renderEvents() {
-  $("#evBox").innerHTML = '<div class="loading">loading event calendar…</div>';
+  $("#evBox").innerHTML = "";
   jload("events").then((d) => {
     const draw = () => {
       const W = d.week || [], K = d.key_dates || [], E = d.earnings || [];
@@ -1111,7 +1137,7 @@ function renderEvents() {
                 (e.country === "US" ? " (US)" : "") + "</span><b style=\"text-align:right;color:var(--dim)\">quarterly result</b></div>").join("") + "</div>").join("");
         }
       }
-      $("#evBox").innerHTML = html + '<div class="footer-note">all times IST · economic calendar: this week + next week · refreshed daily 6:10 AM IST · Fed/RBI/budget dates from official calendars</div>';
+      $("#evBox").innerHTML = html;
     };
     draw();
   }, fail("evBox"));
@@ -1183,7 +1209,7 @@ function renderCompany(sym) {
     return;
   }
   res.innerHTML = "";
-  body.innerHTML = '<div class="loading">loading company card…</div>';
+  body.innerHTML = "";
   jload("companies/" + sym.toUpperCase()).then(drawCompany, function () {
     body.innerHTML = '<div class="note">No company card for ' + esc(sym) +
       " yet — cards are being built for all Nifty 500 stocks (weekly). Try RELIANCE, TCS, HDFCBANK, INFY…</div>";
@@ -1191,6 +1217,12 @@ function renderCompany(sym) {
 }
 
 /* ---------- app-style view router ---------- */
+window.__MB_FLUSH = function () { for (var k in cache) delete cache[k]; };
+window.__MB_RERENDER = function () {
+  try {
+    loaded.forEach(function (id) { if (loaders[id]) { try { loaders[id](); } catch (e) {} } });
+  } catch (e) {}
+};
 const loaders = {dash: renderDash, indices: renderIndices, heatmap: renderHeatmap, screener: renderScreener, events: renderEvents,
   charts: renderCharts, portfolio: renderPortfolio,
   fundamentals: renderFundamentals, deepfund: renderDeepFund, futures: renderFutures, ipo: renderIPO, crypto: renderCrypto, global: renderGlobal, news: renderNews, ai: renderAI,

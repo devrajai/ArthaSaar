@@ -31,7 +31,7 @@
     if (!sec || document.getElementById("macroPulseCard")) return;
     var card = document.createElement("div");
     card.className = "card"; card.id = "macroPulseCard";
-    card.innerHTML = '<div class="subhead">Macro Pulse</div><div class="note">load ho raha hai...</div>';
+    card.innerHTML = '<div class="subhead">Macro Pulse</div><div class="note"></div>';
     sec.appendChild(card);
     fetch("data/macro.json?t=" + Date.now()).then(function (r) { return r.json(); }).then(render).catch(function () {
       var b = document.getElementById("macroPulseCard");

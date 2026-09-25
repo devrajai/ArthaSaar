@@ -37,7 +37,7 @@
 
   function build(card) {
     card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(119,243,123,.10);border:1px solid rgba(119,243,123,.45);font-size:14.5px;text-align:center"><b style="color:rgba(150,240,150,.95)">\uD83D\uDCF0 DAILY AUTHENTIC NEWS</b></summary>' +
-      '<div id="dgBody" class="note" style="margin-top:8px">loading digest...</div>';
+      '<div id="dgBody" class="note" style="margin-top:8px"></div>';
     fetch('data/news-digest.json').then(function (r) { return r.json(); }).then(function (d) {
       var b = document.getElementById('dgBody');
       var h = '<div class="note" style="margin-top:8px">' + esc(d.u) + ' \u00b7 9 PM daily \u00b7 Google News RSS (free)</div>';

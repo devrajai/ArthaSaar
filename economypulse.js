@@ -47,7 +47,7 @@
 
   function build(card) {
     card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83C\uDDEE\uD83C\uDDF3 ECONOMY PULSE</b></summary>' +
-      '<div id="epBody" class="note" style="margin-top:8px">loading economy pulse...</div>';
+      '<div id="epBody" class="note" style="margin-top:8px"></div>';
     fetch("data/economy-pulse.json").then(function (r) { return r.json(); }).then(function (d) {
       var h = '<div class="note" style="margin-top:8px">Govt data se economy ka asli haal - sab green to economy strong, girne lage to dhyan. Figures verified (monthly releases), headlines roz auto-update. Tap = detail + stock impact + FII monthly bars. (indicative, advice nahi)</div>';
       (d.ind || []).forEach(function (i) { h += row(i); });

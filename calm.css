@@ -227,3 +227,13 @@ a{color:var(--blue)}
 .as-evb.close{background:rgba(224,110,110,.12);color:#e08c8c}
 .as-evn{font-size:11px;font-weight:600;line-height:1.25}
 .as-evm{font-family:var(--mono);font-size:8px;color:var(--faint);letter-spacing:.04em}
+
+/* ---------- v14: dashboard mobile-friendly + event radar chevron ---------- */
+@media(max-width:430px){
+  #kpiRow{grid-template-columns:repeat(2,1fr)}
+  #kpiRow .kpi{padding:11px 7px}
+  #kpiRow .k-val{font-size:17px}
+  #kpiRow .k-name{font-size:8px}
+}
+.as-chev{font-family:var(--mono);font-size:12px;color:var(--faint);transition:transform .15s;flex:0 0 auto;line-height:1}
+details[data-ev][open] .as-chev{transform:rotate(90deg);color:var(--text)}

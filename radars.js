@@ -58,7 +58,7 @@
       bot.forEach(function (i) { h += badge(esc(i.index) + " " + fmt(i.change_pct, 1) + "%", "var(--down-dim)", "var(--down)"); });
       h += "<div class='footer-note'>Radar: breadth dikhta hai ki market andar se kaisa hai - sab green = healthy, sirf Nifty green = weak inside.</div>";
       setB("mbIdxRadarBody", h);
-    }).catch(function () { setB("mbIdxRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbIdxRadarBody", ""); });
   }
 
   /* 2) FUNDAMENTAL RADAR - valuation meter + quality counts */
@@ -90,7 +90,7 @@
       h += "<div class='kpi' style='text-align:center'><div class='k-name'>YIELD &ge;3%<br>income stocks</div><div class='k-val' style='font-size:24px;color:var(--amber)'>" + hy + "</div></div>";
       h += "</div><div class='footer-note'>Radar: " + n + " Nifty-500 stocks se nikala. History me Nifty P/E 17-21 band fair raha hai - usse upar mehgi, neeche sasti market.</div>";
       setB("mbFundRadarBody", h);
-    }).catch(function () { setB("mbFundRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbFundRadarBody", ""); });
   }
 
   /* 3) MF RADAR - top funds + best/worst */
@@ -120,7 +120,7 @@
       });
       h += "</div><div class='footer-note'>Radar: returns total % hai (annual nahi). Winner-chasing mat karo - category dekho, 3-5Y dekho.</div>";
       setB("mbMfRadarBody", h);
-    }).catch(function () { setB("mbMfRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbMfRadarBody", ""); });
   }
 
   /* 4) DEEP FUND RADAR - FD beaters + deep value */
@@ -148,7 +148,7 @@
       });
       h += "<div class='footer-note'>Radar: yield trap bhi hota hai (price girne se yield chadhta hai) - pehle company ki halat dekho. Yield = salary, P/E = kitna bhugtan.</div>";
       setB("mbDfRadarBody", h);
-    }).catch(function () { setB("mbDfRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbDfRadarBody", ""); });
   }
 
   /* 5) FILINGS RADAR - latest filings ticker */
@@ -177,7 +177,7 @@
       });
       h += "</tbody></table></div><div class='footer-note'>Radar: bulk deal + insider pledge = 🐋 whale ka signal. Company khud apni stock kharid raha = bull sign.</div>";
       setB("mbFilRadarBody", h);
-    }).catch(function () { setB("mbFilRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbFilRadarBody", ""); });
   }
 
   /* 6) FUTURES RADAR - basis + PCR + max pain */
@@ -209,7 +209,7 @@
       }
       h += "</div><div class='footer-note'>Radar: premium = bulls ka paisa, discount = dar. PCR >1.2 me ghabraavat (contrarian), <0.7 pe pagal bullish. Max pain expiry pe magnet hai.</div>";
       setB("mbFutRadarBody", h);
-    }).catch(function () { setB("mbFutRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbFutRadarBody", ""); });
   }
 
   /* 7) GTI ZONES RADAR - current zone + compression */
@@ -240,7 +240,7 @@
       });
       h += "<div class='footer-note'>Radar: SD = supply (upar bikta hai), SS = support (niche khareedte hai). Price SD ke paas = resistance, SS ke paas = support.</div>";
       setB("mbGtiRadarBody", h);
-    }).catch(function () { setB("mbGtiRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbGtiRadarBody", ""); });
   }
 
   /* 8) SECTOR MAP RADAR - heat grid */
@@ -263,7 +263,7 @@
       });
       h += "</div><div class='footer-note'>Radar: jahan gehra green = aaj paisa wahan. Kal ka colour badal jaye to rotation pakdo - paisa ghoom raha hai.</div>";
       setB("mbSecRadarBody", h);
-    }).catch(function () { setB("mbSecRadarBody", "data load nahi hua - refresh karo"); });
+    }).catch(function () { setB("mbSecRadarBody", ""); });
   }
 
   function boot() {

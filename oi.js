@@ -35,7 +35,7 @@
     if (!sec || document.getElementById("oiCard")) return;
     var card = document.createElement("div");
     card.className = "card"; card.id = "oiCard"; card.style.marginTop = "14px";
-    card.innerHTML = '<div class="subhead">GTI + OI Combo</div><div class="note">load ho raha hai...</div>';
+    card.innerHTML = '<div class="subhead">GTI + OI Combo</div><div class="note"></div>';
     sec.appendChild(card);
     fetch("data/oi-gti.json?t=" + Date.now()).then(function (r) { return r.json(); }).then(function (d) { DATA = d; render(); })
       .catch(function () {

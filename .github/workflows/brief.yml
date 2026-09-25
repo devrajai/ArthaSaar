@@ -1,8 +1,7 @@
-name: Morning Brief
+name: Morning Brief (manual only)
+# merged into 8:30 AM unified message (telegram-morning.yml) — no schedule
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 1 * * 1-5"
 concurrency:
   group: brief
   cancel-in-progress: false

@@ -1,9 +1,9 @@
 name: Telegram Morning Brief
-
 on:
   schedule:
-    # 9:25 AM IST Mon-Fri — after morning-brain (9:20) commits preopen + FII/DII
-    - cron: '55 3 * * 1-5'
+    # 8:30 AM IST Mon-Fri — single merged morning message
+    # (7AM AI brief + Morning Digest + Pre-open brief -> EK message)
+    - cron: '0 3 * * 1-5'
   workflow_dispatch:
 
 concurrency:
@@ -14,6 +14,8 @@ jobs:
   send:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,11 +27,19 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install yfinance (Sensex fallback)
-        run: pip install -q yfinance
-
-      - name: Send morning brief
+      - name: Send unified morning brief (8:30 AM)
         env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python scripts/telegram_brain.py morning
+        run: python3 scripts/morning_unified.py
+
+      - name: Commit fii history
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/fii-history.json
+          git commit -m "data: fii history update" || echo "no change"
+          git pull --rebase || true
+          git push

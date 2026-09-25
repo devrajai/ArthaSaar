@@ -1,8 +1,7 @@
-name: Morning Digest
+name: Morning Digest (manual only)
+# merged into 8:30 AM unified message (telegram-morning.yml) — no schedule
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 2 * * 1-5'
 permissions:
   contents: write
 jobs:

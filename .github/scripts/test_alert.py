@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""test_alert.py - MANUAL test: stress-meter format ka test message Dev + Jems Bonda ko.
+"""test_alert.py - MANUAL test: stress-meter format ka test message 2 members ko.
 Sirf testing ke liye (baaki 4 logon ko nahi). Real alert stress >= 60 pe stress.py bhejta hai sabko."""
 import json, os, urllib.request
 
@@ -12,7 +12,7 @@ def main():
     try:
         d = json.load(open("data/stress.json"))
         c = d.get("comp", {})
-        msg = "\U0001F9EA TEST \u2014 MARKET STRESS METER (Dev's Bloomberg)\n\n"
+        msg = "\U0001F9EA TEST \u2014 MARKET STRESS METER (ArthaSaar)\n\n"
         msg += "Score: %s/100 (%s)\n\n" % (d.get("score", "?"), d.get("band", "?").upper())
         if "dma" in c:
             msg += "\u2022 NIFTY 200-DMA: %s%% %s \u2014 %s/30 pts\n" % (abs(c["dma"]["d"]), "neeche" if c["dma"]["d"] < 0 else "ooper", c["dma"]["s"])

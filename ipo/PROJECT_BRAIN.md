@@ -1,18 +1,18 @@
 # IPO TERMINAL — PROJECT BRAIN
 
-Single source of truth. Any AI session starts here. Owner: Dev (mobile-only user, Android Chrome).
+Single source of truth. Any AI session starts here. Owner: mobile-only user (Android Chrome).
 Website: https://devrajai.github.io/ipo-terminal/ | Repo: devrajai/ipo-terminal
 
 ## Mission
-Dev's personal all-in-one India IPO + market terminal. Free forever. Mobile-first. Goal: a personal poor-man's Aladdin.
+the personal all-in-one India IPO + market terminal. Free forever. Mobile-first. Goal: a personal poor-man's Aladdin.
 
-## Hard Rules (from Dev)
+## Hard Rules (from owner)
 - NO paid APIs ever. NO DR.VIDHI branding. Title style: IPO TERMINAL - AUTO.
 - 12 toggle panels must stay: Open, Upcoming, DRHP Filed, Listed G/L, Comparison, Allotment, News, RHP/DRHP, Tips, Brokers, Glossary, Why Apply.
 - Only 3 KPI cards: Open / Upcoming / Closed.
 - Dates dd/mm/yy. All times IST — always use Asia/Kolkata explicitly.
 - Sarvam AI assistant is the ONLY developer on this project (no GPT, no other AI).
-- Dev is on a weekly message limit: be efficient, build in phases, never redo work.
+- owner is on a weekly message limit: be efficient, build in phases, never redo work.
 
 ## Architecture — Three Ways (all free)
 1. WAY 1 — GitHub Actions auto-refresh every 5 min: .github/workflows/update-ipo-data.yml
@@ -32,7 +32,7 @@ Dev's personal all-in-one India IPO + market terminal. Free forever. Mobile-firs
    - Daily IPO digest 8:45 AM IST: market-brain repo .github/workflows/telegram-ipo.yml + scripts/telegram_ipo.py
    - Runs in devrajai/market-brain (which has TG_TOKEN + TG_CHAT_ID secrets); reads ipo-terminal data via public raw URLs — no secrets needed here
    - Message: closes today / allotment & listing today / open now with GMP* + sub / opening soon (+5d)
-   - Recipients (21/09/26): market-brain secrets TG_CHAT_ID (market msgs) and TG_CHAT_ID_IPO (IPO digest) BOTH = "1392604324,1148261593,1785489570,1182983939" (Dev + Nandan @Dev_pithadiya + Hemant ____Hemant + Solanki @Rahul3573). To add a person: they must /start the bot first, then run telegram-who.yml to get their chat_id, then update BOTH secrets with comma-separated ids (encrypt via repo public key + PyNaCl sealed box)
+   - Recipients (21/09/26): market-brain secrets TG_CHAT_ID (market msgs) and TG_CHAT_ID_IPO (IPO digest) BOTH = "1392604324,1148261593,1785489570,1182983939" (Nandan + Hemant + Rahul). To add a person: they must /start the bot first, then run telegram-who.yml to get their chat_id, then update BOTH secrets with comma-separated ids (encrypt via repo public key + PyNaCl sealed box)
 
 ## Current Status (updated 21/09/2026)
 - Website live with 5-min auto data refresh; market data pipeline live (Way 1 + Way 2)
@@ -40,7 +40,7 @@ Dev's personal all-in-one India IPO + market terminal. Free forever. Mobile-firs
 - Pro Tools (scripts/ipo-protools.js) has 6 tabs: Calculator (21/09/26 — Apply Cost / GMP Return / P&L, IPO dropdown auto-filled from live ipo-data.json), Track Record, My Apps, Planner, Calendar, Why & Sources
 - 21/09/26 evening: repo consolidation done (2 old repos merged in); Open-list board filter (Mainboard first, then SME + filter pills) live in scripts/ipo-forecast.js; Notion sync moved from GitHub Actions to Sarvam (Way 3)
 - 21/09/26 night: tap any IPO name on the site → full detail sheet (GMP, dates, subscription, fundamentals, RHP/allotment links) — IIFE __IPODT in scripts/ipo-forecast.js; Telegram IPO digest live (Way 4, first sent 21/09 20:02 IST)
-- 21/09/26 late night: 2nd recipient added — Nandan (@Dev_pithadiya, chat id 1148261593) gets BOTH IPO digest and market messages; verified delivered to 2 chats
+- 21/09/26 late night: 2nd recipient added — Nandan (chat id 1148261593) gets BOTH IPO digest and market messages; verified delivered to 2 chats
 - 21/09/26 night 2: recipients 3 & 4 added — Hemant (____Hemant, chat id 1785489570) + Solanki (@Rahul3573, chat id 1182983939); verified delivered to 4 chats
 - Next: Phase 1 — Screener layer (Nifty 500: PE, PB, ROE, ROCE, D/E, promoter/DII/FII holding, EMA 20/200, RSI, MACD, 52w/200d high-low)
 

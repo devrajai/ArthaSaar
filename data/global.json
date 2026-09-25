@@ -1,6 +1,6 @@
 {
- "updated": "2026-09-25T10:57:21.972835+00:00",
- "count": 13,
+ "updated": "2026-09-25T10:59:52.541555+00:00",
+ "count": 14,
  "items": [
   {
    "name": "S&P 500",
@@ -10,6 +10,15 @@
    "high_52w": 7798.99,
    "low_52w": 6343.72,
    "as_of": "2026-09-24"
+  },
+  {
+   "name": "SENSEX",
+   "symbol": "^BSESN",
+   "price": 73895.74,
+   "chg_pct": 0.43,
+   "high_52w": 85762.01,
+   "low_52w": 71947.55,
+   "as_of": "2026-09-25"
   },
   {
    "name": "Nasdaq Composite",
@@ -50,7 +59,7 @@
   {
    "name": "Gold (COMEX)",
    "symbol": "GC=F",
-   "price": 4341.5,
+   "price": 4341.3,
    "chg_pct": 1.01,
    "high_52w": 5318.4,
    "low_52w": 3771.1,
@@ -59,8 +68,8 @@
   {
    "name": "Silver (COMEX)",
    "symbol": "SI=F",
-   "price": 65.38,
-   "chg_pct": 3.03,
+   "price": 65.36,
+   "chg_pct": 3.01,
    "high_52w": 115.08,
    "low_52w": 44.7,
    "as_of": "2026-09-25"
@@ -68,8 +77,8 @@
   {
    "name": "Crude Oil WTI",
    "symbol": "CL=F",
-   "price": 92.92,
-   "chg_pct": -1.79,
+   "price": 93.06,
+   "chg_pct": -1.64,
    "high_52w": 112.95,
    "low_52w": 55.27,
    "as_of": "2026-09-25"
@@ -78,7 +87,7 @@
    "name": "Natural Gas",
    "symbol": "NG=F",
    "price": 3.24,
-   "chg_pct": -1.64,
+   "chg_pct": -1.58,
    "high_52w": 7.46,
    "low_52w": 2.52,
    "as_of": "2026-09-25"
@@ -95,8 +104,8 @@
   {
    "name": "Dollar Index (DXY)",
    "symbol": "DX-Y.NYB",
-   "price": 101.05,
-   "chg_pct": -0.24,
+   "price": 101.06,
+   "chg_pct": -0.23,
    "high_52w": 101.61,
    "low_52w": 96.22,
    "as_of": "2026-09-25"

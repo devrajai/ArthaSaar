@@ -14,12 +14,18 @@ const sign = (x, d) => (x == null || isNaN(x)) ? "—" :
 const agoUTC = (iso) => { try { return iso ? iso.slice(11, 16) + " UTC" : ""; } catch (e) { return ""; } };
 
 const BASE = "./data/";
-const IPO_URL = "https://raw.githubusercontent.com/devrajai/ipo-terminal/main/data/ipo-data.json";
+const IPO_URL = "ipo/data/ipo-data.json"; // v13: local repo data (auto-update hota hai)
 const cache = {};
 function jload(key, url) {
-  if (!cache[key]) cache[key] =
-    fetch((url || BASE + key + ".json") + "?t=" + Date.now())
-      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  if (!cache[key]) cache[key] = (function attempt(n) {
+    return fetch((url || BASE + key + ".json") + "?t=" + Date.now())
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .catch((e) => {
+        if (n < 3) return new Promise((res) => setTimeout(res, 500 * (n + 1))).then(() => attempt(n + 1));
+        delete cache[key];
+        throw e;
+      });
+  })(0);
   return cache[key];
 }
 const fail = (id) => (e) => {

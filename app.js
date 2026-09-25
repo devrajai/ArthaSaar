@@ -24,7 +24,7 @@
     if (i >= files.length) return;
     var f = files[i++];
     var s = document.createElement("script");
-    s.src = f + "?v=as12";
+    s.src = f + "?v=as13";
     s.async = false;
     s.onload = function () { tries[f] = 0; next(); };
     s.onerror = function () {

@@ -231,6 +231,11 @@ def main():
     if len(msg) > 3900:
         msg = msg[:3850] + NL + '...'
 
+    if os.environ.get('TG_MERGE') == '1':
+        (DATA / 'night-news.txt').write_text(msg, encoding='utf-8')
+        print('TG_MERGE: night-news.txt saved (send night-unified.py karega)')
+        return
+
     tok = os.environ.get('TG_TOKEN')
     if not tok:
         print('no TG_TOKEN - skip send (digest file written)')

@@ -46,7 +46,7 @@
   }
 
   function build(card) {
-    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83C\uDDEE\uD83C\uDDF3 ECONOMY PULSE</b> <span style="font-size:11px;opacity:.65">GST \u00b7 Rail \u00b7 Ports \u00b7 Auto \u00b7 Jobs \u00b7 Power \u00b7 GDP \u00b7 CPI \u00b7 PMI \u00b7 Core \u00b7 FII \u00b7 UPI \u00b7 IIP \u00b7 FX \u00b7 Trade</span></summary>' +
+    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83C\uDDEE\uD83C\uDDF3 ECONOMY PULSE</b></summary>' +
       '<div id="epBody" class="note" style="margin-top:8px">loading economy pulse...</div>';
     fetch("data/economy-pulse.json").then(function (r) { return r.json(); }).then(function (d) {
       var h = '<div class="note" style="margin-top:8px">Govt data se economy ka asli haal - sab green to economy strong, girne lage to dhyan. Figures verified (monthly releases), headlines roz auto-update. Tap = detail + stock impact + FII monthly bars. (indicative, advice nahi)</div>';

@@ -16,11 +16,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 scripts/newsdigest.py
+      - run: python3 scripts/newsdigest.py  # TG_MERGE=1: message file me save (send night-unified karega)
+        env:
+          TG_MERGE: '1'
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/news-digest.json
+          git add data/news-digest.json data/night-news.txt
           git commit -m "data: news digest (authentic, cross-verified)" || echo "no change"
           git pull --rebase || true
           git push

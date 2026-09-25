@@ -1,19 +1,19 @@
-name: Night Brief Telegram
+name: Night Unified Brief
 on:
   schedule:
-    # merged into night-unified.yml 9:15 PM message 2026-09-25
+    - cron: '15 15 * * *'  # 9:15 PM IST daily
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  brief:
+  night:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 xray_tg.py
+      - run: python3 scripts/night_unified.py
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}

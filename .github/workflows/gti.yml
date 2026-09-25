@@ -14,10 +14,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -q yfinance
-      - run: python3 scripts/gti.py
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+      - run: python3 scripts/gti.py  # TG alert removed — night-unified.yml me merge ho gaya
       - run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"

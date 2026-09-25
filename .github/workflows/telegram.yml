@@ -2,7 +2,7 @@ name: Telegram Alerts
 on:
   workflow_dispatch:
   schedule:
-    - cron: "50 3 * * 1-5"    # 09:20 IST — market open summary
+    # 09:20 market open summary removed — 9:15 AM IPO+preopen message (morning-brain.yml) takes its place
     - cron: "30 10 * * 1-5"  # 16:00 IST — market close summary
 concurrency:
   group: telegram

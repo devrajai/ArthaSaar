@@ -1,8 +1,7 @@
 name: Telegram IPO Digest
 on:
   schedule:
-    # 8:45 AM IST daily — before market open
-    - cron: '15 3 * * *'
+    # 8:45 AM IST daily — merged into morning-brain.yml 9:15 AM message (2026-09-25)
   workflow_dispatch:
 
 concurrency:

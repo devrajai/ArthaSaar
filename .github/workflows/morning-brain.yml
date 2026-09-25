@@ -2,8 +2,8 @@ name: Morning Brain (Pre-Open Movers)
 
 on:
   schedule:
-    # 9:20 AM IST Mon-Fri — right after the 9:00-9:15 pre-open session
-    - cron: '50 3 * * 1-5'
+    # 9:15 AM IST Mon-Fri — pre-open collect + IPO digest send
+    - cron: '45 3 * * 1-5'  # 9:15 AM IST
   workflow_dispatch:
 
 permissions:
@@ -47,3 +47,7 @@ jobs:
             done
             echo 'ERROR: could not push after 5 attempts'; exit 1
           fi
+      - run: python3 scripts/morning_ipo.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}

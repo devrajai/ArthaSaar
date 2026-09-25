@@ -2,8 +2,7 @@ name: Telegram Day Analysis
 
 on:
   schedule:
-    # 3:45 PM IST Mon-Fri — 15 min after market close (15:30)
-    - cron: '15 10 * * 1-5'
+    # 3:45 PM IST Mon-Fri — merged into 4 PM Day Analysis Close (telegram.yml) 2026-09-25
   workflow_dispatch:
 
 concurrency:

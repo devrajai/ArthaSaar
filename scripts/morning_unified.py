@@ -2,6 +2,7 @@
 # morning_unified.py - 8:30 AM IST: EK merged morning message
 # (7AM AI brief + Morning Digest + Pre-open brief -> single 8:30 AM message)
 # duplicates removed: FII/DII aur Global sirf EK baar
+# v2: rotation me LEVEL + OI multi-line (Dev ke Monday paste ke hisaab se)
 # quote-safe style: sirf single quotes
 import sys, os, json, datetime
 sys.path.insert(0, 'scripts')
@@ -134,9 +135,25 @@ if g.get('verdict'):
     L.append('')
 rot3 = (tf.get('rotation') or [])[:2]
 if rot3:
+    lvl = {}
+    for f in (tf.get('forecasts') or []):
+        if f.get('symbol') and f.get('as_of_last_close'):
+            lvl[f['symbol']] = f['as_of_last_close']
     L.append('\U0001F52E TimesFM 21-day rotation')
     for r in rot3:
-        L.append('\u2022 %s (conf %s%%)' % (rotline(r, tf), r.get('conf', '?')))
+        nm = r.get('name') or '?'
+        p = r.get('chg30') or 0
+        lv = lvl.get(r.get('sym'))
+        lvs = '{:,.1f}'.format(lv) if isinstance(lv, (int, float)) else ''
+        pts = ''
+        if lv and p:
+            try:
+                pts = ' (%+.0f pts)' % (lv - lv / (1.0 + p / 100.0))
+            except ZeroDivisionError:
+                pass
+        head = '\u2022 %s' % nm + ((' ' + lvs) if lvs else '')
+        L.append(head)
+        L.append('%+.1f%%%s (conf %s%%)' % (p, pts, r.get('conf', '?')))
     L.append('')
 
 # ---------- digest block ----------
@@ -149,8 +166,11 @@ near = (gti.get('nearest') or ['?'])[0]
 comp = (gti.get('compression') or {}).get('compressed')
 L.append('GTI nearest zone: %s%s' % (near, ' (COMPRESSED!)' if comp else ''))
 if oi:
-    L.append('OI: max pain %s | PCR %s | put wall %s / call wall %s' % (
-        oi.get('max_pain', '-'), oi.get('pcr', '-'), oi.get('put_wall', '-'), oi.get('call_wall', '-')))
+    L.append('OI:')
+    L.append('max pain %s' % oi.get('max_pain', '-'))
+    L.append('PCR %s' % oi.get('pcr', '-'))
+    L.append('Put wall %s' % oi.get('put_wall', '-'))
+    L.append('Call wall %s' % oi.get('call_wall', '-'))
 acc = (radar.get('accumulation') or [])[:2]
 if acc:
     L.append('Radar top accumulation:')

@@ -17,7 +17,7 @@
     var parts = gp.formatToParts(now);
     var gv = function (t) { return (parts.find(function (p) { return p.type === t; }) || {}).value || ""; };
     var day = gv("weekday"), hm = gv("hour") + gv("minute");
-    var txt = "CLOSED", cls = "closed";
+    var txt = "MARKET CLOSE", cls = "closed";
     if (["Sat", "Sun"].indexOf(day) === -1) {
       if (hm >= "0900" && hm < "0915") { txt = "PRE-OPEN"; cls = "pre"; }
       if (hm >= "0915" && hm <= "1530") { txt = "NSE OPEN"; cls = "open"; }

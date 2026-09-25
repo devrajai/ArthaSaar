@@ -1,5 +1,5 @@
 /* ============================================================
-   calm.css v9 — ARTHASAAR PREMIUM (compact header + radars, no small words) (full new look, 25 Sep)
+   calm.css v10 — ARTHASAAR PREMIUM (no brand underline) (full new look, 25 Sep)
    Pro arrangement: command-bar header · desk summary · 2-col tiles
    numbered sections · dense tables · mono micro-labels.
    Palette: light blue = calm · light green = growth · amber = action · red = risk
@@ -46,8 +46,7 @@ body{
 /* ---------- header: command bar ---------- */
 header{border-bottom:1px solid var(--hair);padding:15px 0 12px}
 header h1{font-family:'Space Grotesk',var(--font);font-weight:700;letter-spacing:.045em;font-size:1.2em;line-height:1.1}
-header h1::after{content:"";display:block;height:2px;border-radius:2px;margin-top:5px;
-  background:linear-gradient(90deg,var(--blue),var(--up))}
+header h1::after{content:none}
 header h1 em{font-style:normal;color:var(--blue)}
 header .logo{background:none !important;border:none !important;color:transparent !important;font-size:0 !important;
   width:44px;height:44px;padding:0 !important;display:flex;align-items:center;box-shadow:none !important}

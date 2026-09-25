@@ -50,7 +50,7 @@ const fail = (id) => (e) => {
       .formatToParts(now);
     const gv = (t) => (parts.find((p) => p.type === t) || {}).value || "";
     const day = gv("weekday"), hm = gv("hour") + gv("minute");
-    let txt = "CLOSED", cls = "closed";
+    let txt = "MARKET CLOSE", cls = "closed";
     if (!["Sat", "Sun"].includes(day)) {
       if (hm >= "0900" && hm < "0915") { txt = "PRE-OPEN"; cls = "pre"; }
       if (hm >= "0915" && hm <= "1530") { txt = "NSE OPEN"; cls = "open"; }

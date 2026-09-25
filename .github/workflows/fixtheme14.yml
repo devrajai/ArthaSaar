@@ -1,0 +1,20 @@
+name: Fix Theme 14 TG+Site
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python .github/scripts/fix_tg.py
+      - run: python .github/scripts/fix_theme14.py
+      - name: Commit and push
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add -A scripts .github/workflows index.html app.js oldapp.js themefix.js economypulse.js newsvolume.js news.js
+          git commit -m "feat: TG schedule v2 (9:15 IPO+preopen, 4PM close, 9:15PM night) + site v13 (retry, auto-refresh, clean tiles)" || echo "no changes"
+          git pull --rebase || true
+          git push

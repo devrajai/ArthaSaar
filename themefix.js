@@ -106,7 +106,7 @@
     } catch (e) {}
   }
 
-  function boot() { apply(); statusbar(); ticker(); }
+  function boot() { if (window.MB_LOCKED) return; apply(); statusbar(); ticker(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
   /* gate ke baad body replace ho sakta hai — thoda baad me dobara apply */

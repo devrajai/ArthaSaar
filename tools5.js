@@ -1,1 +1,1 @@
-/* removed: external links card (Dev request) */
+/* removed: external links card (request) */

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""bigplayer.py - BIG PLAYER RADAR (Whale / Shark / Pig - Dev ka idea, Manish podcast framework):
+"""bigplayer.py - BIG PLAYER RADAR (Whale / Shark / Pig - Manish podcast framework):
 WHALE = bulk + block deals (client-wise names milte hain!)
 SHARK  = futures OI buildup (long/short buildup = bade players position bana rahe)
 OPTION SHARK = options contracts me sabse bada OI change

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""bankscan.py - BANK HEALTH SCANNER (Dev ke notebook rules):
+"""bankscan.py - BANK HEALTH SCANNER (notebook rules):
 - data/banks.json me ratios quarterly seed hote hain (manual, official press releases se)
 - Ye script sirf price/day-change merge karta hai data/circuits.json (bhavcopy) se
 - Ratios preserve hote hain - jab tak seed edit na ho"""

@@ -1,4 +1,4 @@
-/* learnfix.js — Dev's Notebook (Advance.pdf pages 22, 23, 25, 26) in Learn section */
+/* learnfix.js — Notebook (Advance.pdf pages 22, 23, 25, 26) in Learn section */
 (function () {
   var LN = document.querySelector("#learn");
   if (!LN || document.getElementById("devNoteCard")) return;

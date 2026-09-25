@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""stages.py - STOCK STAGE DETECTOR (Dev ke notebook ke 4-Stage rules):
+"""stages.py - STOCK STAGE DETECTOR (notebook 4-Stage rules):
 Stage 1 = Base (sab kuch flat, taiyari) | Stage 2 = Uptrend (20 upar 40, dancing area, 200 SMA ke upar)
 Stage 3 = Topping (20 neeche 40 upar wale se) | Stage 4 = Downtrend (20 neeche 40, 200 SMA ke neeche)
 Weekly closes bhavcopy se banate hain (incremental, pehli baar ~10 mahine ka history laata hai)"""

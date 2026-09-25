@@ -1,4 +1,4 @@
-/* stage.js - STOCK STAGE DETECTOR: 4-Stage (Dev ke notebook rules). #screener */
+/* stage.js - STOCK STAGE DETECTOR: 4-Stage (notebook rules). #screener */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var DATA = null;

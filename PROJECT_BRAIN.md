@@ -1,24 +1,24 @@
 # ARTHASAAR — PROJECT BRAIN
 
-Single source of truth. Any AI session starts here. Owner: Dev (mobile-only, Android Chrome).
+Single source of truth. Any AI session starts here. Owner: owner (mobile-only, Android Chrome).
 Repo: devrajai/market-brain | Sister project: devrajai/ipo-terminal (read its PROJECT_BRAIN.md too)
 
 ## Mission
-Dev's personal market intelligence brain — a "poor-man's BlackRock Aladdin / Sharekhan TX3
-quality terminal". FULL Indian market coverage, 100% free sources, fully automatic. Dev will
+the personal market intelligence brain — a "poor-man's BlackRock Aladdin / Sharekhan TX3
+quality terminal". FULL Indian market coverage, 100% free sources, fully automatic. owner will
 wait for perfection on DATA (daily reliability, zero issues) before the website — data first,
 website second.
 
-## Hard Rules (from Dev)
+## Hard Rules (from owner)
 - NO paid APIs ever. Free sources only.
 - Sarvam AI assistant is the ONLY developer (no GPT, no other AI).
-- Dev is on weekly message limits — build in phases, be efficient, never redo work.
+- owner is on weekly message limits — build in phases, be efficient, never redo work.
 - All times IST (Asia/Kolkata). Dates dd/mm/yy in user-facing content.
 - PERMANENT UI: Liquid Glass design (see below) — every future page/site uses it.
 
-## PERMANENT UI — Liquid Glass Design System (approved by Dev 18/09/26)
+## PERMANENT UI — Liquid Glass Design System (approved 18/09/26)
 - Dark mode default + light mode toggle (pill switch, saved in localStorage 'mb-theme')
-- ZERO position:sticky and ZERO backdrop-filter ANYWHERE (Dev's confirmed rule after TWO
+- ZERO position:sticky and ZERO backdrop-filter ANYWHERE (the confirmed rule after TWO
   rounds of screen-recorded feedback, 18/09/26 night: the header bar must scroll away with
   the page like every other card — NOTHING stays pinned/floating on top while scrolling).
   Cards use translucent gradient backgrounds only; they look glass without any blur filter.
@@ -37,7 +37,7 @@ website second.
 ### Workflows
 - .github/workflows/morning-brain.yml — 9:20 AM IST Mon-Fri: phase2_collect
 - .github/workflows/brain-collect.yml — 18:35 & 21:05 IST Mon-Sat: full pipeline
-- .github/workflows/telegram-morning.yml — 9:25 AM IST Mon-Fri: morning brief to Dev's
+- .github/workflows/telegram-morning.yml — 9:25 AM IST Mon-Fri: morning brief to the
   Telegram (runs AFTER morning-brain commits; needs secrets TELEGRAM_BOT_TOKEN +
   TELEGRAM_CHAT_ID; manual dispatch available for testing)
 - .github/workflows/telegram-day.yml — 3:45 PM IST Mon-Fri: post-close day analysis to
@@ -64,9 +64,9 @@ website second.
 - scripts/budget_study.py — budget-day Nifty ±10-day windows 2015-2026
 - scripts/fundamentals_collect.py — yfinance staggered 300/run → fundamentals.json
 
-### Telegram setup (one-time, Dev only)
+### Telegram setup (one-time, owner only)
 1. @BotFather → /newbot → token
-2. /start the bot from Dev's Telegram, get chat id via api.telegram.org/bot<TOKEN>/getUpdates
+2. /start the bot from the Telegram, get chat id via api.telegram.org/bot<TOKEN>/getUpdates
 3. Repo Settings → Secrets → Actions: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 4. Test: Actions → Telegram Morning Brief → Run workflow (manual dispatch)
 
@@ -74,7 +74,7 @@ website second.
 - Secrets that run the messages: TG_TOKEN (bot token) + TG_CHAT_ID (market msgs via
   telegram.yml) + TG_CHAT_ID_IPO (IPO digest 8:45 AM via telegram-ipo.yml; fallback = TG_CHAT_ID)
 - Both TG_CHAT_ID and TG_CHAT_ID_IPO = "1392604324,1148261593,1785489570,1182983939" =
-  Dev + Nandan pithadiya (@Dev_pithadiya) + Hemant (____Hemant) + Solanki (@Rahul3573).
+  owner + Nandan + Hemant + Rahul + Vidhi + Jems Bonda.
   All 4 get EVERYTHING (market + IPO). Verified sent to 4 chats 21/09/26.
 - To add a person: they must /start the bot first (Telegram blocks bots messaging strangers),
   run "Telegram Who" workflow (telegram-who.yml) to see their chat_id, then update BOTH secrets
@@ -83,22 +83,22 @@ website second.
 
 ### Google Sheet "ArthaSaar Hub" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
 Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks,
-Daily_Digest_Archive, Dividend_Calendar (Dev's handwritten monthly dividend stocks)
+Daily_Digest_Archive, Dividend_Calendar (the handwritten monthly dividend stocks)
 
-### Dev's study notes (all received 18/09/26)
+### the study notes (all received 18/09/26)
 - Advance.pdf: 36 pages course notes (broker structure, market psychology, participants
   breakdown, bull/bear phases) → data/education.json devs_collected_rules
 - sensex_history.pdf: 9 pages Sensex history study
 - Divided_stocks_list.pdf: monthly dividend calendar → Dividend_Calendar tab
 - data/education.json: books (12), podcasts (5), YouTube (5), free courses (5),
-  Dev's Inspiring Traders playlist (25 Abhishek Kar videos, indexed with titles),
-  Dev's collected rules (6) — feeds website Learn section
+  the Inspiring Traders playlist (25 Abhishek Kar videos, indexed with titles),
+  the collected rules (6) — feeds website Learn section
 
 ### Cron
 Daily digest 6:30 PM IST covers both repos + appends to sheet. Includes FII/DII flows,
 pre-open highlights, fundamental insight, IPO status, index changes. Verify the screener
 is filling (run of 18/09 21:05 IST deployed the batched-yfinance fix — check breadth.json
-'stocks' count and report it to Dev).
+'stocks' count and report it to owner).
 
 ## Data Source Facts
 - nsearchives.nseindia.com CSVs work from datacenter IPs (EQUITY_L.csv 2,578 → keep EQ only)
@@ -117,10 +117,10 @@ is filling (run of 18/09 21:05 IST deployed the batched-yfinance fix — check b
 - Phase 2 DONE: pre-open movers, FII/DII flows, index add/remove, dividend calendar
 - Phase 3: super-investor portfolios, AMFI MF data, panchang calendar
 - Phase 3.5 DONE (21/09/26): Telegram Brain — daily morning brief (9:25) + day analysis (15:45)
-- Phase 4 WEBSITE (Dev-approved, WAIT for data reliability confirmation first):
+- Phase 4 WEBSITE (owner-approved, WAIT for data reliability confirmation first):
   GitHub Pages site in Liquid Glass UI, FULL of data — today's dashboard sections + screener
   tables, budget study, education library (books/podcasts/articles + Inspiring Traders
-  playlist + Dev's rules), articles. Aladdin/TX3-level ambition: as much data as free
+  playlist + the rules), articles. Aladdin/TX3-level ambition: as much data as free
   sources allow.
 
 ## Conventions

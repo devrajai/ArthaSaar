@@ -1,4 +1,4 @@
-/* bank.js - BANK HEALTH SCANNER: Dev ke notebook rules se bank stock selection checklist. #screener */
+/* bank.js - BANK HEALTH SCANNER: notebook rules se bank stock selection checklist. #screener */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var DATA = null, R = {};
@@ -40,7 +40,7 @@
   }
 
   function render(box) {
-    var h = '<div class="note" style="margin-top:8px">' + esc(DATA.asof) + ' quarterly data \u00b7 price ' + esc(DATA.updated) + ' se. Ye <b>Dev ke personal notebook ke rules</b> ka checklist hai - har bank 5 me se kitne rule pass karti hai. (checklist hai, advice nahi)</div>';
+    var h = '<div class="note" style="margin-top:8px">' + esc(DATA.asof) + ' quarterly data \u00b7 price ' + esc(DATA.updated) + ' se. Ye <b>personal notebook ke rules</b> ka checklist hai - har bank 5 me se kitne rule pass karti hai. (checklist hai, advice nahi)</div>';
     h += '<div style="margin-top:8px;padding:8px 12px;border-radius:10px;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.35);font-size:12px">' +
       '\uD83D\uDCD3 <b>NOTEBOOK RULES:</b> Net NPA \u2264 1.5% \u00b7 ROE 15-35% \u00b7 CASA 40%+ (30 avg) \u00b7 CAR 9%+ \u00b7 ROA 1.5%+ <span style="opacity:.6">(notebook me 5% likha tha - India ke top banks bhi ~2.5% pe aate hain, isliye 1.5%+ = strong)</span></div>';
     function score(b) {
@@ -59,7 +59,7 @@
   }
 
   function build(card) {
-    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83C\uDFDA BANK SCANNER</b> <span style="font-size:11px;opacity:.65">Dev ke notebook rules \u00b7 5-point checklist</span></summary>' +
+    card.innerHTML = '<summary style="cursor:pointer;margin:4px 2px;padding:10px 14px;border-radius:11px;background:rgba(240,180,41,.13);border:1px solid rgba(240,180,41,.5);font-size:14.5px;text-align:center"><b style="color:rgba(240,180,41,.95)">\uD83C\uDFDA BANK SCANNER</b> <span style="font-size:11px;opacity:.65">notebook rules \u00b7 5-point checklist</span></summary>' +
       '<div id="bsBody" class="note" style="margin-top:8px">loading banks...</div>';
     fetch("data/banks.json").then(function (r) { return r.json(); }).then(function (d) {
       DATA = d; R = d.rules || {};

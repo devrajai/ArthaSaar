@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""global.py - GLOBAL RADAR (Dev's Bloomberg Phase 1):
+"""global.py - GLOBAL RADAR (ArthaSaar Phase 1):
 - Duniya ke indices + commodities ka EOD data (Yahoo Finance free API, 1 saal)
 - GLOBAL->INDIA CORRELATION ENGINE: har global market ka NIFTY/sector pe asar
   (same-day + NEXT-DAY lag correlation + shock stats)

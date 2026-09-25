@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# rotpts.py - rotation line helper: % ke saath index POINTS bhi (Dev ka rule)
+# rotpts.py - rotation line helper: % ke saath index POINTS bhi (rule)
 # r: {name, sym, chg30, conf} | tf: timesfm_forecasts.json ka dict
 # quote-safe style: sirf single quotes
 

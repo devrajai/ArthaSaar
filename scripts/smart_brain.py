@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""smart_brain.py — Dev ka auto-analyst.
+"""smart_brain.py — auto-analyst.
 Combines existing free data (screener technicals + TimesFM AI + OI + breadth +
 FII/DII + filings) into one smart-brain.json:
   1. confluence  — top bull/bear stocks by agreement score

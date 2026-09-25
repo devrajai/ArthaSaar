@@ -1,6 +1,6 @@
 {
  "updated": "2026-09-19",
- "purpose": "Dev's market education library — feeds the future website's Learn section. Curated, India-first, free-first.",
+ "purpose": "Market education library — feeds the future website's Learn section. Curated, India-first, free-first.",
  "books": [
   {
    "title": "Coffee Can Investing",
@@ -135,7 +135,7 @@
   },
   {
    "name": "POWER OF STOCKS",
-   "why": "Full free courses: option buying/selling, swing, chart patterns, psychology (Dev's main playlist source)",
+   "why": "Full free courses: option buying/selling, swing, chart patterns, psychology (main playlist source)",
    "lang": "English"
   },
   {
@@ -177,7 +177,7 @@
   }
  ],
  "inspiring_traders": {
-  "note": "Dev's curated 'Inspiring Traders' playlist — AUTO-SYNCED from the playlist link 18/09/26 (34 videos, incl. 9 not in the manually pasted list). Legendary trader stories: motivation + case studies in how great traders think (and blow up).",
+  "note": "Curated 'Inspiring Traders' playlist — AUTO-SYNCED from the playlist link 18/09/26 (34 videos, incl. 9 not in the manually pasted list). Legendary trader stories: motivation + case studies in how great traders think (and blow up).",
   "playlist": "https://youtube.com/playlist?list=PLyEvUpwXRAdPUT7VpaVblOxAVxAdGwmWU",
   "channel": "Abhishek Kar (Hindi)",
   "videos": [
@@ -323,37 +323,37 @@
  "devs_collected_rules": [
   {
    "rule": "When a stock doubles, sell half — the remaining half becomes free of cost",
-   "source": "YouTube quote saved by Dev 18/09/26",
+   "source": "YouTube quote saved 18/09/26",
    "note": "personal collection"
   },
   {
    "rule": "Hold the free-of-cost half for ten years",
-   "source": "YouTube quote saved by Dev 18/09/26",
+   "source": "YouTube quote saved 18/09/26",
    "note": "personal collection"
   },
   {
    "rule": "January: cash in · February: keep cash · March: reinvest · April–September: weekly SIP · November–December: plan exit",
-   "source": "YouTube quote saved by Dev 18/09/26",
+   "source": "YouTube quote saved 18/09/26",
    "note": "seasonal heuristic — folk wisdom, not a verified strategy"
   },
   {
    "rule": "Market participants: brokers(pro) 57.8%, individuals 26.8%, FII 6.1%, corporates 4.3%, others 4.9%, DII 0.1% (May 2023 data)",
-   "source": "Dev's course notes (Advance.pdf)",
+   "source": "course notes (Advance.pdf)",
    "note": "retail is a small player — smart money moves the market"
   },
   {
    "rule": "30 trading sessions ≈ 45 calendar days",
-   "source": "Dev's course notes (Advance.pdf)",
+   "source": "course notes (Advance.pdf)",
    "note": ""
   },
   {
    "rule": "Phase-3 bull tops are driven by external factors (geopolitics, US panic) — professionals create panic where retail holds average positions",
-   "source": "Dev's course notes (Advance.pdf)",
+   "source": "course notes (Advance.pdf)",
    "note": ""
   }
  ],
  "market_analysis_videos": {
-  "note": "Daily/weekly market analysis videos Dev follows — WAY2LAABH (Nifty/BankNifty predictions), Ghanshyam Tech (Nifty price action, Hindi) & Kunal Saraogi (Chart Of The Week + Kunal Ki Adaaat lives). Added 18/09/26, Kunal Saraogi added 19/09/26.",
+  "note": "Daily/weekly market analysis videos — WAY2LAABH (Nifty/BankNifty predictions), Ghanshyam Tech (Nifty price action, Hindi) & Kunal Saraogi (Chart Of The Week + Kunal Ki Adaaat lives). Added 18/09/26, Kunal Saraogi added 19/09/26.",
   "channels": [
    "WAY2LAABH",
    "Ghanshyam Tech",
@@ -458,7 +458,7 @@
   ]
  },
  "devs_learning_playlists": {
-  "note": "Dev's course playlists — all POWER OF STOCKS (English subtitle), auto-indexed 18/09/26. Re-sync with scripts/ingest_playlist.py.",
+  "note": "Course playlists — all POWER OF STOCKS (English subtitle), auto-indexed 18/09/26. Re-sync with scripts/ingest_playlist.py.",
   "playlists": [
    {
     "name": "Option Buying Course",

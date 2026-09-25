@@ -2,7 +2,7 @@
 """fix_notoolkit.py - Free Toolkit (external links) card REMOVE + version bump."""
 def main():
     open("tools5.js", "w", encoding="utf-8").write(
-        "/* removed: external links card (Dev request) */\n")
+        "/* removed: external links card (request) */\n")
     print("tools5.js: stubbed (card removed)")
     idx = open("index.html", encoding="utf-8").read()
     if "21sep26z" in idx:

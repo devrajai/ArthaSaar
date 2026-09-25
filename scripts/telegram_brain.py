@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TELEGRAM BRAIN — Dev's personal market bot.
+TELEGRAM BRAIN — market bot.
 
 Two daily messages to Telegram from ArthaSaar's own data (no new APIs, no deps):
 
@@ -17,7 +17,7 @@ Usage:
 
 Secrets (GitHub Actions env or local shell):
   TELEGRAM_BOT_TOKEN  — from @BotFather
-  TELEGRAM_CHAT_ID    — Dev's chat id (get via /start to the bot + getUpdates)
+  TELEGRAM_CHAT_ID    — owner chat id (get via /start to the bot + getUpdates)
 
 Self-healing: every section fails independently — one bad JSON never kills
 the whole message. Telegram hard limit is 4096 chars/msg, so long messages
@@ -98,7 +98,7 @@ def cr(v):
     return f"+₹{v:,.0f} Cr" if v >= 0 else f"−₹{abs(v):,.0f} Cr"
 
 def bs(v):
-    # FII/DII ke liye: Buy/Sell word (Dev ka rule: sirf +/- nahi)
+    # FII/DII ke liye: Buy/Sell word (rule: sirf +/- nahi)
     try:
         v = float(v)
     except (TypeError, ValueError):

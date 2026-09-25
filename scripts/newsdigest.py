@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# newsdigest.py - DAILY AUTHENTIC NEWS DIGEST (Dev ka rule: sirf sach, no masala)
+# newsdigest.py - DAILY AUTHENTIC NEWS DIGEST (rule: sirf sach, no masala)
 # Free source: Google News RSS (koi API key nahi).
 # AUTHENTIC ka matlab: (1) trusted outlets whitelist (2) cross-verify = same story 2+ alag outlets
 # (3) clickbait/sensational words EXCLUDED (TV wala masala nahi - Sumeet Jain style).

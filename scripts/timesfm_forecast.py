@@ -3,7 +3,7 @@
 
 Google Research's TimesFM 3.0 (330M params) zero-shot forecaster.
 
-Features in this version (Dev's TimesFM 3.0 wishlist):
+Features in this version (TimesFM 3.0 wishlist):
   1. multi-horizon: 7d / 14d / 21d / 30d / 3m from one 63-step forecast
   2. confidence % — share of the model's 9 quantile bands that agree
      with the median direction (rough conviction, not a probability)

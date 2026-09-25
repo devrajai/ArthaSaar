@@ -557,7 +557,7 @@ function drawLearn() {
     const ma = e.market_analysis_videos || {};
     const pl = e.devs_learning_playlists || {};
     const it = e.inspiring_traders || {};
-    box.innerHTML = '<div class="note" style="margin-bottom:10px">Dev\'s collected library — books, podcasts, videos.</div>' +
+    box.innerHTML = '<div class="note" style="margin-bottom:10px">Collected library — books, podcasts, videos.</div>' +
       dl("Books", e.books) + dl("Podcasts", e.podcasts) + dl("YouTube channels", e.youtube) +
       dl("Free courses & articles", e.free_courses_and_articles) +
       dl("My collected rules", e.devs_collected_rules) +
@@ -632,7 +632,7 @@ function renderStudies() {
       const max = Math.max(...s.map((y) => Math.abs(y.ret_pct || 0)), 1);
       const greens = s.filter((y) => (y.ret_pct || 0) > 0).length;
       $("#sensexCard").innerHTML = '<div class="subhead">Sensex yearly returns 1979–2024 (' +
-        greens + " green / " + (s.length - greens) + " red) — from Dev's own handwritten study</div>" +
+        greens + " green / " + (s.length - greens) + " red) — from the handwritten study notes</div>" +
         s.map((y) => { const r = y.ret_pct || 0, w = Math.abs(r) / max * 50;
           return '<div class="yearbar"><span class="yb-label">' + y.year + '</span>' +
             '<span class="yb-track"><span class="yb-bar ' + (r >= 0 ? "g" : "r") +

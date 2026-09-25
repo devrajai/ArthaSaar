@@ -1,4 +1,4 @@
-/* globals.js - GLOBAL RADAR (Dev's Bloomberg): duniya ke indices+commodities EOD + Global->India correlation engine. #global */
+/* globals.js - GLOBAL RADAR (ArthaSaar): duniya ke indices+commodities EOD + Global->India correlation engine. #global */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var D = null;

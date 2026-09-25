@@ -1,14 +1,11 @@
-name: TG Test Msg
+name: TG Bot Test
 on:
   workflow_dispatch:
 jobs:
-  t:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          for id in 1392604324 1073463083; do
-            curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendMessage" \
-              -d chat_id="$id" \
-              --data-urlencode "text=Welcome jems_bonda! (6th member) - Aap ab Market Brain ke rozana Market + IPO Telegram messages receive karoge. Ye sirf test message hai - aaj se daily digest, alerts, IPO news sab aayega. - Market Brain by Dev" > /dev/null
-            echo "sent $id"
-          done
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/tgtest.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}

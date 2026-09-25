@@ -1,0 +1,18 @@
+name: Fix Theme 13 LoadRetry
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python .github/scripts/fix_theme13.py
+      - name: Commit and push
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add app.js index.html ipo/index.html
+          git commit -m "fix: script load retry + cacheable URLs (flaky mobile network)" || echo "no changes"
+          git push

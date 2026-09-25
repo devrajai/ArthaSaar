@@ -1,10 +1,17 @@
 {
- "updated": "2026-09-25T01:33:41.050746+05:30",
+ "updated": "2026-09-25T07:32:57.593670+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
- "overall": 54,
+ "overall": 53,
  "tag": "Neutral",
  "counted": 60,
  "pos": [
+  {
+   "t": "Oil jump sends 30-year yields to two-decade high",
+   "s": 78,
+   "pub": "Livemint",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQTkhQSDBVVGVHTzdpM3BRYmV5WnNKaHVSNmh0WlBQMFdwd0JYSWxRc1NldEkwdF9CYzlTMlpJVmcyOUJqZmowbmtIV21NYXEzdmVhWllUbFFNQ0NiSzFrWW9HTHBoVzg4SWJ2cFZzQTJUWkxwdVYxMi1QNWNqS3MxdFZCMzBOSHQtZ0RVUHlvQnRmMV9NR0I0QzQzekhCZDVFOFHSAacBQVVfeXFMTXp5c0duejVnU3FwWUVYQ2N4RVNxb0dJMVg5V3Fya2x5Xy1Db1pvX0xtckVWZDBCU1drRnpXOWhUNkt5NkFuQ25yMHc2bjktaUEyajdHY1JxRXZON0NRNVYxbE1nSEhrdGRKTGVKVkF5NXNUdEc5Y1E2VWNKMmw0YlNTUUNmZ2JOT1pTWXdWLTBFdmNwb1JTZEt3MzBVbzgzS0Y3NzF1dWM?oc=5"
+  },
   {
    "t": "Third Point Reinsurance stock hits all-time high at 26.49 USD",
    "s": 78,
@@ -25,13 +32,6 @@
    "pub": "Investing.com India",
    "topic": "Markets",
    "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPZ0RjQnNOc3IyWkxGejU5cW5QcXYxdTU3NURadXZESU5RV0hFcFVleUtEOFVRQlRUaW1Wdkl0aV95M3dDYk1tTl85Zk44bGhJLXdNTHJtOWlMREs0S3pKMnBrZlJpQ3VrZDQ5ZVRFT2ZralY5aWxYcXlEbE1ySjhubXk5b0NTaVFlRHk5OTJPM1VlVk00YTVaeEFXajduWlJpU1NYMXd2RE03N0swWVoxNFhJcEdMRGZUcXZyZjZaWko?oc=5"
-  },
-  {
-   "t": "Proto Labs stock hits 52-week high at 93.25 USD",
-   "s": 78,
-   "pub": "Investing.com India",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQZ2NpN0JNT0Z3Y3BrQUs5enA5eGFSaG80bno0bVE3b2tDQVN6aTF0aFVsRlJOY0h2WUttWXJEbm44enlvOFhKamp6a0VTbFhBUEtLa3hiNE9KQld1bzJrWEVpM1BGTlkyQ3JLaHJfeEhGYlEtVTNYT09ZYThjUFR0N09vdmVpcnlpTm5qTXJJRU9DS3pxa3BoZU03bkphcS1OQXkxajllS2RUZw?oc=5"
   }
  ],
  "neg": [
@@ -50,20 +50,26 @@
    "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFBxV3Bta3IyZDZ3RjVUSTZVTDNKWUVkYUd0WlB6ZFFlSnpLckJtTk02QkZJVGpyWE14NVNTLThzbUZvbzhWYWhrY2Jn?oc=5"
   },
   {
-   "t": "Nifty outlook for tomorrow: Why 23,000 matters after breaking below 4-month support? Resistance, support levels | Friday",
+   "t": "Asian Bonds, Stocks to Fall as Oil Fans Inflation: Markets Wrap",
    "s": 36,
-   "pub": "Livemint",
+   "pub": "bloomberg.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMikwJBVV95cUxPVmhHSk5xYVUxOVNvbEVtc1V1Z1NTQ0ZwdzZ1ejQ4b2tfM3BQZlFtYXFlVlZaeE55QzBGXzVXVi02XzYtZjRPbUF1T3pwMVNERWR4eEZ3N3JDel9rQjE3ZlRYNm04SUtOMkxxc1NYM1BpUTlyQjlueVZNSEdNMTQyaGpnSXJocjI2Qi12Tll5Y1JidGRKcDVUOVJaOGllMlExRDd0RlFGc25hRUE4UWxCSndZVGtZbGQzNTFIbll0aVZNbnJ1eml0TTUzRWZvNXFQOFM1Q3k4dUNtTGJEeHZIYUNEQVVDa05JaHFEenUtcGJvR2hua0R1UU1xUzg2d0d4Y2Z6Qm8xZm04V1NPeVZrS25lRdIBmAJBVV95cUxPSlVkNmlJcTVMeEV6cVZaaXBhNFpGeGZENVR1aDNIdnpsQVhyT3Q3RU10Zk93OGdYYU1kRlBUWHlGbnB2S25QaHp5YzFKV3NETmRJVFUtZ1IzVWhxTVp6Ul9WRVFpN2owTjl4RUM4aW1TT2FsUjFFX1g4U1pUVUVwQnJ3ZUY3U09LbFNGb3NQMk9hTGEySXRTWmpOTUVGdFJZV2RYRUxTRU5wNmQxLXVkb1JWYWpYMzQtMkJ0V2x6VF9yV1B2ZlBZU2lGXzhkcVlsR29kYXdQUjVXSDc4cXhhNEEtUzI1QXM1OHdJQmgwS1BXWG51bzFCMV96UEJWNWxoa0hwWTlBR1FMT1FHM0ZpU29Zay1RVURZ?oc=5"
+   "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQSlBZR1YyS3BQNENjZGszSURuWXlKTnVyb0l0d3JudlVHSEdrdW5ZeUlQaDFYVl85SDI1SzNYWlZ3Q2hiMWtfbXhUVFlDYzJHbjZfQTRfY2VlX3NOdlJRYlI4dHFrVjltZ1V6WU1Nbko0RkVBUTRjR3FTZTFXMnF6VDVnZXFVOVJPWUhkSHZUSlpBQ3py?oc=5"
   },
   {
-   "t": "EquipmentShare stock falls 6% after short seller report",
+   "t": "Why US stock market crashes today? 3 reasons Dow Jones, Nasdaq and S&P 500 are in deep red as tech stocks",
    "s": 36,
-   "pub": "Investing.com India",
+   "pub": "The Economic Times",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOcDU4bmt3ZDAwYkhIVjdFS3V4dnZpeEt5Nkc2Q3JROHJnWGIwQy1UYXNTcTIwLW1PclRyVmhIdFYzZldRQUtJai13bDlCeWVUTE9MVnJyclFlVHN1dFhBSTExdWFLb0pmLXB2dGpsN1NFTVg0QzhNc1BkYzlXTGtRM2NIcWpsV1VjbVZrYm91SVQ0YVd0U1VoQ0JYWllFVHpQYmN3a0pNMF9PZ0ZlY3BZ?oc=5"
+   "link": "https://news.google.com/rss/articles/CBMipwJBVV95cUxNVnhwMjhaZHFYY0RkQjdGaW1XVGxqYTQ5eHduZzlJLUhBMzM0T3A0bERhMXBCYTRXZEJpSllsRndxTnozLU1jT2JWUUFia1E4LVFIUVpEdm1vMm1mSnduR2lrU2RvY2xSUjVjZGFEeHJYTGxEc0xzczQ1aFZXRklnelVfQ1dmYW1NZk9YQ3N4aVlSYl9hNzdoZWV2VktoMl91WS1oQ1hmYjVwTFdnRThuY0hjU2Rqd0V1QktjSkgyWkZad2FDRWk0a244YnB1TV9xYnVSc1ROSjNrMlhkcDN1MnNjZmRBTktYbkt0MHFNUTBleTM0c1RtQU5NdVFEbnY0d05GZFBmdVI1cEhwcnNiQm9KTUR4TF9MYnZoV29hTUJyOHJmeXhn0gGsAkFVX3lxTE10dTk5cXNBN2U5aDgybFZ4ZzV3MmZwaDZNcGNSeE1PNG50WE11SkdraXdYRTYxSXhjMVlUazgyRk12ZDl6NExKOTQ2WHRtTk80VE5LR3Y0OGdqREtZQzZma3Nhcm5LOEl6eEhjOUlXV001bFkyd0RGQmh3Q1hFT2w0Y0VzSmJmWEx5TDRnekdfT3VNWmpnMXNVR1A2TmxSU2p3VGVQUkZSX0QyS1p0Z040SmxQS2FUdDgtX2trdC1MUUVRVkdmYzZPRWIzdE5VbU5wVzNWby1YaU5paVZnTGNPRm0yRTMxRkplY3Y1Mjd3Zm52aXZsek80NWpwNm1VVGM0T25oazRhbmJON0N5anBMZldKRjZEZmRLLXpLbUZjNGg5VWFqUEQyZnYzWQ?oc=5"
   }
  ],
- "stocks": [],
+ "stocks": [
+  {
+   "sym": "HAL",
+   "s": 57,
+   "n": 2
+  }
+ ],
  "note": "0-100 scale: >58 bullish, 42-58 neutral, <42 bearish. Approximation hai, tip nahi."
 }

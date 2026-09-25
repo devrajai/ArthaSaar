@@ -1,164 +1,164 @@
 {
- "updated": "2026-09-24T14:29:52.058262",
- "date": "24-09-2026",
+ "updated": "2026-09-25T14:29:53.914034",
+ "date": "25-09-2026",
  "source": "NSE F&O bhavcopy (EOD)",
  "symbols": {
   "NIFTY 50": {
-   "spot": 23063.1,
+   "spot": 23140.5,
    "expiry": "29 Sep",
-   "put_wall": 22000,
-   "put_wall_oi": 12132640,
+   "put_wall": 23000,
+   "put_wall_oi": 14434665,
    "call_wall": 24000,
-   "call_wall_oi": 19409845,
-   "pcr": 0.72,
-   "max_pain": 23300,
-   "total_oi": 413971680,
+   "call_wall_oi": 15609815,
+   "pcr": 0.93,
+   "max_pain": 23250,
+   "total_oi": 413282685,
    "chain": [
     {
-     "strike": 22900,
-     "ce": 376545,
-     "ce_chg": 227825,
-     "pe": 5638620,
-     "pe_chg": 832780
-    },
-    {
-     "strike": 22950,
-     "ce": 266955,
-     "ce_chg": 226850,
-     "pe": 2351700,
-     "pe_chg": 394485
-    },
-    {
      "strike": 23000,
-     "ce": 3885960,
-     "ce_chg": 2550210,
-     "pe": 11757550,
-     "pe_chg": -918215
+     "ce": 3278665,
+     "ce_chg": -607295,
+     "pe": 14434665,
+     "pe_chg": 2677115
     },
     {
      "strike": 23050,
-     "ce": 1351415,
-     "ce_chg": 1271010,
-     "pe": 2790840,
-     "pe_chg": 1044095
+     "ce": 2358525,
+     "ce_chg": 1007110,
+     "pe": 6337825,
+     "pe_chg": 3546985
     },
     {
      "strike": 23100,
-     "ce": 7069660,
-     "ce_chg": 6497335,
-     "pe": 7586020,
-     "pe_chg": 3652090
+     "ce": 9081020,
+     "ce_chg": 2011360,
+     "pe": 10946390,
+     "pe_chg": 3360370
     },
     {
      "strike": 23150,
-     "ce": 3310775,
-     "ce_chg": 3073200,
-     "pe": 1764880,
-     "pe_chg": -348400
+     "ce": 3645655,
+     "ce_chg": 334880,
+     "pe": 3978195,
+     "pe_chg": 2213315
     },
     {
      "strike": 23200,
-     "ce": 11949275,
-     "ce_chg": 10477350,
-     "pe": 4852445,
-     "pe_chg": -1356485
+     "ce": 9387040,
+     "ce_chg": -2562235,
+     "pe": 6103500,
+     "pe_chg": 1251055
+    },
+    {
+     "strike": 23250,
+     "ce": 5950100,
+     "ce_chg": -3929120,
+     "pe": 3416985,
+     "pe_chg": -126685
+    },
+    {
+     "strike": 23300,
+     "ce": 9673105,
+     "ce_chg": -1982955,
+     "pe": 5132465,
+     "pe_chg": -416585
     }
    ],
    "gti": {
-    "day_poc": 23421,
+    "day_poc": 23130,
     "SD": [
-     23109,
-     23134
+     22927,
+     22951
     ],
     "SS": [
-     23310,
-     23335
+     23119,
+     23143
     ],
     "golden": 23352
    },
    "combo": {
-    "support": "PUT wall 22000 (GTI SD 23121 se alag)",
-    "resistance": "CALL wall 24000 (GTI SS 23322 se alag)",
-    "verdict": "PCR 0.72 < 0.85 - call writers dominant, bearish bias. Spot 23063 walls ke beech mein (22000 - 24000) - rangebound"
+    "support": "PUT wall 23000 (GTI SD 22939 se alag)",
+    "resistance": "CALL wall 24000 (GTI SS 23131 se alag)",
+    "verdict": "PCR 0.93 - neutral range (put vs call barabar). Spot 23140 walls ke beech mein (23000 - 24000) - rangebound"
    }
   },
   "BANKNIFTY": {
-   "spot": 55438.5,
+   "spot": 55580.4,
    "expiry": "29 Sep",
    "put_wall": 57500,
-   "put_wall_oi": 1212870,
+   "put_wall_oi": 1188240,
    "call_wall": 57500,
-   "call_wall_oi": 1910790,
-   "pcr": 0.74,
+   "call_wall_oi": 1960290,
+   "pcr": 0.79,
    "max_pain": 56500,
-   "total_oi": 35829900,
+   "total_oi": 35481000,
    "chain": [
     {
-     "strike": 55100,
-     "ce": 9630,
-     "ce_chg": 5820,
-     "pe": 118830,
-     "pe_chg": 14580
-    },
-    {
-     "strike": 55200,
-     "ce": 27960,
-     "ce_chg": 22290,
-     "pe": 97620,
-     "pe_chg": -30750
-    },
-    {
      "strike": 55300,
-     "ce": 35280,
-     "ce_chg": 28440,
-     "pe": 169230,
-     "pe_chg": 34140
+     "ce": 65700,
+     "ce_chg": 30420,
+     "pe": 438510,
+     "pe_chg": 269280
     },
     {
      "strike": 55400,
-     "ce": 97140,
-     "ce_chg": 86460,
-     "pe": 177000,
-     "pe_chg": 74910
+     "ce": 89490,
+     "ce_chg": -7650,
+     "pe": 247410,
+     "pe_chg": 70410
     },
     {
      "strike": 55500,
-     "ce": 437760,
-     "ce_chg": 347400,
-     "pe": 631380,
-     "pe_chg": -21720
+     "ce": 448020,
+     "ce_chg": 10260,
+     "pe": 691680,
+     "pe_chg": 60300
     },
     {
      "strike": 55600,
-     "ce": 275430,
-     "ce_chg": 257400,
-     "pe": 186180,
-     "pe_chg": 70860
+     "ce": 299430,
+     "ce_chg": 24000,
+     "pe": 346800,
+     "pe_chg": 160620
     },
     {
      "strike": 55700,
-     "ce": 313470,
-     "ce_chg": 290970,
-     "pe": 234840,
-     "pe_chg": 40230
+     "ce": 343290,
+     "ce_chg": 29820,
+     "pe": 260700,
+     "pe_chg": 25860
+    },
+    {
+     "strike": 55800,
+     "ce": 337950,
+     "ce_chg": -37620,
+     "pe": 255870,
+     "pe_chg": -16260
+    },
+    {
+     "strike": 55900,
+     "ce": 266730,
+     "ce_chg": -16440,
+     "pe": 177660,
+     "pe_chg": -1590
     }
    ],
    "gti": {
-    "day_poc": 56461,
+    "day_poc": 55566,
     "SD": [
-     55347,
-     55428
+     55011,
+     55092
     ],
     "SS": [
-     55994,
-     56075
+     55656,
+     55737
     ],
     "golden": 56383
    },
    "combo": {
-    "support": "PUT wall 57500 (GTI SD 55387 se alag)",
-    "resistance": "CALL wall 57500 (GTI SS 56034 se alag)",
-    "verdict": "PCR 0.74 < 0.85 - call writers dominant, bearish bias. Spot PUT wall 57500 ke neeche/par - support test ho raha"
+    "support": "PUT wall 57500 (GTI SD 55051 se alag)",
+    "resistance": "CALL wall 57500 (GTI SS 55696 se alag)",
+    "verdict": "PCR 0.79 < 0.85 - call writers dominant, bearish bias. Spot PUT wall 57500 ke neeche/par - support test ho raha"
    }
   }
  }

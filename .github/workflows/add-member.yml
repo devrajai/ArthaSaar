@@ -1,0 +1,70 @@
+name: Add TG Member
+on:
+  workflow_dispatch:
+    inputs:
+      member_id:
+        description: 'chat id of new member'
+        required: true
+      member_name:
+        description: 'name'
+        required: false
+        default: 'friend'
+
+concurrency:
+  group: add-tg-member
+  cancel-in-progress: false
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Invite + DM
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          MEMBER_ID: ${{ github.event.inputs.member_id }}
+          MEMBER_NAME: ${{ github.event.inputs.member_name }}
+        run: |
+          python3 - << 'PYEOF'
+          import os, json, urllib.request
+          TOKEN = os.environ["TG_TOKEN"]
+          GROUP = os.environ["TG_CHAT_ID"].split(",")[0].strip()
+          MID = os.environ["MEMBER_ID"]
+          NAME = os.environ.get("MEMBER_NAME") or "friend"
+
+          def api(method, params):
+              url = "https://api.telegram.org/bot%s/%s" % (TOKEN, method)
+              req = urllib.request.Request(url, data=json.dumps(params).encode(),
+                                           headers={"Content-Type": "application/json"})
+              try:
+                  return json.loads(urllib.request.urlopen(req, timeout=30).read())
+              except urllib.error.HTTPError as e:
+                  try:
+                      return json.loads(e.read())
+                  except Exception:
+                      return {"ok": False, "error": str(e)}
+              except Exception as e:
+                  return {"ok": False, "error": str(e)}
+
+          print("group:", GROUP, "| member:", MID, "| name:", NAME)
+
+          r = api("createChatInviteLink", {"chat_id": GROUP, "name": "invite-" + NAME})
+          if not r.get("ok"):
+              print("INVITE FAIL:", str(r)[:300])
+              m = api("sendMessage", {"chat_id": MID,
+                  "text": "Namaste %s! Aapko ArthaSaar group me add kiya ja raha hai. "
+                          "Admin (Dev) aapko thodi der me group me add kar denge — "
+                          "ya @ArthaSaarbot ko START karke ruk jao." % NAME})
+              print("DM fallback:", m.get("ok"))
+              raise SystemExit(0)
+
+          link = r["result"]["invite_link"]
+          print("INVITE OK")
+          m = api("sendMessage", {"chat_id": MID,
+              "text": "Namaste %s! \U0001f44b\n\nAapko ArthaSaar family me welcome hai! "
+                      "Neeche link pe tap karke group join karo:\n\n%s\n\n"
+                      "Roz subah 9:20 aur shaam 4 baje market summary yahan milegi. "
+                      "\u2014 ArthaSaar" % (NAME, link)})
+          print("DM:", m.get("ok"), str(m)[:200])
+          PYEOF

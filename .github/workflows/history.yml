@@ -18,10 +18,13 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install yfinance pandas requests
+      - run: gh release download candles -D data-history -p intraday.json || echo "no old intraday archive"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: python3 scripts/history_collect.py
       - run: |
-          gh release create candles --title "candle archive (auto)" --notes "all NSE stocks + indices ka 1-saal daily candles - roz auto refresh" || true
-          gh release upload candles data-history/daily-*.json --clobber
+          gh release create candles --title "candle archive (auto)" --notes "all NSE stocks + indices ka 5-saal daily candles + core symbols ka rolling intraday archive - roz auto refresh" || true
+          gh release upload candles data-history/*.json --clobber
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |

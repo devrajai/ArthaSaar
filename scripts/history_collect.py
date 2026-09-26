@@ -2,9 +2,13 @@
 """history_collect.py - ALL NSE stocks + indices ka 1-saal daily candle archive.
 
 - Symbols: NSE EQUITY_L.csv (archives.nseindia.com, ~2000 EQ stocks) + hardcoded indices
-- Data: yfinance multi-ticker download (interval=1d, period=1y), 100-symbol batches
+- Data: yfinance multi-ticker download (interval=1d, period=5y), 100-symbol batches
+- PLUS intraday self-archive (core symbols): 5m/15m (60d window) + 1h (730d) roz
+  fetch karke purane intraday.json me MERGE karta hai — Yahoo ka 60-din limit
+  apne data se todte hain, roz save karke history khud badhati hai
 - Output:
     data-history/daily-00.json ... daily-NN.json  -> GitHub Release "candles" pe (git bloat zero)
+    data-history/intraday.json                     -> core symbols ka rolling intraday archive
     data/symbols.json                               -> repo me commit (site search + chunk index)
 - Site: https://github.com/devrajai/ArthaSaar/releases/download/candles/daily-00.json (CORS ok)
 
@@ -102,14 +106,14 @@ def main():
         batch = universe[i:i + BATCH]
         tickers = [ys for _, ys, _ in batch]
         try:
-            df = yf.download(tickers, interval="1d", period="1y",
+            df = yf.download(tickers, interval="1d", period="5y",
                              progress=False, auto_adjust=False, group_by="ticker",
                              threads=True, timeout=60)
         except Exception as e:  # noqa: BLE001
             print("batch fail @", i, e, "- retry once")
             time.sleep(5)
             try:
-                df = yf.download(tickers, interval="1d", period="1y",
+                df = yf.download(tickers, interval="1d", period="5y",
                                  progress=False, auto_adjust=False, group_by="ticker",
                                  threads=True, timeout=60)
             except Exception:
@@ -161,5 +165,74 @@ def main():
     print("written:", OUTDIR, " + ", SYMFILE)
 
 
+CORE = dict(INDICES)
+CORE.update({s: s + ".NS" for s in ["RELIANCE", "HDFCBANK", "ICICIBANK", "INFY",
+                                    "TCS", "SBIN", "TATASTEEL", "ITC"]})
+INTRADAY_PLAN = {"5m": ("60d", 16000), "15m": ("60d", 16000), "1h": ("730d", 6000)}
+
+
+def intraday():
+    """core symbols ka rolling intraday archive — purana merge, naya append."""
+    path = OUTDIR / "intraday.json"
+    old = {}
+    try:
+        old = json.loads(path.read_text(encoding="utf-8"))
+        print("old intraday:", {k: {iv: len(b["t"]) for iv, b in v.items() if iv != "y"}
+                                for k, v in list(old.items())[:3]})
+    except Exception:
+        old = {}
+    out = {k: v for k, v in old.items()}
+    for iv, (period, cap) in INTRADAY_PLAN.items():
+        tickers = list(CORE.values())
+        try:
+            df = yf.download(tickers, interval=iv, period=period,
+                             progress=False, auto_adjust=False, group_by="ticker",
+                             threads=True, timeout=60)
+        except Exception as e:  # noqa: BLE001
+            print("intraday", iv, "fail:", e)
+            continue
+        if df is None or df.empty:
+            continue
+        for disp, ys in CORE.items():
+            try:
+                sub = df[ys]
+            except KeyError:
+                continue
+            if sub is None or sub.empty:
+                continue
+            bars = to_bars(sub)
+            if not bars or not bars["t"]:
+                continue
+            e = out.setdefault(disp, {"y": ys})
+            prev = e.get(iv)
+            merged = {t: i for i, t in enumerate(prev["t"])} if prev else {}
+            for i, t in enumerate(bars["t"]):
+                merged[t] = i
+            keys = sorted(merged.keys())[-cap:]
+            e[iv] = {
+                "t": keys,
+                "o": [], "h": [], "l": [], "c": [], "v": [],
+            }
+            # rebuild arrays from new bars, fallback old
+            src_new = {t: i for i, t in enumerate(bars["t"])}
+            src_old = {t: i for i, t in enumerate(prev["t"])} if prev else {}
+            for t in keys:
+                if t in src_new:
+                    i = src_new[t]
+                    e[iv]["o"].append(bars["o"][i]); e[iv]["h"].append(bars["h"][i])
+                    e[iv]["l"].append(bars["l"][i]); e[iv]["c"].append(bars["c"][i])
+                    e[iv]["v"].append(bars["v"][i])
+                else:
+                    i = src_old[t]
+                    e[iv]["o"].append(prev["o"][i]); e[iv]["h"].append(prev["h"][i])
+                    e[iv]["l"].append(prev["l"][i]); e[iv]["c"].append(prev["c"][i])
+                    e[iv]["v"].append(prev["v"][i])
+            print(f"intraday {disp} {iv}: {len(keys)} bars (cap {cap})")
+    if out:
+        path.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
+        print("written", path, path.stat().st_size, "bytes")
+
+
 if __name__ == "__main__":
     main()
+    intraday()

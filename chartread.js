@@ -11,7 +11,7 @@
               "INFY", "TCS", "SBIN", "TATASTEEL", "ITC"];
   var IVS = ["1m", "3m", "5m", "15m", "30m", "1h", "4h", "1d"];
   var IVL = {"1m": "1m", "3m": "3m", "5m": "5m", "15m": "15m", "30m": "30m",
-             "1h": "1h", "4h": "4h", "1d": "1D·1Y"};
+             "1h": "1h", "4h": "4h", "1d": "1D·5Y"};
   var SRC = {"3m": "1m", "30m": "15m", "4h": "1h"};   /* derived intervals */
   var BUCKET = {"3m": 180, "30m": 1800, "4h": 14400};  /* bucket seconds */
   var REL = "https://github.com/devrajai/ArthaSaar/releases/download/candles/";
@@ -428,7 +428,7 @@
 
   function renderDaily() {
     var priceEl = document.getElementById("crPrice");
-    priceEl.innerHTML = '<div class="note">1-saal daily archive load ho raha...</div>';
+    priceEl.innerHTML = '<div class="note">5-saal daily archive load ho raha...</div>';
     loadSymbols().then(function () {
       return loadDaily(cur.sym);
     }).then(function (bars) {
@@ -441,7 +441,7 @@
       var last = d.c[d.c.length - 1];
       var chg = pc ? (last - pc) / pc * 100 : 0;
       document.getElementById("crPrice").innerHTML = '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">' +
-        '<div class="subhead">' + esc(cur.sym) + ' · 1D (1 saal)</div>' +
+        '<div class="subhead">' + esc(cur.sym) + ' · 1D (5 saal)</div>' +
         '<div style="font-family:var(--mono);font-size:18px;font-weight:700">' + n2(last) +
         ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "\u2212") + Math.abs(last - pc).toFixed(1) + " pts · ") : "") + pct(chg) + '</span></div></div>' +
         '<div class="note" style="margin:2px 0 8px">' + (d.t.length) + ' din ka data · EOD archive · roz market close ke baad update</div>';
@@ -492,7 +492,7 @@
       '<a class="backbtn" href="#home">⌂ Home</a>' +
       '<h2>Chart Reading — candles · patterns · levels</h2>' +
       '<div style="position:relative;margin:6px 0">' +
-      '<input id="crSearch" type="text" placeholder="koi bhi NSE stock likho (TATAMOTORS, KPIT...) — 1 saal daily chart" ' +
+      '<input id="crSearch" type="text" placeholder="koi bhi NSE stock likho (TATAMOTORS, KPIT...) — 5 saal daily chart" ' +
       'autocomplete="off" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:10px;border:1px solid rgba(125,180,255,.4);background:rgba(96,165,250,.08);color:inherit;font-size:13px">' +
       '<div id="crSugg" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:60;max-height:220px;overflow-y:auto;background:#161b26;border:1px solid rgba(125,180,255,.35);border-radius:0 0 10px 10px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>' +
       '</div>' +
@@ -505,7 +505,7 @@
       '</div>' +
       '<div class="card"><div class="subhead">Volume Profile — heavy volume zones</div><div id="crVP"></div></div>' +
       '<div class="card"><div class="subhead">Padho — pattern glossary</div><div id="crGloss"></div></div>' +
-      '<div class="footer-note">data: Yahoo (free) · 1m/3m/5m = aaj, 15m/30m = 5 din, 1h/4h = 1 mahina, 1D = 1 saal (sab NSE stocks) · patterns sirf read hai, tip nahi</div>';
+      '<div class="footer-note">data: Yahoo (free) · 1m/3m/5m = aaj, 15m/30m = 5 din, 1h/4h = 1 mahina, 1D = 5 saal (sab NSE stocks) · patterns sirf read hai, tip nahi</div>';
     var foot = document.querySelector("footer");
     if (foot && foot.parentNode) foot.parentNode.insertBefore(sec, foot);
     else document.body.appendChild(sec);

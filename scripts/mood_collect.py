@@ -133,6 +133,23 @@ def find_stocks(text, limit=6):
     return found
 
 
+def find_stocks_freq(text, limit=5):
+    """article body ke liye: kaunsa stock sabse zyada baar aaya (nav/boilerplate upar nahi aayega)."""
+    counts = {}
+    for name, sym in STOCKS.items():
+        n = len(re.findall(r"\b" + re.escape(name) + r"\b", text))
+        if n and n > counts.get(sym, 0):
+            counts[sym] = n
+    # chhota naam bade naam ke andar ho to hata do ("itc" <= "itc hotels")
+    drop = set()
+    for a in STOCKS:
+        for b in STOCKS:
+            if a != b and re.search(r"\b" + re.escape(a) + r"\b", b):
+                drop.add(a)
+    ranked = sorted(counts.items(), key=lambda kv: -kv[1])
+    return [sym for sym, _ in ranked[:limit] if sym not in {STOCKS[d] for d in drop}]
+
+
 def article_text(url, max_chars=25000):
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
@@ -170,7 +187,7 @@ def enrich_with_article(items, top=6):
             continue
         body = article_text(tgt)
         if body:
-            syms = find_stocks(body, 6)
+            syms = find_stocks_freq(body, 4)
             if syms:
                 it["syms"] = syms
                 it["src"] = "article"

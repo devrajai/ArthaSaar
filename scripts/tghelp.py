@@ -17,7 +17,12 @@ def yahoo(sym, rng="5d"):
         req = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"})
         d = json.loads(urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore"))
         m = d["chart"]["result"][0]["meta"]
-        return m.get("regularMarketPrice"), m.get("chartPreviousClose") or m.get("previousClose")
+        try:
+            closes = [c for c in (d["chart"]["result"][0]["indicators"]["quote"][0]["close"] or []) if c]
+        except Exception:
+            closes = []
+        prev = closes[-2] if len(closes) >= 2 else (m.get("previousClose") or m.get("chartPreviousClose"))
+        return m.get("regularMarketPrice"), prev
     except Exception:
         return None, None
 

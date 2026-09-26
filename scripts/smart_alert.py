@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """smart_alert.py - trigger-based alerts (no spam): Nifty big move, VIX spike,
-crash score, FII selling, 52w high breaks. Dedup via data/alert-state.json."""
+crash score, FII selling, 52w high breaks, user price levels (data/alerts.json).
+Dedup via data/alert-state.json."""
 import sys, json, datetime
 sys.path.insert(0, "scripts")
 from tghelp import jload, yahoo, send, crash_score, status
@@ -45,6 +46,33 @@ if len(highs) >= 3 and state.get("high52") != key_date:
     extra = " (+%d aur)" % (len(highs) - 6) if len(highs) > 6 else ""
     alerts.append("\U0001F3AF 52-week high: " + ", ".join(highs[:6]) + extra)
     state["high52"] = key_date
+
+# ---- user price levels (data/alerts.json) ----
+AL = jload("data/alerts.json")
+la = AL.get("alerts") or []
+px = {}
+fired = []
+for a in la:
+    tkr = a.get("ticker") or a.get("symbol")
+    lvl = a.get("level")
+    dr = (a.get("dir") or "above").lower()
+    if tkr is None or lvl is None:
+        continue
+    if tkr not in px:
+        px[tkr] = yahoo(tkr)[0]
+    p = px[tkr]
+    if p is None:
+        continue
+    if (dr == "below" and p <= lvl) or (dr != "below" and p >= lvl):
+        nm = a.get("symbol") or tkr
+        extra = " (" + a["note"] + ")" if a.get("note") else ""
+        alerts.append(("\U0001F3AF", "%s %.1f — %s %.0f cross ho gaya%s" % (nm, p, "UPAR" if dr != "below" else "NEECHE", lvl, extra)))
+        fired.append(a)
+if fired:
+    AL["alerts"] = [x for x in la if x not in fired]
+    AL["updated"] = key_date
+    json.dump(AL, open("data/alerts.json", "w"), indent=1)
+    print("fired levels:", [x.get("symbol") for x in fired])
 
 if alerts:
     msg = "\U0001F514 <b>ArthaSaar ALERT</b>\n" + now.strftime("%d %b, %H:%M IST") + "\n\n" + "\n".join("- " + (a if isinstance(a, str) else a[1]) for a in alerts)

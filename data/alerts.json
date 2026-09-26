@@ -1,0 +1,37 @@
+{
+ "updated": "2026-09-26",
+ "alerts": [
+  {
+   "symbol": "NIFTY",
+   "ticker": "^NSEI",
+   "level": 23300,
+   "dir": "above",
+   "note": "breakout zone",
+   "added": "2026-09-26"
+  },
+  {
+   "symbol": "NIFTY",
+   "ticker": "^NSEI",
+   "level": 23000,
+   "dir": "below",
+   "note": "round support",
+   "added": "2026-09-26"
+  },
+  {
+   "symbol": "BANKNIFTY",
+   "ticker": "^NSEBANK",
+   "level": 56000,
+   "dir": "above",
+   "note": "round breakout",
+   "added": "2026-09-26"
+  },
+  {
+   "symbol": "BANKNIFTY",
+   "ticker": "^NSEBANK",
+   "level": 55200,
+   "dir": "below",
+   "note": "swing low",
+   "added": "2026-09-26"
+  }
+ ]
+}

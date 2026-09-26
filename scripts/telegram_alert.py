@@ -2,7 +2,8 @@
 """telegram_alert.py v2 — morning (9:20 IST) open + evening (16:00 IST) close summaries.
 Live Nifty/Sensex + live F&O stock movers (Yahoo) + OI build-up (futures.json) +
 volume movers (brain-screener.json) + Smart Brain + breadth + FII/DII + gold/silver.
-Supports multiple chat ids in TG_CHAT_ID (comma-separated)."""
+Supports multiple chat ids in TG_CHAT_ID (comma-separated).
+"""
 import json, os, sys, time, urllib.request, urllib.parse, datetime as dt
 
 TOKEN = os.environ.get("TG_TOKEN", "")
@@ -31,14 +32,18 @@ def http_json(url):
 def yahoo(sym):
     d = http_json("https://query1.finance.yahoo.com/v8/finance/chart/%s?range=5d&interval=1d" % sym)
     try:
-        m = d["chart"]["result"][0]["meta"]
-        return m.get("regularMarketPrice"), m.get("chartPreviousClose") or m.get("previousClose")
+        r = d["chart"]["result"][0]
+        m = r["meta"]
+        # FIX: chartPreviousClose = 5-din-purana close (galat). Last bar ka prev = dusra-aakhri bar.
+        closes = [c for c in ((r.get("indicators") or {}).get("quote") or [{}])[0].get("close") or [] if c]
+        pc = closes[-2] if len(closes) >= 2 else (m.get("chartPreviousClose") or m.get("previousClose"))
+        return (m.get("regularMarketPrice"), pc,
+                m.get("regularMarketDayHigh"), m.get("regularMarketDayLow"))
     except Exception:
-        return None, None
+        return None, None, None, None
 
 def esc(s):
     return str(s).replace("&", "&").replace("<", "<").replace(">", ">")
-
 def pct(p, pc):
     if p and pc:
         return (p / pc - 1) * 100.0
@@ -55,15 +60,15 @@ fu = jload("data/futures.json")
 sc = jload("data/brain-screener.json")
 
 # ---- live quotes: indices ----
-nifty, npc = yahoo("%5ENSEI")
-sensex, spc = yahoo("%5EBSESN")
+nifty, npc, nhi, nlo = yahoo("%5ENSEI")
+sensex, spc, shi, slo = yahoo("%5EBSESN")
 
 # ---- live movers: top F&O stocks by OI (max 22) ----
 fst = (fu.get("stocks") or [])
 top_oi = sorted(fst, key=lambda s: -(s.get("oi") or 0))[:22]
 movers = []
 for s in top_oi:
-    p, pc2 = yahoo(s["symbol"] + ".NS")
+    p, pc2, _, _ = yahoo(s["symbol"] + ".NS")
     c = pct(p, pc2)
     if c is not None:
         movers.append((s["symbol"], c, s.get("oi_chg")))
@@ -94,7 +99,7 @@ SECTORS = [("IT", "%5ECNXIT"), ("BANK", "%5ENSEBANK"), ("AUTO", "%5ECNXAUTO"),
            ("REALTY", "%5ECNXREALTY"), ("ENERGY", "%5ECNXENERGY")]
 sec_rows = []
 for lbl, sy in SECTORS:
-    p2, c2 = yahoo(sy)
+    p2, c2, _, _ = yahoo(sy)
     ch = pct(p2, c2)
     if ch is not None:
         sec_rows.append((lbl, ch))
@@ -131,12 +136,24 @@ if mode != "open":
 row = []
 if nifty:
     c = pct(nifty, npc)
-    row.append("NIFTY %s (%s%.2f%%)" % ("{:,.0f}".format(nifty), sgn(c or 0), c or 0))
+    p = (nifty - npc) if npc else None
+    row.append("NIFTY %s (%s%.0f pts, %s%.2f%%)" % ("{:,.0f}".format(nifty), sgn(p or 0), p or 0, sgn(c or 0), c or 0))
 if sensex:
     c = pct(sensex, spc)
-    row.append("SENSEX %s (%s%.2f%%)" % ("{:,.0f}".format(sensex), sgn(c or 0), c or 0))
+    p = (sensex - spc) if spc else None
+    row.append("SENSEX %s (%s%.0f pts, %s%.2f%%)" % ("{:,.0f}".format(sensex), sgn(p or 0), p or 0, sgn(c or 0), c or 0))
 if row:
     L.append(" | ".join(row))
+    # aaj ka swing points me — trading me jitna dekhna aasan
+if mode != "open":
+    sw = []
+    if nifty and npc and nhi and nlo:
+        sw.append("NIFTY: %+.0f se %+.0f pts (swing %.0f)" % (nlo - npc, nhi - npc, nhi - nlo))
+    if sensex and spc and shi and slo:
+        sw.append("SENSEX: %+.0f se %+.0f pts (swing %.0f)" % (slo - spc, shi - spc, shi - slo))
+    if sw:
+        L.append("\U0001F9ED <b>Aaj ka swing</b> (prev close se)")
+        L.append(" · ".join(sw))
 if mode != "open" and sec_rows:
     picks = (sec_rows[:2] + sec_rows[-2:]) if len(sec_rows) > 2 else sec_rows
     L.append("\U0001F3ED Sector scoreboard")
@@ -167,29 +184,29 @@ if vols:
 g = (sb.get("guess") or {})
 if g:
     L.append("")
-    L.append("\U0001F9E0 <b>Smart Brain: %s (%s/100)</b>" % (esc(g.get("verdict") or "—"), g.get("score")))
+    L.append("\U0001F9E0 <b>Smart Brain: %s (%s/100)</b>" % (esc(g.get("verdict") or "\u2014"), g.get("score")))
     for p in (g.get("points") or [])[:2]:
-        L.append("• " + esc(p))
+        L.append("\u2022 " + esc(p))
 
 if br:
     L.append("")
-    L.append("\U0001F4C8 Breadth: %s%% stocks EMA200 ke upar" % br.get("above_ema200_pct", "—"))
+    L.append("\U0001F4C8 Breadth: %s%% stocks EMA200 ke upar" % br.get("above_ema200_pct", "\u2014"))
 if fd:
     cats = fd.get("categories") or {}
     fii = (cats.get("FII/FPI") or {}).get("net_cr")
     dii = (cats.get("DII") or {}).get("net_cr")
     if (fii is not None or dii is not None) and (mode == "open" or fii_today is None):
         L.append("\U0001F4B8 FII %s Cr | DII %s Cr" % (
-            ("%+.0f" % fii) if fii is not None else "—",
-            ("%+.0f" % dii) if dii is not None else "—"))
+            ("%+.0f" % fii) if fii is not None else "\u2014",
+            ("%+.0f" % dii) if dii is not None else "\u2014"))
 
 bench = (mt.get("bench") or {})
 gold = (bench.get("gold") or {}).get("r1")
 silver = (bench.get("silver") or {}).get("r1")
 if gold is not None or silver is not None:
     L.append("\U0001F3C6 Gold 1Y %s | Silver 1Y %s" % (
-        ("%+.1f%%" % gold) if gold is not None else "—",
-        ("%+.1f%%" % silver) if silver is not None else "—"))
+        ("%+.1f%%" % gold) if gold is not None else "\u2014",
+        ("%+.1f%%" % silver) if silver is not None else "\u2014"))
 
 bull = (sb.get("bull") or [])[:3]
 bear = (sb.get("bear") or [])[:3]

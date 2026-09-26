@@ -1,7 +1,7 @@
-/* themefix.js v9 - ARTHASAAR PREMIUM (reference header + radars, event tile on top, no small words):
+/* themefix.js v10 - ARTHASAAR PREMIUM (reference header + radars, event tile on top, no small words):
    1) calm.css inject  2) infinity logo  3) favicon fix  4) ARtha-SAAR brand
    5) LIGHT/DARK pill button  6) gradient rline
-   7) ticker tape  8) hero NIFTY panel (+SENSEX from global.json)
+   7) ticker tape (points + %)  8) hero NIFTY panel (+SENSEX, points)
    9) forecast radar (replaces AI head card)  10) event radar on top of events section */
 (function () {
   "use strict";
@@ -108,7 +108,7 @@
     });
   }
 
-  /* ---------- ticker tape ---------- */
+  /* ---------- ticker tape (points + %) ---------- */
   function ticker() {
     fjson("data/indices-all.json", function (d) {
       var tp = document.querySelector(".as-tape");
@@ -121,19 +121,23 @@
         var i = by[w];
         if (!i) return;
         var c = (i.change_pct || 0) > 0 ? "u" : "d";
-        var v = (i.change_pct > 0 ? "+" : "") + (Number(i.change_pct) || 0).toFixed(2) + "%";
+        var pt = (i.change != null && isFinite(Number(i.change))) ? (Number(i.change) > 0 ? "+" : "") + Number(i.change).toFixed(0) + " · " : "";
+        var v = pt + (i.change_pct > 0 ? "+" : "") + (Number(i.change_pct) || 0).toFixed(2) + "%";
         parts.push("<span><b>" + w + "</b> " + Number(i.price).toLocaleString("en-IN") + " <span class='t " + c + "'>" + v + "</span></span>");
       });
       if (parts.length < 4) d.indices.slice(0, 8).forEach(function (i) {
         var c = (i.change_pct || 0) > 0 ? "u" : "d";
-        parts.push("<span><b>" + i.index + "</b> " + Number(i.price).toLocaleString("en-IN") + " <span class='t " + c + "'>" + (i.change_pct > 0 ? "+" : "") + (Number(i.change_pct) || 0).toFixed(2) + "%</span></span>");
+        var pt = (i.change != null && isFinite(Number(i.change))) ? (Number(i.change) > 0 ? "+" : "") + Number(i.change).toFixed(0) + " · " : "";
+        parts.push("<span><b>" + i.index + "</b> " + Number(i.price).toLocaleString("en-IN") + " <span class='t " + c + "'>" + pt + (i.change_pct > 0 ? "+" : "") + (Number(i.change_pct) || 0).toFixed(2) + "%</span></span>");
       });
       var one = parts.join("");
       var draw = function (sx) {
         if (sx) {
           var c2 = (sx.chg_pct || 0) > 0 ? "u" : "d";
           var sv = (sx.chg_pct > 0 ? "+" : "") + Number(sx.chg_pct).toFixed(2) + "%";
-          var sSpan = "<span><b>SENSEX</b> " + Number(sx.price).toLocaleString("en-IN") + " <span class='t " + c2 + "'>" + sv + "</span></span>";
+          var spc2 = sx.chg_pct ? sx.price / (1 + sx.chg_pct / 100) : null;
+          var spt = spc2 ? (sx.chg_pct > 0 ? "+" : "") + (sx.price - spc2).toFixed(0) + " · " : "";
+          var sSpan = "<span><b>SENSEX</b> " + Number(sx.price).toLocaleString("en-IN") + " <span class='t " + c2 + "'>" + spt + sv + "</span></span>";
           one = sSpan + one;
         }
         tp.innerHTML = "<div class='as-tape-in'>" + one + one + "</div>";
@@ -142,7 +146,7 @@
     });
   }
 
-  /* ---------- hero NIFTY panel (home top) ---------- */
+  /* ---------- hero NIFTY panel (home top) — points + % ---------- */
   function desk() {
     fjson("data/indices-all.json", function (d) {
       if (!d || !d.indices || !d.indices.length) return;
@@ -163,7 +167,7 @@
       var dt = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short" }).toUpperCase();
       el.innerHTML = "<div class='as-ht'><span>NIFTY 50 · LIVE</span><span>" + dt + " IST</span></div>" +
         "<div class='as-hv'>" + (n ? Number(n.price).toLocaleString("en-IN") : "—") +
-        "<span class='" + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "▲" : "▼") + " " + Math.abs(chg).toFixed(2) + "%</span></div>" +
+        "<span class='" + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "▲" : "▼") + " " + (n && n.change != null && isFinite(Number(n.change)) ? (chg >= 0 ? "+" : "−") + Math.abs(Number(n.change)).toFixed(1) + " pts (" + Math.abs(chg).toFixed(2) + "%)" : Math.abs(chg).toFixed(2) + "%") + "</span></div>" +
         "<div class='as-hg'>" +
         "<div class='as-hc'><i>TREND</i><b class='" + (chg >= 0 ? "u" : "d") + "'>" + (chg >= 0 ? "UP" : "DOWN") + "</b></div>" +
         "<div class='as-hc'><i>BREADTH</i><b class='" + (pos > idx.length / 2 ? "u" : "d") + "'>" + pos + "/" + idx.length + "</b></div>" +
@@ -176,7 +180,8 @@
         if (!cell) return;
         if (!sx) { cell.textContent = "—"; return; }
         cell.className = (Number(sx.chg_pct) || 0) >= 0 ? "u" : "d";
-        cell.textContent = Number(sx.price).toLocaleString("en-IN");
+        var spc3 = sx.chg_pct ? sx.price / (1 + sx.chg_pct / 100) : null;
+        cell.textContent = Number(sx.price).toLocaleString("en-IN") + (spc3 ? " (" + (sx.chg_pct >= 0 ? "+" : "−") + Math.abs(sx.price - spc3).toFixed(0) + ")" : "");
       });
     });
   }
@@ -228,7 +233,7 @@
 
   /* ---------- EVENT RADAR (ipo open/close pipeline events) ----------
      v14: chevron button (open/close expand), closed+upcoming IPO ka pura info,
-     expand state auto-refresh ke baad bhi preserve */ 
+     expand state auto-refresh ke baad bhi preserve */
   var evOpenState = {};
   function eventRadar() {
     fjson("ipo/data/terminal-events.json", function (d) {

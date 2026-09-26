@@ -2,7 +2,8 @@
    - lightweight-charts (TradingView OSS) se interactive chart, CDN fail ho to SVG fallback
    - patterns: Doji, Hammer, Shooting Star, Engulfing, Marubozu, Inside Bar
    - read: EMA20/50, VWAP, RSI, volume spike, trend
-   - levels: prev close, open, H/L, VWAP, EMAs, swings */
+   - levels: prev close, open, H/L, VWAP, EMAs, swings
+   - NEW 26 Sep: Volume Profile (POC · Value Area · HVN/LVN) + points in price header */
 (function () {
   "use strict";
 
@@ -15,7 +16,7 @@
   var cur = { sym: "NIFTY", iv: "5m" };
   var chart = null, ser = null, vol = null, libOk = false, libTried = false;
 
-  function esc(s) { return String(s == null ? "" : s)
+  function esc(s) { if (s == null) { s = ""; } return String(s)
     .replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   function n2(x) { return Number(x).toLocaleString("en-IN",
     { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -169,7 +170,10 @@
     ["Hammer", "niche wick 2× body — girane par kharidari aayi"],
     ["Engulfing", "aaj ki candle ne kal ki poori dhak li — control badla"],
     ["VWAP", "aaj ka average khareedna rate — uske upar = strong"],
-    ["EMA20/50", "20 = short mood, 50 = trend; dono ke upar = uptrend"]
+    ["EMA20/50", "20 = short mood, 50 = trend; dono ke upar = uptrend"],
+    ["POC", "point of control — sabse zyada volume wala level, price uski taraf khinchta hai"],
+    ["Value Area", "70% volume ka band — price andar = balanced, bahar = trend"],
+    ["HVN / LVN", "high volume node = magnet zone; low volume node = vacuum, wahan move tez hota hai"]
   ];
   function glossaryPanel() {
     var h = "";
@@ -274,7 +278,57 @@
     });
   }
 
-  /* ---------------- render ---------------- */
+  /* ---------------- volume profile (POC · value area · HVN/LVN) ---------------- */
+  function volProfile(d) {
+    var n = d.t.length; if (n < 20) return null;
+    var lo = Infinity, hi = -Infinity, tot = 0, tpo = false;
+    for (var i = 0; i < n; i++) {
+      var v = Number(d.v[i]);
+      if (d.l[i] < lo) lo = d.l[i];
+      if (d.h[i] > hi) hi = d.h[i];
+      if (isFinite(v)) tot += v;
+    }
+    if (!tot || !isFinite(tot)) { tpo = true; tot = n; }
+    if (hi <= lo) return null;
+    var B = 48, w = (hi - lo) / B, prof = [], i2;
+    for (i2 = 0; i2 < B; i2++) prof.push(0);
+    for (i2 = 0; i2 < n; i2++) {
+      var v2 = tpo ? 1 : Number(d.v[i2]);
+      if (!isFinite(v2) || !v2) continue;
+      var cl = d.l[i2], ch = d.h[i2];
+      if (ch <= cl) { prof[Math.min(B - 1, Math.max(0, Math.floor((cl - lo) / w)))] += v2; continue; }
+      var b1 = Math.max(0, Math.floor((cl - lo) / w)), b2 = Math.min(B - 1, Math.floor((ch - lo) / w)), sp = b2 - b1 + 1;
+      for (var b3 = b1; b3 <= b2; b3++) prof[b3] += v2 / sp;
+    }
+    var poc = 0, k;
+    for (k = 1; k < B; k++) if (prof[k] > prof[poc]) poc = k;
+    var acc = prof[poc], a = poc, z = poc;
+    while (acc < 0.7 * tot && (a > 0 || z < B - 1)) {
+      var vl = a > 0 ? prof[a - 1] : -1, vr = z < B - 1 ? prof[z + 1] : -1;
+      if (vr >= vl) { z++; acc += Math.max(vr, 0); } else { a--; acc += Math.max(vl, 0); }
+    }
+    var px = function (b) { return lo + (b + 0.5) * w; };
+    var hvn = [], lvn = [];
+    for (var q = 0; q < B; q++) {
+      var mx = 0;
+      for (var r2 = Math.max(0, q - 2); r2 <= Math.min(B - 1, q + 2); r2++) if (prof[r2] > mx) mx = prof[r2];
+      if (q !== poc && prof[q] > 0.55 * prof[poc] && prof[q] === mx) hvn.push(px(q));
+      if (q > 0 && q < B - 1 && prof[q] < 0.25 * prof[poc] && prof[q] <= prof[q - 1] && prof[q] <= prof[q + 1]) lvn.push(px(q));
+    }
+    return { poc: px(poc), val: px(a), vah: px(z), hvn: hvn.slice(0, 3), lvn: lvn.slice(0, 2), tpo: tpo };
+  }
+  function vpPanel(vp, last) {
+    var h = "";
+    var inVA = last >= vp.val && last <= vp.vah;
+    h += lineBox(vp.tpo ? "POC — control (TPO)" : "POC — control level", n2(vp.poc), last >= vp.poc ? UP : DN);
+    h += lineBox("Value Area (70% vol)", n2(vp.val) + " – " + n2(vp.vah), inVA ? "#d4af37" : null);
+    h += lineBox("Price vs POC", pct((last - vp.poc) / vp.poc * 100), last >= vp.poc ? UP : DN);
+    if (vp.hvn.length) h += lineBox("HVN — magnet zones", vp.hvn.map(function (x) { return n2(x); }).join(" · "), UP);
+    if (vp.lvn.length) h += lineBox("LVN — vacuum, tez cross", vp.lvn.map(function (x) { return n2(x); }).join(" · "), DN);
+    h += '<div class="note" style="margin-top:6px">' + (vp.tpo ? "index me volume nahi aata — TPO (kitni der price raha) se bana hai" : "heavy volume wale levels = jahan bade players beth gaye · halka area jaldi cross hota hai") + ' — read hai, tip nahi</div>';
+    return h;
+  }
+
   function render() {
     var symsEl = document.getElementById("crSyms");
     var ivsEl = document.getElementById("crIvs");
@@ -309,11 +363,15 @@
     priceEl.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">' +
       '<div class="subhead">' + esc(cur.sym) + ' · ' + esc(cur.iv) + '</div>' +
       '<div style="font-family:var(--mono);font-size:18px;font-weight:700">' + n2(last) +
-      ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + pct(chg) + '</span></div></div>' +
+      ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "−") + Math.abs(last - pc).toFixed(1) + " pts · ") : "") + pct(chg) + '</span></div></div>' +
       '<div class="note" style="margin:2px 0 8px">updated ' + esc(DATA.updated) + ' · Yahoo free EOD/intraday</div>';
     drawChart(cur.sym, d, chg);
     document.getElementById("crRead").innerHTML = readPanel(cur.sym, d, pc);
     document.getElementById("crLevels").innerHTML = levelsPanel(d, pc);
+    var vp = volProfile(d);
+    var vpEl = document.getElementById("crVP");
+    if (vpEl) vpEl.innerHTML = vp ? vpPanel(vp, last) :
+      '<div class="note">is symbol ka volume data nahi mila — VP sirf wahan hota hai jahan volume aata hai.</div>';
   }
 
   function onClick(e) {
@@ -354,6 +412,7 @@
       '<div class="card"><div class="subhead">Aaj ka read</div><div id="crRead"></div></div>' +
       '<div class="card"><div class="subhead">Levels</div><div id="crLevels"></div></div>' +
       '</div>' +
+      '<div class="card"><div class="subhead">Volume Profile — heavy volume zones</div><div id="crVP"></div></div>' +
       '<div class="card"><div class="subhead">Padho — pattern glossary</div><div id="crGloss"></div></div>' +
       '<div class="footer-note">data: Yahoo (free) · 1m/5m = aaj, 15m = 5 din, 1h = 1 mahina · patterns sirf read hai, tip nahi</div>';
     var foot = document.querySelector("footer");

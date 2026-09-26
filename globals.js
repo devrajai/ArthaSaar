@@ -1,6 +1,6 @@
 /* globals.js - GLOBAL RADAR (ArthaSaar): duniya ke indices+commodities EOD + Global->India correlation engine. #global */
 (function () {
-  function esc(s) { return String(s == null ? "").replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  function esc(s) { if (s == null) { s = ""; } return String(s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var D = null;
 
   function pill(v) {

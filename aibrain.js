@@ -103,7 +103,7 @@
         h += '<div style="font-size:30px;font-weight:700" class="pos">' + rate + ' <span style="font-size:13px;opacity:.6">direction hit-rate</span></div>' +
           '<div class="note">' + a.hits + "/" + a.tracked + " predictions sahi disha mein - roz auto-check hota hai</div>";
       } else {
-        h += '<div class="note">📊 Accuracy tracker chalu - har roz ki prediction log ho rahi hai. <b>21 din</b> baad pehla report card banega (prediction vs actual).<br>Model khud check hoga - no gyan, sirf hisaab.</div>";
+        h += '<div class="note">📊 Accuracy tracker chalu - har roz ki prediction log ho rahi hai. <b>21 din</b> baad pehla report card banega (prediction vs actual).<br>Model khud check hoga - no gyan, sirf hisaab.</div>';
       }
       var fcs = d.forecasts || [], nif = null;
       fcs.forEach(function (f) { if (f.symbol === "^NSEI") nif = f; });

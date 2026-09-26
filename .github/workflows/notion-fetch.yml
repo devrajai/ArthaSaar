@@ -40,6 +40,7 @@ jobs:
           if [ ! -s data/notion-data.json ]; then echo 'no notion data - skip'; exit 0; fi
           python scripts/build_terminal_state.py || echo 'terminal state skipped'
       - name: Commit
+        id: cd
         run: |
           set -e
           git config user.name 'github-actions[bot]'
@@ -49,3 +50,10 @@ jobs:
           git commit -m 'data: notion IPO tracker sync'
           git pull --rebase --autostash || true
           git push
+          echo "pushed=1" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy pages (new data)
+        if: steps.cd.outputs.pushed == '1'
+        run: gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

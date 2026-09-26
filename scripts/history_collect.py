@@ -8,6 +8,7 @@
   apne data se todte hain, roz save karke history khud badhati hai
 - Output:
     data-history/daily-00.json ... daily-NN.json  -> GitHub Release "candles" pe (git bloat zero)
+    data-history/full-00.json ... full-NN.json   -> MAX history (listing se)
     data-history/intraday.json                     -> core symbols ka rolling intraday archive
     data/symbols.json                               -> repo me commit (site search + chunk index)
 - Site: https://github.com/devrajai/ArthaSaar/releases/download/candles/daily-00.json (CORS ok)
@@ -87,9 +88,7 @@ def to_bars(sub):
     return {"t": t, "o": o, "h": h, "l": l, "c": c, "v": v}
 
 
-def main():
-    now = dt.datetime.now(dt.timezone(dt.timedelta(hours=5, minutes=30))).strftime("%Y-%m-%dT%H:%M")
-
+def universe_build():
     universe = []  # (display, ysym, name)
     for disp, ys in INDICES.items():
         universe.append((disp, ys, disp + " index"))
@@ -98,26 +97,26 @@ def main():
             continue
         universe.append((sym, sym + ".NS", name))
     print("universe:", len(universe))
+    return universe
 
-    got = {}  # display -> bars
-    names = {}
+
+def collect(universe, period, prefix, names):
+    """ek pass: period=5y/max -> daily-XX / full-XX chunks. names: disp->name."""
+    got = {}
     i = 0
     while i < len(universe):
         batch = universe[i:i + BATCH]
         tickers = [ys for _, ys, _ in batch]
-        try:
-            df = yf.download(tickers, interval="1d", period="5y",
-                             progress=False, auto_adjust=False, group_by="ticker",
-                             threads=True, timeout=60)
-        except Exception as e:  # noqa: BLE001
-            print("batch fail @", i, e, "- retry once")
-            time.sleep(5)
+        df = None
+        for attempt in range(2):
             try:
-                df = yf.download(tickers, interval="1d", period="5y",
+                df = yf.download(tickers, interval="1d", period=period,
                                  progress=False, auto_adjust=False, group_by="ticker",
                                  threads=True, timeout=60)
-            except Exception:
-                df = None
+                break
+            except Exception as e:  # noqa: BLE001
+                print("batch fail @", i, e, "- retry")
+                time.sleep(5)
         if df is not None and not df.empty:
             single = len(tickers) == 1
             for disp, ys, name in batch:
@@ -134,35 +133,54 @@ def main():
                 if bars and len(bars["t"]) >= 30:
                     got[disp] = bars
                     names[disp] = name
-        print(f"  {min(i + BATCH, len(universe))}/{len(universe)} -> {len(got)} ok", flush=True)
+        print(f"  {prefix} {min(i + BATCH, len(universe))}/{len(universe)} -> {len(got)} ok", flush=True)
         i += BATCH
         time.sleep(1)
+    return got
 
-    if not got:
-        print("kuch nahi mila - abort")
-        return
 
-    # chunk layout: indices chunk 0 me, phir alphabetical stocks
+def write_chunks(got, universe, prefix):
     order = [u[0] for u in universe if u[0] in got]
     chunks = []
-    symlist = []
     for j, disp in enumerate(order):
         cid = j // CHUNK
         while len(chunks) <= cid:
             chunks.append({})
         chunks[cid][disp] = got[disp]
-        symlist.append({"s": disp, "n": names.get(disp, disp), "c": cid})
-
-    OUTDIR.mkdir(parents=True, exist_ok=True)
     for k, ch in enumerate(chunks):
-        p = OUTDIR / f"daily-{k:02d}.json"
+        p = OUTDIR / f"{prefix}-{k:02d}.json"
         p.write_text(json.dumps({"syms": ch}, separators=(",", ":")), encoding="utf-8")
+    return len(order)
+
+
+def main():
+    now = dt.datetime.now(dt.timezone(dt.timedelta(hours=5, minutes=30))).strftime("%Y-%m-%dT%H:%M")
+    universe = universe_build()
+    names = {}
+
+    # pass 1: 5y (site ka default, fast loading)
+    got5 = collect(universe, "5y", "daily", names)
+    if not got5:
+        print("kuch nahi mila - abort")
+        return
+    OUTDIR.mkdir(parents=True, exist_ok=True)
+    n5 = write_chunks(got5, universe, "daily")
+
+    # pass 2: max history (listing se) — 1D·MAX button ke liye
+    try:
+        gotmax = collect(universe, "max", "full", names)
+        if gotmax:
+            nmax = write_chunks(gotmax, universe, "full")
+            print("full-history symbols:", nmax)
+    except Exception as e:  # noqa: BLE001
+        print("max pass fail:", e)
+
+    symlist = [{"s": u[0], "n": names.get(u[0], u[0]), "c": j // CHUNK}
+               for j, u in enumerate(universe) if u[0] in got5]
     symout = {"updated": now, "count": len(symlist), "syms": symlist}
     SYMFILE.parent.mkdir(parents=True, exist_ok=True)
     SYMFILE.write_text(json.dumps(symout, separators=(",", ":")), encoding="utf-8")
-
-    print("symbols:", len(symlist), "| chunks:", len(chunks))
-    print("written:", OUTDIR, " + ", SYMFILE)
+    print("symbols:", len(symlist), "| 5y chunks:", (n5 + CHUNK - 1) // CHUNK)
 
 
 CORE = dict(INDICES)

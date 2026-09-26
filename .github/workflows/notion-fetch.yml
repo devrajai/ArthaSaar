@@ -27,6 +27,10 @@ jobs:
         run: |
           if [ -z "$NOTION_TOKEN" ]; then echo 'NOTION_TOKEN secret not set yet - skip'; exit 0; fi
           node scripts/fetch-notion.mjs
+      - name: Write data.json
+        run: |
+          if [ ! -s data/notion-data.json ]; then echo 'no notion data - skip'; exit 0; fi
+          python -c "import json,datetime;d=json.load(open('data/notion-data.json'));d['updated']=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ');open('data.json','w').write(json.dumps(d,ensure_ascii=False,separators=(',',':')))"
       - name: Merge into site data
         run: |
           if [ ! -s data/notion-data.json ]; then echo 'no notion data - skip'; exit 0; fi
@@ -40,7 +44,7 @@ jobs:
           set -e
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/
+          git add data/ data.json
           git diff --cached --quiet && echo 'No changes' && exit 0
           git commit -m 'data: notion IPO tracker sync'
           git pull --rebase --autostash || true

@@ -1,8 +1,5 @@
 name: Telegram Day Analysis
-
 on:
-  schedule:
-    # 3:45 PM IST Mon-Fri — merged into 4 PM Day Analysis Close (telegram.yml) 2026-09-25
   workflow_dispatch:
 
 concurrency:

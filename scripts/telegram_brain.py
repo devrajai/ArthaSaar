@@ -393,8 +393,9 @@ def deliver(sections, footer_note, title):
     body = "\n\n".join(s for s in sections if s)
     if not body:
         body = "(no data sections survived — check workflows)"
-    tail = (f"\n\n{footer_note}\n🔗 {SITE}\n"
-            f"<i>Educational data, not investment advice.</i>")
+    tail = ((f"\n\n{footer_note}\n🔗 {SITE}\n"
+             f"<i>Educational data, not investment advice.</i>")
+            if footer_note else "")
     return chunk(f"{head}\n\n{body}{tail}")
 
 
@@ -410,7 +411,7 @@ def main():
         idx = fetch_indices_live()
         sections = [sec_crash_alert(idx), sec_close(idx), sec_sector_board(idx),
                     sec_fii_dii_today()]
-        footer = "📊 Day analysis — post-close"
+        footer = None  # Dev: day analysis footer hata diya
         title = "DAY ANALYSIS"
     else:
         print("usage: telegram_brain.py morning|afternoon [--dry]")

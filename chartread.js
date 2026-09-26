@@ -9,8 +9,14 @@
 
   var SYMS = ["NIFTY", "BANKNIFTY", "RELIANCE", "HDFCBANK", "ICICIBANK",
               "INFY", "TCS", "SBIN", "TATASTEEL", "ITC"];
-  var IVS = ["1m", "5m", "15m", "1h"];
-  var IVL = {"1m": "1m", "5m": "5m", "15m": "15m", "1h": "1h"};
+  var IVS = ["1m", "3m", "5m", "15m", "30m", "1h", "4h", "1d"];
+  var IVL = {"1m": "1m", "3m": "3m", "5m": "5m", "15m": "15m", "30m": "30m",
+             "1h": "1h", "4h": "4h", "1d": "1D·1Y"};
+  var SRC = {"3m": "1m", "30m": "15m", "4h": "1h"};   /* derived intervals */
+  var BUCKET = {"3m": 180, "30m": 1800, "4h": 14400};  /* bucket seconds */
+  var REL = "https://github.com/devrajai/ArthaSaar/releases/download/candles/";
+  var HDATA = {};   /* chunk cache: chunkId -> {SYMBOL: bars} */
+  var SYMLIST = null;  /* data/symbols.json: {syms:[{s,n,c}], updated} */
   var UP = "#34d399", DN = "#ff8b8b";
   var DATA = null;
   var cur = { sym: "NIFTY", iv: "5m" };
@@ -51,6 +57,44 @@
       out[i] = l === 0 ? 100 : 100 - 100 / (1 + g / l);
     }
     return out;
+  }
+
+  /* ---------------- bar aggregation (3m/30m/4h) ---------------- */
+  function aggBars(d, bucketSec) {
+    var out = { t: [], o: [], h: [], l: [], c: [], v: [] }, cur2 = null;
+    function flush() {
+      if (cur2) { out.t.push(cur2.t); out.o.push(cur2.o); out.h.push(cur2.h);
+        out.l.push(cur2.l); out.c.push(cur2.c); out.v.push(cur2.v); }
+    }
+    for (var i = 0; i < d.t.length; i++) {
+      var b = Math.floor(d.t[i] / bucketSec);
+      if (!cur2 || cur2.b !== b) { flush(); cur2 = { b: b, t: d.t[i], o: d.o[i], h: d.h[i], l: d.l[i], c: d.c[i], v: 0 }; }
+      if (d.h[i] > cur2.h) cur2.h = d.h[i];
+      if (d.l[i] < cur2.l) cur2.l = d.l[i];
+      cur2.c = d.c[i]; cur2.v += (d.v[i] || 0);
+    }
+    flush();
+    return out;
+  }
+
+  /* ---------------- daily archive (release assets) ---------------- */
+  function loadSymbols() {
+    if (SYMLIST) return Promise.resolve(SYMLIST);
+    return fetch("data/symbols.json?t=" + Date.now()).then(function (r) { return r.json(); })
+      .then(function (d) { SYMLIST = d; return d; });
+  }
+  function findChunk(sym) {
+    if (SYMLIST && SYMLIST.syms) for (var i = 0; i < SYMLIST.syms.length; i++)
+      if (SYMLIST.syms[i].s === sym) return SYMLIST.syms[i].c;
+    return -1;
+  }
+  function loadDaily(sym) {
+    var cid = findChunk(sym);
+    if (cid < 0) return Promise.reject("no chunk");
+    if (HDATA[cid]) return Promise.resolve(HDATA[cid][sym]);
+    return fetch(REL + "daily-" + (cid < 10 ? "0" + cid : cid) + ".json")
+      .then(function (r) { return r.json(); })
+      .then(function (d) { HDATA[cid] = d.syms || {}; return HDATA[cid][sym]; });
   }
 
   /* ---------------- patterns ---------------- */
@@ -207,7 +251,7 @@
   function svgFallback(d, name, chg) {
     var n = d.t.length, w = 640, h = 260;
     var lo = 1e18, hi = -1e18;
-    for (var i = 0; i < n; i++) { if (lo > d.l[i]) lo = d.l[i]; if (hi < d.h[i]) hi = d.h[i]; }
+    for (var i = 0; i < n; i++) { lo = Math.min(lo, d.l[i]); hi = Math.max(hi, d.h[i]); }
     var span = (hi - lo) || 1;
     var parts = [];
     for (var j = 0; j < n; j++) {
@@ -346,16 +390,24 @@
       h += '<button class="chip' + (s === cur.sym ? " on" : "") + '" data-cr-sym="' + s + '">' + s + '</button>';
     }
     symsEl.innerHTML = h;
-    /* interval chips (available only) */
+    /* interval chips (available only; derived/1d hamesha milenge) */
     var av = DATA.syms[cur.sym] || {};
     var h2 = "";
     for (var j = 0; j < IVS.length; j++) {
       var iv = IVS[j];
-      if (!av[iv]) continue;
+      var has = SRC[iv] ? !!av[SRC[iv]] : !!av[iv];
+      if (iv === "1d") has = true; /* archive me sab hai */
+      if (!has) continue;
       h2 += '<button class="chip' + (iv === cur.iv ? " on" : "") + '" data-cr-iv="' + iv + '">' + IVL[iv] + '</button>';
     }
     ivsEl.innerHTML = h2;
+    if (cur.iv === "1d") { renderDaily(); return; }
     var d = av[cur.iv] || av["5m"] || av["15m"] || av["1h"];
+    if (!d) {
+      if (av["1h"] || av["15m"]) { d = null; } else { priceEl.innerHTML = '<div class="note">is symbol ka data nahi.</div>'; return; }
+    }
+    if (SRC[cur.iv] && av[SRC[cur.iv]]) d = aggBars(av[SRC[cur.iv]], BUCKET[cur.iv]);
+    d = d || av["5m"] || av["15m"] || av["1h"];
     if (!d) { priceEl.innerHTML = '<div class="note">is symbol ka data nahi.</div>'; return; }
     var pc = av.pc;
     var last = d.c[d.c.length - 1];
@@ -374,13 +426,47 @@
       '<div class="note">is symbol ka volume data nahi mila — VP sirf wahan hota hai jahan volume aata hai.</div>';
   }
 
+  function renderDaily() {
+    var priceEl = document.getElementById("crPrice");
+    priceEl.innerHTML = '<div class="note">1-saal daily archive load ho raha...</div>';
+    loadSymbols().then(function () {
+      return loadDaily(cur.sym);
+    }).then(function (bars) {
+      if (!bars || !bars.t || !bars.t.length) {
+        document.getElementById("crPrice").innerHTML = '<div class="note">is symbol ka archive nahi mila.</div>';
+        return;
+      }
+      var d = bars;
+      var pc = d.c.length > 1 ? d.c[d.c.length - 2] : 0;
+      var last = d.c[d.c.length - 1];
+      var chg = pc ? (last - pc) / pc * 100 : 0;
+      document.getElementById("crPrice").innerHTML = '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">' +
+        '<div class="subhead">' + esc(cur.sym) + ' · 1D (1 saal)</div>' +
+        '<div style="font-family:var(--mono);font-size:18px;font-weight:700">' + n2(last) +
+        ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "\u2212") + Math.abs(last - pc).toFixed(1) + " pts · ") : "") + pct(chg) + '</span></div></div>' +
+        '<div class="note" style="margin:2px 0 8px">' + (d.t.length) + ' din ka data · EOD archive · roz market close ke baad update</div>';
+      drawChart(cur.sym, d, chg);
+      document.getElementById("crRead").innerHTML = readPanel(cur.sym, d, pc);
+      document.getElementById("crLevels").innerHTML = levelsPanel(d, pc);
+      var vp = volProfile(d);
+      var vpEl = document.getElementById("crVP");
+      if (vpEl) vpEl.innerHTML = vp ? vpPanel(vp, last) :
+        '<div class="note">is symbol ka volume data nahi mila.</div>';
+    }, function () {
+      document.getElementById("crPrice").innerHTML = '<div class="note">archive load nahi hua — thodi der baad try karo.</div>';
+    });
+  }
+
   function onClick(e) {
     var t = e.target || e.srcElement;
     while (t && t !== document.body && !t.getAttribute) t = t.parentNode;
     if (!t || !t.getAttribute) return;
     var s = t.getAttribute("data-cr-sym"), iv = t.getAttribute("data-cr-iv");
     if (s) { cur.sym = s;
-      if (DATA && DATA.syms[s] && !DATA.syms[s][cur.iv]) cur.iv = "5m";
+      if (DATA && DATA.syms[s]) {
+        if (cur.iv !== "1d" && !DATA.syms[s][cur.iv] &&
+            !(SRC[cur.iv] && DATA.syms[s][SRC[cur.iv]])) cur.iv = "5m";
+      } else { cur.iv = "1d"; }  /* non-core symbol -> archive daily */
       render(); }
     else if (iv) { cur.iv = iv; render(); }
   }
@@ -405,6 +491,11 @@
     sec.innerHTML =
       '<a class="backbtn" href="#home">⌂ Home</a>' +
       '<h2>Chart Reading — candles · patterns · levels</h2>' +
+      '<div style="position:relative;margin:6px 0">' +
+      '<input id="crSearch" type="text" placeholder="koi bhi NSE stock likho (TATAMOTORS, KPIT...) — 1 saal daily chart" ' +
+      'autocomplete="off" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:10px;border:1px solid rgba(125,180,255,.4);background:rgba(96,165,250,.08);color:inherit;font-size:13px">' +
+      '<div id="crSugg" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:60;max-height:220px;overflow-y:auto;background:#161b26;border:1px solid rgba(125,180,255,.35);border-radius:0 0 10px 10px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>' +
+      '</div>' +
       '<div class="controls" id="crSyms"></div>' +
       '<div class="controls" id="crIvs"></div>' +
       '<div class="card"><div id="crPrice"></div><div id="crChart"></div></div>' +
@@ -414,7 +505,7 @@
       '</div>' +
       '<div class="card"><div class="subhead">Volume Profile — heavy volume zones</div><div id="crVP"></div></div>' +
       '<div class="card"><div class="subhead">Padho — pattern glossary</div><div id="crGloss"></div></div>' +
-      '<div class="footer-note">data: Yahoo (free) · 1m/5m = aaj, 15m = 5 din, 1h = 1 mahina · patterns sirf read hai, tip nahi</div>';
+      '<div class="footer-note">data: Yahoo (free) · 1m/3m/5m = aaj, 15m/30m = 5 din, 1h/4h = 1 mahina, 1D = 1 saal (sab NSE stocks) · patterns sirf read hai, tip nahi</div>';
     var foot = document.querySelector("footer");
     if (foot && foot.parentNode) foot.parentNode.insertBefore(sec, foot);
     else document.body.appendChild(sec);
@@ -438,6 +529,50 @@
       .then(function (r) { return r.json(); })
       .then(function (d) { DATA = d; if (document.getElementById("crPrice")) render(); })
       .catch(function () {});
+    /* symbol search */
+    var inp = null;
+    function bindSearch() {
+      var el = document.getElementById("crSearch");
+      if (!el) return;
+      inp = el;
+      el.addEventListener("input", function () {
+        var q = el.value.trim().toUpperCase();
+        var box = document.getElementById("crSugg");
+        if (!q || q.length < 2 || !SYMLIST) { box.style.display = "none"; return; }
+        var out = "", n = 0;
+        for (var i = 0; i < SYMLIST.syms.length && n < 14; i++) {
+          var it = SYMLIST.syms[i];
+          if (it.s.indexOf(q) === 0 || (it.n || "").toUpperCase().indexOf(q) >= 0) {
+            out += '<div data-cr-sym="' + esc(it.s) + '" style="padding:7px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)">' +
+              '<b style="font-size:12.5px">' + esc(it.s) + '</b><span class="note" style="font-size:11px;text-align:right">' + esc(it.n) + '</span></div>';
+            n++;
+          }
+        }
+        if (!out) out = '<div class="note" style="padding:8px 12px">kuch nahi mila</div>';
+        box.innerHTML = out; box.style.display = "block";
+      });
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && el.value.trim()) {
+          var box = document.getElementById("crSugg");
+          var first = box.querySelector("[data-cr-sym]");
+          if (first) { pick(first.getAttribute("data-cr-sym")); return; }
+        }
+      });
+    }
+    function pick(sym2) {
+      cur.sym = sym2; cur.iv = "1d";
+      var box = document.getElementById("crSugg"); if (box) box.style.display = "none";
+      if (inp) inp.value = "";
+      render();
+    }
+    document.addEventListener("click", function (e) {
+      var t = e.target || e.srcElement;
+      while (t && t !== document.body && !t.getAttribute) t = t.parentNode;
+      if (t && t.getAttribute && t.getAttribute("data-cr-sym")) return; /* onClick handle karega */
+      var box = document.getElementById("crSugg");
+      if (box && box.style.display === "block") box.style.display = "none";
+    }, false);
+    loadSymbols().then(bindSearch, function () {});
     document.addEventListener("click", onClick, false);
   }
 

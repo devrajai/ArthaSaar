@@ -1,0 +1,55 @@
+name: Patch TG day analysis remove footer
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Apply footer-removal patch
+        run: |
+          python3 - <<'PYEOF'
+          from pathlib import Path
+          p = Path("scripts/telegram_brain.py")
+          s = p.read_text(encoding="utf-8")
+
+          def rep(old, new):
+              global s
+              assert old in s, "PATTERN NOT FOUND: " + old[:60]
+              s = s.replace(old, new, 1)
+
+          rep('        footer = "\U0001F4CA Day analysis \u2014 post-close"',
+              '        footer = None  # Dev: day analysis footer hata diya')
+
+          rep('    tail = (f"\\n\\n{footer_note}\\n\U0001F517 {SITE}\\n"',
+              '    tail = ((f"\\n\\n{footer_note}\\n\U0001F517 {SITE}\\n"')
+
+          rep('            f"<i>Educational data, not investment advice.</i>")',
+              '             f"<i>Educational data, not investment advice.</i>")\n'
+              '            if footer_note else "")')
+
+          p.write_text(s, encoding="utf-8")
+          print("patched, size:", len(s))
+          PYEOF
+          python3 -m py_compile scripts/telegram_brain.py && echo "SYNTAX OK"
+
+      - name: Commit and push
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add scripts/telegram_brain.py
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "feat: remove footer from TG day analysis"
+          for i in 1 2 3 4 5; do
+            git push && break
+            git pull --rebase --autostash || true
+            sleep 5
+          done

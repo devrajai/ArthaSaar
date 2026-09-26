@@ -1,0 +1,42 @@
+name: Candles fetch (Chart Reading)
+on:
+  schedule:
+    # 9:17–15:47 IST, har ~20 min, Mon-Fri (UTC 3:47-10:27 window)
+    - cron: '17,37,57 3-10 * * 1-5'
+  workflow_dispatch:
+
+concurrency:
+  group: candles
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch candles (Yahoo free)
+        run: python3 scripts/fetch_candles.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add data/candles.json
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "data: chart reading candles"
+          for i in 1 2 3 4 5; do
+            git push && break
+            git pull --rebase --autostash || true
+            sleep 5
+          done

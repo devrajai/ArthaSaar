@@ -247,8 +247,8 @@ def sec_index_changes():
     return "🔔 <b>Nifty 500 index change!</b>\n" + "\n".join(parts)
 
 
-def sec_close():
-    idx = fetch_indices_live()
+def sec_close(idx=None):
+    idx = idx if idx is not None else fetch_indices_live()
     if not idx:
         return None
     lines = ["🎯 <b>Close (15:30 IST)</b>"]
@@ -263,8 +263,8 @@ def sec_close():
     return "\n".join(lines)
 
 
-def sec_sector_board():
-    idx = fetch_indices_live()
+def sec_sector_board(idx=None):
+    idx = idx if idx is not None else fetch_indices_live()
     rows = [r for n, r in ((n, idx.get(n)) for n in SECTORS) if r
             and r.get("change_pct") is not None]
     if not rows:
@@ -272,7 +272,7 @@ def sec_sector_board():
     rows.sort(key=lambda x: float(x["change_pct"]))
     lines = ["🏭 <b>Sector scoreboard</b>"]
     def _lbl(n):
-        return n.replace("NIFTY ", "").title().replace("It", "IT")
+        return n.replace("NIFTY ", "").title().replace("It", "IT").replace("Psu", "PSU")
     for r in reversed(rows[-3:]):
         lines.append(f"🟢 {_lbl(r['index'])}: {pct(r['change_pct'])}")
     for r in rows[:3]:
@@ -287,6 +287,67 @@ def sec_fii_dii_today():
     return (f"💸 <b>FII/DII today (cash)</b>\n"
             f"FII: <b>{bs(f.get('FII/FPI'))}</b>  |  DII: <b>{bs(f.get('DII'))}</b>")
 
+
+
+# ---------------------------------------------------------------- crash alert
+CRASH_PCT = -1.0  # Nifty ya Bank Nifty isse zyada gire -> crash mode
+
+def _cp(r):
+    try:
+        return float(r.get("change_pct"))
+    except (TypeError, ValueError):
+        return None
+
+def sec_crash_alert(idx):
+    """Big red day -> focused CRASH section on top of the day analysis."""
+    if not idx:
+        return None
+    nifty, bank = idx.get("NIFTY 50"), idx.get("NIFTY BANK")
+    np_, bp = _cp(nifty or {}), _cp(bank or {})
+    trigger = None
+    if np_ is not None and np_ <= CRASH_PCT:
+        trigger = ("Nifty 50", np_, nifty)
+    if bp is not None and bp <= CRASH_PCT and (trigger is None or bp < trigger[1]):
+        trigger = ("Bank Nifty", bp, bank)
+    if trigger is None:
+        return None
+
+    name, cp = trigger[0], trigger[1]
+    lines = [f"\U0001F6A8 <b>CRASH ALERT \u2014 {name} {pct(cp)}</b>"]
+
+    if nifty and np_ is not None:
+        price = float(nifty["price"])
+        prev = price / (1 + np_ / 100)
+        lines.append(f"Nifty 50: <b>{price:,.2f}</b> ({price - prev:+,.0f} pts)")
+    if bank and bp is not None:
+        lines.append(f"Bank Nifty: {pct(bp)}")
+
+    rows = [r for n, r in idx.items() if n in SECTORS and _cp(r) is not None]
+    if rows:
+        rows.sort(key=lambda r: _cp(r))
+        def _lbl(n):
+            return n.replace("NIFTY ", "").title().replace("It", "IT").replace("Psu", "PSU")
+        red = [r for r in rows if _cp(r) < 0]
+        if red:
+            hit = ", ".join(f"{_lbl(r['index'])} {pct(_cp(r))}" for r in rows[:3])
+            lines.append(f"Sectors: {len(red)}/{len(rows)} red \u2014 worst: {hit}")
+        else:
+            lines.append(f"Sectors: 0/{len(rows)} red")
+
+    vix = idx.get("INDIA VIX")
+    if vix and _cp(vix) is not None:
+        lines.append(f"India VIX: {pct(_cp(vix))}" + (" \u2014 fear spike" if _cp(vix) > 5 else ""))
+    mid, small = idx.get("NIFTY MIDCAP 100"), idx.get("NIFTY SMALLCAP 100")
+    mp, sp = _cp(mid or {}), _cp(small or {})
+    if mp is not None and sp is not None:
+        lines.append(f"Midcap {pct(mp)} \u00b7 Smallcap {pct(sp)}")
+
+    lines.append("")
+    lines.append("\U0001F9ED <b>Playbook</b>")
+    lines.append("\u2022 Sell-off on KNOWN fears (US yields, FII outflow, crude) = 1 yr tricky, 3 yr+ opportunity zone")
+    lines.append("\u2022 Panic day \u2260 exit day \u2014 stagger entries at supports, SIPs on autopilot")
+    lines.append("\u2022 Watch recent swing lows (Sep / Apr) \u2014 hold ya break, site charts pe clear")
+    return "\n".join(lines)
 
 # ---------------------------------------------------------------- send
 def send(token, chat_id, text):
@@ -346,7 +407,9 @@ def main():
         footer = "☕ Pre-open brief — market opens 9:30 IST"
         title = "MORNING BRIEF"
     elif mode == "afternoon":
-        sections = [sec_close(), sec_sector_board(), sec_fii_dii_today()]
+        idx = fetch_indices_live()
+        sections = [sec_crash_alert(idx), sec_close(idx), sec_sector_board(idx),
+                    sec_fii_dii_today()]
         footer = "📊 Day analysis — post-close"
         title = "DAY ANALYSIS"
     else:

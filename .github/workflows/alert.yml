@@ -1,8 +1,25 @@
 name: Smart Alerts
 on:
   workflow_dispatch:
+    inputs:
+      symbol:
+        description: 'NIFTY / BANKNIFTY / SENSEX / RELIANCE / TCS ...'
+        required: false
+        default: ''
+      level:
+        description: 'price level (number)'
+        required: false
+        default: ''
+      dir:
+        description: 'above / below'
+        required: false
+        default: 'above'
+      note:
+        description: 'note (optional)'
+        required: false
+        default: ''
   schedule:
-    - cron: "0 4,5,6,7,8,9,10 * * 1-5"
+    - cron: "*/15 4-10 * * 1-5"
 concurrency:
   group: alert
   cancel-in-progress: false
@@ -13,13 +30,44 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - name: Add alert (jab inputs diye jayen)
+        if: ${{ github.event.inputs.symbol != '' && github.event.inputs.level != '' }}
+        env:
+          ASYM: ${{ github.event.inputs.symbol }}
+          ALEVEL: ${{ github.event.inputs.level }}
+          ADIR: ${{ github.event.inputs.dir }}
+          ANOTE: ${{ github.event.inputs.note }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, json, datetime
+          sym = os.environ["ASYM"].strip().upper()
+          level = float(os.environ["ALEVEL"])
+          d = os.environ.get("ADIR", "above").strip().lower()
+          note = os.environ.get("ANOTE", "").strip()
+          TK = {"NIFTY": "^NSEI", "BANKNIFTY": "^NSEBANK", "SENSEX": "^BSESN", "VIX": "^INDIAVIX", "GOLD": "GC=F"}
+          t = TK.get(sym, sym if sym.startswith("^") else sym + ".NS")
+          try:
+              a = json.load(open("data/alerts.json"))
+          except Exception:
+              a = {"updated": "", "alerts": []}
+          a["alerts"] = [x for x in a.get("alerts", []) if not (x.get("symbol") == sym and x.get("level") == level)]
+          today = datetime.date.today().isoformat()
+          a["alerts"].append({"symbol": sym, "ticker": t, "level": level,
+                              "dir": d if d in ("above", "below") else "above",
+                              "note": note, "added": today})
+          a["updated"] = today
+          json.dump(a, open("data/alerts.json", "w"), indent=1)
+          print("alert added:", sym, level, d)
+          PYEOF
       - run: python3 scripts/smart_alert.py
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-      - run: |
+      - name: Commit state
+        run: |
           git config user.name "devrajai"
           git config user.email "devraj.resume@gmail.com"
-          git add data/alert-state.json
+          git add data/alert-state.json data/alerts.json
           git commit -m "data: alert state" || echo "no change"
+          git pull --rebase --autostash || true
           git push

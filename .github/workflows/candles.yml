@@ -25,13 +25,17 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Fetch candles (Yahoo free)
+      - name: Install yfinance
+        run: pip install -q yfinance
+
+      - name: Fetch candles (yfinance, free)
         run: python3 scripts/fetch_candles.py
 
       - name: Commit if changed
         run: |
           git config user.name "actions-user"
           git config user.email "actions@github.com"
+          test -f data/candles.json || exit 0
           git add data/candles.json
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "data: chart reading candles"

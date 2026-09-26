@@ -7,7 +7,7 @@
   "use strict";
 
   var SYMS = ["NIFTY", "BANKNIFTY", "RELIANCE", "HDFCBANK", "ICICIBANK",
-              "INFY", "TCS", "SBIN", "TATAMOTORS", "ITC"];
+              "INFY", "TCS", "SBIN", "TATASTEEL", "ITC"];
   var IVS = ["1m", "5m", "15m", "1h"];
   var IVL = {"1m": "1m", "5m": "5m", "15m": "15m", "1h": "1h"};
   var UP = "#34d399", DN = "#ff8b8b";

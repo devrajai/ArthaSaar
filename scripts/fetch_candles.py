@@ -1,120 +1,141 @@
 #!/usr/bin/env python3
 """
-fetch_candles.py — ArthaSaar Chart Reading data (Yahoo free, no API key).
+fetch_candles.py — ArthaSaar Chart Reading data v2 (yfinance, free, no API key).
+
+Why yfinance: Yahoo direct API 429s hard from GH runners; yfinance does the
+cookie/crumb dance + retries (same as index_history_collect.py — proven weekly).
 
 Symbols:
-  indices  : NIFTY, BANKNIFTY   -> 1m/5m/15m/1h
+  indices  : NIFTY, BANKNIFTY         -> 1m/5m/15m/1h
   F&O big  : RELIANCE, HDFCBANK, ICICIBANK, INFY, TCS,
-             SBIN, TATAMOTORS, ITC -> 5m/15m/1h
+             SBIN, TATASTEEL, ITC    -> 5m/15m/1h
 
-Output: data/candles.json  (column arrays — compact)
+Output: data/candles.json (column arrays — compact)
   { "updated": "...", "syms": { "NIFTY": { "y":"^NSEI", "pc": 23447.8,
-      "1m": {"t":[..],"o":[..],"h":[..],"l":[..],"c":[..],"v":[..]}, ... } } }
+      "5m": {"t":[],"o":[],"h":[],"l":[],"c":[],"v":[]}, ... } } }
 
 Run:  python3 scripts/fetch_candles.py   (from repo root)
 """
+import datetime as dt
 import json
 import os
-import time
-import datetime as dt
+import warnings
 from pathlib import Path
-from urllib.request import Request, urlopen
 
-UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
-TIMEOUT = 25
+warnings.filterwarnings("ignore")
+import yfinance as yf  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "data" / "candles.json"
 
 IDX = {"NIFTY": "^NSEI", "BANKNIFTY": "^NSEBANK"}
 STOCKS = ["RELIANCE", "HDFCBANK", "ICICIBANK", "INFY",
-          "TCS", "SBIN", "TATAMOTORS", "ITC"]
+          "TCS", "SBIN", "TATASTEEL", "ITC"]
+YMAP = dict(IDX, **{s: s + ".NS" for s in STOCKS})
 
-# interval -> yahoo range
-RANGES = {"1m": "1d", "5m": "1d", "15m": "5d", "1h": "1mo"}
-IDX_ONLY = {"1m"}  # 1m sirf indices (request budget)
+# interval -> (yfinance period, symbols)
+PLAN = {
+    "1m":  ("1d",  list(IDX)),                       # 1m sirf indices
+    "5m":  ("1d",  list(YMAP)),                     # sab
+    "15m": ("5d",  list(YMAP)),
+    "1h":  ("1mo", list(YMAP)),
+}
 
 
-def fetch(symbol, interval, rng, tries=4):
-    path = ("/v8/finance/chart/" + symbol + f"?range={rng}&interval={interval}"
-            + ("&includePrePost=false" if interval == "1m" else ""))
-    last = None
-    for a in range(tries):
-        host = "query2" if a % 2 else "query1"
+def batch(tickers, interval, period):
+    """yfinance multi-ticker download -> {name: bars}"""
+    df = yf.download(tickers, interval=interval, period=period,
+                     progress=False, auto_adjust=False, group_by="ticker",
+                     threads=False, timeout=25)
+    out = {}
+    if df is None or df.empty:
+        return out
+    single = len(tickers) == 1
+    for name in tickers:
         try:
-            req = Request("https://" + host + ".finance.yahoo.com" + path,
-                          headers={"User-Agent": UA})
-            with urlopen(req, timeout=TIMEOUT) as r:
-                j = json.loads(r.read().decode())
-            break
-        except Exception as e:  # noqa: BLE001
-            last = e
-            time.sleep(2.5 * (a + 1))
-    else:
-        raise last or RuntimeError("fetch failed")
-    res = j["chart"]["result"][0]
-    q = res["indicators"]["quote"][0]
-    ts = res.get("timestamp") or []
-    out = {"t": [], "o": [], "h": [], "l": [], "c": [], "v": []}
-    for i, t in enumerate(ts):
-        o, h, l, c, v = (q["open"][i], q["high"][i], q["low"][i],
-                         q["close"][i], q["volume"][i])
-        if None in (o, h, l, c):
+            sub = df[name] if single else df[name]
+        except KeyError:
             continue
-        out["t"].append(t)
-        out["o"].append(round(float(o), 2))
-        out["h"].append(round(float(h), 2))
-        out["l"].append(round(float(l), 2))
-        out["c"].append(round(float(c), 2))
-        out["v"].append(int(v or 0))
-    meta = res.get("meta", {})
-    return out, (meta.get("chartPreviousClose")
-                 or meta.get("previousClose"))
+        if sub is None or sub.empty:
+            continue
+        sub = sub.dropna(subset=["Open", "High", "Low", "Close"])
+        t, o, h, l, c, v = [], [], [], [], [], []
+        for ts, row in sub.iterrows():
+            t.append(int(ts.timestamp()))
+            o.append(round(float(row["Open"]), 2))
+            h.append(round(float(row["High"]), 2))
+            l.append(round(float(row["Low"]), 2))
+            c.append(round(float(row["Close"]), 2))
+            vol = row.get("Volume")
+            v.append(int(vol) if vol == vol and vol else 0)  # NaN-safe
+        out[name] = {"t": t, "o": o, "h": h, "l": l, "c": c, "v": v}
+    return out
+
+
+def prev_closes():
+    """sab symbols ka prev close (daily 5d se)"""
+    res = {}
+    try:
+        df = yf.download(list(YMAP.values()), interval="1d", period="5d",
+                         progress=False, auto_adjust=False, group_by="ticker",
+                         threads=False, timeout=25)
+        if df is None or df.empty:
+            return res
+        for ysym in YMAP.values():
+            try:
+                sub = df[ysym]
+                closes = sub["Close"].dropna().tolist()
+                if len(closes) >= 2:
+                    res[ysym] = round(float(closes[-2]), 2)
+            except Exception:  # noqa: BLE001
+                pass
+    except Exception as e:  # noqa: BLE001
+        print("prevclose batch fail:", e)
+    return res
 
 
 def main():
-    root = Path(__file__).resolve().parents[1]
     data = {}
-    old = {}
     try:
-        old = json.loads((root / "data" / "candles.json")
-                         .read_text(encoding="utf-8"))
-        data = old.get("syms", {})
+        data = json.loads(OUT.read_text(encoding="utf-8")).get("syms", {})
     except Exception:
         pass
 
-    jobs = []
-    for name, ysym in IDX.items():
-        for iv in RANGES:
-            jobs.append((name, ysym, iv))
-    for s in STOCKS:
-        for iv in ("5m", "15m", "1h"):
-            jobs.append((s, s + ".NS", iv))
+    pcs = prev_closes()
+    print("prev closes:", len(pcs))
 
-    for name, ysym, iv in jobs:
+    for iv, (period, names) in PLAN.items():
+        tickers = [YMAP[n] for n in names]
+        got = {}
         try:
-            bars, pc = fetch(ysym, iv, RANGES[iv])
-            if not bars["t"]:
-                raise ValueError("empty")
-            entry = data.setdefault(name, {"y": ysym, "pc": None})
-            entry[iv] = bars
-            if pc:
-                entry["pc"] = round(float(pc), 2)
-            print(f"OK  {name} {iv}: {len(bars['t'])} bars")
+            got = batch(tickers, iv, period)
         except Exception as e:  # noqa: BLE001
-            print(f"SKIP {name} {iv}: {e}")
-        time.sleep(0.7)
+            print(f"batch {iv} fail: {e}")
+        for ysym, bars in got.items():
+            if not bars["t"]:
+                continue
+            # reverse map ysym -> display name
+            for n, ys in YMAP.items():
+                if ys == ysym:
+                    e = data.setdefault(n, {"y": ys, "pc": None})
+                    e[iv] = bars
+                    if ys in pcs:
+                        e["pc"] = pcs[ys]
+                    print(f"OK  {n} {iv}: {len(bars['t'])} bars")
+        if not got:
+            print(f"NO DATA {iv}")
 
-    out = {"updated": dt.datetime.now(
-        dt.timezone(dt.timedelta(hours=5, minutes=30))
-    ).strftime("%Y-%m-%dT%H:%M IST"),
-        "syms": data}
     if not data:
         print("no data fetched — file not touched")
         return
-    (root / "data").mkdir(parents=True, exist_ok=True)
-    tmp = root / "data" / "candles.json"
-    tmp.write_text(json.dumps(out, separators=(",", ":")),
-                   encoding="utf-8")
-    print("written", tmp, os.path.getsize(tmp), "bytes")
+
+    out = {"updated": dt.datetime.now(
+        dt.timezone(dt.timedelta(hours=5, minutes=30))
+    ).strftime("%Y-%m-%dT%H:%M"),
+        "syms": data}
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
+    print("written", OUT, os.path.getsize(OUT), "bytes")
 
 
 if __name__ == "__main__":

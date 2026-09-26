@@ -35,6 +35,7 @@ jobs:
         run: python scripts/news_collect.py
 
       - name: Commit global + news data
+        id: cd
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -45,10 +46,18 @@ jobs:
             git commit -m 'chore: global watch + news data'
             for i in 1 2 3 4 5; do
               if git pull --rebase --autostash origin main && git push; then
-                echo 'Pushed successfully'; exit 0
+                echo 'Pushed successfully'
+                echo "pushed=1" >> "$GITHUB_OUTPUT"
+                exit 0
               fi
               echo "Push failed (attempt $i) — rebasing and retrying in 15s"
               sleep 15
             done
             echo 'ERROR: could not push after 5 attempts'; exit 1
           fi
+
+      - name: Deploy pages (new data)
+        if: steps.cd.outputs.pushed == '1'
+        run: gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

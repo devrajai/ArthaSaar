@@ -27,7 +27,6 @@ SERIES = {
     "US 10Y Yield": "^TNX",
     "Copper": "HG=F",
 }
-
 def collect():
     items = []
     for name, sym in SERIES.items():
@@ -55,8 +54,43 @@ def collect():
             print(f"FAIL {name} ({sym}): {e}")
     return items
 
+def sensex_guard(items):
+    """Yahoo sometimes serves a stale ^BSESN snapshot that overwrites a fresh
+    close with an older price (seen 25-26 Sep 2026: Friday close 73,895.74 got
+    replaced by 73,580.54 at night). Cross-check SENSEX change against NIFTY 50
+    (NSE source, reliable): if they diverge >1.5pp and the previously stored
+    value IS consistent, keep the stored one."""
+    try:
+        old = json.loads((DATA / "global.json").read_text())
+        prev_sx = next((i for i in old.get("items", []) if i.get("name") == "SENSEX"), None)
+    except Exception:
+        prev_sx = None
+    try:
+        ia = json.loads((DATA / "indices-all.json").read_text())
+        nif = next((i for i in ia.get("indices", []) if i.get("index") == "NIFTY 50"), None)
+        nif_chg = float(nif.get("change_pct")) if nif and nif.get("change_pct") is not None else None
+    except Exception:
+        nif_chg = None
+    if nif_chg is None:
+        return items
+    for it in items:
+        if it.get("name") != "SENSEX" or it.get("chg_pct") is None:
+            continue
+        if abs(it["chg_pct"] - nif_chg) <= 1.5:
+            continue  # consistent with the broad market — accept
+        if (prev_sx and prev_sx.get("as_of") == it.get("as_of")
+                and prev_sx.get("chg_pct") is not None
+                and abs(prev_sx["chg_pct"] - nif_chg) <= 1.5):
+            print(f"SENSEX guard: yahoo {it['price']} ({it['chg_pct']:+.2f}%) diverges "
+                  f"from NIFTY {nif_chg:+.2f}% — keeping previous {prev_sx['price']}")
+            it.update(prev_sx)
+        else:
+            print(f"SENSEX warning: {it['price']} ({it['chg_pct']:+.2f}%) diverges from "
+                  f"NIFTY {nif_chg:+.2f}% — no consistent previous value, accepting")
+    return items
+
 def main():
-    items = collect()
+    items = sensex_guard(collect())
     out = {
         "updated": datetime.now(timezone.utc).isoformat(),
         "count": len(items),

@@ -1,6 +1,6 @@
 /* globals.js - GLOBAL RADAR (ArthaSaar): duniya ke indices+commodities EOD + Global->India correlation engine. #global */
 (function () {
-  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  function esc(s) { return String(s == null ? "").replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   var D = null;
 
   function pill(v) {
@@ -14,10 +14,23 @@
     var up = cl[cl.length - 1] >= cl[0];
     return "<svg width='70' height='20' viewBox='0 0 70 20' style='flex:0 0 70px'><polyline points='" + pts + "' fill='none' stroke='" + (up ? "#77f37b" : "#ff8b8b") + "' stroke-width='1.4'/></svg>";
   }
+  function ptsPill(x) {
+    var c = x.c, d1 = x.d1;
+    if (!c || d1 == null) return "<span style='flex:1;text-align:right;font-size:12px'>" + pill(d1) + "</span>";
+    var pts = c - c / (1 + d1 / 100);
+    var col = d1 > 0 ? "#77f37b" : (d1 < 0 ? "#ff8b8b" : "#ccc");
+    var ap = Math.abs(pts), pv;
+    if (ap >= 100) pv = Math.round(pts);
+    else if (ap >= 1) pv = Math.round(pts * 10) / 10;
+    else pv = Math.round(pts * 100) / 100;
+    if (pv === 0) pv = 0;
+    return "<span style='flex:1;text-align:right;line-height:1.15'><b style='color:" + col + ";font-size:11.5px'>" + (pts > 0 ? "+" : "") + pv.toLocaleString("en-IN") + " pts</b>" +
+      "<div style='font-size:9.5px;color:" + col + ";opacity:.8'>" + (d1 > 0 ? "+" : "") + d1 + "%</div></span>";
+  }
   function row2(x) {
     return "<div style='display:flex;align-items:center;gap:8px;padding:7px 4px;margin-top:3px;border-radius:8px;border:1px solid rgba(255,255,255,.07)'>" +
       "<span style='flex:1.4;font-weight:600;font-size:12.5px'>" + esc(x.n) + "</span>" + sparkline(x.sp) +
-      "<span style='flex:1;text-align:right;font-size:12px'>" + pill(x.d1) + "</span>" +
+      ptsPill(x) +
       "<span style='flex:1;text-align:right;font-size:11px' title='1 month'>" + pill(x.m1) + "</span>" +
       "</div>";
   }

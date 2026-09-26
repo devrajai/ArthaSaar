@@ -13,6 +13,10 @@
   }
   var _A = String.fromCharCode(38,97,109,112,59), _L = String.fromCharCode(38,108,116,59), _G = String.fromCharCode(38,103,116,59);
   function esc(s) { s = String(s == null ? "" : s); return s.split("&").join(_A).split("<").join(_L).split(">").join(_G); }
+  function symChips(h) {
+    if (!h.syms || !h.syms.length) return "";
+    return " <span style='background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.45);color:#7db4ff;border-radius:5px;padding:0 5px;font-size:10.5px;font-weight:600;white-space:normal'>" + esc(h.syms.join(" ")) + "</span>";
+  }
   function badge(v) { var c = v >= 58 ? "pos" : (v <= 42 ? "neg" : ""); return '<b class="' + c + '">' + v + "</b>"; }
 
   function loadMood() {
@@ -28,11 +32,11 @@
         '<div class="note"><b>' + esc(tag) + "</b> - " + (d.counted || 0) + " headlines scan karke (word-score AI, 100% free)</div>";
       if ((d.pos || []).length) {
         html += '<div class="subhead" style="margin-top:10px">🙂 Positive headlines</div>';
-        d.pos.slice(0, 3).forEach(function (h) { html += '<div class="note" style="margin:3px 0">' + badge(h.s) + " - " + esc(h.t).slice(0, 85) + "</div>"; });
+        d.pos.slice(0, 3).forEach(function (h) { html += '<div class="note" style="margin:3px 0">' + badge(h.s) + " - " + esc(h.t).slice(0, 85) + symChips(h) + "</div>"; });
       }
       if ((d.neg || []).length) {
         html += '<div class="subhead" style="margin-top:10px">😓 Negative headlines</div>';
-        d.neg.slice(0, 3).forEach(function (h) { html += '<div class="note" style="margin:3px 0">' + badge(h.s) + " - " + esc(h.t).slice(0, 85) + "</div>"; });
+        d.neg.slice(0, 3).forEach(function (h) { html += '<div class="note" style="margin:3px 0">' + badge(h.s) + " - " + esc(h.t).slice(0, 85) + symChips(h) + "</div>"; });
       }
       if ((d.stocks || []).length) {
         html += '<div class="subhead" style="margin-top:10px">Stock sentiment (news se)</div><div>';
@@ -99,7 +103,7 @@
         h += '<div style="font-size:30px;font-weight:700" class="pos">' + rate + ' <span style="font-size:13px;opacity:.6">direction hit-rate</span></div>' +
           '<div class="note">' + a.hits + "/" + a.tracked + " predictions sahi disha mein - roz auto-check hota hai</div>";
       } else {
-        h += '<div class="note">📊 Accuracy tracker chalu - har roz ki prediction log ho rahi hai. <b>21 din</b> baad pehla report card banega (prediction vs actual).<br>Model khud check hoga - no gyan, sirf hisaab.</div>';
+        h += '<div class="note">📊 Accuracy tracker chalu - har roz ki prediction log ho rahi hai. <b>21 din</b> baad pehla report card banega (prediction vs actual).<br>Model khud check hoga - no gyan, sirf hisaab.</div>";
       }
       var fcs = d.forecasts || [], nif = null;
       fcs.forEach(function (f) { if (f.symbol === "^NSEI") nif = f; });

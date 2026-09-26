@@ -17,14 +17,24 @@ jobs:
           TOKEN = os.environ["TG_TOKEN"]
           CHATS = [c.strip() for c in os.environ["TG_CHAT_ID"].split(",") if c.strip()]
           print("total chats:", len(CHATS))
+          KNOWN = {
+              "1392604324": "Dev",
+              "1148261593": "Nandan",
+              "1215372010": "Vidhi",
+              "1182983939": "Rahul",
+              "1785489570": "Hemant",
+              "1073463083": "Jems",
+              "1142296297": "Heet",
+          }
           for i, c in enumerate(CHATS):
+              who = KNOWN.get(c, "UNKNOWN-ID")
               url = "https://api.telegram.org/bot%s/getChat?chat_id=%s" % (TOKEN, c)
               try:
                   r = json.loads(urllib.request.urlopen(url, timeout=15).read())
                   ch = r.get("result", {})
-                  typ = ch.get("type")
-                  nm = ch.get("title") or ch.get("first_name") or "?"
-                  print("chat %d: type=%s name=%s" % (i + 1, typ, nm))
+                  print("chat %d: match=%s type=%s name=%s" % (
+                      i + 1, who, ch.get("type"),
+                      ch.get("title") or ch.get("first_name") or "?"))
               except Exception as e:
-                  print("chat %d: getChat FAIL %s" % (i + 1, str(e)[:80]))
+                  print("chat %d: match=%s getChat-FAIL" % (i + 1, who))
           PYEOF

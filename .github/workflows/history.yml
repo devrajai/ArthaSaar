@@ -1,0 +1,33 @@
+name: Candle History (all NSE)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 13 * * 1-5"   # 7:05 PM IST, market close + EOD settle
+concurrency:
+  group: history
+  cancel-in-progress: false
+jobs:
+  hist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install yfinance pandas requests
+      - run: python3 scripts/history_collect.py
+      - run: |
+          gh release create candles --title "candle archive (auto)" --notes "all NSE stocks + indices ka 1-saal daily candles - roz auto refresh" || true
+          gh release upload candles data-history/daily-*.json --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add data/symbols.json
+          git commit -m "data: symbols list (all NSE archive)" || echo "no change"
+          git pull --rebase || true
+          git push

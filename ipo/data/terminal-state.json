@@ -1,14 +1,14 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-26T18:23:16.956668+00:00",
-  "today_ist": "2026-09-26",
-  "data_updated_at": "2026-09-26T23:52:47.888209+05:30",
-  "ipo_count": 23,
-  "field_coverage_pct": 24.6,
+  "generated_at": "2026-09-26T21:20:09.459988+00:00",
+  "today_ist": "2026-09-27",
+  "data_updated_at": "2026-09-27T02:49:41.522190+05:30",
+  "ipo_count": 19,
+  "field_coverage_pct": 25.8,
   "sources": {
     "NSE": {
       "ok": true,
-      "records": 15,
+      "records": 11,
       "errors": []
     },
     "BSE": {
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-26T18:22:05.396451+00:00",
+      "checked_at": "2026-09-26T21:19:00.759266+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -85,15 +85,15 @@
     },
     "ProspectusResearch": {
       "ok": false,
-      "records": 23,
+      "records": 19,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-26T18:22:10.030128+00:00"
+      "checked_at": "2026-09-26T21:19:03.257735+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-26T18:22:35.441259+00:00",
+      "checked_at": "2026-09-26T21:19:26.421512+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,17 +103,17 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-26T18:22:35.519553+00:00"
+      "checked_at": "2026-09-26T21:19:26.494223+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-26T18:22:35.573270+00:00"
+      "checked_at": "2026-09-26T21:19:26.545550+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-26T18:22:35.736227+00:00",
+      "checked_at": "2026-09-26T21:19:26.695304+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
@@ -132,7 +132,7 @@
         },
         "Google News · RHP DRHP": {
           "ok": true,
-          "records": 72,
+          "records": 73,
           "url": "https://news.google.com/rss/search?q=RHP+DRHP+IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         }
       }
@@ -141,12 +141,12 @@
       "ok": true,
       "records": 13,
       "verified": 5,
-      "checked_at": "2026-09-26T18:22:35.736227+00:00"
+      "checked_at": "2026-09-26T21:19:26.695304+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-26T23:52:47.888209+05:30",
-      "status_repairs": 4,
+      "checked_at": "2026-09-27T02:49:41.522190+05:30",
+      "status_repairs": 0,
       "sme_added": 0,
       "filings": {
         "checked": 21,
@@ -159,6 +159,34 @@
     }
   },
   "ipos": [
+    {
+      "id": "runwal-enterprises-limited",
+      "name": "Runwal Enterprises Limited",
+      "fingerprint": "d5520855f43408de",
+      "fields": {
+        "price": "₹290-302",
+        "size": "₹0 Cr",
+        "lot": "49",
+        "open": "25/09/26",
+        "close": "29/09/26",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "—",
+        "roce": "—",
+        "growth": "76%",
+        "de": "3.29",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
     {
       "id": "orient-cables-india-limited",
       "name": "Orient Cables (India) Limited",
@@ -216,34 +244,6 @@
       }
     },
     {
-      "id": "runwal-enterprises-limited",
-      "name": "Runwal Enterprises Limited",
-      "fingerprint": "d5520855f43408de",
-      "fields": {
-        "price": "₹290-302",
-        "size": "₹0 Cr",
-        "lot": "49",
-        "open": "25/09/26",
-        "close": "29/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "76%",
-        "de": "3.29",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
       "id": "acevector-limited",
       "name": "AceVector Limited",
       "fingerprint": "81e3d28eb6d44d59",
@@ -272,34 +272,6 @@
       }
     },
     {
-      "id": "moneyview-limited",
-      "name": "Moneyview Limited",
-      "fingerprint": "63db845240887f88",
-      "fields": {
-        "price": "₹32-34",
-        "size": "₹0 Cr",
-        "lot": "441",
-        "open": "24/09/26",
-        "close": "28/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "15.98%",
-        "roce": "—",
-        "growth": "43%",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
       "id": "a-one-steels-india-limited",
       "name": "A-One Steels India Limited",
       "fingerprint": "2102c841abc08cd2",
@@ -322,6 +294,34 @@
         "roe": "—",
         "roce": "—",
         "growth": "—",
+        "de": "—",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
+    {
+      "id": "moneyview-limited",
+      "name": "Moneyview Limited",
+      "fingerprint": "63db845240887f88",
+      "fields": {
+        "price": "₹32-34",
+        "size": "₹0 Cr",
+        "lot": "441",
+        "open": "24/09/26",
+        "close": "28/09/26",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "15.98%",
+        "roce": "—",
+        "growth": "43%",
         "de": "—",
         "fresh": "—",
         "ofs": "—"
@@ -412,99 +412,15 @@
       }
     },
     {
-      "id": "adroit-industries-india-limited",
-      "name": "Adroit Industries (India) Limited",
-      "fingerprint": "1bc16c4c40f9d338",
+      "id": "srit-india-limited",
+      "name": "Srit India Limited",
+      "fingerprint": "499c768627531078",
       "fields": {
-        "price": "₹126-134",
-        "size": "₹105 Cr",
-        "lot": "—",
-        "open": "23/09/26",
-        "close": "25/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "armee-infotech-limited",
-      "name": "ArMee Infotech Limited",
-      "fingerprint": "79287a15ef718770",
-      "fields": {
-        "price": "₹350-375",
-        "size": "₹279 Cr",
-        "lot": "—",
-        "open": "23/09/26",
-        "close": "25/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "elevate-campuses-limited",
-      "name": "Elevate Campuses Limited",
-      "fingerprint": "29c380d0acfdf3b9",
-      "fields": {
-        "price": "₹343-362",
-        "size": "₹1,219 Cr",
-        "lot": "—",
-        "open": "23/09/26",
-        "close": "25/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "swastika-infra-limited",
-      "name": "Swastika Infra Limited",
-      "fingerprint": "14f336eff48665df",
-      "fields": {
-        "price": "₹175-185",
-        "size": "₹117 Cr",
-        "lot": "—",
-        "open": "23/09/26",
-        "close": "25/09/26",
+        "price": "₹123 – ₹130",
+        "size": "₹218.4 Cr",
+        "lot": "115",
+        "open": "28/09/26",
+        "close": "30/09/26",
         "allotment": null,
         "listing": "—",
         "sub": "—",
@@ -531,34 +447,6 @@
         "price": "₹159 – ₹167",
         "size": "₹90.17 Cr",
         "lot": "85",
-        "open": "28/09/26",
-        "close": "30/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "srit-india-limited",
-      "name": "Srit India Limited",
-      "fingerprint": "499c768627531078",
-      "fields": {
-        "price": "₹123 – ₹130",
-        "size": "₹218.4 Cr",
-        "lot": "115",
         "open": "28/09/26",
         "close": "30/09/26",
         "allotment": null,
@@ -806,34 +694,6 @@
   ],
   "events": [
     {
-      "date": "2026-09-23",
-      "type": "OPEN",
-      "ipo_id": "adroit-industries-india-limited",
-      "name": "Adroit Industries (India) Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-23",
-      "type": "OPEN",
-      "ipo_id": "armee-infotech-limited",
-      "name": "ArMee Infotech Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-23",
-      "type": "OPEN",
-      "ipo_id": "elevate-campuses-limited",
-      "name": "Elevate Campuses Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-23",
-      "type": "OPEN",
-      "ipo_id": "swastika-infra-limited",
-      "name": "Swastika Infra Limited",
-      "source": "NSE"
-    },
-    {
       "date": "2026-09-24",
       "type": "OPEN",
       "ipo_id": "a-one-steels-india-limited",
@@ -852,34 +712,6 @@
       "type": "OPEN",
       "ipo_id": "moneyview-limited",
       "name": "Moneyview Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-25",
-      "type": "CLOSE",
-      "ipo_id": "adroit-industries-india-limited",
-      "name": "Adroit Industries (India) Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-25",
-      "type": "CLOSE",
-      "ipo_id": "armee-infotech-limited",
-      "name": "ArMee Infotech Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-25",
-      "type": "CLOSE",
-      "ipo_id": "elevate-campuses-limited",
-      "name": "Elevate Campuses Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-25",
-      "type": "CLOSE",
-      "ipo_id": "swastika-infra-limited",
-      "name": "Swastika Infra Limited",
       "source": "NSE"
     },
     {

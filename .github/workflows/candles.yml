@@ -32,6 +32,7 @@ jobs:
         run: python3 scripts/fetch_candles.py
 
       - name: Commit if changed
+        id: cd
         run: |
           git config user.name "actions-user"
           git config user.email "actions@github.com"
@@ -40,7 +41,14 @@ jobs:
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "data: chart reading candles"
           for i in 1 2 3 4 5; do
-            git push && break
+            if git push; then echo "pushed=1" >> "$GITHUB_OUTPUT"; exit 0; fi
             git pull --rebase --autostash || true
             sleep 5
           done
+          echo "ERROR: push failed"; exit 1
+
+      - name: Deploy pages (new data)
+        if: steps.cd.outputs.pushed == '1'
+        run: gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

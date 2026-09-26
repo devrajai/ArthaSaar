@@ -1,0 +1,30 @@
+name: TG Chats List
+on:
+  workflow_dispatch:
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Describe TG_CHAT_ID chats
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          python3 - << 'PYEOF'
+          import os, json, urllib.request
+          TOKEN = os.environ["TG_TOKEN"]
+          CHATS = [c.strip() for c in os.environ["TG_CHAT_ID"].split(",") if c.strip()]
+          print("total chats:", len(CHATS))
+          for i, c in enumerate(CHATS):
+              url = "https://api.telegram.org/bot%s/getChat?chat_id=%s" % (TOKEN, c)
+              try:
+                  r = json.loads(urllib.request.urlopen(url, timeout=15).read())
+                  ch = r.get("result", {})
+                  typ = ch.get("type")
+                  nm = ch.get("title") or ch.get("first_name") or "?"
+                  print("chat %d: type=%s name=%s" % (i + 1, typ, nm))
+              except Exception as e:
+                  print("chat %d: getChat FAIL %s" % (i + 1, str(e)[:80]))
+          PYEOF

@@ -1,4 +1,4 @@
-/* arthabodh.js v1 -- Learn + Studies + My Notes teen sections ko ek me combine karta hai: ARTHABODH.
+/* arthabodh.js v2 -- Learn + Studies + My Notes teen sections ko ek me combine karta hai: ARTHABODH.
    DOM surgery: home ke 3 tiles ki jagah 1 tile, teen sections ka content ek naye
    section #arthabodh me move hota hai (listeners/cards safe rehte hain). */
 (function () {
@@ -21,6 +21,15 @@
       var tile = document.createElement("a");
       tile.className = "tile learnchip";
       tile.href = "#arthabodh";
+      /* lone button -- poora width + center (27 Sep, Dev) */
+      try {
+        tile.style.gridColumn = "1 / -1";
+        tile.style.flexDirection = "row";
+        tile.style.alignItems = "center";
+        tile.style.justifyContent = "center";
+        tile.style.gap = "10px";
+        tile.style.padding = "16px 10px";
+      } catch (e) {}
       tile.innerHTML = '<span class="t-ic">\ud83d\udcda</span><span class="t-nm">ArthaBodh</span><span class="t-sb">school \u00b7 studies \u00b7 notes</span>';
       if (anchor && anchor.parentNode) {
         anchor.parentNode.insertBefore(tile, anchor);

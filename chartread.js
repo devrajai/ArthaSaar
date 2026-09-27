@@ -4,7 +4,8 @@
    - read: EMA20/50, VWAP, RSI, volume spike, trend
    - levels: prev close, open, H/L, VWAP, EMAs, swings
    - NEW 26 Sep: Volume Profile (POC \u00b7 Value Area \u00b7 HVN/LVN) + points in price header
-   - NEW 27 Sep: grid sirf F&O indices, TATAMOTORS->TMPV alias, fast idx- files */
+   - NEW 27 Sep: grid sirf F&O indices, TATAMOTORS->TMPV alias, fast idx- files
+   - 27 Sepb: 1D chip hata (range chips hi daily hain), ek hi highlight */
 (function () {
   "use strict";
 
@@ -430,7 +431,7 @@
     for (var j = 0; j < IVS.length; j++) {
       var iv = IVS[j];
       var has = SRC[iv] ? !!av[SRC[iv]] : !!av[iv];
-      if (iv === "1d") has = true; /* archive me sab hai */
+      if (iv === "1d") continue; /* daily = sirf range chips (1MO/1Y/5Y/MAX) -- ek hi selector */
       if (!has) continue;
       h2 += '<button class="chip' + (iv === cur.iv ? " on" : "") + '" data-cr-iv="' + iv + '">' + IVL[iv] + '</button>';
     }

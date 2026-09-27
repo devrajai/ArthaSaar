@@ -3,6 +3,7 @@
    - range chips (this file): 1D | 1M \u00b7 1Y \u00b7 5Y \u00b7 MAX \u2014 daily archive, clipped at fetch
    - data: jsDelivr CDN (devrajai/arthasaar-data) \u2014 Release assets pe CORS nahi hota
    - range switch = clear cache + re-render in place. location.reload() KABHI nahi
+   - 27 Sepb: range chip sirf iv==1d pe highlight (ek hi selected dikhe)
      => landing-page redirect bug khatam. State localStorage (crrange) me. */
 (function () {
   "use strict";
@@ -64,9 +65,12 @@
 
   /* ---------- range chips UI ---------- */
   function markActive() {
+    var iv = null;
+    try { iv = window.__CR__.getCur().iv; } catch (e) {}
     var bs = document.querySelectorAll("[data-crrange]");
     for (var i = 0; i < bs.length; i++)
-      bs[i].className = "chip" + (bs[i].getAttribute("data-crrange") === range ? " on" : "");
+      bs[i].className = "chip" +
+        (iv === "1d" && bs[i].getAttribute("data-crrange") === range ? " on" : "");
   }
   function addChips() {
     var ivs = document.getElementById("crIvs");
@@ -77,13 +81,14 @@
     wrap.style.cssText = "display:inline-flex;gap:6px;margin-left:8px;padding-left:8px;border-left:1px solid rgba(125,180,255,.35)";
     for (var i = 0; i < RANGES.length; i++) {
       var b = document.createElement("button");
-      b.className = "chip" + (range === RANGES[i][0] ? " on" : "");
+      b.className = "chip";
       b.setAttribute("data-crrange", RANGES[i][0]);
       b.textContent = RANGES[i][0] === "1M" ? "1MO" : RANGES[i][0];
       b.title = "daily candles \u2014 " + RANGES[i][1];
       wrap.appendChild(b);
     }
     ivs.appendChild(wrap);
+    markActive();
   }
 
   /* ---------- click: switch range in place (no reload) ---------- */

@@ -187,32 +187,4 @@
   } else { mount(); }
 })();
 
-/* ---------- landing redirect fix (early load): refresh pe wapas isi section me ----------
-   oldapp har load pe hash strip karke home pe bhejta tha. last section
-   sessionStorage me yaad rehta hai (index.html inline save + hashchange).
-   Section milte hi turant route kar dete hain \u2014 home flash na dikhe. */
-(function () {
-  "use strict";
-  var lastSec = "";
-  try { lastSec = window.sessionStorage.getItem("crsec") || ""; } catch (e) {}
-  if (!lastSec || lastSec === "home" || lastSec === "lock") return;
-  window.addEventListener("hashchange", function () {
-    var h = (location.hash || "").replace("#/", "#");
-    var id = h.replace("#", "").split("/")[0];
-    if (id && id !== "lock") { try { window.sessionStorage.setItem("crsec", id); } catch (e) {} }
-  });
-  var n = 0;
-  (function tick() {  /* dtfix-safe: setTimeout chain, setInterval nahi */
-    setTimeout(function () {
-      n++;
-      var cur = "";
-      try { cur = (location.hash || "").replace("#/", "#").replace("#", "").split("/")[0]; } catch (e) {}
-      if (cur !== lastSec && document.getElementById(lastSec)) {
-        try { location.hash = "#" + lastSec; } catch (e) {}
-        return;
-      }
-      if (cur === lastSec || n > 400) return;
-      tick();
-    }, 150);
-  })();
-})();
+/* landing redirect fix removed 27 Sep: site hamesha Home pe khulega (Dev) */

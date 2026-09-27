@@ -50,6 +50,12 @@
       if (abMood) brain.insertBefore(k, abMood); else brain.appendChild(k);
     }
 
+    /* 3b. Dev (27 Sep): MARKET MOOD METER sabse upar -- forecast grid se pehle */
+    if (abMood) {
+      var hgl = brain.querySelector("div.hgroup");
+      if (hgl) brain.insertBefore(abMood, hgl);
+    }
+
     /* 4. #ai section hata do */
     if (ai.parentNode) ai.parentNode.removeChild(ai);
 

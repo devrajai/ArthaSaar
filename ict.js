@@ -532,7 +532,7 @@
       '<b style="color:#f87171">PDH</b>/<b style="color:#60a5fa">PDL</b> pichla din \u00b7 <b style="color:#fbbf24">PWH/PWL</b> pichla hafta \u00b7 <b style="color:#b8860b">WH/WL</b> chalu hafta \u00b7 <b style="color:#c084fc">MH/ML</b> chalu mahina \u00b7 ' +
       '<b style="color:#60a5fa">ASIA</b> 21:15\u201306:30 IST \u00b7 <b style="color:#34d399">LDN KZ</b> 12:30\u201315:30 \u00b7 <b style="color:#ffb84d">NY KZ</b> 17:30\u201320:30 \u00b7 ' +
       '<b style="color:#4da3ff">OB\u2191</b>/<b style="color:#ff9f40">OB\u2193</b> order block \u00b7 <b style="color:#34d399">FVG\u2191</b>/<b style="color:#ff6b6b">FVG\u2193</b> fair value gap \u00b7 ' +
-      '<b style="color:#34d399">BOS</b> trend continuation \u00b7 <b style="color:#ffd54d">CHOCH</b> reversal</div>' +
+      '<b style="color:#34d399">BOS</b> (Break of Structure) trend continue \u00b7 <b style="color:#ffd54d">CHOCH</b> (Change of Character) reversal</div>' +
       '<div class="footer-note">data: Yahoo free (5m aaj \u00b7 15m 5 din \u00b7 1h 1 mahina) \u00b7 Asia box + NY KZ sirf 24h market (BTC) pe poore \u2014 NSE raat ko band \u00b7 structure fractal-3 swings se \u00b7 read hai, tip nahi</div>';
     sec.insertBefore(card, sec.firstChild);
     fetch("data/candles.json?t=" + Date.now()).then(function (r) { return r.json(); }).then(function (dd) {

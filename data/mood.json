@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-27T01:33:24.777546+05:30",
+ "updated": "2026-09-27T07:33:30.329625+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
  "overall": 54,
  "tag": "Neutral",
@@ -8,7 +8,7 @@
   {
    "t": "Prediction: Sept. 30 Will Be a Big Day for the Stock Market. Here Are 2 Stocks to Buy Hand Over Fist Before That",
    "s": 95,
-   "pub": "Yahoo Finance",
+   "pub": "finance.yahoo.com",
    "topic": "Markets",
    "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPU1JESUNnY0FzYVdYQXFKc3BYODU4ZVFTYzNiekx0NkdFZHk4bnNHR05tdGlVUUdyYnBsdlJvQWxib0s4ZGFYWDlFMmJ4ZFQyS1V1Q1JVUUdMTGZFTkNpdmNKQ1dUbFhLLTlPaXBwU1N2X1NWVW52a091VXNlUm16OEZtTHNXWmppOG4wNWhnZDhGeEVwRUE?oc=5",
    "syms": [
@@ -40,16 +40,29 @@
   {
    "t": "Wall Street ends higher as investors buy AI stocks; Microsoft rallies",
    "s": 78,
-   "pub": "Yahoo Finance",
+   "pub": "The Detroit News",
    "topic": "Global",
-   "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNRHcxekllckNiQjFxYU9xci13SXgyU3ZhUnhNdTc4Zk5mQllJbkRQTHljVEZoMk42V19zWVREWHRuTEUyR296LW1GazNIclNESUZESFpqc2VDZFd0Y2VaeGhfQVNVSERDdU9ldkhjU2duVUV0MEZkcG1FZjNqbWJLbkphY2QxYjN0UXduVS03TzN6dw?oc=5",
-   "syms": [
-    "IDEA"
-   ],
-   "src": "article"
+   "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxPaS03djd6Ykx6YnVpbFl6YVNqOEJlRVZncmgzM0Etb1dqSU9CdDZHZVhiSkdDVVZlNFZuaVR6NXBwUzFpdEUwc3J5R0JaSkFGa1F3NFp3bjNKQkZsZ0FoVnFEVGk0S0NfQUhKUVY3Q1Z0MmJfaDZsSDIxb2FBRF9WYklWNDhKdVZHTlVOVTdxeGkzZUhELThiNDgtbnpCN3JPMnZiako5U2N2RmlXenctcU1XT1g5eEUxR0JqQW9xbzE3bUtfWi0tcXcwY2I1b3lp?oc=5",
+   "syms": []
   }
  ],
  "neg": [
+  {
+   "t": "Rate Market Fear Gauge Is Warning for Corporates: Credit Weekly",
+   "s": 22,
+   "pub": "Livemint",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQY0NFSWNtYl85aGxET3h1Vm84TDZidUd4UmZ6d1J3dUYxczBBbWVPLW1VV3pDaktNMDJZQ3VXVnJ4Ml9OYnZtcTU4T3Vsb01qS1dEUEEtY2xURlFpbmdZY2F3ZHBJeG1Bbl9kNWItNktZUWVVZ2xINTlVelI1V3ZnaUtwVms0UUxfeE1uUmgtb0lXTUNFN3MteU94RHExRDNLYXJVcnRFNi1nZjRhMnE2X3BKNnrSAboBQVVfeXFMTWZmcFMyaGJNN0lCOWhmQ0Q5N1RMbUFxOFplb0JnZmgyT2xBbWY5N2lFNUxheHRxVHpWYmNqUi1qNjN1ckgyVjR4ZURWM3hpZlRwUmNBMzNBdUJGUVNnTFdxUk83UVFvU1hTTk5hR09uZnN4NkY2b0FnMk40YnVES0VHS2lFS0VqUU5XQUthVUl2MEdQUVhXVzdWbEpNMkNZMWZLUFI0dG9oVS1uTHpaV2kyekw3NXJjSndR?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Rate Market Fear Gauge Is Warning for Corporate Bonds",
+   "s": 22,
+   "pub": "bloomberg.com",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxORXh6NW1EMEtxUzFTQS1OZVRKRUVVaWlHZ1lwMXNGRVFwMTFrVkkxd1FKakd4VGtKZlVzdElFdlBzWjRzNEtIbFpPelVOSDJSX3llcHRBZkNvVzdyVUlxMzJHX3pXVGdGaXhLT1c2R3RYYlY1TFB2TnB0b19QM3dKMXJ3bjNNamkxZE1KSHByTUp1TFFtbno4eDlVVEF2YzBjbEZ4ZE0xNHIyMXc1N3BPOWltZw?oc=5",
+   "syms": []
+  },
   {
    "t": "Weekly market wrap: NIFTY50, SENSEX falls for 7th consecutive week; Infosys, Bharti Airtel, others drag losses",
    "s": 22,
@@ -71,22 +84,6 @@
     "IDEA"
    ],
    "src": "article"
-  },
-  {
-   "t": "Warren Buffett's Top Advice for Investors Bracing for a Market Crash",
-   "s": 36,
-   "pub": "Yahoo Finance",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPOWxkN0J0ak5leTJXWVdlUWFqeHQybmFPbHNlakhNaGxZUE4yWWdUV21yOGlkNEp4TG53M3ltVFU1aS0yRjFXNW40ZGRjYXRiR3RxRDNVeHFmTDlzUzVxYWJ6MDRoazNRR0dsMmF6Smdmc05QWkp1dUVCOXdsTE1vVXp1cmFrQ21oQmtPX19FY2FBV2FTdlNleU5qN3c5WXhLb3FN?oc=5",
-   "syms": []
-  },
-  {
-   "t": "History Shows: This Midterm Election Result Could Be a Warning Sign for the Stock Market",
-   "s": 36,
-   "pub": "The Motley Fool",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQUnRTZlowSzUzb3VNT1l1UjdWaFZVZFd1amFQVFZqX20wY1ltVzViMTNFOFBIOW1ER1k3OUMxT3JmemhnbkVTSENSNkRzOXBkUzZsTy1mMGNYdi0xdV92MTVGREVEd2l2TnVJc1hxckQwYVdDQ042NWdwa2V4RXVTX3FPeVhNR1M1cDctWVViWkMyN285S3RlYQ?oc=5",
-   "syms": []
   }
  ],
  "stocks": [],

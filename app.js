@@ -1,7 +1,8 @@
-/* ARTHASAAR loader -- v12: stable ?v= URLs (cache-friendly) + 4 retries with backoff.
-   oldapp.js (main app) then patches (screener fix, TimesFM AI view, trade tools,
-   learn + stage + guide + desktop, smart brain, MF tracker).
-   cdnfix.js sabse pehle — data/ fetches CDN pe. */
+/* ARTHASAAR loader -- v13: PARALLEL download + ordered execution.
+   Purana v12 sequential tha (ek file ka intezaar, phir agla request) —
+   80 files x ~120ms latency = 10+ sec load. Ab saari files ek saath
+   download hoti hain (HTTP/2 multiplex), execution order wahi rehta hai
+   (async=false = ordered async scripts). Load ~1-2 sec. */
 (function () {
   "use strict";
   var __origSI = window.setInterval;
@@ -15,29 +16,18 @@
    "eventradar.js",
    "cryptoradar.js",
    "aimerge.js" ];
-  var i = 0, tries = {};
-  function banner(msg) {
-    try {
-      var d = document.createElement("div");
-      d.textContent = msg;
-      d.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;font:12px/1.6 sans-serif;padding:3px 8px;text-align:center";
-      (document.body || document.documentElement).appendChild(d);
-    } catch (e) {}
-  }
-  function next() {
-    if (i >= files.length) return;
-    var f = files[i++];
+  var tries = {};
+  function load(f) {
     var s = document.createElement("script");
     s.src = f + "?v=as32";
-    s.async = false;
-    s.onload = function () { tries[f] = 0; next(); };
+    s.async = false; /* execution order preserve, download parallel */
+    s.onload = function () { tries[f] = 0; };
     s.onerror = function () {
+      try { if (s.parentNode) s.parentNode.removeChild(s); } catch (e) {}
       tries[f] = (tries[f] || 0) + 1;
-      if (tries[f] <= 4) { i--; setTimeout(next, 400 * tries[f]); return; }
-      
-      next();
+      if (tries[f] <= 3) setTimeout(function () { load(f); }, 300 * tries[f]);
     };
     document.head.appendChild(s);
   }
-  next();
+  for (var j = 0; j < files.length; j++) load(files[j]);
 })();

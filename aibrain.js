@@ -13,16 +13,53 @@
   }
   var _A = String.fromCharCode(38,97,109,112,59), _L = String.fromCharCode(38,108,116,59), _G = String.fromCharCode(38,103,116,59);
   function esc(s) { s = String(s == null ? "" : s); return s.split("&").join(_A).split("<").join(_L).split(">").join(_G); }
+  /* stock NAMES dikhane ke liye: symbols.json se sym->name map + title se auto-detect */
+  var SYMS = null;
+  var SYMP = fetch("data/symbols.json").then(function (r) { return r.json(); })
+    .then(function (d) { SYMS = d || { syms: [] }; })
+    .catch(function () { SYMS = { syms: [] }; });
+  function symName(sym) {
+    if (!SYMS || !SYMS.syms) return "";
+    for (var i = 0; i < SYMS.syms.length; i++)
+      if (SYMS.syms[i].s === sym) return String(SYMS.syms[i].n || "").replace(/\s+(Limited|Ltd\.?)$/i, "");
+    return "";
+  }
+  function titleSyms(t) {
+    if (!SYMS || !SYMS.syms) return [];
+    var tl = " " + String(t).toLowerCase() + " ";
+    var out = [];
+    for (var i = 0; i < SYMS.syms.length && out.length < 3; i++) {
+      var e = SYMS.syms[i];
+      var nm = String(e.n || "").toLowerCase().replace(/\s+(limited|ltd\.?)$/, "");
+      if (nm.length >= 5 && tl.indexOf(nm) >= 0 && out.indexOf(e.s) < 0) out.push(e.s);
+    }
+    return out;
+  }
+  function shortName(nm) {
+    var w = String(nm).split(" ");
+    var out = [];
+    for (var i = 0; i < w.length; i++) {
+      if ((out.join(" ") + " " + w[i]).trim().length > 22) break;
+      out.push(w[i]);
+    }
+    return out.join(" ") || String(nm).slice(0, 22);
+  }
   function symChips(h) {
-    if (!h.syms || !h.syms.length) return "";
-    return " <span style='background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.45);color:#7db4ff;border-radius:5px;padding:0 5px;font-size:10.5px;font-weight:600;white-space:normal'>" + esc(h.syms.join(" ")) + "</span>";
+    var syms = (h.syms && h.syms.length) ? h.syms.slice(0, 4) : titleSyms(h.t);
+    if (!syms.length) return "";
+    var parts = [];
+    for (var i = 0; i < syms.length; i++) {
+      var nm = symName(syms[i]);
+      parts.push("<b>" + esc(syms[i]) + "</b>" + (nm ? '<i style="font-style:normal;font-weight:400;opacity:.75"> \u00b7 ' + esc(shortName(nm)) + "</i>" : ""));
+    }
+    return " <span style='background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.45);color:#7db4ff;border-radius:5px;padding:0 5px;font-size:10.5px;font-weight:600;white-space:normal'>" + parts.join(" &nbsp;") + "</span>";
   }
   function badge(v) { var c = v >= 58 ? "pos" : (v <= 42 ? "neg" : ""); return '<b class="' + c + '">' + v + "</b>"; }
 
   function loadMood() {
     var box = document.getElementById("abMood");
     box.innerHTML = '<div class="subhead">Market Mood Meter</div><div class="note">load ho raha...</div>';
-    jload("mood").then(function (d) {
+    jload("mood").then(function (d) { SYMP.then(function () {
       var o = d.overall || 50, tag = d.tag || "-";
       var emot = o >= 70 ? "🚀" : (o >= 58 ? "🙂" : (o >= 42 ? "😐" : (o >= 30 ? "😓" : "😱")));
       var color = o >= 58 ? "#22c55e" : (o >= 42 ? "#eab308" : "#ef4444");
@@ -40,12 +77,12 @@
       }
       if ((d.stocks || []).length) {
         html += '<div class="subhead" style="margin-top:10px">Stock sentiment (news se)</div><div>';
-        d.stocks.slice(0, 8).forEach(function (s) { html += '<span class="chip" style="margin:2px">' + esc(s.sym) + " " + badge(s.s) + "</span>"; });
+        d.stocks.slice(0, 8).forEach(function (s) { html += '<span class="chip" style="margin:2px" title="' + esc(symName(s.sym)) + '">' + esc(s.sym) + " " + badge(s.s) + "</span>"; });
         html += "</div>";
       }
       html += '<div class="note" style="margin-top:6px;opacity:.7">har 6 ghante auto-update</div>';
       box.innerHTML = html;
-    }, function () { box.innerHTML = '<div class="subhead">Market Mood Meter</div><div class="note">mood data nahi mila - thodi der baad try karo</div>'; });
+    }); }, function () { box.innerHTML = '<div class="subhead">Market Mood Meter</div><div class="note">mood data nahi mila - thodi der baad try karo</div>'; });
   }
 
   function loadRisk() {

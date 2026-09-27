@@ -49,8 +49,9 @@ jobs:
           s = s.replace("app.js?v=27sepv4", "app.js?v=27sepv5")
           s = s.replace("app.js?v=27sepv5", "app.js?v=27sepv6")
           s = s.replace("app.js?v=27sepv6", "app.js?v=27sepv7")
+          s = s.replace("app.js?v=27sepv7", "app.js?v=27sepv8")
           open(p, "w", encoding="utf-8").write(s)
-          print("patched" if "27sepv7" in s else "already patched")
+          print("patched" if "27sepv8" in s else "already patched")
           PY
 
       - name: Commit if changed

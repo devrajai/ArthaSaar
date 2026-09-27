@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-fetch_candles.py — ArthaSaar Chart Reading data v2 (yfinance, free, no API key).
+fetch_candles.py -- ArthaSaar Chart Reading data v2 (yfinance, free, no API key).
 
 Why yfinance: Yahoo direct API 429s hard from GH runners; yfinance does the
-cookie/crumb dance + retries (same as index_history_collect.py — proven weekly).
+cookie/crumb dance + retries (same as index_history_collect.py -- proven weekly).
 
 Symbols:
   indices  : NIFTY, BANKNIFTY         -> 1m/5m/15m/1h
   F&O big  : RELIANCE, HDFCBANK, ICICIBANK, INFY, TCS,
              SBIN, TATASTEEL, ITC    -> 5m/15m/1h
 
-Output: data/candles.json (column arrays — compact)
+Output: data/candles.json (column arrays -- compact)
   { "updated": "...", "syms": { "NIFTY": { "y":"^NSEI", "pc": 23447.8,
       "5m": {"t":[],"o":[],"h":[],"l":[],"c":[],"v":[]}, ... } } }
 
@@ -28,7 +28,8 @@ import yfinance as yf  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "candles.json"
 
-IDX = {"NIFTY": "^NSEI", "BANKNIFTY": "^NSEBANK"}
+IDX = {"NIFTY": "^NSEI", "BANKNIFTY": "^NSEBANK", "SENSEX": "^BSESN",
+      "FINNIFTY": "^CNXFIN", "MIDCPNIFTY": "^NSEMDCP50", "NIFTYIT": "^CNXIT"}
 STOCKS = ["RELIANCE", "HDFCBANK", "ICICIBANK", "INFY",
           "TCS", "SBIN", "TATASTEEL", "ITC"]
 YMAP = dict(IDX, **{s: s + ".NS" for s in STOCKS})
@@ -40,7 +41,6 @@ PLAN = {
     "15m": ("5d",  list(YMAP)),
     "1h":  ("1mo", list(YMAP)),
 }
-
 
 def batch(tickers, interval, period):
     """yfinance multi-ticker download -> {name: bars}"""
@@ -71,7 +71,6 @@ def batch(tickers, interval, period):
         out[name] = {"t": t, "o": o, "h": h, "l": l, "c": c, "v": v}
     return out
 
-
 def prev_closes():
     """sab symbols ka prev close (daily 5d se)"""
     res = {}
@@ -92,7 +91,6 @@ def prev_closes():
     except Exception as e:  # noqa: BLE001
         print("prevclose batch fail:", e)
     return res
-
 
 def main():
     data = {}
@@ -126,7 +124,7 @@ def main():
             print(f"NO DATA {iv}")
 
     if not data:
-        print("no data fetched — file not touched")
+        print("no data fetched -- file not touched")
         return
 
     out = {"updated": dt.datetime.now(

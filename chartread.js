@@ -3,12 +3,19 @@
    - patterns: Doji, Hammer, Shooting Star, Engulfing, Marubozu, Inside Bar
    - read: EMA20/50, VWAP, RSI, volume spike, trend
    - levels: prev close, open, H/L, VWAP, EMAs, swings
-   - NEW 26 Sep: Volume Profile (POC \u00b7 Value Area \u00b7 HVN/LVN) + points in price header */
+   - NEW 26 Sep: Volume Profile (POC \u00b7 Value Area \u00b7 HVN/LVN) + points in price header
+   - NEW 27 Sep: grid sirf F&O indices, TATAMOTORS->TMPV alias, fast idx- files */
 (function () {
   "use strict";
 
-  var SYMS = ["NIFTY", "BANKNIFTY", "RELIANCE", "HDFCBANK", "ICICIBANK",
-              "INFY", "TCS", "SBIN", "TATASTEEL", "ITC"];
+  var SYMS = ["NIFTY", "BANKNIFTY", "SENSEX", "FINNIFTY", "MIDCPNIFTY", "NIFTYIT"];
+  /* renamed NSE symbols -> naya naam (archive me naye naam se data hai) */
+  var ALIAS = { "TATAMOTORS": "TMPV", "TATAMOTORS.NS": "TMPV", "TATA MOTORS": "TMPV" };
+  function resolve(s) { return ALIAS[s] || s; }
+  /* fast per-index daily files (chhota, ~50KB -- 4MB chunk ki jagah) */
+  var IDXF = { "NIFTY": 1, "BANKNIFTY": 1, "SENSEX": 1, "FINNIFTY": 1,
+               "MIDCPNIFTY": 1, "NIFTYIT": 1 };
+  var CDNX = "https://cdn.jsdelivr.net/gh/devrajai/arthasaar-data@main/data/idx-";
   var IVS = ["1m", "3m", "5m", "10m", "15m", "30m", "1h", "4h", "6h", "8h", "1d"];
   var IVL = {"1m": "1m", "3m": "3m", "5m": "5m", "10m": "10m", "15m": "15m", "30m": "30m",
              "1h": "1h", "4h": "4h", "6h": "6h", "8h": "8h", "1d": "1D"};
@@ -88,13 +95,40 @@
       if (SYMLIST.syms[i].s === sym) return SYMLIST.syms[i].c;
     return -1;
   }
-  function loadDaily(sym) {
+  function idxClip(b) {
+    /* range chip ke hisaab se bars trim (1MO=26, 1Y=252, warna full) */
+    try {
+      var r = (window.localStorage.getItem("crrange") || "5y").toUpperCase();
+      var n = r === "1M" ? 26 : r === "1Y" ? 252 : 0;
+      if (n && b && b.t && b.t.length > n) {
+        b.t = b.t.slice(-n); b.o = b.o.slice(-n); b.h = b.h.slice(-n);
+        b.l = b.l.slice(-n); b.c = b.c.slice(-n); b.v = b.v.slice(-n);
+      }
+    } catch (e) {}
+    return b;
+  }
+  function loadDailyChunk(sym) {
     var cid = findChunk(sym);
     if (cid < 0) return Promise.reject("no chunk");
     if (HDATA[cid]) return Promise.resolve(HDATA[cid][sym]);
     return fetch(REL + "daily-" + (cid < 10 ? "0" + cid : cid) + ".json")
       .then(function (r) { return r.json(); })
       .then(function (d) { HDATA[cid] = d.syms || {}; return HDATA[cid][sym]; });
+  }
+  function loadDaily(symRaw) {
+    var sym = resolve(symRaw);
+    if (IDXF[sym]) {
+      if (HDATA["idx:" + sym]) return Promise.resolve(HDATA["idx:" + sym]);
+      return fetch(CDNX + sym + ".json")
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var b = idxClip(d && d.t ? d : null);
+          if (!b || !b.t || !b.t.length) throw "no idx file";
+          HDATA["idx:" + sym] = b; return b;
+        })
+        .catch(function () { return loadDailyChunk(sym); });
+    }
+    return loadDailyChunk(sym);
   }
 
   /* ---------------- patterns ---------------- */
@@ -382,7 +416,7 @@
       priceEl.innerHTML = '<div class="note">candles data abhi nahi mila \u2014 thodi der baad try karo.</div>';
       return;
     }
-    /* symbol chips */
+    /* symbol chips -- sirf grid wale (indices) jo feed me hain */
     var h = "";
     for (var i = 0; i < SYMS.length; i++) {
       var s = SYMS[i];
@@ -433,7 +467,8 @@
       return loadDaily(cur.sym);
     }).then(function (bars) {
       if (!bars || !bars.t || !bars.t.length) {
-        document.getElementById("crPrice").innerHTML = '<div class="note">is symbol ka archive nahi mila.</div>';
+        document.getElementById("crPrice").innerHTML = '<div class="note">is symbol ka archive nahi mila' +
+          (ALIAS[cur.sym] ? " \u2014 naya naam: " + esc(ALIAS[cur.sym]) : " \u2014 NSE ka naya naam search karke try karo (TATAMOTORS ab TMPV hai)") + '.</div>';
         return;
       }
       var d = bars;
@@ -462,7 +497,7 @@
     while (t && t !== document.body && !t.getAttribute) t = t.parentNode;
     if (!t || !t.getAttribute) return;
     var s = t.getAttribute("data-cr-sym"), iv = t.getAttribute("data-cr-iv");
-    if (s) { cur.sym = s;
+    if (s) { cur.sym = resolve(s);
       if (DATA && DATA.syms[s]) {
         if (cur.iv !== "1d" && !DATA.syms[s][cur.iv] &&
             !(SRC[cur.iv] && DATA.syms[s][SRC[cur.iv]])) cur.iv = "5m";
@@ -540,11 +575,15 @@
         var box = document.getElementById("crSugg");
         if (!q || q.length < 2 || !SYMLIST) { box.style.display = "none"; return; }
         var out = "", n = 0;
+        var aq = ALIAS[q];
+        if (aq) { /* purana naam likha hai -> naya suggest karo */
+          out += '<div data-cr-sym="' + esc(aq) + '" style="padding:7px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)"><b style="font-size:12.5px">' + esc(aq) + '</b><span class="note" style="font-size:11px;text-align:right">naya naam (pehle ' + esc(q) + ')</span></div>';
+          n++;
+        }
         for (var i = 0; i < SYMLIST.syms.length && n < 14; i++) {
           var it = SYMLIST.syms[i];
           if (it.s.indexOf(q) === 0 || (it.n || "").toUpperCase().indexOf(q) >= 0) {
-            out += '<div data-cr-sym="' + esc(it.s) + '" style="padding:7px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)">' +
-              '<b style="font-size:12.5px">' + esc(it.s) + '</b><span class="note" style="font-size:11px;text-align:right">' + esc(it.n) + '</span></div>';
+            out += '<div data-cr-sym="' + esc(it.s) + '" style="padding:7px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)"><b style="font-size:12.5px">' + esc(it.s) + '</b><span class="note" style="font-size:11px;text-align:right">' + esc(it.n) + '</span></div>';
             n++;
           }
         }
@@ -560,7 +599,7 @@
       });
     }
     function pick(sym2) {
-      cur.sym = sym2; cur.iv = "1d";
+      cur.sym = resolve(sym2); cur.iv = "1d";
       var box = document.getElementById("crSugg"); if (box) box.style.display = "none";
       if (inp) inp.value = "";
       render();

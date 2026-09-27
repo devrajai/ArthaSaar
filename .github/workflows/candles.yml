@@ -1,7 +1,7 @@
 name: Candles fetch (Chart Reading)
 on:
   schedule:
-    # 9:17–15:47 IST, har ~20 min, Mon-Fri (UTC 3:47-10:27 window)
+    # 9:17-15:47 IST, har ~20 min, Mon-Fri (UTC 3:47-10:27 window)
     - cron: '17,37,57 3-10 * * 1-5'
   workflow_dispatch:
 
@@ -32,15 +32,32 @@ jobs:
       - name: Fetch candles (yfinance, free)
         run: python3 scripts/fetch_candles.py
 
+      - name: Patch index.html (CSP + cache bump, idempotent)
+        run: |
+          python3 - <<'PY'
+          p = "index.html"
+          s = open(p, encoding="utf-8").read()
+          if "Content-Security-Policy" not in s:
+              csp = ('<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; '
+                     'script-src \'self\' \'unsafe-inline\' https://cdn.jsdelivr.net https://unpkg.com; '
+                     'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; '
+                     'font-src https://fonts.gstatic.com; img-src * data:; connect-src *; '
+                     'object-src \'none\'; base-uri \'self\'; form-action \'self\'">')
+              s = s.replace("<head>", "<head>\n" + csp, 1)
+          s = s.replace("app.js?v=27sepv2", "app.js?v=27sepv3")
+          open(p, "w", encoding="utf-8").write(s)
+          print("patched" if "27sepv3" in s else "already patched")
+          PY
+
       - name: Commit if changed
         id: cd
         run: |
           git config user.name "actions-user"
           git config user.email "actions@github.com"
           test -f data/candles.json || exit 0
-          git add data/candles.json
+          git add data/candles.json index.html
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
-          git commit -m "data: chart reading candles"
+          git commit -m "data: chart reading candles + index patch"
           for i in 1 2 3 4 5; do
             if git push; then echo "pushed=1" >> "$GITHUB_OUTPUT"; exit 0; fi
             git pull --rebase --autostash || true

@@ -4,7 +4,7 @@
 - Symbols: NSE EQUITY_L.csv (archives.nseindia.com, ~2000 EQ stocks) + hardcoded indices
 - Data: yfinance multi-ticker download (interval=1d, period=5y), 100-symbol batches
 - PLUS intraday self-archive (core symbols): 5m/15m (60d window) + 1h (730d) roz
-  fetch karke purane intraday.json me MERGE karta hai — Yahoo ka 60-din limit
+  fetch karke purane intraday.json me MERGE karta hai -- Yahoo ka 60-din limit
   apne data se todte hain, roz save karke history khud badhati hai
 - Output:
     data-history/daily-00.json ... daily-NN.json  -> GitHub Release "candles" pe (git bloat zero)
@@ -45,7 +45,6 @@ BATCH = 100
 FALLBACK = ["RELIANCE", "TCS", "HDFCBANK", "ICICIBANK", "INFY", "SBIN",
             "BHARTIARTL", "ITC", "LT", "AXISBANK", "KOTAKBANK", "TATAMOTORS"]
 
-
 def nse_list():
     """[(SYMBOL, NAME)] - sab EQ-series listed stocks."""
     try:
@@ -71,7 +70,6 @@ def nse_list():
         print("EQUITY_L fetch fail:", e, "-> fallback", len(FALLBACK))
         return [(s, s) for s in FALLBACK]
 
-
 def to_bars(sub):
     sub = sub.dropna(subset=["Open", "High", "Low", "Close"])
     t, o, h, l, c, v = [], [], [], [], [], []
@@ -87,7 +85,6 @@ def to_bars(sub):
         return None
     return {"t": t, "o": o, "h": h, "l": l, "c": c, "v": v}
 
-
 def universe_build():
     universe = []  # (display, ysym, name)
     for disp, ys in INDICES.items():
@@ -98,7 +95,6 @@ def universe_build():
         universe.append((sym, sym + ".NS", name))
     print("universe:", len(universe))
     return universe
-
 
 def collect(universe, period, prefix, names):
     """ek pass: period=5y/max -> daily-XX / full-XX chunks. names: disp->name."""
@@ -138,7 +134,6 @@ def collect(universe, period, prefix, names):
         time.sleep(1)
     return got
 
-
 def write_chunks(got, universe, prefix):
     order = [u[0] for u in universe if u[0] in got]
     chunks = []
@@ -152,6 +147,74 @@ def write_chunks(got, universe, prefix):
         p.write_text(json.dumps({"syms": ch}, separators=(",", ":")), encoding="utf-8")
     return len(order)
 
+GRID_IDX = ["NIFTY", "BANKNIFTY", "SENSEX", "FINNIFTY", "MIDCPNIFTY", "NIFTYIT"]
+FCFILE = ROOT / "data" / "rangeforecast.json"
+
+def atr14(b):
+    n = len(b["t"])
+    if n < 16:
+        return None
+    trs = []
+    for i in range(n - 14, n):
+        tr = max(b["h"][i] - b["l"][i],
+                 abs(b["h"][i] - b["c"][i - 1]),
+                 abs(b["l"][i] - b["c"][i - 1]))
+        trs.append(tr)
+    return sum(trs) / 14.0
+
+def write_idx_and_forecast(src):
+    """(1) per-index chhote daily files -> idx-<SYM>.json (fast load, ~50KB)
+    (2) kal ka range forecast (close +/- ATR14) + accuracy history
+       honest math: kal ka projection aaj ke close se, hit = aaj ka H aur L
+       dono projection ke andar aaye (pichle din ka forecast aaj check hota hai)."""
+    for s in GRID_IDX:
+        b = src.get(s)
+        if not b or len(b["t"]) < 30:
+            continue
+        (OUTDIR / f"idx-{s}.json").write_text(
+            json.dumps(b, separators=(",", ":")), encoding="utf-8")
+        print("idx file:", s, len(b["t"]), "bars")
+    old = {}
+    try:
+        old = json.loads(FCFILE.read_text(encoding="utf-8"))
+    except Exception:
+        old = {}
+    hist = old.get("hist") or []
+    oldfc = {x["s"]: x for x in (old.get("fc") or [])}
+    fc, hits, of, newday = [], 0, 0, None
+    for s in GRID_IDX:
+        b = src.get(s)
+        if not b or len(b["t"]) < 30:
+            continue
+        a = atr14(b)
+        if not a or not b["c"][-1]:
+            continue
+        close = b["c"][-1]
+        last_t = b["t"][-1]
+        o = oldfc.get(s)
+        if o and o.get("dt") and last_t > o["dt"]:
+            of += 1
+            if b["l"][-1] >= o["lo"] and b["h"][-1] <= o["hi"]:
+                hits += 1
+            newday = last_t
+        fc.append({"s": s, "c": round(close, 2), "atr": round(a, 2),
+                   "lo": round(close - a, 2), "hi": round(close + a, 2),
+                   "dt": last_t})
+    if of and newday:
+        dstr = dt.datetime.fromtimestamp(
+            newday, dt.timezone(dt.timedelta(hours=5, minutes=30))).strftime("%d-%b")
+        if not hist or hist[-1].get("d") != dstr:
+            hist.append({"d": dstr, "h": hits, "n": of,
+                         "p": round(100.0 * hits / of)})
+        hist = hist[-30:]
+    FCFILE.parent.mkdir(parents=True, exist_ok=True)
+    FCFILE.write_text(json.dumps(
+        {"updated": dt.datetime.now(dt.timezone(dt.timedelta(hours=5, minutes=30))
+                                     ).strftime("%Y-%m-%dT%H:%M"),
+         "fc": fc, "hist": hist,
+         "note": "kal ka projected range = aaj ka close +/- ATR14. hit = kal ka high AND low dono is range ke andar. 30-din ka track record."},
+        separators=(",", ":")), encoding="utf-8")
+    print("rangeforecast:", len(fc), "idx | hist:", len(hist))
 
 def main():
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=5, minutes=30))).strftime("%Y-%m-%dT%H:%M")
@@ -166,7 +229,7 @@ def main():
     OUTDIR.mkdir(parents=True, exist_ok=True)
     n5 = write_chunks(got5, universe, "daily")
 
-    # pass 2: max history (listing se) — 1D·MAX button ke liye
+    # pass 2: max history (listing se) -- 1D-MAX button ke liye
     try:
         gotmax = collect(universe, "max", "full", names)
         if gotmax:
@@ -182,15 +245,19 @@ def main():
     SYMFILE.write_text(json.dumps(symout, separators=(",", ":")), encoding="utf-8")
     print("symbols:", len(symlist), "| 5y chunks:", (n5 + CHUNK - 1) // CHUNK)
 
+    # grid indices ke liye: chhote idx- files + kal ka range forecast
+    try:
+        write_idx_and_forecast(gotmax if gotmax else got5)
+    except Exception as e:  # noqa: BLE001
+        print("idx/forecast fail:", e)
 
 CORE = dict(INDICES)
 CORE.update({s: s + ".NS" for s in ["RELIANCE", "HDFCBANK", "ICICIBANK", "INFY",
                                     "TCS", "SBIN", "TATASTEEL", "ITC"]})
 INTRADAY_PLAN = {"5m": ("60d", 16000), "15m": ("60d", 16000), "1h": ("730d", 6000)}
 
-
 def intraday():
-    """core symbols ka rolling intraday archive — purana merge, naya append."""
+    """core symbols ka rolling intraday archive -- purana merge, naya append."""
     path = OUTDIR / "intraday.json"
     old = {}
     try:
@@ -249,7 +316,6 @@ def intraday():
     if out:
         path.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
         print("written", path, path.stat().st_size, "bytes")
-
 
 if __name__ == "__main__":
     main()

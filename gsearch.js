@@ -20,7 +20,7 @@
     ["event calendar result dividend board meeting", "Events", "events"],
     ["ipo gmp listing allotment subscribe grey market", "IPO", "ipo"],
     ["crypto btc eth bitcoin fear greed", "Crypto", "crypto"],
-    ["ai forecast timesfm prediction", "AI Forecast", "ai"],
+    ["ai forecast timesfm prediction", "AI Brain \u00b7 Forecast", "aibrain"],
     ["aibrain ai brain mood stocks", "AI Brain", "aibrain"],
     ["filing filings sebi disclosure", "Filings", "filings"],
     ["learn education glossary basics", "Learn", "learn"],
@@ -37,7 +37,7 @@
   var SYMS = null; /* lazy symbols.json */
 
   function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return "&#" + c.charCodeAt(0) + ";";
     });
   }

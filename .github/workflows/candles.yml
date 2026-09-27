@@ -73,6 +73,12 @@ jobs:
           done
           echo "ERROR: push failed"; exit 1
 
+      - name: Purge CDN (fresh candles on jsDelivr)
+        if: steps.cd.outputs.pushed == '1'
+        run: |
+          curl -s -o /dev/null --max-time 15 "https://purge.jsdelivr.net/gh/devrajai/ArthaSaar@main/data/candles.json"
+          curl -s -o /dev/null --max-time 15 "https://purge.jsdelivr.net/gh/devrajai/ArthaSaar@main/data/symbols.json"
+
       - name: Deploy pages (new data)
         if: steps.cd.outputs.pushed == '1'
         run: gh workflow run pages.yml --ref main

@@ -1,0 +1,33 @@
+name: CDN purge (jsDelivr freshness)
+
+on:
+  schedule:
+    # har 2 ghante, 24x7 — data files ka CDN cache refresh
+    - cron: "20 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  purge:
+    name: Purge root data files
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Purge jsDelivr cache
+        run: |
+          n=0; fail=0
+          for f in data/*.json data/*.ics; do
+            [ -f "$f" ] || continue
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "https://purge.jsdelivr.net/gh/devrajai/ArthaSaar@main/$f")
+            n=$((n+1))
+            [ "$code" = "200" ] || { fail=$((fail+1)); echo "purge fail ($code): $f"; }
+            sleep 0.2
+          done
+          echo "purged: $n files, fail: $fail"
+          [ "$fail" -le 5 ] || exit 1

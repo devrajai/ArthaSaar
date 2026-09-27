@@ -1,0 +1,36 @@
+name: Semgrep scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # har Somvar raat ~12:00 IST (Mon 18:30 UTC)
+    - cron: "30 18 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: OWASP + secrets + CI (free, report-only)
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Semgrep
+        run: |
+          semgrep scan \
+            --config p/owasp-top-ten \
+            --config p/secrets \
+            --config p/ci \
+            --exclude data \
+            --exclude node_modules \
+            --exclude market-brain.apk \
+            --max-target-bytes 1000000
+      - name: Summary
+        if: always()
+        run: echo "Semgrep scan poora hua — findings upar logs me hain (report-only, build fail nahi hota)"

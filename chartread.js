@@ -1,19 +1,19 @@
-/* chartread.js — Chart Reading section: candles (Yahoo data) + pattern read + levels
+/* chartread.js \u2014 Chart Reading section: candles (Yahoo data) + pattern read + levels
    - lightweight-charts (TradingView OSS) se interactive chart, CDN fail ho to SVG fallback
    - patterns: Doji, Hammer, Shooting Star, Engulfing, Marubozu, Inside Bar
    - read: EMA20/50, VWAP, RSI, volume spike, trend
    - levels: prev close, open, H/L, VWAP, EMAs, swings
-   - NEW 26 Sep: Volume Profile (POC · Value Area · HVN/LVN) + points in price header */
+   - NEW 26 Sep: Volume Profile (POC \u00b7 Value Area \u00b7 HVN/LVN) + points in price header */
 (function () {
   "use strict";
 
   var SYMS = ["NIFTY", "BANKNIFTY", "RELIANCE", "HDFCBANK", "ICICIBANK",
               "INFY", "TCS", "SBIN", "TATASTEEL", "ITC"];
-  var IVS = ["1m", "3m", "5m", "15m", "30m", "1h", "4h", "1d"];
-  var IVL = {"1m": "1m", "3m": "3m", "5m": "5m", "15m": "15m", "30m": "30m",
-             "1h": "1h", "4h": "4h", "1d": "1D·5Y"};
-  var SRC = {"3m": "1m", "30m": "15m", "4h": "1h"};   /* derived intervals */
-  var BUCKET = {"3m": 180, "30m": 1800, "4h": 14400};  /* bucket seconds */
+  var IVS = ["1m", "3m", "5m", "10m", "15m", "30m", "1h", "4h", "6h", "8h", "1d"];
+  var IVL = {"1m": "1m", "3m": "3m", "5m": "5m", "10m": "10m", "15m": "15m", "30m": "30m",
+             "1h": "1h", "4h": "4h", "6h": "6h", "8h": "8h", "1d": "1D"};
+  var SRC = {"3m": "1m", "10m": "5m", "30m": "15m", "4h": "1h", "6h": "1h", "8h": "1h"};  /* derived intervals */
+  var BUCKET = {"3m": 180, "10m": 600, "30m": 1800, "4h": 14400, "6h": 21600, "8h": 28800};  /* bucket seconds */
   var REL = "https://github.com/devrajai/ArthaSaar/releases/download/candles/";
   var HDATA = {};   /* chunk cache: chunkId -> {SYMBOL: bars} */
   var SYMLIST = null;  /* data/symbols.json: {syms:[{s,n,c}], updated} */
@@ -26,7 +26,7 @@
     .replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   function n2(x) { return Number(x).toLocaleString("en-IN",
     { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-  function pct(x) { return (x >= 0 ? "+" : "−") + Math.abs(x).toFixed(2) + "%"; }
+  function pct(x) { return (x >= 0 ? "+" : "\u2212") + Math.abs(x).toFixed(2) + "%"; }
 
   /* ---------------- indicators ---------------- */
   function emaArr(a, n) {
@@ -113,22 +113,22 @@
         res.push({ s: s, b: bd, n: note + " (" + when + ")" });
       }
       if (body / rng < 0.08)
-        add("Doji", "neutral", "Indecision — buyers/sellers barabar, next candle decide karega");
+        add("Doji", "neutral", "Indecision \u2014 buyers/sellers barabar, next candle decide karega");
       if (body / rng > 0.9)
         add((up ? "Bullish" : "Bearish") + " Marubozu", up ? "bull" : "bear",
-            up ? "Poora body, wick nahi — strong buying" : "Poora body niche — strong selling");
+            up ? "Poora body, wick nahi \u2014 strong buying" : "Poora body niche \u2014 strong selling");
       if (body > 0 && lw >= 0.55 * rng && uw <= 0.2 * rng && body <= 0.35 * rng)
-        add("Hammer", "bull", "Niche lamba wick — giraya toh wapas khareed diya");
+        add("Hammer", "bull", "Niche lamba wick \u2014 giraya toh wapas khareed diya");
       if (body > 0 && uw >= 0.55 * rng && lw <= 0.2 * rng && body <= 0.35 * rng)
-        add("Shooting Star", "bear", "Upar lamba wick — rally pe bikwali");
+        add("Shooting Star", "bear", "Upar lamba wick \u2014 rally pe bikwali");
       if (i > 0) {
         var p = B(i - 1), pb = Math.abs(p.c - p.o);
         if (!up && p.c >= p.o && b.c < p.o && b.o >= p.c && body > pb)
-          add("Bearish Engulfing", "bear", "Laal candle ne kal ki hari poori nigal li — sellers ka control");
+          add("Bearish Engulfing", "bear", "Laal candle ne kal ki hari poori nigal li \u2014 sellers ka control");
         if (up && p.c <= p.o && b.c > p.o && b.o <= p.c && body > pb)
-          add("Bullish Engulfing", "bull", "Hari candle ne laal cover kar di — buyers wapas");
+          add("Bullish Engulfing", "bull", "Hari candle ne laal cover kar di \u2014 buyers wapas");
         if (b.h <= p.h && b.l >= p.l)
-          add("Inside Bar", "neutral", "Pichli candle ke andar squeeze — breakout aane wala");
+          add("Inside Bar", "neutral", "Pichli candle ke andar squeeze \u2014 breakout aane wala");
       }
     }
     return res;
@@ -164,17 +164,17 @@
     var trend;
     if (last > e20[n - 1] && e20[n - 1] > e50[n - 1]) trend = ["Uptrend", UP];
     else if (last < e20[n - 1] && e20[n - 1] < e50[n - 1]) trend = ["Downtrend", DN];
-    else if (last > e50[n - 1]) trend = ["Recovery try — EMA50 ke upar, EMA20 abhi paar nahi", "#d4af37"];
-    else trend = ["Weak — EMAs ke neeche", "#d4af37"];
+    else if (last > e50[n - 1]) trend = ["Recovery try \u2014 EMA50 ke upar, EMA20 abhi paar nahi", "#d4af37"];
+    else trend = ["Weak \u2014 EMAs ke neeche", "#d4af37"];
     h += lineBox("Trend (EMA20/50)", esc(trend[0]), trend[1]);
     h += lineBox("VWAP se", pct((last - vw[n - 1]) / vw[n - 1] * 100),
       last >= vw[n - 1] ? UP : DN);
     var rsi = r[n - 1];
-    h += lineBox("RSI(14)", rsi == null ? "—" :
+    h += lineBox("RSI(14)", rsi == null ? "\u2014" :
       rsi.toFixed(0) + (rsi > 70 ? " overbought" : rsi < 30 ? " oversold" : ""),
       rsi > 70 ? DN : rsi < 30 ? UP : null);
     h += lineBox("Volume (last vs 20-bar avg)", avgv ?
-      (lastv / avgv).toFixed(1) + "×" + (lastv > 2 * avgv ? " 🔥 spike" : "") : "—",
+      (lastv / avgv).toFixed(1) + "\u00d7" + (lastv > 2 * avgv ? " \ud83d\udd25 spike" : "") : "\u2014",
       lastv > 2 * avgv ? "#d4af37" : null);
     var pats = detect(d);
     if (!pats.length) h += lineBox("Pattern", "koi major nahi", null);
@@ -182,7 +182,7 @@
       for (var k = 0; k < Math.min(pats.length, 4); k++) {
         var col = pats[k].b === "bull" ? UP : pats[k].b === "bear" ? DN : "#d4af37";
         h += '<div class="note" style="margin-top:6px"><b style="color:' + col + '">' +
-          esc(pats[k].s) + '</b> — ' + esc(pats[k].n) + '</div>';
+          esc(pats[k].s) + '</b> \u2014 ' + esc(pats[k].n) + '</div>';
       }
     }
     h += lineBox("Aaj", esc(name) + " " + n2(last) + " (" + pct(chg) + " vs prev close)",
@@ -199,7 +199,7 @@
     }
     var vw = vwapArr(d), e20 = emaArr(d.c, 20), e50 = emaArr(d.c, 50);
     var h = "";
-    h += lineBox("Prev close (pivot)", pc ? n2(pc) : "—", "#d4af37");
+    h += lineBox("Prev close (pivot)", pc ? n2(pc) : "\u2014", "#d4af37");
     h += lineBox("Day high", n2(hi), DN);
     h += lineBox("Day low", n2(lo), UP);
     h += lineBox("VWAP", n2(vw[n - 1]), null);
@@ -210,13 +210,13 @@
     return h;
   }
   var GLOSS = [
-    ["Doji", "open ≈ close — market soch raha hai"],
-    ["Hammer", "niche wick 2× body — girane par kharidari aayi"],
-    ["Engulfing", "aaj ki candle ne kal ki poori dhak li — control badla"],
-    ["VWAP", "aaj ka average khareedna rate — uske upar = strong"],
+    ["Doji", "open \u2248 close \u2014 market soch raha hai"],
+    ["Hammer", "niche wick 2\u00d7 body \u2014 girane par kharidari aayi"],
+    ["Engulfing", "aaj ki candle ne kal ki poori dhak li \u2014 control badla"],
+    ["VWAP", "aaj ka average khareedna rate \u2014 uske upar = strong"],
     ["EMA20/50", "20 = short mood, 50 = trend; dono ke upar = uptrend"],
-    ["POC", "point of control — sabse zyada volume wala level, price uski taraf khinchta hai"],
-    ["Value Area", "70% volume ka band — price andar = balanced, bahar = trend"],
+    ["POC", "point of control \u2014 sabse zyada volume wala level, price uski taraf khinchta hai"],
+    ["Value Area", "70% volume ka band \u2014 price andar = balanced, bahar = trend"],
     ["HVN / LVN", "high volume node = magnet zone; low volume node = vacuum, wahan move tez hota hai"]
   ];
   function glossaryPanel() {
@@ -322,7 +322,7 @@
     });
   }
 
-  /* ---------------- volume profile (POC · value area · HVN/LVN) ---------------- */
+  /* ---------------- volume profile (POC \u00b7 value area \u00b7 HVN/LVN) ---------------- */
   function volProfile(d) {
     var n = d.t.length; if (n < 20) return null;
     var lo = Infinity, hi = -Infinity, tot = 0, tpo = false;
@@ -364,12 +364,12 @@
   function vpPanel(vp, last) {
     var h = "";
     var inVA = last >= vp.val && last <= vp.vah;
-    h += lineBox(vp.tpo ? "POC — control (TPO)" : "POC — control level", n2(vp.poc), last >= vp.poc ? UP : DN);
-    h += lineBox("Value Area (70% vol)", n2(vp.val) + " – " + n2(vp.vah), inVA ? "#d4af37" : null);
+    h += lineBox(vp.tpo ? "POC \u2014 control (TPO)" : "POC \u2014 control level", n2(vp.poc), last >= vp.poc ? UP : DN);
+    h += lineBox("Value Area (70% vol)", n2(vp.val) + " \u2013 " + n2(vp.vah), inVA ? "#d4af37" : null);
     h += lineBox("Price vs POC", pct((last - vp.poc) / vp.poc * 100), last >= vp.poc ? UP : DN);
-    if (vp.hvn.length) h += lineBox("HVN — magnet zones", vp.hvn.map(function (x) { return n2(x); }).join(" · "), UP);
-    if (vp.lvn.length) h += lineBox("LVN — vacuum, tez cross", vp.lvn.map(function (x) { return n2(x); }).join(" · "), DN);
-    h += '<div class="note" style="margin-top:6px">' + (vp.tpo ? "index me volume nahi aata — TPO (kitni der price raha) se bana hai" : "heavy volume wale levels = jahan bade players beth gaye · halka area jaldi cross hota hai") + ' — read hai, tip nahi</div>';
+    if (vp.hvn.length) h += lineBox("HVN \u2014 magnet zones", vp.hvn.map(function (x) { return n2(x); }).join(" \u00b7 "), UP);
+    if (vp.lvn.length) h += lineBox("LVN \u2014 vacuum, tez cross", vp.lvn.map(function (x) { return n2(x); }).join(" \u00b7 "), DN);
+    h += '<div class="note" style="margin-top:6px">' + (vp.tpo ? "index me volume nahi aata \u2014 TPO (kitni der price raha) se bana hai" : "heavy volume wale levels = jahan bade players beth gaye \u00b7 halka area jaldi cross hota hai") + ' \u2014 read hai, tip nahi</div>';
     return h;
   }
 
@@ -379,7 +379,7 @@
     var priceEl = document.getElementById("crPrice");
     if (!symsEl) return;
     if (!DATA || !DATA.syms) {
-      priceEl.innerHTML = '<div class="note">candles data abhi nahi mila — thodi der baad try karo.</div>';
+      priceEl.innerHTML = '<div class="note">candles data abhi nahi mila \u2014 thodi der baad try karo.</div>';
       return;
     }
     /* symbol chips */
@@ -413,17 +413,17 @@
     var last = d.c[d.c.length - 1];
     var chg = pc ? (last - pc) / pc * 100 : 0;
     priceEl.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">' +
-      '<div class="subhead">' + esc(cur.sym) + ' · ' + esc(cur.iv) + '</div>' +
+      '<div class="subhead">' + esc(cur.sym) + ' \u00b7 ' + esc(cur.iv) + '</div>' +
       '<div style="font-family:var(--mono);font-size:18px;font-weight:700">' + n2(last) +
-      ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "−") + Math.abs(last - pc).toFixed(1) + " pts · ") : "") + pct(chg) + '</span></div></div>' +
-      '<div class="note" style="margin:2px 0 8px">updated ' + esc(DATA.updated) + ' · Yahoo free EOD/intraday</div>';
+      ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "\u2212") + Math.abs(last - pc).toFixed(1) + " pts \u00b7 ") : "") + pct(chg) + '</span></div></div>' +
+      '<div class="note" style="margin:2px 0 8px">updated ' + esc(DATA.updated) + ' \u00b7 Yahoo free EOD/intraday</div>';
     drawChart(cur.sym, d, chg);
     document.getElementById("crRead").innerHTML = readPanel(cur.sym, d, pc);
     document.getElementById("crLevels").innerHTML = levelsPanel(d, pc);
     var vp = volProfile(d);
     var vpEl = document.getElementById("crVP");
     if (vpEl) vpEl.innerHTML = vp ? vpPanel(vp, last) :
-      '<div class="note">is symbol ka volume data nahi mila — VP sirf wahan hota hai jahan volume aata hai.</div>';
+      '<div class="note">is symbol ka volume data nahi mila \u2014 VP sirf wahan hota hai jahan volume aata hai.</div>';
   }
 
   function renderDaily() {
@@ -441,10 +441,10 @@
       var last = d.c[d.c.length - 1];
       var chg = pc ? (last - pc) / pc * 100 : 0;
       document.getElementById("crPrice").innerHTML = '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">' +
-        '<div class="subhead">' + esc(cur.sym) + ' · 1D (5 saal)</div>' +
+        '<div class="subhead">' + esc(cur.sym) + ' \u00b7 1D</div>' +
         '<div style="font-family:var(--mono);font-size:18px;font-weight:700">' + n2(last) +
-        ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "\u2212") + Math.abs(last - pc).toFixed(1) + " pts · ") : "") + pct(chg) + '</span></div></div>' +
-        '<div class="note" style="margin:2px 0 8px">' + (d.t.length) + ' din ka data · EOD archive · roz market close ke baad update</div>';
+        ' <span style="color:' + (chg >= 0 ? UP : DN) + ';font-size:13px">' + (pc ? ((last - pc >= 0 ? "+" : "\u2212") + Math.abs(last - pc).toFixed(1) + " pts \u00b7 ") : "") + pct(chg) + '</span></div></div>' +
+        '<div class="note" style="margin:2px 0 8px">' + (d.t.length) + ' din ka data \u00b7 EOD archive \u00b7 roz market close ke baad update</div>';
       drawChart(cur.sym, d, chg);
       document.getElementById("crRead").innerHTML = readPanel(cur.sym, d, pc);
       document.getElementById("crLevels").innerHTML = levelsPanel(d, pc);
@@ -453,7 +453,7 @@
       if (vpEl) vpEl.innerHTML = vp ? vpPanel(vp, last) :
         '<div class="note">is symbol ka volume data nahi mila.</div>';
     }, function () {
-      document.getElementById("crPrice").innerHTML = '<div class="note">archive load nahi hua — thodi der baad try karo.</div>';
+      document.getElementById("crPrice").innerHTML = '<div class="note">archive load nahi hua \u2014 thodi der baad try karo.</div>';
     });
   }
 
@@ -473,26 +473,26 @@
 
   function mount() {
     if (document.getElementById("chartread")) return;
-    /* tile — GTI tile ke baad */
+    /* tile \u2014 GTI tile ke baad */
     try {
       var hg = document.querySelector("section#home .homegrid");
       var gtile = hg ? hg.querySelector('a[href="#gti"]') : null;
       var tile = document.createElement("a");
       tile.className = "tile";
       tile.href = "#chartread";
-      tile.innerHTML = '<span class="t-ic">🕯️</span><span class="t-nm">Chart Reading</span><span class="t-sb">candles · patterns · levels</span>';
+      tile.innerHTML = '<span class="t-ic">\ud83d\udd6f\ufe0f</span><span class="t-nm">Chart Reading</span><span class="t-sb">candles \u00b7 patterns \u00b7 levels</span>';
       if (gtile && gtile.nextSibling) hg.insertBefore(tile, gtile.nextSibling);
       else if (hg) hg.appendChild(tile);
     } catch (e) {}
-    /* section — footer se pehle */
+    /* section \u2014 footer se pehle */
     var sec = document.createElement("section");
     sec.id = "chartread";
     sec.style.display = "none";
     sec.innerHTML =
-      '<a class="backbtn" href="#home">⌂ Home</a>' +
-      '<h2>Chart Reading — candles · patterns · levels</h2>' +
+      '<a class="backbtn" href="#home">\u2302 Home</a>' +
+      '<h2>Chart Reading \u2014 candles \u00b7 patterns \u00b7 levels</h2>' +
       '<div style="position:relative;margin:6px 0">' +
-      '<input id="crSearch" type="text" placeholder="koi bhi NSE stock likho (TATAMOTORS, KPIT...) — 5 saal daily chart" ' +
+      '<input id="crSearch" type="text" placeholder="koi bhi NSE stock likho (TATAMOTORS, KPIT...) \u2014 5 saal daily chart" ' +
       'autocomplete="off" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:10px;border:1px solid rgba(125,180,255,.4);background:rgba(96,165,250,.08);color:inherit;font-size:13px">' +
       '<div id="crSugg" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:60;max-height:220px;overflow-y:auto;background:#161b26;border:1px solid rgba(125,180,255,.35);border-radius:0 0 10px 10px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>' +
       '</div>' +
@@ -503,9 +503,9 @@
       '<div class="card"><div class="subhead">Aaj ka read</div><div id="crRead"></div></div>' +
       '<div class="card"><div class="subhead">Levels</div><div id="crLevels"></div></div>' +
       '</div>' +
-      '<div class="card"><div class="subhead">Volume Profile — heavy volume zones</div><div id="crVP"></div></div>' +
-      '<div class="card"><div class="subhead">Padho — pattern glossary</div><div id="crGloss"></div></div>' +
-      '<div class="footer-note">data: Yahoo (free) · 1m/3m/5m = aaj, 15m/30m = 5 din, 1h/4h = 1 mahina, 1D = 5 saal (sab NSE stocks) · patterns sirf read hai, tip nahi</div>';
+      '<div class="card"><div class="subhead">Volume Profile \u2014 heavy volume zones</div><div id="crVP"></div></div>' +
+      '<div class="card"><div class="subhead">Padho \u2014 pattern glossary</div><div id="crGloss"></div></div>' +
+      '<div class="footer-note">data: Yahoo (free) \u00b7 1m\u201310m = aaj, 15m/30m = 5 din, 1h\u20138h = 1 mahina, 1D = daily archive (1M/1Y/5Y/MAX range) \u00b7 patterns sirf read hai, tip nahi</div>';
     var foot = document.querySelector("footer");
     if (foot && foot.parentNode) foot.parentNode.insertBefore(sec, foot);
     else document.body.appendChild(sec);
@@ -575,6 +575,14 @@
     loadSymbols().then(bindSearch, function () {});
     document.addEventListener("click", onClick, false);
   }
+
+  /* external control handle \u2014 range switching without page reload (crtime.js) */
+  window.__CR__ = {
+    getCur: function () { return cur; },
+    setIv: function (v) { cur.iv = v; },
+    render: function () { render(); },
+    clearCache: function () { HDATA = {}; }
+  };
 
   if (document.readyState === "loading")
     document.addEventListener("DOMContentLoaded", mount);

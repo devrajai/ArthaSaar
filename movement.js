@@ -62,7 +62,7 @@
     var c = document.createElement("div");
     c.className = "card"; c.id = "mbMove"; c.style.marginTop = "14px";
     var first = sec.querySelector(".card");
-    if (first) sec.insertBefore(c, first); else sec.appendChild(c);
+    if (first && first.parentNode === sec) sec.insertBefore(c, first); else sec.appendChild(c);
     try { build(c); } catch (e) { c.innerHTML = '<div class="subhead">Market Movement Analysis</div><div class="note">error</div>'; }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();

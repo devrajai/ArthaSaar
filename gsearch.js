@@ -1,19 +1,19 @@
-/* gsearch.js v3 — all-in-one search: koi bhi keyword likho (OI, GTI, Radar, X-Ray,
+/* gsearch.js v3 \u2014 all-in-one search: koi bhi keyword likho (OI, GTI, Radar, X-Ray,
    RELIANCE...) -> feature ya stock ka result. Home + Dashboard dono pe dikhta hai. */
 (function () {
-  /* [keywords, display title, section id] — id "find:" hone par runtime resolve */
+  /* [keywords, display title, section id] \u2014 id "find:" hone par runtime resolve */
   var FEAT = [
-    ["oi option chain pcr max pain walls expiry put call", "OI — Option Chain + PCR", "gti"],
+    ["oi option chain pcr max pain walls expiry put call", "OI \u2014 Option Chain + PCR", "gti"],
     ["greeks theta delta gamma vega option premium calculator", "Greeks Calculator", "find:grQ"],
     ["gti zone manish indicator green", "GTI Zones", "gti"],
     ["xray x ray market xray evening closing analysis", "Market X-Ray (evening)", "dash"],
-    ["chart candle pattern level support resistance volume profile alert", "Chart Reading — any stock", "chartread"],
+    ["chart candle pattern level support resistance volume profile alert", "Chart Reading \u2014 any stock", "chartread"],
     ["global radar world us market dow nasdaq crude gold dollar fed", "Global Radar", "global"],
     ["screener filter scan rsi breakout 52w", "Screener", "screener"],
     ["heatmap sector map heat sectoral", "Sector Map", "heatmap"],
     ["index indices nifty sensex bank midcap smallcap pe pb", "Indices", "indices"],
     ["fundamental fundamentals pe roe debt", "Fundamentals", "fundamentals"],
-    ["company card stock quote profile", "Company Card — search any stock", "company"],
+    ["company card stock quote profile", "Company Card \u2014 search any stock", "company"],
     ["portfolio holdings", "Portfolio", "portfolio"],
     ["futures rollover premium basis", "Futures", "futures"],
     ["news headline digest", "News", "news"],
@@ -63,25 +63,31 @@
     var wrap = document.createElement("div");
     wrap.style.cssText = "position:relative;margin:12px 0 4px";
     wrap.innerHTML =
-      '<input type="text" placeholder="Search anything — OI, GTI, Radar, X-Ray, RELIANCE..." ' +
+      '<input type="text" placeholder="Search anything \u2014 OI, GTI, Radar, X-Ray, RELIANCE..." ' +
       'autocomplete="off" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:12px;' +
       'border:1px solid rgba(125,180,255,.5);background:rgba(96,165,250,.1);color:inherit;font-size:14px">' +
       '<div class="gsbox" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:80;max-height:260px;' +
       'overflow-y:auto;background:#161b26;border:1px solid rgba(125,180,255,.4);border-radius:0 0 12px 12px;' +
       'box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>';
-    /* home me tiles ke theek upar, dash me top — aur position locked (moving bug fix) */
+    /* home me tiles ke theek upar, dash me top \u2014 aur position locked (moving bug fix) */
     var anchor = sec.querySelector(".homegrid") || sec.firstChild;
     sec.insertBefore(wrap, anchor);
     /* guard: koi aur script position khiska de to wapas set karo */
-    setInterval(function () {
-      if (!wrap.parentNode || wrap.parentNode !== sec) {
-        var a2 = sec.querySelector(".homegrid") || sec.firstChild;
-        sec.insertBefore(wrap, a2);
-        return;
-      }
-      var want = sec.querySelector(".homegrid") || sec.firstChild;
-      if (wrap.nextSibling !== want) sec.insertBefore(wrap, want);
-    }, 900);
+    (function guard() {  /* dtfix purane setInterval kill karta hai isliye setTimeout chain */
+      setTimeout(function () {
+        try {
+          if (!wrap.parentNode || wrap.parentNode !== sec) {
+            var a2 = sec.querySelector(".homegrid") || sec.firstChild;
+            if (a2 && a2.parentNode === sec) sec.insertBefore(wrap, a2);
+            else sec.appendChild(wrap);
+          } else {
+            var want = sec.querySelector(".homegrid") || sec.firstChild;
+            if (want && want.parentNode === sec && wrap.nextSibling !== want) sec.insertBefore(wrap, want);
+          }
+        } catch (e) {}
+        guard();
+      }, 900);
+    })();
 
     var inp = wrap.querySelector("input");
     var box = wrap.querySelector(".gsbox");
@@ -123,11 +129,11 @@
           out += '<div data-gs-sym="' + esc(it.s) + '" style="padding:9px 12px;cursor:pointer;' +
             'border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:8px">' +
             '<b style="font-size:13px">' + esc(it.s) + '</b>' +
-            '<span class="note" style="font-size:11px;text-align:right">' + esc(it.n) + ' · chart</span></div>';
+            '<span class="note" style="font-size:11px;text-align:right">' + esc(it.n) + ' \u00b7 chart</span></div>';
           n++; m++;
         }
       }
-      if (!out) out = '<div class="note" style="padding:10px 12px">kuch nahi mila — try: gti, oi, xray, radar</div>';
+      if (!out) out = '<div class="note" style="padding:10px 12px">kuch nahi mila \u2014 try: gti, oi, xray, radar</div>';
       box.innerHTML = out;
       box.style.display = "block";
     }
@@ -179,4 +185,34 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", mount);
   } else { mount(); }
+})();
+
+/* ---------- landing redirect fix (early load): refresh pe wapas isi section me ----------
+   oldapp har load pe hash strip karke home pe bhejta tha. last section
+   sessionStorage me yaad rehta hai (index.html inline save + hashchange).
+   Section milte hi turant route kar dete hain \u2014 home flash na dikhe. */
+(function () {
+  "use strict";
+  var lastSec = "";
+  try { lastSec = window.sessionStorage.getItem("crsec") || ""; } catch (e) {}
+  if (!lastSec || lastSec === "home" || lastSec === "lock") return;
+  window.addEventListener("hashchange", function () {
+    var h = (location.hash || "").replace("#/", "#");
+    var id = h.replace("#", "").split("/")[0];
+    if (id && id !== "lock") { try { window.sessionStorage.setItem("crsec", id); } catch (e) {} }
+  });
+  var n = 0;
+  (function tick() {  /* dtfix-safe: setTimeout chain, setInterval nahi */
+    setTimeout(function () {
+      n++;
+      var cur = "";
+      try { cur = (location.hash || "").replace("#/", "#").replace("#", "").split("/")[0]; } catch (e) {}
+      if (cur !== lastSec && document.getElementById(lastSec)) {
+        try { location.hash = "#" + lastSec; } catch (e) {}
+        return;
+      }
+      if (cur === lastSec || n > 400) return;
+      tick();
+    }, 150);
+  })();
 })();

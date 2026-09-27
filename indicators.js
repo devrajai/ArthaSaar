@@ -392,56 +392,94 @@
     ch.parentNode.insertBefore(d, ch.nextSibling);
   }
 
-  /* ================= LightweightCharts hook ================= */
-  function wrapLib(L) {
-    if (!L || L.__asind) return L;
-    try {
-      var oc = L.createChart;
-      L.createChart = function () {
-        var ch = oc.apply(L, arguments);
+  /* ================= LightweightCharts hook =================
+     FIX (v2): UMD build pehle `window.LightweightCharts = {}` set karti hai,
+     factory uske BAAD populate karta hai. Purana code setter me turant wrap
+     karta tha — tab createChart hota hi nahi tha => chart capture fail =>
+     chips dabane par kuch nahi hota tha.
+     Ab: setter sirf raw store karta hai, microtask (script khatam hone ke
+     baad) me populated lib ki WRAPPED COPY banti hai. Original lib kabhi
+     mutate nahi hoti (frozen exports pe bhi safe). */
+  function wrapChartFactory(L, orig) {
+    return function () {
+      var ch = orig.apply(L, arguments);
+      try {
         var isMain = false;
         try { isMain = arguments.length > 0 && arguments[0] === document.getElementById("crChart"); } catch (e) {}
         if (isMain) chart = ch;
         var oacs = ch.addCandlestickSeries;
-        ch.addCandlestickSeries = function () {
-          var s = oacs.apply(ch, arguments);
-          if (isMain) {
-            ser = s;
-            var osd = s.setData;
-            s.setData = function () {
-              var r = osd.apply(s, arguments);
-              setTimeout(applyIndicators, 0);
-              return r;
-            };
-          }
-          return s;
-        };
-        return ch;
-      };
-      try { Object.defineProperty(L, "__asind", { value: 1 }); } catch (e) { L.__asind = 1; }
-    } catch (e) {}
-    return L;
+        if (typeof oacs === "function") {
+          ch.addCandlestickSeries = function () {
+            var s = oacs.apply(ch, arguments);
+            if (isMain) {
+              ser = s;
+              var osd = s.setData;
+              if (typeof osd === "function") {
+                s.setData = function () {
+                  var r = osd.apply(s, arguments);
+                  setTimeout(applyIndicators, 0);
+                  return r;
+                };
+              }
+            }
+            return s;
+          };
+        }
+      } catch (e) {}
+      return ch;
+    };
   }
-  if (typeof window.LightweightCharts !== "undefined") {
-    wrapLib(window.LightweightCharts);
-  } else {
+  function buildWrapped(L) {
     try {
-      var _v;
+      if (!L || typeof L.createChart !== "function") return null;
+      var w = {};
+      for (var k in L) w[k] = L[k];
+      w.createChart = wrapChartFactory(L, L.createChart);
+      w.__asind = 1;
+      return w;
+    } catch (e) { return null; }
+  }
+  (function initHook() {
+    var cur = null;
+    try { cur = window.LightweightCharts; } catch (e) {}
+    if (cur) {
+      /* lib pehle se loaded — seedha wrapped copy assign karo */
+      if (cur.__asind) return;
+      var w0 = buildWrapped(cur);
+      if (w0) { try { window.LightweightCharts = w0; } catch (e) {} }
+      return;
+    }
+    /* lib baad me aayegi (chartread loadLib) — accessor lagao.
+       NOTE: getter undefined tab tak return karta hai jab tak wrap na ho,
+       taaki chartread ka `typeof` check galat ho jaye — isliye getter turant
+       _raw de deta hai, sirf createChart wrapped copy se aata hai. */
+    var _raw = null, _v = null;
+    try {
       Object.defineProperty(window, "LightweightCharts", {
         configurable: true,
-        get: function () { return _v; },
-        set: function (nv) { _v = wrapLib(nv); }
+        get: function () { return _v || _raw; },
+        set: function (nv) {
+          _raw = nv;
+          /* factory abhi exports populate kar raha hai — script khatam hone do */
+          Promise.resolve().then(function () {
+            if (_v) return;
+            var w = buildWrapped(nv);
+            if (w) _v = w;
+          });
+        }
       });
     } catch (e) {}
-    var _n = 0;
-    var _iv = setInterval(function () {
-      if (window.LightweightCharts) {
-        if (!window.LightweightCharts.__asind) wrapLib(window.LightweightCharts);
-        else { clearInterval(_iv); return; }
+    var n = 0;
+    var iv = setInterval(function () {
+      if (_v) { clearInterval(iv); return; }
+      var c = window.LightweightCharts;
+      if (c && typeof c.createChart === "function") {
+        var w2 = buildWrapped(c);
+        if (w2) { _v = w2; clearInterval(iv); return; }
       }
-      if (++_n > 200) clearInterval(_iv);
+      if (++n > 200) clearInterval(iv);
     }, 300);
-  }
+  })();
 
   /* mount: chartread ke section banne ke baad UI inject */
   function start() {

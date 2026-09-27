@@ -1,4 +1,4 @@
-/* gsearch.js v2 — all-in-one search: koi bhi keyword likho (OI, GTI, Radar, X-Ray,
+/* gsearch.js v3 — all-in-one search: koi bhi keyword likho (OI, GTI, Radar, X-Ray,
    RELIANCE...) -> feature ya stock ka result. Home + Dashboard dono pe dikhta hai. */
 (function () {
   /* [keywords, display title, section id] — id "find:" hone par runtime resolve */
@@ -69,7 +69,19 @@
       '<div class="gsbox" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:80;max-height:260px;' +
       'overflow-y:auto;background:#161b26;border:1px solid rgba(125,180,255,.4);border-radius:0 0 12px 12px;' +
       'box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>';
-    sec.insertBefore(wrap, sec.firstChild);
+    /* home me tiles ke theek upar, dash me top — aur position locked (moving bug fix) */
+    var anchor = sec.querySelector(".homegrid") || sec.firstChild;
+    sec.insertBefore(wrap, anchor);
+    /* guard: koi aur script position khiska de to wapas set karo */
+    setInterval(function () {
+      if (!wrap.parentNode || wrap.parentNode !== sec) {
+        var a2 = sec.querySelector(".homegrid") || sec.firstChild;
+        sec.insertBefore(wrap, a2);
+        return;
+      }
+      var want = sec.querySelector(".homegrid") || sec.firstChild;
+      if (wrap.nextSibling !== want) sec.insertBefore(wrap, want);
+    }, 900);
 
     var inp = wrap.querySelector("input");
     var box = wrap.querySelector(".gsbox");

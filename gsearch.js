@@ -1,5 +1,5 @@
-/* gsearch.js — all-in-one search: koi bhi keyword likho (OI, GTI, Radar, X-Ray,
-   RELIANCE...) -> feature ya stock ka result. "dum person friendly" (user request). */
+/* gsearch.js v2 — all-in-one search: koi bhi keyword likho (OI, GTI, Radar, X-Ray,
+   RELIANCE...) -> feature ya stock ka result. Home + Dashboard dono pe dikhta hai. */
 (function () {
   /* [keywords, display title, section id] — id "find:" hone par runtime resolve */
   var FEAT = [
@@ -58,24 +58,21 @@
     return "";
   }
 
-  function mount() {
-    var home = document.getElementById("home");
-    if (!home) return;
-    var tag = home.querySelector(".tagline");
+  function mountInto(sec) {
+    if (!sec) return;
     var wrap = document.createElement("div");
     wrap.style.cssText = "position:relative;margin:12px 0 4px";
     wrap.innerHTML =
-      '<input id="gq" type="text" placeholder="Search anything — OI, GTI, Radar, X-Ray, RELIANCE..." ' +
+      '<input type="text" placeholder="Search anything — OI, GTI, Radar, X-Ray, RELIANCE..." ' +
       'autocomplete="off" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:12px;' +
       'border:1px solid rgba(125,180,255,.5);background:rgba(96,165,250,.1);color:inherit;font-size:14px">' +
-      '<div id="gs" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:80;max-height:260px;' +
+      '<div class="gsbox" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:80;max-height:260px;' +
       'overflow-y:auto;background:#161b26;border:1px solid rgba(125,180,255,.4);border-radius:0 0 12px 12px;' +
       'box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>';
-    if (tag && tag.nextSibling) home.insertBefore(wrap, tag.nextSibling);
-    else home.insertBefore(wrap, home.firstChild);
+    sec.insertBefore(wrap, sec.firstChild);
 
-    var inp = document.getElementById("gq");
-    var box = document.getElementById("gs");
+    var inp = wrap.querySelector("input");
+    var box = wrap.querySelector(".gsbox");
 
     function draw() {
       var q = inp.value.trim().toLowerCase();
@@ -98,11 +95,11 @@
           if (hit) break;
         }
         if (!hit) continue;
-        var sec = resolveSec(FEAT[i][2]);
-        out += '<div data-gs-sec="' + esc(sec) + '" style="padding:9px 12px;cursor:pointer;' +
+        var sec2 = resolveSec(FEAT[i][2]);
+        out += '<div data-gs-sec="' + esc(sec2) + '" style="padding:9px 12px;cursor:pointer;' +
           'border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:8px">' +
           '<b style="font-size:13px">' + esc(FEAT[i][1]) + '</b>' +
-          '<span class="note" style="font-size:11px;align-self:center">' + esc(sec) + '</span></div>';
+          '<span class="note" style="font-size:11px;align-self:center">' + esc(sec2) + '</span></div>';
         n++;
       }
       var m = 0;
@@ -138,16 +135,16 @@
       }, 500);
     }
 
-    function goSec(sec) {
+    function goSec(sec2) {
       box.style.display = "none";
-      if (sec) location.hash = "#" + sec;
+      if (sec2) location.hash = "#" + sec2;
     }
 
     inp.addEventListener("input", draw);
     inp.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
-        var f = box.querySelector("[data-gs-sec], [data-gs-sym]");
-        if (f) f.click();
+        var fv = box.querySelector("[data-gs-sec], [data-gs-sym]");
+        if (fv) fv.click();
       }
     });
     document.addEventListener("click", function (e) {
@@ -155,11 +152,16 @@
       while (t && t !== document.body && !t.getAttribute) t = t.parentNode;
       if (!t || !t.getAttribute) { box.style.display = "none"; return; }
       var sym = t.getAttribute("data-gs-sym");
-      var sec = t.getAttribute("data-gs-sec");
+      var sec2 = t.getAttribute("data-gs-sec");
       if (sym) { goStock(sym); return; }
-      if (sec !== null && t.hasAttribute && t.hasAttribute("data-gs-sec")) { goSec(sec); return; }
+      if (sec2 !== null && t.hasAttribute && t.hasAttribute("data-gs-sec")) { goSec(sec2); return; }
       if (!wrap.contains(t)) box.style.display = "none";
     });
+  }
+
+  function mount() {
+    mountInto(document.getElementById("home"));
+    mountInto(document.getElementById("dash"));
   }
 
   if (document.readyState === "loading") {

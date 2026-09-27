@@ -347,11 +347,11 @@
     wrap.style.cssText = "margin-top:2px";
     var html = '<span style="font-size:11px;opacity:.75;margin-right:4px">📊 Indicators</span>';
     OVERLAYS.forEach(function (x) {
-      html += '<button class="chip' + (ACTIVE.overlays.indexOf(x.id) >= 0 ? " on" : "") + '" data-asind="' + x.id + '">' + x.name + '</button>';
+      html += '<button class="chip' + (ACTIVE.overlays.indexOf(x.id) >= 0 ? " on" : "") + '" data-asind="' + x.id + '">' + x.name + '</button>'
     });
     html += '<span style="font-size:11px;opacity:.75;margin:0 4px">Panel</span>';
     PANELS.forEach(function (x) {
-      html += '<button class="chip' + (ACTIVE.panel === x.id ? " on" : "") + '" data-aspan="' + x.id + '">' + x.name + '</button>';
+      html += '<button class="chip' + (ACTIVE.panel === x.id ? " on" : "") + '" data-aspan="' + x.id + '">' + x.name + '</button>'
     });
     wrap.innerHTML = html;
     ivs.parentNode.insertBefore(wrap, ivs.nextSibling);
@@ -450,14 +450,15 @@
       return;
     }
     /* lib baad me aayegi (chartread loadLib) — accessor lagao.
-       NOTE: getter undefined tab tak return karta hai jab tak wrap na ho,
-       taaki chartread ka `typeof` check galat ho jaye — isliye getter turant
-       _raw de deta hai, sirf createChart wrapped copy se aata hai. */
+       FIX (v3): getter kabhi null return NA kare — typeof null === "object"
+       hota hai aur chartread ka loadLib check (`typeof LightweightCharts
+       !== "undefined"`) jhootha pass ho jata tha => lib kabhi load nahi
+       hoti thi => hamesha SVG fallback + indicators no-op. Isliye || undefined. */
     var _raw = null, _v = null;
     try {
       Object.defineProperty(window, "LightweightCharts", {
         configurable: true,
-        get: function () { return _v || _raw; },
+        get: function () { return _v || _raw || undefined; },
         set: function (nv) {
           _raw = nv;
           /* factory abhi exports populate kar raha hai — script khatam hone do */

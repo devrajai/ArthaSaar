@@ -1,20 +1,33 @@
 {
- "updated": "2026-09-27T19:33:24.227094+05:30",
+ "updated": "2026-09-28T01:33:38.163928+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
- "overall": 51,
+ "overall": 50,
  "tag": "Neutral",
  "counted": 60,
  "pos": [
   {
-   "t": "Prediction: Sept. 30 Will Be a Big Day for the Stock Market. Here Are 2 Stocks to Buy Hand Over Fist Before That",
-   "s": 95,
-   "pub": "Yahoo Finance",
+   "t": "Qualcomm's non-handset growth surges, raising l...",
+   "s": 78,
+   "pub": "pluang.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPU1JESUNnY0FzYVdYQXFKc3BYODU4ZVFTYzNiekx0NkdFZHk4bnNHR05tdGlVUUdyYnBsdlJvQWxib0s4ZGFYWDlFMmJ4ZFQyS1V1Q1JVUUdMTGZFTkNpdmNKQ1dUbFhLLTlPaXBwU1N2X1NWVW52a091VXNlUm16OEZtTHNXWmppOG4wNWhnZDhGeEVwRUE?oc=5",
-   "syms": [
-    "IDEA"
-   ],
-   "src": "article"
+   "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOVUxQZ2NjVjFZdDEyUUw4dkNZa1M1am1UbDF5cTYxMWFtckJXaXZCMjlSX0RRTi1Yem8wVjFYZ2xPemlhN3BObWdhYzdJRDNfekY3X21ZdWZlRk1yN2dfRlhldzc3Q0U3UUlpeW9MVmJ6MjlpVFYtOU9yS2FzdjlVS2t2aTM0QzBxaC0w?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Saudi stock market index closes higher",
+   "s": 64,
+   "pub": "The Peninsula Qatar",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNYVBBbWJFZEdUd3BJai0wY0tFT1pfa2FNclFob2xraC1NbjJIemVhcmV6UWpNUklRWkFYQ2RwbzloV19vcGh5ZC1ZYTJaTnR1MmUwNm15ekFaY3JoRjZPSHh0ZGZvYjdyZUFMcUlSUkJBSmpYdTd0ZFlRbEFwX0dwOXYtUVY4QzZCZjNndXRVNG5CbWc?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Dow Jones Futures Due Amid Trump Iran Comments; Micron, SpaceX, Tesla Eye Buy Points",
+   "s": 64,
+   "pub": "Investor's Business Daily",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPQ0huZkZtNEszTkRUY1NtZDBtZGR4NDdNbXpHSzg5UHdCMVNJS3NQTnQ4RGdvd1oxeGtwdGNNQng1cjJ1OUc2b2FZT2t3MldWd1hXV0tOMDB3NjJfeS1IRUtoNFF2NkpvTWdCbjRIRVB3NmVfVGtxbDNBYnNmMVhNb2pfN3RHby1walpzclpqODFKOF8tSThIRUNhYlduYXRpLVdLWllCN0w3ZG9GWEpiamJqYXAzVlAwX0c5RVJWWWRPbElldkdja0JR?oc=5",
+   "syms": []
   },
   {
    "t": "Citi tells clients to buy the next stock market dip as AI trade gathers momentum ahead of midterms",
@@ -26,48 +39,24 @@
     "IDEA"
    ],
    "src": "article"
-  },
-  {
-   "t": "Down 23%, Should You Buy the Dip on Sandisk Stock?",
-   "s": 64,
-   "pub": "The Motley Fool",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNTVhXUWV2WmYzZjNrenNtWUgtSVYtWXJOYjFkMWFIbFA4RlpYaWZvU2tES1dfZXNlVzhXMXJPc29xOVY0R0QzTG9vZk15TFFNa2d2R2ZjOWlOaFlCVi1OMFdjeHJGT2lURHNWdXV3OFp0cU1FdzNWZTd2Y0psanRpM3QwamRRTm8?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Cochin Shipyard, Voltas, BEL, Tata Steel, Axis Bank, Vedanta Aluminium: Top stocks to buy | Target, SL by Ganesh Dongre",
-   "s": 64,
-   "pub": "livemint.com",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMijAJBVV95cUxOUWVNMzNGS3VPelFWNUh5RGRTUzJHR0ozV1h3V0tXeHhKNGlROTZWLU1iRlMtd2FSNnIxUlBuUXFFdEJjNkp5bTMyQ3pkejN0LVA5VS1kT1VzdWNDeEZUTkQzUGdOMm5odU5Fck5XdHBaa0NFOExadVZhT0NkdDc1aHd5bzdQMWJ3aE51MHBxSUs2REJqU2tON1hhd2g4YllCR3E5ZzJ2QWVPclZ4dW50bWpCaG5IVWlaaWlDMkNkNXRTcDlvcE10bXZtQWQ0RzZkRlpYd2tvbnRsNE1MV1Z1NmRjVjFHbHNGQnNRLUVxUGw3ZC1jc1dVdDFfNEZhemQ1N1V1RENOOFpkWEd50gGSAkFVX3lxTE1FN2g5ZC1NdjBGb0RQNVU2aE5tbDd5YnRRamtpQ21wNHhYNEhGNWJvRk5RSGs4Wkh0SWJ4b3pEU05jZV9oN3BOaURBejJMQWlneTZIRXRaTFRsMF9QZUhkLVZBaDRSa3lKa24tR0NFd3hXamUyYUU1Q0lRMlNzRnRHLVFVRWZCS3BsS2lIQVNPdlV1dzItZmpzRnJFc2dqc2VxN194WTlRQ0g5aVUzQjdFeEZZVzZsejR1Nmd6ZmZQclowbElyUVpLWHNCai1HY3NJZ2F1eHcwUHI4TTFlc3FtUmMtMFZTQXBNMVBxdGVkblNQY2dfekFaaFNIcEhTRVpvc1ZucUYwYjZqT0RPQkR4N0E?oc=5",
-   "syms": [
-    "TATASTEEL",
-    "BEL",
-    "AXISBANK",
-    "VEDL"
-   ]
   }
  ],
  "neg": [
   {
-   "t": "Rate Market Fear Gauge Is Warning for Corporates: Credit Weekly",
-   "s": 22,
-   "pub": "livemint.com",
+   "t": "'Brace for more correction': Mkt outlook cautious after 7 weeks of decline",
+   "s": 36,
+   "pub": "Business Standard",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQY0NFSWNtYl85aGxET3h1Vm84TDZidUd4UmZ6d1J3dUYxczBBbWVPLW1VV3pDaktNMDJZQ3VXVnJ4Ml9OYnZtcTU4T3Vsb01qS1dEUEEtY2xURlFpbmdZY2F3ZHBJeG1Bbl9kNWItNktZUWVVZ2xINTlVelI1V3ZnaUtwVms0UUxfeE1uUmgtb0lXTUNFN3MteU94RHExRDNLYXJVcnRFNi1nZjRhMnE2X3BKNnrSAboBQVVfeXFMTWZmcFMyaGJNN0lCOWhmQ0Q5N1RMbUFxOFplb0JnZmgyT2xBbWY5N2lFNUxheHRxVHpWYmNqUi1qNjN1ckgyVjR4ZURWM3hpZlRwUmNBMzNBdUJGUVNnTFdxUk83UVFvU1hTTk5hR09uZnN4NkY2b0FnMk40YnVES0VHS2lFS0VqUU5XQUthVUl2MEdQUVhXVzdWbEpNMkNZMWZLUFI0dG9oVS1uTHpaV2kyekw3NXJjSndR?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOOWlJeHdKOXRNOGdybU8xaThMVHFMdFZfa0I2SW1aS3E1dXplLVg4dktrdEhUSjFLU0JCaFVCeVptYnFvM2VxY1l4amtkOHY4RmhQVl9oNUEtLTdiQ2RYVEg4MTh2Q0ZQdDBkN2VHY3JPdW9JZGV5bThoZTI2Ny10RV9zYnhxMTZqQkplVWRJbS1OTHJ4aFhTN0JDbFd4blhPOXM4WXdxZllNSFdXeUZPaXU0bnR4ZEdZZ08tQTJibW1ES1lUNmxKTDJjd1ktWmFk0gHWAUFVX3lxTE1ZazZIY1IyeUszZ2pxM29ITXR3UXVzZ0xWMTcwb1FIaklGQ1F0d0RlMUg5QTZLS3NWYnpUZWMzdE53Rk96TFhoVGpVbXpSbWstUFhXZVJva2lvTjVMbHp1T0NuZkpiWl9SN1VuZUdMR0duM3lPcnk0Wk90b2FFZUNBLU5LV0FrMlY0aFZ6Ty1UdHRielMxTzBDa0hnaVNOdkZXX0Zpbk5jRURpQTZsOWtYTl9JQi1JNHRUUlRpcGc5bWFuWEJEZVhPaVg4V1dsRjBCcnFpRGc?oc=5",
    "syms": []
   },
   {
-   "t": "Weekly market wrap: NIFTY50, SENSEX falls for 7th consecutive week; Infosys, Bharti Airtel, others drag losses",
-   "s": 22,
-   "pub": "Upstox",
+   "t": "Warren Buffett Issued a Market Warning That History Says Investors Should Take Seriously",
+   "s": 36,
+   "pub": "Yahoo Finance",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNTzFkM05pMU5YQy1jcVVSbWtXSXVrRW80UzU0U3ZDYXhwQ3J0NmJmMFNDMTVuWW9IMEp4T0NWalg0TGl0MEtaQzQzeTRpNzZ5MHY4cjYxcXV3Sk4tZ3l1dTQybzJXakhSVUFyX2RtSTM1QTRwVi1nNGZXdkpfSlZUUTkwcVViYzkzai1uaFk3eS1xVlg0b2stQl94eGdza01BLU4wLTd4MmNBUDNKQzJURXNPQV9oYk5GdTNwSnlSal9Xb2V0ak9KZkRBM0VmcjROSGdSMjg4TS1fOU9iNzdFUi1JU3lvRndla3JHbmZSZUJGSnBoeUJyLQ?oc=5",
-   "syms": [
-    "INFY",
-    "BHARTIARTL"
-   ]
+   "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOUkN5ZHBNLTlVbmttSDBYU243QTA4S3ZHMVlhcEt5N2JlV2hRTW14cHptYzUwMjlkLXh1M2JZaG9ZTmRWMU44NGFNLVlHdGZRc1pqUkRHNTFHU1V2cEIzT2JCRkowOS1nc0p1aWZ5VlN5QUFoaWdONG5KZDBkVDczY3cydTZjamFTcFhSclNyT3Z3WVRXOTZoalg1STJOaVBwSl93?oc=5",
+   "syms": []
   },
   {
    "t": "Prediction: A Stock Market Crash Is Coming. Here\u2019s the One Move You Should Make, According to History.",

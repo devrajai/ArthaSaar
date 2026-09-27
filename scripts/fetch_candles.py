@@ -9,6 +9,7 @@ Symbols:
   indices  : NIFTY, BANKNIFTY         -> 1m/5m/15m/1h
   F&O big  : RELIANCE, HDFCBANK, ICICIBANK, INFY, TCS,
              SBIN, TATASTEEL, ITC    -> 5m/15m/1h
+  crypto   : BTC                     -> 5m/15m/1h (24h -- ICT Asia box + NY KZ)
 
 Output: data/candles.json (column arrays -- compact)
   { "updated": "...", "syms": { "NIFTY": { "y":"^NSEI", "pc": 23447.8,
@@ -32,7 +33,8 @@ IDX = {"NIFTY": "^NSEI", "BANKNIFTY": "^NSEBANK", "SENSEX": "^BSESN",
       "FINNIFTY": "^CNXFIN", "MIDCPNIFTY": "^NSEMDCP50", "NIFTYIT": "^CNXIT"}
 STOCKS = ["RELIANCE", "HDFCBANK", "ICICIBANK", "INFY",
           "TCS", "SBIN", "TATASTEEL", "ITC"]
-YMAP = dict(IDX, **{s: s + ".NS" for s in STOCKS})
+CRYPTO = {"BTC": "BTC-USD"}  # 24h -- Asia box + NY kill zone ICT ke liye
+YMAP = dict(IDX, **{s: s + ".NS" for s in STOCKS}, **CRYPTO)
 
 # interval -> (yfinance period, symbols)
 PLAN = {
@@ -41,7 +43,6 @@ PLAN = {
     "15m": ("5d",  list(YMAP)),
     "1h":  ("1mo", list(YMAP)),
 }
-
 def batch(tickers, interval, period):
     """yfinance multi-ticker download -> {name: bars}"""
     df = yf.download(tickers, interval=interval, period=period,
@@ -70,7 +71,6 @@ def batch(tickers, interval, period):
             v.append(int(vol) if vol == vol and vol else 0)  # NaN-safe
         out[name] = {"t": t, "o": o, "h": h, "l": l, "c": c, "v": v}
     return out
-
 def prev_closes():
     """sab symbols ka prev close (daily 5d se)"""
     res = {}

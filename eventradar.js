@@ -4,6 +4,7 @@
    - LIVE sessions green + band hone ka countdown
    - closed = khulne ka countdown (weekend + midnight cross handled)
    - US/Europe ka DST (summer/winter) auto detect
+   - F&O expiry (aakhri Tuesday) + RBI MPC countdown
    Times sab IST me. Har 30 sec refresh. */
 (function () {
   "use strict";
@@ -122,6 +123,55 @@
     return "khulega " + fmtDur(nextStart(now, 555) - now) + " me";
   }
 
+  /* ---- countdowns: F&O expiry (NSE = mahine ka aakhri Tuesday) + RBI MPC ---- */
+  function fmtDays(ms) {
+    var d = Math.ceil(ms / 86400000);
+    return d <= 0 ? "aaj" : d + " din";
+  }
+  function nextExpiryTuesday(now) {
+    var y = now.getFullYear(), m = now.getMonth();
+    var last = new Date(y, m + 1, 0); /* aakhri din of month */
+    var back = (last.getDay() - 2 + 7) % 7; /* 2 = Tuesday */
+    var exp = new Date(last.getTime() - back * 86400000);
+    exp.setHours(15, 30, 0, 0);
+    if (exp <= now) {
+      last = new Date(y, m + 2, 0);
+      back = (last.getDay() - 2 + 7) % 7;
+      exp = new Date(last.getTime() - back * 86400000);
+      exp.setHours(15, 30, 0, 0);
+    }
+    return exp;
+  }
+  function extraCountdowns() {
+    var host = document.getElementById("evRadarExtra");
+    if (!host) return;
+    var now = new Date();
+    var h = '<div class="note" style="display:flex;justify-content:space-between"><span><b style="color:#f7b955">F&O EXPIRY</b> (NSE \u00b7 aakhri Tuesday)</span>' +
+      '<span style="font-family:var(--mono,monospace);font-size:10.5px">' + nextExpiryTuesday(now).toLocaleDateString("en-IN", { day: "2-digit", month: "short" }) + ' \u00b7 ' + fmtDays(nextExpiryTuesday(now) - now) + ' me</span></div>';
+    h += '<div class="note" style="display:flex;justify-content:space-between"><span><b style="color:#7db4ff">RBI MPC</b> meeting</span><span id="evRbiTxt" style="font-family:var(--mono,monospace);font-size:10.5px">dates check kar raha...</span></div>';
+    host.innerHTML = h;
+    fetch("data/events.json").then(function (r) { return r.json(); }).then(function (d) {
+      var best = null;
+      var all = (d.key_dates || []).concat(d.week || []);
+      for (var i = 0; i < all.length; i++) {
+        var e = all[i];
+        if (!e || !e.date || !/rbi|repo|monetary/i.test(String(e.title || "") + String(e.title_ist || ""))) continue;
+        if (e.date >= new Date().toISOString().slice(0, 10) && (!best || e.date < best.date)) best = e;
+      }
+      var el = document.getElementById("evRbiTxt");
+      if (!el) return;
+      if (best) {
+        var ms = new Date(best.date + "T10:00:00") - now;
+        var p = best.date.split("-"); el.textContent = p[2] + "/" + p[1] + " \u00b7 " + fmtDays(ms) + " me";
+      } else {
+        el.textContent = "agli meeting Events calendar me";
+      }
+    }).catch(function () {
+      var el = document.getElementById("evRbiTxt");
+      if (el) el.textContent = "events data nahi mila";
+    });
+  }
+
   function mount() {
     var sec = document.getElementById("events");
     if (!sec) return;
@@ -133,11 +183,13 @@
     card.innerHTML =
       '<div class="subhead">MARKET OPEN-CLOSE RADAR \u2014 aaj ke sessions</div>' +
       '<div id="evRadarBox"></div>' +
+      '<div id="evRadarExtra" style="margin-top:8px"></div>' +
       '<div class="footer-note" style="margin-top:6px">sab times IST \u00b7 sat-sun India band \u00b7 US/Europe ka summer-winter shift auto</div>';
     if (chips && chips.parentNode === sec) sec.insertBefore(card, chips);
     else sec.appendChild(card);
     draw();
-    setInterval(draw, 30000);
+    extraCountdowns();
+    setInterval(function () { draw(); extraCountdowns(); }, 30000);
   }
 
   var tries = 0;

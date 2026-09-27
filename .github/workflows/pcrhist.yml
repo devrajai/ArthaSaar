@@ -1,0 +1,61 @@
+name: PCR History
+on:
+  schedule:
+    # 20:05 IST Mon-Fri (futures data collect hone ke baad)
+    - cron: '5 14 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pcrhist
+  cancel-in-progress: false
+
+jobs:
+  append:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Append today's PCR
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          p = Path("data/pcr-history.json")
+          hist = json.loads(p.read_text()) if p.exists() else {"history": []}
+          try:
+              f = json.loads(Path("data/futures.json").read_text())
+              pcr = f.get("pcr", {}).get("nifty_pcr_oi")
+              mp = f.get("pcr", {}).get("nifty_max_pain")
+          except Exception:
+              pcr = None
+          if pcr is None:
+              raise SystemExit("no pcr in futures.json today")
+          today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+          h = hist["history"]
+          if h and h[-1]["d"] == today:
+              h[-1] = {"d": today, "pcr": pcr, "mp": mp}
+          else:
+              h.append({"d": today, "pcr": pcr, "mp": mp})
+          hist["history"] = h[-400:]
+          hist["updated"] = datetime.now(timezone.utc).isoformat()
+          p.write_text(json.dumps(hist, separators=(",", ":")))
+          print(f"pcr-history: {len(hist['history'])} entries, today pcr={pcr}")
+          PY
+
+      - name: Commit if changed
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add data/pcr-history.json
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "data: pcr history"
+          for i in 1 2 3 4 5; do
+            if git pull --rebase --autostash && git push; then exit 0; fi
+            sleep 10
+          done
+          echo "ERROR: push failed"; exit 1

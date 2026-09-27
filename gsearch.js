@@ -20,6 +20,7 @@
     ["event calendar result dividend board meeting", "Events", "events"],
     ["ipo gmp listing allotment subscribe grey market", "IPO", "ipo"],
     ["crypto btc eth bitcoin fear greed", "Crypto", "crypto"],
+    ["internals breadth ad line trin mcclellan advance decline", "Market Internals", "internals"],
     ["ai forecast timesfm prediction", "AI Brain \u00b7 Forecast", "aibrain"],
     ["aibrain ai brain mood stocks", "AI Brain", "aibrain"],
     ["filing filings sebi disclosure", "Filings", "filings"],

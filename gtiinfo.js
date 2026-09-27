@@ -1,6 +1,6 @@
 /* gtiinfo.js - GTI Complete Guide: sab GTI info ek jagah (Learn + GTI section) */
 (function () {
-  function esc(s) { return String(s == null ? "").replace(/[&<>"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   function build(id) {
     var d = document.createElement("details");
     d.className = "gl"; d.id = id; d.style.marginTop = "12px";

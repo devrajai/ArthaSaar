@@ -1,10 +1,23 @@
 /* gtiinfo.js - GTI Complete Guide: sab GTI info ek jagah (Learn + GTI section) */
 (function () {
-  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  function esc(s) { return String(s == null ? "").replace(/[&<>"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
   function build(id) {
     var d = document.createElement("details");
     d.className = "gl"; d.id = id; d.style.marginTop = "12px";
     var items = [
+      ["ICT Beginner Guide \u2014 CHOCH / BOS / Order Block / FVG simple bhasha me",
+       'Naye <b>ICT Terminal</b> (GTI section me sabse upar chart) ke tools \u2014 beginner ke liye ekdum seedha:<br><br>' +
+       '<b style="color:#ffd54d">CHOCH = Change of Character</b> (character badal gaya) \u2014 market ka MOOD switch ho gaya. Ab tak upar ja raha tha, ab neeche jaayega (ya ulta). Chart pe yellow arrow = pehla reversal signal. Sabse important marker.<br><br>' +
+       '<b style="color:#34d399">BOS = Break of Structure</b> (structure toda) \u2014 trend waise hi chal raha hai, bas naya high/low bana diya. Trend CONTINUE hone ki confirmation. Green/red arrow.<br><br>' +
+       '<b style="color:#f87171">PDH / PDL = Previous Day High / Low</b> \u2014 kal ka highest/lowest point, aaj ki deewar. PDH ke UPAR gaya = buyers strong, PDL ke NEECHE gira = sellers strong. Rule: in lines ke PAAS mat trade karo, break ke BAAD karo.<br><br>' +
+       '<b style="color:#fbbf24">Weekly / Monthly H/L</b> \u2014 same deewar, lekin badi. Jitna bada level, utna tagdi deewar \u2014 bade moves yahin se aate/rukte hain.<br><br>' +
+       '<b style="color:#60a5fa">ASIA box</b> \u2014 raat 9:15 se subah 6:30 tak ka range (Japan/China). Aksar sidha-sadha chalta hai.<br>' +
+       '<b style="color:#34d399">LDN KZ (London Kill Zone, 12:30\u201315:30 IST)</b> \u2014 London khulte hi Asia ka range aksar TOD deta hai, bada move aata hai.<br>' +
+       '<b style="color:#ffb84d">NY KZ (New York Kill Zone, 17:30\u201320:30 IST)</b> \u2014 America, sabse tez vol; London ka direction continue karta hai ya reversal deta hai.<br>' +
+       'Tip: London/NY ke moves serious hote hain, Asia ke aksar trap. (Asia box + NY KZ sirf 24h market jaise BTC pe poore dikhte hain \u2014 NSE raat ko band rehta hai.)<br><br>' +
+       '<b style="color:#4da3ff">Order Block (OB)</b> \u2014 bade players (banks/institutions) ka footprint: jahan unhone saari kharidi/bechi wali last ulta candle. Price wapas is box me aaye to wahan se FIR wahi direction me move. Neela OB\u2191 = neeche support, orange OB\u2193 = upar resistance. Entry points yahin se milte hain.<br><br>' +
+       '<b style="color:#34d399">FVG = Fair Value Gap</b> \u2014 teen candles ke beech ka khali area. Price ne itni tezi se jump maara ki beech ka gap reh gaya (lift ne floor skip kar diya). Market ka nature: har gap WAPAS bharne aata hai \u2014 gap ke paas price ruk/reverse sakta hai.<br><br>' +
+       '<b>Beginner ka sequence:</b> (1) CHOCH se trend dekho (2) OB/FVG zone ka wait karo (3) PDH/PDL level se confirm karo (4) London/NY time me hi trade socho. Aur yaad rakho \u2014 ye READ hai, guarantee nahi. Har trade me SL rakhna hi hai.'],
       ["Zones - SD / WD / WS / SS (GTI ka core)",
        '<b style="color:#77f37b">SD (Strong Demand)</b> = din/hafta ke open se sabse door neeche wala TAGDA support - price yahan aaye to <b>best buying</b><br><br>' +
        '<b style="color:#77f37b">WD (Weak Demand)</b> = open ke paas wala halka support<br><br>' +
@@ -63,7 +76,7 @@
       ["TradingView indicator",
        'GTI <b>v5 Final Full Edition</b> file ready hai - zones (6 timeframes), POC, VWAP, EMA200, RSI labels, compression, 300-grid, Gann levels, first-candle lines, golden line, operator/doji labels, trade plan dashboard + 20 alerts. Pine Editor mein paste karo.']
     ];
-    var h = '<summary><b>GTI Complete Guide</b> - zones, POC, candles, sab kuch</summary><div style="padding:4px 2px">';
+    var h = '<summary><b>GTI Complete Guide</b> - ICT (CHOCH/BOS/OB/FVG), zones, POC, candles, sab kuch</summary><div style="padding:4px 2px">';
     for (var i = 0; i < items.length; i++) {
       h += '<details class="gl" style="margin-top:8px"><summary>' + esc(items[i][0]) + '</summary><div style="padding:6px 2px;font-size:13px;line-height:1.7">' + items[i][1] + '</div></details>';
     }

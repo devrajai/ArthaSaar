@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""dividends_collect.py - Dividend/Bonus/Split calendar (v2: NSE + BSE merge).
-Two free sources, merged + deduped - ek fail ho to doosra chalta hai:
-  1. NSE corporate-actions API (cookie bootstrap) - upcoming ex-dates
-  2. BSE AnnSubCategoryGetData API - announcements window
-Output: data/dividends.json (same shape as before - powerpack.js card reads it).
+"""dividends_collect.py - Dividend/Bonus/Split calendar (v3: many fallbacks).
+GitHub runner IPs ko NSE/BSE APIs 403 dete hain, isliye relay chain:
+  1. direct NSE + BSE (kabhi chal jaye to)
+  2. codetabs proxy relay (BSE)
+  3. r.jina.ai reader relay (BSE)
+  4. Yahoo dividend calendar (query1 - Actions se reachable)
+Merge + dedupe. Output: data/dividends.json (powerpack.js card reads it).
 """
 import http.cookiejar
 import json
@@ -14,44 +16,115 @@ from datetime import date, datetime, timedelta
 
 UA = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-    "Accept": "application/json",
+    "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.9",
 }
 CATS = {"Dividend": "DIV", "Bonus": "BON", "Stock Split": "SPL"}
 
 
-def bse_cat(cat, f, t):
+def bse_url(cat, f, t, page):
+    return (
+        "https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w?pageno=" + str(page)
+        + "&strCat=" + urllib.parse.quote(cat)
+        + "&strSrc=market&strSearch=&FromDate=" + f.strftime("%d-%m-%Y")
+        + "&ToDate=" + t.strftime("%d-%m-%Y") + "&Type=null"
+    )
+
+
+def http_json(url, headers=None, timeout=25):
+    req = urllib.request.Request(url, headers=headers or UA)
+    raw = urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", "ignore")
+    s = raw.strip()
+    if s.startswith("```"):
+        s = s.strip("`")
+        if s[:4].lower() == "json":
+            s = s[4:]
+        s = s.strip()
+    if not s.startswith("{"):
+        i = s.find("{")
+        if i > 0:
+            s = s[i:]
+    return json.loads(s)
+
+
+def parse_bse_rows(d, typ):
+    out = []
+    for x in d.get("Table") or []:
+        out.append(
+            {
+                "sym": (x.get("scrip_name") or "").upper(),
+                "code": x.get("scrip") or "",
+                "date": x.get("ex_dt") or x.get("ann_dt") or "",
+                "type": typ,
+                "detail": (x.get("subject") or "")[:110],
+            }
+        )
+    return out
+
+
+def bse_direct(cat, f, t):
     out = []
     for page in (1, 2):
-        api = (
-            "https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w?pageno=" + str(page)
-            + "&strCat=" + urllib.parse.quote(cat)
-            + "&strSrc=market&strSearch=&FromDate=" + f.strftime("%d-%m-%Y")
-            + "&ToDate=" + t.strftime("%d-%m-%Y") + "&Type=null"
+        try:
+            out += parse_bse_rows(http_json(bse_url(cat, f, t, page)), CATS.get(cat, "OTH"))
+        except Exception as e:
+            print("BSE direct", cat, "p" + str(page), "fail:", str(e)[:60])
+    return out
+
+
+def bse_relay(cat, f, t):
+    out = []
+    for page in (1, 2):
+        u = bse_url(cat, f, t, page)
+        for relay, name in (
+            ("https://api.codetabs.com/v1/proxy?quest=" + urllib.parse.quote(u, safe=""), "codetabs"),
+            ("https://r.jina.ai/" + u, "jina"),
+        ):
+            try:
+                rows = parse_bse_rows(http_json(relay), CATS.get(cat, "OTH"))
+                if rows:
+                    print("BSE", cat, "via", name, "p" + str(page), ":", len(rows), "rows")
+                    out += rows
+                    break
+            except Exception as e:
+                print("BSE", name, cat, "p" + str(page), "fail:", str(e)[:60])
+    return out
+
+
+def yahoo_dividends():
+    out = []
+    for off in range(0, 22):
+        day = date.today() + timedelta(days=off)
+        url = (
+            "https://query1.finance.yahoo.com/v1/finance/calendar/dividends?day="
+            + day.strftime("%Y-%m-%d") + "&formatted=false"
         )
         try:
-            req = urllib.request.Request(
-                api,
-                headers={
-                    **UA,
-                    "Referer": "https://www.bseindia.com/corporates/ann.html",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-            )
-            r = urllib.request.urlopen(req, timeout=25).read().decode("utf-8", "ignore")
-            d = json.loads(r)
-            for x in d.get("Table") or []:
+            d = http_json(url, headers={**UA, "Referer": "https://finance.yahoo.com/"}, timeout=15)
+            fin = (d or {}).get("finance") or {}
+            res = fin.get("result")
+            if not res:
+                continue
+            rows = res[0] if isinstance(res, list) else res
+            if isinstance(rows, dict):
+                rows = rows.get("rows") or []
+            for x in rows or []:
+                sym = (x.get("symbol") or "").replace(".NS", "").replace(".BO", "").upper()
+                amt = x.get("amount") or x.get("dividend") or ""
+                ex = x.get("exDate") or x.get("ex-date") or day.strftime("%d-%b-%Y")
+                if not sym:
+                    continue
                 out.append(
                     {
-                        "sym": (x.get("scrip_name") or "").upper(),
-                        "code": x.get("scrip") or "",
-                        "date": x.get("ex_dt") or x.get("ann_dt") or "",
-                        "type": CATS.get(cat, "OTH"),
-                        "detail": (x.get("subject") or "")[:110],
+                        "sym": sym,
+                        "code": "",
+                        "date": str(ex),
+                        "type": "DIV",
+                        "detail": ("DIVIDEND - RS " + str(amt) + " PER SHARE") if amt else "DIVIDEND DECLARED",
                     }
                 )
         except Exception as e:
-            print("BSE", cat, "p" + str(page), "fail:", str(e)[:60])
+            print("Yahoo", day, "fail:", str(e)[:50])
     return out
 
 
@@ -59,19 +132,12 @@ def nse_actions(f, t):
     try:
         cj = http.cookiejar.CookieJar()
         op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
-        op.open(
-            urllib.request.Request("https://www.nseindia.com/", headers=UA), timeout=25
-        ).read(102400)
+        op.open(urllib.request.Request("https://www.nseindia.com/", headers=UA), timeout=25).read(102400)
         url = (
             "https://www.nseindia.com/api/corporates-corporate-actions?index=equities&from_date="
-            + f.strftime("%d-%m-%Y")
-            + "&to_date="
-            + t.strftime("%d-%m-%Y")
+            + f.strftime("%d-%m-%Y") + "&to_date=" + t.strftime("%d-%m-%Y")
         )
-        r = op.open(urllib.request.Request(url, headers=UA), timeout=30).read().decode(
-            "utf-8", "ignore"
-        )
-        d = json.loads(r)
+        d = json.loads(op.open(urllib.request.Request(url, headers=UA), timeout=30).read().decode("utf-8", "ignore"))
     except Exception as e:
         print("NSE corp actions fail:", str(e)[:80])
         return []
@@ -91,15 +157,7 @@ def nse_actions(f, t):
             typ = "SPL"
         if not typ:
             continue
-        out.append(
-            {
-                "sym": sym,
-                "code": "",
-                "date": ex,
-                "type": typ,
-                "detail": (x.get("purpose") or "")[:110],
-            }
-        )
+        out.append({"sym": sym, "code": "", "date": ex, "type": typ, "detail": (x.get("purpose") or "")[:110]})
     return out
 
 
@@ -119,9 +177,14 @@ def main():
     rows = nse_actions(today, till)
     print("NSE rows:", len(rows))
     for cat in CATS:
-        b = bse_cat(cat, today, till)
+        b = bse_direct(cat, today, till)
+        if not b:
+            b = bse_relay(cat, today, till)
         print("BSE", cat, "rows:", len(b))
         rows += b
+    y = yahoo_dividends()
+    print("Yahoo rows:", len(y))
+    rows += y
     seen = set()
     uniq = []
     for x in rows:
@@ -138,12 +201,12 @@ def main():
         "from": today.strftime("%d-%m-%Y"),
         "to": till.strftime("%d-%m-%Y"),
         "items": uniq[:80],
-        "note": "NSE + BSE se - aane wale 3 hafte ke dividend/bonus/split.",
+        "note": "NSE + BSE + Yahoo se - aane wale 3 hafte ke dividend/bonus/split.",
     }
     os.makedirs("data", exist_ok=True)
     with open("data/dividends.json", "w") as f:
         json.dump(out, f, indent=1)
-    print("dividends.json:", len(uniq), "items (merged NSE+BSE)")
+    print("dividends.json:", len(uniq), "items (merged)")
 
 
 if __name__ == "__main__":

@@ -1,14 +1,14 @@
 {
- "updated": "2026-09-25T01:42:45.378187",
+ "updated": "2026-09-28T01:44:43.019432",
  "today": {
-  "date": "2026-09-25",
-  "crude": 93.28,
-  "dxy": 101.26,
-  "gold": 4328.2,
-  "us10y": 5.16,
-  "usdinr": 95.94,
-  "spx": 7704.13,
-  "fii_net_cr": -5027.4
+  "date": "2026-09-28",
+  "crude": 93.46,
+  "dxy": 100.97,
+  "gold": 4251.7,
+  "us10y": 5.18,
+  "usdinr": 95.8,
+  "spx": 7743.41,
+  "fii_net_cr": -3693.9
  },
  "history": [
   {
@@ -50,14 +50,23 @@
    "usdinr": 95.94,
    "spx": 7704.13,
    "fii_net_cr": -5027.4
+  },
+  {
+   "date": "2026-09-28",
+   "crude": 93.46,
+   "dxy": 100.97,
+   "gold": 4251.7,
+   "us10y": 5.18,
+   "usdinr": 95.8,
+   "spx": 7743.41,
+   "fii_net_cr": -3693.9
   }
  ],
- "streak_fii_sell_days": 1,
- "score": -1,
- "verdict": "NEUTRAL - mixed signals. Normal, par alert raho.",
+ "streak_fii_sell_days": 2,
+ "score": -2,
+ "verdict": "CAUTION - macro headwind hai. Positions chhote, stop-loss pakka.",
  "signals": [
-  "dollar index strong +0.95%",
-  "US 10Y yields up (Fed hawkish)",
-  "S&P strong +2.02%"
+  "dollar index strong +0.75%",
+  "US 10Y yields up (Fed hawkish)"
  ]
 }

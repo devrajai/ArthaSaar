@@ -1,81 +1,113 @@
 {
- "updated": "2026-09-28T07:34:32.594434+05:30",
+ "updated": "2026-09-28T13:35:48.945521+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
- "overall": 50,
+ "overall": 45,
  "tag": "Neutral",
  "counted": 60,
  "pos": [
   {
-   "t": "Qualcomm's non-handset growth surges, raising l...",
-   "s": 78,
-   "pub": "pluang.com",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOVUxQZ2NjVjFZdDEyUUw4dkNZa1M1am1UbDF5cTYxMWFtckJXaXZCMjlSX0RRTi1Yem8wVjFYZ2xPemlhN3BObWdhYzdJRDNfekY3X21ZdWZlRk1yN2dfRlhldzc3Q0U3UUlpeW9MVmJ6MjlpVFYtOU9yS2FzdjlVS2t2aTM0QzBxaC0w?oc=5",
-   "syms": []
-  },
-  {
-   "t": "India's AI enablers surge as data centre buildout gathers pace",
+   "t": "Elecon Engineering shares gain over 16% in five sessions | What\u2019s driving the stock?",
    "s": 64,
    "pub": "livemint.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQZi1TY2VfMWpYSTBjZnNQekpBUjdVcXJIOUxoX3BxWHZpT01Gby0xdWpibFMxUndkUmg1LTc2RGtmeUNST01SWUJhTjBLRGoyVTVWWTYyLU9BV1liejlpYlVGMjRsVTlUakZnVDJPVWpqaTViSUVkMndRM3k3VFNtY0VSQnhGMGZ0WVdDbjlIbkRlYjBlRFkwSG4yTVIweWlkSFlaSE1qTHIzajJLbTBZWDI0RdIBuAFBVV95cUxOOWg3ZDZwSlUtZG5GUlZaRmRUWHZpam45a1liNHRhREd5Vkt4ZVBxV0JPYXd1OEFLNWpNRWJCOVpzRTZ3N2Rtb2JzY2xva1I4czBNNlN1bXY4RTV5dVF4aWF0UVBncWlzT2F3WHJpZDlNblkzSXo4MjF1YXBYNFJOVnZFcDdSOVM3RHVyUFlSb2RvN3lCa211eGtFcUxmaUw2ZHNzQU1Lc1ZVQnh6R1VlSEFsZDY4TTRy?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxQZnJvQmYtd1hXZ1JEdHRPV0YyUWI1SUU5bXd1S3JnSXlfa3Q4TERjbXZSdU5CSTdDUVRSQzRtcl9fTE9SM3Q0dFgwSGlHZ3ZXekN2ZmNiVlo4ZUJOUHNPOTNWZTRid0hEZnlFVURuVkRPN3FnV2t2cVZkRUJrTFFXT3QwQ1Z4WnR0NDFIajlzUmI5SENPQzBuVWthN2Jxa1BqN2JRU19wYU54cWVFdjBmdWV0OVJBeFNNWDJXN2E0STg3dy10LXRTdjFrSElZUDB3TU5RSFNTQ2lwUWdzT0RBMV9fTWRiYUEzVUHSAeoBQVVfeXFMUGZyb0JmLXdYV2dSRHR0T1dGMlFiNUlFOW13dUtyZ0l5X2t0OExEY212UnVOQkk3Q1FUUkM0bXJfX0xPUjN0NHRYMEhpR2d2V3pDdmZjYlZaOGVCTlBzTzkzVmU0YndIRGZ5RVVEblZETzdxZ1drdnFWZEVCa0xRV090MENWeFp0dDQxSGo5c1JiOUhDT0MwblVrYTdicWtQajdiUVNfcGFOeHFlRXYwZnVldDlSQXhTTVgyVzdhNEk4N3ctdC10U3Yxa0hJWVAwd01OUUhTU0NpcFFnc09EQTFfX01kYmFBM1VB?oc=5",
+   "syms": [
+    "SBIN",
+    "RELIANCE",
+    "TCS"
+   ],
+   "src": "article"
+  },
+  {
+   "t": "800% dividend stock: This Blackstone-backed IT share zooms 14% after fixing record date; check amount per share",
+   "s": 64,
+   "pub": "livemint.com",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxOMmJNNzJoZEpZRUNXYkVmLUt2U0hOZU9RTGM2Tndubk5DLVFEWW1RdE5LZUhjd1RPODI1SzdMM0I1a29FYU1nd0I0M21ycFhjRnJjQ0pTOHUyeUctYVNiWW1TVU84Y3RmaGZaQjhpV1Qzdi0zWk9rM1BCM1VDZHVlSThoWUVGcl9GYVROY1kwMXVpdG8wSTdZeEhsZE9wc044clBYek1JdmROaE40TjBDOXNkM0JHZkdvc0ZMSUVVMHZNM084OW4wRlpJdl8zVlFpbGV0UmdycDN5MGZHMUNjdTBreXhULVFfQXJqZDNYUjJLTjlYRFROejFrNF9VTXpvRXNLUml1eXLSAY4CQVVfeXFMTWdmS1hIeFhXZjRtZnVmMEVHRTBTYU5UaGUxMkdXMi1Eemd0YlZvSVFpZXJUZGpvS0l3Q1gtSlZIX1RnRGhOT3pRZ1lOX19Nd040WDZCQlJiV0hwS1lZR1Bob2tKYjkyamJFSnR0Qnp1NmF4T2hYUzc1OEo4UUNEUmJmWC1NV2pNYVRqZFVRcXJKNC1LaHA4Y1ZOZjdCTkRic0x5QXNJMEw5T0ExejZXTG52TkNPMWFCaWpaRWVrcWE1ZGhMN2lKZWI2b19qc2hqTUp2VS0tcThqY1RKQnlaamJhX1FldjhPaWdvQ0lMMURmQi12U1U0ODQxR05RMlRtNWwxSm5za2p6RGNZcF9B?oc=5",
+   "syms": [
+    "RELIANCE",
+    "TCS",
+    "HDFCBANK"
+   ],
+   "src": "article"
+  },
+  {
+   "t": "What Bitcoin's September Rebound Means for Indian Rupee Traders",
+   "s": 64,
+   "pub": "Siliconindia",
+   "topic": "Crypto",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQQkNqRXBleDQzMWNqU0txekJadFctRHdralFBVk5wRHJJTGdXRzJIVFRGc0NKdS0ycmxwdlB6TU1zYlBwU0ZLeS1kclhVbU1jQmRLQmhlTFlxR3oyUG5JVWw5dE13ZllLVHJ4SmpqN3NhLVZ4QkJvb3Zqd3RJbFg2QnR1TkdQeXZWSUZOY25WbXBUT2ZwdTc3TXFoMFhySk5DQWNySm43UzNoVFZaYVFxcXJsQ1VOM3FQb0tWNzRvNTRHUVR2?oc=5",
    "syms": []
   },
   {
-   "t": "Why US midterm elections could power the next stock market rally",
+   "t": "Bonus share record date alert: Check company name, stock performance, issue ratio and other details",
    "s": 64,
-   "pub": "The Business Times",
+   "pub": "livemint.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPN3hjMW5SbUZLU3RQWnlic2hldGtSdUE5cUoxbDNPdlpuYXFOWkE4UlN4NGFWZzM1RUt0QmlqZE15MXVmN1JpUThtSjlxSnJ1R3lsVlEycmRrU0JEUlBpVTkxZEpaMnJkejNFVFZjeDR3eU9YR2NERG13WkRmLU9idmVWMWRaalFfa1NDZ1lHek45LWVGX1VFbHBfaGxQMGJRN2hZMWZvSl9odXhtSldyUjQ1dTk?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Dow Jones Futures Due Amid Trump Iran Comments; Micron, SpaceX, Tesla Eye Buy Points",
-   "s": 64,
-   "pub": "Investor's Business Daily",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPQ0huZkZtNEszTkRUY1NtZDBtZGR4NDdNbXpHSzg5UHdCMVNJS3NQTnQ4RGdvd1oxeGtwdGNNQng1cjJ1OUc2b2FZT2t3MldWd1hXV0tOMDB3NjJfeS1IRUtoNFF2NkpvTWdCbjRIRVB3NmVfVGtxbDNBYnNmMVhNb2pfN3RHby1walpzclpqODFKOF8tSThIRUNhYlduYXRpLVdLWllCN0w3ZG9GWEpiamJqYXAzVlAwX0c5RVJWWWRPbElldkdja0JR?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxOeVlrZWp6dWFWeWpYaHRUQkg1UFNKYllVNEo1WVJuVlNCQ3lrU210UXFJaWFxaE9zTzZnNEpHNU9mcHQ5RjJzcno0d3A4bzBUbk40aXk3SGpkVGVVQTY0c0NobjRPR2NUcFdRZWdPa2VxOFdkY0ZRQ0NzNVZwS2cyNnMyWklacEdTLVl3azBKbll0SmNqOExqbG11MW1DTEdSVWNSZ0tZeHh2T1dyTUNyWEUyNlVkWlV1X05VXy1ocDh3dW1iMTRpLTc3b3lEQUJ6azlBdEtqZjdiZHBXSHNjZjRJU2tZZDZEUV9FeFJ3M3dOZjNQV0dpS2RR0gH_AUFVX3lxTE9wVWZlbXh2dkNFMkhvVjBKT01ZclJlZG5hSkJDcGFmSzNGdkpDX3FxYWJsanZmRHI2WnVEbGRyTTNQXzF1UE9ncG40VjhJR05wMHVRb2VEd3dveEM4OHpneUtZYUdUck1uay1TOEtjSWF4MXNXdi0yMnFFU2VST2NZUWk0VGdoeHFMLUUtRTNRb2tnX2VRb1FHSDZGVzc4MjUxWFJWc1ZXZmZOMG9IZi0tbVBIN0ZNUUM5dnRGa0dwcnF3bFVwZ05PMWF3SWtrMENsYnhlSUg4bkZzOWtDWUNiRG9ZMHhIWjU2MldRS2lkdDdUaE5rZFh6azMyaTRsbw?oc=5",
+   "syms": [
+    "RELIANCE",
+    "TCS"
+   ],
+   "src": "article"
   }
  ],
  "neg": [
   {
-   "t": "If a Stock Market Crash Is Coming, Warren Buffett Says Investors Should Make This 1 Move Right Now",
-   "s": 36,
-   "pub": "The Motley Fool",
+   "t": "Why is market falling today? Sensex tumbles over 1,000 points, Nifty below 22,850. 6 key factors behind Rs",
+   "s": 22,
+   "pub": "The Economic Times",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPaFJEcEhfMHE1WmlDWlRBU2l2UDZDbWFjcWRFZVE0aW9Eckl1UmN5TXMxWDhRT1pyUHEwbTdBR2dPS3pfb0xFSGRINlRIUjd5Ukk3VnhoaEdhQWpZMm9vVFZqZ0V1aXkzT2FmYUpEVXpmcDJLRkpMbDZ3NmdSUjFrVXZNbHJWdExhTHVBVGRoRE1GMzN3ZnlpOQ?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMilgJBVV95cUxQZi1NX0ZnR1pnWl9lLURWQW9uazJudU5adU43UVVWdG9BV1A5WTZaN2RPZ3NSWHl5bTlCZlA4ODkzcDRoc3JWVEtyRk1NbGx4MDQ5X3NGZ2ZHVW9MWnFTV0F4U3ZSWVA5S3BtbzdtZFRLT2JVOXJjZjUtNENidWtZai1JaTJPc0VQVE9mdDE2VGhBNXByZnZ3ZEtVdm5ZRkFvUXd4UGdfZjJTcFFRcHkwcmo3d0p0Vy0yZXNkV3RXV3ZFcTRLTlBUNGRrNXNGMGVpUXFKMDJzUndJWXpqWnpGSkFIRVJ4Q0MzQUJVOHMwT0Z6X3R3aHZ0YzU3TmN1RDZVQmNzWWNZbkF1YVJ3YlV2Tndac1N3Z9IBmwJBVV95cUxQcExWMGJPZG5EOW5QWXdrOGFGVWpSNnA2bjNYYnlRbGdhSG13ei1YYXExbjZPZlkweGtvRDJ4QmtZcFNJbmthU2xJNWxnV3hVYjh4SDRzU2k1cTQwcG9BS0VCOTlQcUpuS3FzREFhbXRIWVVYQVZRZEdHSE9HUVRWYTAtUFFWX2M1RmZXVXhKUzd5RmtuWjBhTi1wSXZfVXBWWHRCOTV3VGFRQ1NKeXQ1WU54dlBQZmpteFlFa3JrYlRkYnRoUWJsMVJZM1RlMnFWVVZGRmNUWExEUzZJUHRCcGpmMl8xU0Y3QmRBMTdESW85NTA3LVRGODFGakpiY2lIUlV2bVJLMWhaUVNqRl9HMmhsSEU0VFNGa3lR?oc=5",
+   "syms": [
+    "HDFCBANK",
+    "INFY",
+    "SBIN"
+   ],
+   "src": "article"
   },
   {
-   "t": "Why Could the US Stock Market Fall Monday? Trump Rejects Iran\u2019s Strait of Hormuz Proposal",
-   "s": 36,
-   "pub": "Stocks Down Under",
+   "t": "Why Is the Stock Market Falling Today? From US-Iran Talks to Crude Oil Prices, Key Reasons Behind the Decline",
+   "s": 22,
+   "pub": "Jagran Josh",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTFAxS1ZlNjZEMzh0b3hmNl9mdklrazVHSEI5UlhJLS11RDZLMFFIOUxrbk5hTmxXQ2FkOE9FSGg3aDk4UHMtMU9jTERCc2tIVjUtUWlwLWtVd05NT1NnN083SjFhUV9fRWdibzRHSFI2VVlyYURPMW9oczhFUnR5QQ?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMiigJBVV95cUxQT1NhNy1kaEhvOF9xMkpvd2Z3WGZ0NEpSQjVTcWhXS3dTWnYyakZlTFJpUlF1cWlCczA0UzdydE80UkR5RF9ETVo2X1YxLURLVTJqeE95bUlUVTZQbzM1SHBSSktPdjZHRWdGWjhtT25nUndKNE9hWHNxTVVPRFByV0xDM05NUXVaWll0YkNMU3lxV1cyclZncC1pc1dfM25BTE9NQkUxdDNBdGp4U1dvXzJLWnEtY1NnVXdXYmc5WUlTY0p4Sk5wWHd1Q2lPeE9mTkhCZFRLQkE3VDBXZ0c3bklIRmNYS2FnZ0tBX2VZanNTWm40ekk5Y0g4TzBaZWNVVkliNlBxQmU4Z9IBkAJBVV95cUxQbnVhUE9uNUtqaHlJVXl2aU9kSkRXYVp2RjFWbFc2QTZtN3RidWtoUWtJMTJVVDQ0ZTJjRllaQjZ1TUx0RWlxT1ZoYlN0NFBXbWJzUVY3dnVfZEktRGF5ZlFhMG5fV3RWNFBFdi05QnhfcXJEY2hWeTdJY2o1dXpwRWxYQ2tDOWc5SXQxU0pMdDdpOGZLTmUweWNwM1dZZmFGUUpwTy1EUkI2anRJUElJLWxVRmo3Z0ZYNjdaWlV1OTR5MEYxVkZIM3JnNENjcENLLVhRMXA1cy0wWDNISlhzMjJXdVp2NTAzLVVOWjdyZzlELVJLMW5hbERwWFBDZ01RRDJVbHlheHIzbGpjaURKdw?oc=5",
+   "syms": [
+    "SBIN",
+    "NTPC",
+    "CANBK"
+   ],
+   "src": "article"
   },
   {
-   "t": "'Brace for more correction': Mkt outlook cautious after 7 weeks of decline",
-   "s": 36,
-   "pub": "Business Standard",
+   "t": "HDFC Bank shares fall 2% as banking stocks decline amid market slump",
+   "s": 22,
+   "pub": "BusinessLine",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOOWlJeHdKOXRNOGdybU8xaThMVHFMdFZfa0I2SW1aS3E1dXplLVg4dktrdEhUSjFLU0JCaFVCeVptYnFvM2VxY1l4amtkOHY4RmhQVl9oNUEtLTdiQ2RYVEg4MTh2Q0ZQdDBkN2VHY3JPdW9JZGV5bThoZTI2Ny10RV9zYnhxMTZqQkplVWRJbS1OTHJ4aFhTN0JDbFd4blhPOXM4WXdxZllNSFdXeUZPaXU0bnR4ZEdZZ08tQTJibW1ES1lUNmxKTDJjd1ktWmFk0gHWAUFVX3lxTE1ZazZIY1IyeUszZ2pxM29ITXR3UXVzZ0xWMTcwb1FIaklGQ1F0d0RlMUg5QTZLS3NWYnpUZWMzdE53Rk96TFhoVGpVbXpSbWstUFhXZVJva2lvTjVMbHp1T0NuZkpiWl9SN1VuZUdMR0duM3lPcnk0Wk90b2FFZUNBLU5LV0FrMlY0aFZ6Ty1UdHRielMxTzBDa0hnaVNOdkZXX0Zpbk5jRURpQTZsOWtYTl9JQi1JNHRUUlRpcGc5bWFuWEJEZVhPaVg4V1dsRjBCcnFpRGc?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxQNVhoVXNlTjFOazdxZHVDS3RCUDFIcERSMGRxX2tPXzItc2xmcjdWNWVWcVFnbTYxZTZwYXRZeDdRaHFxTFktMW85SDNoOVpnY2VYQVQwTGlSNEpvMnJacTlRcWNqVnB3aENrRnlHR2dNUHJPMWltRVZfWXZJNDhLWHJ3ODZubHlVa2x4bjAyWnpLNWNqa0VEQ1NIUDM2QlhCU2xaTHJ2eHVzUGRtTldmZUNqN3otZlN0VXY1dE42TDVWVHZaT21oUTQ2NUxTTnhpMjd3SUtPYzA4SFZyaUhR0gHmAUFVX3lxTE5YbjRjc1ZwbXJBclpBd2RPbE1ScGxiTUVpQjRRdGNndDl0SjNRLTY2aDZOcVlLV19DQkNyRVYxQUZ0SnhZWnA3UDRGQU9pdTNHalljejVfQk5ZTmxnVmJJRDhURndXb18xVVlLcVdjZmJQYlhwN1NyVVBCcm9iTGtDRzVvNjZxR09lVHFvRElHOTdDM05Od1BJWk44eVNnakw2U3hiWGlHaEZPNG9XOEZTc3N2YXBCZjRILXdEeUNmNFlGNFlUMjhlWmR0YzF3d0ZPQ1RFS3FhX0hLWHZXNVZ1MWd0SUl3?oc=5",
+   "syms": [
+    "HDFCBANK"
+   ]
   },
   {
-   "t": "Prediction: A Stock Market Crash Is Coming. Here\u2019s the One Move You Should Make, According to History.",
-   "s": 36,
-   "pub": "The Motley Fool",
+   "t": "National Stock Exchange (NSE) shares fall below IPO price; here is why",
+   "s": 22,
+   "pub": "upstox.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxQZ1hpQWkzMExGS3dkbmpwOEY4VklPM3FXWTJZNVFLcDZIY3VJM2JRZk1zaTBkTERyYjNuMm5taS1IMUEzSWVGOEE0Q2NRSnhXOWxmQmhiTW9IeEh3dmNhWlRjT0N1a3paRkY4eGd1dEVtOEwzTFJiM2JaRUJ0OGxDeF9xd3hRSzluZXFoblc1OW0yTldudUlqVWU5NGo2d1NKdS14dW5wa0ZGSk92VVdxRjNYNmt6ZktvLUxBb01xenJhZXh2SjdHcjRxVE5waGdfVkRUVFJSVjI?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQUFFFcU9GYzFBSFZPdmNFQ2lpdmtNM2FpdV9vdzlSMWR5ZG91SU10b0JNVkNQWUNGMFdaYTRjamJYelpnR1RSSXZ6d0sxT3N2R0k1OWc5MV9vNzlLN2RzcXYwZjNubnpmWjVmenhmWjQxNjBqSEFfdHFZUjZfZEJueE1ZNGs3LTNzMlYxakxiT0tYeUdLZUFMNm56ZFhvaHJza3d5dmlBdTFwZ3Q0R3JtYWlGdm53WF9xOFhtVWhlNGpRZURz?oc=5",
+   "syms": [
+    "SBIN",
+    "VOLTAS",
+    "BLUESTARCO",
+    "AXISBANK"
+   ],
+   "src": "article"
   }
  ],
  "stocks": [
   {
-   "sym": "SAIL",
-   "s": 57,
+   "sym": "ADANIENT",
+   "s": 43,
    "n": 2
   }
  ],

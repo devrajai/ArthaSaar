@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-25T14:29:53.914034",
+ "updated": "2026-09-28T14:32:59.078509",
  "date": "25-09-2026",
  "source": "NSE F&O bhavcopy (EOD)",
  "symbols": {
@@ -65,20 +65,20 @@
     }
    ],
    "gti": {
-    "day_poc": 23130,
+    "day_poc": 23108,
     "SD": [
-     22927,
-     22951
+     22955,
+     22979
     ],
     "SS": [
-     23119,
-     23143
+     23151,
+     23175
     ],
-    "golden": 23352
+    "golden": 23217
    },
    "combo": {
-    "support": "PUT wall 23000 (GTI SD 22939 se alag)",
-    "resistance": "CALL wall 24000 (GTI SS 23131 se alag)",
+    "support": "PUT wall 23000 (GTI SD 22967 se alag)",
+    "resistance": "CALL wall 24000 (GTI SS 23163 se alag)",
     "verdict": "PCR 0.93 - neutral range (put vs call barabar). Spot 23140 walls ke beech mein (23000 - 24000) - rangebound"
    }
   },
@@ -144,20 +144,20 @@
     }
    ],
    "gti": {
-    "day_poc": 55566,
+    "day_poc": 55572,
     "SD": [
-     55011,
-     55092
+     54984,
+     55065
     ],
     "SS": [
-     55656,
-     55737
+     55631,
+     55712
     ],
-    "golden": 56383
+    "golden": 55864
    },
    "combo": {
-    "support": "PUT wall 57500 (GTI SD 55051 se alag)",
-    "resistance": "CALL wall 57500 (GTI SS 55696 se alag)",
+    "support": "PUT wall 57500 (GTI SD 55024 se alag)",
+    "resistance": "CALL wall 57500 (GTI SS 55671 se alag)",
     "verdict": "PCR 0.79 < 0.85 - call writers dominant, bearish bias. Spot PUT wall 57500 ke neeche/par - support test ho raha"
    }
   }

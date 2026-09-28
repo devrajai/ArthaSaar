@@ -1,17 +1,47 @@
 {
- "u": "27 Sep 2026, 21:07 IST",
+ "u": "28 Sep 2026, 21:10 IST",
  "cats": [
   {
    "name": "INDIA MARKETS",
-   "stories": []
+   "stories": [
+    {
+     "t": "Indian shares slide to near six-month low as US-Iran deadlock lifts oil prices",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 5.3,
+     "x": 0
+    }
+   ]
   },
   {
    "name": "ECONOMY/POLICY",
-   "stories": []
+   "stories": [
+    {
+     "t": "Broadening inflation, robust growth, global hikes build case for India RBI tightening",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 5.8,
+     "x": 0
+    }
+   ]
   },
   {
    "name": "GLOBAL",
-   "stories": []
+   "stories": [
+    {
+     "t": "Gold hits seven-week low as oil surge fuels rate hike bets",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 14.0,
+     "x": 0
+    }
+   ]
   },
   {
    "name": "GEOPOLITICS",
@@ -21,54 +51,54 @@
    "name": "AUTHENTIC WIRE",
    "stories": [
     {
-     "t": "Floods, landslides kill 56 in India and 14 in Nepal",
+     "t": "Red Bull sues Indian regulator over 'energy drink' label ban",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 1.2,
+     "age": 1.3,
      "x": 0
     },
     {
-     "t": "India badminton medallist says Aichi-Nagoya Asiad 'sad' for athletes",
+     "t": "Tata Trusts proposes Tata Sons rejig to prevent listing driven by central bank",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 10.4,
+     "age": 1.8,
      "x": 0
     },
     {
-     "t": "India's election commission orders review of voter-roll changes",
+     "t": "India poll chief Gyanesh Kumar under pressure over alleged manipulation of electoral rolls",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 26.0,
+     "age": 2.6,
      "x": 0
     },
     {
-     "t": "Kohli says 2027 World Cup will be his last for India",
+     "t": "Prediction markets' push into US stocks raises regulatory alarm bells",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 30.2,
+     "age": 4.6,
      "x": 0
     }
    ]
   }
  ],
  "xray": {
-  "o": 23035,
-  "h": 23163,
-  "l": 23021,
-  "c": 23140,
-  "chg": 0.34,
-  "pattern": "gap-down open, GREEN close - dar bech ke wapas khareeda gaya",
-  "fii": -3694,
-  "dii": 2838,
-  "fii_streak": 1,
+  "o": 23065,
+  "h": 23080,
+  "l": 22762,
+  "c": 22780,
+  "chg": -1.56,
+  "pattern": "gap-down open, red close - pure selling pressure",
+  "fii": -5353,
+  "dii": 5189,
+  "fii_streak": 2,
   "puppato": 1
  }
 }

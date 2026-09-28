@@ -1,10 +1,10 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-28T18:35:53.845849+00:00",
+  "generated_at": "2026-09-28T21:21:48.950992+00:00",
   "today_ist": "2026-09-29",
-  "data_updated_at": "2026-09-28T23:56:43.767035+05:30",
+  "data_updated_at": "2026-09-29T02:51:18.444074+05:30",
   "ipo_count": 22,
-  "field_coverage_pct": 27.1,
+  "field_coverage_pct": 26.6,
   "sources": {
     "NSE": {
       "ok": true,
@@ -20,7 +20,7 @@
       "ok": false,
       "records": 0,
       "errors": [
-        "<urlopen error timed out>"
+        "HTTP Error 403: Forbidden"
       ]
     },
     "GMP": {
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-28T18:24:42.845758+00:00",
+      "checked_at": "2026-09-28T21:20:42.747819+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -88,12 +88,12 @@
       "records": 22,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-28T18:24:44.667588+00:00"
+      "checked_at": "2026-09-28T21:20:45.121060+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T18:24:47.471700+00:00",
+      "checked_at": "2026-09-28T21:21:03.909638+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,17 +103,17 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-28T18:24:47.544164+00:00"
+      "checked_at": "2026-09-28T21:21:03.994085+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T18:24:47.593990+00:00"
+      "checked_at": "2026-09-28T21:21:04.053543+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-28T18:24:47.748372+00:00",
+      "checked_at": "2026-09-28T21:21:04.230214+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
@@ -140,20 +140,20 @@
     "FilingVerification": {
       "ok": true,
       "records": 13,
-      "verified": 2,
-      "checked_at": "2026-09-28T18:24:47.748372+00:00"
+      "verified": 5,
+      "checked_at": "2026-09-28T21:21:04.230214+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-28T23:56:43.767035+05:30",
-      "status_repairs": 0,
+      "checked_at": "2026-09-29T02:51:18.444074+05:30",
+      "status_repairs": 2,
       "sme_added": 0,
       "filings": {
-        "checked": 24,
+        "checked": 21,
         "verified": 13,
-        "repaired": 11
+        "repaired": 8
       },
-      "upcoming_filing_map": 11,
+      "upcoming_filing_map": 10,
       "schedule": "GitHub Actions every 15 minutes",
       "rule": "Open and Upcoming are mutually exclusive; opening date begins at 00:00 IST"
     }
@@ -328,15 +328,15 @@
       }
     },
     {
-      "id": "a-one-steels-india-limited",
-      "name": "A-One Steels India Limited",
-      "fingerprint": "2102c841abc08cd2",
+      "id": "papadmalji-agro-foods-limited",
+      "name": "Papadmalji Agro Foods Limited",
+      "fingerprint": "487d263dd297b7e7",
       "fields": {
-        "price": "₹385-405",
-        "size": "₹299 Cr",
+        "price": "—",
+        "size": "—",
         "lot": "—",
-        "open": "24/09/26",
-        "close": "28/09/26",
+        "open": "29/09/26",
+        "close": "01/10/26",
         "allotment": null,
         "listing": "—",
         "sub": "—",
@@ -350,34 +350,6 @@
         "roe": "—",
         "roce": "—",
         "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "moneyview-limited",
-      "name": "Moneyview Limited",
-      "fingerprint": "63db845240887f88",
-      "fields": {
-        "price": "₹32-34",
-        "size": "₹0 Cr",
-        "lot": "441",
-        "open": "24/09/26",
-        "close": "28/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "15.98%",
-        "roce": "—",
-        "growth": "43%",
         "de": "—",
         "fresh": "—",
         "ofs": "—"
@@ -468,6 +440,62 @@
       }
     },
     {
+      "id": "a-one-steels-india-limited",
+      "name": "A-One Steels India Limited",
+      "fingerprint": "2102c841abc08cd2",
+      "fields": {
+        "price": "₹385-405",
+        "size": "₹299 Cr",
+        "lot": "—",
+        "open": "24/09/26",
+        "close": "28/09/26",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "—",
+        "roce": "—",
+        "growth": "—",
+        "de": "—",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
+    {
+      "id": "moneyview-limited",
+      "name": "Moneyview Limited",
+      "fingerprint": "b8b836304248ec6f",
+      "fields": {
+        "price": "₹32-34",
+        "size": "₹791 Cr",
+        "lot": "441",
+        "open": "24/09/26",
+        "close": "28/09/26",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "15.98%",
+        "roce": "—",
+        "growth": "43%",
+        "de": "—",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
+    {
       "id": "vishal-nirmiti-limited",
       "name": "Vishal Nirmiti Limited",
       "fingerprint": "f07f28476b22a2e3",
@@ -505,34 +533,6 @@
         "lot": "1200",
         "open": "30/09/26",
         "close": "Oct 5, 2026",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "papadmalji-agro-foods-limited",
-      "name": "Papadmalji Agro Foods Limited",
-      "fingerprint": "3cc82c3d77354b58",
-      "fields": {
-        "price": "₹69-72",
-        "size": "₹20 Cr",
-        "lot": "—",
-        "open": "29/09/26",
-        "close": "01/10/26",
         "allotment": null,
         "listing": "—",
         "sub": "—",
@@ -1024,6 +1024,25 @@
     }
   ],
   "changes": [
+    {
+      "at": "2026-09-28T21:21:48.950992+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "papadmalji-agro-foods-limited",
+      "name": "Papadmalji Agro Foods Limited",
+      "fields": [
+        "price",
+        "size"
+      ]
+    },
+    {
+      "at": "2026-09-28T21:21:48.950992+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "moneyview-limited",
+      "name": "Moneyview Limited",
+      "fields": [
+        "size"
+      ]
+    },
     {
       "at": "2026-09-28T15:24:46.448631+00:00",
       "type": "DATA_CHANGE",
@@ -4376,30 +4395,6 @@
         "roe",
         "roce",
         "growth"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:59:03.926583+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "armee-infotech-limited",
-      "name": "ArMee Infotech Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth",
-        "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:59:03.926583+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "adroit-industries-india-limited",
-      "name": "Adroit Industries (India) Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth",
-        "de"
       ]
     }
   ]

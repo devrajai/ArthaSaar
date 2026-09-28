@@ -11,7 +11,6 @@ concurrency:
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
   fetch:
@@ -53,9 +52,8 @@ jobs:
           s = s.replace("app.js?v=27sepv8", "app.js?v=27sepv9")
           s = s.replace("app.js?v=27sepv9", "app.js?v=27sepv10")
           s = s.replace("app.js?v=27sepv10", "app.js?v=27sepv11")
-          s = s.replace("app.js?v=27sepv11", "app.js?v=27sepv12")
           open(p, "w", encoding="utf-8").write(s)
-          print("patched" if "27sepv12" in s else "already patched")
+          print("patched" if "27sepv11" in s else "already patched")
           PY
 
       - name: Commit if changed
@@ -79,9 +77,3 @@ jobs:
         run: |
           curl -s -o /dev/null --max-time 15 "https://purge.jsdelivr.net/gh/devrajai/ArthaSaar@main/data/candles.json"
           curl -s -o /dev/null --max-time 15 "https://purge.jsdelivr.net/gh/devrajai/ArthaSaar@main/data/symbols.json"
-
-      - name: Deploy pages (new data)
-        if: steps.cd.outputs.pushed == '1'
-        run: gh workflow run pages.yml --ref main
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

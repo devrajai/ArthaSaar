@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28T01:33:38.163928+05:30",
+ "updated": "2026-09-28T07:34:32.594434+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
  "overall": 50,
  "tag": "Neutral",
@@ -14,11 +14,19 @@
    "syms": []
   },
   {
-   "t": "Saudi stock market index closes higher",
+   "t": "India's AI enablers surge as data centre buildout gathers pace",
    "s": 64,
-   "pub": "The Peninsula Qatar",
+   "pub": "livemint.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNYVBBbWJFZEdUd3BJai0wY0tFT1pfa2FNclFob2xraC1NbjJIemVhcmV6UWpNUklRWkFYQ2RwbzloV19vcGh5ZC1ZYTJaTnR1MmUwNm15ekFaY3JoRjZPSHh0ZGZvYjdyZUFMcUlSUkJBSmpYdTd0ZFlRbEFwX0dwOXYtUVY4QzZCZjNndXRVNG5CbWc?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQZi1TY2VfMWpYSTBjZnNQekpBUjdVcXJIOUxoX3BxWHZpT01Gby0xdWpibFMxUndkUmg1LTc2RGtmeUNST01SWUJhTjBLRGoyVTVWWTYyLU9BV1liejlpYlVGMjRsVTlUakZnVDJPVWpqaTViSUVkMndRM3k3VFNtY0VSQnhGMGZ0WVdDbjlIbkRlYjBlRFkwSG4yTVIweWlkSFlaSE1qTHIzajJLbTBZWDI0RdIBuAFBVV95cUxOOWg3ZDZwSlUtZG5GUlZaRmRUWHZpam45a1liNHRhREd5Vkt4ZVBxV0JPYXd1OEFLNWpNRWJCOVpzRTZ3N2Rtb2JzY2xva1I4czBNNlN1bXY4RTV5dVF4aWF0UVBncWlzT2F3WHJpZDlNblkzSXo4MjF1YXBYNFJOVnZFcDdSOVM3RHVyUFlSb2RvN3lCa211eGtFcUxmaUw2ZHNzQU1Lc1ZVQnh6R1VlSEFsZDY4TTRy?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Why US midterm elections could power the next stock market rally",
+   "s": 64,
+   "pub": "The Business Times",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPN3hjMW5SbUZLU3RQWnlic2hldGtSdUE5cUoxbDNPdlpuYXFOWkE4UlN4NGFWZzM1RUt0QmlqZE15MXVmN1JpUThtSjlxSnJ1R3lsVlEycmRrU0JEUlBpVTkxZEpaMnJkejNFVFZjeDR3eU9YR2NERG13WkRmLU9idmVWMWRaalFfa1NDZ1lHek45LWVGX1VFbHBfaGxQMGJRN2hZMWZvSl9odXhtSldyUjQ1dTk?oc=5",
    "syms": []
   },
   {
@@ -28,20 +36,25 @@
    "topic": "Markets",
    "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPQ0huZkZtNEszTkRUY1NtZDBtZGR4NDdNbXpHSzg5UHdCMVNJS3NQTnQ4RGdvd1oxeGtwdGNNQng1cjJ1OUc2b2FZT2t3MldWd1hXV0tOMDB3NjJfeS1IRUtoNFF2NkpvTWdCbjRIRVB3NmVfVGtxbDNBYnNmMVhNb2pfN3RHby1walpzclpqODFKOF8tSThIRUNhYlduYXRpLVdLWllCN0w3ZG9GWEpiamJqYXAzVlAwX0c5RVJWWWRPbElldkdja0JR?oc=5",
    "syms": []
-  },
-  {
-   "t": "Citi tells clients to buy the next stock market dip as AI trade gathers momentum ahead of midterms",
-   "s": 64,
-   "pub": "Yahoo Finance",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOdTNNS2M5NldLX2MyNWVnU2lPVlhkb0xBZG5uZGJQb0pwcWR2ajUyOWlFTGdlR1NUcVhNZUlsNDV5QVdqNWw0X0dTaE03aHBVWmoyeFFyMnRFUXJONWk4NzBaYUVaRThOLVJWX2JwbEFRM055SExqbFFhcnBHR3AzOUlOSFhqSlpGU2hWNTJwUWRsWkNoTzlV?oc=5",
-   "syms": [
-    "IDEA"
-   ],
-   "src": "article"
   }
  ],
  "neg": [
+  {
+   "t": "If a Stock Market Crash Is Coming, Warren Buffett Says Investors Should Make This 1 Move Right Now",
+   "s": 36,
+   "pub": "The Motley Fool",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPaFJEcEhfMHE1WmlDWlRBU2l2UDZDbWFjcWRFZVE0aW9Eckl1UmN5TXMxWDhRT1pyUHEwbTdBR2dPS3pfb0xFSGRINlRIUjd5Ukk3VnhoaEdhQWpZMm9vVFZqZ0V1aXkzT2FmYUpEVXpmcDJLRkpMbDZ3NmdSUjFrVXZNbHJWdExhTHVBVGRoRE1GMzN3ZnlpOQ?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Why Could the US Stock Market Fall Monday? Trump Rejects Iran\u2019s Strait of Hormuz Proposal",
+   "s": 36,
+   "pub": "Stocks Down Under",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTFAxS1ZlNjZEMzh0b3hmNl9mdklrazVHSEI5UlhJLS11RDZLMFFIOUxrbk5hTmxXQ2FkOE9FSGg3aDk4UHMtMU9jTERCc2tIVjUtUWlwLWtVd05NT1NnN083SjFhUV9fRWdibzRHSFI2VVlyYURPMW9oczhFUnR5QQ?oc=5",
+   "syms": []
+  },
   {
    "t": "'Brace for more correction': Mkt outlook cautious after 7 weeks of decline",
    "s": 36,
@@ -51,31 +64,12 @@
    "syms": []
   },
   {
-   "t": "Warren Buffett Issued a Market Warning That History Says Investors Should Take Seriously",
-   "s": 36,
-   "pub": "Yahoo Finance",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOUkN5ZHBNLTlVbmttSDBYU243QTA4S3ZHMVlhcEt5N2JlV2hRTW14cHptYzUwMjlkLXh1M2JZaG9ZTmRWMU44NGFNLVlHdGZRc1pqUkRHNTFHU1V2cEIzT2JCRkowOS1nc0p1aWZ5VlN5QUFoaWdONG5KZDBkVDczY3cydTZjamFTcFhSclNyT3Z3WVRXOTZoalg1STJOaVBwSl93?oc=5",
-   "syms": []
-  },
-  {
    "t": "Prediction: A Stock Market Crash Is Coming. Here\u2019s the One Move You Should Make, According to History.",
    "s": 36,
    "pub": "The Motley Fool",
    "topic": "Markets",
    "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxQZ1hpQWkzMExGS3dkbmpwOEY4VklPM3FXWTJZNVFLcDZIY3VJM2JRZk1zaTBkTERyYjNuMm5taS1IMUEzSWVGOEE0Q2NRSnhXOWxmQmhiTW9IeEh3dmNhWlRjT0N1a3paRkY4eGd1dEVtOEwzTFJiM2JaRUJ0OGxDeF9xd3hRSzluZXFoblc1OW0yTldudUlqVWU5NGo2d1NKdS14dW5wa0ZGSk92VVdxRjNYNmt6ZktvLUxBb01xenJhZXh2SjdHcjRxVE5waGdfVkRUVFJSVjI?oc=5",
    "syms": []
-  },
-  {
-   "t": "As Stock Market Warning Signs Pile Up, Here's What History Says Comes Next",
-   "s": 36,
-   "pub": "Yahoo Finance",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOdDVFRkVtXzVnOU9xWTFOTElVU3hBQndFX1d1TlBrUEVaTmlxQW9Wb3ZfcWVLVlZKSHZJdUVlazBKbDVEeGZ4ODlVQ25NS1FlYVdjdmlFUXp0bTg1U1Y0cGN1SWtJWGRZclExbHNFckZhM3AwbFVyR0w0VWVqVUE2RXZmWWxBVnFwal92OVdlZ0FhdWR3eDhRQXhTZWM?oc=5",
-   "syms": [
-    "IDEA"
-   ],
-   "src": "article"
   }
  ],
  "stocks": [

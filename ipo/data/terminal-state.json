@@ -1,10 +1,10 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-28T03:22:38.413827+00:00",
+  "generated_at": "2026-09-28T06:29:50.564219+00:00",
   "today_ist": "2026-09-28",
-  "data_updated_at": "2026-09-28T08:52:16.191807+05:30",
+  "data_updated_at": "2026-09-28T11:59:22.676919+05:30",
   "ipo_count": 18,
-  "field_coverage_pct": 25.7,
+  "field_coverage_pct": 28.3,
   "sources": {
     "NSE": {
       "ok": true,
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-28T03:21:52.198276+00:00",
+      "checked_at": "2026-09-28T06:28:45.924277+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -88,12 +88,12 @@
       "records": 18,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-28T03:21:54.110467+00:00"
+      "checked_at": "2026-09-28T06:28:48.066245+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T03:22:02.359090+00:00",
+      "checked_at": "2026-09-28T06:29:10.381932+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,17 +103,17 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-28T03:22:02.437789+00:00"
+      "checked_at": "2026-09-28T06:29:10.448616+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T03:22:02.493617+00:00"
+      "checked_at": "2026-09-28T06:29:10.495203+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-28T03:22:02.654156+00:00",
+      "checked_at": "2026-09-28T06:29:10.634123+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
@@ -141,11 +141,11 @@
       "ok": true,
       "records": 13,
       "verified": 5,
-      "checked_at": "2026-09-28T03:22:02.654156+00:00"
+      "checked_at": "2026-09-28T06:29:10.634123+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-28T08:52:16.191807+05:30",
+      "checked_at": "2026-09-28T11:59:22.676919+05:30",
       "status_repairs": 0,
       "sme_added": 0,
       "filings": {
@@ -162,10 +162,10 @@
     {
       "id": "shah-investor-s-home-limited",
       "name": "Shah Investor's Home Limited",
-      "fingerprint": "f350477873e9e2f6",
+      "fingerprint": "88d070953f3a18ce",
       "fields": {
         "price": "₹159-167",
-        "size": "—",
+        "size": "₹63 Cr",
         "lot": "85",
         "open": "28/09/26",
         "close": "30/09/26",
@@ -179,10 +179,10 @@
         "gmp_pct": "—",
         "est_list": "—",
         "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
+        "roe": "7.59%",
+        "roce": "10.61%",
+        "growth": "-23%",
+        "de": "0.10",
         "fresh": "—",
         "ofs": "—"
       }
@@ -190,10 +190,10 @@
     {
       "id": "srit-india-limited",
       "name": "Srit India Limited",
-      "fingerprint": "aacd672b1b05eeb3",
+      "fingerprint": "8cffe0dd9d3e4bf6",
       "fields": {
         "price": "₹123-130",
-        "size": "—",
+        "size": "₹0 Cr",
         "lot": "115",
         "open": "28/09/26",
         "close": "30/09/26",
@@ -207,10 +207,10 @@
         "gmp_pct": "—",
         "est_list": "—",
         "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
+        "roe": "30.23%",
+        "roce": "28.79%",
+        "growth": "16%",
+        "de": "0.23",
         "fresh": "—",
         "ofs": "—"
       }
@@ -870,6 +870,32 @@
     }
   ],
   "changes": [
+    {
+      "at": "2026-09-28T06:29:50.564219+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "shah-investor-s-home-limited",
+      "name": "Shah Investor's Home Limited",
+      "fields": [
+        "size",
+        "roe",
+        "roce",
+        "growth",
+        "de"
+      ]
+    },
+    {
+      "at": "2026-09-28T06:29:50.564219+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "srit-india-limited",
+      "name": "Srit India Limited",
+      "fields": [
+        "size",
+        "roe",
+        "roce",
+        "growth",
+        "de"
+      ]
+    },
     {
       "at": "2026-09-27T21:19:29.519674+00:00",
       "type": "DATA_CHANGE",
@@ -4229,30 +4255,6 @@
         "roe",
         "roce",
         "growth"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:26:46.332608+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "armee-infotech-limited",
-      "name": "ArMee Infotech Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth",
-        "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:26:46.332608+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "adroit-industries-india-limited",
-      "name": "Adroit Industries (India) Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth",
-        "de"
       ]
     }
   ]

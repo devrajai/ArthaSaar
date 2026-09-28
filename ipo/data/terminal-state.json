@@ -1,10 +1,10 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-28T06:29:50.564219+00:00",
+  "generated_at": "2026-09-28T09:25:12.002622+00:00",
   "today_ist": "2026-09-28",
-  "data_updated_at": "2026-09-28T11:59:22.676919+05:30",
-  "ipo_count": 18,
-  "field_coverage_pct": 28.3,
+  "data_updated_at": "2026-09-28T14:54:45.496330+05:30",
+  "ipo_count": 21,
+  "field_coverage_pct": 27.0,
   "sources": {
     "NSE": {
       "ok": true,
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-28T06:28:45.924277+00:00",
+      "checked_at": "2026-09-28T09:24:07.157664+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -68,9 +68,9 @@
         },
         "EconomicTimes": {
           "ok": true,
-          "records": 7,
+          "records": 10,
           "matched": 0,
-          "added": 7,
+          "added": 10,
           "url": "https://economictimes.indiatimes.com/markets/ipo/upcoming"
         },
         "EconomicTimesListed": {
@@ -85,15 +85,15 @@
     },
     "ProspectusResearch": {
       "ok": false,
-      "records": 18,
+      "records": 21,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-28T06:28:48.066245+00:00"
+      "checked_at": "2026-09-28T09:24:08.517089+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T06:29:10.381932+00:00",
+      "checked_at": "2026-09-28T09:24:30.280012+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,17 +103,17 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-28T06:29:10.448616+00:00"
+      "checked_at": "2026-09-28T09:24:30.342709+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T06:29:10.495203+00:00"
+      "checked_at": "2026-09-28T09:24:30.388021+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-28T06:29:10.634123+00:00",
+      "checked_at": "2026-09-28T09:24:30.519273+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
@@ -132,7 +132,7 @@
         },
         "Google News · RHP DRHP": {
           "ok": true,
-          "records": 71,
+          "records": 72,
           "url": "https://news.google.com/rss/search?q=RHP+DRHP+IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         }
       }
@@ -141,11 +141,11 @@
       "ok": true,
       "records": 13,
       "verified": 5,
-      "checked_at": "2026-09-28T06:29:10.634123+00:00"
+      "checked_at": "2026-09-28T09:24:30.519273+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-28T11:59:22.676919+05:30",
+      "checked_at": "2026-09-28T14:54:45.496330+05:30",
       "status_repairs": 0,
       "sme_added": 0,
       "filings": {
@@ -153,7 +153,7 @@
         "verified": 13,
         "repaired": 8
       },
-      "upcoming_filing_map": 7,
+      "upcoming_filing_map": 10,
       "schedule": "GitHub Actions every 15 minutes",
       "rule": "Open and Upcoming are mutually exclusive; opening date begins at 00:00 IST"
     }
@@ -552,6 +552,90 @@
       }
     },
     {
+      "id": "tna-solutions-ltd-sme",
+      "name": "TNA Solutions Ltd. SME",
+      "fingerprint": "40fda4ba39d6c660",
+      "fields": {
+        "price": "₹66 – ₹70",
+        "size": "₹37.86 Cr",
+        "lot": "2000",
+        "open": "30/09/26",
+        "close": "—",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "—",
+        "roce": "—",
+        "growth": "—",
+        "de": "—",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
+    {
+      "id": "sjp-ultrasonics-ltd-sme",
+      "name": "SJP Ultrasonics Ltd. SME",
+      "fingerprint": "495e3cd4670e7077",
+      "fields": {
+        "price": "₹67",
+        "size": "₹23.45 Cr",
+        "lot": "2000",
+        "open": "30/09/26",
+        "close": "—",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "—",
+        "roce": "—",
+        "growth": "—",
+        "de": "—",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
+    {
+      "id": "sollfege-smart-electronics-ltd-sme",
+      "name": "Sollfege Smart Electronics Ltd. SME",
+      "fingerprint": "3df6bceac8ea0fcc",
+      "fields": {
+        "price": "₹55",
+        "size": "₹21.78 Cr",
+        "lot": "2000",
+        "open": "30/09/26",
+        "close": "—",
+        "allotment": null,
+        "listing": "—",
+        "sub": "—",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "—",
+        "gmp_pct": "—",
+        "est_list": "—",
+        "pe": "—",
+        "roe": "—",
+        "roce": "—",
+        "growth": "—",
+        "de": "—",
+        "fresh": "—",
+        "ofs": "—"
+      }
+    },
+    {
       "id": "black-opal-consultants-ltd-sme",
       "name": "Black Opal Consultants Ltd. SME",
       "fingerprint": "dbbad027df0bc6b4",
@@ -867,9 +951,63 @@
       "ipo_id": "paramount-syntex-ltd-sme",
       "name": "Paramount Syntex Ltd. SME",
       "source": "Economic Times"
+    },
+    {
+      "date": "2026-09-30",
+      "type": "OPEN",
+      "ipo_id": "sjp-ultrasonics-ltd-sme",
+      "name": "SJP Ultrasonics Ltd. SME",
+      "source": "Economic Times"
+    },
+    {
+      "date": "2026-09-30",
+      "type": "OPEN",
+      "ipo_id": "sollfege-smart-electronics-ltd-sme",
+      "name": "Sollfege Smart Electronics Ltd. SME",
+      "source": "Economic Times"
+    },
+    {
+      "date": "2026-09-30",
+      "type": "OPEN",
+      "ipo_id": "tna-solutions-ltd-sme",
+      "name": "TNA Solutions Ltd. SME",
+      "source": "Economic Times"
     }
   ],
   "changes": [
+    {
+      "at": "2026-09-28T09:25:12.002622+00:00",
+      "type": "NEW_EVENT",
+      "event": {
+        "date": "2026-09-30",
+        "type": "OPEN",
+        "ipo_id": "sjp-ultrasonics-ltd-sme",
+        "name": "SJP Ultrasonics Ltd. SME",
+        "source": "Economic Times"
+      }
+    },
+    {
+      "at": "2026-09-28T09:25:12.002622+00:00",
+      "type": "NEW_EVENT",
+      "event": {
+        "date": "2026-09-30",
+        "type": "OPEN",
+        "ipo_id": "sollfege-smart-electronics-ltd-sme",
+        "name": "Sollfege Smart Electronics Ltd. SME",
+        "source": "Economic Times"
+      }
+    },
+    {
+      "at": "2026-09-28T09:25:12.002622+00:00",
+      "type": "NEW_EVENT",
+      "event": {
+        "date": "2026-09-30",
+        "type": "OPEN",
+        "ipo_id": "tna-solutions-ltd-sme",
+        "name": "TNA Solutions Ltd. SME",
+        "source": "Economic Times"
+      }
+    },
     {
       "at": "2026-09-28T06:29:50.564219+00:00",
       "type": "DATA_CHANGE",
@@ -4221,40 +4359,6 @@
         "roce",
         "growth",
         "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:40:06.087336+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "elevate-campuses-limited",
-      "name": "Elevate Campuses Limited",
-      "fields": [
-        "roce",
-        "growth",
-        "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:40:06.087336+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "swastika-infra-limited",
-      "name": "Swastika Infra Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth",
-        "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T07:40:06.087336+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "varmora-granito-limited",
-      "name": "Varmora Granito Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth"
       ]
     }
   ]

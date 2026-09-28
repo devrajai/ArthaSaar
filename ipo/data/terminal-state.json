@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-28T15:24:46.448631+00:00",
-  "today_ist": "2026-09-28",
-  "data_updated_at": "2026-09-28T20:54:11.571421+05:30",
+  "generated_at": "2026-09-28T18:35:53.845849+00:00",
+  "today_ist": "2026-09-29",
+  "data_updated_at": "2026-09-28T23:56:43.767035+05:30",
   "ipo_count": 22,
   "field_coverage_pct": 27.1,
   "sources": {
@@ -20,7 +20,7 @@
       "ok": false,
       "records": 0,
       "errors": [
-        "HTTP Error 403: Forbidden"
+        "<urlopen error timed out>"
       ]
     },
     "GMP": {
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-28T15:23:27.129709+00:00",
+      "checked_at": "2026-09-28T18:24:42.845758+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -88,12 +88,12 @@
       "records": 22,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-28T15:23:29.041553+00:00"
+      "checked_at": "2026-09-28T18:24:44.667588+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T15:23:57.677943+00:00",
+      "checked_at": "2026-09-28T18:24:47.471700+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,21 +103,21 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-28T15:23:57.754516+00:00"
+      "checked_at": "2026-09-28T18:24:47.544164+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-28T15:23:57.808969+00:00"
+      "checked_at": "2026-09-28T18:24:47.593990+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-28T15:23:57.969143+00:00",
+      "checked_at": "2026-09-28T18:24:47.748372+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
-          "records": 103,
+          "records": 104,
           "url": "https://news.google.com/rss/search?q=IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         },
         "Google News · IPO allotment": {
@@ -132,7 +132,7 @@
         },
         "Google News · RHP DRHP": {
           "ok": true,
-          "records": 74,
+          "records": 71,
           "url": "https://news.google.com/rss/search?q=RHP+DRHP+IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         }
       }
@@ -140,18 +140,18 @@
     "FilingVerification": {
       "ok": true,
       "records": 13,
-      "verified": 5,
-      "checked_at": "2026-09-28T15:23:57.969143+00:00"
+      "verified": 2,
+      "checked_at": "2026-09-28T18:24:47.748372+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-28T20:54:11.571421+05:30",
+      "checked_at": "2026-09-28T23:56:43.767035+05:30",
       "status_repairs": 0,
       "sme_added": 0,
       "filings": {
-        "checked": 21,
+        "checked": 24,
         "verified": 13,
-        "repaired": 8
+        "repaired": 11
       },
       "upcoming_filing_map": 11,
       "schedule": "GitHub Actions every 15 minutes",

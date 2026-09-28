@@ -8,6 +8,7 @@
     ["gti zone manish indicator green", "GTI Zones", "gti"],
     ["xray x ray market xray evening closing analysis", "Market X-Ray (evening)", "dash"],
     ["chart candle pattern level support resistance volume profile alert", "Chart Reading \u2014 any stock", "chartread"],
+    ["multi timeframe mtf 15m 1h 4h daily radar confluence", "Multi-TF Radar (Chart Reading me)", "chartread"],
     ["global radar world us market dow nasdaq crude gold dollar fed", "Global Radar", "global"],
     ["screener filter scan rsi breakout 52w", "Screener", "screener"],
     ["heatmap sector map heat sectoral", "Sector Map", "heatmap"],

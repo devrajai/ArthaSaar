@@ -1,9 +1,10 @@
-/* procharts.js v1 -- Chart Reading section me 3 pro features (Bloomberg-style, free data):
-   1. PIVOT POINTS card -- Classic / Fibonacci / Camarilla / Woodie, Daily/Weekly/Monthly
-      (daily chunks se, jo Chart Reading wala 5-saal archive hai)
-   2. RENKO + POINT&FIGURE card -- noise-free charts (Renko bricks, P&F X/O columns)
-   3. MULTI-TIMEFRAME RADAR -- index ke 4 timeframes ek saath (15m / 1h / 4h / Daily)
+/* procharts.js v2 -- Chart Reading section me 3 pro features (Bloomberg-style, free data):
+   1. MULTI-TIMEFRAME RADAR -- index ke 4 timeframes ek saath (15m / 1h / 4h / Daily)
       + trend confluence badge. candles.json (intraday) + CDN idx archive.
+      CARD SECTION KE TOP PE HAI (price chart se pehle).
+   2. PIVOT POINTS card -- Classic / Fibonacci / Camarilla / Woodie, Daily/Weekly/Monthly
+      (daily chunks se, jo Chart Reading wala 5-saal archive hai)
+   3. RENKO + POINT&FIGURE card -- noise-free charts (Renko bricks, P&F X/O columns)
    Sab self-contained, kisi aur file ko touch nahi karta. */
 (function () {
   "use strict";
@@ -258,6 +259,11 @@
     mk("pcMtfCard", "\ud83d\udd25 MULTI-TIMEFRAME RADAR \u2014 15m \u00b7 1h \u00b7 4h \u00b7 Daily", "pcMtfChips", "pcMtfBox");
     mk("pcPivCard", "\ud83d\udccd PIVOT POINTS \u2014 Classic \u00b7 Fibonacci \u00b7 Camarilla \u00b7 Woodie", "pcPivChips", "pcPivBox");
     mk("pcRkCard", "\ud83e\uddf1 RENKO \u00b7 POINT&FIGURE \u2014 noise-free charts", "pcRkChips", "pcRkBox");
+
+    /* Dev (28 Sep): MULTI-TIMEFRAME RADAR sabse upar -- pehli card (price chart) se pehle, taaki turant dikhe */
+    var mtfC = document.getElementById("pcMtfCard");
+    var firstCard = sec.querySelector(".card");
+    if (mtfC && firstCard && firstCard !== mtfC && firstCard.parentNode === sec) sec.insertBefore(mtfC, firstCard);
 
     /* MTF chips: sirf indices */
     chipRow("pcMtfChips", ["NIFTY", "BANKNIFTY", "SENSEX", "MIDCPNIFTY", "NIFTYIT", "FINNIFTY"], mtSym, function (v) { mtSym = v; renderMTF(); });

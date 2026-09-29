@@ -1,14 +1,14 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-29T06:27:15.418385+00:00",
+  "generated_at": "2026-09-29T09:23:51.460935+00:00",
   "today_ist": "2026-09-29",
-  "data_updated_at": "2026-09-29T11:56:47.035823+05:30",
-  "ipo_count": 22,
-  "field_coverage_pct": 35.5,
+  "data_updated_at": "2026-09-29T14:53:23.272606+05:30",
+  "ipo_count": 20,
+  "field_coverage_pct": 36.7,
   "sources": {
     "NSE": {
       "ok": true,
-      "records": 14,
+      "records": 13,
       "errors": []
     },
     "BSE": {
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-29T06:26:07.353595+00:00",
+      "checked_at": "2026-09-29T09:22:44.862028+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -62,15 +62,15 @@
         "Mint": {
           "ok": true,
           "records": 10,
-          "matched": 1,
+          "matched": 2,
           "added": 0,
           "url": "https://www.livemint.com/market/ipo/subscription-status"
         },
         "EconomicTimes": {
           "ok": true,
           "records": 10,
-          "matched": 2,
-          "added": 8,
+          "matched": 3,
+          "added": 7,
           "url": "https://economictimes.indiatimes.com/markets/ipo/upcoming"
         },
         "EconomicTimesListed": {
@@ -85,15 +85,15 @@
     },
     "ProspectusResearch": {
       "ok": false,
-      "records": 22,
+      "records": 20,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-29T06:26:09.179233+00:00"
+      "checked_at": "2026-09-29T09:22:46.739474+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-29T06:26:31.826574+00:00",
+      "checked_at": "2026-09-29T09:23:06.266213+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,17 +103,17 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-29T06:26:31.905449+00:00"
+      "checked_at": "2026-09-29T09:23:06.343353+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-29T06:26:31.960479+00:00"
+      "checked_at": "2026-09-29T09:23:06.395473+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-29T06:26:32.123838+00:00",
+      "checked_at": "2026-09-29T09:23:06.551474+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
@@ -141,12 +141,12 @@
       "ok": true,
       "records": 13,
       "verified": 5,
-      "checked_at": "2026-09-29T06:26:32.123838+00:00"
+      "checked_at": "2026-09-29T09:23:06.551474+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-29T11:56:47.035823+05:30",
-      "status_repairs": 2,
+      "checked_at": "2026-09-29T14:53:23.272606+05:30",
+      "status_repairs": 0,
       "sme_added": 0,
       "filings": {
         "checked": 21,
@@ -216,6 +216,34 @@
       }
     },
     {
+      "id": "german-green-steel-and-power-limited",
+      "name": "German Green Steel and Power Limited",
+      "fingerprint": "51290aba3ad5ab9e",
+      "fields": {
+        "price": "₹132-139",
+        "size": "₹0 Cr",
+        "lot": "107",
+        "open": "25/09/26",
+        "close": "29/09/26",
+        "allotment": null,
+        "listing": "05/10/26",
+        "sub": "5.39x (Day 2, 28 Sep)",
+        "sub_qib": null,
+        "sub_nii": null,
+        "sub_retail": null,
+        "gmp": "₹24.5",
+        "gmp_pct": "+17.6%",
+        "est_list": "₹163.5",
+        "pe": "9",
+        "roe": "18.86%",
+        "roce": "19.31%",
+        "growth": "11%",
+        "de": "0.79",
+        "fresh": "₹290 Cr",
+        "ofs": "₹13.9 Cr"
+      }
+    },
+    {
       "id": "runwal-enterprises-limited",
       "name": "Runwal Enterprises Limited",
       "fingerprint": "aff95f7c7de600ae",
@@ -269,34 +297,6 @@
         "de": "—",
         "fresh": "₹287 Cr",
         "ofs": "₹133 Cr"
-      }
-    },
-    {
-      "id": "german-green-steel-and-power-limited",
-      "name": "German Green Steel and Power Limited",
-      "fingerprint": "51290aba3ad5ab9e",
-      "fields": {
-        "price": "₹132-139",
-        "size": "₹0 Cr",
-        "lot": "107",
-        "open": "25/09/26",
-        "close": "29/09/26",
-        "allotment": null,
-        "listing": "05/10/26",
-        "sub": "5.39x (Day 2, 28 Sep)",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "₹24.5",
-        "gmp_pct": "+17.6%",
-        "est_list": "₹163.5",
-        "pe": "9",
-        "roe": "18.86%",
-        "roce": "19.31%",
-        "growth": "11%",
-        "de": "0.79",
-        "fresh": "₹290 Cr",
-        "ofs": "₹13.9 Cr"
       }
     },
     {
@@ -440,62 +440,6 @@
       }
     },
     {
-      "id": "a-one-steels-india-limited",
-      "name": "A-One Steels India Limited",
-      "fingerprint": "2102c841abc08cd2",
-      "fields": {
-        "price": "₹385-405",
-        "size": "₹299 Cr",
-        "lot": "—",
-        "open": "24/09/26",
-        "close": "28/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "—",
-        "roce": "—",
-        "growth": "—",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "moneyview-limited",
-      "name": "Moneyview Limited",
-      "fingerprint": "b8b836304248ec6f",
-      "fields": {
-        "price": "₹32-34",
-        "size": "₹791 Cr",
-        "lot": "441",
-        "open": "24/09/26",
-        "close": "28/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "15.98%",
-        "roce": "—",
-        "growth": "43%",
-        "de": "—",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
       "id": "vishal-nirmiti-limited",
       "name": "Vishal Nirmiti Limited",
       "fingerprint": "1ba14b90f997eff5",
@@ -524,13 +468,13 @@
       }
     },
     {
-      "id": "eventions-limited",
-      "name": "Eventions Limited",
-      "fingerprint": "6047fd79e9d028d1",
+      "id": "nityas-gems-and-jewellery-limited",
+      "name": "Nityas Gems and Jewellery Limited",
+      "fingerprint": "8b025198cd9b7940",
       "fields": {
-        "price": "₹112 – ₹118",
-        "size": "₹38.12 Cr",
-        "lot": "1200",
+        "price": "₹70 – ₹75",
+        "size": "₹108.42 Cr",
+        "lot": "200",
         "open": "30/09/26",
         "close": "Oct 5, 2026",
         "allotment": null,
@@ -552,15 +496,15 @@
       }
     },
     {
-      "id": "nityas-gems-and-jewellery-ltd-mainboard",
-      "name": "Nityas Gems and Jewellery Ltd. Mainboard",
-      "fingerprint": "877e5f792e5e22cf",
+      "id": "eventions-limited",
+      "name": "Eventions Limited",
+      "fingerprint": "6047fd79e9d028d1",
       "fields": {
-        "price": "₹70 – ₹75",
-        "size": "₹108.42 Cr",
-        "lot": "200",
+        "price": "₹112 – ₹118",
+        "size": "₹38.12 Cr",
+        "lot": "1200",
         "open": "30/09/26",
-        "close": "—",
+        "close": "Oct 5, 2026",
         "allotment": null,
         "listing": "—",
         "sub": "—",
@@ -780,22 +724,8 @@
     {
       "date": "2026-09-24",
       "type": "OPEN",
-      "ipo_id": "a-one-steels-india-limited",
-      "name": "A-One Steels India Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-24",
-      "type": "OPEN",
       "ipo_id": "green-asia-impex-limited",
       "name": "Green Asia Impex Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-24",
-      "type": "OPEN",
-      "ipo_id": "moneyview-limited",
-      "name": "Moneyview Limited",
       "source": "NSE"
     },
     {
@@ -838,20 +768,6 @@
       "type": "OPEN",
       "ipo_id": "runwal-enterprises-limited",
       "name": "Runwal Enterprises Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-28",
-      "type": "CLOSE",
-      "ipo_id": "a-one-steels-india-limited",
-      "name": "A-One Steels India Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-28",
-      "type": "CLOSE",
-      "ipo_id": "moneyview-limited",
-      "name": "Moneyview Limited",
       "source": "NSE"
     },
     {
@@ -955,9 +871,9 @@
     {
       "date": "2026-09-30",
       "type": "OPEN",
-      "ipo_id": "nityas-gems-and-jewellery-ltd-mainboard",
-      "name": "Nityas Gems and Jewellery Ltd. Mainboard",
-      "source": "Economic Times"
+      "ipo_id": "nityas-gems-and-jewellery-limited",
+      "name": "Nityas Gems and Jewellery Limited",
+      "source": "NSE"
     },
     {
       "date": "2026-09-30",
@@ -1052,6 +968,17 @@
     }
   ],
   "changes": [
+    {
+      "at": "2026-09-29T09:23:51.460935+00:00",
+      "type": "NEW_EVENT",
+      "event": {
+        "date": "2026-09-30",
+        "type": "OPEN",
+        "ipo_id": "nityas-gems-and-jewellery-limited",
+        "name": "Nityas Gems and Jewellery Limited",
+        "source": "NSE"
+      }
+    },
     {
       "at": "2026-09-29T06:27:15.418385+00:00",
       "type": "DATA_CHANGE",
@@ -4429,17 +4356,6 @@
         "roce",
         "growth",
         "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T08:51:42.161350+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "varmora-granito-limited",
-      "name": "Varmora Granito Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth"
       ]
     }
   ]

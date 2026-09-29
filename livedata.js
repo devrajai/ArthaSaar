@@ -1068,6 +1068,135 @@
     }).catch(function () {});
   }
 
+
+  /* ---------- 22) legacy features: xray, preopen, circuits, bigplayer, results, stress ---------- */
+  function renderLegacy() {
+    /* X-ray verdict - AI Brain ke top par */
+    fj("data/xray.json").then(function (d) {
+      var v = sec("v-aibrain");
+      if (!v) return;
+      var card = v.__xray;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "0 0 10px";
+        var g2 = $(".grid2", v);
+        if (g2 && g2.parentNode) v.insertBefore(card, g2);
+        v.__xray = card;
+      }
+      var h = '<div class="sh2">Market X-Ray <span class="fr">' + esc(String(d.date || "")) + "</span></div>" + '<div style="padding:8px 14px 12px">';
+      h += '<div class="num ' + (String(d.vc || "").indexOf("ff8b8b") > -1 ? "dn" : "up") + '" style="font-size:15px;margin-bottom:6px">' + esc(d.verdict || "") + "</div>";
+      h += '<div class="mono s11" style="color:var(--dim);margin-bottom:8px">' + esc(d.headline || "") + "</div>";
+      (d.points || []).forEach(function (p) {
+        h += '<div class="zrow"><span><b>' + esc(p.h || "") + "</b> \u2014 " + esc(String(p.t || "").slice(0, 160)) + '</span><b class="' + (p.c === "g" ? "up" : "dn") + '">' + (p.c === "g" ? "\u2713" : "\u2717") + "</b></div>";
+      });
+      h += "</div>";
+      card.innerHTML = h;
+      /* stress - crash monitor mein */
+      fj("data/stress.json").then(function (s) {
+        var g3 = $$(".grid2 > .card", v)[1];
+        if (!g3) return;
+        var body = $("div[style]", g3);
+        if (body) {
+          var kk = $$(".kpi", body);
+          if (kk.length === 3) {
+            var el = document.createElement("div");
+            el.className = "card kpi";
+            el.style.border = "0";
+            el.innerHTML = '<div class="lbl">STRESS</div><div class="num" style="font-size:17px">' + (s.score != null ? s.score + "/100" : "\u2014") + '</div><div class="chg ' + (String(s.band || "").toLowerCase().indexOf("high") > -1 ? "dn" : "hold") + '">' + esc(s.band || "") + "</div>";
+            body.appendChild(el);
+          }
+        }
+      }).catch(function () {});
+    }).catch(function () {});
+
+    /* Preopen - screener ke top par */
+    fj("data/preopen.json").then(function (p) {
+      var v = sec("v-screener");
+      if (!v) return;
+      var card = v.__pre;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "0 0 10px";
+        var chips = $(".chips", v);
+        if (chips && chips.parentNode) v.insertBefore(card, chips);
+        v.__pre = card;
+      }
+      var h = '<div class="sh2">Preopen \u2014 IEP movers <span class="fr">' + esc(String((p.updated || "").slice(11, 16) || "")) + "</span></div>" + '<div style="padding:6px 14px 10px">';
+      var gb = p.gainer_buckets || {}, lb = p.loser_buckets || {};
+      h += '<div class="mono s11" style="margin-bottom:6px;color:var(--dim)">up 5%+: <b class="up">' + (gb.up_ge_5pct || 0) + "</b> \u00b7 up 2%+: <b class=\"up\">" + (gb.up_ge_2pct || 0) + "</b> \u00b7 down 5%+: <b class=\"dn\">" + (lb.down_ge_5pct || 0) + "</b> \u00b7 down 2%+: <b class=\"dn\">" + (lb.down_ge_2pct || 0) + "</b></div>";
+      function col(list, cls) {
+        var x = "";
+        (list || []).slice(0, 4).forEach(function (s) {
+          x += '<div class="zrow"><span><b>' + esc(s.symbol) + "</b> IEP \u20b9" + num(s.iep) + " (prev \u20b9" + num(s.prev_close, 1) + ')</span><b class="' + cls + '">' + pctS(s.change_pct) + "</b></div>";
+        });
+        return x;
+      }
+      h += col(p.top20_gainers, "up");
+      h += col(p.top20_losers, "dn");
+      h += "</div>";
+      card.innerHTML = h;
+    }).catch(function () {});
+
+    /* Circuits + Big Player - internals mein */
+    Promise.all([fj("data/circuits.json"), fj("data/bigplayer.json")].map(function (p) { return p.catch(function () { return null; }); })).then(function (rs) {
+      var ci = rs[0], bp = rs[1];
+      var v = sec("v-internals");
+      if (!v) return;
+      var card = v.__circ;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "10px 0 0";
+        var g4 = $(".grid3", v);
+        var anchorEl = v.__radar || (g4 && g4.nextSibling) || null;
+        if (anchorEl && anchorEl.parentNode) v.insertBefore(card, anchorEl);
+        else v.appendChild(card);
+        v.__circ = card;
+      }
+      var h = "";
+      if (ci) {
+        h += '<div class="sh2">Circuits \u2014 aaj <span class="fr">' + esc(String(ci.updated || "")) + "</span></div>" + '<div style="padding:6px 14px 4px">' +
+          '<div class="zrow"><span>Upper circuits</span><b class="up">' + num(ci.n_uc, 0) + "</b></div>" +
+          '<div class="zrow"><span>Lower circuits</span><b class="dn">' + num(ci.n_lc, 0) + "</b></div></div>";
+      }
+      if (bp) {
+        h += '<div class="sh2" style="margin-top:8px">Big Player \u2014 bulk / block deals <span class="fr">' + esc(String(bp.updated || "")) + "</span></div>" + '<div style="padding:6px 14px 10px">';
+        var bd = (bp.bulk || []).slice(0, 5);
+        if (!bd.length) bd = (bp.block || []).slice(0, 5);
+        bd.forEach(function (b2) {
+          h += '<div class="zrow"><span><b>' + esc(b2.s) + "</b> \u20b9" + num(b2.t, 1) + "Cr \u00b7 " + esc(String((b2.c && b2.c[0]) || "deal")) + '</span><b class="dn">SELL</b></div>';
+        });
+        h += "</div>";
+      }
+      if (h) card.innerHTML = h;
+    });
+
+    /* Results calendar - events mein */
+    fj("data/results.json").then(function (d) {
+      var v = sec("v-events");
+      if (!v) return;
+      var card = v.__res;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "10px 0 0";
+        var tb = $("table", v);
+        var tcard = tb ? (tb.closest ? tb.closest(".card") : null) : null;
+        if (tcard && tcard.parentNode) tcard.parentNode.insertBefore(card, tcard.nextSibling);
+        else if (tb && tb.parentNode) tb.parentNode.insertBefore(card, tb.nextSibling);
+        v.__res = card;
+      }
+      var h = '<div class="sh2">Earnings \u2014 ' + esc(d.quarter || "") + ' <span class="fr">' + esc(String(d.updated || "")) + "</span></div>" + '<div style="padding:6px 14px 10px">';
+      (d.results || []).forEach(function (r2) {
+        h += '<div class="zrow"><span><b>' + esc(r2.company) + "</b>" + (r2.div ? " \u00b7 " + esc(r2.div) : "") + '</span><b>' + esc(String(r2.date).slice(5)) + "</b></div>";
+      });
+      h += "</div>";
+      card.innerHTML = h;
+    }).catch(function () {});
+  }
+
   /* ---------- 21) GTI hub — aaj ke zones mini cards ---------- */
   function renderGtiHub() {
     var v = sec("v-gti");
@@ -1123,6 +1252,7 @@
     try { renderSmartRadar(); } catch (e) {}
     try { wireScreenerChips(); } catch (e) {}
     try { renderGtiHub(); } catch (e) {}
+    try { renderLegacy(); } catch (e) {}
   }
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", boot);
   else boot();

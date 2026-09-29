@@ -1,0 +1,30 @@
+name: Vidhi bot-start check
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: getChat probe (works only if user started the bot)
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+        run: |
+          python3 - << 'PYEOF'
+          import os, json, urllib.request
+          TOKEN = os.environ["TG_TOKEN"]
+          def api(method, params):
+              url = "https://api.telegram.org/bot%s/%s" % (TOKEN, method)
+              req = urllib.request.Request(url, data=json.dumps(params).encode(),
+                                           headers={"Content-Type": "application/json"})
+              try:
+                  return json.loads(urllib.request.urlopen(req, timeout=30).read())
+              except urllib.error.HTTPError as e:
+                  try: return json.loads(e.read())
+                  except Exception: return {"ok": False, "error": str(e)}
+              except Exception as e:
+                  return {"ok": False, "error": str(e)}
+          r = api("getChat", {"chat_id": 1215372010})
+          print("GETCHAT_OK:", r.get("ok"))
+          print("GETCHAT_RESULT:", json.dumps(r.get("result") or r.get("description") or r)[:300])
+          PYEOF

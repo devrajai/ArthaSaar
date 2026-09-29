@@ -21,7 +21,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * data:; connect-src *; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arthasaar — One UI · 5 Modes (Paper × Brutal × AMOLED)</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;600;700;800;900&family=Spline+Sans+Mono:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;600;700;800;900&family=Spline+Sans+Mono:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 
 *{box-sizing:border-box;margin:0}
@@ -256,37 +256,37 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
   document.addEventListener("DOMContentLoaded", function () {
     var gs = document.createElement("style");
     gs.textContent = [
-      "#gGate{margin:0;padding:0;background:var(--bg,#f6f1e6);color:var(--text,#201c15);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:var(--font,Georgia,serif);overflow-x:hidden}",
+      "#gGate{margin:0;padding:0;background:#f6f1e6;color:#201c15;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',Georgia,serif;overflow-x:hidden}",
       "#gGate *{box-sizing:border-box;margin:0;padding:0}",
-      "#gIntro{position:fixed;inset:0;background:var(--bg,#f6f1e6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;transition:opacity .5s ease}",
+      "#gIntro{position:fixed;inset:0;background:#f6f1e6;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;transition:opacity .5s ease}",
       "#gIntro.hide{opacity:0;pointer-events:none}",
-      ".gi-word{font-size:2.4rem;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:var(--text,#201c15)}",
-      ".gi-word b{font-weight:700;color:var(--accent,#b5721f)}",
-      ".gi-line{width:0;height:2px;background:var(--accent,#b5721f);margin-top:1.1rem;animation:giGrow .5s ease .5s forwards}",
+      ".gi-word{font-size:2.4rem;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:#201c15}",
+      ".gi-word b{font-weight:700;color:#b5721f}",
+      ".gi-line{width:0;height:2px;background:#b5721f;margin-top:1.1rem;animation:giGrow .5s ease .5s forwards}",
       "@keyframes giGrow{to{width:180px}}",
       ".gi-feats{display:flex;gap:2.5rem;margin-top:1.6rem;opacity:0;animation:giFade .5s ease 1s forwards}",
-      ".gi-feats div{font-size:.85rem;color:var(--dim,#6b6250);text-align:center}",
-      ".gi-feats strong{display:block;color:var(--text,#201c15);font-size:1rem;margin-bottom:.15rem}",
+      ".gi-feats div{font-size:.85rem;color:#6b6250;text-align:center}",
+      ".gi-feats strong{display:block;color:#201c15;font-size:1rem;margin-bottom:.15rem}",
       "@keyframes giFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}",
-      ".gcard{width:min(420px,92vw);background:var(--surface,#fdfbf4);border:1px solid var(--border,#d9cfb6);border-radius:16px;padding:3rem 2.6rem;box-shadow:var(--shadow,0 10px 26px rgba(90,70,30,.14));opacity:0;animation:giFade .7s ease 1.85s forwards}",
+      ".gcard{width:min(420px,92vw);background:#fdfbf4;border:1px solid #d9cfb6;border-radius:16px;padding:3rem 2.6rem;box-shadow:0 10px 26px rgba(90,70,30,.14);opacity:0;animation:giFade .7s ease 1.85s forwards}",
       ".glogo{display:flex;justify-content:center;margin-bottom:.7rem}",
-      ".gmark{width:34px;height:34px;border:2px solid var(--accent,#b5721f);border-radius:50%;position:relative}",
-      ".gmark::after{content:'';position:absolute;inset:7px;background:var(--accent,#b5721f);clip-path:polygon(0 60%,30% 60%,45% 20%,60% 85%,75% 45%,100% 45%,100% 60%,80% 60%,62% 100%,48% 40%,36% 78%,28% 78%,10% 74%,0 74%)}",
+      ".gmark{width:34px;height:34px;border:2px solid #b5721f;border-radius:50%;position:relative}",
+      ".gmark::after{content:'';position:absolute;inset:7px;background:#b5721f;clip-path:polygon(0 60%,30% 60%,45% 20%,60% 85%,75% 45%,100% 45%,100% 60%,80% 60%,62% 100%,48% 40%,36% 78%,28% 78%,10% 74%,0 74%)}",
       ".gcard h1{text-align:center;font-size:1.35rem;font-weight:700;letter-spacing:.14em}",
-      ".gsub{text-align:center;color:var(--dim,#6b6250);font-size:.9rem;margin:.6rem 0 2.2rem;line-height:1.8}",
-      ".gsub b{color:var(--accent,#b5721f)}",
-      ".glist{list-style:none;margin:0 0 2.2rem;border-top:1px solid var(--border,#d9cfb6)}",
-      ".glist li{display:flex;align-items:center;gap:.7rem;padding:.9rem .2rem;border-bottom:1px solid var(--border,#d9cfb6);font-size:.88rem;color:var(--text,#201c15)}",
+      ".gsub{text-align:center;color:#6b6250;font-size:.9rem;margin:.6rem 0 2.2rem;line-height:1.8}",
+      ".gsub b{color:#b5721f}",
+      ".glist{list-style:none;margin:0 0 2.2rem;border-top:1px solid #d9cfb6}",
+      ".glist li{display:flex;align-items:center;gap:.7rem;padding:.9rem .2rem;border-bottom:1px solid #d9cfb6;font-size:.88rem;color:#201c15}",
       ".gcheck{flex:none}",
-      ".gcheck circle{stroke:var(--accent,#b5721f)}",
-      ".gcheck path{stroke:var(--accent,#b5721f)}",
-      ".glabel{display:block;font-size:.8rem;font-weight:600;color:var(--text,#201c15);margin-bottom:.65rem}",
+      ".gcheck circle{stroke:#b5721f}",
+      ".gcheck path{stroke:#b5721f}",
+      ".glabel{display:block;font-size:.8rem;font-weight:600;color:#201c15;margin-bottom:.65rem}",
       ".grow{display:flex;gap:.6rem}",
-      "#gInp{flex:1;border:1px solid var(--border2,#b8a67e);border-radius:10px;padding:.85rem 1rem;font-size:.95rem;outline:none;transition:.2s;background:var(--bg2,#fbf8f0);color:var(--text,#201c15);font-family:inherit}",
-      "#gInp:focus{border-color:var(--accent,#b5721f);box-shadow:0 0 0 3px var(--surface2,#f0e9d8)}",
-      "#gBtn{background:var(--accent,#b5721f);color:#fff;border:none;border-radius:10px;padding:.85rem 1.4rem;font-weight:600;font-size:.92rem;cursor:pointer;transition:.2s;font-family:inherit}",
+      "#gInp{flex:1;border:1px solid #b8a67e;border-radius:10px;padding:.85rem 1rem;font-size:.95rem;outline:none;transition:.2s;background:#fbf8f0;color:#201c15;font-family:inherit}",
+      "#gInp:focus{border-color:#b5721f;box-shadow:0 0 0 3px #f0e9d8}",
+      "#gBtn{background:#b5721f;color:#fff;border:none;border-radius:10px;padding:.85rem 1.4rem;font-weight:600;font-size:.92rem;cursor:pointer;transition:.2s;font-family:inherit}",
       "#gBtn:hover{filter:brightness(.9)}",
-      ".gerr{text-align:center;margin-top:1rem;font-size:.83rem;min-height:1.1rem;color:var(--down,#b3323c)}",
+      ".gerr{text-align:center;margin-top:1rem;font-size:.83rem;min-height:1.1rem;color:#b3323c}",
       
       "@media(max-width:520px){",
       "#gGate{overflow-y:auto;align-items:flex-start;padding:1.5rem 0}",
@@ -325,7 +325,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       "<div class='gerr' id='gErr'></div>" +
       
       "</div>";
-    document.body.setAttribute("style", "margin:0;padding:0;background:var(--bg,#f6f1e6);color:var(--text,#201c15);font-family:var(--font,Georgia,serif);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden");
+    document.body.setAttribute("style", "margin:0;padding:0;background:#f6f1e6;color:#201c15;font-family:'Fraunces',Georgia,serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden");
     document.body.setAttribute("id", "gGate");
     st.remove();
     setTimeout(function () { var i = document.getElementById("gIntro"); if (i) i.classList.add("hide"); }, 1850);
@@ -340,7 +340,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       sha(inp.value).then(function (h) {
         if (h === HASH) {
           try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
-          err.style.color = "var(--up,#1f7a4d)";
+          err.style.color = "#1f7a4d";
           err.textContent = "\u2713 Access granted \u2014 loading terminal\u2026";
           setTimeout(function () { location.hash = "home"; location.reload(); }, 700);
         } else { err.textContent = "Wrong password. Try again."; inp.value = ""; inp.focus(); }

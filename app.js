@@ -20,7 +20,7 @@
   var tries = {};
   function load(f) {
     var s = document.createElement("script");
-    s.src = f + "?v=as33";
+    s.src = f + "?v=as34";
     s.async = false; /* execution order preserve, download parallel */
     s.onload = function () { tries[f] = 0; };
     s.onerror = function () {

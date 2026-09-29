@@ -180,7 +180,7 @@
   }
 
   function mount() {
-    mountInto(document.getElementById("home"));
+    /* NEW UI: home pe search box nahi (demo look) — sirf dash me */
     mountInto(document.getElementById("dash"));
   }
 

@@ -1,14 +1,14 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-29T15:25:30.431452+00:00",
+  "generated_at": "2026-09-29T18:26:53.051422+00:00",
   "today_ist": "2026-09-29",
-  "data_updated_at": "2026-09-29T20:55:00.045461+05:30",
-  "ipo_count": 20,
-  "field_coverage_pct": 36.7,
+  "data_updated_at": "2026-09-29T23:56:23.237413+05:30",
+  "ipo_count": 18,
+  "field_coverage_pct": 37.0,
   "sources": {
     "NSE": {
       "ok": true,
-      "records": 13,
+      "records": 11,
       "errors": []
     },
     "BSE": {
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-29T15:23:36.257319+00:00",
+      "checked_at": "2026-09-29T18:25:05.337684+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -85,15 +85,15 @@
     },
     "ProspectusResearch": {
       "ok": false,
-      "records": 20,
+      "records": 18,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-29T15:23:39.231393+00:00"
+      "checked_at": "2026-09-29T18:25:07.719148+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-29T15:24:47.188843+00:00",
+      "checked_at": "2026-09-29T18:26:08.803966+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,21 +103,21 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-29T15:24:47.267548+00:00"
+      "checked_at": "2026-09-29T18:26:08.863845+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-29T15:24:47.321071+00:00"
+      "checked_at": "2026-09-29T18:26:08.906620+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-29T15:24:47.477073+00:00",
+      "checked_at": "2026-09-29T18:26:09.032311+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
-          "records": 102,
+          "records": 103,
           "url": "https://news.google.com/rss/search?q=IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         },
         "Google News · IPO allotment": {
@@ -141,11 +141,11 @@
       "ok": true,
       "records": 13,
       "verified": 5,
-      "checked_at": "2026-09-29T15:24:47.477073+00:00"
+      "checked_at": "2026-09-29T18:26:09.032311+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-29T20:55:00.045461+05:30",
+      "checked_at": "2026-09-29T23:56:23.237413+05:30",
       "status_repairs": 0,
       "sme_added": 0,
       "filings": {
@@ -351,62 +351,6 @@
         "roce": "46.47%",
         "growth": "6%",
         "de": "0.62",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "bench-mark-infotech-services-limited",
-      "name": "Bench Mark Infotech Services Limited",
-      "fingerprint": "fea1bc721d7e5c57",
-      "fields": {
-        "price": "—",
-        "size": "—",
-        "lot": "1200",
-        "open": "25/09/26",
-        "close": "29/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "47.65%",
-        "roce": "47.74%",
-        "growth": "26%",
-        "de": "0.10",
-        "fresh": "—",
-        "ofs": "—"
-      }
-    },
-    {
-      "id": "himalayan-solar-limited",
-      "name": "Himalayan Solar Limited",
-      "fingerprint": "5a0899963ce6b4fe",
-      "fields": {
-        "price": "—",
-        "size": "—",
-        "lot": "1200",
-        "open": "25/09/26",
-        "close": "29/09/26",
-        "allotment": null,
-        "listing": "—",
-        "sub": "—",
-        "sub_qib": null,
-        "sub_nii": null,
-        "sub_retail": null,
-        "gmp": "—",
-        "gmp_pct": "—",
-        "est_list": "—",
-        "pe": "—",
-        "roe": "56%",
-        "roce": "35.84%",
-        "growth": "20%",
-        "de": "0.77",
         "fresh": "—",
         "ofs": "—"
       }
@@ -738,22 +682,8 @@
     {
       "date": "2026-09-25",
       "type": "OPEN",
-      "ipo_id": "bench-mark-infotech-services-limited",
-      "name": "Bench Mark Infotech Services Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-25",
-      "type": "OPEN",
       "ipo_id": "german-green-steel-and-power-limited",
       "name": "German Green Steel and Power Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-25",
-      "type": "OPEN",
-      "ipo_id": "himalayan-solar-limited",
-      "name": "Himalayan Solar Limited",
       "source": "NSE"
     },
     {
@@ -794,22 +724,8 @@
     {
       "date": "2026-09-29",
       "type": "CLOSE",
-      "ipo_id": "bench-mark-infotech-services-limited",
-      "name": "Bench Mark Infotech Services Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-29",
-      "type": "CLOSE",
       "ipo_id": "german-green-steel-and-power-limited",
       "name": "German Green Steel and Power Limited",
-      "source": "NSE"
-    },
-    {
-      "date": "2026-09-29",
-      "type": "CLOSE",
-      "ipo_id": "himalayan-solar-limited",
-      "name": "Himalayan Solar Limited",
       "source": "NSE"
     },
     {

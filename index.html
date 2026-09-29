@@ -242,7 +242,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 </head>
 <body>
 <script>
-/* privacy gate - password 131217 (SHA-256) */
+/* privacy gate — Arthasaar (demo-2 light design). Password check unchanged (SHA-256). */
 (function () {
   var HASH = "c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
   var SIX_H = 6 * 3600 * 1000;
@@ -254,32 +254,79 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
   st.textContent = "body{visibility:hidden}";
   document.head.appendChild(st);
   document.addEventListener("DOMContentLoaded", function () {
-    document.body.innerHTML =
-      "<div class='gwrap'>" +
-      "<div class='glogo'>AS</div>" +
-      "<h1>ARTHASAAR</h1>" +
-      "<p class='gsub'>This terminal is private. Authorised access only.</p>" +
-      "<div class='gcard'><div class='glabel'>ENTER PASSWORD</div>" +
-      "<input id='gInp' type='password' placeholder='password' autocomplete='current-password'>" +
-      "<button id='gBtn'>Unlock</button>" +
-      "<div class='gerr' id='gErr'></div></div>" +
-      "<p class='gnote'>Personal market intelligence terminal.<br>" +
-      "To log out on a shared phone: open the site with #lock at the end of the address.</p>" +
-      "</div>";
     var gs = document.createElement("style");
-    gs.textContent = ".gwrap{max-width:420px;margin:0 auto;padding:28px 20px;display:flex;flex-direction:column;min-height:70vh;box-sizing:border-box}" +
-      ".gwrap h1{font-size:22px;letter-spacing:.14em;margin:0 0 6px}" +
-      ".glogo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--accent,#CDA175),#8a6a3f);display:flex;align-items:center;justify-content:center;font-family:var(--mono,monospace);font-weight:700;font-size:24px;color:#fff;margin-bottom:18px}" +
-      ".gcard{background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.25);border-radius:16px;padding:18px}" +
-      ".glabel{font-size:11px;letter-spacing:.14em;color:var(--dim,#8fa3bd);font-weight:600;margin-bottom:8px}" +
-      "#gInp{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(128,128,128,.35);background:transparent;color:inherit;font:400 15px inherit;outline:none;box-sizing:border-box}" +
-      "#gBtn{margin-top:10px;width:100%;padding:12px;border:0;border-radius:10px;background:var(--accent,#CDA175);color:#fff;font-weight:700;font-size:14px;cursor:pointer}" +
-      ".gerr{color:#fb5c7d;font-size:12.5px;margin-top:10px;min-height:16px}" +
-      ".gsub{font-size:13px;color:var(--dim,#8fa3bd);margin:0 0 26px}" +
-      ".gnote{font-size:11.5px;color:var(--dim,#5d6f88);margin-top:auto;padding-top:24px;line-height:1.6}";
+    gs.textContent = [
+      "#gGate{margin:0;padding:0;background:#fafaf8;color:#1a1a1a;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overflow-x:hidden}",
+      "#gGate *{box-sizing:border-box;margin:0;padding:0}",
+      "#gIntro{position:fixed;inset:0;background:#fafaf8;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;transition:opacity .5s ease}",
+      "#gIntro.hide{opacity:0;pointer-events:none}",
+      ".gi-word{font-size:2.4rem;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:#1a1a1a}",
+      ".gi-word b{font-weight:700;color:#0a7d5c}",
+      ".gi-line{width:0;height:2px;background:#0a7d5c;margin-top:1.1rem;animation:giGrow .5s ease .5s forwards}",
+      "@keyframes giGrow{to{width:180px}}",
+      ".gi-feats{display:flex;gap:2.5rem;margin-top:1.6rem;opacity:0;animation:giFade .5s ease 1s forwards}",
+      ".gi-feats div{font-size:.85rem;color:#666;text-align:center}",
+      ".gi-feats strong{display:block;color:#1a1a1a;font-size:1rem;margin-bottom:.15rem}",
+      "@keyframes giFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}",
+      ".gcard{width:min(420px,92vw);background:#fff;border:1px solid #e8e8e4;border-radius:16px;padding:3rem 2.6rem;box-shadow:0 4px 30px rgba(0,0,0,.05);opacity:0;animation:giFade .7s ease 1.85s forwards}",
+      ".glogo{display:flex;justify-content:center;margin-bottom:.6rem}",
+      ".gmark{width:34px;height:34px;border:2px solid #0a7d5c;border-radius:50%;position:relative}",
+      ".gmark::after{content:'';position:absolute;inset:7px;background:#0a7d5c;clip-path:polygon(0 60%,30% 60%,45% 20%,60% 85%,75% 45%,100% 45%,100% 60%,80% 60%,62% 100%,48% 40%,36% 78%,28% 78%,10% 74%,0 74%)}",
+      ".gcard h1{text-align:center;font-size:1.35rem;font-weight:700;letter-spacing:.14em}",
+      ".gsub{text-align:center;color:#777;font-size:.88rem;margin:.5rem 0 2rem;line-height:1.5}",
+      ".gsub b{color:#0a7d5c}",
+      ".glist{list-style:none;margin:0 0 2rem;border-top:1px solid #eee}",
+      ".glist li{display:flex;align-items:center;gap:.7rem;padding:.7rem .2rem;border-bottom:1px solid #eee;font-size:.88rem;color:#444}",
+      ".gcheck{flex:none}",
+      ".glabel{display:block;font-size:.8rem;font-weight:600;color:#1a1a1a;margin-bottom:.5rem}",
+      ".grow{display:flex;gap:.6rem}",
+      "#gInp{flex:1;border:1px solid #ddd;border-radius:10px;padding:.85rem 1rem;font-size:.95rem;outline:none;transition:.2s;background:#fff;color:#1a1a1a;font-family:inherit}",
+      "#gInp:focus{border-color:#0a7d5c;box-shadow:0 0 0 3px rgba(10,125,92,.1)}",
+      "#gBtn{background:#0a7d5c;color:#fff;border:none;border-radius:10px;padding:.85rem 1.4rem;font-weight:600;font-size:.92rem;cursor:pointer;transition:.2s;font-family:inherit}",
+      "#gBtn:hover{background:#086a4f}",
+      ".gerr{text-align:center;margin-top:.9rem;font-size:.83rem;min-height:1.1rem;color:#c0392b}",
+      ".gnote{text-align:center;font-size:.75rem;color:#999;margin-top:1.3rem;line-height:1.6}",
+      "@media(max-width:520px){",
+      "#gGate{overflow-y:auto;align-items:flex-start;padding:1.5rem 0}",
+      ".gcard{padding:2.2rem 1.4rem;border-radius:14px}",
+      ".grow{flex-direction:column}",
+      "#gBtn{width:100%;padding:1rem;font-size:1rem}",
+      "#gInp{font-size:1rem;padding:1rem}",
+      ".gi-word{font-size:1.6rem;letter-spacing:1px}",
+      ".gi-feats{flex-direction:column;gap:.9rem;margin-top:1.3rem}",
+      ".gi-feats div{font-size:.8rem}",
+      ".gi-feats strong{font-size:.95rem}",
+      "}"
+    ].join("");
     document.head.appendChild(gs);
-    document.body.setAttribute("style", "margin:0;background:var(--bg,#070c17);color:var(--text,#e8eef7);font-family:inherit;min-height:100vh;display:block");
+    var CHK = "<svg class='gcheck' width='16' height='16' viewBox='0 0 16 16' fill='none'><circle cx='8' cy='8' r='7' stroke='#0a7d5c' stroke-width='1.5'/><path d='M5 8.2l2 2 4-4.4' stroke='#0a7d5c' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>";
+    document.body.innerHTML =
+      "<div id='gIntro'>" +
+      "<div class='gi-word'>Artha<b>saar</b></div>" +
+      "<div class='gi-line'></div>" +
+      "<div class='gi-feats'>" +
+      "<div><strong>Market data</strong>NSE & BSE</div>" +
+      "<div><strong>Refined</strong>Clean analysis</div>" +
+      "<div><strong>Insights</strong>Clear & actionable</div>" +
+      "</div></div>" +
+      "<div class='gcard'>" +
+      "<div class='glogo'><div class='gmark'></div></div>" +
+      "<h1>ARTHASAAR</h1>" +
+      "<p class='gsub'>This terminal is private. Authorised access only.<br>Inside: <b>dynamic charts, smart screeners & instant stock analysis.</b></p>" +
+      "<ul class='glist'>" +
+      "<li>" + CHK + "Market data, refined & readable</li>" +
+      "<li>" + CHK + "Powerful screeners for every strategy</li>" +
+      "<li>" + CHK + "Raw market data turned into clarity</li>" +
+      "</ul>" +
+      "<label class='glabel' for='gInp'>Password</label>" +
+      "<div class='grow'><input id='gInp' type='password' placeholder='Enter password' autocomplete='current-password'><button id='gBtn'>Enter</button></div>" +
+      "<div class='gerr' id='gErr'></div>" +
+      "<p class='gnote'>Personal market intelligence terminal.<br>To log out on a shared phone: open the site with #lock at the end of the address.</p>" +
+      "</div>";
+    document.body.setAttribute("style", "margin:0;padding:0;background:#fafaf8;color:#1a1a1a;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden");
+    document.body.setAttribute("id", "gGate");
     st.remove();
+    setTimeout(function () { var i = document.getElementById("gIntro"); if (i) i.classList.add("hide"); }, 1850);
     var inp = document.getElementById("gInp"), btn = document.getElementById("gBtn"), err = document.getElementById("gErr");
     function sha(s) {
       return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function (b) {
@@ -287,19 +334,22 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       });
     }
     function tryOpen() {
+      if (!inp.value) { err.textContent = "Please enter the password."; return; }
       sha(inp.value).then(function (h) {
         if (h === HASH) {
           try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
-          location.hash = "home";
-          location.reload();
+          err.style.color = "#0a7d5c";
+          err.textContent = "\u2713 Access granted \u2014 loading terminal\u2026";
+          setTimeout(function () { location.hash = "home"; location.reload(); }, 700);
         } else { err.textContent = "Wrong password. Try again."; inp.value = ""; inp.focus(); }
       });
     }
     btn.onclick = tryOpen;
     inp.addEventListener("keydown", function (e) { if (e.key === "Enter") tryOpen(); });
-    setTimeout(function () { inp.focus(); }, 50);
+    setTimeout(function () { inp.focus(); }, 1950);
   });
 })();
+
 </script>
 <header class="hdr" id="hdr">
   <div class="top">

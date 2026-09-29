@@ -1,0 +1,36 @@
+name: Make idx files (from full-00 archive)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate idx-*.json
+        run: python3 scripts/make_idx.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+          git add data/idx-*.json
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "data: idx-*.json (from full-00 archive)"
+          for i in 1 2 3 4 5; do
+            if git push; then exit 0; fi
+            git pull --rebase --autostash origin data || true
+            sleep 5
+          done
+          echo "ERROR: push failed"; exit 1

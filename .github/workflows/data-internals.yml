@@ -1,0 +1,42 @@
+name: Market Internals
+on:
+  schedule:
+    # 19:50 IST Mon-Fri (EOD ke baad)
+    - cron: '20 14 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: internals
+  cancel-in-progress: false
+
+jobs:
+  compute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compute internals (A/D line, TRIN, McClellan, NH-NL, thrust)
+        run: python3 scripts/make_internals.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/internals.json
+          if git diff --cached --quiet; then echo 'No changes.'; exit 0; fi
+          git commit -m 'data: market internals'
+          for i in 1 2 3 4 5; do
+            if git pull --rebase --autostash origin data && git push; then exit 0; fi
+            sleep 15
+          done
+          echo 'ERROR: push failed'; exit 1

@@ -1,0 +1,136 @@
+name: Repo consolidation (one-shot)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-consolidate
+  cancel-in-progress: false
+
+jobs:
+  data-branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Create ArthaSaar 'data' branch from arthasaar-data
+        run: |
+          set -e
+          git clone --depth 1 https://github.com/devrajai/arthasaar-data.git ad
+          cd ad
+          rm -rf .github
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          printf '/data\n/scripts\n' > .vercelignore
+          git checkout -q --orphan data-branch
+          git rm -q -rf --cached . 2>/dev/null || true
+          git add .vercelignore data scripts
+          git commit -q -m "consolidate: arthasaar-data -> ArthaSaar data branch (orphan)"
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/devrajai/ArthaSaar.git" HEAD:refs/heads/data
+          echo "DATA-BRANCH-PUSHED"
+
+  main-edits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: data-branch
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Guard - data branch must be live on jsDelivr first
+        run: |
+          for u in daily-00 idx-NIFTY internals; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/$u.json")
+            echo "$u -> $code"
+            [ "$code" = "200" ] || { echo "data branch not served yet - abort"; exit 1; }
+          done
+      - name: Apply URL migrations
+        run: |
+          python3 - <<'PYEOF'
+          import pathlib
+          OLD_CDN = "https://cdn.jsdelivr.net/gh/devrajai/arthasaar-data@main/data/"
+          NEW_CDN = "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/"
+          def sub(path, pairs):
+              p = pathlib.Path(path)
+              t = p.read_text(encoding="utf-8")
+              n = 0
+              for old, new in pairs:
+                  c = t.count(old)
+                  if c == 0:
+                      print("MISS:", path, "|", old[:70])
+                  t = t.replace(old, new)
+                  n += c
+              p.write_text(t, encoding="utf-8")
+              print("edited:", path, "replacements:", n)
+          for f in ["chartmax.js", "chartread.js", "crtime.js", "marketinternals.js", "procharts.js"]:
+              sub(f, [(OLD_CDN, NEW_CDN)])
+          sub("scripts/telegram_ipo.py", [
+              ("from the ipo-terminal repo via public raw URLs.",
+               "from this repo (ArthaSaar, ipo/data/) via public raw URLs."),
+              ("https://raw.githubusercontent.com/devrajai/ipo-terminal/main/data/",
+               "https://raw.githubusercontent.com/devrajai/ArthaSaar/main/ipo/data/"),
+              ("https://devrajai.github.io/ipo-terminal/",
+               "https://arthasaar.vercel.app/ipo/"),
+          ])
+          sub("ipo/scripts/sync_from_pipeline.py", [
+              ("https://raw.githubusercontent.com/devrajai/ipo-website/main/data.json",
+               "https://raw.githubusercontent.com/devrajai/ArthaSaar/main/ipo/data/notion-data.json"),
+          ])
+          sub("ipo/scripts/ipo-upgrade.js", [
+              ("https://devrajai.github.io/ipo-terminal/", "https://arthasaar.vercel.app/ipo/"),
+          ])
+          sub("ipo/README.md", [
+              ("**Live:** https://devrajai.github.io/ipo-terminal/",
+               "**Live:** https://arthasaar.vercel.app/ipo/ (also https://devrajai.github.io/ArthaSaar/ipo/)"),
+          ])
+          sub("PROJECT_BRAIN.md", [
+              ("Repo: devrajai/market-brain | Sister project: devrajai/ipo-terminal (read its PROJECT_BRAIN.md too)",
+               "Repo: devrajai/ArthaSaar (single repo since 29-09-2026; candle chunks live on the 'data' branch of this repo, served via jsDelivr; former ipo-terminal lives in ipo/, former arthasaar-data in the 'data' branch)"),
+          ])
+          PYEOF
+      - name: Commit to main
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 1; fi
+          git commit -m "consolidate: point chart/IPO data at ArthaSaar 'data' branch (jsDelivr) + fix repo links"
+          for i in 1 2 3 4 5; do
+            if git pull --rebase --autostash origin main && git push; then echo "MAIN-EDITS-PUSHED"; exit 0; fi
+            sleep 10
+          done
+          echo "ERROR: push failed"; exit 1
+
+  ipo-extras:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: main-edits
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Copy ipo-terminal extras into ipo/
+        run: |
+          set -e
+          git clone --depth 1 https://github.com/devrajai/ipo-terminal.git it
+          mkdir -p ipo/apps-script ipo/archive
+          cp it/apps-script/IPO_Tracker_AllInOne.gs ipo/apps-script/
+          cp -r it/archive/. ipo/archive/
+          cp it/PROJECT_BRAIN.md ipo/PROJECT_BRAIN.md
+          sed -i 's|https://devrajai.github.io/ipo-terminal/|https://arthasaar.vercel.app/ipo/|g' ipo/PROJECT_BRAIN.md
+          sed -i 's|devrajai/ipo-terminal|devrajai/ArthaSaar (ipo/ folder)|g' ipo/PROJECT_BRAIN.md
+          rm -rf it
+          git status --short | head -20
+      - name: Commit to main
+        run: |
+          git config user.name "devrajai"
+          git config user.email "devraj.resume@gmail.com"
+          git add ipo
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "consolidate: ipo-terminal extras (apps-script, archive, brain) into ipo/"
+          for i in 1 2 3 4 5; do
+            if git pull --rebase --autostash origin main && git push; then echo "IPO-EXTRAS-PUSHED"; exit 0; fi
+            sleep 10
+          done
+          echo "ERROR: push failed"; exit 1

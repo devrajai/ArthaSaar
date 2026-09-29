@@ -1,0 +1,92 @@
+name: Candle data sync (release -> data branch)
+on:
+  workflow_dispatch:
+    inputs:
+      force_full:
+        description: "full-XX chunks bhi refresh karo (Sunday auto, warna daily-only)"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "50 13 * * 1-5"   # 7:20 PM IST weekdays (history.yml ke ~45 min baad)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: candle-data-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+          fetch-depth: 1
+
+      - name: Download candle chunks from release
+        run: |
+          REL="https://github.com/devrajai/ArthaSaar/releases/download/candles"
+          mkdir -p data
+          ok=0
+          for i in $(seq -w 0 25); do
+            for p in daily full; do
+              u="$REL/$p-$i.json"
+              if curl -fsSL --retry 3 --max-time 120 "$u" -o "data/$p-$i.json"; then
+                ok=$((ok+1))
+              else
+                rm -f "data/$p-$i.json"
+              fi
+            done
+          done
+          curl -fsSL --retry 3 --max-time 120 "$REL/intraday.json" -o data/intraday.json || true
+          for s in NIFTY BANKNIFTY SENSEX FINNIFTY MIDCPNIFTY NIFTYIT; do
+            curl -fsSL --retry 3 --max-time 60 "$REL/idx-$s.json" -o "data/idx-$s.json" || rm -f "data/idx-$s.json"
+          done
+          echo "downloaded chunks: $ok"
+          du -sm data
+
+      - name: Decide full-chunk refresh
+        id: full
+        run: |
+          DOW=$(date -u +%u)
+          FORCE="${{ github.event.inputs.force_full }}"
+          if [ "$FORCE" = "true" ] || [ "$DOW" = "7" ]; then
+            echo "refresh=full" >> "$GITHUB_OUTPUT"
+          else
+            echo "refresh=daily-only" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trim full chunks (non-Sunday)
+        if: steps.full.outputs.refresh != 'full'
+        run: rm -f data/full-*.json
+
+      - name: Sanity check
+        run: |
+          N=$(ls data/daily-*.json 2>/dev/null | wc -l)
+          if [ "$N" -lt 20 ]; then
+            echo "daily chunks kam mile ($N) - abort (accha data mat mitao)"
+            exit 1
+          fi
+          echo "daily chunks: $N - OK"
+
+      - name: Orphan commit + force push (history = sirf 1 commit)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          printf '/data\n/scripts\n' > .vercelignore
+          git add .vercelignore
+          git checkout -q --orphan fresh-data
+          git rm -q -rf --cached .
+          git add .vercelignore data scripts
+          git commit -q -m "candle data refresh $(date -u +%F_%H:%M)"
+          git push -f origin HEAD:refs/heads/data
+
+      - name: Purge jsDelivr cache
+        run: |
+          for f in data/*.json; do
+            curl -fsS --max-time 30 "https://purge.jsdelivr.net/gh/devrajai/ArthaSaar@data/$f" || echo "purge fail: $f"
+          done
+          echo "jsDelivr cache purged"

@@ -54,17 +54,31 @@
     fj("data/indices-all.json").then(function (d) {
       var by = {};
       (d.indices || []).forEach(function (x) { by[(x.index || "").toUpperCase()] = x; });
-      var pick = function (k) {
-        return by["NIFTY 50"] && k === "NIFTY 50" ? by[k] : (by[k] || {});
-      };
-      var n = by["NIFTY 50"] || {}, se = by["SENSEX"] || {}, bn = by["BANK NIFTY"] || by["BANKNIFTY"] || {}, vx = by["INDIA VIX"] || {};
+      var n = by["NIFTY 50"] || {}, se = by["SENSEX"] || by["BSE SENSEX"] || null, bn = by["BANK NIFTY"] || by["BANKNIFTY"] || by["NIFTY BANK"] || {}, vx = by["INDIA VIX"] || {};
       var k = sec("v-home") ? $(".kpis", sec("v-home")) : null;
-      if (k) {
-        k.innerHTML =
-          kpi("NIFTY 50", num(n.price), n.change_pct, n.change) +
-          kpi("SENSEX", num(se.price), se.change_pct, se.change) +
-          kpi("BANK NIFTY", num(bn.price), bn.change_pct, bn.change) +
-          kpi("INDIA VIX", num(vx.price), vx.change_pct);
+      var draw = function (seX) {
+        if (k) {
+          k.innerHTML =
+            kpi("NIFTY 50", num(n.price), n.change_pct, n.change) +
+            kpi("SENSEX", num(seX.price), seX.change_pct, seX.change) +
+            kpi("BANK NIFTY", num(bn.price), bn.change_pct, bn.change) +
+            kpi("INDIA VIX", num(vx.price), vx.change_pct);
+        }
+      };
+      if (se) { draw({ price: se.price, change_pct: se.change_pct, change: se.change }); }
+      else {
+        /* SENSEX indices-all mein nahi — candles se */
+        draw({ price: null, change_pct: null });
+        fj("data/candles.json").then(function (c) {
+          var s = ((c || {}).syms || {})["SENSEX"];
+          if (!s) return;
+          var m = s["1m"] || s["5m"] || s["15m"] || s["1h"];
+          if (!m || !m.c || !m.c.length) return;
+          var last = m.c[m.c.length - 1];
+          var pc2 = s.pc != null ? s.pc : m.c[0];
+          var chg = last - pc2;
+          draw({ price: last, change_pct: pc2 ? chg / pc2 * 100 : null, change: chg });
+        }).catch(function () {});
       }
       /* nifty 1D card title */
       var g2 = sec("v-home") ? $(".grid2 .card .sh2", sec("v-home")) : null;
@@ -577,9 +591,19 @@
     if (!v) return;
     var inp = $("input[type=search]", v);
     if (!inp) return;
+    function findSym(q) {
+      q = (q || "").trim().toUpperCase();
+      if (!q) return null;
+      if (PM[q]) return q;
+      var ks = Object.keys(PM);
+      var i;
+      for (i = 0; i < ks.length; i++) if (ks[i].indexOf(q) === 0) return ks[i];
+      for (i = 0; i < ks.length; i++) if (String(NAME[ks[i]] || "").toUpperCase().indexOf(q) > -1) return ks[i];
+      return null;
+    }
     function show(sym) {
-      sym = (sym || "").trim().toUpperCase();
-      var x = PM[sym];
+      sym = findSym(sym);
+      var x = sym ? PM[sym] : null;
       if (!x) return false;
       var f = FUND[sym] || {};
       var ks = $(".kpis", v);
@@ -962,7 +986,9 @@
     var h = "";
     out.forEach(function (f) {
       var tp = MFTOP[f.c] || {};
-      h += "<tr><td>" + esc((f.n || "").split("\u00b7")[0].trim()) + " <small>(" + esc(f.h || "") + ")</small></td><td>\u20b9" + (f.v != null ? f.v.toFixed(4) : "\u2014") + "</td><td>" + (tp.r1 != null ? sp(tp.r1) : "\u2014") + "</td><td>" + (tp.r3 != null ? sp(tp.r3) : "\u2014") + "</td><td>" + (tp.r5 != null ? sp(tp.r5) : "\u2014") + "</td></tr>";
+      var parts = String(f.n || "").split("\u00b7").map(function (s) { return s.trim(); });
+      var plan = parts[1] || "";
+      h += "<tr><td>" + esc(parts[0]) + (plan ? " <small>(" + esc(plan) + ")</small>" : "") + " <small>\u00b7 " + esc(f.k || f.h || "") + "</small></td><td>\u20b9" + (f.v != null ? f.v.toFixed(4) : "\u2014") + "</td><td>" + (tp.r1 != null ? sp(tp.r1) : "\u2014") + "</td><td>" + (tp.r3 != null ? sp(tp.r3) : "\u2014") + "</td><td>" + (tp.r5 != null ? sp(tp.r5) : "\u2014") + "</td></tr>";
     });
     if (h) tb.innerHTML = h;
   }
@@ -1042,6 +1068,36 @@
     }).catch(function () {});
   }
 
+  /* ---------- 21) GTI hub — aaj ke zones mini cards ---------- */
+  function renderGtiHub() {
+    var v = sec("v-gti");
+    if (!v || v.__gth) return;
+    var trow = $(".trow", v);
+    if (!trow) return;
+    v.__gth = 1;
+    var wrap = document.createElement("div");
+    wrap.className = "grid3";
+    wrap.style.marginTop = "10px";
+    trow.parentNode.insertBefore(wrap, trow.nextSibling);
+    fj("data/gti.json").then(function (d) {
+      var syms = d.symbols || {};
+      var want = ["NIFTY 50", "BANKNIFTY", "RELIANCE"];
+      var h = "";
+      want.forEach(function (w) {
+        var x = syms[w];
+        if (!x) return;
+        var z = x.day_zones || {};
+        var sd = z.SD || z.WD || [], ss = z.SS || z.WS || [];
+        h += '<div class="card"><div class="sh2">' + esc(w) + '</div><div style="padding:6px 14px 10px">' +
+          '<div class="zrow"><span>Price</span><b>' + (x.price != null ? num(x.price, 0) : "\u2014") + "</b></div>" +
+          '<div class="zrow"><span>Demand</span><b class="up">' + (sd.length ? num(sd[0], 0) + " \u2013 " + num(sd[1], 0) : "\u2014") + "</b></div>" +
+          '<div class="zrow"><span>Supply</span><b class="dn">' + (ss.length ? num(ss[0], 0) + " \u2013 " + num(ss[1], 0) : "\u2014") + "</b></div>" +
+          '<div class="zrow"><span>POC day</span><b>' + (x.day_poc != null ? num(x.day_poc, 0) : "\u2014") + "</b></div></div></div>";
+      });
+      if (h) wrap.innerHTML = h;
+    }).catch(function () {});
+  }
+
   /* ---------- boot ---------- */
   function boot() {
     try { renderHome(); } catch (e) {}
@@ -1066,6 +1122,7 @@
     try { renderEconomy(); } catch (e) {}
     try { renderSmartRadar(); } catch (e) {}
     try { wireScreenerChips(); } catch (e) {}
+    try { renderGtiHub(); } catch (e) {}
   }
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", boot);
   else boot();

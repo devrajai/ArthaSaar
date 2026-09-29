@@ -1,6 +1,23 @@
 <!doctype html>
 <html lang="en" data-theme="a">
 <head>
+<script>
+/* cache kill — purani service worker + cache hamesha ke liye khatam */
+(function () {
+  try {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (rs) {
+        rs.forEach(function (r) { r.unregister(); });
+      });
+    }
+    if (window.caches) {
+      caches.keys().then(function (ks) {
+        ks.forEach(function (k) { caches.delete(k); });
+      });
+    }
+  } catch (e) {}
+})();
+</script>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * data:; connect-src *; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arthasaar — One UI · 5 Modes (Paper × Brutal × AMOLED)</title>

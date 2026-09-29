@@ -269,7 +269,7 @@
       var f = FUND[sym] || {};
       var pr = f["Current Price"], bv = f["Book Value"];
       var pb = pr && bv ? (pr / bv).toFixed(1) : "—";
-      h += "<tr><td>" + esc(NAME[sym] || sym) + "</td><td>" + mcap(f["Market Cap"]) + "</td><td>" + (f["Stock P/E"] != null ? f["Stock P/E"] : "—") + "</td><td>" + pb + "</td><td>" + (f.ROE != null ? f.ROE + "%" : "—") + "</td><td>" + (f.ROCE != null ? f.ROCE + "%" : "—") + "</td><td>" + (f["D/E"] != null ? f["D/E"] : "—") + "</td><td>" + (f["Dividend Yield"] != null ? f["Dividend Yield"] + "%" : "—") + "</td></tr>";
+      h += "<tr><td>" + esc(NAME[sym] || sym) + " <small>( " + esc(sym) + " )</small></td><td>" + mcap(f["Market Cap"]) + "</td><td>" + (f["Stock P/E"] != null ? f["Stock P/E"] : "—") + "</td><td>" + pb + "</td><td>" + (f.ROE != null ? f.ROE + "%" : "—") + "</td><td>" + (f.ROCE != null ? f.ROCE + "%" : "—") + "</td><td>" + (f["D/E"] != null ? f["D/E"] : "—") + "</td><td>" + (f["Dividend Yield"] != null ? f["Dividend Yield"] + "%" : "—") + "</td></tr>";
     });
     if (h) tb.innerHTML = h;
   }
@@ -661,6 +661,160 @@
     });
   }
 
+
+  /* ---------- 15) real charts (candles.json se) ---------- */
+  var CH = { sym: "NIFTY" };
+  var CH_TFS = [["1D\u00b75m", "5m", 75], ["3D\u00b715m", "15m", 75], ["1W\u00b71h", "1h", 30], ["2M\u00b71h", "1h", 0], ["1D\u00b71m", "1m", 0]];
+  var CH_TF = "1D\u00b75m";
+  function chPath(c) {
+    var n = c.length;
+    if (!n) return "";
+    var mn = Math.min.apply(null, c), mx = Math.max.apply(null, c);
+    if (mx === mn) { mx += 1; mn -= 1; }
+    var pts = [];
+    for (var i = 0; i < n; i++) {
+      var x = (i / (n - 1 || 1)) * 800;
+      var y = 150 - ((c[i] - mn) / (mx - mn)) * 130;
+      pts.push(x.toFixed(1) + "," + y.toFixed(1));
+    }
+    return "M" + pts.join("L");
+  }
+  function chDraw(v, syms, sym, tfLabel) {
+    var def = CH_TFS.filter(function (t) { return t[0] === tfLabel; })[0] || CH_TFS[0];
+    var s = syms[sym];
+    var m = s && (s[def[1]] || s["5m"] || s["15m"] || s["1h"] || s["1m"]);
+    var card = $(".card", v);
+    if (!m || !card) return;
+    var c = m.c.slice(def[2] ? -def[2] : 0);
+    var h = m.h.slice(def[2] ? -def[2] : 0);
+    var l = m.l.slice(def[2] ? -def[2] : 0);
+    var up = c[c.length - 1] >= c[0];
+    var col = up ? "var(--up)" : "var(--dn)";
+    var chg = (c[c.length - 1] - c[0]) / c[0] * 100;
+    var sh = $(".sh2", card);
+    if (sh) {
+      sh.innerHTML = esc(sym) + " \u00b7 " + esc(tfLabel) + " " +
+        "<span class=\"" + (up ? "up" : "dn") + "\">" + pctS(chg) + "</span>" +
+        '<span class="fr">H ' + num(Math.max.apply(null, h), 0) + " \u00b7 L " + num(Math.min.apply(null, l), 0) + "</span>";
+    }
+    var svg = $("svg", card);
+    if (svg) {
+      var p = chPath(c);
+      svg.innerHTML = '<path d="M0 30H800M0 85H800M0 140H800" class="gl"/>' +
+        '<path d="' + p + 'V170H0Z" fill="' + col + '" opacity=".12"/>' +
+        '<path d="' + p + '" fill="none" stroke="' + col + '" stroke-width="2.5"/>';
+    }
+  }
+  function renderCharts() {
+    var v = sec("v-gticharts");
+    if (!v) return;
+    fj("data/candles.json").then(function (d) {
+      var syms = (d && d.syms) || {};
+      var names = Object.keys(syms);
+      if (!names.length) return;
+      var chips = $(".chips", v);
+      if (!chips) return;
+      /* symbol chips row — demo style hi */
+      if (!v.__symRow) {
+        var sr = document.createElement("div");
+        sr.className = "chips";
+        sr.style.margin = "6px 0 0";
+        v.insertBefore(sr, chips);
+        v.__symRow = sr;
+      }
+      v.__symRow.innerHTML = names.map(function (s) {
+        return '<span class="fch' + (s === CH.sym ? " on" : "") + '" data-sym="' + esc(s) + '">' + esc(s) + "</span>";
+      }).join("");
+      v.__symRow.onclick = function (e) {
+        var t = e.target.closest("[data-sym]");
+        if (!t) return;
+        CH.sym = t.getAttribute("data-sym");
+        $$("span", v.__symRow).forEach(function (x) { x.classList.toggle("on", x === t); });
+        chDraw(v, syms, CH.sym, CH_TF);
+      };
+      /* TF chips */
+      chips.innerHTML = CH_TFS.map(function (t) {
+        return '<span class="fch' + (t[0] === CH_TF ? " on" : "") + '" data-tf="' + t[0] + '">' + t[0] + "</span>";
+      }).join("");
+      chips.onclick = function (e) {
+        var t = e.target.closest("[data-tf]");
+        if (!t) return;
+        CH_TF = t.getAttribute("data-tf");
+        $$("span", chips).forEach(function (x) { x.classList.toggle("on", x === t); });
+        chDraw(v, syms, CH.sym, CH_TF);
+      };
+      chDraw(v, syms, CH.sym, CH_TF);
+      /* placeholder hataya — BANKNIFTY second chart */
+      var ph = null;
+      $$(".sect", v).forEach(function (s) { if (/REPO VERSION|TradingView/i.test(s.textContent)) ph = s; });
+      if (ph) {
+        var card2 = document.createElement("div");
+        card2.className = "card";
+        card2.style.marginTop = "10px";
+        card2.innerHTML = '<div class="sh2">BANKNIFTY \u00b7 1D</div><div style="padding:10px 12px"><svg viewBox="0 0 800 170" preserveAspectRatio="none" style="width:100%;height:160px"></svg></div>';
+        v.replaceChild(card2, ph);
+        var s2 = syms["BANKNIFTY"] || syms[names[1]] || syms[names[0]];
+        if (s2) {
+          var m2 = s2["5m"] || s2["15m"] || s2["1h"];
+          var c2 = m2.c.slice(-75), h2 = m2.h.slice(-75), l2 = m2.l.slice(-75);
+          var up2 = c2[c2.length - 1] >= c2[0];
+          var col2 = up2 ? "var(--up)" : "var(--dn)";
+          var chg2 = (c2[c2.length - 1] - c2[0]) / c2[0] * 100;
+          var sh2 = $(".sh2", card2);
+          if (sh2) sh2.innerHTML = "BANKNIFTY \u00b7 1D <span class=\"" + (up2 ? "up" : "dn") + "\">" + pctS(chg2) + "</span>" +
+            '<span class="fr">H ' + num(Math.max.apply(null, h2), 0) + " \u00b7 L " + num(Math.min.apply(null, l2), 0) + "</span>";
+          var svg2 = $("svg", card2);
+          var p2 = chPath(c2);
+          if (svg2) svg2.innerHTML = '<path d="M0 30H800M0 85H800M0 140H800" class="gl"/>' +
+            '<path d="' + p2 + 'V170H0Z" fill="' + col2 + '" opacity=".12"/>' +
+            '<path d="' + p2 + '" fill="none" stroke="' + col2 + '" stroke-width="2.5"/>';
+        }
+      }
+    }).catch(function () {});
+  }
+
+  /* ---------- 16) generic search filters (fundamentals + MF + crypto + filings) ---------- */
+  function wireFilters() {
+    [["v-fundamentals", "tbody"], ["v-mf", "tbody"], ["v-crypto", "tbody"], ["v-events", "tbody"], ["v-filings", "tbody"]].forEach(function (p) {
+      var v = sec(p[0]);
+      if (!v) return;
+      var inp = $("input[type=search]", v);
+      var tb = $(p[1], v);
+      if (!inp || !tb || inp.__ldf) return;
+      inp.__ldf = 1;
+      inp.addEventListener("input", function () {
+        var q = inp.value.toLowerCase();
+        $$("tr", tb).forEach(function (r) { r.style.display = !q || r.textContent.toLowerCase().indexOf(q) > -1 ? "" : "none"; });
+      });
+    });
+  }
+
+  /* ---------- 17) Learn studies heatmap (index-history se real monthly returns) ---------- */
+  function renderLearn() {
+    var v = sec("v-learn");
+    if (!v) return;
+    var heat = null;
+    $$(".heat", v).forEach(function (h2) { if (!heat && /STUDIES/.test((h2.previousElementSibling || {}).textContent || "")) heat = h2; });
+    if (!heat) heat = $$(".heat", v)[0];
+    if (!heat) return;
+    fj("data/index-history.json").then(function (d) {
+      var ix = (d.indices || []).filter(function (x) { return /nifty/i.test(x.key) && !/bank/i.test(x.key); })[0] || (d.indices || [])[0];
+      if (!ix) return;
+      var out = [];
+      Object.keys(ix.years).sort().forEach(function (y) {
+        Object.keys(ix.years[y]).sort().forEach(function (m) { out.push([y, m, ix.years[y][m]]); });
+      });
+      var last12 = out.slice(-12);
+      var MN = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      var h = "";
+      last12.forEach(function (r2) {
+        var vv = r2[2];
+        h += '<div class="hc" style="background:color-mix(in srgb,var(' + (vv >= 0 ? "up" : "dn") + ') ' + Math.min(20, 4 + Math.abs(vv) * 2).toFixed(0) + '%,var(--surface))"><b>' + MN[parseInt(r2[1], 10) - 1] + " '" + r2[0].slice(2) + "</b><span class='" + cl(vv) + "'>" + pctS(vv) + "</span></div>";
+      });
+      if (h) heat.innerHTML = h;
+    }).catch(function () {});
+  }
+
   /* ---------- boot ---------- */
   function boot() {
     try { renderHome(); } catch (e) {}
@@ -677,6 +831,9 @@
     try { renderForecast(); } catch (e) {}
     try { renderDeep(); } catch (e) {}
     try { renderAIBrain(); } catch (e) {}
+    try { renderCharts(); } catch (e) {}
+    try { wireFilters(); } catch (e) {}
+    try { renderLearn(); } catch (e) {}
   }
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", boot);
   else boot();
@@ -690,5 +847,8 @@
     try { renderGlobal(); } catch (e) {}
     try { renderCrypto(); } catch (e) {}
     try { renderAIBrain(); } catch (e) {}
+    try { renderCharts(); } catch (e) {}
+    try { wireFilters(); } catch (e) {}
+    try { renderLearn(); } catch (e) {}
   }, 5 * 60 * 1000);
 })();

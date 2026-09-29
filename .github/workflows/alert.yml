@@ -19,7 +19,7 @@ on:
         required: false
         default: ''
   schedule:
-    - cron: "*/15 4-10 * * 1-5"
+    - cron: "0 4-10 * * 1-5"
 concurrency:
   group: alert
   cancel-in-progress: false

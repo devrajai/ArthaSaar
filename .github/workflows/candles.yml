@@ -1,8 +1,8 @@
 name: Candles fetch (Chart Reading)
 on:
   schedule:
-    # 9:17-15:47 IST, har ~20 min, Mon-Fri (UTC 3:47-10:27 window)
-    - cron: '17,37,57 3-10 * * 1-5'
+    # 9:17-15:47 IST, hourly (1 ghante mein ek), Mon-Fri (UTC 3:47-10:27 window)
+    - cron: '17 3-10 * * 1-5'
   workflow_dispatch:
 
 concurrency:

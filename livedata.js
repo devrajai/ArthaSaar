@@ -219,6 +219,48 @@
 
   /* ---------- 4) screener table ---------- */
   var SCRSIG = {};
+  var SCR_CHIP = "all", VOLSET = null;
+  function applyScr() {
+    var v = sec("v-screener");
+    if (!v) return;
+    var qi = document.getElementById("qScr");
+    var q = (qi && qi.value || "").toLowerCase();
+    $$("#scrBody tr").forEach(function (r) {
+      var ok = true;
+      if (SCR_CHIP.indexOf("large") > -1) ok = r.getAttribute("data-tier") === "1";
+      else if (SCR_CHIP.indexOf("mid") > -1) ok = r.getAttribute("data-tier") === "2";
+      else if (SCR_CHIP.indexOf("52w") > -1) ok = parseFloat(r.getAttribute("data-f52") || "0") >= -3;
+      else if (SCR_CHIP.indexOf("volume") > -1) ok = r.getAttribute("data-vol") === "1";
+      if (ok && q) ok = r.textContent.toLowerCase().indexOf(q) > -1;
+      r.style.display = ok ? "" : "none";
+    });
+  }
+  function wireScreenerChips() {
+    var v = sec("v-screener");
+    if (!v) return;
+    var chips = $(".chips", v);
+    if (chips && !chips.__ldc) {
+      chips.__ldc = 1;
+      chips.addEventListener("click", function (e) {
+        var t = e.target.closest(".fch");
+        if (!t) return;
+        $$("span", chips).forEach(function (x) { x.classList.toggle("on", x === t); });
+        SCR_CHIP = t.textContent.trim().toLowerCase();
+        applyScr();
+      });
+    }
+    if (VOLSET === null) {
+      VOLSET = {};
+      fj("data/radar.json").then(function (r) {
+        (((r || {}).volume_blast) || []).forEach(function (x) { VOLSET[x.sym] = 1; });
+      }).catch(function () {});
+    }
+    var qi = document.getElementById("qScr");
+    if (qi && !qi.__ldscr) {
+      qi.__ldscr = 1;
+      qi.addEventListener("input", function () { setTimeout(applyScr, 0); });
+    }
+  }
   function renderScreenerTable(st) {
     var b = sec("scrBody");
     if (!b) return;
@@ -227,16 +269,17 @@
     fj("data/stock-scores.json").then(function (sc) {
       (sc.top || []).forEach(function (x) { SCRSIG[x.sym] = x; });
     }).catch(function () {}).then(function () {
-      var rows = st.slice().sort(function (a, b2) { return (b2.change_pct || 0) - (a.change_pct || 0); });
-      var mixed = rows.slice(0, 15).concat(rows.slice(-15));
+      var rows = st.slice().sort(function (a, b2) { return Math.abs(b2.change_pct || 0) - Math.abs(a.change_pct || 0); }).slice(0, 100);
+      var vols = VOLSET || {};
       var h = "";
-      mixed.forEach(function (x) {
+      rows.forEach(function (x) {
         var f = FUND[x.symbol] || {};
         var sig = sigFor(x);
         var mc = f["Market Cap"] != null ? mcap(f["Market Cap"]) : "—";
-        h += "<tr><td>" + esc(x.symbol) + "</td><td>" + num(x.price) + "</td><td>" + sp(x.change_pct) + "</td><td>" + mc + "</td><td>" + (f["Stock P/E"] != null ? f["Stock P/E"] : "—") + "</td><td>" + (f.ROE != null ? f.ROE + "%" : (f.ROCE != null ? f.ROCE + "%" : "—")) + "</td><td>" + sig + "</td></tr>";
+        h += "<tr data-tier=\"" + (x.tier || 3) + "\" data-f52=\"" + (x.from_52w_high_pct != null ? x.from_52w_high_pct : 0) + "\" data-vol=\"" + (vols[x.symbol] ? 1 : 0) + "\"><td>" + esc(x.symbol) + "</td><td>" + num(x.price) + "</td><td>" + sp(x.change_pct) + "</td><td>" + mc + "</td><td>" + (f["Stock P/E"] != null ? f["Stock P/E"] : "—") + "</td><td>" + (f.ROE != null ? f.ROE + "%" : (f.ROCE != null ? f.ROCE + "%" : "—")) + "</td><td>" + sig + "</td></tr>";
       });
       b.innerHTML = h;
+      applyScr();
       renderFundamentalsTable();
     });
   }
@@ -815,6 +858,190 @@
     }).catch(function () {});
   }
 
+
+  /* ---------- 18) fundamentals DEEP search - company summary card ---------- */
+  var CIDX = null;
+  function plRow(rows, label) {
+    for (var i = 0; i < rows.length; i++) {
+      if (String(rows[i][0] || "").replace(/\+$/, "").trim().toLowerCase() === label) return rows[i];
+    }
+    return null;
+  }
+  function lookupCompany(q, card) {
+    if (!q || q.length < 2 || !CIDX) { card.style.display = "none"; return; }
+    var sym = null;
+    if (CIDX[q.toUpperCase()]) sym = q.toUpperCase();
+    else {
+      var ks = Object.keys(CIDX);
+      for (var i = 0; i < ks.length; i++) {
+        if (String(CIDX[ks[i]].name || "").toLowerCase().indexOf(q) > -1) { sym = ks[i]; break; }
+      }
+    }
+    if (!sym) { card.style.display = "none"; return; }
+    fj("data/companies/" + sym + ".json").then(function (c) {
+      if (!c || !c.name) { card.style.display = "none"; return; }
+      var top = c.top || {}, pr = c.profile || {};
+      var h = '<div class="sh2">' + esc(c.name) + " <small>(" + esc(c.symbol) + ')</small><span class="fr">' + esc(pr.sector || "") + " \u00b7 " + esc(pr.industry || "") + "</span></div>";
+      h += '<div style="padding:10px 14px 4px;font-size:12px;line-height:1.7;color:var(--dim)">' + esc((c.about || "").slice(0, 420)) + "\u2026</div>";
+      var kv = [["Market Cap", top["Market Cap"]], ["Price", "\u20b9" + (top["Current Price"] || "\u2014")], ["P/E", top["Stock P/E"]], ["ROCE", top["ROCE"]], ["ROE", top["ROE"]], ["Div Yield", top["Dividend Yield"]], ["52w H/L", top["High / Low"]], ["Book Value", "\u20b9" + (top["Book Value"] || "\u2014")]];
+      h += '<div class="kpis" style="margin-top:8px">';
+      kv.forEach(function (x) {
+        h += '<div class="card kpi"><div class="lbl">' + esc(x[0]) + '</div><div class="num" style="font-size:15px">' + esc(String(x[1] != null ? x[1] : "\u2014")) + "</div></div>";
+      });
+      h += "</div>";
+      var PL = c.profit_loss || [], RT = c.ratios || [];
+      var yrs = PL[0] || [];
+      var cols = [];
+      for (var ci = Math.max(1, yrs.length - 5); ci < yrs.length; ci++) cols.push(ci);
+      var defs = [[PL, "sales", "Sales"], [PL, "operating profit", "Op Profit"], [PL, "net profit", "Net Profit"], [PL, "opm %", "OPM %"], [RT, "roce %", "ROCE %"]];
+      var anyRow = false;
+      var tbl = '<div class="card" style="margin-top:10px;padding:0;overflow:auto"><table><thead><tr><th>10Y</th>';
+      cols.forEach(function (ci2) { tbl += "<th>" + esc(String(yrs[ci2])) + "</th>"; });
+      tbl += "</tr></thead><tbody>";
+      defs.forEach(function (d) {
+        var r = plRow(d[0], d[1]);
+        if (!r) return;
+        anyRow = true;
+        tbl += "<tr><td>" + esc(d[2]) + "</td>";
+        cols.forEach(function (ci2) { tbl += "<td>" + esc(String(r[ci2] != null ? r[ci2] : "\u2014")) + "</td>"; });
+        tbl += "</tr>";
+      });
+      tbl += "</tbody></table></div>";
+      if (anyRow) h += tbl;
+      var SH = c.shareholding || [];
+      if (SH.length > 1) {
+        var lastCol = SH[0].length - 1;
+        h += '<div class="card" style="margin-top:10px"><div class="sh2">Shareholding \u2014 ' + esc(String(SH[0][lastCol] || "")) + '</div><div style="padding:6px 14px 10px">';
+        ["promoters", "fiis", "diis", "public"].forEach(function (k2) {
+          var r = plRow(SH, k2);
+          if (r) h += '<div class="zrow"><span>' + esc(String(r[0]).replace("+", "").trim()) + "</span><b>" + esc(String(r[lastCol])) + "</b></div>";
+        });
+        h += "</div></div>";
+      }
+      h += '<div style="padding:8px 14px 12px;font-size:11px;opacity:.6">Source: ' + esc(c.source || "screener.in") + " \u00b7 updated " + esc(String(c.updated || "").slice(0, 16)) + " \u00b7 <a href='" + esc(c.url || "#") + "' target='_blank' style='color:var(--accent)'>screener.in</a></div>";
+      card.innerHTML = h;
+      card.style.display = "";
+    }).catch(function () { card.style.display = "none"; });
+  }
+  function renderCompanySummary() {
+    var v = sec("v-fundamentals");
+    if (!v) return;
+    var inp = $("input[type=search]", v);
+    if (!inp) return;
+    inp.placeholder = "Company naam ya symbol \u2014 RELIANCE, Aarti, TCS\u2026";
+    if (!CIDX) fj("data/company-index.json").then(function (d) { CIDX = d; }).catch(function () {});
+    if (inp.__ldcs) return;
+    inp.__ldcs = 1;
+    var card = document.createElement("div");
+    card.className = "card";
+    card.style.margin = "0 0 10px";
+    card.style.display = "none";
+    var srow = $(".srow", v);
+    if (srow && srow.parentNode) srow.parentNode.insertBefore(card, srow.nextSibling);
+    var t = null;
+    inp.addEventListener("input", function () {
+      clearTimeout(t);
+      var q = inp.value.trim().toLowerCase();
+      t = setTimeout(function () { lookupCompany(q, card); }, 350);
+    });
+  }
+
+  /* ---------- 19) MF live search (8,668 funds) ---------- */
+  var MFALL = null, MFTOP = {};
+  function mfSearch(q) {
+    var v = sec("v-mf");
+    if (!v || !MFALL) return;
+    var tb = $("tbody", v);
+    if (!tb) return;
+    if (!q || q.length < 2) return;
+    var out = [];
+    for (var i = 0; i < MFALL.length && out.length < 15; i++) {
+      var f = MFALL[i];
+      if ((f.n || "").toLowerCase().indexOf(q) > -1 || (f.c || "").indexOf(q) === 0) out.push(f);
+    }
+    var h = "";
+    out.forEach(function (f) {
+      var tp = MFTOP[f.c] || {};
+      h += "<tr><td>" + esc((f.n || "").split("\u00b7")[0].trim()) + " <small>(" + esc(f.h || "") + ")</small></td><td>\u20b9" + (f.v != null ? f.v.toFixed(4) : "\u2014") + "</td><td>" + (tp.r1 != null ? sp(tp.r1) : "\u2014") + "</td><td>" + (tp.r3 != null ? sp(tp.r3) : "\u2014") + "</td><td>" + (tp.r5 != null ? sp(tp.r5) : "\u2014") + "</td></tr>";
+    });
+    if (h) tb.innerHTML = h;
+  }
+  function wireMF() {
+    var v = sec("v-mf");
+    if (!v) return;
+    var inp = $("input", v);
+    if (!inp) return;
+    if (!MFALL) {
+      fj("data/mf.json").then(function (d) { MFALL = d.funds || []; }).catch(function () {});
+      fj("data/mf-top.json").then(function (d) { (d.funds || []).forEach(function (f) { MFTOP[f.c] = f; }); }).catch(function () {});
+    }
+    if (inp.__ldm) return;
+    inp.__ldm = 1;
+    inp.placeholder = "Fund dhoondo \u2014 naam ya code (bluechip / hdfc / 120502)";
+    inp.addEventListener("input", function () {
+      clearTimeout(inp.__t);
+      var q = inp.value.trim().toLowerCase();
+      inp.__t = setTimeout(function () { mfSearch(q); }, 300);
+    });
+  }
+
+  /* ---------- 20) Economy Radar + Smart Money Radar ---------- */
+  function renderEconomy() {
+    var v = sec("v-news");
+    if (!v) return;
+    Promise.all([fj("data/economy-pulse.json"), fj("data/macro.json")].map(function (p) { return p.catch(function () { return null; }); })).then(function (rs) {
+      var ep = rs[0] || {}, mc = rs[1] || {};
+      var card = v.__econ;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "0 0 10px";
+        var g = $(".grid3", v);
+        if (g && g.parentNode) v.insertBefore(card, g);
+        v.__econ = card;
+      }
+      var h = '<div class="sh2">Economy Radar <span class="fr">' + esc(String(ep.updated || "").slice(0, 10)) + "</span></div>" + '<div style="padding:6px 14px 10px">';
+      (ep.ind || []).forEach(function (x) {
+        h += '<div class="zrow"><span>' + esc(x.icon || "\u2022") + " " + esc(x.name) + "</span><b>" + esc(String(x.val)) + "</b></div>";
+        if (x.sub) h += '<div class="zrow" style="border:0"><span style="opacity:.55;font-size:11px">' + esc(String(x.sub)) + "</span><span></span></div>";
+      });
+      var t2 = mc.today || {};
+      var mb = [["Crude", t2.crude], ["Gold", t2.gold], ["USD/INR", t2.usdinr], ["US 10Y", t2.us10y], ["DXY", t2.dxy], ["FII net", t2.fii_net_cr != null ? t2.fii_net_cr + " Cr" : null]];
+      h += '<div class="sect" style="margin:10px 0 4px">MACRO \u2014 TODAY</div>';
+      mb.forEach(function (m) { h += '<div class="zrow"><span>' + m[0] + "</span><b>" + (m[1] != null ? m[1] : "\u2014") + "</b></div>"; });
+      h += "</div>";
+      card.innerHTML = h;
+    });
+  }
+  function renderSmartRadar() {
+    var v = sec("v-internals");
+    if (!v) return;
+    fj("data/radar.json").then(function (r) {
+      if (!r) return;
+      var card = v.__radar;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "10px 0 0";
+        var g = $(".grid3", v);
+        if (g && g.parentNode) g.parentNode.insertBefore(card, g.nextSibling);
+        v.__radar = card;
+      }
+      function col(list, title) {
+        var h = '<div class="sect" style="margin:8px 0 4px">' + title + "</div>";
+        (list || []).slice(0, 5).forEach(function (x) {
+          h += '<div class="zrow"><span><b>' + esc(x.sym) + "</b> \u20b9" + num(x.close, 1) + " \u00b7 deliv " + (x.deliv != null ? x.deliv + "%" : "\u2014") + '</span><b class="' + (x.chg >= 0 ? "up" : "dn") + '">' + pctS(x.chg) + "</b></div>";
+        });
+        return h;
+      }
+      card.innerHTML = '<div class="sh2">Smart Money Radar \u2014 delivery + volume</div><div style="padding:6px 14px 10px">' +
+        col(r.accumulation, "ACCUMULATION \u2014 smart paisa aa raha") +
+        col(r.hidden_selling, "HIDDEN SELLING \u2014 sambhal") +
+        col(r.volume_blast, "VOLUME BLAST \u2014 aaj ke shockers") +
+        '<div style="font-size:11px;opacity:.6;padding-top:6px">' + esc(r.note || "") + " \u00b7 " + esc(String(r.date || "")) + "</div></div>";
+    }).catch(function () {});
+  }
+
   /* ---------- boot ---------- */
   function boot() {
     try { renderHome(); } catch (e) {}
@@ -834,6 +1061,11 @@
     try { renderCharts(); } catch (e) {}
     try { wireFilters(); } catch (e) {}
     try { renderLearn(); } catch (e) {}
+    try { renderCompanySummary(); } catch (e) {}
+    try { wireMF(); } catch (e) {}
+    try { renderEconomy(); } catch (e) {}
+    try { renderSmartRadar(); } catch (e) {}
+    try { wireScreenerChips(); } catch (e) {}
   }
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", boot);
   else boot();
@@ -850,5 +1082,7 @@
     try { renderCharts(); } catch (e) {}
     try { wireFilters(); } catch (e) {}
     try { renderLearn(); } catch (e) {}
+    try { renderEconomy(); } catch (e) {}
+    try { renderSmartRadar(); } catch (e) {}
   }, 5 * 60 * 1000);
 })();

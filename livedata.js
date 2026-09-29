@@ -32,8 +32,16 @@
       return Math.round(h / 24) + " d ago";
     } catch (e) { return ""; }
   }
+  /* data seedha GitHub se (hamesha fresh — deploy ka wait nahi), fail ho to local */
+  var RAW = "https://raw.githubusercontent.com/devrajai/ArthaSaar/main/";
   function fj(p) {
-    return fetch(p + "?t=" + Date.now()).then(function (r) { return r.json(); });
+    var t = Date.now();
+    return fetch(RAW + p + "?t=" + t).then(function (r) {
+      if (!r.ok) throw new Error("raw " + r.status);
+      return r.json();
+    }).catch(function () {
+      return fetch(p + "?t=" + t).then(function (r) { return r.json(); });
+    });
   }
   function sec(id) { return document.getElementById(id); }
 

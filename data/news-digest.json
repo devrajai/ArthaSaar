@@ -1,16 +1,35 @@
 {
- "u": "28 Sep 2026, 21:10 IST",
+ "u": "29 Sep 2026, 21:11 IST",
  "cats": [
   {
    "name": "INDIA MARKETS",
    "stories": [
     {
-     "t": "Indian shares slide to near six-month low as US-Iran deadlock lifts oil prices",
+     "t": "Stock Market Crash: Investors Lose Rs 5.9 Lakh Crore In 90 Minutes As Sensex Tumbles Over 700 Points, Nifty Breaches 22,600",
+     "n": 2,
+     "srcs": [
+      "NDTV Profit",
+      "timesofindia.indiatimes.com"
+     ],
+     "age": 10.5,
+     "x": 1
+    },
+    {
+     "t": "Indian shares extend losing run on elevated oil, bond yields",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 5.3,
+     "age": 13.2,
+     "x": 0
+    },
+    {
+     "t": "India Stock Bulls Pin Hopes on Corporate Earnings as Market Selloff Deepens",
+     "n": 1,
+     "srcs": [
+      "Bloomberg.com"
+     ],
+     "age": 13.2,
      "x": 0
     }
    ]
@@ -24,7 +43,7 @@
      "srcs": [
       "Reuters"
      ],
-     "age": 5.8,
+     "age": 29.8,
      "x": 0
     }
    ]
@@ -33,12 +52,30 @@
    "name": "GLOBAL",
    "stories": [
     {
-     "t": "Gold hits seven-week low as oil surge fuels rate hike bets",
+     "t": "U.S. indexes hold steady in morning trading on Wall Street",
+     "n": 1,
+     "srcs": [
+      "BNN Bloomberg"
+     ],
+     "age": 1.5,
+     "x": 0
+    },
+    {
+     "t": "Stocks fall as higher oil prices, Treasury yields weigh",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 14.0,
+     "age": 16.4,
+     "x": 0
+    },
+    {
+     "t": "Bond yields crank higher and pull U.S. stocks further from their record",
+     "n": 1,
+     "srcs": [
+      "BNN Bloomberg"
+     ],
+     "age": 19.2,
      "x": 0
     }
    ]
@@ -51,54 +88,54 @@
    "name": "AUTHENTIC WIRE",
    "stories": [
     {
-     "t": "Red Bull sues Indian regulator over 'energy drink' label ban",
+     "t": "India targets 600 million tons steel capacity by 2047, secretary says",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 1.3,
+     "age": 10.2,
      "x": 0
     },
     {
-     "t": "Tata Trusts proposes Tata Sons rejig to prevent listing driven by central bank",
+     "t": "Breakingviews - COMMENTARY: India's big insurance overhaul will test demand",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 1.8,
+     "age": 12.3,
      "x": 0
     },
     {
-     "t": "India poll chief Gyanesh Kumar under pressure over alleged manipulation of electoral rolls",
+     "t": "Gold rises but strong Fed hike bets keep it near seven week-low",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 2.6,
+     "age": 12.7,
      "x": 0
     },
     {
-     "t": "Prediction markets' push into US stocks raises regulatory alarm bells",
+     "t": "EXCLUSIVE Japan's currency diplomat Mimura urges markets to heed 'very clear' warning on yen",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 4.6,
+     "age": 16.0,
      "x": 0
     }
    ]
   }
  ],
  "xray": {
-  "o": 23065,
-  "h": 23080,
-  "l": 22762,
-  "c": 22780,
-  "chg": -1.56,
+  "o": 22732,
+  "h": 22753,
+  "l": 22570,
+  "c": 22716,
+  "chg": -0.28,
   "pattern": "gap-down open, red close - pure selling pressure",
   "fii": -5353,
   "dii": 5189,
-  "fii_streak": 2,
+  "fii_streak": 3,
   "puppato": 1
  }
 }

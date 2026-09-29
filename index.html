@@ -4,14 +4,14 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * data:; connect-src *; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#070c17">
-<title>ARTHASAAR &#8212; Market Intelligence Terminal</title>
+<meta name="theme-color" content="#1B1917">
+<title>ARTHASAAR — Market Intelligence Terminal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=as1">
-<link rel="stylesheet" href="calm.css?v=as13">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38'%3E%3Crect width='38' height='38' rx='11' fill='%235aa7ff'/%3E%3Ctext x='19' y='25' font-family='monospace' font-size='15' font-weight='bold' fill='white' text-anchor='middle'%3EMB%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="newui.css?v=nu1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38'%3E%3Crect width='38' height='38' rx='11' fill='%23CDA175'/%3E%3Ctext x='19' y='25' font-family='monospace' font-size='15' font-weight='bold' fill='white' text-anchor='middle'%3EAS%3C/text%3E%3C/svg%3E">
 <script>
 /* ---------- privacy gate ---------- */
 (function () {
@@ -28,7 +28,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     document.body.innerHTML =
       "<div class='gwrap'>" +
-      "<div class='glogo'>MB</div>" +
+      "<div class='glogo'>AS</div>" +
       "<h1>ARTHASAAR</h1>" +
       "<p class='gsub'>This terminal is private. Authorised access only.</p>" +
       "<div class='gcard'><div class='glabel'>ENTER PASSWORD</div>" +
@@ -70,95 +70,90 @@
 <style>
 /* privacy gate (lock screen) */
 .gwrap{max-width:420px;margin:0 auto;padding:28px 20px;display:flex;flex-direction:column;min-height:70vh;box-sizing:border-box}
-.glogo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#5aa7ff,#3d6fd6);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:24px;color:#fff;margin-bottom:18px}
+.glogo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#CDA175,#8a6a3f);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:24px;color:#fff;margin-bottom:18px}
 #gInp{width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;color:#e8eef7;font-size:16px;outline:none;font-family:'IBM Plex Mono',monospace}
 #gInp:focus{border-color:rgba(255,255,255,.28)}
-#gBtn{width:100%;margin-top:12px;background:linear-gradient(135deg,#5aa7ff,#3d6fd6);border:none;border-radius:10px;padding:13px;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
+#gBtn{width:100%;margin-top:12px;background:linear-gradient(135deg,#CDA175,#8a6a3f);border:none;border-radius:10px;padding:13px;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
 .gcard{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px}
 .glabel{font-size:11px;letter-spacing:.14em;color:#8fa3bd;font-weight:600;margin-bottom:8px}
 .gerr{color:#fb5c7d;font-size:12.5px;margin-top:10px;min-height:16px}
 .gsub{font-size:13px;color:#8fa3bd;margin:0 0 26px}
 .gnote{font-size:11.5px;color:#5d6f88;margin-top:auto;padding-top:24px;line-height:1.6}
-/* app-style home grid + view chrome (added for mobile-app layout) */
+/* app-style home grid + view chrome */
 .homegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.hgroup{grid-column:1/-1;margin:16px 0 2px;font-size:11px;letter-spacing:.14em;color:var(--dim,#7b8aa2);font-weight:700;font-family:'IBM Plex Mono',monospace}
-.tile{display:flex;flex-direction:column;gap:5px;padding:14px 10px;background:var(--glass2,rgba(255,255,255,.045));border:1px solid var(--border,rgba(255,255,255,.09));border-radius:14px;text-decoration:none;color:inherit;transition:border-color .15s}
-.tile:active{border-color:rgba(255,255,255,.22)}
+.hgroup{grid-column:1/-1;margin:16px 0 2px;font-size:11px;letter-spacing:.14em;color:var(--dim);font-weight:700;font-family:'IBM Plex Mono',monospace}
+.tile{display:flex;flex-direction:column;gap:5px;padding:14px 10px;background:var(--glass2);border:1px solid var(--border);border-radius:var(--rad,14px);text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.tile:hover{border-color:var(--accent);transform:translateY(-1px)}
+.tile:active{border-color:var(--accent)}
 .t-ic{font-size:21px;line-height:1}
-.t-nm{font-size:12.5px;font-weight:600;line-height:1.2}
-.t-sb{font-size:10px;color:var(--dim,#7b8aa2);line-height:1.3}
-.backbtn{display:inline-block;margin-bottom:10px;padding:6px 14px;border-radius:999px;border:1px solid var(--border,rgba(255,255,255,.12));background:var(--glass2,rgba(255,255,255,.05));color:var(--dim,#7b8aa2);text-decoration:none;font-size:12px;font-weight:500}
-.learnchip{border-color:var(--border2)}
-.co-res{display:flex;gap:8px;align-items:baseline;padding:10px 12px;margin-bottom:8px;background:var(--glass2,rgba(255,255,255,.045));border:1px solid var(--border,rgba(255,255,255,.09));border-radius:12px;color:inherit;text-decoration:none;font-size:13px;flex-wrap:wrap}
+.t-nm{font-size:12.5px;font-weight:600;line-height:1.2;color:var(--text)}
+.t-sb{font-size:10px;color:var(--dim);line-height:1.3}
+.backbtn{display:inline-block;margin-bottom:10px;padding:6px 14px;border-radius:999px;border:1px solid var(--border2);background:var(--glass2);color:var(--dim);text-decoration:none;font-size:12px;font-weight:500}
+.co-res{display:flex;gap:8px;align-items:baseline;padding:10px 12px;margin-bottom:8px;background:var(--glass2);border:1px solid var(--border);border-radius:12px;color:inherit;text-decoration:none;font-size:13px;flex-wrap:wrap}
 .co-res b{font-family:'IBM Plex Mono',monospace}
-.sym a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--dim,#7b8aa2)}
-td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
+.sym a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--dim)}
+td.lbl{font-weight:500;color:var(--dim);white-space:nowrap}
 </style>
-<meta name="theme-color" content="#070c17">
+<meta name="theme-color" content="#1B1917">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 <div class="wrap">
 
-<header>
-  <div class="brand-row">
-    <div class="logo">MB</div>
-    <div>
-      <h1>ARTHASAAR</h1>
-      <div class="tagline">2,305 stocks &#183; 139 indices &#183; crypto &#183; IPO</div>
-    </div>
-    <div class="header-right">
-      <div class="clockbox">
-        <div id="clock">--:--:--</div>
-        <div id="clockdate">&#8212; IST</div>
-      </div>
-      <span class="pill" id="mktPill"><span class="dot" id="mktDot"></span><span id="mktTxt">NSE</span></span>
-      <button id="themeBtn" aria-label="Toggle theme">&#9728;</button>
-    </div>
+<header class="hdr"><div class="hdr-in">
+  <div class="brand"><div class="mk">AS</div><div><b>ARTHASAAR</b></div></div>
+  <div class="sg">
+    <span class="pill" id="mktPill"><span class="dot" id="mktDot"></span><span id="mktTxt">NSE</span></span>
+    <button class="pill tbtn" id="themeBtn" title="Look toggle — theme change">▼ LOOK</button>
+    <span class="clock"><b id="clock">--:--:--</b></span>
+    <span id="clockdate" style="display:none"></span>
+    <button class="pill ipob" data-go="ipo" style="cursor:pointer">IPO</button>
   </div>
-  <div class="meta-row">
-    <span id="dataFresh">tap a card below to open a section</span>
-    <button id="refreshBtn">&#10227; refresh</button>
+</div></header>
+
+<nav class="nav">
+  <div class="nrow"><span class="ng">MARKETS</span>
+    <button data-go="indices">Indices</button>
+    <button data-go="heatmap">Sector Map</button>
+    <button data-go="screener">Screener</button>
+    <button data-go="company">Company</button>
   </div>
-</header>
+  <div class="nrow"><span class="ng">STOCKS</span>
+    <button data-go="fundamentals">Fundamentals</button>
+    <button data-go="mf">MF</button>
+    <button data-go="deepfund">Deep Fund</button>
+  </div>
+  <div class="nrow"><span class="ng">WATCH</span>
+    <button data-go="crypto">Crypto</button>
+    <button data-go="global">Global</button>
+    <button data-go="news">News</button>
+    <button data-go="events">Events</button>
+  </div>
+</nav>
 
 <section id="home">
   <div class="homegrid">
-    <a class="tile" href="#company" style="grid-column:1/-1;flex-direction:row;align-items:center;gap:12px"><span class="t-ic">&#127970;</span><span><span class="t-nm">Company Card &#8212; search any stock</span><br><span class="t-sb">story &#183; management &#183; growth &#183; results &#183; shareholding</span></span></a>
+    <a class="tile" href="#company" style="grid-column:1/-1;flex-direction:row;align-items:center;gap:12px"><span class="t-ic">🏢</span><span><span class="t-nm">Company Card — search any stock</span><br><span class="t-sb">story · management · growth · results · shareholding</span></span></a>
     <div class="hgroup">MARKETS</div>
-    <a class="tile" href="#dash"><span class="t-ic">&#128202;</span><span class="t-nm">Dashboard</span><span class="t-sb">today at a glance</span></a>
-    <a class="tile" href="#indices"><span class="t-ic">&#128200;</span><span class="t-nm">Indices</span><span class="t-sb">139 tracked</span></a>
-    <a class="tile" href="#heatmap"><span class="t-ic">&#128293;</span><span class="t-nm">Sector Map</span><span class="t-sb">today by sector</span></a>
-    <a class="tile" href="#screener"><span class="t-ic">&#128269;</span><span class="t-nm">Screener</span><span class="t-sb">2,085 stocks</span></a>
+    <a class="tile" href="#indices"><span class="t-ic">📈</span><span class="t-nm">Indices</span><span class="t-sb">139 tracked</span></a>
+    <a class="tile" href="#heatmap"><span class="t-ic">🔥</span><span class="t-nm">Sector Map</span><span class="t-sb">today by sector</span></a>
+    <a class="tile" href="#screener"><span class="t-ic">🔍</span><span class="t-nm">Screener</span><span class="t-sb">2,085 stocks</span></a>
     <div class="hgroup">STOCKS</div>
-    <a class="tile" href="#fundamentals"><span class="t-ic">&#127970;</span><span class="t-nm">Fundamentals</span><span class="t-sb">PE &#183; ROE &#183; debt</span></a><a class="tile" href="#mf"><span class="t-ic">&#128202;</span><span class="t-nm">MF Tracker</span><span class="t-sb">nav &#183; sip &#183; my funds</span></a>
-    <a class="tile" href="#deepfund"><span class="t-ic">&#128142;</span><span class="t-nm">Deep Fund</span><span class="t-sb">screener.in weekly</span></a>
-    <a class="tile" href="#filings"><span class="t-ic">&#128196;</span><span class="t-nm">Filings</span><span class="t-sb">company results</span></a>
-    <div class="hgroup">TRADING</div>
-    <a class="tile" href="#futures"><span class="t-ic">&#129534;</span><span class="t-nm">Futures</span><span class="t-sb">F&O chains</span></a><a class="tile" href="#gti"><span class="t-ic">&#127919;</span><span class="t-nm">GTI Zones</span><span class="t-sb">demand &#183; supply &#183; POC</span></a>
-    <a class="tile" href="ipo/" target="_blank" rel="noopener"><span class="t-ic">&#128640;</span><span class="t-nm">IPO</span><span class="t-sb">full terminal &#183; GMP &#183; listing</span></a>
-    <a class="tile" href="#ai"><span class="t-ic">&#129302;</span><span class="t-nm">AI Forecast</span><span class="t-sb">TimesFM 21-day</span></a><a class="tile" href="#aibrain"><span class="t-ic">&#129504;</span><span class="t-nm">AI Brain</span><span class="t-sb">mood &#183; crash &#183; report</span></a>
+    <a class="tile" href="#fundamentals"><span class="t-ic">🏢</span><span class="t-nm">Fundamentals</span><span class="t-sb">PE · ROE · debt</span></a><a class="tile" href="#mf"><span class="t-ic">📊</span><span class="t-nm">MF Tracker</span><span class="t-sb">nav · sip · my funds</span></a>
+    <a class="tile" href="#deepfund"><span class="t-ic">💎</span><span class="t-nm">Deep Fund</span><span class="t-sb">screener.in weekly</span></a>
     <div class="hgroup">WATCH</div>
-    <a class="tile" href="#crypto"><span class="t-ic">&#129689;</span><span class="t-nm">Crypto</span><span class="t-sb">top 100 coins</span></a>
-    <a class="tile" href="#global"><span class="t-ic">&#127757;</span><span class="t-nm">Global</span><span class="t-sb">US &#183; gold &#183; crude</span></a>
-    <a class="tile" href="#news"><span class="t-ic">&#128240;</span><span class="t-nm">News</span><span class="t-sb">India market</span></a>
-    <a class="tile" href="#events"><span class="t-ic">&#128197;</span><span class="t-nm">Events</span><span class="t-sb">GDP &#183; jobs &#183; Fed &#183; RBI</span></a>
-    <a class="tile" href="#portfolio"><span class="t-ic">&#128188;</span><span class="t-nm">Portfolio</span><span class="t-sb">my holdings &#183; P&L</span></a>
-    <div class="hgroup">LEARN</div>
-    <a class="tile learnchip" href="#learn"><span class="t-ic">&#128218;</span><span class="t-nm">Learn</span><span class="t-sb">strategies &#183; glossary &#183; rules</span></a>
-    <a class="tile" href="#studies"><span class="t-ic">&#129514;</span><span class="t-nm">Studies</span><span class="t-sb">history heatmap</span></a>
-    <a class="tile" href="#mynotes"><span class="t-ic">&#128221;</span><span class="t-nm">My Notes</span><span class="t-sb">course notes</span></a>
+    <a class="tile" href="#crypto"><span class="t-ic">🪙</span><span class="t-nm">Crypto</span><span class="t-sb">top 100 coins</span></a>
+    <a class="tile" href="#global"><span class="t-ic">🌍</span><span class="t-nm">Global</span><span class="t-sb">US · gold · crude</span></a>
+    <a class="tile" href="#news"><span class="t-ic">📰</span><span class="t-nm">News</span><span class="t-sb">India market</span></a>
+    <a class="tile" href="#events"><span class="t-ic">📅</span><span class="t-nm">Events</span><span class="t-sb">GDP · jobs · Fed · RBI</span></a>
   </div>
-</section>
 
-<section id="dash" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Dashboard</h2>
+  <div class="sect">TODAY — DASHBOARD</div>
   <div class="grid g3" id="kpiRow"></div>
   <div class="grid g2" style="margin-top:10px">
     <div class="card">
-      <div class="subhead">Market Breadth &#8212; 2,000+ stocks</div>
+      <div class="subhead">Market Breadth — 2,000+ stocks</div>
       <div id="breadthBox"></div>
     </div>
     <div class="card">
@@ -166,8 +161,16 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
       <div id="fiiBox"></div>
     </div>
   </div>
+  <div class="card" style="margin-top:10px">
+    <div class="subhead">India VIX + Put/Call Ratio</div>
+    <div id="vixBox"></div>
+  </div>
+</section>
+
+<section id="dash" style="display:none">
+  <h2>Market X-Ray</h2>
   <div class="card">
-    <div class="subhead">Pre-open Movers (9:00&#8211;9:15 IST)</div>
+    <div class="subhead">Pre-open Movers (9:00–9:15 IST)</div>
     <div id="preopenBox"></div>
   </div>
   <div class="grid g2">
@@ -179,18 +182,25 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
       <div class="subhead">TimesFM 21-day AI Outlook</div>
       <div id="aiMini"></div>
     </div>
-    <div class="card">
-      <div class="subhead">India VIX + Put/Call Ratio</div>
-      <div id="vixBox"></div>
-    </div>
+  </div>
+</section>
+
+<section id="tools" style="display:none">
+  <div class="fshead"><h2>Trading Tools</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
+  <div class="trow">
+    <button class="tb" data-go="futures">Futures</button>
+    <button class="tb" data-go="charts">Charts</button>
+    <button class="tb" data-go="gti">GTI</button>
+    <button class="tb" data-go="ai">AI</button>
+    <button class="tb" data-go="aibrain">AI Brain</button>
+    <button class="tb" data-go="internals">Internals</button>
   </div>
 </section>
 
 <section id="indices" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Indices &#8212; 139 tracked</h2>
+  <h2>Indices — 139 tracked</h2>
   <div class="controls">
-    <input id="idxSearch" type="search" placeholder="Search index name&#8230;">
+    <input id="idxSearch" type="search" placeholder="Search index name…">
   </div>
   <div class="card flat" style="padding:0">
     <div class="tblwrap" style="border:none;margin:0">
@@ -201,41 +211,38 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 </section>
 
 <section id="heatmap" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Heatmaps &#8212; sectors &#183; all indices &#183; stocks</h2>
+  <h2>Heatmaps — sectors · all indices · stocks</h2>
   <div class="controls" id="hmChips"></div>
   <div id="hmBody"></div>
 </section>
 
 <section id="screener" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Screener &#8212; full market technicals</h2>
+  <h2>Screener — full market technicals</h2>
   <div class="controls">
-    <input id="scrSearch" type="search" placeholder="Search symbol / company&#8230;">
+    <input id="scrSearch" type="search" placeholder="Search symbol / company…">
     <select id="scrTier"><option value="0">All tiers</option><option value="1">Tier 1 (Nifty 500)</option><option value="2">Tier 2</option></select>
     <select id="scrRsi"><option value="all">RSI: all</option><option value="os">Oversold <30</option><option value="lt40">Weak <40</option><option value="gt60">Strong >60</option><option value="ob">Overbought >70</option></select>
     <select id="scrEma"><option value="all">EMA200: all</option><option value="above">Above EMA200</option><option value="below">Below EMA200</option></select>
-    <select id="scrSort"><option value="chg">Sort: Chg% &#9660;</option><option value="rsi">Sort: RSI &#9650;</option><option value="rsid">RSI &#9660;</option><option value="52w">Near 52w low</option><option value="vol">Volume spike</option><option value="up">Near 52w high</option></select>
-    <button class="chip" id="scrAI">AI &#128302; bullish</button>
+    <select id="scrSort"><option value="chg">Sort: Chg% ▼</option><option value="rsi">Sort: RSI ▲</option><option value="rsid">RSI ▼</option><option value="52w">Near 52w low</option><option value="vol">Volume spike</option><option value="up">Near 52w high</option></select>
+    <button class="chip" id="scrAI">AI 🔮 bullish</button>
   </div>
   <div class="card flat" style="padding:0">
     <div class="tblwrap" style="border:none;margin:0">
-      <table><thead><tr><th>Symbol</th><th>Price</th><th>Chg%</th><th>RSI14</th><th>vs 52wH</th><th>EMA200</th><th>Vol&#215;</th><th>Streak</th></tr></thead>
+      <table><thead><tr><th>Symbol</th><th>Price</th><th>Chg%</th><th>RSI14</th><th>vs 52wH</th><th>EMA200</th><th>Vol×</th><th>Streak</th></tr></thead>
       <tbody id="scrBody"></tbody></table>
     </div>
   </div>
   <div id="scrCount" class="footer-note"></div>
-  <button class="morebtn" id="scrMore">show more &#9662;</button>
+  <button class="morebtn" id="scrMore">show more ▾</button>
 </section>
 
 <section id="fundamentals" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Fundamentals &#8212; Nifty 500 quality + value</h2>
+  <h2>Fundamentals — Nifty 500 quality + value</h2>
   <div class="controls">
-    <input id="fndSearch" type="search" placeholder="Search symbol&#8230;">
+    <input id="fndSearch" type="search" placeholder="Search symbol…">
     <select id="fndPE"><option value="0">PE: any</option><option value="10">< 10</option><option value="15">< 15</option><option value="20">< 20</option><option value="30">< 30</option></select>
     <select id="fndROE"><option value="0">ROE: any</option><option value="15">> 15%</option><option value="20">> 20%</option><option value="25">> 25%</option></select>
-    <button class="chip" id="fndValue">Value screen: PE<20 &#183; ROE>15</button>
+    <button class="chip" id="fndValue">Value screen: PE<20 · ROE>15</button>
   </div>
   <div class="card flat" style="padding:0">
     <div class="tblwrap" style="border:none;margin:0">
@@ -244,68 +251,64 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
     </div>
   </div>
   <div id="fndCount" class="footer-note"></div>
-  <button class="morebtn" id="fndMore">show more &#9662;</button>
+  <button class="morebtn" id="fndMore">show more ▾</button>
 </section>
 
 <section id="deepfund" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Deep Fundamentals &#8212; Screener.in weekly</h2>
+  <h2>Deep Fundamentals — Screener.in weekly</h2>
   <div class="controls">
-    <input id="dfSearch" type="search" placeholder="Search stock name / symbol&#8230;" style="flex:2;min-width:150px">
+    <input id="dfSearch" type="search" placeholder="Search stock name / symbol…" style="flex:2;min-width:150px">
     <select id="dfPE"><option value="0">PE: any</option><option value="10">< 10</option><option value="15">< 15</option><option value="20">< 20</option><option value="30">< 30</option></select>
     <select id="dfROCE"><option value="0">ROCE: any</option><option value="15">> 15%</option><option value="20">> 20%</option><option value="25">> 25%</option></select>
     <select id="dfSort"><option value="mcap">Sort: MCap</option><option value="roce">ROCE</option><option value="pe">P/E</option><option value="growth">Profit YoY</option><option value="prom">Promoter %</option></select>
-    <button class="chip" id="dfQuality">Quality: PE<20 &#183; ROCE>15 &#183; Profit&#8593;</button>
+    <button class="chip" id="dfQuality">Quality: PE<20 · ROCE>15 · Profit↑</button>
   </div>
   <div class="card flat" style="padding:0">
     <div class="tblwrap" style="border:none;margin:0">
-      <table><thead><tr><th>Symbol</th><th>MCap &#8377;Cr</th><th>P/E</th><th>ROCE</th><th>ROE</th><th>DivY</th><th>Prom</th><th>FII</th><th>DII</th><th>Sales YoY</th><th>Profit YoY</th><th>Pledge</th></tr></thead>
+      <table><thead><tr><th>Symbol</th><th>MCap ₹Cr</th><th>P/E</th><th>ROCE</th><th>ROE</th><th>DivY</th><th>Prom</th><th>FII</th><th>DII</th><th>Sales YoY</th><th>Profit YoY</th><th>Pledge</th></tr></thead>
       <tbody id="dfBody"></tbody></table>
     </div>
   </div>
   <div id="dfCount" class="footer-note"></div>
-  <button class="morebtn" id="dfMore">show more &#9662;</button>
+  <button class="morebtn" id="dfMore">show more ▾</button>
 </section>
 
 <section id="company" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
   <h2>Company Card</h2>
   <div class="controls">
-    <input id="coSearch" type="search" placeholder="Search company&#8230; e.g. RELIANCE, TCS, Tata">
+    <input id="coSearch" type="search" placeholder="Search company… e.g. RELIANCE, TCS, Tata">
   </div>
   <div id="coResults"></div>
   <div id="coBody"></div>
 </section>
 
 <section id="portfolio" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
   <h2>Portfolio Tracker</h2>
   <div class="controls">
-    <input id="pfSym" type="text" placeholder="Symbol&#8230; RELIANCE">
+    <input id="pfSym" type="text" placeholder="Symbol… RELIANCE">
     <input id="pfQty" type="number" placeholder="Qty" min="0.001" step="any">
-    <input id="pfBuy" type="number" placeholder="Buy &#8377;" min="0" step="any">
+    <input id="pfBuy" type="number" placeholder="Buy ₹" min="0" step="any">
     <button class="chip" id="pfAdd">+ Add</button>
   </div>
   <div class="card">
-    <div class="subhead">My holdings &#8212; saved in this browser</div>
+    <div class="subhead">My holdings — saved in this browser</div>
     <div class="tblwrap"><table>
-      <thead><tr><th>Stock</th><th>Qty</th><th>Buy &#8377;</th><th>Last &#8377;</th><th>Day%</th><th>Value &#8377;</th><th>P&L &#8377;</th><th>P&L%</th><th></th></tr></thead>
+      <thead><tr><th>Stock</th><th>Qty</th><th>Buy ₹</th><th>Last ₹</th><th>Day%</th><th>Value ₹</th><th>P&L ₹</th><th>P&L%</th><th></th></tr></thead>
       <tbody id="pfBody"></tbody>
     </table></div>
     <div class="footer-note" id="pfNote"></div>
   </div>
   <div class="card">
-    <div class="subhead">Risk & Scenario &#8212; market girega to kitna girega?</div>
+    <div class="subhead">Risk & Scenario — market girega to kitna girega?</div>
     <div id="pfRisk"></div>
   </div>
 </section>
 
 <section id="futures" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Futures &#8212; F&O Contract Chain</h2>
+  <h2>Futures — F&O Contract Chain</h2>
   <div id="futIdx"></div>
   <div class="card">
-    <div class="subhead">Top Stock Futures &#8212; near month, by open interest</div>
+    <div class="subhead">Top Stock Futures — near month, by open interest</div>
     <div class="tblwrap"><table><thead><tr><th>Symbol</th><th>Expiry</th><th>Fut close</th><th>Spot</th><th>Basis</th><th>Open interest</th><th>OI chg</th></tr></thead>
     <tbody id="futBody"></tbody></table></div>
     <div class="footer-note" id="futNote"></div>
@@ -313,19 +316,17 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 </section>
 
 <section id="charts" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Charts &#8212; TradingView live</h2>
+  <h2>Charts — TradingView live</h2>
   <div class="controls">
-    <input id="chSym" type="text" placeholder="Symbol&#8230; RELIANCE, NIFTY, BTC" value="RELIANCE" style="flex:2;min-width:140px">
+    <input id="chSym" type="text" placeholder="Symbol… RELIANCE, NIFTY, BTC" value="RELIANCE" style="flex:2;min-width:140px">
     <button class="chip" id="chGo">Load</button>
   </div>
   <div class="controls" id="chIv"></div>
   <div id="tvBox" style="margin-top:10px"></div>
-  <div class="footer-note">charts by TradingView (free) &#183; 1m / 5m data needs market hours &#183; NSE symbols, NIFTY, BANKNIFTY, BTC</div>
+  <div class="footer-note">charts by TradingView (free) · 1m / 5m data needs market hours · NSE symbols, NIFTY, BANKNIFTY, BTC</div>
 </section>
 
 <section id="global" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
   <h2>Global Markets</h2>
   <div class="grid g3" id="globKpi"></div>
   <div class="card">
@@ -336,37 +337,33 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
 </section>
 
 <section id="gti" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>GTI Zones &#8212; Ghost Trade Indicator</h2>
+  <h2>GTI Zones — Ghost Trade Indicator</h2>
   <div id="gtiMount"></div>
 </section>
+
 <section id="news" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>News &#8212; India Market</h2>
+  <div class="fshead"><h2>News</h2><button class="tb" data-go="filings">Filings</button></div>
   <div class="controls" id="newsChips"></div>
   <div id="newsBox"></div>
 </section>
 
 <section id="events" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Global Event Calendar</h2>
+  <h2>Events</h2>
   <div class="controls" id="evChips"></div>
   <div id="evBox"></div>
 </section>
 
 <section id="ipo" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
   <h2>IPO Terminal</h2>
   <div id="ipoBox"></div>
 </section>
 
 <section id="crypto" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Crypto Watch &#8212; top 100</h2>
+  <h2>Crypto Watch — top 100</h2>
   <div class="grid g3" id="cryptoGlobal"></div>
   <div class="card"><div class="subhead">Fear & Greed</div><div id="fgBox"></div></div>
   <div class="controls" style="margin-top:12px">
-    <input id="crySearch" type="search" placeholder="Search coin&#8230;">
+    <input id="crySearch" type="search" placeholder="Search coin…">
   </div>
   <div class="card flat" style="padding:0">
     <div class="tblwrap" style="border:none;margin:0">
@@ -374,53 +371,95 @@ td.lbl{font-weight:500;color:var(--dim,#7b8aa2);white-space:nowrap}
       <tbody id="cryBody"></tbody></table>
     </div>
   </div>
-  <button class="morebtn" id="cryMore">show more &#9662;</button>
+  <button class="morebtn" id="cryMore">show more ▾</button>
 </section>
 
 <section id="ai" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>AI Forecast &#8212; Google TimesFM 3.0</h2>
+  <h2>AI Forecast — Google TimesFM 3.0</h2>
   <div class="card"><div id="aiHead"></div></div>
   <div class="grid g2" id="aiGrid"></div>
 </section>
 
 <section id="filings" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Company Filings &#8212; tier-1, last 7 days</h2>
+  <div class="fshead"><h2>Filings</h2><button class="tb" data-go="news">◂ NEWS</button></div>
   <div class="controls" id="filChips"></div>
   <div id="filBox"></div>
 </section>
 
 <section id="learn" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Learn &#8212; Trading & Investing School</h2>
+  <h2>Learn — Trading & Investing School</h2>
   <div class="controls" id="learnChips"></div>
   <div id="eduBox"></div>
 </section>
 
 <section id="studies" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>Studies &#8212; history heatmap &#183; Sensex years &#183; Budget days</h2>
+  <h2>Studies — history heatmap · Sensex years · Budget days</h2>
   <div class="card" id="histCard"></div>
   <div class="card" id="sensexCard"></div>
   <div class="card" id="budgetCard"></div>
 </section>
 
 <section id="mynotes" style="display:none">
-  <a class="backbtn" href="#home">&#8962; Home</a>
-  <h2>My Notes &#8212; Course Notes (Advance.pdf)</h2>
+  <h2>My Notes — Course Notes (Advance.pdf)</h2>
   <div id="notesBox"></div>
 </section>
 
-<section id="mf" style="display:none"><a class="backbtn" href="#home">Home</a><h2>MF Tracker</h2><div class="card"><div class="subhead">Fund dhoondo - naam ya code</div><input id="mfQ" placeholder="e.g. bluechip / hdfc / 120502" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:inherit;font-size:14px"><div id="mfRes" style="margin-top:8px" class="note"></div></div><div class="card" id="mfCard"></div><div class="card" id="mfTop"></div><div class="card" id="mfSip"></div><div class="card" id="mfPf"></div><div class="card" id="mfGuide"></div></section><section id="aibrain" style="display:none"><a class="backbtn" href="#home">Home</a><h2>AI Brain</h2><div class="card" id="abMood"></div><div class="card" id="abRisk"></div><div class="card" id="abAcc"></div><div class="card" id="abRot"></div></section><footer style="text-align:center">
+<section id="internals" style="display:none">
+  <h2>Market Internals</h2>
+  <div id="miBox"></div>
+  <div class="card"><div class="subhead">🎧 Put/Call Ratio history</div><div id="miPCR"></div></div>
+  <div class="footer-note">~2200 NSE stocks se roz EOD pe calculate · Actions auto · 100% free · signal hai, guarantee nahi</div>
+</section>
+
+<section id="mf" style="display:none">
+  <h2>MF Tracker</h2>
+  <div class="card"><div class="subhead">Fund dhoondo - naam ya code</div><input id="mfQ" placeholder="e.g. bluechip / hdfc / 120502" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--glass2);color:inherit;font-size:14px"><div id="mfRes" style="margin-top:8px" class="note"></div></div>
+  <div class="card" id="mfCard"></div><div class="card" id="mfTop"></div><div class="card" id="mfSip"></div><div class="card" id="mfPf"></div><div class="card" id="mfGuide"></div>
+</section>
+
+<section id="aibrain" style="display:none">
+  <h2>AI Brain</h2>
+  <div class="card" id="abMood"></div><div class="card" id="abRisk"></div><div class="card" id="abAcc"></div><div class="card" id="abRot"></div>
+</section>
+
+<footer style="text-align:center">
 </footer>
 
 </div>
+
+<div class="dock">
+  <button class="db on" id="dHome" title="Home"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></button>
+  <button class="db" id="dLearn" title="Learn — strategies · studies · notes"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>
+  <button class="db" id="dGrid" title="Trading Tools"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+  <button class="db" id="dSearch" title="Search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+  <button class="db" id="dMore" title="Menu — all cards"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  <button class="db" id="dPort" title="Portfolio"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></button>
+</div>
+
+<div class="ov" id="moreOv"><div class="sheet">
+  <div class="ovh"><span>ALL CARDS · MENU</span><button class="x" id="mx">✕ CLOSE</button></div>
+  <div class="mlist" id="menuList"></div>
+  <div class="ovh" style="border-top:1px solid var(--border);margin-top:10px"><span>ACTIONS</span></div>
+  <div class="al">
+    <button class="mb" data-go="portfolio"><span class="ic">＋</span><span>Add transaction<small>portfolio mein naya buy/sell</small></span></button>
+    <button class="mb" data-go="company"><span class="ic">●</span><span>Company Card<small>stock search · set alert</small></span></button>
+    <button class="mb" id="refreshBtn"><span class="ic">⟳</span><span>Refresh data<small>saare feeds dobara fetch</small></span></button>
+  </div>
+  <div id="dataFresh"></div>
+</div></div>
+
+<div class="ov" id="palOv"><div class="sheet pal">
+  <input id="palQ" placeholder="Search sections, tools…" autocomplete="off">
+  <div class="plist" id="palList"></div>
+</div></div>
+
+<div class="toast" id="asToast"></div>
+
 <script>/* deep-link save: oldapp load pe hash strip karta hai \u2014 pehle yaad rakho (crtime restore karega) */
 try { if (location.hash && location.hash.indexOf("#company") !== 0 && location.hash !== "#lock")
   sessionStorage.setItem("crsec", location.hash.replace("#/", "#").replace("#", "").split("/")[0]); } catch (e) {}</script>
 <script src="app.js?v=27sepv112"></script>
-<script src="themefix.js?v=26sepvp1"></script>
+<script src="themefix.js?v=newui1"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>

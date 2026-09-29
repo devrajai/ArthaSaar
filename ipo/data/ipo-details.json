@@ -1,12 +1,13 @@
 {
- "updated_at": "2026-09-28T04:41:43.655427+00:00",
+ "updated_at": "2026-09-29T04:40:18.951072+00:00",
  "ipos": {
   "Shah Investor's Home Limited": {
    "url": "https://www.chittorgarh.com/ipo/shah-investors-home-ipo/2657/",
    "subs": {
     "rii": 35.0,
     "nii": 15.0,
-    "qib": 50.0
+    "qib": 50.0,
+    "total": 100.0
    },
    "anchor": {
     "total_cr": 27.05,
@@ -72,7 +73,8 @@
    "subs": {
     "rii": 35.0,
     "nii": 15.0,
-    "qib": 50.0
+    "qib": 50.0,
+    "total": 100.0
    },
    "anchor": {
     "total_cr": 65.52,
@@ -153,6 +155,64 @@
    },
    "promoter_pct": 84.91
   },
+  "Runwal Enterprises Limited": {
+   "url": "https://www.chittorgarh.com/ipo/runwal-enterprises-ipo/2298/",
+   "subs": {
+    "rii": 34.74,
+    "nii": 14.89,
+    "qib": 49.63,
+    "total": 100.0
+   },
+   "anchor": {
+    "total_cr": 148.95,
+    "investors": 20
+   },
+   "fin": {
+    "periods": [
+     "31 Mar 2026",
+     "31 Mar 2025",
+     "31 Mar 2024"
+    ],
+    "assets": [
+     10254.5,
+     8328.14,
+     7079.74
+    ],
+    "income": [
+     1850.79,
+     1050.71,
+     2436.68
+    ],
+    "pat": [
+     185.76,
+     55.65,
+     93.7
+    ],
+    "ebitda": [
+     349.81,
+     180.11,
+     201.73
+    ],
+    "networth": [
+     768.2,
+     455.86,
+     372.65
+    ],
+    "borrowing": [
+     2909.13,
+     2312.58,
+     1783.65
+    ]
+   },
+   "rev_growth": 76.1,
+   "pat_growth": 233.8,
+   "kpi": {
+    "de": "3.29",
+    "ebitda_margin": "19.44%",
+    "nav": "61.43"
+   },
+   "promoter_pct": 95.16
+  },
   "AceVector Limited": {
    "url": "https://www.chittorgarh.com/ipo/snapdeal-ipo/2543/",
    "subs": {
@@ -219,64 +279,7 @@
    "rev_growth": 32.2,
    "promoter_pct": 65.9
   },
-  "Runwal Enterprises Limited": {
-   "url": "https://www.chittorgarh.com/ipo/runwal-enterprises-ipo/2298/",
-   "subs": {
-    "rii": 34.74,
-    "nii": 14.89,
-    "qib": 49.63,
-    "total": 100.0
-   },
-   "anchor": {
-    "total_cr": 148.95,
-    "investors": 20
-   },
-   "fin": {
-    "periods": [
-     "31 Mar 2026",
-     "31 Mar 2025",
-     "31 Mar 2024"
-    ],
-    "assets": [
-     10254.5,
-     8328.14,
-     7079.74
-    ],
-    "income": [
-     1850.79,
-     1050.71,
-     2436.68
-    ],
-    "pat": [
-     185.76,
-     55.65,
-     93.7
-    ],
-    "ebitda": [
-     349.81,
-     180.11,
-     201.73
-    ],
-    "networth": [
-     768.2,
-     455.86,
-     372.65
-    ],
-    "borrowing": [
-     2909.13,
-     2312.58,
-     1783.65
-    ]
-   },
-   "rev_growth": 76.1,
-   "pat_growth": 233.8,
-   "kpi": {
-    "de": "3.29",
-    "ebitda_margin": "19.44%",
-    "nav": "61.43"
-   },
-   "promoter_pct": 95.16
-  },
+  "German Green Steel and Power Limited": {},
   "Orient Cables (India) Limited": {
    "url": "https://www.chittorgarh.com/ipo/orient-cables-ipo/2532/",
    "subs": {
@@ -345,98 +348,87 @@
    },
    "promoter_pct": 100.0
   },
-  "German Green Steel and Power Limited": {},
-  "Moneyview Limited": {
-   "url": "https://www.chittorgarh.com/ipo/moneyview-ipo/2936/",
+  "Papadmalji Agro Foods Limited": {
+   "url": "https://www.chittorgarh.com/ipo/papadmalji-agro-foods-ipo/2823/",
    "subs": {
-    "rii": 35.0,
-    "nii": 15.0,
-    "qib": 50.0,
+    "qib": 1.14,
+    "nii": 28.08,
+    "rii": 65.64,
     "total": 100.0
    },
    "anchor": {
-    "total_cr": 327.5,
     "investors": 20
    },
    "peers": [
     {
-     "name": "Manipal Payment & Identity Solutions Ltd.",
-     "pe": "29.74"
+     "name": "Elfin Agro India Ltd.",
+     "pe": "13.05"
     },
     {
-     "name": "Turtlemint Fintech Solutions Ltd.",
-     "pe": "-19.66"
+     "name": "Shyam Dhani Industries Ltd.",
+     "pe": "13.19"
     },
     {
-     "name": "Pine Labs Ltd.",
-     "pe": "-160.13"
+     "name": "Pajson Agro India Ltd.",
+     "pe": "10.11"
     },
     {
-     "name": "Finbud Financial Services Ltd.",
-     "pe": "23.4"
+     "name": "Mother Nutri Foods Ltd.",
+     "pe": "17.78"
+    },
+    {
+     "name": "Orkla India Ltd.",
+     "pe": "39.11"
     }
    ],
    "fin": {
     "periods": [
-     "30 Jun 2026",
      "31 Mar 2026",
-     "30 Jun 2025",
      "31 Mar 2025",
      "31 Mar 2024"
     ],
     "assets": [
-     8641.89,
-     8104.85,
-     6404.82,
-     5632.42,
-     3519.5
+     33.5,
+     25.05,
+     20.07
     ],
     "income": [
-     1065.09,
-     3404.27,
-     702.92,
-     2378.53,
-     1389.24
+     33.54,
+     31.76,
+     26.29
     ],
     "pat": [
-     173.8,
-     242.71,
-     67.15,
-     240.28,
-     171.15
+     5.21,
+     4.72,
+     2.11
     ],
     "ebitda": [
-     424.28,
-     968.92,
-     225.56,
-     697.98,
-     328.7
+     8.44,
+     5.98,
+     3.31
     ],
     "networth": [
-     2415.2,
-     2225.42,
-     1991.01,
-     1918.66,
-     1606.64
+     16.14,
+     10.93,
+     6.2
     ],
     "borrowing": [
-     5484.76,
-     5157.04,
-     4070.14,
-     3413.37,
-     1708.92
+     9.99,
+     8.97,
+     10.28
     ]
    },
-   "rev_growth": 43.1,
-   "pat_growth": 1.0,
+   "rev_growth": 5.6,
+   "pat_growth": 10.4,
    "kpi": {
-    "roe": "15.98%",
-    "nav": "14.67"
+    "roe": "38.51%",
+    "roce": "46.47%",
+    "de": "0.62",
+    "pat_margin": "15.54%",
+    "ebitda_margin": "25.16%",
+    "nav": "23.67"
    },
-   "promoter_pct": 23.96
-  },
-  "A-One Steels India Limited": {
-   "url": "https://www.chittorgarh.com/ipo/a-one-steels-ipo/2000/"
+   "promoter_pct": 60.98
   },
   "Bench Mark Infotech Services Limited": {
    "url": "https://www.chittorgarh.com/ipo/bench-mark-infotech-services-ipo/3212/",
@@ -589,9 +581,9 @@
   "Green Asia Impex Limited": {
    "url": "https://www.chittorgarh.com/ipo/green-asia-impex-ipo/2963/",
    "subs": {
-    "qib": 28.34,
-    "nii": 33.46,
-    "rii": 33.17,
+    "qib": 28.43,
+    "nii": 33.25,
+    "rii": 33.28,
     "total": 100.0
    },
    "anchor": {
@@ -646,8 +638,92 @@
    },
    "promoter_pct": 94.65
   },
-  "A-One Steels India": {
-   "url": "https://www.chittorgarh.com/ipo/a-one-steels-ipo/2000/"
+  "A-One Steels India Limited": {},
+  "Moneyview Limited": {},
+  "Vishal Nirmiti Limited": {
+   "url": "https://www.chittorgarh.com/ipo/vishal-nirmiti-ipo/2665/",
+   "subs": {
+    "rii": 70.0,
+    "nii": 29.0,
+    "qib": 1.0
+   },
+   "anchor": {
+    "investors": 20
+   },
+   "peers": [
+    {
+     "name": "LCC Projects Ltd.",
+     "pe": "13.87"
+    },
+    {
+     "name": "Annu Projects Ltd.",
+     "pe": "14.33"
+    },
+    {
+     "name": "Technocraft Ventures Ltd.",
+     "pe": "14.73"
+    },
+    {
+     "name": "Om Power Transmission Ltd.",
+     "pe": "21.13"
+    },
+    {
+     "name": "Infrax Renewable Ltd.",
+     "pe": "11.19"
+    },
+    {
+     "name": "Paluck Technologies Ltd.",
+     "pe": "6.95"
+    }
+   ],
+   "fin": {
+    "periods": [
+     "31 Mar 2026",
+     "31 Mar 2025",
+     "31 Mar 2024"
+    ],
+    "assets": [
+     334.92,
+     296.61,
+     242.04
+    ],
+    "income": [
+     344.13,
+     324.86,
+     247.93
+    ],
+    "pat": [
+     24.98,
+     23.64,
+     3.45
+    ],
+    "ebitda": [
+     51.13,
+     46.48,
+     23.14
+    ],
+    "networth": [
+     86.34,
+     61.12,
+     38.12
+    ],
+    "borrowing": [
+     87.42,
+     88.05,
+     91.75
+    ]
+   },
+   "rev_growth": 5.9,
+   "pat_growth": 5.7,
+   "kpi": {
+    "roe": "33.67%",
+    "roce": "28.02%",
+    "de": "1.01",
+    "pat_margin": "7.37%",
+    "ebitda_margin": "15.10%",
+    "nav": "43.61"
+   },
+   "promoter_pct": 73.42
   }
  }
 }

@@ -1,81 +1,105 @@
 {
- "updated": "2026-09-29T07:33:43.458231+05:30",
+ "updated": "2026-09-29T13:36:00.935807+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
- "overall": 51,
+ "overall": 45,
  "tag": "Neutral",
  "counted": 60,
  "pos": [
   {
-   "t": "Bond yields crank higher and pull U.S. stocks further from their record",
-   "s": 78,
-   "pub": "BNN Bloomberg",
-   "topic": "Global",
-   "link": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxQQXZqTjFZTnRmaVVzTGVTcEtuZ0wyS2tLMnR0eDdHN2t0elZTeXpXNVFCb2s3MDRyVmxKUW1CbTdxSUZBMC1LemJReHpVUTJOVzBpZVdBN0c0cFdHUExlZ1NNSUtuNF8yY053Ny00RmtwQmgzSW5GOFI3T09PdzZsTElDbnU0a0hWVTFld0ttS3FLQVNqVXJyZXVTRS1vNDZOYmxFamJTLVAwZ3ZFS0g2WEZKYWpPQkYyQ3dqblVqTnFUUUFkcGcxUFd5aUVmMHd4dVZucy1QU1RmM0I1R3pHVHBHUXRqSmFRUURMQ01n?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Abcellera Biologics stock hits 52-week high at 13.23 USD",
-   "s": 78,
-   "pub": "Investing.com India",
+   "t": "Sensex rises 500 pts from day's low, Nifty reclaims 22,700: Key reasons behind sharp market recovery",
+   "s": 95,
+   "pub": "Moneycontrol.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPOGV3MldYeVhWZkZ6Q2VzUjhGZUd1dHZZNkZmcEtQYWs1WkM4aWdBaGFPTUp1ZWJqalVoQ2FxOWQ0RlNjNlBaZTZpaXBObGJBUjJ5anJnaGItaDhhODJEaDVPYmVYVm9vZllqMVhvcTNCbXZsU05PQmIzMmNNQWxBWTVHcTJNTTlOUmRLajRRV0VsMXpiZ0pNb3Y4MDFzSkdKbl9hWEczNVZVaDVDdFVwRkpHZFQ3dw?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Atkore stock hits 52-week high at 94.67 USD",
-   "s": 78,
-   "pub": "Investing.com India",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQZE5hUURzR0xUb3VrX2NncmYwYmRVYnAtOF9scElxSkJmaWRlaTl0VnlSMHBjM05wY3NFTGRleWV6QVJSUkZYb0RxZDhCaTdiV0xfYlpsUnZjUlZONjBzMVRnS0EzQ0tPV0pjVmZMLXgyMzhTbXRocmx0WHdiWHBGdVVwV2xRcW1DQ3JHSkV4TXVLd21aOHYyVUtCWTdmMzk4eUM1Vg?oc=5",
-   "syms": []
-  },
-  {
-   "t": "PCB Bancorp stock rises on share buyback program approval",
-   "s": 64,
-   "pub": "Investing.com India",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNZjNDQVdEREhIRk1xRDJQa3RxMHJDMmtRWjN4aC1jT2FXQU85OUZRcDl0VjlqT2JCQm5PelVBbkRETFM1NHJsaFFzZEpBYTZ2NFdUcTZQMHdUUU53WWZ3d1QzMU01LUJVSmx1VlBkNllPRXdrc2xrSnVoMnNXeG1BdGQ1NlB4dkZ6Z25SRTQ3RXl4VTY3eDF2YkpPdDkwdi1oYTNxYTN2SjZwTG03QlZYdm0wbw?oc=5",
-   "syms": []
-  }
- ],
- "neg": [
-  {
-   "t": "Asian Bonds to Decline as Oil Fans Inflation Fears: Markets Wrap",
-   "s": 22,
-   "pub": "Bloomberg.com",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQODhVaklOeWxwTzlmNzFhOVNJbklKakh1cnBSQWdqX2lEbWZldjlCOWhmaWEtb0FzaE9hTkV0SWpfVUR1cjlVNzROWUhlNDE2SnJmclFfWGRtT3FESmNrb05ENWxHZnJSYWswcHFPdGVpa3FPOTY5WjFzQmtubFd4OEY5MVBXMmtZUWhNN0Vzd3Npcm5S?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Indian stock market crashes, 7.4 lakh crore wiped out: What is driving the fall?",
-   "s": 22,
-   "pub": "WION",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOZ3ZwWkRNRjJrZ1RQN0tCaXBfTGZORVVIeFJ2d1FmTkJpZ3RFM2ZUNW52alVyTDVSLXNzN0hRWUE0YUZ1NXBJZWEzbWVuV2NDUFRxNmRmWXVSdnkzZ0MtLV9UMm9FeTVaM2VGckptZWt1Wnhpd2F6TmVjcEpXVEJhNXpKWkVFd0NCelczRTBidmMxam1zVjRfM1J0aDVHaVl5MWtkQ1RvS2xXNm9lMTlraE9IQXBqd9IBuwFBVV95cUxQdU1hSjhhcHpRbXBFRmlSLUVvakR5c3ZwYlpORGl2M1hiaEhqa2dDWTVIdHhmY2NsNkVUWFZKT1c4MHROTG1fbEtCYnZnM0VMOHFEXzB5cFotZEtGNHgyVDR6ZkpwM19JM1JaVmlFMElpSUw0OHRMUXNKVUlvSEswOFdQcXlLLVVZZWpDVlE5bHplYkZoNUp4bUVEV2VhaWFVZzNDN1dpRFVUMUROeGtLQ3VlZFJjUDZ5Rmd3?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPRW1ha29OeWpYT2duNXA0RnNlUU96b2pDNEtUQy1HWG1vV2dmZXc1c1BjZVR1Zk5qVk1PUml4WXktcGFIQzBHYmZpaUhHYVY1RDBYSGtBS084X040UmpRYU1qcFFTVlF6TVJHYjBLT0tKdXcxVDd1SFBaZUNONy1KM1gxbUpSbS1Cd2t6VjRONGMyajZXNkI5SkYxZHpfejhZMVNDMmdQTW95emEtTVBoUjJiNVJvSmg2d3JycVlkVEV4eGVxdnowNE5BRXJJb0VyMHR0UXZPZEsyX0NpLTR0cUY1WEh4NEJXNV9lZ3BrQnEtc1A2bVHSAfsBQVVfeXFMUDJJT0hiR3BoZmtIR1dOTHZUM0p6UjF1UlcwaGZNNG9ad3hZWUpMb0pIMnYtc2JGMVdtdDcwTzk5cEtTS2tZOFpSYTR4b0VlM0syYi0wN24wQU9iUlVmcDBaa1h5eVRETkJsNWxabEJrV29hZHdyUWZQTHZnb0dUQ3hlQlNlOTNLTkNtYmJybEJMeTZqcnlaYWFGZzJSUjYxUXJIU05xdXAtZEFCOHlEczIxR3ZFSmZCNHBDSVFnRzhseHA4cHJvVzZlQmtoRWlERkY0SzFRMm01WVVRY0Rya09tZm5mUmpZZWszbXQ2aWVMbzFPSU0xbElTajg?oc=5",
    "syms": [
-    "RELIANCE",
-    "HDFCBANK",
-    "INFY",
-    "SBIN"
+    "KOTAKBANK",
+    "LTF",
+    "BAJAJFINSV",
+    "KALYANKJIL"
    ],
    "src": "article"
   },
   {
-   "t": "Market plunges, more bad weather may lie ahead",
-   "s": 36,
-   "pub": "indianexpress.com",
+   "t": "97% rally in two years! Azad Engineering share price jumps 5% today",
+   "s": 78,
+   "pub": "Livemint",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNeHR0MjR3d2ozTVJhcVNZMkpRV3JKY0F4NlFtdEhReDk0Zl9RQWsxdFNOMFM3R1FFdnF5bVp4ZWtSdTQzd2o4RUN0elZfb29rY29CaXlmRm10NDQ0eXozOWhUa0p3R3Z5X1BRMlB5ckRTR2dRM3ByMnpkTWdLdWh4Nm5IYUdXVG8tS0NuSTBqdDRaQjdrdlBqYTVaZUdmQdIBpAFBVV95cUxOVDNudHJ5Q0h6VE5QcmtQcUs4YzVlbEN0Q1g1RUF0aFlnYnpYWVQ4d1FOdkpOYTJiX0tiOFhYZXN3b0hzNkNBQXBSQmZZMGhpMm9zRXJnT0JFZ2FSNThlUm1tOW5rQTA0Ym16b1JWRk5ZWGVyYWF6c0hObHdrd2ZmbzNNd0VfMjlvdWI2OHpJYlU2NmtwRVNSZ3VVZ3Z3a2JOdjhvZQ?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMi_gFBVV95cUxOSXF0eHp1dk5lY1VRLThGNTdUTWhVOVVuclo3X3pmT0JKWkotdWhKTVJscWYyb2U5NFc3dGo4NlBwUktud1U2Q0NxczVfWUJLS3E4S3EyZHFEa09kYmItb2l4WWRIV3BfQUJRcHlBOGZpN1E2ZEtQSjlmRUZla3l5aVp0SlZCUGZLRXVvblBQaTB4LTU3YzEtOUxwQlBPUmVKU1l0dm45RDllS01VbURKd3hEYmdSbEdxQm90cDl1Y04wa1QxNVhaSmdSbDRYdVF3STROR2JidUJqQmZ5RC1MWHUwQ1J0RDIwQ0Z6aTV0WTdLTkI3TDM4ZVFXSERsZ9IBgwJBVV95cUxNWE45NmQ5Zm9vZWtIRnRYSTdQT0VBX1lRVzNUcHNYS1ZKeEpjbkd0bDRIXzNFOGpHRTU3ekZwSm53UXJMZWYycDRjZ09UZjBFRWZSSU5WZGgyMGdlZUMtOFFUdlVEZnUwaENpNXFfZlpJa2dSdzhFZ003QzRsQWhsVE8zZ1hCS2dXWnY1d3pjdnRYMmgzaEJJQng5QkwzcUFadWVDcmFlc2pSMTIwMHpSVU5aa1JkeDJsMDVZRzZmOGNqbE1rU2RCdHJhRkFMM2RFSl9JZG8zY3ZGQTVCbjQya29ZcW5UMmFZdkdWRU5jd1JEQ3R1MnZLSUlxcDFuRnlnMG1v?oc=5",
+   "syms": [
+    "RELIANCE",
+    "TCS",
+    "HDFCBANK"
+   ],
+   "src": "article"
+  },
+  {
+   "t": "S&P 500: Rising Rates Put the Stock Market Back on Alert",
+   "s": 64,
+   "pub": "Investing.com India",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQeU9aUmJ6QUVCMzBQalZGbHlEOExRN0lTNWFhSDJxSzlQelVrNkRyQ2REeVNPZXJrMy1NVnFaUHkyY2JqWEw3Tm9mUGE5c1hXUEJYa0tHYWI2bmFCbThzc1lCaF9YQW8zU2xRdU9MN2hyV1ppRVJNaFk4YmMyUmJSM1M2NlN4LUFqNzZpMzJsR2VXbWJDeS1qekxoT3pBMDg?oc=5",
    "syms": []
   },
   {
-   "t": "Travis Kelce\u2019s Six Flags hit by 45.94% stock slide as market value drops to $1.24 billion",
-   "s": 36,
+   "t": "Sensex, Nifty rebound from near six-month lows amid crude shock",
+   "s": 64,
+   "pub": "Livemint",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPbnlwRUxnX0Mtc0I1MHBlVmo5dlptQ2NnUm5ib1lSUk5EU1o4TjhNNUgtY2k3TENnYlpQSkptbEZRU1JXaFcydWNEY0F2c2FjcjZhajBmQllqU2dIckQyZDlMcWo2emcxajVEN0xjaWQtSy1NVlBaa2x0QzFlV3cyblVHemQ2X2xSWjVCZVJUNkdjak5SQ0h5NEVqSGZsZUlIQTdCUUZxR1hpUmMtYVZxeHRaRUZpWVcw0gG-AUFVX3lxTE5ySzVLbHhfdWYzTWpxYm1zLWNSUEZ4QVE3c1BhZ1ktWDM0aENCZ0Qtal85VVhCVFFFeVJqbFVwNkRxOEJaTVdyZWZPZTR0bTNDT0xyNndFS0ZlTUtwTDFzNnpQZFprT3pEazRHX0xFbFczaGhoemc1OWNkeWFqQUk0UVUtYnNiUWV6WC1iZHpJQ3U5ZWRSZnh6eWlKNlR2MTkwUmwzSE1pZzh5NzREOUtkRy1Tb2ZvY0Fpa0RickE?oc=5",
+   "syms": [
+    "RELIANCE",
+    "HDFCBANK",
+    "TCS"
+   ],
+   "src": "article"
+  }
+ ],
+ "neg": [
+  {
+   "t": "Indian Stock Market Sell-Off: Why Nifty and Bank Nifty Are Falling and What Retail Investors Should Do Now",
+   "s": 22,
+   "pub": "SMEStreet",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxQSTExOTlKUGtuUl9lTDViaU5lTVZkWW9TQU1XUngtU0lQM1JyZnRoSGRsRDI1LTRyaGJTdnBuVDRPakhuRmtDSU43UjBLLXg0YzJ3cHpmakZQQnYyM3cybEM5bXhWWnYyN3VSS0JEMENVdzJuTWZ6TnhDc1JETGVpY3lpeVR2aVp0aFh3V3llanl4SlhJSmc3SWhYSEV1bmpmOFFsb2VkYXdjTURCM0lmTDd6T21SMWRlaDBsNWZ3eVZxMmtOdHhaRHk4aC1jMUU5MWVIcGFiRFZoTnl2LUFKUzR30gHiAUFVX3lxTFBJMTE5OUpQa25SX2VMNWJpTmVNVmRZb1NBTVdSeC1TSVAzUnJmdGhIZGxEMjUtNHJoYlN2cG5UNE9qSG5Ga0NJTjdSMEsteDRjMndwemZqRlBCdjIzdzJsQzlteFZadjI3dVJLQkQwQ1V3Mm5NZnpOeENzUkRMZWljeWl5VHZpWnRoWHdXeWVqeXhKWElKZzdJaFhIRXVuamY4UWxvZWRhd2NNREIzSWZMN3pPbVIxZGVoMGw1Znd5VnEya050eFpEeThoLWMxRTkxZUhwYWJEVmhOeXYtQUpTNHc?oc=5",
+   "syms": [
+    "HDFCBANK",
+    "ICICIBANK",
+    "KOTAKBANK"
+   ],
+   "src": "article"
+  },
+  {
+   "t": "Stock market crash: Why Sensex crashed 1800 points, Nifty lost 550 points in 2 days? Top 5 reasons",
+   "s": 22,
+   "pub": "Livemint",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxOYXhNdG9wbEpyV1JrT2ZVSG1veDJCakIwTVJDTGNZY1RuRDlYZFlTMHpWcjBRN0lwQ1I0WnBxWWJveEJvZzkySFZ5NG1JODR2OHlFQlMwR0FEZGY1cFRCcFRobUR1RjJoeEtxdXlCd3Fac2otQXpSTFEyLTVUTktTLTBfb3c3MVl5NExiUm5aN1pOQkR2bDBWLUJJQTVBdE0xQ3BLR3l2NG1hemFCb0VuNjJiMDlkZmpvZFNUSHZBMGhSbm41OTJpT1VWY1J3aTlrMGw2QldJTDA1RndGM2ZpLXR5dFdFYUpYcUxFd3paUU1kRmZEdGhYSNIB_gFBVV95cUxNUGZ4U1VBSU1YUGdsOTVHb0dyVkNoT1lGSjBucl9LR24yUnRKajNCSHFLWWFFbDg2b05iN0pNR05KdG5ZQWo0dzFDRUp3N0hCamVpbWdMeTZMSVQ1bU1GRmY2X3hjMTRTMFFMZVJKOExiZFF5dFhkbUZkcUVjWHNma2YzcFVQZF9LT1hJaVgxYTZXSFBoTDBkT25jNDdIMzI4YldxdjJ5TmtINF8wa2tnb3d2eWtsX3FVamNKV2RmZG5KdzBKd292V0pYd3dQcDVFTGg4QjNLWWxLZ3o3MVNvS3FnT0ZJQnR3REYxSTd4TUdtenFheXQzb3FLMmZzdw?oc=5",
+   "syms": [
+    "RELIANCE",
+    "TCS",
+    "HDFCBANK"
+   ],
+   "src": "article"
+  },
+  {
+   "t": "Sensex falls 600 points, trading at 72,100: Nifty also falls 200 points, decline continues for the eighth c...",
+   "s": 22,
+   "pub": "bhaskarenglish.in",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQT2FJNURydy1OVldVQm9yeWgwenkxMzNySGhTU3dhbmlySDMzT3lkOHlCNjVseTRwbmxNN0tHNDA3aTF4ZjRvZ0lnblVqQUVWMW5SZndPaURtX2E5TV85TXFyRmNPYlJhemxIVExBT2dTeFlDSFNjeFJMMXJVQjlxMDV4NGJkcXRkamVCM0dSWDRqd3UyNFdmYmJfc3NYQVdlOWs3ZjJkdDJBYWJtNjNSaHkwQWdkYVnSAbwBQVVfeXFMTVBITGlad0xhVy0zUGRrY3dtUWNIc3ROazlQUHE3UXMtOU5KYTBieTNBUy1qd2szMExjS1JST0JYMFZXcGxHOFdCMzdHRTJVdXJhYlY4R3BXakR4YzRxRkpJeHB4a09YQXFsT3M3aF9mNVlINDdyQUhXY0lLWHlla1MxVDZqSTMzdE16RzB1cnNSQkk2TXV6eG9MSVR4b2EtN2JPMUQ4UUFuLTYzRDdoMVhKS2xScUJVME9oeno?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Stock market crash today: BSE Sensex continues to be in bear grip; Nifty50 below 22,600",
+   "s": 22,
    "pub": "The Times of India",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxPQU5yaTZQa1hpbGVnTjNpc2RleUgxQ3psM0RGUVVkRk9mdHhmelZUY1JVOUFTazB6anV2RmwxSERzTnBMZEhTeTBNNmUwcGE4cWJfQ2xGVnhzbUM2Xy1GM0l1LXRtZVExRUxWcVB4d2g4NV96Y0xPVDFjZ0dQQk9udGFCUll3UXpVZ0ViUFJNN3V1cTZHQXJIb1VuVTltaGFLMG0tbEdKSVRqOEhwcDJzSFZHVlBaQ2xEb20tdDk0elRaNi1Wb0JhbFNkcU9vVEJYbDNRMlFnc2FhNllQQTBvYkZCcW9oaGJEaW9qY0twVktzeUxHRS000gH8AUFVX3lxTE9uZXVXVzFpeXpCZ0JhOUdEMjJnZmRsSEdWWkUtaHVsVFZKSDZiY19jX2RoaS00cWh4ZDZSQnZkbDI3eEptNWEwLUZjMl8wWmtCLXJXQVFUOWZLQ042cTFmMUMtTjlkSWw2WkJlc2tudGlKS0tRWTB5WkRIWHVSQlN2TU9vZWF0dUNHSmdnM1NJXzRwbmNQYnQ4NFlTaGF2SGRxY0VZbmZlXzNkR095czJKb2JmNzNVeGxpV0FqU1ZyOWdCMnFzOTZWT3ZvWGIwdkQwZWRXYl90dDhSR0FpLVJ3M1Q4X2o5SDYybDJYODctUnVvUGhlWGk2MkZpag?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMikgJBVV95cUxORm9sbGt4LWI0Qnc2ZTIyNm5MMVFFT0FXelZ0aTQta2ExTkZxbUZ0bW55RjFMVG9yNmZVczZSWFluQmpxNkxKRnpMdmJPUFNfRDFQSk1vVUVpMGpLdkp0V1c1RDd6Q1NEZUFjQTJzT1VWaTNZTGYyOU45T0cxRWV4UUs0NER0Qm5ucWJxV0xyY2diTFJ5a2N0eWVWRElHZ081bFlNckRUNEpRbmZVYXRZaTA5TWxpUUltR3dsdEQ3VEMxMUkzZWNLZmlsTlRPWWV0dHBwQ2Q5MUlOcDNqVWhNS1RoSlhfYlg0X0hVR0k5R3VER3JjS2JBejJrWFJ0TFhYLTFLX2RBQkpaVDhtd2RJOFRn0gGXAkFVX3lxTE9YUFdsMTlDTl9lbkdfTE1VY0toUk10QmlBcWM0blRhdTBjU0RxV3Q4eWNyNDhpNmhFTGZvSFY2bHU2RVpMM0JzMGdsWFRKQWdPVTNpSkl2WXZHVHNuTXo5c2VDOHBuVXltMnVKT2c4UVprUHdodmd6QUF0ODN5MnQ4UW5sS3RCWjVTMGhZNVNNRjViWFkxek51M3hqUHd3SWJtVzVwMGx3LUNnV2xfLU5WLWk0UXZDYVFLWGtxdlprQl8xNVF0SmR5ZmZiLXFBNDd1YnBuRkJabWZNSDY4SVpseDZKZEZQV1JsbHdFdHJVMW43T0JmRGR1THNMcjVxbVFyUGZpdVN3X0lSTzRLVkE0UDBZeHlFbw?oc=5",
+   "syms": [
+    "INFY",
+    "BAJFINANCE"
+   ],
+   "src": "article"
   }
  ],
  "stocks": [],

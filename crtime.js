@@ -7,7 +7,7 @@
      => landing-page redirect bug khatam. State localStorage (crrange) me. */
 (function () {
   "use strict";
-  var CDN = "https://cdn.jsdelivr.net/gh/devrajai/arthasaar-data@main/data/";
+  var CDN = "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/";
   var RELRE = /https:\/\/github\.com\/devrajai\/ArthaSaar\/releases\/download\/candles\//;
 
   /* range: bars to keep (0 = full file). MAX additionally switches daily- -> full- */

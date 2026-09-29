@@ -16,7 +16,7 @@
   /* fast per-index daily files (chhota, ~50KB -- 4MB chunk ki jagah) */
   var IDXF = { "NIFTY": 1, "BANKNIFTY": 1, "SENSEX": 1, "FINNIFTY": 1,
                "MIDCPNIFTY": 1, "NIFTYIT": 1 };
-  var CDNX = "https://cdn.jsdelivr.net/gh/devrajai/arthasaar-data@main/data/idx-";
+  var CDNX = "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/idx-";
   var IVS = ["1m", "3m", "5m", "10m", "15m", "30m", "1h", "4h", "6h", "8h", "1d"];
   var IVL = {"1m": "1m", "3m": "3m", "5m": "5m", "10m": "10m", "15m": "15m", "30m": "30m",
              "1h": "1h", "4h": "4h", "6h": "6h", "8h": "8h", "1d": "1D"};

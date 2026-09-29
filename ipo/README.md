@@ -2,7 +2,7 @@
 
 A continuously updating research terminal for Indian Mainboard and SME IPOs — a static site on GitHub Pages fed by an automatic 15-minute data pipeline. No server, no API keys, no cost.
 
-**Live:** https://devrajai.github.io/ipo-terminal/
+**Live:** https://arthasaar.vercel.app/ipo/ (also https://devrajai.github.io/ArthaSaar/ipo/)
 
 > **Repo consolidation (2026-09-21):** This is now the single IPO repository. The former
 > `ipo-tracker-india` (Google Sheets tracker) and `ipo-website` (Notion-based tracker)

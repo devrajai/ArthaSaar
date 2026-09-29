@@ -1,11 +1,11 @@
 /* chartmax.js v3 — data layer + 1D·MAX toggle.
    GitHub Release assets pe CORS nahi hota (site "archive load nahi hua" dikha
    raha tha), isliye candle chunks ab arthasaar-data repo se jsDelivr CDN pe
-   aate hain: https://cdn.jsdelivr.net/gh/devrajai/arthasaar-data@main/data/
+   aate hain: https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/
    + MAX toggle: ON hone par daily-XX full-XX ho jaata hai (listing se history).
    + toggle ke baad reload par wapas Chart Reading pe hi aate hain (landing nahi). */
 (function () {
-  var CDN = "https://cdn.jsdelivr.net/gh/devrajai/arthasaar-data@main/data/";
+  var CDN = "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/";
   var RELRE = /https:\/\/github\.com\/devrajai\/ArthaSaar\/releases\/download\/candles\//;
   var ON = false;
   try { ON = window.sessionStorage.getItem("crmax") === "1"; } catch (e) { ON = false; }

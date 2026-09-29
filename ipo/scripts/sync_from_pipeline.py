@@ -22,7 +22,7 @@ import re
 import urllib.request
 from pathlib import Path
 
-PIPELINE_URL = "https://raw.githubusercontent.com/devrajai/ipo-website/main/data.json"  # legacy fallback
+PIPELINE_URL = "https://raw.githubusercontent.com/devrajai/ArthaSaar/main/ipo/data/notion-data.json"  # legacy fallback
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 LOCAL_PIPELINE = DATA / "notion-data.json"

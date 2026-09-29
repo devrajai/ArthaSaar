@@ -3,7 +3,7 @@
 TELEGRAM IPO — daily IPO Terminal digest.
 
 Runs in the market-brain repo (uses its TG_TOKEN secret) and reads IPO data
-from the ipo-terminal repo via public raw URLs.
+from this repo (ArthaSaar, ipo/data/) via public raw URLs.
 
 Recipients: TG_CHAT_ID_IPO secret if set (comma-separated list), else falls
 back to TG_CHAT_ID. Put someone ONLY in TG_CHAT_ID_IPO -> they get only the
@@ -28,7 +28,7 @@ import re
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-RAW = "https://raw.githubusercontent.com/devrajai/ipo-terminal/main/data/"
+RAW = "https://raw.githubusercontent.com/devrajai/ArthaSaar/main/ipo/data/"
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 TIMEOUT = 25
@@ -182,7 +182,7 @@ def main():
         L = ["😊 No open or upcoming IPOs right now."]
 
     head = (f"📈 <b>IPO TERMINAL</b> — {today.strftime('%a %d %b %Y')}\n\n")
-    foot = ("\n📊 Full terminal: https://devrajai.github.io/ipo-terminal/"
+    foot = ("\n📊 Full terminal: https://arthasaar.vercel.app/ipo/"
             "\n<i>* GMP is unofficial market rate, not guaranteed</i>")
     text = head + "\n".join(L).rstrip() + foot
 

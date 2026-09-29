@@ -1,7 +1,7 @@
 # ARTHASAAR — PROJECT BRAIN
 
 Single source of truth. Any AI session starts here. Owner: owner (mobile-only, Android Chrome).
-Repo: devrajai/market-brain | Sister project: devrajai/ipo-terminal (read its PROJECT_BRAIN.md too)
+Repo: devrajai/ArthaSaar (single repo since 29-09-2026; candle chunks live on the 'data' branch of this repo, served via jsDelivr; former ipo-terminal lives in ipo/, former arthasaar-data in the 'data' branch)
 
 ## Mission
 the personal market intelligence brain — a "poor-man's BlackRock Aladdin / Sharekhan TX3

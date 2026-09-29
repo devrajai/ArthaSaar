@@ -241,6 +241,66 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 </style>
 </head>
 <body>
+<script>
+/* privacy gate - password 131217 (SHA-256) */
+(function () {
+  var HASH = "c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
+  var SIX_H = 6 * 3600 * 1000;
+  var ok = false;
+  try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = (Date.now() - gt) < SIX_H; } catch (e) {}
+  try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate-ts"); ok = false; } } catch (e) {}
+  if (ok) return;
+  var st = document.createElement("style");
+  st.textContent = "body{visibility:hidden}";
+  document.head.appendChild(st);
+  document.addEventListener("DOMContentLoaded", function () {
+    document.body.innerHTML =
+      "<div class='gwrap'>" +
+      "<div class='glogo'>AS</div>" +
+      "<h1>ARTHASAAR</h1>" +
+      "<p class='gsub'>This terminal is private. Authorised access only.</p>" +
+      "<div class='gcard'><div class='glabel'>ENTER PASSWORD</div>" +
+      "<input id='gInp' type='password' placeholder='password' autocomplete='current-password'>" +
+      "<button id='gBtn'>Unlock</button>" +
+      "<div class='gerr' id='gErr'></div></div>" +
+      "<p class='gnote'>Personal market intelligence terminal.<br>" +
+      "To log out on a shared phone: open the site with #lock at the end of the address.</p>" +
+      "</div>";
+    var gs = document.createElement("style");
+    gs.textContent = ".gwrap{max-width:420px;margin:0 auto;padding:28px 20px;display:flex;flex-direction:column;min-height:70vh;box-sizing:border-box}" +
+      ".gwrap h1{font-size:22px;letter-spacing:.14em;margin:0 0 6px}" +
+      ".glogo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--accent,#CDA175),#8a6a3f);display:flex;align-items:center;justify-content:center;font-family:var(--mono,monospace);font-weight:700;font-size:24px;color:#fff;margin-bottom:18px}" +
+      ".gcard{background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.25);border-radius:16px;padding:18px}" +
+      ".glabel{font-size:11px;letter-spacing:.14em;color:var(--dim,#8fa3bd);font-weight:600;margin-bottom:8px}" +
+      "#gInp{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(128,128,128,.35);background:transparent;color:inherit;font:400 15px inherit;outline:none;box-sizing:border-box}" +
+      "#gBtn{margin-top:10px;width:100%;padding:12px;border:0;border-radius:10px;background:var(--accent,#CDA175);color:#fff;font-weight:700;font-size:14px;cursor:pointer}" +
+      ".gerr{color:#fb5c7d;font-size:12.5px;margin-top:10px;min-height:16px}" +
+      ".gsub{font-size:13px;color:var(--dim,#8fa3bd);margin:0 0 26px}" +
+      ".gnote{font-size:11.5px;color:var(--dim,#5d6f88);margin-top:auto;padding-top:24px;line-height:1.6}";
+    document.head.appendChild(gs);
+    document.body.setAttribute("style", "margin:0;background:var(--bg,#070c17);color:var(--text,#e8eef7);font-family:inherit;min-height:100vh;display:block");
+    st.remove();
+    var inp = document.getElementById("gInp"), btn = document.getElementById("gBtn"), err = document.getElementById("gErr");
+    function sha(s) {
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function (b) {
+        return Array.from(new Uint8Array(b)).map(function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+      });
+    }
+    function tryOpen() {
+      sha(inp.value).then(function (h) {
+        if (h === HASH) {
+          try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
+          location.hash = "home";
+          location.reload();
+        } else { err.textContent = "Wrong password. Try again."; inp.value = ""; inp.focus(); }
+      });
+    }
+    btn.onclick = tryOpen;
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") tryOpen(); });
+    setTimeout(function () { inp.focus(); }, 50);
+  });
+})();
+</script>
 <header class="hdr" id="hdr">
   <div class="top">
     <div class="brand"><div class="mk">AS</div><div><b>ARTHASAAR</b></div></div>
@@ -459,5 +519,4 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 <script src="livedata.js?v=ld1"></script>
-<script src="reentry.js?v=r1"></script>
 </body></html>

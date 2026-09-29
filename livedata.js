@@ -7,6 +7,7 @@
   /* ---------- helpers ---------- */
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function q1(s, r) { var L = (r || document).querySelectorAll(s); return L && L.length ? L[0] : null; }
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
       return { "&": "&" + "amp;", "<": "&" + "lt;", ">": "&" + "gt;", '"': "&" + "quot;" }[c];
@@ -548,9 +549,11 @@
           '<div class="card kpi"><div class="lbl">TREND</div><div class="num ' + cl(f.median_chg_pct) + '">' + ((f.direction || "") || (f.median_chg_pct >= 0 ? "UP" : "DOWN")).toUpperCase() + '</div><div class="chg hold">median path</div></div>' +
           '<div class="card kpi"><div class="lbl">RANGE 10-90</div><div class="num" style="font-size:15px">' + num(f.low10_end, 0) + "–" + num(f.high90_end, 0) + '</div><div class="chg hold">10% – 90% band</div></div>';
       }
-      var mv = $$(".card", v).filter(function (x) { return /Model View/.test($(".sh2", x) ? $(".sh2", x).textContent : ""); })[0];
+      var mv = v.querySelectorAll(".card")[0];
+      var cards2 = Array.prototype.slice.call(v.querySelectorAll(".card"));
+      for (var ci = 0; ci < cards2.length; ci++) { var sh2 = cards2[ci].querySelectorAll(".sh2")[0]; if (sh2 && /Model View/i.test(sh2.textContent)) { mv = cards2[ci]; break; } }
       if (mv) {
-        var body = $("div[style]", mv);
+        var body = mv.querySelectorAll("div[style]")[0];
         if (body) body.textContent = (f.name || f.symbol) + ": " + f.horizon_days + "-din ka median target " + num(f.median_end, 0) + " (" + pctS(f.median_chg_pct) + "). Model band " + num(f.low10_end, 0) + " se " + num(f.high90_end, 0) + " tak. Base case " + (f.median_chg_pct >= 0 ? "upar" : "neeche") + " — range ke andar trade karo, band ke bahar nahi.";
       }
     }).catch(function () {});
@@ -617,14 +620,14 @@
       }
       var cards = $$(".grid2 .card", v);
       if (cards[0]) {
-        var sh = $(".sh2", cards[0]);
-        var body = $("div[style]", cards[0]);
+        var sh = q1(".sh2", cards[0]);
+        var body = q1("div[style]", cards[0]);
         if (sh) sh.textContent = "Snapshot — " + (NAME[sym] || sym);
-        if (body) body.textContent = (NAME[sym] || sym) + " — price ₹" + num(x.price) + " (" + pctS(x.change_pct) + "). RSI(14) " + (x.rsi14 != null ? x.rsi14.toFixed(1) : "—") + ", EMA200 " + (x.above_ema200 ? "ke upar" : "ke neeche") + ", MACD hist " + (x.macd_hist != null ? x.macd_hist.toFixed(2) : "—") + ". 52w high se " + pctS(x.from_52w_high_pct) + " door.";
+        if (body) body.textContent = (NAME[sym] || sym) + " — price ₹" + num(x.price) + " (" + pctS(x.change_pct) + "). RSI(14) " + (x.rsi14 != null ? x.rsi14.toFixed(1) : "—") + ", EMA200 " + (x.above_ema200 ? "ke upar" : "ke neeche") + ", MACD hist " + (x.macd_hist != null ? x.macd_hist.toFixed(2) : "—") + ". 52w high se " + pctS(x.from_52w_high_pct) + " door." + (function () { try { var f2 = fcFind(sym); if (f2 && f2.median_end != null) return " AI 21-din forecast: \u20b9" + num(f2.median_end, 0) + " (" + pctS(f2.median_chg_pct) + ")."; } catch (e) {} return ""; })();
       }
       if (cards[1]) {
-        var sh2 = $(".sh2", cards[1]);
-        var body2 = $("div[style]", cards[1]);
+        var sh2 = q1(".sh2", cards[1]);
+        var body2 = q1("div[style]", cards[1]);
         if (sh2) sh2.textContent = "Technical position — " + sym;
         if (body2) {
           var b = $(".breadth i", cards[1]);
@@ -1080,8 +1083,8 @@
         card = document.createElement("div");
         card.className = "card";
         card.style.margin = "0 0 10px";
-        var g2 = $(".grid2", v);
-        if (g2 && g2.parentNode) v.insertBefore(card, g2);
+        var g2 = q1(".grid2", v);
+        try { if (g2 && g2.parentNode) v.insertBefore(card, g2); else v.insertBefore(card, v.firstChild); } catch (e) { try { v.appendChild(card); } catch (e2) {} }
         v.__xray = card;
       }
       var h = '<div class="sh2">Market X-Ray <span class="fr">' + esc(String(d.date || "")) + "</span></div>" + '<div style="padding:8px 14px 12px">';
@@ -1227,6 +1230,280 @@
     }).catch(function () {});
   }
 
+
+  /* ---------- 23) Options chain / greeks (futures section mein) ---------- */
+  var OPTS = null, OPT_SYM = "NIFTY";
+  function renderOptions() {
+    var v = sec("v-futures");
+    if (!v) return;
+    if (!OPTS) {
+      fj("data/greeks.json").then(function (d) { OPTS = d; drawOpt(); }).catch(function () {});
+    } else drawOpt();
+    function drawOpt() {
+      if (!OPTS || !OPTS.u) return;
+      var names = Object.keys(OPTS.u);
+      var card = v.__opt;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "10px 0 0";
+        card.style.padding = "0";
+        card.style.overflow = "auto";
+        var tb = q1("table", v);
+        try {
+          if (tb && tb.parentNode) tb.parentNode.insertBefore(card, tb.parentNode.lastChild);
+          else v.appendChild(card);
+        } catch (e) { try { v.appendChild(card); } catch (e2) {} }
+        v.__opt = card;
+        /* symbol chips */
+        var chips = document.createElement("div");
+        chips.className = "chips";
+        chips.style.margin = "10px 0 0";
+        try { v.insertBefore(chips, card); } catch (e) { v.appendChild(chips); }
+        v.__optChips = chips;
+        chips.addEventListener("click", function (e) {
+          var t = e.target.closest("[data-osym]");
+          if (!t) return;
+          OPT_SYM = t.getAttribute("data-osym");
+          chips.querySelectorAll("span").forEach(function (x) { x.classList.toggle("on", x === t); });
+          drawOpt();
+        });
+      }
+      var pick = names.indexOf(OPT_SYM) > -1 ? OPT_SYM : (names.indexOf("NIFTY") > -1 ? "NIFTY" : names[0]);
+      OPT_SYM = pick;
+      if (v.__optChips) {
+        var want = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY", "NIFTYNXT50", pick].filter(function (x, i, a) { return names.indexOf(x) > -1 && a.indexOf(x) === i; });
+        v.__optChips.innerHTML = want.map(function (s) {
+          return '<span class="fch' + (s === pick ? " on" : "") + '" data-osym="' + esc(s) + '">' + esc(s) + "</span>";
+        }).join("");
+      }
+      var x = OPTS.u[pick];
+      var ch = (x.c || [])[0] || {};
+      var rows = ch.r || [];
+      var h = '<div class="sh2" style="padding:10px 14px 4px">Options \u2014 ' + esc(pick) + " <span class=\"fr\">expiry " + esc(String(ch.d || "\u2014")) + " \u00b7 spot \u20b9" + num(x.s, 0) + "</span></div>" +
+        '<table><thead><tr><th>Strike</th><th>CE LTP</th><th>CE IV</th><th>CE \u0394</th><th>CE \u0398</th><th>PE \u0398</th><th>PE \u0394</th><th>PE IV</th><th>PE LTP</th></tr></thead><tbody>';
+      var srt = rows.slice().sort(function (a, b2) { return a[0] - b2[0]; });
+      srt.forEach(function (r) {
+        var atm = Math.abs(r[0] - x.s) <= 50 || (srt.length && Math.abs(r[0] - x.s) === Math.min.apply(null, srt.map(function (q) { return Math.abs(q[0] - x.s); })));
+        h += "<tr" + (atm ? ' style="background:color-mix(in srgb,var(--accent) 12%,transparent)"' : "") + "><td><b>" + num(r[0], 0) + "</b></td><td>" + (r[1] != null ? num(r[1], 1) : "\u2014") + "</td><td>" + (r[2] != null ? r[2] : "\u2014") + "</td><td>" + (r[3] != null ? r[3] : "\u2014") + "</td><td>" + (r[4] != null ? r[4] : "\u2014") + "</td><td>" + (r[8] != null ? r[8] : "\u2014") + "</td><td>" + (r[7] != null ? r[7] : "\u2014") + "</td><td>" + (r[6] != null ? r[6] : "\u2014") + "</td><td>" + (r[5] != null ? num(r[5], 1) : "\u2014") + "</td></tr>";
+      });
+      h += "</tbody></table>";
+      card.innerHTML = h;
+    }
+  }
+
+  /* ---------- 24) Watchlist + price alerts (localStorage) + bot alerts ---------- */
+  var FCAST = {};
+  function watchRd(k) { try { return JSON.parse(localStorage.getItem(k) || "[]") || []; } catch (e) { return []; } }
+  function watchWr(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function ldToast(m) {
+    try {
+      var ts = document.getElementById("toast");
+      if (!ts) { ts = document.createElement("div"); ts.id = "toast"; document.body.appendChild(ts); }
+      ts.textContent = m;
+      ts.classList.add("show");
+      setTimeout(function () { ts.classList.remove("show"); }, 2600);
+    } catch (e) {}
+  }
+  function checkAlerts() {
+    var al = watchRd("mbAlerts");
+    al.forEach(function (a) {
+      var p = PM[a.sym] ? PM[a.sym].price : null;
+      if (p == null || a.hit) return;
+      if ((a.dir === "above" && p >= a.level) || (a.dir === "below" && p <= a.level)) {
+        a.hit = 1;
+        ldToast("ALERT: " + a.sym + " " + a.level + " " + a.dir + " cross \u2014 abhi \u20b9" + p);
+      }
+    });
+    watchWr("mbAlerts", al);
+  }
+  function renderWatchlist() {
+    var v = sec("v-company");
+    if (!v) return;
+    var card = v.__wl;
+    if (!card) {
+      card = document.createElement("div");
+      card.className = "card";
+      card.style.margin = "0 0 10px";
+      var k = q1(".kpis", v);
+      try { if (k && k.parentNode) v.insertBefore(card, k); else v.insertBefore(card, v.firstChild); } catch (e) { try { v.appendChild(card); } catch (e2) {} }
+      v.__wl = card;
+    }
+    var w = watchRd("mbWatch");
+    var h = '<div class="sh2">My Watchlist <span class="fr">' + w.length + " stocks</span></div>" + '<div style="padding:6px 14px 10px">';
+    if (!w.length) h += '<div class="zrow"><span style="opacity:.6">khali \u2014 symbol add karo (RELIANCE, TCS\u2026)</span><span></span></div>';
+    w.forEach(function (s, i) {
+      var p = PM[s.sym];
+      h += '<div class="zrow"><span><b>' + esc(s.sym) + "</b> \u20b9" + (p ? num(p.price) : "\u2014") + '</span><span><b class="' + (p && p.change_pct >= 0 ? "up" : "dn") + '">' + (p ? pctS(p.change_pct) : "\u2014") + '</b> <small data-wx="' + i + '" style="cursor:pointer;opacity:.5;padding-left:8px">\u2715</small></span></div>';
+    });
+    h += '<div style="display:flex;gap:8px;margin-top:8px"><input id="wlAdd" placeholder="symbol add (RELIANCE)" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12.5px var(--font);outline:none">' +
+      '<small id="wlAddB" style="cursor:pointer;color:var(--accent);padding-top:9px">+ ADD</small></div>';
+    /* local alerts */
+    var al = watchRd("mbAlerts");
+    h += '<div class="sect" style="margin:10px 0 4px">MY PRICE ALERTS</div>';
+    if (!al.length) h += '<div class="zrow"><span style="opacity:.6">koi alert nahi</span><span></span></div>';
+    al.forEach(function (a, i) {
+      h += '<div class="zrow"><span><b>' + esc(a.sym) + "</b> " + (a.dir === "above" ? "\u2191" : "\u2193") + " \u20b9" + num(a.level, 0) + (a.hit ? " \u00b7 HIT" : "") + '</span><small data-ax="' + i + '" style="cursor:pointer;opacity:.5">\u2715</small></div>';
+    });
+    h += '<div style="display:flex;gap:6px;margin-top:6px"><input id="alSym" placeholder="SYM" style="width:70px;padding:9px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12px var(--font);outline:none">' +
+      '<input id="alLvl" placeholder="level" inputmode="decimal" style="width:80px;padding:9px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12px var(--font);outline:none">' +
+      '<select id="alDir" style="border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12px var(--font);outline:none"><option value="above">above</option><option value="below">below</option></select>' +
+      '<small id="alAddB" style="cursor:pointer;color:var(--accent);padding-top:9px">+ SET</small></div>';
+    h += "</div>";
+    /* bot alerts */
+    h += '<div style="padding:0 14px 12px">';
+    h += '<div class="sect" style="margin:4px 0 6px">BOT ALERTS (auto)</div>';
+    h += '<div id="botAlerts" style="font-size:12px;color:var(--dim)">loading\u2026</div></div>';
+    card.innerHTML = h;
+    card.onclick = function (e) {
+      var t = e.target;
+      var wx = t.getAttribute && t.getAttribute("data-wx");
+      var ax = t.getAttribute && t.getAttribute("data-ax");
+      if (wx != null) { var w2 = watchRd("mbWatch"); w2.splice(+wx, 1); watchWr("mbWatch", w2); renderWatchlist(); }
+      if (ax != null) { var a2 = watchRd("mbAlerts"); a2.splice(+ax, 1); watchWr("mbAlerts", a2); renderWatchlist(); }
+      if (t.id === "wlAddB") {
+        var s = (document.getElementById("wlAdd").value || "").trim().toUpperCase();
+        if (s && PM[s]) { var w3 = watchRd("mbWatch"); if (!w3.filter(function (z) { return z.sym === s; }).length) { w3.push({ sym: s }); watchWr("mbWatch", w3); renderWatchlist(); } else ldToast("watchlist mein already hai"); }
+        else ldToast("symbol nahi mila \u2014 exact symbol likho (RELIANCE)");
+      }
+      if (t.id === "alAddB") {
+        var sy = (document.getElementById("alSym").value || "").trim().toUpperCase();
+        var lv = parseFloat(document.getElementById("alLvl").value);
+        var dr = document.getElementById("alDir").value;
+        if (sy && lv > 0) { var a3 = watchRd("mbAlerts"); a3.push({ sym: sy, level: lv, dir: dr }); watchWr("mbAlerts", a3); renderWatchlist(); ldToast("alert set \u2014 " + sy + " " + dr + " " + lv); }
+      }
+    };
+    fj("data/alerts.json").then(function (d) {
+      var ba = document.getElementById("botAlerts");
+      if (ba && d.alerts && d.alerts.length) {
+        ba.innerHTML = d.alerts.map(function (a) {
+          return '<div class="zrow"><span><b>' + esc(a.symbol) + "</b> " + (a.dir === "above" ? "\u2191" : "\u2193") + " \u20b9" + num(a.level, 0) + " \u00b7 " + esc(a.note || "") + '</span><small class="mono">' + esc(String(a.added || "")) + "</small></div>";
+        }).join("");
+      } else if (ba) ba.textContent = "abhi koi active nahi";
+    }).catch(function () { var ba = document.getElementById("botAlerts"); if (ba) ba.textContent = "\u2014"; });
+    checkAlerts();
+  }
+
+  /* ---------- 25) Backtest (learn mein) ---------- */
+  function renderBacktest() {
+    var v = sec("v-learn");
+    if (!v) return;
+    fj("data/backtest.json").then(function (b) {
+      if (!b || !b.days) return;
+      var card = v.__bt;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "10px 0 0";
+        v.appendChild(card);
+        v.__bt = card;
+      }
+      card.innerHTML = '<div class="sh2">Strategy Backtest \u2014 Nifty 1y <span class="fr">' + b.days + " din</span></div>" + '<div style="padding:6px 14px 10px">' +
+        '<div class="zrow"><span>Buy {"+"} Hold</span><b class="' + (b.buy_hold_pct >= 0 ? "up" : "dn") + '">' + pctS(b.buy_hold_pct) + "</b></div>" +
+        '<div class="zrow"><span>EMA 20{"+"}50 crossover</span><b class="' + (b.ema_pct >= 0 ? "up" : "dn") + '">' + pctS(b.ema_pct) + " (" + b.ema_trades + " trades)</b></div>" +
+        '<div class="zrow"><span>RSI 30-70</span><b class="' + (b.rsi_pct >= 0 ? "up" : "dn") + '">' + pctS(b.rsi_pct) + " (" + b.rsi_trades + " trades)</b></div>" +
+        '<div style="font-size:11px;opacity:.6;padding-top:6px">' + esc(b.note || "") + "</div></div>";
+    }).catch(function () {});
+  }
+
+  /* ---------- 26) Bank health (fundamentals mein) ---------- */
+  function renderBanks() {
+    var v = sec("v-fundamentals");
+    if (!v) return;
+    fj("data/banks.json").then(function (d) {
+      if (!d || !d.banks) return;
+      var r = d.rules || {};
+      var card = v.__bk;
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "card";
+        card.style.margin = "10px 0 0";
+        card.style.padding = "0";
+        card.style.overflow = "auto";
+        var tbc = q1("table", v);
+        var tcard = tbc ? (tbc.closest ? tbc.closest(".card") : null) : null;
+        if (tcard && tcard.parentNode) tcard.parentNode.insertBefore(card, tcard.nextSibling);
+        else v.appendChild(card);
+        v.__bk = card;
+      }
+      function verd(b2) {
+        var bad = [];
+        if (b2.npa != null && r.npa_max != null && b2.npa > r.npa_max) bad.push("NPA");
+        if (b2.roe != null && r.roe_min != null && b2.roe < r.roe_min) bad.push("ROE");
+        if (b2.casa != null && r.casa_avg != null && b2.casa < r.casa_avg) bad.push("CASA");
+        if (b2.car != null && r.car_min != null && b2.car < r.car_min) bad.push("CAR");
+        return bad.length ? '<span class="b dn">' + bad.join("+") + "</span>" : '<span class="b buy">HEALTHY</span>';
+      }
+      var h = '<div class="sh2" style="padding:10px 14px 4px">Bank Health <span class="fr">' + esc(d.asof || "") + "</span></div>" +
+        '<table><thead><tr><th>Bank</th><th>NPA</th><th>ROE</th><th>ROA</th><th>CASA</th><th>CAR</th><th>Price</th><th>Verdict</th></tr></thead><tbody>';
+      d.banks.forEach(function (b2) {
+        h += "<tr><td>" + esc(b2.n) + "</td><td>" + b2.npa + "%</td><td>" + b2.roe + "%</td><td>" + b2.roa + "%</td><td>" + b2.casa + "%</td><td>" + b2.car + "%</td><td>\u20b9" + num(b2.p, 0) + "</td><td>" + verd(b2) + "</td></tr>";
+      });
+      h += "</tbody></table>";
+      h += '<div style="font-size:11px;opacity:.6;padding:8px 14px">rules \u2014 NPA<' + (r.npa_max || "?") + "% \u00b7 ROE " + (r.roe_min || "?") + "-" + (r.roe_max || "?") + "% \u00b7 CASA>" + (r.casa_avg || "?") + "% \u00b7 CAR>" + (r.car_min || "?") + "%" + (d.note ? " \u00b7 " + esc(d.note) : "") + "</div>";
+      card.innerHTML = h;
+    }).catch(function () {});
+  }
+
+  /* ---------- 27) per-stock AI forecast (gtiai + company card) ---------- */
+  function fcFind(q) {
+    q = (q || "").trim().toUpperCase();
+    if (!q || !FCAST._loaded) return null;
+    var L = FCAST._list || [];
+    var norm = function (s) { return String(s || "").toUpperCase().replace("^", "").replace(".NS", "").replace("-USD", "").replace("USD", ""); };
+    var i;
+    for (i = 0; i < L.length; i++) if (norm(L[i].symbol) === q || String(L[i].name || "").toUpperCase() === q) return L[i];
+    for (i = 0; i < L.length; i++) if (norm(L[i].symbol).indexOf(q) === 0 || String(L[i].name || "").toUpperCase().indexOf(q) === 0) return L[i];
+    for (i = 0; i < L.length; i++) if (String(L[i].name || "").toUpperCase().indexOf(q) > -1) return L[i];
+    return null;
+  }
+  function loadForecasts() {
+    if (FCAST._loaded) return;
+    fj("data/timesfm_forecasts.json").then(function (d) {
+      FCAST._list = d.forecasts || [];
+      FCAST._model = d.model || "TimesFM";
+      FCAST._loaded = 1;
+      /* company card mein AI forecast line + watchlist ke baad render */
+      try { renderWatchlist(); } catch (e) {}
+    }).catch(function () {});
+  }
+  function renderFcSearch() {
+    var v = sec("v-gtiai");
+    if (!v || v.__fcs) return;
+    v.__fcs = 1;
+    var inp = document.createElement("input");
+    inp.type = "search";
+    inp.placeholder = "kisi bhi stock ka 21-din AI forecast \u2014 RELIANCE, INFY, NIFTY\u2026";
+    inp.style.cssText = "width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12.5px var(--font);outline:none;margin:0 0 10px";
+    var ks = q1(".kpis", v);
+    try { if (ks && ks.parentNode) ks.parentNode.insertBefore(inp, ks); else v.insertBefore(inp, v.firstChild); } catch (e) { try { v.appendChild(inp); } catch (e2) {} }
+    var t = null;
+    inp.addEventListener("input", function () {
+      clearTimeout(t);
+      var q = inp.value;
+      t = setTimeout(function () { drawFc(q); }, 350);
+    });
+    function drawFc(q) {
+      var f = fcFind(q);
+      if (!f) return;
+      var ks2 = q1(".kpis", v);
+      if (ks2) {
+        ks2.innerHTML =
+          '<div class="card kpi"><div class="lbl">' + esc(f.name || f.symbol) + ' \u2014 ' + f.horizon_days + 'D TARGET</div><div class="num">' + num(f.median_end, 0) + '</div><div class="chg ' + (f.median_chg_pct >= 0 ? "up" : "dn") + '">' + pctS(f.median_chg_pct) + " expected</div></div>" +
+          '<div class="card kpi"><div class="lbl">CONFIDENCE</div><div class="num">' + (f.confidence != null ? f.confidence + "%" : "\u2014") + '</div><div class="chg hold">model agreement</div></div>' +
+          '<div class="card kpi"><div class="lbl">TREND</div><div class="num ' + (f.median_chg_pct >= 0 ? "up" : "dn") + '">' + String(f.direction || (f.median_chg_pct >= 0 ? "up" : "down")).toUpperCase() + '</div><div class="chg hold">median path</div></div>' +
+          '<div class="card kpi"><div class="lbl">RANGE 10-90</div><div class="num" style="font-size:15px">' + num(f.low10_end, 0) + "\u2013" + num(f.high90_end, 0) + '</div><div class="chg hold">10% \u2013 90% band</div></div>';
+      }
+      var mv = v.querySelectorAll(".card")[0];
+      var cards2 = Array.prototype.slice.call(v.querySelectorAll(".card"));
+      for (var ci = 0; ci < cards2.length; ci++) { var sh2 = cards2[ci].querySelectorAll(".sh2")[0]; if (sh2 && /Model View/i.test(sh2.textContent)) { mv = cards2[ci]; break; } }
+      if (mv) {
+        var body = mv.querySelectorAll("div[style]")[0];
+        if (body) body.textContent = (f.name || f.symbol) + ": " + f.horizon_days + "-din ka median target " + num(f.median_end, 0) + " (" + pctS(f.median_chg_pct) + "). Model band " + num(f.low10_end, 0) + " se " + num(f.high90_end, 0) + " tak. Base case " + (f.median_chg_pct >= 0 ? "upar" : "neeche") + " \u2014 band ke andar trade karo.";
+      }
+    }
+  }
+
   /* ---------- boot ---------- */
   function boot() {
     try { renderHome(); } catch (e) {}
@@ -1253,6 +1530,12 @@
     try { wireScreenerChips(); } catch (e) {}
     try { renderGtiHub(); } catch (e) {}
     try { renderLegacy(); } catch (e) {}
+    try { renderOptions(); } catch (e) {}
+    try { renderWatchlist(); } catch (e) {}
+    try { renderBacktest(); } catch (e) {}
+    try { renderBanks(); } catch (e) {}
+    try { loadForecasts(); } catch (e) {}
+    try { renderFcSearch(); } catch (e) {}
   }
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", boot);
   else boot();
@@ -1271,5 +1554,6 @@
     try { renderLearn(); } catch (e) {}
     try { renderEconomy(); } catch (e) {}
     try { renderSmartRadar(); } catch (e) {}
+    try { renderWatchlist(); } catch (e) {}
   }, 5 * 60 * 1000);
 })();

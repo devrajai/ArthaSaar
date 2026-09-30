@@ -1,5 +1,5 @@
 const crypto=require("crypto");
-const FALLBACK="c09f57e0b728dc5b1638e5022da243db3d8e0e7ceabfe62bc8f1d40b99677880";
+const FALLBACK="c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
 function ph(){return process.env.ARTHASAAR_PASSWORD_SHA256||FALLBACK}
 function sec(){return process.env.ARTHASAAR_AUTH_SECRET||ph()}
 function hash(s){return crypto.createHash("sha256").update(String(s)).digest("hex")}

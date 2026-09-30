@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
-  "generated_at": "2026-09-30T09:23:38.878314+00:00",
+  "generated_at": "2026-09-30T12:33:45.550275+00:00",
   "today_ist": "2026-09-30",
-  "data_updated_at": "2026-09-30T14:53:15.821334+05:30",
+  "data_updated_at": "2026-09-30T18:03:23.464631+05:30",
   "ipo_count": 11,
   "field_coverage_pct": 63.2,
   "sources": {
@@ -50,7 +50,7 @@
       "errors": []
     },
     "PublicAggregators": {
-      "checked_at": "2026-09-30T09:22:13.030129+00:00",
+      "checked_at": "2026-09-30T12:30:22.056501+00:00",
       "sources": {
         "Groww": {
           "ok": false,
@@ -88,12 +88,12 @@
       "records": 11,
       "matched": 0,
       "errors": [],
-      "checked_at": "2026-09-30T09:22:15.345518+00:00"
+      "checked_at": "2026-09-30T12:30:29.669459+00:00"
     },
     "SeedFallback": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-30T09:23:01.448273+00:00",
+      "checked_at": "2026-09-30T12:33:09.022001+00:00",
       "seed_fundamentals": 32,
       "seed_documents": 13
     },
@@ -103,21 +103,21 @@
       "changed_fields": 0,
       "live_gmp_records": 0,
       "rejected_gmp_records": 0,
-      "checked_at": "2026-09-30T09:23:01.525721+00:00"
+      "checked_at": "2026-09-30T12:33:09.103083+00:00"
     },
     "TranscriptEvidence": {
       "ok": true,
       "records": 0,
-      "checked_at": "2026-09-30T09:23:01.579241+00:00"
+      "checked_at": "2026-09-30T12:33:09.172102+00:00"
     },
     "LiveNews": {
       "ok": true,
       "records": 200,
-      "checked_at": "2026-09-30T09:23:01.762155+00:00",
+      "checked_at": "2026-09-30T12:33:09.386052+00:00",
       "feeds": {
         "Google News · IPO India": {
           "ok": true,
-          "records": 104,
+          "records": 106,
           "url": "https://news.google.com/rss/search?q=IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         },
         "Google News · IPO allotment": {
@@ -132,7 +132,7 @@
         },
         "Google News · RHP DRHP": {
           "ok": true,
-          "records": 69,
+          "records": 71,
           "url": "https://news.google.com/rss/search?q=RHP+DRHP+IPO+India&hl=en-IN&gl=IN&ceid=IN%3Aen"
         }
       }
@@ -141,11 +141,11 @@
       "ok": true,
       "records": 13,
       "verified": 5,
-      "checked_at": "2026-09-30T09:23:01.762155+00:00"
+      "checked_at": "2026-09-30T12:33:09.386052+00:00"
     },
     "SelfHeal": {
       "ok": true,
-      "checked_at": "2026-09-30T14:53:15.821334+05:30",
+      "checked_at": "2026-09-30T18:03:23.464631+05:30",
       "status_repairs": 4,
       "sme_added": 0,
       "filings": {
@@ -162,7 +162,7 @@
     {
       "id": "vishal-nirmiti-limited",
       "name": "Vishal Nirmiti Limited",
-      "fingerprint": "00904455657829a3",
+      "fingerprint": "b0f303d73be38a2e",
       "fields": {
         "price": "₹208-220",
         "size": "178.00",
@@ -172,9 +172,9 @@
         "allotment": null,
         "listing": "08/10/26",
         "sub": "—",
-        "sub_qib": "0.00",
-        "sub_nii": "0.00",
-        "sub_retail": "0.04",
+        "sub_qib": "0.96",
+        "sub_nii": "0.01",
+        "sub_retail": "0.05",
         "gmp": "₹6",
         "gmp_pct": "+2.7%",
         "est_list": "₹226",
@@ -190,7 +190,7 @@
     {
       "id": "nityas-gems-and-jewellery-limited",
       "name": "Nityas Gems and Jewellery Limited",
-      "fingerprint": "749945ba1df8ade3",
+      "fingerprint": "caf5cfb58ca633d8",
       "fields": {
         "price": "₹70-75",
         "size": "108.42",
@@ -201,8 +201,8 @@
         "listing": "08/10/26",
         "sub": "—",
         "sub_qib": "0.00",
-        "sub_nii": "0.05",
-        "sub_retail": "0.34",
+        "sub_nii": "0.09",
+        "sub_retail": "0.47",
         "gmp": "₹5",
         "gmp_pct": "+6.7%",
         "est_list": "₹80",
@@ -274,7 +274,7 @@
     {
       "id": "eventions-limited",
       "name": "Eventions Limited",
-      "fingerprint": "a74ddf80a15643c6",
+      "fingerprint": "9d465fe81b16b6ed",
       "fields": {
         "price": "—",
         "size": "38.12",
@@ -284,9 +284,9 @@
         "allotment": null,
         "listing": "08/10/26",
         "sub": "—",
-        "sub_qib": "13.09",
-        "sub_nii": "0.00",
-        "sub_retail": "0.01",
+        "sub_qib": "19.89",
+        "sub_nii": "0.14",
+        "sub_retail": "0.02",
         "gmp": "₹0",
         "gmp_pct": "+0.0%",
         "est_list": "₹118",
@@ -674,6 +674,38 @@
     }
   ],
   "changes": [
+    {
+      "at": "2026-09-30T12:33:45.550275+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "vishal-nirmiti-limited",
+      "name": "Vishal Nirmiti Limited",
+      "fields": [
+        "sub_qib",
+        "sub_nii",
+        "sub_retail"
+      ]
+    },
+    {
+      "at": "2026-09-30T12:33:45.550275+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "nityas-gems-and-jewellery-limited",
+      "name": "Nityas Gems and Jewellery Limited",
+      "fields": [
+        "sub_nii",
+        "sub_retail"
+      ]
+    },
+    {
+      "at": "2026-09-30T12:33:45.550275+00:00",
+      "type": "DATA_CHANGE",
+      "ipo_id": "eventions-limited",
+      "name": "Eventions Limited",
+      "fields": [
+        "sub_qib",
+        "sub_nii",
+        "sub_retail"
+      ]
+    },
     {
       "at": "2026-09-30T09:23:38.878314+00:00",
       "type": "DATA_CHANGE",
@@ -4005,40 +4037,6 @@
         "roce",
         "growth",
         "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T09:58:22.986177+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "elevate-campuses-limited",
-      "name": "Elevate Campuses Limited",
-      "fields": [
-        "roce",
-        "growth",
-        "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T09:58:22.986177+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "swastika-infra-limited",
-      "name": "Swastika Infra Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth",
-        "de"
-      ]
-    },
-    {
-      "at": "2026-09-23T09:58:22.986177+00:00",
-      "type": "DATA_CHANGE",
-      "ipo_id": "varmora-granito-limited",
-      "name": "Varmora Granito Limited",
-      "fields": [
-        "roe",
-        "roce",
-        "growth"
       ]
     }
   ]

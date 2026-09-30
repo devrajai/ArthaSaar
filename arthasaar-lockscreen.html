@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Arthasaar — Locked</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F4EDE1;
+  --card:#FFFDF8;
+  --border:#E3D3BB;
+  --ochre:#A9741F;
+  --ochre-dk:#8E5F16;
+  --ink:#2B2117;
+  --dim:#8A7A64;
+  --ok:#3E7C4F;
+  --bad:#B23A3A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font:15px/1.6 "Archivo",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100dvh;
+  padding:max(20px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom));
+  overflow:hidden;
+}
+.lock{width:100%;max-width:390px;position:relative}
+
+/* ---- card ---- */
+.lock-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:34px 26px 28px;
+  box-shadow:0 18px 50px -18px rgba(90,64,20,.28);
+  text-align:center;
+}
+
+/* logo mark */
+.lock-mark{
+  width:54px;height:54px;margin:0 auto 18px;
+  border-radius:16px;
+  background:var(--ochre);color:#FFF9EE;
+  display:grid;place-items:center;
+  font:600 22px "Fraunces",serif;
+  box-shadow:0 6px 16px -6px rgba(169,116,31,.55);
+}
+
+/* title — wide letter spacing */
+.lock-title{
+  font:700 25px/1.15 "Fraunces",serif;
+  letter-spacing:.34em;
+  text-indent:.34em; /* balances tracking */
+  margin-bottom:16px;
+}
+
+/* description */
+.lock-desc{
+  font-size:13.5px;color:var(--dim);
+  max-width:300px;margin:0 auto 22px;
+}
+.lock-desc b{color:var(--ochre);font-weight:600}
+
+/* feature list */
+.lock-feats{
+  list-style:none;
+  display:flex;flex-direction:column;gap:10px;
+  text-align:left;
+  background:color-mix(in srgb,var(--cream) 62%,white);
+  border:1px solid color-mix(in srgb,var(--border) 70%,white);
+  border-radius:14px;
+  padding:16px 16px;
+  margin-bottom:24px;
+}
+.lock-feats li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13px;color:var(--ink);
+}
+.tick{
+  flex:0 0 auto;width:18px;height:18px;margin-top:1px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--ochre) 16%,white);
+  color:var(--ochre);
+  display:grid;place-items:center;
+  font:700 11px/1 "Spline Sans Mono",monospace;
+}
+
+/* form */
+.lock-label{
+  display:block;text-align:left;
+  font:600 10px/1 "Spline Sans Mono",monospace;
+  letter-spacing:.30em;
+  color:var(--dim);
+  margin-bottom:9px;
+}
+.lock-row{display:flex;gap:9px}
+.lock-row input{
+  flex:1;min-width:0;
+  height:50px;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  background:#FFFDF8;
+  padding:0 15px;
+  font:500 15px "Archivo",sans-serif;
+  letter-spacing:.08em;
+  color:var(--ink);
+  outline:none;
+  transition:border-color .18s, box-shadow .18s;
+}
+.lock-row input::placeholder{color:#B7A68C;letter-spacing:.04em}
+.lock-row input:focus{
+  border-color:var(--ochre);
+  box-shadow:0 0 0 3.5px color-mix(in srgb,var(--ochre) 16%,transparent);
+}
+.lock-row button{
+  flex:0 0 auto;
+  height:50px;padding:0 24px;
+  border:none;border-radius:12px;
+  background:var(--ochre);color:#FFF9EE;
+  font:600 14px "Archivo",sans-serif;
+  letter-spacing:.14em;
+  cursor:pointer;
+  transition:background .18s, transform .12s;
+}
+.lock-row button:hover{background:var(--ochre-dk)}
+.lock-row button:active{transform:scale(.96)}
+
+/* error */
+.lock-err{
+  display:none;
+  margin-top:12px;
+  font:500 11.5px "Spline Sans Mono",monospace;
+  color:var(--bad);
+  letter-spacing:.05em;
+}
+.lock-err.show{display:block}
+
+/* footer url */
+.lock-foot{
+  margin-top:18px;
+  text-align:center;
+  font:500 10px "Spline Sans Mono",monospace;
+  letter-spacing:.22em;
+  color:#A7977D;
+}
+
+/* granted state */
+.granted{
+  position:fixed;inset:0;z-index:10;
+  background:var(--cream);
+  display:none;flex-direction:column;gap:14px;
+  align-items:center;justify-content:center;
+}
+.granted.show{display:flex}
+.granted .g-mark{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--ok);color:#fff;
+  display:grid;place-items:center;
+  font:700 30px/1 "Fraunces",serif;
+  animation:pop .45s cubic-bezier(.2,1.4,.4,1) both;
+}
+.granted p{
+  font:600 12px "Spline Sans Mono",monospace;
+  letter-spacing:.30em;color:var(--ink);
+}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ============================================================
+   ENTRANCE ANIMATION  (~2s total choreography)
+   ============================================================ */
+.lock-card > *{opacity:0}
+.lock-card{animation:rise .7s cubic-bezier(.22,.9,.30,1) both}
+.lock-mark    {animation:fadeUp .5s ease .30s both}
+.lock-title   {animation:titleIn .8s ease .50s both}
+.lock-desc    {animation:fadeUp .5s ease .85s both}
+.lock-feats   {animation:fadeUp .5s ease 1.05s both}
+.lock-feats li{animation:fadeUp .4s ease both}
+.lock-feats li:nth-child(1){animation-delay:1.20s}
+.lock-feats li:nth-child(2){animation-delay:1.32s}
+.lock-feats li:nth-child(3){animation-delay:1.44s}
+form          {animation:fadeUp .5s ease 1.55s both}
+.lock-foot    {animation:fadeUp .5s ease 1.80s both}
+
+@keyframes rise{
+  from{opacity:0;transform:translateY(34px) scale(.97)}
+  to  {opacity:1;transform:none}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to  {opacity:1;transform:none}
+}
+@keyframes titleIn{
+  from{opacity:0;letter-spacing:.6em;filter:blur(3px)}
+  to  {opacity:1;letter-spacing:.34em;filter:blur(0)}
+}
+
+/* wrong password shake */
+.shake{animation:shake .45s ease}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-9px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-5px)}
+  80%{transform:translateX(3px)}
+}
+</style>
+</head>
+<body>
+
+<div class="lock" id="lock">
+  <div class="lock-card" id="card">
+    <div class="lock-mark">अ</div>
+    <h1 class="lock-title">ARTHASAAR</h1>
+    <p class="lock-desc">This terminal is private. <b>Authorised access only.</b> Inside: dynamic charts, smart screeners & instant stock analysis.</p>
+
+    <ul class="lock-feats">
+      <li><span class="tick">✓</span>Market data, refined & readable</li>
+      <li><span class="tick">✓</span>Powerful screeners for every strategy</li>
+      <li><span class="tick">✓</span>Raw market data turned into clarity</li>
+    </ul>
+
+    <form id="lockForm" autocomplete="off">
+      <label class="lock-label" for="pw">PASSWORD</label>
+      <div class="lock-row">
+        <input type="password" id="pw" placeholder="Enter password" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button type="submit">ENTER</button>
+      </div>
+      <p class="lock-err" id="err">✕ Incorrect password. Try again.</p>
+    </form>
+  </div>
+
+  <p class="lock-foot">ARTHASAAR · SECURED</p>
+</div>
+
+<div class="granted" id="granted">
+  <div class="g-mark">✓</div>
+  <p>ACCESS GRANTED</p>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — change these two lines only
+   ============================================================ */
+const PASSWORD   = "arthasaar";                        // ← your lock password
+const REDIRECT_TO = "arthasaar-full-mixed-5themes.html"; // ← page that opens after unlock
+
+const form = document.getElementById('lockForm');
+const pw   = document.getElementById('pw');
+const err  = document.getElementById('err');
+const card = document.getElementById('card');
+
+/* focus the field once the intro animation settles */
+setTimeout(() => pw.focus({preventScroll:true}), 2100);
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  if (pw.value === PASSWORD) {
+    document.getElementById('granted').classList.add('show');
+    setTimeout(() => { window.location.href = REDIRECT_TO; }, 900);
+  } else {
+    err.classList.add('show');
+    card.classList.remove('shake');
+    void card.offsetWidth;               /* restart animation */
+    card.classList.add('shake');
+    pw.select();
+  }
+});
+
+/* clear the error as soon as the user retypes */
+pw.addEventListener('input', () => err.classList.remove('show'));
+</script>
+</body>
+</html>

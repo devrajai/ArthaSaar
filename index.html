@@ -1020,8 +1020,33 @@ document.querySelectorAll(".fch2").forEach(function(c){c.addEventListener("click
     });
     tb.innerHTML = h;
     var h2 = document.querySelector("#v-indices h2");
-    if (h2) h2.textContent = "Indices \u2014 " + arr.length + " tracked" + (d.as_of ? " \u00b7 " + esc(d.as_of) : "");
+    if (h2) h2.textContent = "Indices \\u2014 " + arr.length + " tracked" + (d.as_of ? " \\u00b7 " + esc(d.as_of) : "");
+
+    /* Existing repo radar snapshot — secondary context for the Indices screen. */
+    fetch("data/radar.json?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (r) {
+      var host = document.getElementById("v-indices"); if (!host) return;
+      var oldRadar = host.querySelector(".idx-radar-snapshot"); if (oldRadar) oldRadar.remove();
+      function radarTable(title, rows) {
+        return "<div class='card' style='margin-top:10px'><div class='sh2'>" + esc(title) + "</div><div class='tblwrap'><table><thead><tr><th>Symbol</th><th>Close</th><th>Change</th><th>Delivery</th><th>Turnover</th></tr></thead><tbody>" +
+          (rows || []).slice(0,5).map(function (x) {
+            var cc = Number(x.chg), cl = cc > 0 ? "up" : (cc < 0 ? "dn" : "");
+            return "<tr><td>" + esc(x.sym) + "</td><td>" + (x.close == null ? "\\u2014" : Number(x.close).toLocaleString("en-IN", { maximumFractionDigits: 2 })) + "</td><td><span class='" + cl + "'>" + (cc > 0 ? "+" : "") + cc.toFixed(2) + "%</span></td><td>" + (x.deliv == null ? "\\u2014" : x.deliv + "%") + "</td><td>" + (x.tover_l == null ? "\\u2014" : Number(x.tover_l).toLocaleString("en-IN")) + "</td></tr>";
+          }).join("") +
+          "</tbody></table></div></div>";
+      }
+      var snap = document.createElement("div");
+      snap.className = "idx-radar-snapshot";
+      snap.innerHTML = "<div class='sect' style='margin-top:18px'>RADAR SNAPSHOT · EXISTING FEED · " + esc(r.date || r.updated || "") + "</div>" +
+        radarTable("Accumulation", r.accumulation) +
+        radarTable("Hidden Selling", r.hidden_selling) +
+        radarTable("Volume Blast", r.volume_blast);
+      var anchor = host.querySelector("#idxBody");
+      var wrap = anchor && anchor.closest ? anchor.closest(".tblwrap") : null;
+      if (wrap && wrap.parentNode) wrap.parentNode.insertBefore(snap, wrap.nextSibling);
+      else host.appendChild(snap);
+    }).catch(function () {});
   }).catch(function () {});
+
 })();
 </script>
 <script>

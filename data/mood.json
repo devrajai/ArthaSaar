@@ -1,74 +1,96 @@
 {
- "updated": "2026-09-30T07:34:32.614616+05:30",
+ "updated": "2026-09-30T13:36:31.836731+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
- "overall": 52,
+ "overall": 54,
  "tag": "Neutral",
  "counted": 60,
  "pos": [
   {
-   "t": "Dow Jones Futures Rise With Micron, Inflation Data Due; Yields Pressure Stocks But Bloom Energy Soars",
+   "t": "94% returns in 2026! Savita Oil Tech share price jumped 20% today, hitting record high | Book profits or hold?",
    "s": 78,
-   "pub": "Investor's Business Daily",
+   "pub": "Livemint",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOREF2Z2ZRWDNfX0JCWlpUeWtQeGVlSEFxM04zVklORnRjbTR0R1VMSGpNNjRvVVhSeFAtWkc3TVlUanFkYjVWWkdBSU9GeTBiLVBwNUFSZHpzY1hVQnB1eUNkX25fNEpCdjVHd3FxWVpwZWZOY09HSWlHUmVJMER0YjZONExxNWxxZkZhWFRaZXo2U2NVODZXOE5GMG5KQlc3ZDVmRUYxMEVaR0pfVGY5OUFndU1YMWpzS01UekczZVdVMmc4ZDU5a3ZPdE02SHlQVmZKNg?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMigwJBVV95cUxOUlljU0kwZ0xvZ3VCSVBlMDl5WnN0di1EVEFkM05zOUFIcXIzeFhSRWMyUXVXZmZUeTFoMjRhQVNLRERpQklpR0JoUkZ3VEVyRWtsbU81TzNpTV9zSlNHc2xrSkhOZ2xKam9QM2xvM0k2ck5MODNhNkpvZ0ktdFpQYXhpelRhTXVXcWhLWkRmLXBMQzFhUmoyX2lNS0hoWjJ0Yl9xdXB4ZXRud2ZWWDZneTl3ZThIOXVna3Mza0w2UC1YTWtNZmhKLTFtTkZ5eXN2THVMZDA4dGZtVTZtNG84RHk1bHRzTXJxX1JMTmxIZmZWakphT1BkaUNGZ0RGcWFBSDhr0gGIAkFVX3lxTFBzOGZkbEg2SXY2eU9fblNTVDdYNlRDWTdFdWlna2hkYXJ1eEJpNTBRRzBQWGZQX0lZc3ZCcG0wb19IXzRpVlMtMWFUX1Q0U0RZUnNEcFV5S2VKNnNKT1JUcjVJVWhBSzVqeEtwLVh1TlBvMExPYlB5NjR5VjZOY2NPY0liZ0UtVWQ4eEZid1N6N3NIZjkxRWwyeFVMVlBnQVAwMTdOb25XM0NMM2JjYnN3TjFsMnNLbE1ubDlXSjNsMEJTTnFRTmpqWWRXOEFXOHk3eDVLRFVERWZiT2QtNjRzVl9zdkQ3cjN4NVRBcDYzRmhzNjVJU1hid194dXVlSU5IWk5zX25kUA?oc=5",
+   "syms": [
+    "INFY",
+    "RELIANCE",
+    "TCS"
+   ],
+   "src": "article"
   },
   {
-   "t": "US futures edge higher, oil prices dip and bond yields hover near record highs",
+   "t": "Stock market update: Sensex rises over 160 points in early trade amid buying in IT stocks",
    "s": 78,
-   "pub": "ABC News - Breaking News, Latest News and Videos",
-   "topic": "Global",
-   "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOSU5kRXVKWEtIaUJrdmRuV1BtdEJRTTgwUnhENkpQVkw4Zkw5VlFGdjdBdk9yVm1yeUFUUE9JaVZNNnhYMFI2SThlY1lDTkVwSlJwTFJPYkJZVmp6b1BUVWNjeS1UMzNoMkpaQlhkQlFJakJZTDl5eDlaTmJoTURVOEhNVERZYnJWUGFYRnExLUZIRkpETXdmRXBSY9IBoAFBVV95cUxQcXUzbVY3czlOQjJ5OUpTVkp0T1ZjUWN1cl85UFBIVnNQYUVqZEtzVW5aWE9JWkRKaFVxZ1RqbGlGLW5NV0t2MEQzMFFZdXJoWUZKUEhPV3NjUVhQTklPUFVrZDRzVk9MNnRHd0RtM0Rlb1B3R3JOVVpGaTVRN2hsZGtSOXgxZFFIQkNBRmtWTXNRRXF4S2MyTENEWmYzS1B1?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Stocks slip on Wall Street as rising bond yields pressure the market",
-   "s": 64,
-   "pub": "CommBank",
-   "topic": "Global",
-   "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOa2FDVGpaZVpIUURuT2l4YlFCRVZXdFZxbGRGbnV3Qzc0V0ZrZWJUUlNXVHlBODNVcFdLWUNrRW5TTVZva3dyRVBxZnFoNDFZT1FobGFUWXN5N1FnZ1I5Y01fZXR6NjQ0Yk9hSUY2SHY0Z0FXNnJiUUFoWk96bzFMVlBNNVA4NGdCWTdadjg5ck9iaG1MeXhwZUV5TVRrakVOLUdfYnAxTEFMRGNDV0NoU0VMTW9KUkR6N3E0cU1n?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Asian Stocks Set for Rebound as Oil Prices Ease: Markets Wrap",
-   "s": 64,
-   "pub": "bloomberg.com",
+   "pub": "Mid-Day",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNSlRCOEw4eEozV0V3dXh5UDQwWC1pYkRkZEVSZDhyVHo1UnA4V3c3R3pkOTVUUnRWWXRSbjNyckFmVk9Mdk1ReWNUcmlHZ0ludWdrbGJpbkZRSmUyOUpVdE4zWVA3QzVYeEZwMEhIVDdMZWlvVVYxNFI1Y2hvNzJ1U3N5MmcwOWJiOFhEWUQtRjZxdDROQ2kyTUEyb0JIU0w3b1FFZ1M5UGhBY3hYQTFISnVR?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxQNGxmSEVnc18zR2stQnhoNXd5dU9ZZTVGeHpwdE1TdWNvUm9ESlNHU2dVRnZyb1lrd3dwT1FZVjNJZEVNY2JFX2w4R2VRYWVkd2o2OWtXZGZ5UG5CcHlJQ2c2UmpMbURMSEU0QUU5aF9XVm5UWHhNQ0NhWjlhc0hfLUpIYmg1bzh2MFFKVmlXYXVmMHBEM0hleG5jcWRxU3BhME5lUkdMSTVrVFUyRGR6Ni1qVHVlVzJzVmNnN2k1YkpzdGRXRUxyN1F1N1hJVzd4WTRWZVoxaWo0Q3Y2TFotbi1aUmRYQdIB6wFBVV95cUxNcHlYOUNQTHEzMWNCVFMwVnJReVVjM1ltV3dKREppWTNQc3dXZlMtc0dvQkh3bDJCdTN0SFZsVkJQYWFYay1SLXJEeEF3cEthcEhVdVNLcmhNZUtJVWRCSmRoU3B5MWcyLWdOOVRTSUtfZVIxVmRsWUk2Y2ZkMmVYVHRWNDRoVzZUWk1Fa3JGUTdDcXRaU2N0R01PVks1QlhiLVBMM0U1S1YzZ1RqWm4yVGFoSXl5aWJIN2pFVkl1Vi0wRjJzaDd3cHJudUU2b0d2ZElvemJMbzFnVnBhUVh4WHJVMW5wZ2xOaUFV?oc=5",
    "syms": []
+  },
+  {
+   "t": "Tega Industries shares jump 6% | What\u2019s driving the stock\u2019s 30% monthly rally?",
+   "s": 78,
+   "pub": "Livemint",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNY1BIV1BoXy1RYXB3d1Y1WHR0bEhZZk1wVnd6dDB2ZzlFR2ZscEZsSnRlT3RoeWlzQXhobkJqeHRNSDlZcVQtVTZDWERLWTJYUmp2UU9fWFoycGdaZGRiX2JvdnNUR2NPc29CRkhKSVlpTTNCUmJMQ1pBeFBmclF5ZTg4WXZpOGFoWTFKS1ZXaXNYRFVrSTBmdFpma0xrOU5LRU5DWnlCdUp6T0pGZE1YUV9RQTMxWXRYYXE2bXhTUVdka0lrX3NsR0ZSMnVkckctbGhOMnVKWndmaWfSAeABQVVfeXFMTkJfMGUwTy16RnVDbEliWUU1cEYzX2d2ejd6c2EzNDNsMVFOZlFtQmNZNWZ5dm9UYUJuYUljVWwxUzhIVDhYdVdnbEhPQXFWOVMzYTZDenFwMVBrTHk3TlJ4d1hTTE9Kd3loSnBsVnNfakpVX2paSGFnT0pNVm1pOHJvUldKeDdvUjR3RnNsLURPM3U2bVkxVndqN3ByNFEwTGJIdkZsTXNsb2RJeXQ5RlhpWlc0TnBhWElYNzVoZ2xZODRhUmJCOGtvUTctUjlhQndBaG9ZNkhqVXlFR1BCcWc?oc=5",
+   "syms": [
+    "SBIN",
+    "HEROMOTOCO",
+    "RELIANCE"
+   ],
+   "src": "article"
+  },
+  {
+   "t": "Hero Motors share price jumps over 7%, newly listed stock up 78% from IPO price | What\u2019s driving the rally?",
+   "s": 78,
+   "pub": "Livemint",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMigAJBVV95cUxPVUhOai1zMDBwYTFyTk9hWEJqLXM0dHBWYlh4bEV5anBabXZlb2pUcGxzY2llR1pHV2ZwX29POE5yM2dfNldjZUx0dTNHZzJYakFnSTFTVU83RWo1M1JWaDJoMGpvWVhpc295djVNX3hMZmItM0hTdnBUd2lyMzZ2end2WFpkWWZ1eWlkOE9iX0Y0SHdGSEY0aFBHNnBtMHA4ZTFtVHcwUE9LXzNRcHZtZW5DVGdBeXJUYjZPVklJeXZPOFRndUowRzI3SkN2YnhaSzB3Q3pkS3g4ZUpFd0w4Z2dtcldSa0lvdXdVRXVrU2IxdXJmdU5MQWFWUldoYTl50gGGAkFVX3lxTE1lWGE5RTZZRFI4TkQzYTlLdzJhX0d1dVJfUHp2WnpwZzJ2NGxfLUtFNjV1VGN3U0dVTC0wRDktSjd3SWJsZUo5UFhmNHA0clR4WnlzV0E0WXhZalFlcFFPWG1CdWdFRXFaWXV4aXNKUjN4THJGbzVpS25OM3lrZm9MUTFHZVBWYkktZGtaQjI0XzU0anpScWlEMUducklIU3NJZGxwRmprcktPVzNka3FpcnNPcURpNWt6THFyM0NURkpsRXp1WEhaNWQ0U092UEpGMzMzVjd0Z3R4UE9RMTFiOGEtc2JESHVNeGhVSmxxTHZRV3duWDdmMFZmbnBjTXNIbGsyT2c?oc=5",
+   "syms": [
+    "HEROMOTOCO"
+   ]
   }
  ],
  "neg": [
   {
-   "t": "India\u2019s ageing population set to reshape economy as fertility falls below replacement: Moody\u2019s",
+   "t": "Sensex falls 250 pts from day's high, Nifty below 22,700: Key reasons behind market decline",
    "s": 22,
-   "pub": "Livemint",
-   "topic": "Economy",
-   "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNV1lkRTl0X3RyUlRNbzdwUUlIQ0NEdHVZY1dWY1ljMVE5YTZRN3JFU0RSRC1MZzUyS25sM2hmSWtmRTlybGNGcURxdm9iaUs2OGV4OWFTajVVVlpvSHFBY1ZTeGxTZVhPRGFwUnlJTmZ3eWZtQXJ4V2JjSHNrenRYRms1NmoyRlEzU25sNXpHblhrREdYNDhwNTloaC03eW1OQWllLWJSeDFTamdlaHdZdkVueGpRM3B6OU1KN1MxREdDM25jN2FVN3Vvb3ZNcUpHZDVjWmVLai3SAd4BQVVfeXFMUDBFTlk3STRoMGRfMzZRQ0NlTXNBUUNvalV2X3RqcW9KQ1VmNE1kVmFmdVhycHotRmZqbnB0WGM5RnNaQ0RRMXpGbG9XbG0wR3dCZmlfMHhwckQ2ZjAzMDB3TnZuU2J4dF96NmNXcnBySkhjaG96ZHJkMWYwbjhENFZCWWFVN3QtTG1zbEhTaFotNTlKQUMxWXhnWVhiY2VqVFpNV1p3a2VPY3EzYjNIZHdwUnJyUDh3RC03djhGOUM0NmhuQkdiM09ydWFGejBYMzBoSXJ5Q3RSaG1YM0J3?oc=5",
-   "syms": []
+   "pub": "Moneycontrol.com",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxOeVY3WlI0R3M2UENaa3pLMFJRZWlxblFmQnZiMTMxOUhnM1lhRXdCcmJmNnV4ZVhtZnVTbFhaeWVRa04yUFIwSVhHOVBYcTZxSkdkTmpITnZDT1pxNUNKMEUtdE5vNWlBS0c4NXJCeEVRZjA1ZjNZbEp4SGhkTkYtSzFoeTZNeWdEZkNSQkVUQWFCOWg5cVRGd2UzZmQyS19XN0xLaEZpRDZqSGk3UTlFZDY4OV82NFdzTk42UVNiVHpkVHkzUXVMZ3VoNjdVTnlsN2xHTGZiTEFyZnNnOGZGVmdDYzhUM2hOZ1HSAe8BQVVfeXFMTUdydW1NZjJEV0RjS0hGTXkzV3RMOGw5MHE3OGk4TWxlRTFnZ0pmMW5pNnRrQXBoRUl5eWgzSkJnam5kNk9DV2dyT21DVWVGeEZ2M1dkblcwZFUwZjZTcWg5YU56bjNrb3VSbm15NHVXQldKQVZMUFRMTGhxcVZSVjZFYVFpNEs2aXZPckxGOHV2UHlxQmwxbXFtbkpncGwwcy11a0ttcVl6M3p2Y01qSjUwbnVNTkZIY3dtaW1CMlQyWnRaQWN0LTBRQUI5SnhLa2xUWUx6OHdNcVR2aDhhV2lMOGZXMC0zQkNRZjhxb1U?oc=5",
+   "syms": [
+    "LTF",
+    "BAJAJFINSV"
+   ],
+   "src": "article"
   },
   {
-   "t": "Stock Market Today, Sept. 29: Oracle's Fusion Claw Helps it Claw Back Losses",
+   "t": "The latest market fall has made at least seven stocks attractive, says Deven Choksey",
    "s": 36,
-   "pub": "Yahoo Finance",
+   "pub": "CNBC TV18",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOS0NyOVhxeHBQaElLVmR5Q25IUlktOF9UcVNjRjF2Y3JMM0pBaFk4VnZiMVZ2dkhGVEwwOGY4YW1OWm9KeTE0UWdoUGxtdFZxNHRSMkh0SENNNE9CQjhlMUVoeUItN2pLbGUtSzcwY19rX0dnWDYyVG1PS0RMMnExNTdrTUUzRGFDeFU3aVVoMEotR3owTEE?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxObUxUNk9lTzFNSEsxN2NTbHpnNUh1ODVKZnRMZWtnVDZPMFNRX0R5N1ZsWnZVM3NkNVJPMTFnQk5uWHZqeG9JU3FsZ1phM1ZfTHhOMW5kdnZOSFdDbnJmSExJTTB1SnNnaFNRY2dWMGd1dTNXZjJiNW4yV3pNejVXa1pKWEZYNFJENlNkUF9CaFhrMWJXZjVCZHB5OHBaLTdkWFFQQWl4UjU5TkhrbkdsM3lHbEdCV0JyVm1RSGpQRWlPY3N3dTdFUUczUmhHWGFMdnhxWlpjTnQwY0NyX0HSAeMBQVVfeXFMTkpIVjdRazNWVExHcExkRW9zdEZLQzJPdW1lbV9GT0NEQWEyLTVTN0tZMHRyS0xqamI5dFZISmZoY3FZWFdHc2MtWThTRVQ4VldIQXdPYVpHRThET3ctb2xyNjYzS2k0TmktUVpobWlNMnd0ZGhPUnhZaXdsTzc3bUZHbjI2Z05UMElZdGZRaDIyT0lhT1lRTFBvcm4zaDAyQkkzT3ZGMVQ2OXh0OU9GdnM0QlM1Tkk1MUUycm84S0dGdXh0c1dYWGZSeURWeGtxMWNNN3JJdXFiOGlXaXNIUnRFR0U?oc=5",
+   "syms": [
+    "SBIN",
+    "BAJAJ-AUTO"
+   ],
+   "src": "article"
   },
   {
-   "t": "Stock Market Today, Sept. 29: Nio Slides on Geely's 30% Stake Purchase in Battery Swap Business",
+   "t": "Firstsource Solutions, Solar Industries lead Nifty 500 gainers, Max Healthcare, BSE fall at market open",
    "s": 36,
-   "pub": "Yahoo Finance",
+   "pub": "CNBC TV18",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNdWRyRHM4SWtDdGZnRUtMOHU4NVNLcVhTM2FaZ1NFNl9QMVFzeGdDR2pnV29wT0FLenRUX3A5dXlxM3VJcnNQMGJ0d1lDYnlPQlJYX2g2Zk5PTmQ4X2toaGNPUVJJWHhSbjl1aG92c2RSc0oza015Z2M3bjJhSUJWc1cwVGpJb2lCWFhZQUhSZVZJWXQ0T3c?oc=5",
-   "syms": []
+   "link": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNSFZybHpOR1JNTDgwTGxCZGJ3TGVydGNyQUJFOGdVZk9POXdzRzFBVUZZYk9UYWYyTFE4UENYRF9OTTVMRGhiR3JhNzllQnFrazhsWWZBdHppYWJWdHhVTklsQU9CQUVhRl9XeWRzU1VfLVd1NnVmMENSZ0l3UmxnWDQ3Ny1WQlZ6ZVZPM0pHaUVUbTFGcXFaZDFLd3VKQ2QxTXo1XzlPR3BycDBjVUJhX1kxX1M4LXlqVEVzZUNsdlRDQmYxRENGTHM0aG1KSkhiOXJ5NEJubFk5bmZ1cnczbWt2Y9IB6AFBVV95cUxOUWQ3T0kyYjZvbXdkWFI5ak03VjhnVHYwMXJIV0d4Z19WazhRNWJOVTBJX1IxN0JVaGtBa0kwQjExQWNWT2N5ODFsTlRoRVRHNEhPTmJRdUtrU1Rzc200ekI3VzdYQUxvTmlIZ1JoSVg3dFlEZXZnYlVQYWNCNEQ3Zzl1VWFGYkNuVWJhdHFfTjB4WDk2bXJ4Z1Q4SXR3SzIza21qLWs4TkYwU3QycE81d3hiZFNGUEllUzNleVNxeGlaNGthRlY5UXE5TTRUZ1J3RHYtQ2FPcW5IMUIzVjJrV0VVYlh1UzAt?oc=5",
+   "syms": [
+    "MAXHEALTH"
+   ]
   },
   {
-   "t": "The stock market crash, the Great Depression & the legend of Rocky Road",
+   "t": "Indian shares set for weak October as foreign investors ramp up shorts, brokerages say",
    "s": 36,
-   "pub": "Yahoo Finance",
+   "pub": "reuters.com",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNcFdhVkFKVzQ3MTRaeEw3S05GMGVqVGlaUXh0U2tZRUV4a1hiejVCRzA5cDQzVVh1cVJMU2I4Ql93Y09PMW95NWh1R0Rjd0RENmZKZGtLUnE1cXlmbVlNSG05M3hPNGNhaldiM0QyX0pKbVJCYzBJcEJnalFlRFR0aUxvenR1dnJBblZLTVhVbVhqaFdLS0pTWng1aC1CNUdYWFE?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxONElPVFlxeFJwUGsyVWYwR1NYM3pkY2NLZmx3dHRycnlWejY2bVZJUlFoNkc2ZTJaRWt2UC1DSmYycVRaQUpidGlGZ0VjTjkwWUNMR3F1QndPN0dhdHdfajVVVU1kUlM1U2xqTnlwZU9YY2tOSFYtQ0VfZkpRR092ZEs0NlY3eEVlVE02NGtlQVNLeV9ndkF6bWlPUGxKd3ROcXpaaGJoVm1YUDc3NFM5QnNTTHBVaHl0NE5rVEhVTlhVVlp4?oc=5",
    "syms": []
   }
  ],

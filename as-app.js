@@ -1,6 +1,6 @@
 /* ==========================================================================
    Arthasaar — Market Terminal · data layer
-   Renders every view from the live files under /data (and /ipo/data).
+   Renders every view from the live files under /data.
    ========================================================================== */
 (function () {
 "use strict";
@@ -32,7 +32,7 @@ var FILES = {
   events:"data/events.json", smart:"data/smart-brain.json", macro:"data/macro.json",
   scores:"data/stock-scores.json", candles:"data/candles.json", learn:"data/learn-content.json",
   education:"data/education.json", radar:"data/radar.json", results:"data/results.json",
-  stress:"data/stress.json", ipo:"ipo/data/ipo-data.json"
+  stress:"data/stress.json"
 };
 var D = {};
 function loadAll(){
@@ -114,22 +114,6 @@ function rHome(){
   h+='<div class="card kpi"><div class="lbl">UNIVERSE</div><div class="num">'+num(B.length,0)+'</div><div class="chg">tracked</div></div>';
   h+='</div>';
 
-  /* IPO */
-  var ip=(D.ipo&&D.ipo.ipos)||[];
-  var open=ip.filter(function(x){return /open|live/i.test(x.status||"")||/^\d{2}\/\d{2}/.test(x.open||"");}).slice(0,2);
-  h+='<div class="sect">IPO TERMINAL</div><div class="grid3"><div class="card"><div class="sh2">OPEN <span class="b buy">LIVE</span></div>';
-  if(open.length) open.forEach(function(x){h+='<div class="ni"><b>'+esc(x.name)+'</b><small>'+esc(x.price||"")+(x.sub?" &middot; "+esc(x.sub)+" sub":"")+(x.gmp?" &middot; GMP "+esc(x.gmp):"")+'</small></div>';});
-  else h+='<div class="ni"><b>No open issues</b><small>check IPO terminal</small></div>';
-  h+='</div>';
-  var upc=ip.filter(function(x){return /upcoming|announced/i.test(x.status||"");}).slice(0,2);
-  h+='<div class="card"><div class="sh2">UPCOMING</div>';
-  if(upc.length) upc.forEach(function(x){h+='<div class="ni"><b>'+esc(x.name)+'</b><small>'+esc(x.open||x.price||"")+'</small></div>';});
-  else h+='<div class="ni"><b>See IPO section</b><small>'+num(ip.length,0)+' issues tracked</small></div>';
-  h+='</div>';
-  var lis=((D.ipo&&D.ipo.listed)||[]).slice(0,2);
-  h+='<div class="card"><div class="sh2">CLOSED / LISTED</div>';
-  lis.forEach(function(x){h+='<div class="ni"><b>'+esc(x.name)+'</b><small>'+esc(x.listing||x.price||"")+'</small></div>';});
-  h+='</div></div>';
 
   /* news */
   h+='<div class="sect">NEWS</div><div class="grid3">'+newsCards(3)+'</div>';
@@ -400,24 +384,6 @@ function rGtiAi(){
     '<ul class="s11" style="margin:10px 0 0 16px">'+pts.map(function(p){return '<li>'+esc(p)+'</li>';}).join("")+'</ul></div>';
 }
 
-/* ---------- IPO ---------- */
-function rIpo(){
-  var ip=(D.ipo&&D.ipo.ipos)||[], lis=(D.ipo&&D.ipo.listed)||[];
-  var tr=function(arr,cols){return arr.slice(0,80).map(function(x){
-    return '<tr><td>'+esc(x.name)+'</td><td>'+esc(x.type||"")+'</td><td>'+esc(x.price||"")+'</td><td>'+esc(x.sub||x.size||"")+'</td><td>'+esc(x.open||x.listing||"")+'</td></tr>';}).join("");};
-  return '<div class="fshead"><h2>IPO Terminal</h2><button class="xbtn" data-go="home">\u2715 CLOSE</button></div>'+
-    '<a class="radarbtn" href="ipo/" style="text-decoration:none"><span class="t"><b>OPEN FULL IPO TERMINAL</b><small>liquid-glass terminal \u00b7 GMP, brokers, coach</small></span><span class="arw">\u2192</span></a>'+
-    '<div class="minirow">'+
-    '<div class="card kpi"><div class="lbl">TRACKED</div><div class="num" style="font-size:18px">'+num(ip.length,0)+'</div></div>'+
-    '<div class="card kpi"><div class="lbl">LISTED</div><div class="num" style="font-size:18px">'+num(lis.length,0)+'</div></div>'+
-    '<div class="card kpi"><div class="lbl">DOCUMENTS</div><div class="num" style="font-size:18px">'+num(((D.ipo&&D.ipo.documents)||[]).length,0)+'</div></div>'+
-    '<div class="card kpi"><div class="lbl">NEWS</div><div class="num" style="font-size:18px">'+num(((D.ipo&&D.ipo.news)||[]).length,0)+'</div></div></div>'+
-    '<div class="sect">ISSUES</div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Name</th><th>Type</th><th>Price</th><th>Sub / Size</th><th>Open</th></tr></thead><tbody>'+
-    tr(ip)+'</tbody></table></div>'+
-    '<div class="sect">LISTED</div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Name</th><th>Type</th><th>Price</th><th>Sub / Size</th><th>Listing</th></tr></thead><tbody>'+
-    tr(lis)+'</tbody></table></div>';
-}
-
 /* ---------- AI BRAIN ---------- */
 function rAiBrain(){
   var sm=D.smart||{};
@@ -547,7 +513,7 @@ var VIEWS = [
   ["fundamentals","Fundamentals",rFundamentals],["mf","MF",rMf],["deepfund","Deep Fund",rDeepFund],
   ["filings","Filings",rFilings],["futures","Futures",rFutures],["gti","GTI",rGti],
   ["gticharts","Charts",rGtiCharts],["gtizones","Zones",rGtiZones],["gtiai","AI read",rGtiAi],
-  ["ipo","IPO",rIpo],["aibrain","AI Brain",rAiBrain],["internals","Internals",rInternals],
+  ["aibrain","AI Brain",rAiBrain],["internals","Internals",rInternals],
   ["crypto","Crypto",rCrypto],["global","Global",rGlobal],["news","News",rNews],
   ["events","Events",rEvents],["portfolio","Portfolio",rPortfolio],["learn","Learn",rLearn]
 ];
@@ -613,11 +579,10 @@ function wire(){
     out+=grp("LIVE \u00b7 STOCKS",B);
     out+=grp("LIVE \u00b7 INDICES",idxList().map(function(r){return {n:r.index,d:px(r.price)+" \u00b7 "+pct(r.change_pct),go:"indices"};}));
     out+=grp("LIVE \u00b7 MUTUAL FUNDS",((D.mf&&D.mf.funds)||[]).map(function(f){return {n:f.n,d:(f.k||"")+(f.r1!=null?" \u00b7 1Y "+pct(f.r1):""),go:"mf"};}));
-    out+=grp("LIVE \u00b7 IPO",((D.ipo&&D.ipo.ipos)||[]).map(function(x){return {n:x.name,d:(x.price||"")+" \u00b7 "+(x.type||""),go:"ipo"};}));
     out+=grp("LIVE \u00b7 CRYPTO",((D.crypto&&D.crypto.top)||[]).map(function(x){return {n:x.symbol,d:usd(x.price_usd)+" \u00b7 "+pct(x.chg_24h_pct),go:"crypto"};}));
     var s=VIEWS.filter(function(v){return !q||(v[1]).toLowerCase().indexOf(q)>-1;});
     if(s.length)out+='<div class="pg">SECTIONS</div>'+s.map(function(v){return '<div class="pi" data-go="'+v[0]+'"><b>'+esc(v[1])+'</b></div>';}).join("");
-    pl.innerHTML=out||'<div class="pg">nothing found \u2014 try RELIANCE, nifty, mf, ipo</div>';
+    pl.innerHTML=out||'<div class="pg">nothing found \u2014 try RELIANCE, nifty, mf</div>';
   }
   if(pq){ pq.addEventListener("input",function(){groups(pq.value);}); groups(""); }
   if(pl) pl.addEventListener("click",function(e){var i=e.target.closest(".pi");if(!i)return;pOv.classList.remove("open");

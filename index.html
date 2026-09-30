@@ -242,7 +242,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 </head>
 <body>
 <script>
-/* privacy gate — Arthasaar (demo-2 design, site-matched theme). Password check unchanged (SHA-256). */
+/* privacy gate — Arthasaar (new lock screen design, 30 Sep 2026). SHA-256 check + 6h remember unchanged. */
 (function () {
   var HASH = "c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
   var SIX_H = 6 * 3600 * 1000;
@@ -254,104 +254,112 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
   st.textContent = "body{visibility:hidden}";
   document.head.appendChild(st);
   document.addEventListener("DOMContentLoaded", function () {
+    var fl = document.createElement("link");
+    fl.rel = "stylesheet";
+    fl.href = "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap";
+    document.head.appendChild(fl);
     var gs = document.createElement("style");
     gs.textContent = [
-      "#gGate{margin:0;padding:0;background:#f6f1e6;color:#201c15;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',Georgia,serif;overflow-x:hidden}",
-      "#gGate *{box-sizing:border-box;margin:0;padding:0}",
-      "#gIntro{position:fixed;inset:0;background:#f6f1e6;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;transition:opacity .5s ease}",
-      "#gIntro.hide{opacity:0;pointer-events:none}",
-      ".gi-word{font-size:2.4rem;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:#201c15}",
-      ".gi-word b{font-weight:700;color:#b5721f}",
-      ".gi-line{width:0;height:2px;background:#b5721f;margin-top:1.1rem;animation:giGrow .5s ease .5s forwards}",
-      "@keyframes giGrow{to{width:180px}}",
-      ".gi-feats{display:flex;gap:2.5rem;margin-top:1.6rem;opacity:0;animation:giFade .5s ease 1s forwards}",
-      ".gi-feats div{font-size:.85rem;color:#6b6250;text-align:center}",
-      ".gi-feats strong{display:block;color:#201c15;font-size:1rem;margin-bottom:.15rem}",
-      "@keyframes giFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}",
-      ".gcard{width:min(420px,92vw);background:#fdfbf4;border:1px solid #d9cfb6;border-radius:16px;padding:3rem 2.6rem;box-shadow:0 10px 26px rgba(90,70,30,.14);opacity:0;animation:giFade .7s ease 1.85s forwards}",
-      ".glogo{display:flex;justify-content:center;margin-bottom:.7rem}",
-      ".gmark{width:34px;height:34px;border:2px solid #b5721f;border-radius:50%;position:relative}",
-      ".gmark::after{content:'';position:absolute;inset:7px;background:#b5721f;clip-path:polygon(0 60%,30% 60%,45% 20%,60% 85%,75% 45%,100% 45%,100% 60%,80% 60%,62% 100%,48% 40%,36% 78%,28% 78%,10% 74%,0 74%)}",
-      ".gcard h1{text-align:center;font-size:1.35rem;font-weight:700;letter-spacing:.14em}",
-      ".gsub{text-align:center;color:#6b6250;font-size:.9rem;margin:.6rem 0 2.2rem;line-height:1.8}",
-      ".gsub b{color:#b5721f}",
-      ".glist{list-style:none;margin:0 0 2.2rem;border-top:1px solid #d9cfb6}",
-      ".glist li{display:flex;align-items:center;gap:.7rem;padding:.9rem .2rem;border-bottom:1px solid #d9cfb6;font-size:.88rem;color:#201c15}",
-      ".gcheck{flex:none}",
-      ".gcheck circle{stroke:#b5721f}",
-      ".gcheck path{stroke:#b5721f}",
-      ".glabel{display:block;font-size:.8rem;font-weight:600;color:#201c15;margin-bottom:.65rem}",
-      ".grow{display:flex;gap:.6rem}",
-      "#gInp{flex:1;border:1px solid #b8a67e;border-radius:10px;padding:.85rem 1rem;font-size:.95rem;outline:none;transition:.2s;background:#fbf8f0;color:#201c15;font-family:inherit}",
-      "#gInp:focus{border-color:#b5721f;box-shadow:0 0 0 3px #f0e9d8}",
-      "#gBtn{background:#b5721f;color:#fff;border:none;border-radius:10px;padding:.85rem 1.4rem;font-weight:600;font-size:.92rem;cursor:pointer;transition:.2s;font-family:inherit}",
-      "#gBtn:hover{filter:brightness(.9)}",
-      ".gerr{text-align:center;margin-top:1rem;font-size:.83rem;min-height:1.1rem;color:#b3323c}",
-      
-      "@media(max-width:520px){",
-      "#gGate{overflow-y:auto;align-items:flex-start;padding:1.5rem 0}",
-      ".gcard{padding:2.2rem 1.4rem;border-radius:14px}",
-      ".grow{flex-direction:column}",
-      "#gBtn{width:100%;padding:1rem;font-size:1rem}",
-      "#gInp{font-size:1rem;padding:1rem}",
-      ".gi-word{font-size:1.6rem;letter-spacing:1px}",
-      ".gi-feats{flex-direction:column;gap:.9rem;margin-top:1.3rem}",
-      ".gi-feats div{font-size:.8rem}",
-      ".gi-feats strong{font-size:.95rem}",
-      "}"
+      "body{background:#F4EDE1;color:#2B2117;margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;font:15px/1.6 'Archivo',sans-serif;-webkit-font-smoothing:antialiased}",
+      "body *{box-sizing:border-box;margin:0;padding:0}",
+      ".lock{width:100%;max-width:390px;position:relative}",
+      ".lock-card{background:#FFFDF8;border:1px solid #E3D3BB;border-radius:20px;padding:34px 26px 28px;box-shadow:0 18px 50px -18px rgba(90,64,20,.28);text-align:center}",
+      ".lock-mark{width:54px;height:54px;margin:0 auto 18px;border-radius:16px;background:#A9741F;color:#FFF9EE;display:grid;place-items:center;font:600 22px 'Fraunces',serif;box-shadow:0 6px 16px -6px rgba(169,116,31,.55)}",
+      ".lock-title{font:700 25px/1.15 'Fraunces',serif;letter-spacing:.34em;text-indent:.34em;margin-bottom:16px;color:#2B2117}",
+      ".lock-desc{font-size:13.5px;color:#8A7A64;max-width:300px;margin:0 auto 22px;line-height:1.6}",
+      ".lock-desc b{color:#A9741F;font-weight:600}",
+      ".lock-feats{list-style:none;display:flex;flex-direction:column;gap:10px;text-align:left;background:color-mix(in srgb,#F4EDE1 62%,white);border:1px solid color-mix(in srgb,#E3D3BB 70%,white);border-radius:14px;padding:16px;margin-bottom:24px}",
+      ".lock-feats li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#2B2117}",
+      ".tick{flex:0 0 auto;width:18px;height:18px;margin-top:1px;border-radius:50%;background:color-mix(in srgb,#A9741F 16%,white);color:#A9741F;display:grid;place-items:center;font:700 11px/1 'Spline Sans Mono',monospace}",
+      ".lock-label{display:block;text-align:left;font:600 10px/1 'Spline Sans Mono',monospace;letter-spacing:.30em;color:#8A7A64;margin-bottom:9px}",
+      ".lock-row{display:flex;gap:9px}",
+      ".lock-row input{flex:1;min-width:0;height:50px;border:1.5px solid #E3D3BB;border-radius:12px;background:#FFFDF8;padding:0 15px;font:500 15px 'Archivo',sans-serif;letter-spacing:.08em;color:#2B2117;outline:none;transition:border-color .18s, box-shadow .18s}",
+      ".lock-row input::placeholder{color:#B7A68C;letter-spacing:.04em}",
+      ".lock-row input:focus{border-color:#A9741F;box-shadow:0 0 0 3.5px color-mix(in srgb,#A9741F 16%,transparent)}",
+      ".lock-row button{flex:0 0 auto;height:50px;padding:0 24px;border:none;border-radius:12px;background:#A9741F;color:#FFF9EE;font:600 14px 'Archivo',sans-serif;letter-spacing:.14em;cursor:pointer;transition:background .18s, transform .12s}",
+      ".lock-row button:hover{background:#8E5F16}",
+      ".lock-row button:active{transform:scale(.96)}",
+      ".lock-err{display:none;margin-top:12px;font:500 11.5px 'Spline Sans Mono',monospace;color:#B23A3A;letter-spacing:.05em;text-align:left}",
+      ".lock-err.show{display:block}",
+      ".lock-foot{margin-top:18px;text-align:center;font:500 10px 'Spline Sans Mono',monospace;letter-spacing:.22em;color:#A7977D}",
+      ".granted{position:fixed;inset:0;z-index:10;background:#F4EDE1;display:none;flex-direction:column;gap:14px;align-items:center;justify-content:center}",
+      ".granted.show{display:flex}",
+      ".granted .g-mark{width:64px;height:64px;border-radius:50%;background:#3E7C4F;color:#fff;display:grid;place-items:center;font:700 30px/1 'Fraunces',serif;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}",
+      ".granted p{font:600 12px 'Spline Sans Mono',monospace;letter-spacing:.30em;color:#2B2117}",
+      "@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}",
+      ".lock-card > *{opacity:0}",
+      ".lock-card{animation:rise .7s cubic-bezier(.22,.9,.30,1) both}",
+      ".lock-mark{animation:fadeUp .5s ease .30s both}",
+      ".lock-title{animation:titleIn .8s ease .50s both}",
+      ".lock-desc{animation:fadeUp .5s ease .85s both}",
+      ".lock-feats{animation:fadeUp .5s ease 1.05s both}",
+      ".lock-feats li{animation:fadeUp .4s ease both}",
+      ".lock-feats li:nth-child(1){animation-delay:1.20s}",
+      ".lock-feats li:nth-child(2){animation-delay:1.32s}",
+      ".lock-feats li:nth-child(3){animation-delay:1.44s}",
+      "#lockFormWrap{animation:fadeUp .5s ease 1.55s both}",
+      ".lock-foot{animation:fadeUp .5s ease 1.80s both}",
+      "@keyframes rise{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}",
+      "@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}",
+      "@keyframes titleIn{from{opacity:0;letter-spacing:.6em;filter:blur(3px)}to{opacity:1;letter-spacing:.34em;filter:blur(0)}}",
+      ".shake{animation:shake .45s ease}",
+      "@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}",
+      "@media(max-width:520px){body{padding:20px 14px 24px}.lock-card{padding:26px 18px 22px}.lock-row{flex-direction:column}.lock-row button{width:100%}}"
     ].join("");
     document.head.appendChild(gs);
-    var CHK = "<svg class='gcheck' width='16' height='16' viewBox='0 0 16 16' fill='none'><circle cx='8' cy='8' r='7' stroke='#b5721f' stroke-width='1.5'/><path d='M5 8.2l2 2 4-4.4' stroke='#b5721f' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>";
     document.body.innerHTML =
-      "<div id='gIntro'>" +
-      "<div class='gi-word'>Artha<b>saar</b></div>" +
-      "<div class='gi-line'></div>" +
-      "<div class='gi-feats'>" +
-      "<div><strong>Market data</strong>NSE & BSE</div>" +
-      "<div><strong>Refined</strong>Clean analysis</div>" +
-      "<div><strong>Insights</strong>Clear & actionable</div>" +
-      "</div></div>" +
-      "<div class='gcard'>" +
-      "<div class='glogo'><div class='gmark'></div></div>" +
-      "<h1>ARTHASAAR</h1>" +
-      "<p class='gsub'>This terminal is private. Authorised access only.<br>Inside: <b>dynamic charts, smart screeners & instant stock analysis.</b></p>" +
-      "<ul class='glist'>" +
-      "<li>" + CHK + "Market data, refined & readable</li>" +
-      "<li>" + CHK + "Powerful screeners for every strategy</li>" +
-      "<li>" + CHK + "Raw market data turned into clarity</li>" +
+      "<div class='lock' id='lock'>" +
+      "<div class='lock-card' id='card'>" +
+      "<div class='lock-mark'>\u0935</div>" +
+      "<h1 class='lock-title'>ARTHASAAR</h1>" +
+      "<p class='lock-desc'>This terminal is private. <b>Authorised access only.</b> Inside: dynamic charts, smart screeners & instant stock analysis.</p>" +
+      "<ul class='lock-feats'>" +
+      "<li><span class='tick'>\u2713</span>Market data, refined & readable</li>" +
+      "<li><span class='tick'>\u2713</span>Powerful screeners for every strategy</li>" +
+      "<li><span class='tick'>\u2713</span>Raw market data turned into clarity</li>" +
       "</ul>" +
-      "<label class='glabel' for='gInp'>Password</label>" +
-      "<div class='grow'><input id='gInp' type='password' placeholder='Enter password' autocomplete='current-password'><button id='gBtn'>Enter</button></div>" +
-      "<div class='gerr' id='gErr'></div>" +
-      
-      "</div>";
-    document.body.setAttribute("style", "margin:0;padding:0;background:#f6f1e6;color:#201c15;font-family:'Fraunces',Georgia,serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden");
-    document.body.setAttribute("id", "gGate");
+      "<div id='lockFormWrap'><form id='lockForm' autocomplete='off'>" +
+      "<label class='lock-label' for='pw'>PASSWORD</label>" +
+      "<div class='lock-row'>" +
+      "<input type='password' id='pw' placeholder='Enter password' autocomplete='off' autocapitalize='off' spellcheck='false'>" +
+      "<button type='submit'>ENTER</button>" +
+      "</div>" +
+      "<p class='lock-err' id='err'></p>" +
+      "</form></div>" +
+      "</div>" +
+      "<p class='lock-foot'>ARTHASAAR \u00b7 SECURED</p>" +
+      "</div>" +
+      "<div class='granted' id='granted'><div class='g-mark'>\u2713</div><p>ACCESS GRANTED</p></div>";
+    document.body.removeAttribute("class");
+    document.body.setAttribute("style", "margin:0;padding:0;background:#F4EDE1;color:#2B2117;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Archivo',sans-serif");
     st.remove();
-    setTimeout(function () { var i = document.getElementById("gIntro"); if (i) i.classList.add("hide"); }, 1850);
-    var inp = document.getElementById("gInp"), btn = document.getElementById("gBtn"), err = document.getElementById("gErr");
+    var form = document.getElementById("lockForm"), pw = document.getElementById("pw"),
+        err = document.getElementById("err"), card = document.getElementById("card");
     function sha(s) {
       return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function (b) {
         return Array.from(new Uint8Array(b)).map(function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
       });
     }
-    function tryOpen() {
-      if (!inp.value) { err.textContent = "Please enter the password."; return; }
-      sha(inp.value).then(function (h) {
+    setTimeout(function () { try { pw.focus({ preventScroll: true }); } catch (e) {} }, 2100);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!pw.value) { err.textContent = "Please enter the password."; err.classList.add("show"); return; }
+      sha(pw.value).then(function (h) {
         if (h === HASH) {
-          try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
-          err.style.color = "#1f7a4d";
-          err.textContent = "\u2713 Access granted \u2014 loading terminal\u2026";
-          setTimeout(function () { location.hash = "home"; location.reload(); }, 700);
-        } else { err.textContent = "Wrong password. Try again."; inp.value = ""; inp.focus(); }
+          try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e2) {}
+          document.getElementById("granted").classList.add("show");
+          setTimeout(function () { location.hash = "home"; location.reload(); }, 900);
+        } else {
+          err.textContent = "\u2715 Incorrect password. Try again.";
+          err.classList.add("show");
+          card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+          pw.select();
+        }
       });
-    }
-    btn.onclick = tryOpen;
-    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") tryOpen(); });
-    setTimeout(function () { inp.focus(); }, 1950);
+    });
+    pw.addEventListener("input", function () { err.classList.remove("show"); });
   });
 })();
-
 </script>
 <header class="hdr" id="hdr">
   <div class="top">
@@ -414,7 +422,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <div class="grid3"><div class="card"><div class="sh2">OPEN <span class="b buy">LIVE</span></div><div class="ni"><b>Artha Technologies</b><small>₹210–225 · 4.8× sub · GMP ₹38</small></div><div class="ni"><b>Nova Consumer</b><small>₹145–152 · 2.6× sub</small></div></div><div class="card"><div class="sh2">UPCOMING</div><div class="ni"><b>FinServe Digital</b><small>Opens 02 Oct · band TBA</small></div><div class="ni"><b>Green Infra</b><small>DRHP filed</small></div></div><div class="card"><div class="sh2">CLOSED</div><div class="ni"><b>Metro Retail</b><small>Listing 30 Sep</small></div><div class="ni"><b>DataCore Systems</b><small>Allotment out</small></div></div></div>
 <div class="sect">NEWS</div>
 <div class="grid3"><div class="card"><div class="sh2">Market News</div><div class="ni"><b>Indian equities trade mixed as sector rotation continues</b><small>Market · 12 min ago</small></div><div class="ni"><b>IT and auto names lead the active volume list</b><small>Stocks · 28 min ago</small></div><div class="ni"><b>FII flows remain the key variable for the week</b><small>Flows · 42 min ago</small></div></div><div class="card"><div class="sh2">IPO News</div><div class="ni"><b>New issue enters the open IPO calendar</b><small>IPO · 18 min ago</small></div><div class="ni"><b>Listing and allotment updates</b><small>IPO · 1 hr ago</small></div><div class="ni"><b>DRHP filing tracker updated</b><small>IPO · 2 hr ago</small></div></div><div class="card"><div class="sh2">Company News</div><div class="ni"><b>Large-cap earnings and management updates</b><small>Companies · 25 min ago</small></div><div class="ni"><b>Corporate actions monitor</b><small>Companies · 54 min ago</small></div><div class="ni"><b>Order-book and capex updates</b><small>Companies · 2 hr ago</small></div></div></div></section>
-<section class="view" id="v-indices"><h2>Indices — 139 tracked</h2><div class="srow"><input id="qIdx" type="search" placeholder="Search index name…"></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Index</th><th>Price</th><th>Chg%</th><th>52w Pos</th><th>PE</th><th>PB</th></tr></thead><tbody id="idxBody"><tr><td>NIFTY 50</td><td>26,429.27</td><td><span class='up'>+0.74%</span></td><td>74%</td><td>22.1</td><td>3.6</td></tr><tr><td>BANK NIFTY</td><td>58,412.30</td><td><span class='up'>+0.58%</span></td><td>81%</td><td>18.4</td><td>2.9</td></tr><tr><td>NIFTY NEXT 50</td><td>68,104.55</td><td><span class='dn'>−0.12%</span></td><td>62%</td><td>24.8</td><td>4.4</td></tr><tr><td>NIFTY MIDCAP 100</td><td>59,884.10</td><td><span class='up'>+0.31%</span></td><td>68%</td><td>28.6</td><td>4.9</td></tr><tr><td>NIFTY IT</td><td>41,256.85</td><td><span class='up'>+1.62%</span></td><td>77%</td><td>26.2</td><td>7.1</td></tr><tr><td>NIFTY PHARMA</td><td>21,744.05</td><td><span class='dn'>−0.44%</span></td><td>54%</td><td>32.4</td><td>4.8</td></tr><tr><td>NIFTY AUTO</td><td>25,990.45</td><td><span class='up'>+0.88%</span></td><td>85%</td><td>29.1</td><td>5.2</td></tr><tr><td>SENSEX</td><td>81,712.56</td><td><span class='up'>+0.62%</span></td><td>72%</td><td>22.4</td><td>3.7</td></tr><tr><td>NIFTY METAL</td><td>9,412.30</td><td><span class='dn'>−0.96%</span></td><td>41%</td><td>19.8</td><td>2.6</td></tr><tr><td>INDIA VIX</td><td>13.84</td><td><span class='dn'>−2.11%</span></td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div></section>
+<section class="view" id="v-indices"><h2>Indices — 21 tracked</h2><div class="srow"><input id="qIdx" type="search" placeholder="Search index name…"></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Index</th><th>Price</th><th>Chg%</th><th>52w Pos</th><th>PE</th><th>PB</th></tr></thead><tbody id="idxBody"><tr><td>NIFTY 50</td><td>22,716.20</td><td><span class='dn'>−0.28%</span></td><td>86%</td><td>—</td><td>—</td></tr><tr><td>BANK NIFTY</td><td>54,259.95</td><td><span class='dn'>−0.39%</span></td><td>88%</td><td>—</td><td>—</td></tr><tr><td>NIFTY NEXT 50</td><td>69,460.20</td><td><span class='dn'>−1.21%</span></td><td>93%</td><td>—</td><td>—</td></tr><tr><td>NIFTY MIDCAP 100</td><td>59,319.40</td><td><span class='dn'>−0.99%</span></td><td>92%</td><td>—</td><td>—</td></tr><tr><td>NIFTY IT</td><td>27,670.00</td><td><span class='dn'>−1.48%</span></td><td>69%</td><td>—</td><td>—</td></tr><tr><td>NIFTY PHARMA</td><td>26,933.65</td><td><span class='up'>+0.64%</span></td><td>99%</td><td>—</td><td>—</td></tr><tr><td>NIFTY AUTO</td><td>26,173.35</td><td><span class='dn'>−1.33%</span></td><td>88%</td><td>—</td><td>—</td></tr><tr><td>SENSEX</td><td>72,529.07</td><td><span class='dn'>−0.33%</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td>NIFTY METAL</td><td>12,954.45</td><td><span class='up'>+0.78%</span></td><td>93%</td><td>—</td><td>—</td></tr><tr><td>INDIA VIX</td><td>13.32</td><td><span class='dn'>−2.32%</span></td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div></section>
 <section class="view" id="v-heatmap"><h2>Sector Map — today</h2><div style="margin-top:4px"><div class="heat"><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>IT</b><span class="up">+1.6%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>BANK</b><span class="up">+0.8%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>AUTO</b><span class="up">+0.9%</span></div><div class="hc" style="background:color-mix(in srgb,var(dn) 8%,var(--surface))"><b>PHARMA</b><span class="dn">−0.4%</span></div><div class="hc" style="background:color-mix(in srgb,var(dn) 8%,var(--surface))"><b>METAL</b><span class="dn">−1.0%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>FMCG</b><span class="up">+0.2%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>ENERGY</b><span class="up">+0.6%</span></div><div class="hc" style="background:color-mix(in srgb,var(dn) 8%,var(--surface))"><b>REALTY</b><span class="dn">−0.7%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>PSU BK</b><span class="up">+1.1%</span></div><div class="hc" style="background:color-mix(in srgb,var(dn) 8%,var(--surface))"><b>MEDIA</b><span class="dn">−1.4%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>CHEM</b><span class="up">+0.5%</span></div><div class="hc" style="background:color-mix(in srgb,var(up) 8%,var(--surface))"><b>TELECOM</b><span class="up">+0.3%</span></div></div></div></section>
 <section class="view" id="v-screener"><h2>Screener — 2,085 stocks</h2>
 <div class="chips"><span class="fch on">All</span><span class="fch">Large Cap</span><span class="fch">Mid Cap</span><span class="fch">52W Breakout</span><span class="fch">Volume Surge</span></div>
@@ -506,7 +514,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <script>
 (function(){
 "use strict";
-var SECS=[["home","Home","aapka hub"],["company","Company Card","search any stock"],["indices","Indices","139 tracked"],["heatmap","Sector Map","today by sector"],["screener","Screener","2,085 stocks"],["fundamentals","Fundamentals","PE ROE debt"],["mf","MF Tracker","nav sip funds"],["deepfund","Deep Fund","screener.in weekly"],["filings","Filings","company results"],["futures","Futures","F&O chains"],["gti","GTI · Charts · AI","zones charts forecast"],["ipo","IPO","terminal GMP listing"],["aibrain","AI Brain","mood crash report"],["internals","Internals","breadth TRIN McClellan"],["crypto","Crypto","top 100 coins"],["global","Global","US gold crude"],["news","News","India market"],["events","Events","GDP jobs RBI"],["portfolio","Portfolio","holdings P/L"],["learn","Learn","strategies studies notes"]];
+var SECS=[["home","Home","aapka hub"],["company","Company Card","search any stock"],["indices","Indices","21 tracked"],["heatmap","Sector Map","today by sector"],["screener","Screener","2,085 stocks"],["fundamentals","Fundamentals","PE ROE debt"],["mf","MF Tracker","nav sip funds"],["deepfund","Deep Fund","screener.in weekly"],["filings","Filings","company results"],["futures","Futures","F&O chains"],["gti","GTI · Charts · AI","zones charts forecast"],["ipo","IPO","terminal GMP listing"],["aibrain","AI Brain","mood crash report"],["internals","Internals","breadth TRIN McClellan"],["crypto","Crypto","top 100 coins"],["global","Global","US gold crude"],["news","News","India market"],["events","Events","GDP jobs RBI"],["portfolio","Portfolio","holdings P/L"],["learn","Learn","strategies studies notes"]];
 var clk=document.getElementById("clock");
 function tick(){var d=new Date();var h=d.getHours();var ap=h>=12?"PM":"AM";h=h%12;if(h===0)h=12;clk.textContent=[h,d.getMinutes(),d.getSeconds()].map(function(n){return String(n).padStart(2,"0");}).join(":")+" "+ap;}
 tick();setInterval(tick,1000);
@@ -572,4 +580,27 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 </script>
 <script src="livedata.js?v=ld1"></script>
 <script src="reentry.js?v=r1"></script>
+
+<script>
+/* Indices — render real data from data/indices-all.json (added 30 Sep 2026) */
+(function () {
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  fetch("data/indices-all.json?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+    var arr = d.indices || []; if (!arr.length) return;
+    var tb = document.getElementById("idxBody"); if (!tb) return;
+    var h = "";
+    arr.forEach(function (i) {
+      var c = Number(i.change_pct), cl = c > 0.005 ? "up" : (c < -0.005 ? "dn" : "");
+      var pct = (c > 0 ? "+" : (c < 0 ? "\u2212" : "")) + Math.abs(c).toFixed(2) + "%";
+      var px = (i.price == null) ? "\u2014" : Number(i.price).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+      h += "<tr><td>" + esc(i.index) + "</td><td>" + px + "</td><td><span class='" + cl + "'>" + pct + "</span></td><td>" +
+        (i.w52_pos != null ? i.w52_pos + "%" : "\u2014") + "</td><td>" + (i.pe != null ? i.pe : "\u2014") + "</td><td>" + (i.pb != null ? i.pb : "\u2014") + "</td></tr>";
+    });
+    tb.innerHTML = h;
+    var h2 = document.querySelector("#v-indices h2");
+    if (h2) h2.textContent = "Indices \u2014 " + arr.length + " tracked" + (d.as_of ? " \u00b7 " + esc(d.as_of) : "");
+  }).catch(function () {});
+})();
+</script>
+
 </body></html>

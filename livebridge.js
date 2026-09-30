@@ -1,5 +1,6 @@
 (function(){
 "use strict";
+/* deployment retry: single clean Vercel build */
 var A="/api/data?p=",M={
 indices:["indices-all.json"],mf:["mf-top.json"],futures:["futures.json"],gti:["gti.json"],
 gtizones:["gti.json"],gticharts:["candles.json"],gtiai:["timesfm_forecasts.json"],

@@ -9,7 +9,17 @@ const REFS = new Set(["main", "data"]);
 const SAFE = /^data\/[A-Za-z0-9._\-\/]+\.(json|csv|txt)$/;
 const TYPES = { json: "application/json; charset=utf-8", csv: "text/csv; charset=utf-8", txt: "text/plain; charset=utf-8" };
 
+function authOk(req){
+  const crypto=require("crypto"), secret=process.env.ARTHASAAR_AUTH_SECRET||process.env.ARTHASAAR_PASSWORD_SHA256||"c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
+  const m=(req.headers.cookie||"").match(/(?:^|;\s*)as_auth=([^;]+)/); if(!m)return false;
+  const p=m[1].split("."); if(p.length!==2)return false;
+  const exp=Number(Buffer.from(p[0],"base64url").toString()); if(!Number.isFinite(exp)||exp<Date.now())return false;
+  const sig=crypto.createHmac("sha256",secret).update(p[0]).digest("base64url");
+  const x=Buffer.from(p[1]),y=Buffer.from(sig); return x.length===y.length&&crypto.timingSafeEqual(x,y);
+}
+
 module.exports = async function handler(req, res) {
+  if(!authOk(req)){ res.status(401).json({error:"unauthorized"}); return; }
   const p = String((req.query && req.query.p) || "");
   const ref = REFS.has(String(req.query && req.query.ref)) ? String(req.query.ref) : "main";
   if (!SAFE.test(p) || p.indexOf("..") !== -1) {

@@ -35,7 +35,7 @@
 
   /* 1) INDICES RADAR - breadth + gainers/losers + big tiles */
   function idxRadar() {
-    var b = mountCard("indices", "mbIdxRadar", "📊 INDICES RADAR", "139 indices ka nichod");
+    var b = mountCard("indices", "mbIdxRadar", "📊 INDICES RADAR", "live breadth + movers");
     if (!b) return;
     fj("data/indices-all.json").then(function (d) {
       var arr = (d.indices || []).slice();

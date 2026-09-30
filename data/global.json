@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30T06:56:00.471793+00:00",
+ "updated": "2026-09-30T12:59:13.809920+00:00",
  "count": 14,
  "items": [
   {
@@ -14,8 +14,8 @@
   {
    "name": "SENSEX",
    "symbol": "^BSESN",
-   "price": 72830.58,
-   "chg_pct": 0.42,
+   "price": 72480.29,
+   "chg_pct": -0.07,
    "high_52w": 85762.01,
    "low_52w": 71947.55,
    "as_of": "2026-09-30"
@@ -50,8 +50,8 @@
   {
    "name": "Hang Seng",
    "symbol": "^HSI",
-   "price": 24576.94,
-   "chg_pct": 0.22,
+   "price": 24613.27,
+   "chg_pct": 0.37,
    "high_52w": 27968.09,
    "low_52w": 22671.86,
    "as_of": "2026-09-30"
@@ -59,8 +59,8 @@
   {
    "name": "Gold (COMEX)",
    "symbol": "GC=F",
-   "price": 4213.3,
-   "chg_pct": 0.8,
+   "price": 4245.7,
+   "chg_pct": 1.58,
    "high_52w": 5318.4,
    "low_52w": 3868.1,
    "as_of": "2026-09-30"
@@ -68,8 +68,8 @@
   {
    "name": "Silver (COMEX)",
    "symbol": "SI=F",
-   "price": 61.37,
-   "chg_pct": 1.16,
+   "price": 61.52,
+   "chg_pct": 1.4,
    "high_52w": 115.08,
    "low_52w": 46.0,
    "as_of": "2026-09-30"
@@ -77,8 +77,8 @@
   {
    "name": "Crude Oil WTI",
    "symbol": "CL=F",
-   "price": 89.8,
-   "chg_pct": 0.47,
+   "price": 90.65,
+   "chg_pct": 1.42,
    "high_52w": 112.95,
    "low_52w": 55.27,
    "as_of": "2026-09-30"
@@ -86,8 +86,8 @@
   {
    "name": "Natural Gas",
    "symbol": "NG=F",
-   "price": 3.02,
-   "chg_pct": 0.4,
+   "price": 3.0,
+   "chg_pct": -0.23,
    "high_52w": 7.46,
    "low_52w": 2.52,
    "as_of": "2026-09-30"
@@ -95,8 +95,8 @@
   {
    "name": "USD-INR",
    "symbol": "USDINR=X",
-   "price": 95.97,
-   "chg_pct": -0.01,
+   "price": 95.82,
+   "chg_pct": -0.17,
    "high_52w": 96.88,
    "low_52w": 87.74,
    "as_of": "2026-09-30"
@@ -104,8 +104,8 @@
   {
    "name": "Dollar Index (DXY)",
    "symbol": "DX-Y.NYB",
-   "price": 101.28,
-   "chg_pct": -0.08,
+   "price": 101.1,
+   "chg_pct": -0.27,
    "high_52w": 101.61,
    "low_52w": 96.22,
    "as_of": "2026-09-30"
@@ -113,17 +113,17 @@
   {
    "name": "US 10Y Yield",
    "symbol": "^TNX",
-   "price": 5.26,
-   "chg_pct": 0.29,
+   "price": 5.22,
+   "chg_pct": -0.63,
    "high_52w": 5.26,
    "low_52w": 3.95,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "Copper",
    "symbol": "HG=F",
    "price": 6.63,
-   "chg_pct": 1.38,
+   "chg_pct": 1.28,
    "high_52w": 6.8,
    "low_52w": 4.8,
    "as_of": "2026-09-30"

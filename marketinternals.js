@@ -6,7 +6,7 @@
 (function () {
   "use strict";
   var UP = "#77f37b", DN = "#ff8b8b", NEU = "#eab308";
-  var PCBASE = window.__PC_BASE || "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/";
+  var PCBASE = window.__PC_BASE || "/api/data?ref=data&p=data/";
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
 

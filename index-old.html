@@ -16,7 +16,7 @@
 /* ---------- privacy gate ---------- */
 (function () {
   var HASH = "c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
-  var SIX_H = 6 * 3600 * 1000;
+  var SIX_H = 4 * 3600 * 1000; /* 4 ghante */
   var ok = false;
   try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = (Date.now() - gt) < SIX_H; } catch (e) {}
   try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate-ts"); localStorage.removeItem("mb-gate"); ok = false; } } catch (e) {}

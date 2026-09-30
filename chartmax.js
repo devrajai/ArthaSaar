@@ -5,7 +5,7 @@
    + MAX toggle: ON hone par daily-XX full-XX ho jaata hai (listing se history).
    + toggle ke baad reload par wapas Chart Reading pe hi aate hain (landing nahi). */
 (function () {
-  var CDN = "https://cdn.jsdelivr.net/gh/devrajai/ArthaSaar@data/data/";
+  var CDN = "/api/data?ref=data&p=data/";
   var RELRE = /https:\/\/github\.com\/devrajai\/ArthaSaar\/releases\/download\/candles\//;
   var ON = false;
   try { ON = window.sessionStorage.getItem("crmax") === "1"; } catch (e) { ON = false; }

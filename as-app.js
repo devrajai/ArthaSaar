@@ -406,6 +406,7 @@ function rIpo(){
   var tr=function(arr,cols){return arr.slice(0,80).map(function(x){
     return '<tr><td>'+esc(x.name)+'</td><td>'+esc(x.type||"")+'</td><td>'+esc(x.price||"")+'</td><td>'+esc(x.sub||x.size||"")+'</td><td>'+esc(x.open||x.listing||"")+'</td></tr>';}).join("");};
   return '<div class="fshead"><h2>IPO Terminal</h2><button class="xbtn" data-go="home">\u2715 CLOSE</button></div>'+
+    '<a class="radarbtn" href="ipo/" style="text-decoration:none"><span class="t"><b>OPEN FULL IPO TERMINAL</b><small>liquid-glass terminal \u00b7 GMP, brokers, coach</small></span><span class="arw">\u2192</span></a>'+
     '<div class="minirow">'+
     '<div class="card kpi"><div class="lbl">TRACKED</div><div class="num" style="font-size:18px">'+num(ip.length,0)+'</div></div>'+
     '<div class="card kpi"><div class="lbl">LISTED</div><div class="num" style="font-size:18px">'+num(lis.length,0)+'</div></div>'+

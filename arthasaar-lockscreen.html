@@ -199,7 +199,6 @@ form          {animation:fadeUp .5s ease 1.55s both}
   to  {opacity:1;letter-spacing:.34em;filter:blur(0)}
 }
 
-/* wrong password shake */
 .shake{animation:shake .45s ease}
 @keyframes shake{
   0%,100%{transform:translateX(0)}
@@ -212,67 +211,9 @@ form          {animation:fadeUp .5s ease 1.55s both}
 </head>
 <body>
 
-<div class="lock" id="lock">
-  <div class="lock-card" id="card">
-    <div class="lock-mark">अ</div>
-    <h1 class="lock-title">ARTHASAAR</h1>
-    <p class="lock-desc">This terminal is private. <b>Authorised access only.</b> Inside: dynamic charts, smart screeners & instant stock analysis.</p>
-
-    <ul class="lock-feats">
-      <li><span class="tick">✓</span>Market data, refined & readable</li>
-      <li><span class="tick">✓</span>Powerful screeners for every strategy</li>
-      <li><span class="tick">✓</span>Raw market data turned into clarity</li>
-    </ul>
-
-    <form id="lockForm" autocomplete="off">
-      <label class="lock-label" for="pw">PASSWORD</label>
-      <div class="lock-row">
-        <input type="password" id="pw" placeholder="Enter password" autocomplete="off" autocapitalize="off" spellcheck="false">
-        <button type="submit">ENTER</button>
-      </div>
-      <p class="lock-err" id="err">✕ Incorrect password. Try again.</p>
-    </form>
-  </div>
-
-  <p class="lock-foot">ARTHASAAR · SECURED</p>
-</div>
-
-<div class="granted" id="granted">
-  <div class="g-mark">✓</div>
-  <p>ACCESS GRANTED</p>
-</div>
-
 <script>
-/* ============================================================
-   CONFIG — change these two lines only
-   ============================================================ */
-const PASSWORD   = "arthasaar";                        // ← your lock password
-const REDIRECT_TO = "arthasaar-full-mixed-5themes.html"; // ← page that opens after unlock
-
-const form = document.getElementById('lockForm');
-const pw   = document.getElementById('pw');
-const err  = document.getElementById('err');
-const card = document.getElementById('card');
-
-/* focus the field once the intro animation settles */
-setTimeout(() => pw.focus({preventScroll:true}), 2100);
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  if (pw.value === PASSWORD) {
-    document.getElementById('granted').classList.add('show');
-    setTimeout(() => { window.location.href = REDIRECT_TO; }, 900);
-  } else {
-    err.classList.add('show');
-    card.classList.remove('shake');
-    void card.offsetWidth;               /* restart animation */
-    card.classList.add('shake');
-    pw.select();
-  }
-});
-
-/* clear the error as soon as the user retypes */
-pw.addEventListener('input', () => err.classList.remove('show'));
+/* password gate removed — this page now forwards straight to the app */
+window.location.replace("index.html");
 </script>
 </body>
 </html>

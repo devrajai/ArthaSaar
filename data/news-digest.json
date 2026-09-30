@@ -1,81 +1,61 @@
 {
- "u": "29 Sep 2026, 21:11 IST",
+ "u": "30 Sep 2026, 21:12 IST",
  "cats": [
   {
    "name": "INDIA MARKETS",
    "stories": [
     {
-     "t": "Stock Market Crash: Investors Lose Rs 5.9 Lakh Crore In 90 Minutes As Sensex Tumbles Over 700 Points, Nifty Breaches 22,600",
-     "n": 2,
-     "srcs": [
-      "NDTV Profit",
-      "timesofindia.indiatimes.com"
-     ],
-     "age": 10.5,
-     "x": 1
-    },
-    {
-     "t": "Indian shares extend losing run on elevated oil, bond yields",
-     "n": 1,
-     "srcs": [
-      "Reuters"
-     ],
-     "age": 13.2,
-     "x": 0
-    },
-    {
-     "t": "India Stock Bulls Pin Hopes on Corporate Earnings as Market Selloff Deepens",
+     "t": "India is the Second-Worst-Performing Emerging Market This Year for Equities",
      "n": 1,
      "srcs": [
       "Bloomberg.com"
      ],
-     "age": 13.2,
+     "age": 3.2,
+     "x": 0
+    },
+    {
+     "t": "India benchmark shares log worst month since March as oil, global rate hikes spark outflows",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 5.0,
+     "x": 0
+    },
+    {
+     "t": "India's Elevate Campuses debuts at discount, valued at $625 million",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 11.2,
+     "x": 0
+    },
+    {
+     "t": "Indian shares set for weak October as foreign investors ramp up shorts, brokerages say",
+     "n": 1,
+     "srcs": [
+      "Reuters"
+     ],
+     "age": 12.0,
      "x": 0
     }
    ]
   },
   {
    "name": "ECONOMY/POLICY",
-   "stories": [
-    {
-     "t": "Broadening inflation, robust growth, global hikes build case for India RBI tightening",
-     "n": 1,
-     "srcs": [
-      "Reuters"
-     ],
-     "age": 29.8,
-     "x": 0
-    }
-   ]
+   "stories": []
   },
   {
    "name": "GLOBAL",
    "stories": [
     {
-     "t": "U.S. indexes hold steady in morning trading on Wall Street",
-     "n": 1,
-     "srcs": [
-      "BNN Bloomberg"
-     ],
-     "age": 1.5,
-     "x": 0
-    },
-    {
-     "t": "Stocks fall as higher oil prices, Treasury yields weigh",
+     "t": "US oil and gas production rises in Q3 2026 but price uncertainty plagues producers, Dallas Fed survey says",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 16.4,
-     "x": 0
-    },
-    {
-     "t": "Bond yields crank higher and pull U.S. stocks further from their record",
-     "n": 1,
-     "srcs": [
-      "BNN Bloomberg"
-     ],
-     "age": 19.2,
+     "age": 0.4,
      "x": 0
     }
    ]
@@ -88,54 +68,54 @@
    "name": "AUTHENTIC WIRE",
    "stories": [
     {
-     "t": "India targets 600 million tons steel capacity by 2047, secretary says",
+     "t": "DoorDash to create 3,000 jobs at global tech centre in India",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 10.2,
+     "age": 1.3,
      "x": 0
     },
     {
-     "t": "Breakingviews - COMMENTARY: India's big insurance overhaul will test demand",
+     "t": "India approves $19 billion for renewable energy programme",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 12.3,
+     "age": 3.2,
      "x": 0
     },
     {
-     "t": "Gold rises but strong Fed hike bets keep it near seven week-low",
+     "t": "India has yet to decide on dropping pre-shipment inspections of scrap metal imports",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 12.7,
+     "age": 3.6,
      "x": 0
     },
     {
-     "t": "EXCLUSIVE Japan's currency diplomat Mimura urges markets to heed 'very clear' warning on yen",
+     "t": "State Bank of India buys nearly 40% of Reliance's $1.35 billion debt sale",
      "n": 1,
      "srcs": [
       "Reuters"
      ],
-     "age": 16.0,
+     "age": 4.1,
      "x": 0
     }
    ]
   }
  ],
  "xray": {
-  "o": 22732,
-  "h": 22753,
-  "l": 22570,
-  "c": 22716,
-  "chg": -0.28,
+  "o": 22665,
+  "h": 22809,
+  "l": 22595,
+  "c": 22620,
+  "chg": -0.42,
   "pattern": "gap-down open, red close - pure selling pressure",
-  "fii": -5353,
-  "dii": 5189,
-  "fii_streak": 3,
+  "fii": -10148,
+  "dii": 11272,
+  "fii_streak": 4,
   "puppato": 1
  }
 }

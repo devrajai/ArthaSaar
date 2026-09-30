@@ -6,7 +6,7 @@ gtizones:["gti.json"],gticharts:["candles.json"],gtiai:["timesfm_forecasts.json"
 internals:["breadth.json","fii-dii.json","futures.json"],idxradar:["radar.json"],
 heatmap:["indices-all.json"],screener:["brain-screener.json"],fundamentals:["screener-fundamentals.json"],
 deepfund:["screener-fundamentals.json"],filings:["results.json"],news:["news.json","news-digest.json"],
-events:["events.json"],crypto:["crypto.json"],global:["world.json"],aibrain:["smart-brain.json","timesfm_forecasts.json"],
+events:["events.json","economy-pulse.json"],crypto:["crypto.json"],global:["world.json"],aibrain:["smart-brain.json","timesfm_forecasts.json"],
 home:["indices-all.json","breadth.json","fii-dii.json","news.json"],learn:["education.json"]
 };
 function e(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]);})}

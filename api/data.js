@@ -27,15 +27,27 @@ module.exports = async function handler(req, res) {
     return;
   }
   const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
-  const url = token
-    ? "https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + p + "?ref=" + ref
-    : "https://raw.githubusercontent.com/" + OWNER + "/" + REPO + "/" + ref + "/" + p;
   const headers = { "User-Agent": "arthasaar-data-proxy" };
   if (token) {
     headers.Authorization = "Bearer " + token;
     headers.Accept = "application/vnd.github.raw";
   }
   try {
+    /* Prefer the copy bundled in the Vercel deployment. This keeps private-repo data
+       working even when GITHUB_TOKEN is not configured; GitHub remains the fallback. */
+    const fs = require("fs"), path = require("path");
+    const localPath = path.join(process.cwd(), p);
+    if (ref === "main" && fs.existsSync(localPath)) {
+      const body = fs.readFileSync(localPath);
+      res.setHeader("Content-Type", TYPES[p.split(".").pop()] || TYPES.txt);
+      res.setHeader("Cache-Control", "no-store");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.status(200).send(body);
+      return;
+    }
+    const url = token
+      ? "https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + p + "?ref=" + ref
+      : "https://raw.githubusercontent.com/" + OWNER + "/" + REPO + "/" + ref + "/" + p;
     const r = await fetch(url, { headers });
     if (!r.ok) {
       res.setHeader("Cache-Control", "public, s-maxage=60");

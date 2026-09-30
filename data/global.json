@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30T00:58:02.133767+00:00",
+ "updated": "2026-09-30T06:56:00.471793+00:00",
  "count": 14,
  "items": [
   {
@@ -14,11 +14,11 @@
   {
    "name": "SENSEX",
    "symbol": "^BSESN",
-   "price": 72771.72,
-   "chg_pct": -1.52,
+   "price": 72830.58,
+   "chg_pct": 0.42,
    "high_52w": 85762.01,
    "low_52w": 71947.55,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "Nasdaq Composite",
@@ -41,8 +41,8 @@
   {
    "name": "Nikkei 225",
    "symbol": "^N225",
-   "price": 66279.69,
-   "chg_pct": 0.61,
+   "price": 66753.72,
+   "chg_pct": 1.94,
    "high_52w": 72366.34,
    "low_52w": 44550.85,
    "as_of": "2026-09-30"
@@ -50,47 +50,47 @@
   {
    "name": "Hang Seng",
    "symbol": "^HSI",
-   "price": 24642.51,
-   "chg_pct": 0.54,
+   "price": 24576.94,
+   "chg_pct": 0.22,
    "high_52w": 27968.09,
    "low_52w": 22671.86,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "Gold (COMEX)",
    "symbol": "GC=F",
-   "price": 4210.5,
-   "chg_pct": 1.01,
+   "price": 4213.3,
+   "chg_pct": 0.8,
    "high_52w": 5318.4,
-   "low_52w": 3855.2,
-   "as_of": "2026-09-29"
+   "low_52w": 3868.1,
+   "as_of": "2026-09-30"
   },
   {
    "name": "Silver (COMEX)",
    "symbol": "SI=F",
-   "price": 61.76,
-   "chg_pct": 0.87,
+   "price": 61.37,
+   "chg_pct": 1.16,
    "high_52w": 115.08,
    "low_52w": 46.0,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "Crude Oil WTI",
    "symbol": "CL=F",
-   "price": 89.33,
-   "chg_pct": -3.53,
+   "price": 89.8,
+   "chg_pct": 0.47,
    "high_52w": 112.95,
    "low_52w": 55.27,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "Natural Gas",
    "symbol": "NG=F",
    "price": 3.02,
-   "chg_pct": 0.63,
+   "chg_pct": 0.4,
    "high_52w": 7.46,
    "low_52w": 2.52,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "USD-INR",
@@ -104,11 +104,11 @@
   {
    "name": "Dollar Index (DXY)",
    "symbol": "DX-Y.NYB",
-   "price": 101.41,
-   "chg_pct": 0.21,
+   "price": 101.28,
+   "chg_pct": -0.08,
    "high_52w": 101.61,
    "low_52w": 96.22,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   },
   {
    "name": "US 10Y Yield",
@@ -122,11 +122,11 @@
   {
    "name": "Copper",
    "symbol": "HG=F",
-   "price": 6.65,
-   "chg_pct": 1.26,
+   "price": 6.63,
+   "chg_pct": 1.38,
    "high_52w": 6.8,
    "low_52w": 4.8,
-   "as_of": "2026-09-29"
+   "as_of": "2026-09-30"
   }
  ],
  "note": "Global context: US/global indices, commodities, FX via Yahoo (free). Commodities are futures prices in USD; US 10Y yield in %."

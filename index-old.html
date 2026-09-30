@@ -108,7 +108,7 @@ td.lbl{font-weight:500;color:var(--dim);white-space:nowrap}
     <button class="pill tbtn" id="themeBtn" title="Look toggle — theme change">▼ LOOK</button>
     <span class="clock"><b id="clock">--:--:--</b></span>
     <span id="clockdate" style="display:none"></span>
-    <button class="pill ipob" data-go="ipo" style="cursor:pointer">IPO</button>
+    <button class="pill ipob" onclick="location.href='ipo/'" style="cursor:pointer" title="IPO Terminal — liquid glass">IPO</button>
   </div>
 </div></header>
 
@@ -458,7 +458,7 @@ td.lbl{font-weight:500;color:var(--dim);white-space:nowrap}
 <script>/* deep-link save: oldapp load pe hash strip karta hai \u2014 pehle yaad rakho (crtime restore karega) */
 try { if (location.hash && location.hash.indexOf("#company") !== 0 && location.hash !== "#lock")
   sessionStorage.setItem("crsec", location.hash.replace("#/", "#").replace("#", "").split("/")[0]); } catch (e) {}</script>
-<script src="app.js?v=27sepv112"></script>
+<script src="app.js?v=30sepv113"></script>
 <script src="themefix.js?v=newui2"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>

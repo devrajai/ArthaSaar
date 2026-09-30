@@ -1007,7 +1007,7 @@ document.querySelectorAll(".fch2").forEach(function(c){c.addEventListener("click
 /* Indices — render real data from data/indices-all.json (added 30 Sep 2026) */
 (function () {
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
-  fetch("data/indices-all.json?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+  fetch("/api/data?p=" + encodeURIComponent("data/indices-all.json") + "&v=" + Date.now(), { credentials: "same-origin", cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
     var arr = d.indices || []; if (!arr.length) return;
     var tb = document.getElementById("idxBody"); if (!tb) return;
     var h = "";
@@ -1023,7 +1023,7 @@ document.querySelectorAll(".fch2").forEach(function(c){c.addEventListener("click
     if (h2) h2.textContent = "Indices \\u2014 " + arr.length + " tracked" + (d.as_of ? " \\u00b7 " + esc(d.as_of) : "");
 
     /* Existing repo radar snapshot — secondary context for the Indices screen. */
-    fetch("data/radar.json?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (r) {
+    fetch("/api/data?p=" + encodeURIComponent("data/radar.json") + "&v=" + Date.now(), { credentials: "same-origin", cache: "no-store" }).then(function (r) { return r.json(); }).then(function (r) {
       var host = document.getElementById("v-indices"); if (!host) return;
       var oldRadar = host.querySelector(".idx-radar-snapshot"); if (oldRadar) oldRadar.remove();
       function radarTable(title, rows) {
@@ -1045,7 +1045,10 @@ document.querySelectorAll(".fch2").forEach(function(c){c.addEventListener("click
       if (wrap && wrap.parentNode) wrap.parentNode.insertBefore(snap, wrap.nextSibling);
       else host.appendChild(snap);
     }).catch(function () {});
-  }).catch(function () {});
+  }).catch(function () {
+    var tb = document.getElementById("idxBody");
+    if (tb && !tb.children.length) tb.innerHTML = "<tr><td colspan=\"6\">Live index feed unavailable — retry after login.</td></tr>";
+  });
 
 })();
 </script>

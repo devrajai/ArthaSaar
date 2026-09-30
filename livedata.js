@@ -111,9 +111,39 @@
   }
 
   /* ---------- 2) SCREENER data load (price map) + home modules + breadth ---------- */
+  function parseBrainCsv(csv) {
+    var lines = String(csv || "").split(/\r?\n/).filter(function (x) { return x.trim(); });
+    if (!lines.length) return { stocks: [] };
+    var head = lines[0].split(",");
+    function row(s) {
+      var out = [], cur = "", q = false;
+      for (var i = 0; i < s.length; i++) {
+        var ch = s[i];
+        if (ch === '"') { if (q && s[i + 1] === '"') { cur += '"'; i++; } else q = !q; }
+        else if (ch === "," && !q) { out.push(cur); cur = ""; }
+        else cur += ch;
+      }
+      out.push(cur);
+      var o = {};
+      head.forEach(function (k, i) { o[k] = out[i] == null ? "" : out[i]; });
+      ["tier","price","change_pct","high_52w","low_52w","high_200d","low_200d","from_52w_high_pct","ema20","ema200","rsi14","macd","macd_signal","macd_hist","vol_vs_avg20","consec_days","history_days"].forEach(function (k) {
+        if (o[k] !== "") { var z = Number(o[k]); if (!isNaN(z)) o[k] = z; }
+      });
+      ["above_ema200"].forEach(function (k) { if (o[k] !== "") o[k] = String(o[k]).toLowerCase() === "true"; });
+      return o;
+    }
+    return { stocks: lines.slice(1).map(row).filter(function (x) { return x.symbol; }) };
+  }
   function loadScreenerData(cb) {
     fj("data/brain-screener.json").then(function (d) {
       var st = d.stocks || [];
+      if (st.length) return st;
+      throw new Error("brain-screener.json empty");
+    }).catch(function () {
+      return fj("data/brain-screener.csv").then(function (csv) {
+        return parseBrainCsv(csv).stocks;
+      });
+    }).then(function (st) {
       st.forEach(function (x) {
         PM[x.symbol] = x;
         NAME[x.symbol] = x.company || x.symbol;

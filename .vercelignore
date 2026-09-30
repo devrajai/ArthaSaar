@@ -1,5 +1,6 @@
-# ArthaSaar — repo public hai: data/ ab deployment ke saath static serve hota hai
-# (direct fast fetch, har data-commit pe fresh redeploy). No proxy, no token.
+# ArthaSaar — data/ deployment me NAHI hai (deploy chhota rehta hai, rate-limit safe).
+# Data live GitHub se aata hai: /api/data proxy (api/data.js) — hamesha fresh, cache 60s.
+/data
 /scripts
 /.github
 /market-brain.apk

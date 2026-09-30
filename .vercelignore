@@ -1,6 +1,5 @@
-# ArthaSaar — data jsDelivr CDN se serve hota hai (cdnfix.js), deploy me sirf code.
-# ipo/ ka apna data chhota hai (~659K) — wo deployed rehta hai.
-/data
+# ArthaSaar — repo public hai: data/ ab deployment ke saath static serve hota hai
+# (direct fast fetch, har data-commit pe fresh redeploy). No proxy, no token.
 /scripts
 /.github
 /market-brain.apk

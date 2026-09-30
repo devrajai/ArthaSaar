@@ -249,7 +249,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
   var ok = false;
   try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = (Date.now() - gt) < SIX_H; } catch (e) {}
   try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate-ts"); ok = false; } } catch (e) {}
-  if (ok) { try { fetch("/api/auth").then(function (r) { if (r.status === 401) { try { localStorage.removeItem("mb-gate-ts"); } catch (e) {} if (!sessionStorage.getItem("asAuthRetry")) { try { sessionStorage.setItem("asAuthRetry", "1"); } catch (e) {} location.reload(); } } }).catch(function () {}); } catch (e) {} return; }
+  if (ok) return;
   var st = document.createElement("style");
   st.textContent = "body{visibility:hidden}";
   document.head.appendChild(st);
@@ -340,8 +340,9 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       sha(inp.value).then(function (h) {
         if (h === HASH) {
           try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
-          var done = false; function go() { if (done) return; done = true; err.style.color = "#1f7a4d"; err.textContent = "\u2713 Access granted \u2014 loading terminal\u2026"; setTimeout(function () { location.hash = "home"; location.reload(); }, 700); }
-          try { fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: inp.value }) }).then(go, go); setTimeout(go, 2500); } catch (e) { go(); }
+          err.style.color = "#1f7a4d";
+          err.textContent = "\u2713 Access granted \u2014 loading terminal\u2026";
+          setTimeout(function () { location.hash = "home"; location.reload(); }, 700);
         } else { err.textContent = "Wrong password. Try again."; inp.value = ""; inp.focus(); }
       });
     }
@@ -569,7 +570,6 @@ function filt(inp,tbody){var el=document.getElementById(inp);if(!el)return;
 filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
-<script src="cdnfix.js?v=cf1"></script>
 <script src="livedata.js?v=ld1"></script>
 <script src="reentry.js?v=r1"></script>
 </body></html>

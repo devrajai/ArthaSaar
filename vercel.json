@@ -44,6 +44,5 @@
         }
       ]
     }
-  ],
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data' ':(exclude)scripts' ':(exclude).github' ':(exclude)*.md'"
+  ]
 }

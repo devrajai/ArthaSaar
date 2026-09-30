@@ -12,73 +12,7 @@
 <link rel="stylesheet" href="style.css?v=as1">
 <link rel="stylesheet" href="newui.css?v=nu3">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38'%3E%3Crect width='38' height='38' rx='11' fill='%23CDA175'/%3E%3Ctext x='19' y='25' font-family='monospace' font-size='15' font-weight='bold' fill='white' text-anchor='middle'%3EAS%3C/text%3E%3C/svg%3E">
-<script>
-/* ---------- privacy gate ---------- */
-(function () {
-  var HASH = "c09f57e0b728dc5b1638e5022da243db3d8e0e7cefeab62bc8f1d40b99677880";
-  var SIX_H = 4 * 3600 * 1000; /* 4 ghante */
-  var ok = false;
-  try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = (Date.now() - gt) < SIX_H; } catch (e) {}
-  try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate-ts"); localStorage.removeItem("mb-gate"); ok = false; } } catch (e) {}
-  if (ok) return;
-  window.MB_LOCKED = true;
-  var st = document.createElement("style");
-  st.textContent = "body{visibility:hidden}";
-  document.head.appendChild(st);
-  document.addEventListener("DOMContentLoaded", function () {
-    document.body.innerHTML =
-      "<div class='gwrap'>" +
-      "<div class='glogo'>AS</div>" +
-      "<h1>ARTHASAAR</h1>" +
-      "<p class='gsub'>This terminal is private. Authorised access only.</p>" +
-      "<div class='gcard'><div class='glabel'>ENTER PASSWORD</div>" +
-      "<input id='gInp' type='password' placeholder='password' autocomplete='current-password'>" +
-      "<button id='gBtn'>Unlock</button>" +
-      "<div class='gerr' id='gErr'></div></div>" +
-      "<p class='gnote'>Personal market intelligence terminal.<br>" +
-      "To log out on a shared phone: open the site with #lock at the end of the address.</p>" +
-      "</div>";
-    document.body.setAttribute("style",
-      "margin:0;background:#070c17;color:#e8eef7;" +
-      "font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:100vh");
-    st.remove();
-    var inp = document.getElementById("gInp"), btn = document.getElementById("gBtn"),
-        err = document.getElementById("gErr");
-    function sha(s) {
-      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function (b) {
-        return Array.from(new Uint8Array(b)).map(function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
-      });
-    }
-    function tryOpen() {
-      sha(inp.value).then(function (h) {
-        if (h === HASH) {
-          try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
-          location.hash = "";
-          location.reload();
-        } else {
-          err.textContent = "Wrong password. Try again.";
-          inp.value = ""; inp.focus();
-        }
-      });
-    }
-    btn.onclick = tryOpen;
-    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") tryOpen(); });
-    setTimeout(function () { inp.focus(); }, 50);
-  });
-})();
-</script>
 <style>
-/* privacy gate (lock screen) */
-.gwrap{max-width:420px;margin:0 auto;padding:28px 20px;display:flex;flex-direction:column;min-height:70vh;box-sizing:border-box}
-.glogo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#CDA175,#8a6a3f);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:24px;color:#fff;margin-bottom:18px}
-#gInp{width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;color:#e8eef7;font-size:16px;outline:none;font-family:'IBM Plex Mono',monospace}
-#gInp:focus{border-color:rgba(255,255,255,.28)}
-#gBtn{width:100%;margin-top:12px;background:linear-gradient(135deg,#CDA175,#8a6a3f);border:none;border-radius:10px;padding:13px;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
-.gcard{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px}
-.glabel{font-size:11px;letter-spacing:.14em;color:#8fa3bd;font-weight:600;margin-bottom:8px}
-.gerr{color:#fb5c7d;font-size:12.5px;margin-top:10px;min-height:16px}
-.gsub{font-size:13px;color:#8fa3bd;margin:0 0 26px}
-.gnote{font-size:11.5px;color:#5d6f88;margin-top:auto;padding-top:24px;line-height:1.6}
 /* app-style home grid + view chrome */
 .homegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .hgroup{grid-column:1/-1;margin:16px 0 2px;font-size:11px;letter-spacing:.14em;color:var(--dim);font-weight:700;font-family:'IBM Plex Mono',monospace}

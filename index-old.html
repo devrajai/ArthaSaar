@@ -20,7 +20,7 @@
   var ok = false;
   try { var gt = parseInt(localStorage.getItem("mb-gate-ts") || "0", 10); if (gt) ok = (Date.now() - gt) < SIX_H; } catch (e) {}
   try { if (location.hash.indexOf("lock") !== -1) { localStorage.removeItem("mb-gate-ts"); localStorage.removeItem("mb-gate"); ok = false; } } catch (e) {}
-  if (ok) return;
+  if (ok) { try { fetch("/api/auth").then(function (r) { if (r.status === 401) { try { localStorage.removeItem("mb-gate-ts"); } catch (e) {} if (!sessionStorage.getItem("asAuthRetry")) { try { sessionStorage.setItem("asAuthRetry", "1"); } catch (e) {} location.reload(); } } }).catch(function () {}); } catch (e) {} return; }
   window.MB_LOCKED = true;
   var st = document.createElement("style");
   st.textContent = "body{visibility:hidden}";
@@ -53,8 +53,8 @@
       sha(inp.value).then(function (h) {
         if (h === HASH) {
           try { localStorage.setItem("mb-gate-ts", String(Date.now())); } catch (e) {}
-          location.hash = "";
-          location.reload();
+          var done = false; function go() { if (done) return; done = true; location.hash = ""; location.reload(); }
+          try { fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: inp.value }) }).then(go, go); setTimeout(go, 2500); } catch (e) { go(); }
         } else {
           err.textContent = "Wrong password. Try again.";
           inp.value = ""; inp.focus();
@@ -458,6 +458,7 @@ td.lbl{font-weight:500;color:var(--dim);white-space:nowrap}
 <script>/* deep-link save: oldapp load pe hash strip karta hai \u2014 pehle yaad rakho (crtime restore karega) */
 try { if (location.hash && location.hash.indexOf("#company") !== 0 && location.hash !== "#lock")
   sessionStorage.setItem("crsec", location.hash.replace("#/", "#").replace("#", "").split("/")[0]); } catch (e) {}</script>
+<script src="cdnfix.js?v=cf1"></script>
 <script src="app.js?v=27sepv112"></script>
 <script src="themefix.js?v=newui2"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>

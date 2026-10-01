@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ArthaSaar — ping test</title>
+</head>
+<body style="background:#0b0f14;color:#eaf1fb;font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding:22px;line-height:1.5">
+<h1 style="color:#5b9dff;margin:0 0 8px">ArthaSaar — ping ✅</h1>
+<p style="color:#9fb3c8;margin:0 0 16px">If you can read this text, your device loads pages from this site fine. Now scroll to the box below and send me a screenshot of it.</p>
+<div id="out" style="background:#131c2b;border:1px solid #243147;border-radius:12px;padding:14px;white-space:pre-wrap;font-size:13px;color:#cfe0f5">running…</div>
+<script>
+(function () {
+  var out = [];
+  out.push("JavaScript: running ✅");
+  out.push("User agent: " + navigator.userAgent);
+  out.push("URL: " + location.href);
+  out.push("Service worker: " + ("serviceWorker" in navigator ? "supported" : "not supported"));
+  out.push("Online: " + navigator.onLine);
+  out.push("Time: " + new Date().toISOString());
+  document.getElementById("out").textContent = out.join("\n");
+  fetch("data/site-build.json", { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (j) { out.push("Data fetch: OK " + JSON.stringify(j)); document.getElementById("out").textContent = out.join("\n"); })
+    .catch(function (e) { out.push("Data fetch: FAILED — " + e.message); document.getElementById("out").textContent = out.join("\n"); });
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,8 @@
 const crypto=require("crypto");
 /* hardcoded password hash removed — set ARTHASAAR_PASSWORD_SHA256 in the environment if this endpoint is used again */
+const fallbackSecret = crypto.randomBytes(32).toString("hex");
 function ph(){return process.env.ARTHASAAR_PASSWORD_SHA256||""}
-function sec(){return process.env.ARTHASAAR_AUTH_SECRET||ph()}
+function sec(){return process.env.ARTHASAAR_AUTH_SECRET||ph()||fallbackSecret}
 function hash(s){return crypto.createHash("sha256").update(String(s)).digest("hex")}
 function sig(v){return crypto.createHmac("sha256",sec()).update(v).digest("base64url")}
 function ok(req){const m=(req.headers.cookie||"").match(/(?:^|;\s*)as_auth=([^;]+)/);if(!m)return false;const p=m[1].split(".");if(p.length!==2)return false;const exp=Number(Buffer.from(p[0],"base64url").toString());if(!Number.isFinite(exp)||exp<Date.now())return false;const a=Buffer.from(p[1]),b=Buffer.from(sig(p[0]));return a.length===b.length&&crypto.timingSafeEqual(a,b)}

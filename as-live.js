@@ -114,9 +114,10 @@ function paintIndices(data, glob) {
   tb.innerHTML = L.map(function (r) {
     var pos = pos52(r);
     return "<tr><td>" + esc(r.index) + "</td><td>" + n2(r.price) + "</td>" +
+      "<td><span class='" + dirCls(r.change) + "'>" + (r.change == null ? "—" : (Number(r.change) >= 0 ? "+" : "") + n2(r.change)) + "</span></td>" +
       "<td><span class='" + dirCls(r.change_pct) + "'>" + pctStr(r.change_pct) + "</span></td>" +
-      "<td>" + (pos == null ? "\u2014" : pos + "%") + "</td>" +
-      "<td>" + (r.pe || "\u2014") + "</td><td>" + (r.pb || "\u2014") + "</td></tr>";
+      "<td>" + (pos == null ? "—" : pos + "%") + "</td>" +
+      "<td>" + (r.pe || "—") + "</td><td>" + (r.pb || "—") + "</td></tr>";
   }).join("");
 
   var title = el("idxTitle");
@@ -210,7 +211,7 @@ function paintSectorMap(data) {
 
 function fail() {
   var tb = el("idxBody");
-  if (tb) tb.innerHTML = '<tr><td colspan="6" class="idxload">Live indices load nahi hue \u2014 data/indices-all.json check karo.</td></tr>';
+  if (tb) tb.innerHTML = '<tr><td colspan="7" class="idxload">Live indices load nahi hue \u2014 data/indices-all.json check karo.</td></tr>';
 }
 
 function boot() {

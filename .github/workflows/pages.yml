@@ -5,13 +5,16 @@ on:
     branches: [main]
   schedule:
     - cron: "0 * * * *"
+
 permissions:
   pages: write
   id-token: write
   contents: read
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,9 +23,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build ArthaSaar master UI v7"data/$f.json" "site/data/$f.json"
+
+      - name: Build ArthaSaar master UI v7
+        run: |
+          rm -rf site
+          mkdir -p site/data
+          cp -R v7/. site/
+          for f in indices-all global fii-dii breadth radar news economy-pulse crypto stock-scores preopen candles constituents delivery; do
+            if [ -f "data/$f.json" ]; then cp "data/$f.json" "site/data/$f.json"; fi
           done
-          printf '%s\n' '{"site":"ArthaSaar v3","pipeline":"NSE + yfinance + free public sources","built_at":"'"$(date -u +%FT%TZ)"'"}' > site/data/site-build.json
+          printf '%s\n' '{"site":"ArthaSaar v7","pipeline":"NSE + yfinance + free public sources","built_at":"'"$(date -u +%FT%TZ)"'"}' > site/data/site-build.json
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

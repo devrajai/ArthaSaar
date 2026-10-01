@@ -213,9 +213,17 @@ function paintSectorMap(data, mode) {
   var title=el("sectorViewTitle");
   if(title) title.textContent = mode === "Sectors" ? "SECTORS" : mode.toUpperCase();
   host.innerHTML = rows.length ? rows.map(function(x){
-    var p=Number(x.r.change_pct)||0;
-    var sub = mode === "Sectors" ? "" : "<small>"+esc(x.r.index)+"</small>";
-    return '<div class="tcell '+sectorClass(p)+'" data-sector-card="'+esc(x.bucket||"")+'" title="Open '+esc(x.k)+'"><b>'+esc(x.k)+'</b>'+sub+'<span class="'+dirCls(p)+'">'+pctStr(p)+'</span></div>';
+    var p=Number(x.r.change_pct)||0, ch=Number(x.r.change)||0;
+    var price = x.r.price == null ? "—" : Number(x.r.price).toLocaleString("en-IN",{maximumFractionDigits:2});
+    var sym = x.r.symbol || x.r.index || "";
+    var point = (ch>0?"+":"")+ch.toLocaleString("en-IN",{maximumFractionDigits:2});
+    var sub = mode === "Sectors" ? "" : "<small>"+esc(sym)+"</small>";
+    return '<div class="tcell '+sectorClass(p)+'" data-sector-card="'+esc(x.bucket||"")+'" title="'+esc(x.r.index)+'">'+
+      '<b>'+esc(x.k)+'</b>'+sub+
+      '<span class="'+dirCls(p)+'">'+pctStr(p)+'</span>'+
+      '<div class="tp">PRICE · '+esc(price)+'</div>'+
+      '<div class="tchg">DAY · '+esc(point)+'</div>'+
+      '</div>';
   }).join("") : '<div class="idxload">No matching index data in this snapshot.</div>';
   var green=rows.filter(function(x){return Number(x.r.change_pct)>0;}).length;
   var red=rows.filter(function(x){return Number(x.r.change_pct)<0;}).length;

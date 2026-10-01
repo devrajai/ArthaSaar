@@ -1,0 +1,31 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "ArthaSaar — stock screener + budget-day study engine. Auto-collects Nifty 500 data daily, computes technicals (EMA/RSI/MACD), and builds historical market intelligence. 100% free sources.",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devrajai/ArthaSaar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/devrajai/ArthaSaar/issues"
+  },
+  "homepage": "https://github.com/devrajai/ArthaSaar#readme",
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2"
+  },
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

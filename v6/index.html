@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f1e6"><title>ArthaSaar — Mobile Market OS</title><link rel="stylesheet" href="./styles.css?v=1"></head><body><div id="app">
+<header class="topbar"><button class="mark" id="brandHome">अ</button><div class="brandtext"><b>ARTHASAAR</b><small>NSE · MARKET OS</small></div><div class="topmeta"><span class="liveDot"></span><span id="clock">--:-- IST</span><button id="mode" class="mode">◐</button></div></header>
+<main id="screens">
+<section class="screen active" id="home"><div class="screen-inner">
+  <div class="eyebrow">MARKET BRIEF <span id="fresh">DATA LINKING…</span></div>
+  <div class="hero"><div><small>NIFTY 50 · NSE EOD</small><h1 id="nifty">—</h1><div id="niftyChg">—</div></div><div class="hero-note">INDIA<br><b id="marketTone">—</b></div></div>
+  <div class="chart-card paper"><div class="chart-top"><span>PRICE PATH · 1D</span><div><button class="tf on">1D</button><button class="tf">1W</button><button class="tf">1M</button></div></div><svg id="homeChart" viewBox="0 0 700 190" preserveAspectRatio="none"></svg></div>
+  <div class="mini-grid" id="miniGrid"></div>
+  <div class="card paper"><div class="card-title">MARKET BREADTH</div><div class="breadth-bar"><i id="breadthAdv"></i><em></em></div><div class="breadth-row"><b id="advCount">—</b><span>adv</span><b id="unchCount">—</b><span>unch</span><b id="decCount">—</b><span>dec</span></div><div class="caprow"><span>LARGE <b id="largeChg">—</b></span><span>MID <b id="midChg">—</b></span><span>SMALL <b id="smallChg">—</b></span></div></div>
+  <div class="flow-grid"><div class="card paper"><div class="card-title">FII / FPI</div><strong id="fiiNet">—</strong><small>net · Cr</small></div><div class="card paper"><div class="card-title">DII</div><strong id="diiNet">—</strong><small>net · Cr</small></div></div>
+  <div class="section-label">SIGNALS</div><div class="signal-grid" id="homeSignals"></div>
+</div></section>
+
+<section class="screen" id="market"><div class="screen-inner">
+  <div class="screen-head"><div><div class="eyebrow">INDIA</div><h2>Market Map</h2></div><button class="round" data-open="search">⌕</button></div>
+  <div class="seg"><button class="active" data-market="indices">INDICES</button><button data-market="sectors">SECTORS</button><button data-market="internals">INTERNALS</button></div>
+  <div id="marketContent"></div>
+</div></section>
+
+<section class="screen" id="tools"><div class="screen-inner">
+  <div class="screen-head"><div><div class="eyebrow">TRADING OS</div><h2>Tools</h2></div><span class="tool-count">12 modules</span></div>
+  <div class="tool-list">
+    <button data-tool="charts"><b>Trading Charts</b><small>timeframes · EMA · VWAP · RSI · MACD</small><span>→</span></button>
+    <button data-tool="futures"><b>Futures & OI</b><small>contracts · basis · open interest</small><span>→</span></button>
+    <button data-tool="gti"><b>GTI Zones</b><small>demand · supply · POC</small><span>→</span></button>
+    <button data-tool="radar"><b>Stock Radar</b><small>accumulation · volume blast · hidden selling</small><span>→</span></button>
+    <button data-tool="ai"><b>AI Market View</b><small>forecast · regime · model context</small><span>→</span></button>
+    <button data-tool="internals"><b>Market Internals</b><small>breadth · TRIN · McClellan</small><span>→</span></button>
+    <button data-tool="company"><b>Company</b><small>research · fundamentals · filings · events</small><span>→</span></button>
+    <button data-tool="funds"><b>MF / Deep Fund</b><small>fund radar · returns · institutional context</small><span>→</span></button>
+    <button data-tool="global"><b>Global Radar</b><small>US · Asia · commodities · FX · rates</small><span>→</span></button>
+    <button data-tool="crypto"><b>Crypto</b><small>BTC · ETH · market mood</small><span>→</span></button>
+    <button data-tool="ipo"><b>IPO Terminal</b><small>open · upcoming · listing · GMP</small><span>→</span></button>
+    <button data-tool="events"><b>Events</b><small>macro · RBI · results · corporate actions</small><span>→</span></button>
+  </div>
+</div></section>
+
+<section class="screen" id="searchScreen"><div class="screen-inner">
+  <div class="screen-head"><div><div class="eyebrow">UNIVERSAL</div><h2>Search</h2></div><button class="round" id="searchFocus">⌕</button></div>
+  <input id="globalSearch" class="search-input" placeholder="stock, index, MF, crypto, tool…" autocomplete="off">
+  <div id="searchResults" class="search-results"></div>
+</div></section>
+
+<section class="screen" id="more"><div class="screen-inner">
+  <div class="screen-head"><div><div class="eyebrow">ARTHASAAR</div><h2>More</h2></div><button class="round" id="mode2">◐</button></div>
+  <div class="more-feature"><b>ONE MARKET. MANY LENSES.</b><small>Everything in the terminal lives here — without putting all of it on the home screen.</small></div>
+  <div class="more-grid">
+    <button data-tool="global">Global Radar</button><button data-tool="charts">Charts</button><button data-tool="futures">Futures & OI</button><button data-tool="gti">GTI Zones</button>
+    <button data-tool="ai">AI View</button><button data-tool="internals">Internals</button><button data-tool="company">Company</button><button data-tool="funds">Funds</button>
+    <button data-tool="crypto">Crypto</button><button data-tool="events">Events</button><button data-tool="ipo">IPO</button><button id="aboutData">Data Sources</button>
+  </div>
+  <div class="more-actions"><button>＋ Watchlist</button><button>◎ Price alert</button><button>↥ Import CSV</button><button>⟳ Refresh feeds</button></div>
+</div></section>
+</main>
+
+<nav class="bottom"><button class="active" data-nav="home">HOME</button><button data-nav="market">MARKET</button><button data-nav="tools">TOOLS</button><button data-nav="searchScreen">SEARCH</button><button data-nav="more">MORE</button></nav>
+</div>
+
+<div id="sheet" class="sheet hidden"><div class="sheet-backdrop"></div><div class="sheet-panel"><button class="sheet-x" id="sheetClose">×</button><div id="sheetBody"></div></div></div>
+<script src="./app.js?v=1"></script></body></html>

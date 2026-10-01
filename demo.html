@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ArthaSaar — UI design demos (pick one)</title>
+<style>
+/* ============ shared ============ */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased;background:#0a0d16;color:#eaf1fb;padding-top:64px}
+.picker{position:fixed;top:0;left:0;right:0;z-index:99;display:flex;gap:8px;align-items:center;padding:10px 14px;flex-wrap:wrap;
+  background:rgba(8,12,22,.72);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.12)}
+.picker span{font-size:12px;color:#9fb0c9;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.pbtn{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#dfe8f5;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+.pbtn.on{background:linear-gradient(135deg,#6aa8ff,#a07cff);border-color:transparent;color:#fff;font-weight:700}
+.demo{display:none;min-height:100vh}
+.demo.on{display:block}
+.panel{border-radius:20px;padding:16px;box-shadow:0 14px 36px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.18)}
+.panel h4{margin:0 0 10px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;opacity:.7;font-weight:700}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.up{color:#38e08a}.down{color:#ff6b7d}.mut{opacity:.66}
+.btn{border:1px solid rgba(255,255,255,.25);background:linear-gradient(135deg,#5b9dff,#8b5cf6);color:#fff;font-weight:700;border-radius:999px;padding:9px 16px;cursor:pointer;font-size:13px}
+.btn.ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:inherit}
+.btn.amber{background:linear-gradient(135deg,#ffb457,#ff6b7d);border-color:rgba(255,255,255,.3)}
+.tools{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.tool{border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:12px;background:rgba(255,255,255,.05);cursor:pointer}
+.tool b{display:block;font-size:13px}.tool span{font-size:11px;opacity:.7}
+.radar li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.14);font-size:13px}
+.radar li:last-child{border:0}
+.ind{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.indchip{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);border-radius:999px;padding:4px 11px;font-size:12px}
+.indchip.on{background:linear-gradient(135deg,#5b9dff,#8b5cf6);border-color:transparent;color:#fff}
+svg{display:block;width:100%;height:auto}
+
+/* ============ DEMO 1 — FROST CLASSIC ============ */
+#demo-a{--bg:#eef2fb;--fg:#0f1729;--mut:#54637c;--glass:rgba(255,255,255,.72);--glass2:rgba(255,255,255,.5);--stroke:rgba(255,255,255,.9);--line:rgba(20,40,90,.10);--acc:#2f6bff;--acc2:#7c3aed;
+  background:radial-gradient(60vw 60vw at 10% 0%,rgba(120,170,255,.5),transparent 60%),radial-gradient(55vw 55vw at 90% 10%,rgba(180,150,255,.45),transparent 60%),#eef2fb;color:#0f1729}
+#demo-a .top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;position:sticky;top:64px;z-index:20;
+  background:rgba(255,255,255,.6);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+#demo-a .logo{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2))}
+#demo-a .nav{display:flex;gap:6px;overflow:auto;flex:1}
+#demo-a .nv{border:1px solid transparent;background:transparent;color:#54637c;padding:9px 14px;border-radius:999px;font:inherit;font-size:13.5px;cursor:pointer;white-space:nowrap}
+#demo-a .nv.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 8px 18px rgba(47,107,255,.3)}
+#demo-a .wrap{max-width:1200px;margin:0 auto;padding:18px}
+#demo-a .panel{background:linear-gradient(160deg,var(--glass),var(--glass2));border:1px solid var(--stroke);backdrop-filter:blur(18px);color:#0f1729}
+#demo-a .grid{display:grid;gap:14px}
+#demo-a .cols{grid-template-columns:2fr 1fr}
+#demo-a .tools2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:820px){#demo-a .cols,#demo-a .tools2{grid-template-columns:1fr}}
+#demo-a .hero{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+#demo-a .kpi{font-size:30px;font-weight:850;letter-spacing:-1px}
+#demo-a .tool{background:rgba(255,255,255,.6);border-color:rgba(255,255,255,.9)}
+#demo-a .indchip{background:rgba(255,255,255,.6);border-color:rgba(255,255,255,.9)}
+#demo-a .radar li{border-color:rgba(20,40,90,.14)}
+
+/* ============ DEMO 2 — BLUE LIQUID APP ============ */
+#demo-b{--bg:#050b1c;--acc:#4aa8ff;--acc2:#7c5cff;--stroke:rgba(120,180,255,.22);--glass:rgba(30,60,120,.35);--glass2:rgba(20,40,90,.28);
+  background:radial-gradient(70vw 60vw at 20% -5%,rgba(60,140,255,.45),transparent 60%),radial-gradient(60vw 60vw at 90% 20%,rgba(120,80,255,.4),transparent 60%),#050b1c;color:#eaf3ff;padding-bottom:86px}
+#demo-b .top{display:flex;align-items:center;gap:10px;padding:14px 16px;position:sticky;top:64px;z-index:20;background:rgba(10,20,45,.6);backdrop-filter:blur(22px);border-bottom:1px solid var(--stroke)}
+#demo-b .logo{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2))}
+#demo-b .grow{flex:1}
+#demo-b .wrap{max-width:760px;margin:0 auto;padding:16px}
+#demo-b .panel{background:linear-gradient(160deg,var(--glass),var(--glass2));border:1px solid var(--stroke);backdrop-filter:blur(22px) saturate(170%);border-radius:22px}
+#demo-b .stack{display:grid;gap:14px}
+#demo-b .hero{text-align:center;padding:8px 0 4px}
+#demo-b .kpi{font-size:34px;font-weight:850;letter-spacing:-1px}
+#demo-b .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:space-around;padding:8px 6px 12px;
+  background:rgba(8,18,40,.72);backdrop-filter:blur(24px) saturate(170%);border-top:1px solid var(--stroke)}
+#demo-b .tab{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;color:#9fc0e8;font:inherit;font-size:10.5px;cursor:pointer;padding:6px 10px;border-radius:14px}
+#demo-b .tab .ic{font-size:19px;line-height:1}
+#demo-b .tab.on{color:#fff;background:linear-gradient(135deg,rgba(74,168,255,.35),rgba(124,92,255,.35))}
+#demo-b .tool{background:rgba(40,80,150,.28);border-color:var(--stroke)}
+#demo-b .indchip{background:rgba(40,80,150,.28);border-color:var(--stroke)}
+#demo-b .radar li{border-color:var(--stroke)}
+
+/* ============ DEMO 3 — PRO TERMINAL ============ */
+#demo-c{--bg:#080b12;--acc:#31d0aa;--acc2:#4aa8ff;--stroke:rgba(255,255,255,.14);--glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.04);
+  background:radial-gradient(60vw 60vw at 85% 0%,rgba(49,208,170,.25),transparent 60%),radial-gradient(60vw 60vw at 0% 100%,rgba(74,168,255,.22),transparent 60%),#080b12;color:#e9f1fb}
+#demo-c .shell{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+@media(max-width:820px){#demo-c .shell{grid-template-columns:1fr}#demo-c .side{position:sticky;top:64px;display:flex;overflow:auto;gap:6px}}
+#demo-c .side{padding:16px 14px;border-right:1px solid var(--stroke);background:rgba(12,18,30,.6);backdrop-filter:blur(16px)}
+#demo-c .side .logo{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-weight:800;color:#04120e;background:linear-gradient(135deg,var(--acc),var(--acc2));margin-bottom:14px}
+#demo-c .sn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:#9db0c6;cursor:pointer;font-size:13.5px;white-space:nowrap}
+#demo-c .sn.on{background:linear-gradient(135deg,rgba(49,208,170,.22),rgba(74,168,255,.18));color:#fff;border:1px solid var(--stroke)}
+#demo-c .main{padding:18px}
+#demo-c .panel{background:linear-gradient(160deg,var(--glass),var(--glass2));border:1px solid var(--stroke);backdrop-filter:blur(18px)}
+#demo-c .grid{display:grid;gap:14px}
+#demo-c .cols{grid-template-columns:2fr 1fr}
+@media(max-width:1000px){#demo-c .cols{grid-template-columns:1fr}}
+#demo-c .kpi{font-size:30px;font-weight:850;letter-spacing:-1px}
+#demo-c .tool{background:rgba(255,255,255,.05);border-color:var(--stroke)}
+#demo-c .indchip{background:rgba(255,255,255,.05);border-color:var(--stroke)}
+#demo-c .radar li{border-color:var(--stroke)}
+</style>
+</head>
+<body>
+
+<div class="picker">
+  <span>Pick a design →</span>
+  <button class="pbtn on" data-d="a">1 · Frost Classic</button>
+  <button class="pbtn" data-d="b">2 · Blue Liquid App</button>
+  <button class="pbtn" data-d="c">3 · Pro Terminal</button>
+</div>
+
+<!-- ================= DEMO A ================= -->
+<section class="demo on" id="demo-a">
+  <div class="top">
+    <div class="logo">आ</div>
+    <div style="font-weight:800">ArthaSaar</div>
+    <nav class="nav">
+      <button class="nv on">Home</button><button class="nv">Markets</button><button class="nv">Mutual Funds</button>
+      <button class="nv">Stocks</button><button class="nv">Pro Tools</button><button class="nv">Radar</button><button class="nv">Learn</button>
+    </nav>
+    <button class="btn amber">🚀 IPO · IpoBodh</button>
+  </div>
+  <div class="wrap">
+    <div class="hero panel" style="display:block">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div><div class="mut" style="font-size:12px;letter-spacing:.5px">NIFTY 50 · EOD</div><div class="kpi">22,620.45 <span class="down" style="font-size:16px">-0.42%</span></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn">Analyse a stock</button><button class="btn ghost">Run screener</button></div>
+      </div>
+    </div>
+
+    <div class="grid cols" style="margin-top:14px">
+      <div class="panel">
+        <h4>Candlestick chart · NIFTY 50</h4>
+        <div class="ind">
+          <span class="indchip on">EMA 20</span><span class="indchip on">EMA 50</span>
+          <span class="indchip on">RSI 14</span><span class="indchip">MACD</span>
+          <span class="indchip">Bollinger</span><span class="indchip">VWAP</span>
+        </div>
+        <div id="chartA"></div>
+        <div class="mut" style="font-size:11.5px;margin-top:8px">Candles · EMA20 (blue) · EMA50 (orange) · Volume · RSI(14) with 30/70 bands</div>
+      </div>
+      <div style="display:grid;gap:14px">
+        <div class="panel"><h4>Radar system</h4>
+          <ul class="radar" style="list-style:none;margin:0;padding:0">
+            <li><span>Accumulation</span><b class="up">BAJAJFINSV · 73.6%</b></li>
+            <li><span>Hidden selling</span><b class="down">DLF · 21.2%</b></li>
+            <li><span>Volume blast</span><b class="up">RVNL · 3.4×</b></li>
+            <li><span>Breakout</span><b class="up">PERSISTENT</b></li>
+          </ul>
+        </div>
+        <div class="panel"><h4>Pro Tools</h4>
+          <div class="tools tools2">
+            <div class="tool"><b>🧭 Screener</b><span>2,288 stocks</span></div>
+            <div class="tool"><b>⛓️ Option chain</b><span>OI · PCR · walls</span></div>
+            <div class="tool"><b>📊 Backtest</b><span>Strategies</span></div>
+            <div class="tool"><b>🚀 IPO · IpoBodh</b><span>Live IPOs</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEMO B ================= -->
+<section class="demo" id="demo-b">
+  <div class="top">
+    <div class="logo">आ</div><div style="font-weight:800">ArthaSaar</div><div class="grow"></div>
+    <button class="btn ghost">Search</button><button class="btn amber">IPO</button>
+  </div>
+  <div class="wrap stack">
+    <div class="panel" style="text-align:center">
+      <div class="mut" style="font-size:12px">NIFTY 50 · today</div>
+      <div class="kpi">22,620.45</div>
+      <div class="down" style="font-weight:700">-0.42% (-95.30)</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap"><button class="btn">Screener</button><button class="btn ghost">Option chain</button></div>
+    </div>
+    <div class="panel">
+      <h4>Chart · indicators</h4>
+      <div class="ind"><span class="indchip on">EMA</span><span class="indchip on">RSI</span><span class="indchip">MACD</span><span class="indchip">BB</span></div>
+      <div id="chartB"></div>
+    </div>
+    <div class="panel"><h4>Radar</h4>
+      <ul class="radar" style="list-style:none;margin:0;padding:0">
+        <li><span>Accumulation</span><b class="up">ASIANPAINT</b></li>
+        <li><span>Hidden selling</span><b class="down">DLF</b></li>
+      </ul>
+    </div>
+    <div class="panel"><h4>Pro Tools</h4>
+      <div class="tools"><div class="tool"><b>🧭 Screener</b></div><div class="tool"><b>⛓️ Chain</b></div><div class="tool"><b>📊 Backtest</b></div><div class="tool"><b>🚀 IPO</b></div></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <button class="tab on"><span class="ic">🏠</span>Home</button>
+    <button class="tab"><span class="ic">📈</span>Markets</button>
+    <button class="tab"><span class="ic">🧰</span>Pro</button>
+    <button class="tab"><span class="ic">📡</span>Radar</button>
+    <button class="tab"><span class="ic">📚</span>Learn</button>
+  </nav>
+</section>
+
+<!-- ================= DEMO C ================= -->
+<section class="demo" id="demo-c">
+  <div class="shell">
+    <aside class="side">
+      <div class="logo">आ</div>
+      <div class="sn on">🏠 Home</div><div class="sn">📈 Markets</div><div class="sn">💠 Mutual Funds</div>
+      <div class="sn">🧭 Screener</div><div class="sn">🧰 Pro Tools</div><div class="sn">📡 Radar</div><div class="sn">📚 Learn</div>
+      <div style="margin-top:12px"><button class="btn amber" style="width:100%">🚀 IPO · IpoBodh</button></div>
+    </aside>
+    <main class="main">
+      <div class="panel" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div><div class="mut" style="font-size:12px">NIFTY 50</div><div class="kpi">22,620.45 <span class="down" style="font-size:15px">-0.42%</span></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn">Run screener</button><button class="btn ghost">Backtest</button><button class="btn ghost">Chain</button></div>
+      </div>
+      <div class="grid cols" style="margin-top:14px">
+        <div class="panel">
+          <h4>NIFTY 50 · candle + indicators</h4>
+          <div class="ind"><span class="indchip on">EMA20</span><span class="indchip on">EMA50</span><span class="indchip on">RSI</span><span class="indchip on">Vol</span><span class="indchip">MACD</span></div>
+          <div id="chartC"></div>
+        </div>
+        <div style="display:grid;gap:14px">
+          <div class="panel"><h4>Pro Tools</h4>
+            <div class="tools"><div class="tool"><b>🧭 Screener</b><span>fund + tech</span></div><div class="tool"><b>⛓️ Option chain</b><span>walls · PCR</span></div>
+            <div class="tool"><b>📊 Backtest</b><span>EMA / RSI</span></div><div class="tool"><b>📉 GTI</b><span>value zones</span></div></div>
+          </div>
+          <div class="panel"><h4>Radar system</h4>
+            <ul class="radar" style="list-style:none;margin:0;padding:0">
+              <li><span>Accumulation</span><b class="up">MOGSEC 97.8%</b></li>
+              <li><span>Hidden selling</span><b class="down">DLF 21.2%</b></li>
+              <li><span>Volume blast</span><b class="up">RVNL 3.4×</b></li>
+              <li><span>Delivery %</span><b>BAJAJFINSV 73.6%</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<script>
+/* ---------- sample OHLC + indicators, rendered as SVG ---------- */
+function genOHLC(n){ var p=100,a=[]; for(var i=0;i<n;i++){ var o=p, drift=(Math.random()-0.47)*2.2, c=Math.max(2,o+drift);
+  var h=Math.max(o,c)+Math.random()*1.1, l=Math.min(o,c)-Math.random()*1.1, v=Math.round(20+Math.random()*80);
+  a.push({o:o,h:h,l:l,c:c,v:v}); p=c; } return a; }
+function ema(v,p){ var k=2/(p+1), e=v[0], out=[]; for(var i=0;i<v.length;i++){ e = i? v[i]*k+e*(1-k) : v[i]; out.push(e);} return out; }
+function rsi(v,p){ p=p||14; var g=0,l=0,out=[]; for(var i=0;i<v.length;i++){ if(i===0){out.push(50);continue;}
+  var d=v[i]-v[i-1], up=d>0?d:0, dn=d<0?-d:0; g=(g*(p-1)+up)/p; l=(l*(p-1)+dn)/p; out.push(l===0?100:100-100/(1+g/l)); } return out; }
+
+function candle(data){
+  var w=760, priceH=250, volH=58, rsiH=64, gap=12, padL=8, padR=8;
+  var totalH=priceH+volH+rsiH+gap*2+10;
+  var cs=data.map(function(d){return d.c;}), e20=ema(cs,20), e50=ema(cs,50), rs=rsi(cs,14);
+  var hi=Math.max.apply(null,data.map(function(d){return d.h})), lo=Math.min.apply(null,data.map(function(d){return d.l}));
+  var ehi=Math.max.apply(null,e20.concat(e50)), elo=Math.min.apply(null,e20.concat(e50)); hi=Math.max(hi,ehi); lo=Math.min(lo,elo);
+  var rg=(hi-lo)||1, n=data.length, cw=(w-padL-padR)/n;
+  var X=function(i){return padL+i*cw+cw/2;}, Y=function(v){return 10+(hi-v)/rg*(priceH-10);};
+  var s='<svg viewBox="0 0 '+w+' '+totalH+'" preserveAspectRatio="none" style="height:340px">';
+  // grid
+  for(var gy=0;gy<=4;gy++){ var yy=10+gy*(priceH-10)/4; s+='<line x1="0" y1="'+yy+'" x2="'+w+'" y2="'+yy+'" stroke="rgba(140,160,200,.14)"/>'; }
+  // candles
+  for(var i=0;i<n;i++){ var d=data[i], up=d.c>=d.o, col=up?'#38e08a':'#ff6b7d';
+    s+='<line x1="'+X(i).toFixed(1)+'" y1="'+Y(d.h).toFixed(1)+'" x2="'+X(i).toFixed(1)+'" y2="'+Y(d.l).toFixed(1)+'" stroke="'+col+'" stroke-width="1"/>';
+    var y1=Y(Math.max(d.o,d.c)), y2=Y(Math.min(d.o,d.c));
+    s+='<rect x="'+(X(i)-cw*0.32).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+(cw*0.64).toFixed(1)+'" height="'+Math.max(1,(y2-y1)).toFixed(1)+'" fill="'+col+'" rx="1"/>';
+  }
+  // EMA lines
+  function line(arr,col){ var pts=arr.map(function(v,i){return X(i).toFixed(1)+','+Y(v).toFixed(1);}).join(' ');
+    return '<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="1.8"/>'; }
+  s+=line(e20,'#4aa8ff'); s+=line(e50,'#ffb457');
+  // volume
+  var vy0=priceH+gap; var vmax=Math.max.apply(null,data.map(function(d){return d.v}))||1;
+  for(var i=0;i<n;i++){ var d=data[i], up=d.c>=d.o, col=up?'rgba(56,224,138,.6)':'rgba(255,107,125,.6)';
+    var bh=d.v/vmax*(volH-6); s+='<rect x="'+(X(i)-cw*0.3).toFixed(1)+'" y="'+(vy0+volH-bh).toFixed(1)+'" width="'+(cw*0.6).toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+col+'" rx="1"/>'; }
+  s+='<line x1="0" y1="'+vy0+'" x2="'+w+'" y2="'+vy0+'" stroke="rgba(140,160,200,.25)"/>';
+  // RSI
+  var ry0=vy0+volH+gap, rh=rsiH;
+  var rY=function(v){return ry0+ (100-v)/100*rh;};
+  s+='<rect x="0" y="'+rY(70)+'" width="'+w+'" height="'+(rY(30)-rY(70))+'" fill="rgba(120,160,255,.07)"/>';
+  s+='<line x1="0" y1="'+rY(70)+'" x2="'+w+'" y2="'+rY(70)+'" stroke="rgba(255,107,125,.4)" stroke-dasharray="3 3"/>';
+  s+='<line x1="0" y1="'+rY(30)+'" x2="'+w+'" y2="'+rY(30)+'" stroke="rgba(56,224,138,.4)" stroke-dasharray="3 3"/>';
+  s+='<polyline points="'+rs.map(function(v,i){return X(i).toFixed(1)+','+rY(v).toFixed(1);}).join(' ')+'" fill="none" stroke="#a07cff" stroke-width="1.6"/>';
+  s+='</svg>';
+  return s;
+}
+var data=genOHLC(80);
+["chartA","chartB","chartC"].forEach(function(id){ var el=document.getElementById(id); if(el) el.innerHTML=candle(data); });
+
+/* demo switcher */
+document.querySelectorAll(".pbtn").forEach(function(b){ b.onclick=function(){
+  document.querySelectorAll(".pbtn").forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+  document.querySelectorAll(".demo").forEach(function(d){d.classList.remove("on");});
+  document.getElementById("demo-"+b.dataset.d).classList.add("on"); window.scrollTo(0,0);
+};});
+/* nav / tab clicks are visual only */
+document.querySelectorAll("#demo-a .nv, #demo-b .tab, #demo-c .sn").forEach(function(b){ b.onclick=function(){
+  var sib=b.parentNode.querySelectorAll("button, .sn"); sib.forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+};});
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<title>ArthaSaar — Market Dashboard</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+:root{--bg:#f4f6fa;--card:#fbfcff;--card2:#eef2f7;--text:#172033;--muted:#66748b;--line:#d8dee8;--green:#21b866;--red:#ef5b61;--orange:#f28b24;--blue:#3e78d8;--shadow:0 12px 32px rgba(31,45,72,.09)}
+[data-theme=dark]{--bg:#080d12;--card:#141a20;--card2:#1b2229;--text:#f4f7fb;--muted:#9ba7b5;--line:#303943;--green:#2bd477;--red:#ff6b70;--orange:#ff9a2e;--blue:#6ea2ff;--shadow:0 18px 40px rgba(0,0,0,.32)}
+body{background:radial-gradient(circle at 50% -10%,rgba(92,128,190,.12),transparent 34%),var(--bg);color:var(--text);padding-bottom:92px}
+.wrap{width:min(980px,100%);margin:auto;padding:18px 16px 30px}
+.hero{background:linear-gradient(135deg,var(--card),color-mix(in srgb,var(--card) 82%,#dfe7f8));border:1px solid var(--line);border-radius:30px;padding:24px 22px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand h1{font-size:36px;line-height:1;margin:0 0 12px;font-weight:850;letter-spacing:-.045em}.brand p{margin:0;color:var(--muted);font-size:13px;font-weight:700}
+.brand .live{display:inline-flex;align-items:center;gap:7px;margin-top:13px;font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.live i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px color-mix(in srgb,var(--green) 14%,transparent)}
+.theme{width:58px;height:58px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:25px;cursor:pointer;box-shadow:0 7px 18px rgba(0,0,0,.06)}
+.section{margin-top:22px}.section h2{font-size:14px;margin:0 0 10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.kpi{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow)}.kpi small{display:block;color:var(--muted);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.07em}.kpi strong{display:block;font-size:32px;line-height:1.1;margin-top:8px;font-weight:850}.kpi span{display:block;margin-top:5px;font-size:12px;font-weight:800}.up{color:var(--green)}.down{color:var(--red)}.neutral{color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.35fr 1fr;gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}.cardhead{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cardhead b{font-size:14px}.cardhead small{font-size:10px;color:var(--muted);font-weight:800}.list{display:flex;flex-direction:column}.row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:13px 17px;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row b{font-size:13px}.row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.value{text-align:right;font-variant-numeric:tabular-nums;font-size:13px;font-weight:850}.chg{text-align:right;font-size:11px;font-weight:850;min-width:58px}.chips{display:flex;gap:8px;flex-wrap:wrap;padding:13px 17px}.chip{border:1px solid var(--line);background:var(--card2);border-radius:999px;padding:8px 11px;font-size:11px;font-weight:850}.news .row{display:block}.news .row b{font-size:13px;line-height:1.4}.news .row small{margin-top:6px}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:18px;padding:15px 10px;font-size:12px;font-weight:850;cursor:pointer;box-shadow:var(--shadow)}.quick button:hover{border-color:var(--blue);transform:translateY(-1px)}
+.footer{margin-top:22px;text-align:center;color:var(--muted);font-size:10px;font-weight:700}.dock{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(560px,calc(100% - 24px));display:flex;gap:6px;padding:7px;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:999px;backdrop-filter:blur(18px);box-shadow:var(--shadow);z-index:20}.dock button{flex:1;border:0;background:transparent;color:var(--muted);border-radius:999px;padding:10px 8px;font-size:11px;font-weight:850;cursor:pointer}.dock button.active{background:var(--card2);color:var(--text)}
+@media(max-width:720px){.wrap{padding:12px 12px 26px}.hero{padding:21px 18px;border-radius:26px}.brand h1{font-size:31px}.grid{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.kpis{grid-template-columns:1fr 1fr}.kpi:last-child{grid-column:1/-1}.kpi strong{font-size:27px}.row{grid-template-columns:1fr auto}.row .chg{grid-column:2;grid-row:1}.row .value{grid-column:2;grid-row:2}.theme{width:50px;height:50px}.hero{align-items:flex-start}.brand p{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="brand">
+    <h1>ArthaSaar</h1>
+    <p>India market data, simplified.</p>
+    <div class="live"><i></i><span id="status">Loading latest snapshot…</span></div>
+  </div>
+  <button class="theme" id="theme" aria-label="Toggle theme">☀️</button>
+</header>
+
+<section class="section">
+  <h2>Market pulse</h2>
+  <div class="kpis">
+    <div class="kpi"><small>NIFTY 50</small><strong id="nifty">—</strong><span id="niftyChg" class="neutral">—</span></div>
+    <div class="kpi"><small>NIFTY BANK</small><strong id="bank">—</strong><span id="bankChg" class="neutral">—</span></div>
+    <div class="kpi"><small>INDIA VIX</small><strong id="vix">—</strong><span id="vixChg" class="neutral">—</span></div>
+  </div>
+</section>
+
+<section class="section grid">
+  <div class="card">
+    <div class="cardhead"><b>Indian indices</b><small id="indicesMeta">NSE snapshot</small></div>
+    <div class="list" id="indices"></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><b>Market breadth</b><small id="breadthMeta">—</small></div>
+    <div class="chips" id="breadth"></div>
+    <div class="cardhead"><b>FII / DII</b><small id="flowMeta">—</small></div>
+    <div class="list" id="flows"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="card">
+    <div class="cardhead"><b>Global markets</b><small id="globalMeta">Yahoo snapshot</small></div>
+    <div class="list" id="global"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="card news">
+    <div class="cardhead"><b>Latest market news</b><small>Google News feed</small></div>
+    <div class="list" id="news"></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Explore</h2>
+  <div class="quick">
+    <button onclick="scrollToId('indices')">📊 Indices</button>
+    <button onclick="scrollToId('global')">🌍 Global</button>
+    <button onclick="scrollToId('news')">📰 News</button>
+    <button onclick="scrollToId('crypto')">₿ Crypto</button>
+  </div>
+</section>
+
+<section class="section" id="crypto">
+  <div class="card">
+    <div class="cardhead"><b>Crypto snapshot</b><small id="cryptoMeta">CoinGecko</small></div>
+    <div class="list" id="cryptoList"></div>
+  </div>
+</section>
+
+<div class="footer">ArthaSaar • data is shown from the repository's latest collector snapshots • not investment advice</div>
+</div>
+
+<nav class="dock">
+  <button class="active" onclick="scrollTo({top:0,behavior:'smooth'})">⌂ Home</button>
+  <button onclick="scrollToId('indices')">▦ Markets</button>
+  <button onclick="scrollToId('global')">◎ Global</button>
+  <button onclick="scrollToId('news')">◉ News</button>
+</nav>
+
+<script>
+const DATA=['indices-all','global','breadth','fii-dii','news','crypto'];
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
+const pct=n=>(Number(n)>0?'+':'')+Number(n).toFixed(2)+'%';
+function cls(n){return Number(n)>0?'up':Number(n)<0?'down':'neutral'}
+function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'})}
+async function load(name){const r=await fetch('./data/'+name+'.json',{cache:'no-store'});if(!r.ok)throw new Error(name);return r.json()}
+function row(name,sub,value,change){return '<div class="row"><div><b>'+name+'</b><small>'+sub+'</small></div><div class="value">'+value+'</div><div class="chg '+cls(change)+'">'+pct(change)+'</div></div>'}
+async function boot(){
+ try{
+  const [ix,gl,br,fd,nw,cr]=await Promise.all(DATA.map(load));
+  const find=n=>ix.indices.find(x=>x.index===n);
+  const n=find('NIFTY 50'), b=find('NIFTY BANK'), v=find('INDIA VIX');
+  if(n){$('nifty').textContent=fmt(n.price);$('niftyChg').textContent=pct(n.change_pct);$('niftyChg').className=cls(n.change_pct)}
+  if(b){$('bank').textContent=fmt(b.price);$('bankChg').textContent=pct(b.change_pct);$('bankChg').className=cls(b.change_pct)}
+  if(v){$('vix').textContent=fmt(v.price);$('vixChg').textContent=pct(v.change_pct);$('vixChg').className=cls(v.change_pct)}
+  const preferred=['NIFTY 50','NIFTY BANK','NIFTY NEXT 50','NIFTY 100','NIFTY MIDCAP 150','NIFTY SMALLCAP 250','NIFTY FINANCIAL SERVICES','NIFTY IT'];
+  const chosen=preferred.map(x=>find(x)).filter(Boolean);
+  $('indices').innerHTML=chosen.map(x=>row(x.index,x.symbol,fmt(x.price),x.change_pct)).join('');
+  $('indicesMeta').textContent=ix.count+' NSE indices • '+new Date(ix.updated).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Kolkata'})+' IST';
+  $('breadthMeta').textContent=br.stocks+' stocks';
+  $('breadth').innerHTML=[
+    ['Above EMA 200',br.above_ema200_pct+'%'],
+    ['RSI > 60',br.rsi_above_60],
+    ['RSI < 40',br.rsi_below_40],
+    ['Near 52W high',br.near_52w_high],
+    ['Volume spike',br.volume_spike_2x]
+  ].map(x=>'<div class="chip">'+x[0]+' · '+x[1]+'</div>').join('');
+  $('flowMeta').textContent=fd.date;
+  $('flows').innerHTML=[
+    row('DII','Net flow','₹'+fmt(fd.categories.DII.net_cr/100)+' cr',fd.categories.DII.net_cr>=0?1:-1),
+    row('FII / FPI','Net flow','₹'+fmt(fd.categories['FII/FPI'].net_cr/100)+' cr',fd.categories['FII/FPI'].net_cr>=0?1:-1)
+  ].join('');
+  $('global').innerHTML=gl.items.slice(0,8).map(x=>row(x.name,x.symbol,fmt(x.price),x.chg_pct)).join('');
+  $('globalMeta').textContent=gl.count+' instruments • latest snapshot';
+  $('news').innerHTML=nw.items.slice(0,7).map(x=>'<div class="row"><b>'+x.title+'</b><small>'+x.publisher+' • '+new Date(x.published).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Kolkata'})+' IST</small></div>').join('');
+  $('cryptoList').innerHTML=cr.top.slice(0,5).map(x=>row(x.name,x.symbol,'$'+fmt(x.price_usd),x.chg_24h_pct)).join('');
+  $('cryptoMeta').textContent='Fear & Greed '+cr.fear_greed.value+' · '+cr.fear_greed.label;
+  $('status').textContent='Latest snapshot • '+new Date(Math.max(new Date(ix.updated),new Date(gl.updated),new Date(nw.updated),new Date(cr.updated))).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Kolkata'})+' IST';
+ }catch(e){
+  $('status').textContent='Data feed unavailable — UI is still available';
+  console.error(e);
+ }
+}
+$('theme').onclick=()=>{
+ const dark=document.documentElement.dataset.theme==='dark';
+ document.documentElement.dataset.theme=dark?'light':'dark';
+ $('theme').textContent=dark?'☀️':'🌙';
+ localStorage.setItem('artha-theme',dark?'light':'dark');
+};
+const saved=localStorage.getItem('artha-theme');if(saved){document.documentElement.dataset.theme=saved;$('theme').textContent=saved==='dark'?'🌙':'☀️'}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+name: ArthaSaar v2 Post-Market Data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "50 13 * * 1-5" # 19:20 IST, after NSE EOD reports settle
+
+permissions:
+  contents: write
+
+concurrency:
+  group: arthasaar-v2-postmarket
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install free market-data client
+        run: pip install yfinance
+
+      - name: Refresh NSE indices
+        run: python scripts/indices_collect.py
+
+      - name: Refresh Yahoo Finance global board
+        run: python scripts/global_collect.py
+
+      - name: Refresh NSE delivery radar
+        run: |
+          python scripts/delivery_collect.py || true
+          python scripts/radar_collect.py || true
+
+      - name: Validate v2 data pack
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          required = ["indices-all","global","radar","breadth","fii-dii","news","economy-pulse","crypto"]
+          for name in required:
+              p=pathlib.Path("data")/(name+".json")
+              if not p.exists():
+                  print("missing", p); sys.exit(1)
+              try:
+                  json.loads(p.read_text())
+              except Exception as e:
+                  print("invalid", p, e); sys.exit(1)
+          x=json.loads(pathlib.Path("data/indices-all.json").read_text())
+          if x.get("count",0) < 100:
+              print("NSE index snapshot too small:",x.get("count")); sys.exit(1)
+          print("v2 data pack OK:",x.get("count"),"NSE indices")
+
+      - name: Commit refreshed v2 data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/indices-all.json data/global.json data/delivery.json data/radar.json
+          if git diff --cached --quiet; then
+            echo "No v2 data changes."
+            exit 0
+          fi
+          git commit -m "data: v2 post-market NSE + Yahoo refresh"
+          for i in 1 2 3 4 5; do
+            if git pull --rebase --autostash origin main && git push; then
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "push failed"
+          exit 1

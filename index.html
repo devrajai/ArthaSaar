@@ -174,6 +174,11 @@ input:focus,select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3
 .foot b{color:var(--mut)}
 .loader{display:grid;place-items:center;min-height:200px;color:var(--mut)}
 
+/* FIX: the drawer overlay sets display:flex, which overrides the [hidden] attribute.
+   Without this, a full-screen blurred overlay covers the whole page. */
+.drawer[hidden]{display:none !important}
+.toast[hidden]{display:none !important}
+
 </style>
 <!-- watchdog: purges old service workers/caches and shows a visible message instead of a blank page -->
 <script>

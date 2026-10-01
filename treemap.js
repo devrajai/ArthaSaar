@@ -88,10 +88,16 @@
     return true;
   }
 
-  var tries = 0;
-  var t = setInterval(function () {
-    tries++;
-    if (mount()) clearInterval(t);
-    if (tries > 240) clearInterval(t);
-  }, 500);
+  if (typeof document !== 'undefined') {
+    var tries = 0;
+    var t = setInterval(function () {
+      tries++;
+      if (mount()) clearInterval(t);
+      if (tries > 240) clearInterval(t);
+    }, 500);
+  }
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { squarify };
+  }
 })();

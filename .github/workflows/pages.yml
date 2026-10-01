@@ -24,15 +24,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build ArthaSaar master UI v7
+      - name: Build ArthaSaar simple live-data UI v8
         run: |
           rm -rf site
           mkdir -p site/data
-          cp -R v7/. site/
+          cp -R v8/. site/
           for f in indices-all global fii-dii breadth radar news economy-pulse crypto stock-scores preopen candles constituents delivery; do
             if [ -f "data/$f.json" ]; then cp "data/$f.json" "site/data/$f.json"; fi
           done
-          printf '%s\n' '{"site":"ArthaSaar v7","pipeline":"NSE + yfinance + free public sources","built_at":"'"$(date -u +%FT%TZ)"'"}' > site/data/site-build.json
+          printf '%s\n' '{"site":"ArthaSaar v8","pipeline":"NSE + yfinance + free public sources","built_at":"'$(date -u +%FT%TZ)'"}' > site/data/site-build.json
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

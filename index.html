@@ -449,11 +449,11 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
   <span class="smic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
   <span class="t"><b>SECTOR MAP RADAR</b><small>rotation · breadth · daily NSE snapshot</small></span>
 </div></div>
-<div class="chips">
-  <span class="fch2 on">Sectors</span><span class="fch2">All Indices</span><span class="fch2">IT</span><span class="fch2">Bank</span><span class="fch2">Auto</span><span class="fch2">Pharma</span><span class="fch2">FMCG</span><span class="fch2">Metal</span><span class="fch2">Energy</span><span class="fch2">Oil & Gas</span><span class="fch2">Realty</span><span class="fch2">Infra</span><span class="fch2">Media</span><span class="fch2">Fin Serv</span><span class="fch2">Cons Dur</span><span class="fch2">Healthcare</span>
+<div class="chips" id="sectorFilters">
+  <span class="fch2 on" data-sector="Sectors">Sectors</span><span class="fch2" data-sector="All Indices">All Indices</span><span class="fch2" data-sector="IT">IT</span><span class="fch2" data-sector="BANK">Bank</span><span class="fch2" data-sector="AUTO">Auto</span><span class="fch2" data-sector="PHARMA">Pharma</span><span class="fch2" data-sector="FMCG">FMCG</span><span class="fch2" data-sector="METAL">Metal</span><span class="fch2" data-sector="ENERGY">Energy</span><span class="fch2" data-sector="OIL & GAS">Oil & Gas</span><span class="fch2" data-sector="REALTY">Realty</span><span class="fch2" data-sector="INFRA">Infra</span><span class="fch2" data-sector="MEDIA">Media</span><span class="fch2" data-sector="FIN SERV">Fin Serv</span><span class="fch2" data-sector="CONS DUR">Cons Dur</span><span class="fch2" data-sector="HEALTHCARE">Healthcare</span>
 </div>
 <div class="card" style="margin-top:12px">
-  <div class="sh2">SECTOR PERFORMANCE · GREEN/RED = DAY CHANGE</div>
+  <div class="sh2">SECTOR PERFORMANCE · <span id="sectorViewTitle">SECTOR VIEW</span> · GREEN/RED = DAY CHANGE</div>
   <div class="tmap" id="sectorMapGrid"><div class="idxload">Loading sector map from NSE snapshot…</div></div>
   <div class="mono" id="sectorMeta" style="padding:0 12px 12px;color:var(--faint);font-size:9.5px">Waiting for data…</div>
 </div>

@@ -175,12 +175,15 @@ def main():
             print('WARN fetch fail', name, e)
             items = []
         stories = []
+        used_tk_flat = set().union(*used_tk) if used_tk else set()
         for g in group_stories(items):
             dup = False
-            for u in used_tk:
-                if len(g['tk'] & u) / float(min(len(g['tk']), len(u)) or 1) >= 0.55:
-                    dup = True
-                    break
+            if not g['tk'].isdisjoint(used_tk_flat):
+                for u in used_tk:
+                    if not g['tk'].isdisjoint(u):
+                        if len(g['tk'] & u) / float(min(len(g['tk']), len(u)) or 1) >= 0.55:
+                            dup = True
+                            break
             if dup:
                 continue
             n = len(g['srcs'])

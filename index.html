@@ -149,8 +149,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
 .loader{display:grid;place-items:center;min-height:200px;color:var(--mut)}
 
 </style>
-<!-- inline watchdog: runs even if the main script is stale/blocked. Purges old service workers + caches
-     and shows a visible message instead of a silent blank page. -->
+<!-- inline watchdog: purges old service workers + caches and shows a visible message instead of a blank page -->
 <script>
 (function () {
   try { if ("serviceWorker" in navigator) { navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }); } } catch (e) {}
@@ -180,7 +179,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <input type="password" id="gateInput" placeholder="Enter access code" autocomplete="off"/>
     <div class="err" id="gateErr"></div>
     <button class="btn" style="width:100%;margin-top:6px" id="gateGo">Enter ArthaSaar</button>
-    <div class="hint">Demo gate (client-side). Set your own access code in this file (search for <b>ACCESS_CODE</b>).<br>This is a cosmetic gate, not real security — a static site can't hide data.</div>
+    <div class="hint">Demo gate (client-side). Set your own access code in the app script (search for <b>ACCESS_CODE</b>).<br>This is a cosmetic gate, not real security — a static site can't hide data.</div>
   </div>
 </div>
 
@@ -383,13 +382,18 @@ async function show(view) {
   $$("#nav .nv").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
   $$(".view").forEach((v) => v.classList.remove("active"));
   const el = $("#v-" + view);
+  if (!el) return false;
   el.classList.add("active");
   if (!RENDERED[view]) {
     el.innerHTML = '<div class="loader">loading ' + view + "…</div>";
     try { await VIEWS[view](el); RENDERED[view] = true; }
-    catch (e) { el.innerHTML = '<div class="card"><h4>Could not load</h4><p class="mut">' + esc(e.message) + "</p><p class='note'>Make sure this file sits next to the repo's <b>data/</b> folder (or one level inside it).</p></div>"; }
+    catch (e) {
+      el.innerHTML = '<div class="card"><h4>Could not load</h4><p class="mut">' + esc(e.message) + "</p><p class='note'>Market data could not be fetched. Check your internet connection, then reload. (base: " + esc(BASE) + ")</p></div>";
+      return false;
+    }
   }
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+  return true;
 }
 
 /* ------------------------------ shared bits ------------------------------ */
@@ -1172,28 +1176,35 @@ function applyTheme(t) {
 window.applyTheme = applyTheme;
 
 async function boot() {
-  $("#gate").style.display = "none";
-  $("#topbar").style.display = "flex";
-  $("#app").style.display = "block";
-  $("#foot").style.display = "block";
-  const ok = await probeBase();
-  const st = $("#status");
+  const gate = $("#gate"), ge = $("#gateErr"), tb = $("#topbar"), ap = $("#app"), ft = $("#foot");
   try {
-    const f = await J("fii-dii.json");
-    $("#statusTxt").textContent = "data " + bytesAgo(f.updated);
-    st.classList.add("ok");
-  } catch (e) {
-    st.classList.add("bad");
-    $("#statusTxt").textContent = ok ? "partial" : "no data";
+    if (tb) tb.style.display = "flex";
+    if (ap) ap.style.display = "block";
+    if (ft) ft.style.display = "block";
+    if (ge) ge.textContent = "Unlocked — loading your dashboard…";
+    const ok = await probeBase();
+    const st = $("#status");
+    try {
+      const f = await J("fii-dii.json");
+      if (st) st.classList.add("ok");
+      if ($("#statusTxt")) $("#statusTxt").textContent = "data " + bytesAgo(f.updated);
+    } catch (e) {
+      if (st) st.classList.add("bad");
+      if ($("#statusTxt")) $("#statusTxt").textContent = ok ? "partial" : "no data";
+    }
+    if ($("#footMeta")) $("#footMeta").textContent = "Loaded from " + BASE + " · " + new Date().toLocaleString("en-IN");
+    $$("#nav .nv").forEach((b) => b.onclick = () => show(b.dataset.view));
+    const br = $(".brand"); if (br) br.onclick = () => show("dash");
+    const dr = $("#drawer"); if (dr) dr.onclick = (e) => { if (e.target.id === "drawer") closeDrawer(); };
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+    const ts = $("#themeSel"); if (ts) ts.onchange = () => applyTheme(ts.value);
+    const ib = $("#ipoBtn"); if (ib) ib.onclick = openIpo;
+    const rendered = await show("dash");
+    if (rendered) { if (gate) gate.style.display = "none"; }
+    else if (ge) ge.textContent = "Unlocked, but market data could not load. Check your internet and reload. (base: " + BASE + ")";
+  } catch (err) {
+    if (ge) ge.textContent = "Error: " + (err && err.message ? err.message : err);
   }
-  $("#footMeta").textContent = "Loaded from " + BASE + " · " + new Date().toLocaleString("en-IN");
-  $$("#nav .nv").forEach((b) => b.onclick = () => show(b.dataset.view));
-  $(".brand").onclick = () => show("dash");
-  $("#drawer").onclick = (e) => { if (e.target.id === "drawer") closeDrawer(); };
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
-  const ts = $("#themeSel"); if (ts) ts.onchange = () => applyTheme(ts.value);
-  const ib = $("#ipoBtn"); if (ib) ib.onclick = openIpo;
-  show("dash");
 }
 
 (async function init() {

@@ -29,7 +29,7 @@ jobs:
         run: |
           rm -rf site
           mkdir -p site/data
-          cp index.html saar.css saar.js site/
+          cp index.html saar-v11.css saar-v11.js site/
           if [ -f sw.js ]; then cp sw.js site/; fi
           cp data/*.json site/data/ 2>/dev/null || true
           printf '%s\n' '{"site":"ArthaSaar v10","pipeline":"NSE + yfinance + AMFI + free public sources","built_at":"'$(date -u +%FT%TZ)'"}' > site/data/site-build.json

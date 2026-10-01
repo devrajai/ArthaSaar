@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081019">
+<meta name="description" content="ArthaSaar — Indian market intelligence terminal">
+<title>ArthaSaar Terminal</title>
+<link rel="stylesheet" href="./styles.css?v=1">
+</head>
+<body>
+<div class="ambient a1"></div><div class="ambient a2"></div><div class="ambient a3"></div>
+<main class="shell">
+  <header class="topbar glass">
+    <div class="brand"><div class="brandmark">AS</div><div><strong>ARTHASAAR</strong><span>MARKET INTELLIGENCE TERMINAL</span></div></div>
+    <div class="market-clock"><b id="clock">--:--:--</b><span id="date">--</span><i id="status" class="status">LOADING</i></div>
+    <div class="top-actions"><button id="refresh" class="iconbtn" title="Refresh data">↻</button><button id="theme" class="iconbtn" title="Toggle theme">◐</button></div>
+  </header>
+
+  <section class="hero">
+    <div><div class="eyebrow">INDIA / GLOBAL / FLOW / RADAR</div><h1>Read the market<br><em>before the noise.</em></h1><p>One terminal for NSE post-market data, Yahoo Finance history, flows, breadth, sectors, stocks and macro context.</p></div>
+    <div class="hero-meta glass"><span>DATA ENGINE</span><b>GitHub Actions</b><small id="updated">checking snapshots…</small></div>
+  </section>
+
+  <section class="grid kpis" id="kpis"></section>
+
+  <section class="section-head"><div><span class="eyebrow">01 / INDIA</span><h2>Index command center</h2></div><button class="textbtn" data-open="indices">ALL 139 INDICES →</button></section>
+  <section class="glass panel">
+    <div class="panelbar"><div><b>CORE INDICES</b><small>NSE daily snapshot</small></div><div class="legend"><span class="updot"></span> up <span class="downdot"></span> down</div></div>
+    <div class="index-grid" id="coreIndices"></div>
+    <div class="spark-wrap"><div><b>NIFTY INTRADAY TRACE</b><small>Yahoo Finance / yfinance archive</small></div><svg id="spark" viewBox="0 0 900 180" preserveAspectRatio="none"></svg></div>
+  </section>
+
+  <section class="section-head"><div><span class="eyebrow">02 / ROTATION</span><h2>Sector radar</h2></div><button class="textbtn" data-open="sectors">OPEN MAP →</button></section>
+  <section class="sector-layout">
+    <div class="glass panel"><div class="panelbar"><div><b>SECTOR MAP</b><small>tracked NSE sector indices</small></div><span id="sectorFresh" class="fresh">—</span></div><div class="sector-grid" id="sectorGrid"></div></div>
+    <div class="glass panel radar-panel"><div class="panelbar"><div><b>RADAR</b><small>largest daily moves</small></div></div><div id="sectorRadar"></div></div>
+  </section>
+
+  <section class="section-head"><div><span class="eyebrow">03 / MARKET BREADTH</span><h2>Stock radar</h2></div><button class="textbtn" data-open="stocks">SCREEN UNIVERSE →</button></section>
+  <section class="stock-layout">
+    <div class="glass panel"><div class="panelbar"><div><b>ACCUMULATION</b><small>high delivery + positive close</small></div></div><div id="accumulation" class="rows"></div></div>
+    <div class="glass panel"><div class="panelbar"><div><b>VOLUME BLAST</b><small>unusual turnover</small></div></div><div id="volumeBlast" class="rows"></div></div>
+    <div class="glass panel"><div class="panelbar"><div><b>HIDDEN SELLING</b><small>high delivery + negative close</small></div></div><div id="selling" class="rows"></div></div>
+  </section>
+
+  <section class="section-head"><div><span class="eyebrow">04 / CAPITAL FLOW</span><h2>Who is moving money?</h2></div></section>
+  <section class="flow-layout">
+    <div class="glass panel" id="flows"></div>
+    <div class="glass panel" id="breadth"></div>
+  </section>
+
+  <section class="section-head"><div><span class="eyebrow">05 / WORLD</span><h2>Global board</h2></div></section>
+  <section class="glass panel"><div class="global-grid" id="global"></div></section>
+
+  <section class="section-head"><div><span class="eyebrow">06 / INFORMATION</span><h2>News + economy + crypto</h2></div></section>
+  <section class="info-layout">
+    <div class="glass panel"><div class="panelbar"><div><b>MARKET NEWS</b><small>free public news feed</small></div></div><div id="news" class="news"></div></div>
+    <div class="glass panel"><div class="panelbar"><div><b>ECONOMY PULSE</b><small>macro release board</small></div></div><div id="economy" class="econ"></div></div>
+    <div class="glass panel"><div class="panelbar"><div><b>CRYPTO BOARD</b><small>CoinGecko snapshot</small></div></div><div id="crypto" class="rows"></div></div>
+  </section>
+
+  <footer class="footer glass"><b>ARTHASAAR</b><span>Free-source market intelligence · not investment advice</span><span id="footerFresh">—</span></footer>
+</main>
+
+<div id="drawer" class="drawer" aria-hidden="true"><div class="drawer-bg" data-close></div><aside class="drawer-card glass"><button class="drawer-close" data-close>×</button><div id="drawerContent"></div></aside></div>
+<script src="./app.js?v=1"></script>
+</body>
+</html>

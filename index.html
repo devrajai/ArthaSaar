@@ -340,6 +340,11 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 #v-company .srow input{font-size:12px;padding:9px 12px}
 #v-company .ni b{font-size:11.5px}
 
+
+/* ===== live indices (added) ===== */
+.idxwrap{max-height:calc(100dvh - 250px);overflow:auto;-webkit-overflow-scrolling:touch}
+.idxmeta{padding:0 2px 9px;font:500 10px var(--mono);color:var(--faint);letter-spacing:.03em}
+.idxload{padding:18px 14px;color:var(--faint);font:500 11px var(--mono)}
 </style>
 </head>
 <body>
@@ -376,7 +381,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 
 <main>
 <section class="view on" id="v-home">
-<div class="kpis"><div class="card kpi"><div class="lbl">NIFTY 50</div><div class="num">26,429.27</div><div class="chg up">▲ +0.74% · +193.4</div></div><div class="card kpi"><div class="lbl">SENSEX</div><div class="num">81,712.56</div><div class="chg up">▲ +0.62%</div></div><div class="card kpi"><div class="lbl">BANK NIFTY</div><div class="num">58,412.30</div><div class="chg up">▲ +0.58%</div></div><div class="card kpi"><div class="lbl">INDIA VIX</div><div class="num">13.84</div><div class="chg dn">▼ −2.11%</div></div></div>
+<div class="kpis"><div class="card kpi" id="kpiNifty"><div class="lbl">NIFTY 50</div><div class="num">--</div><div class="chg up">▲ +0.74% · +193.4</div></div><div class="card kpi" id="kpiSensex"><div class="lbl">SENSEX</div><div class="num">--</div><div class="chg up">▲ +0.62%</div></div><div class="card kpi" id="kpiBank"><div class="lbl">BANK NIFTY</div><div class="num">--</div><div class="chg up">▲ +0.58%</div></div><div class="card kpi" id="kpiVix"><div class="lbl">INDIA VIX</div><div class="num">--</div><div class="chg dn">▼ −2.11%</div></div></div>
 <div class="grid2" style="margin-top:10px">
   <div class="card"><div class="sh2">NIFTY 50 · 1D <span class="up">+0.74%</span><span class="fr">H 26,466 · L 26,126</span></div><div style="padding:10px 12px"><svg viewBox="0 0 800 170" preserveAspectRatio="none" style="width:100%;height:160px"><path d="M0 30H800M0 85H800M0 140H800" class="gl"/><path d="M0 128L60 118L110 136L170 102L230 114L290 84L350 98L410 68L470 80L530 52L590 64L650 38L710 50L800 22V170H0Z" fill="var(--accent)" opacity=".1"/><path d="M0 128L60 118L110 136L170 102L230 114L290 84L350 98L410 68L470 80L530 52L590 64L650 38L710 50L800 22" fill="none" stroke="var(--accent)" stroke-width="2.5"/></svg></div></div>
   <div class="card"><div class="sh2">Market Breadth</div><div style="padding:12px 14px">
@@ -405,37 +410,21 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <div class="sect">NEWS</div>
 <div class="grid3"><div class="card"><div class="sh2">Market News</div><div class="ni"><b>Indian equities trade mixed as sector rotation continues</b><small>Market · 12 min ago</small></div><div class="ni"><b>IT and auto names lead the active volume list</b><small>Stocks · 28 min ago</small></div><div class="ni"><b>FII flows remain the key variable for the week</b><small>Flows · 42 min ago</small></div></div><div class="card"><div class="sh2">IPO News</div><div class="ni"><b>New issue enters the open IPO calendar</b><small>IPO · 18 min ago</small></div><div class="ni"><b>Listing and allotment updates</b><small>IPO · 1 hr ago</small></div><div class="ni"><b>DRHP filing tracker updated</b><small>IPO · 2 hr ago</small></div></div><div class="card"><div class="sh2">Company News</div><div class="ni"><b>Large-cap earnings and management updates</b><small>Companies · 25 min ago</small></div><div class="ni"><b>Corporate actions monitor</b><small>Companies · 54 min ago</small></div><div class="ni"><b>Order-book and capex updates</b><small>Companies · 2 hr ago</small></div></div></div></section>
 <!-- ═══════════ WINDOW: INDICES — opens when its nav button is clicked · edit content below ═══════════ -->
-<section class="view win" id="v-indices"><div class="fshead"><h2>Indices — 139 tracked</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
-<button class="radarbtn" data-go="idxradar"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><rect x="5" y="12" width="3.5" height="6" rx="1"/><rect x="10.25" y="8" width="3.5" height="10" rx="1"/><rect x="15.5" y="4" width="3.5" height="14" rx="1"/></svg></span><span class="t"><b>INDICES RADAR</b><small>139 indices ka nichod</small></span><span class="arw">→</span></button><div class="srow"><input id="qIdx" type="search" placeholder="Search index name…"></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Index</th><th>Price</th><th>Chg%</th><th>52w Pos</th><th>PE</th><th>PB</th></tr></thead><tbody id="idxBody"><tr><td>NIFTY 50</td><td>26,429.27</td><td><span class='up'>+0.74%</span></td><td>74%</td><td>22.1</td><td>3.6</td></tr><tr><td>BANK NIFTY</td><td>58,412.30</td><td><span class='up'>+0.58%</span></td><td>81%</td><td>18.4</td><td>2.9</td></tr><tr><td>NIFTY NEXT 50</td><td>68,104.55</td><td><span class='dn'>−0.12%</span></td><td>62%</td><td>24.8</td><td>4.4</td></tr><tr><td>NIFTY MIDCAP 100</td><td>59,884.10</td><td><span class='up'>+0.31%</span></td><td>68%</td><td>28.6</td><td>4.9</td></tr><tr><td>NIFTY IT</td><td>41,256.85</td><td><span class='up'>+1.62%</span></td><td>77%</td><td>26.2</td><td>7.1</td></tr><tr><td>NIFTY PHARMA</td><td>21,744.05</td><td><span class='dn'>−0.44%</span></td><td>54%</td><td>32.4</td><td>4.8</td></tr><tr><td>NIFTY AUTO</td><td>25,990.45</td><td><span class='up'>+0.88%</span></td><td>85%</td><td>29.1</td><td>5.2</td></tr><tr><td>SENSEX</td><td>81,712.56</td><td><span class='up'>+0.62%</span></td><td>72%</td><td>22.4</td><td>3.7</td></tr><tr><td>NIFTY METAL</td><td>9,412.30</td><td><span class='dn'>−0.96%</span></td><td>41%</td><td>19.8</td><td>2.6</td></tr><tr><td>INDIA VIX</td><td>13.84</td><td><span class='dn'>−2.11%</span></td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div></section>
+<section class="view win" id="v-indices"><div class="fshead"><h2 id="idxTitle">Indices</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
+<button class="radarbtn" data-go="idxradar"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><rect x="5" y="12" width="3.5" height="6" rx="1"/><rect x="10.25" y="8" width="3.5" height="10" rx="1"/><rect x="15.5" y="4" width="3.5" height="14" rx="1"/></svg></span><span class="t"><b>INDICES RADAR</b><small>139 indices ka nichod</small></span><span class="arw">→</span></button><div class="srow"><input id="qIdx" type="search" placeholder="Search index name…"></div><div class="idxmeta" id="idxMeta">Loading live indices…</div><div class="card idxwrap"><table><thead><tr><th>Index</th><th>Price</th><th>Chg%</th><th>52w Pos</th><th>PE</th><th>PB</th></tr></thead><tbody id="idxBody"><tr><td colspan="6" class="idxload">Loading live indices…</td></tr></tbody></table></div></section>
 <!-- ═══════════ WINDOW: INDICES RADAR — opens from the INDICES RADAR button · edit content below ═══════════ -->
 <section class="view win" id="v-idxradar">
 <div class="fshead"><h2>Indices Radar — nichod</h2><button class="xbtn" data-go="indices">✕ CLOSE</button></div>
-<div class="idxcards">
-  <div class="ridx"><div class="lbl">NIFTY 50</div><div class="val">23140.5</div><div class="chg up">+0.34%</div></div>
-  <div class="ridx"><div class="lbl">NIFTY BANK</div><div class="val">55580.4</div><div class="chg up">+0.26%</div></div>
-  <div class="ridx"><div class="lbl">NIFTY NEXT 50</div><div class="val">71778.6</div><div class="chg up">+0.56%</div></div>
-</div>
-<div class="rbreadth">
+<div class="idxcards" id="radarCards"></div>
+<div class="rbreadth" id="radarBreadth">
   <div class="blab">98/139 GREEN</div>
   <div class="rbar"><i style="width:70.5%"></i><em></em></div>
   <div class="rcap">38 red · 3 flat · 2026-09-26</div>
 </div>
 <div class="sect">TOP GAINERS</div>
-<div class="rchips">
-  <span class="rchip g"><b>NIFTY CONSUMER DURABLES</b> +0.9%</span>
-  <span class="rchip g"><b>NIFTY REALTY</b> +0.9%</span>
-  <span class="rchip g"><b>NIFTY AUTO</b> +0.9%</span>
-  <span class="rchip g"><b>NIFTY CORE HOUSING</b> +0.8%</span>
-  <span class="rchip g"><b>NIFTY SME EMERGE</b> +0.8%</span>
-</div>
+<div class="rchips" id="radarGainers"></div>
 <div class="sect">TOP LOSERS</div>
-<div class="rchips">
-  <span class="rchip r"><b>INDIA VIX</b> -4.0%</span>
-  <span class="rchip r"><b>NIFTY INDIA INTERNET</b> -0.9%</span>
-  <span class="rchip r"><b>NIFTY MIDSMALL HEALTHCARE</b> -0.9%</span>
-  <span class="rchip r"><b>NIFTY CAPITAL MARKETS</b> -0.7%</span>
-  <span class="rchip r"><b>NIFTY MIDCAP LIQUID 15</b> -0.5%</span>
-</div>
+<div class="rchips" id="radarLosers"></div>
 <p class="rnote">Radar: breadth dikhta hai ki market andar se kaisa hai — sab green = healthy, sirf Nifty green = weak inside.</p>
 </section>
 <!-- ═══════════ WINDOW: SECTOR MAP — opens when its nav button is clicked · edit content below ═══════════ -->
@@ -897,4 +886,5 @@ document.querySelectorAll(".fch2").forEach(function(c){c.addEventListener("click
   document.querySelectorAll(".fch2").forEach(function(x){x.classList.remove("on");});c.classList.add("on");});});
 })();
 </script>
+<script src="as-live.js?v=1"></script>
 </body></html>

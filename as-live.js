@@ -220,6 +220,12 @@ function paintSectorMap(data, mode) {
   var green=rows.filter(function(x){return Number(x.r.change_pct)>0;}).length;
   var red=rows.filter(function(x){return Number(x.r.change_pct)<0;}).length;
   if(meta) meta.textContent=rows.length+" shown · "+green+" green · "+red+" red · NSE snapshot "+fmtUpdated(data.updated);
+  host.querySelectorAll("[data-sector-card]").forEach(function(card){
+    card.addEventListener("click",function(){
+      var target=card.getAttribute("data-sector-card");
+      if(target) setSectorFilter(target);
+    });
+  });
   if(radar){
     var top=rows.slice().sort(function(a,b){
       return Math.abs(Number(b.r.change_pct))-Math.abs(Number(a.r.change_pct));

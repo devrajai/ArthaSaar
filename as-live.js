@@ -118,10 +118,6 @@ function paintIndices(data, glob) {
 
   var title = el("idxTitle");
   if (title) title.textContent = "Indices \u2014 " + L.length + " tracked";
-
-  var meta = el("idxMeta");
-  if (meta) meta.textContent = "LIVE \u00b7 " + L.length + " indices \u00b7 NSE + BSE \u00b7 updated " +
-    fmtUpdated(data.updated) + " \u00b7 refreshes daily after market close";
 }
 
 /* ---------- Indices Radar ---------- */
@@ -164,7 +160,6 @@ function paintRadar(data) {
 function fail() {
   var tb = el("idxBody");
   if (tb) tb.innerHTML = '<tr><td colspan="6" class="idxload">Live indices load nahi hue \u2014 data/indices-all.json check karo.</td></tr>';
-  var m = el("idxMeta"); if (m) m.textContent = "offline \u00b7 snapshot load nahi hua";
 }
 
 function boot() {

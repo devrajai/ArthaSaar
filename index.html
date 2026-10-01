@@ -342,6 +342,9 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 
 
 /* ===== live indices (added) ===== */
+/* window views cover the dock, so don't reserve its space */
+.view.win.on{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+
 .idxwrap{overflow:auto;-webkit-overflow-scrolling:touch}
 #v-indices.on{display:flex;flex-direction:column;overflow:hidden}
 #v-indices .fshead,#v-indices .radarbtn,#v-indices .srow{flex:0 0 auto}

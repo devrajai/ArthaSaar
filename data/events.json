@@ -1,285 +1,6 @@
 {
- "updated": "2026-09-30T00:32:17.612122+00:00",
+ "updated": "2026-10-01T00:33:36.105168+00:00",
  "week": [
-  {
-   "title": "Household Spending m/m",
-   "country": "AUD",
-   "date_ist": "2026-09-29",
-   "time_ist": "07:00",
-   "impact": "Low",
-   "forecast": "0.3%",
-   "previous": "1.1%"
-  },
-  {
-   "title": "Cash Rate",
-   "country": "AUD",
-   "date_ist": "2026-09-29",
-   "time_ist": "10:00",
-   "impact": "High",
-   "forecast": "4.60%",
-   "previous": "4.35%"
-  },
-  {
-   "title": "RBA Rate Statement",
-   "country": "AUD",
-   "date_ist": "2026-09-29",
-   "time_ist": "10:00",
-   "impact": "High",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "RBA Press Conference",
-   "country": "AUD",
-   "date_ist": "2026-09-29",
-   "time_ist": "11:00",
-   "impact": "Medium",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "KOF Economic Barometer",
-   "country": "CHF",
-   "date_ist": "2026-09-29",
-   "time_ist": "12:30",
-   "impact": "Low",
-   "forecast": "106.0",
-   "previous": "106.7"
-  },
-  {
-   "title": "Spanish Flash CPI y/y",
-   "country": "EUR",
-   "date_ist": "2026-09-29",
-   "time_ist": "12:30",
-   "impact": "Low",
-   "forecast": "4.6%",
-   "previous": "4.3%"
-  },
-  {
-   "title": "M4 Money Supply m/m",
-   "country": "GBP",
-   "date_ist": "2026-09-29",
-   "time_ist": "14:00",
-   "impact": "Low",
-   "forecast": "0.1%",
-   "previous": "-0.3%"
-  },
-  {
-   "title": "Mortgage Approvals",
-   "country": "GBP",
-   "date_ist": "2026-09-29",
-   "time_ist": "14:00",
-   "impact": "Low",
-   "forecast": "56K",
-   "previous": "56K"
-  },
-  {
-   "title": "Net Lending to Individuals m/m",
-   "country": "GBP",
-   "date_ist": "2026-09-29",
-   "time_ist": "14:00",
-   "impact": "Low",
-   "forecast": "6.2B",
-   "previous": "6.3B"
-  },
-  {
-   "title": "10-y Bond Auction",
-   "country": "GBP",
-   "date_ist": "2026-09-29",
-   "time_ist": "14:32",
-   "impact": "Low",
-   "forecast": "",
-   "previous": "5.16|3.6"
-  },
-  {
-   "title": "Italian 10-y Bond Auction",
-   "country": "EUR",
-   "date_ist": "2026-09-29",
-   "time_ist": "14:34",
-   "impact": "Low",
-   "forecast": "",
-   "previous": "4.10|1.6"
-  },
-  {
-   "title": "German Buba President Nagel Speaks",
-   "country": "EUR",
-   "date_ist": "2026-09-29",
-   "time_ist": "15:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "ECB President Lagarde Speaks",
-   "country": "EUR",
-   "date_ist": "2026-09-29",
-   "time_ist": "16:30",
-   "impact": "Medium",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "GDP m/m",
-   "country": "CAD",
-   "date_ist": "2026-09-29",
-   "time_ist": "18:00",
-   "impact": "Medium",
-   "forecast": "0.0%",
-   "previous": "0.3%"
-  },
-  {
-   "title": "HPI m/m",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "18:30",
-   "impact": "Low",
-   "forecast": "0.1%",
-   "previous": "0.0%"
-  },
-  {
-   "title": "S&P/CS Composite-20 HPI y/y",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "18:30",
-   "impact": "Low",
-   "forecast": "2.2%",
-   "previous": "2.1%"
-  },
-  {
-   "title": "CB Consumer Confidence",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "19:30",
-   "impact": "Medium",
-   "forecast": "89.2",
-   "previous": "89.4"
-  },
-  {
-   "title": "JOLTS Job Openings",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "19:30",
-   "impact": "Medium",
-   "forecast": "7.23M",
-   "previous": "7.27M"
-  },
-  {
-   "title": "MPC Member Mann Speaks",
-   "country": "GBP",
-   "date_ist": "2026-09-29",
-   "time_ist": "20:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "FOMC Member Bowman Speaks",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "20:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "MPC Member Taylor Speaks",
-   "country": "GBP",
-   "date_ist": "2026-09-29",
-   "time_ist": "21:00",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "FOMC Member Barr Speaks",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "22:10",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "FOMC Member Goolsbee Speaks",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "22:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "Gov Council Member Gravelle Speaks",
-   "country": "CAD",
-   "date_ist": "2026-09-29",
-   "time_ist": "22:50",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "FOMC Member Musalem Speaks",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "23:00",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "FOMC Member Williams Speaks",
-   "country": "USD",
-   "date_ist": "2026-09-29",
-   "time_ist": "23:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "FOMC Member Waller Speaks",
-   "country": "USD",
-   "date_ist": "2026-09-30",
-   "time_ist": "00:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "API Weekly Statistical Bulletin",
-   "country": "USD",
-   "date_ist": "2026-09-30",
-   "time_ist": "02:00",
-   "impact": "Low",
-   "forecast": "",
-   "previous": ""
-  },
-  {
-   "title": "Prelim Industrial Production m/m",
-   "country": "JPY",
-   "date_ist": "2026-09-30",
-   "time_ist": "05:20",
-   "impact": "Low",
-   "forecast": "1.4%",
-   "previous": "0.1%"
-  },
-  {
-   "title": "Retail Sales y/y",
-   "country": "JPY",
-   "date_ist": "2026-09-30",
-   "time_ist": "05:20",
-   "impact": "Low",
-   "forecast": "3.3%",
-   "previous": "4.0%"
-  },
-  {
-   "title": "ANZ Business Confidence",
-   "country": "NZD",
-   "date_ist": "2026-09-30",
-   "time_ist": "05:30",
-   "impact": "Low",
-   "forecast": "",
-   "previous": "53.7"
-  },
   {
    "title": "CPI m/m",
    "country": "AUD",
@@ -380,15 +101,6 @@
    "previous": "0.2%"
   },
   {
-   "title": "German Retail Sales m/m",
-   "country": "EUR",
-   "date_ist": "2026-09-30",
-   "time_ist": "11:30",
-   "impact": "Low",
-   "forecast": "1.6%",
-   "previous": "-3.4%"
-  },
-  {
    "title": "Current Account",
    "country": "GBP",
    "date_ist": "2026-09-30",
@@ -414,6 +126,15 @@
    "impact": "Low",
    "forecast": "1.7%",
    "previous": "1.7%"
+  },
+  {
+   "title": "German Retail Sales m/m",
+   "country": "EUR",
+   "date_ist": "2026-09-30",
+   "time_ist": "11:34",
+   "impact": "Low",
+   "forecast": "1.6%",
+   "previous": "-3.4%"
   },
   {
    "title": "German Prelim CPI m/m",
@@ -491,7 +212,7 @@
    "title": "German 10-y Bond Auction",
    "country": "EUR",
    "date_ist": "2026-09-30",
-   "time_ist": "15:12",
+   "time_ist": "15:02",
    "impact": "Low",
    "forecast": "",
    "previous": "3.39|1.5"
@@ -610,7 +331,7 @@
    "date_ist": "2026-09-30",
    "time_ist": "20:00",
    "impact": "Low",
-   "forecast": "-1.9M",
+   "forecast": "-0.7M",
    "previous": "3.0M"
   },
   {
@@ -628,6 +349,15 @@
    "date_ist": "2026-10-01",
    "time_ist": "00:55",
    "impact": "Low",
+   "forecast": "",
+   "previous": ""
+  },
+  {
+   "title": "President Trump Speaks",
+   "country": "USD",
+   "date_ist": "2026-10-01",
+   "time_ist": "01:00",
+   "impact": "Medium",
    "forecast": "",
    "previous": ""
   },
@@ -654,7 +384,7 @@
    "country": "USD",
    "date_ist": "2026-10-01",
    "time_ist": "03:30",
-   "impact": "Low",
+   "impact": "Medium",
    "forecast": "",
    "previous": ""
   },
@@ -772,7 +502,7 @@
    "date_ist": "2026-10-01",
    "time_ist": "13:00",
    "impact": "Low",
-   "forecast": "56.4",
+   "forecast": "56.3",
    "previous": "57.1"
   },
   {
@@ -893,15 +623,6 @@
    "previous": ""
   },
   {
-   "title": "India monthly auto sales numbers (expected date)",
-   "country": "INR",
-   "date_ist": "2026-10-01",
-   "time_ist": "17:30",
-   "impact": "Medium",
-   "forecast": "",
-   "previous": ""
-  },
-  {
    "title": "Unemployment Claims",
    "country": "USD",
    "date_ist": "2026-10-01",
@@ -1015,7 +736,7 @@
    "date_ist": "2026-10-01",
    "time_ist": "20:00",
    "impact": "Low",
-   "forecast": "",
+   "forecast": "63B",
    "previous": "53B"
   },
   {
@@ -1267,6 +988,15 @@
    "date_ist": "2026-11-15",
    "time_ist": "17:30",
    "impact": "Medium",
+   "forecast": "",
+   "previous": ""
+  },
+  {
+   "title": "India quarterly GDP release (expected date)",
+   "country": "INR",
+   "date_ist": "2026-11-30",
+   "time_ist": "17:30",
+   "impact": "High",
    "forecast": "",
    "previous": ""
   }

@@ -93,6 +93,9 @@ function paintHome(idx, glob) {
 function paintIndices(data, glob) {
   var L = (data.indices || []).slice();
   var tb = el("idxBody"); if (!tb) return;
+  var src = el("idxSource"), fresh = el("idxFresh");
+  if (src) src.textContent = "NSE daily snapshot · " + (data.updated ? fmtUpdated(data.updated) : "timestamp unavailable");
+  if (fresh) { fresh.textContent = "● DAILY SNAPSHOT"; fresh.className = "fresh"; }
 
   // add a BSE Sensex row (from global.json) if the snapshot doesn't carry one
   if (!byName(L, "SENSEX") && glob && glob.items) {
@@ -157,6 +160,54 @@ function paintRadar(data) {
   }).join("");
 }
 
+/* ---------- Sector Map: live sector/index rotation ---------- */
+function sectorBucket(name) {
+  var n = String(name || "").toUpperCase();
+  var keys = [
+    ["BANK","BANK"],["FINANCIAL","FIN SERV"],["IT","IT"],["AUTO","AUTO"],["PHARMA","PHARMA"],
+    ["HEALTHCARE","HEALTHCARE"],["FMCG","FMCG"],["METAL","METAL"],["OIL & GAS","OIL & GAS"],
+    ["ENERGY","ENERGY"],["REALTY","REALTY"],["INFRASTRUCTURE","INFRA"],["MEDIA","MEDIA"],
+    ["CONSUMER DURABLES","CONS DUR"],["CHEMICAL","CHEMICALS"],["DEFENCE","DEFENCE"],
+    ["TOURISM","TOURISM"],["CAPITAL MARKETS","CAPITAL MKT"],["MOBILITY","MOBILITY"],
+    ["TRANSPORTATION","TRANSPORT"],["RAILWAYS","RAILWAYS"],["DIGITAL","DIGITAL"],
+    ["MANUFACTURING","MANUFACTURING"],["CONSUMPTION","CONSUMPTION"]
+  ];
+  for (var i=0;i<keys.length;i++) if (n.indexOf(keys[i][0])>-1) return keys[i][1];
+  return null;
+}
+function sectorClass(p) {
+  p=Number(p)||0;
+  if(p>=1.5)return "g3"; if(p>=0.5)return "g2"; if(p>0)return "g1";
+  if(p<=-1.5)return "r3"; if(p<=-0.5)return "r2"; return "r1";
+}
+function paintSectorMap(data) {
+  var host=el("sectorMapGrid"), meta=el("sectorMeta"), radar=el("sectorRadar");
+  if(!host)return;
+  var best={};
+  (data.indices||[]).forEach(function(r){
+    var b=sectorBucket(r.index);
+    if(!b || r.change_pct==null)return;
+    if(!best[b] || Math.abs(Number(r.change_pct))>Math.abs(Number(best[b].change_pct))) best[b]=r;
+  });
+  var rows=Object.keys(best).map(function(k){return {k:k,r:best[k]};})
+    .sort(function(a,b){return Number(b.r.change_pct)-Number(a.r.change_pct);});
+  host.innerHTML=rows.map(function(x){
+    var p=Number(x.r.change_pct)||0;
+    return '<div class="tcell '+sectorClass(p)+'"><b>'+esc(x.k)+'</b><span class="'+dirCls(p)+'">'+pctStr(p)+'</span></div>';
+  }).join("");
+  var green=rows.filter(function(x){return Number(x.r.change_pct)>0;}).length;
+  var red=rows.filter(function(x){return Number(x.r.change_pct)<0;}).length;
+  if(meta) meta.textContent=green+" green · "+red+" red · NSE snapshot "+fmtUpdated(data.updated);
+  if(radar){
+    var top=rows.slice().sort(function(a,b){return Math.abs(Number(b.r.change_pct))-Math.abs(Number(a.r.change_pct));}).slice(0,6);
+    radar.innerHTML='<div class="sect" style="margin-top:0">SECTOR MAP RADAR</div>'+
+      '<div class="rchips">'+top.map(function(x){
+        var p=Number(x.r.change_pct)||0;
+        return '<span class="rchip '+(p>=0?'g':'r')+'"><b>'+esc(x.k)+'</b> '+pctStr(p)+'</span>';
+      }).join("")+'</div>';
+  }
+}
+
 function fail() {
   var tb = el("idxBody");
   if (tb) tb.innerHTML = '<tr><td colspan="6" class="idxload">Live indices load nahi hue \u2014 data/indices-all.json check karo.</td></tr>';
@@ -169,9 +220,12 @@ function boot() {
     paintHome(idx.indices, glob);
     paintIndices(idx, glob);
     paintRadar(idx);
+    paintSectorMap(idx);
   });
 }
 
+var refreshBtn = el("idxRefresh");
+if (refreshBtn) refreshBtn.addEventListener("click", boot);
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
 else boot();
 

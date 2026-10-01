@@ -97,8 +97,7 @@ def main():
             out.append(e)
             print(f"  [{n}/{len(ids)}] {t[:60]} — {ch}")
         time.sleep(0.35)
-    print(f"\n{json.dumps({'section': section, 'videos': out}, "
-          f"ensure_ascii=False, indent=1)}")
+    print("\n" + json.dumps({'section': section, 'videos': out}, ensure_ascii=False, indent=1))
     print(f"\n# merge the above into data/education.json under '{section}' and commit")
 
 

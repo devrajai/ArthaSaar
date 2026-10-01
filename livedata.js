@@ -576,11 +576,11 @@
           '<div class="card kpi"><div class="lbl">TREND</div><div class="num ' + cl(f.median_chg_pct) + '">' + ((f.direction || "") || (f.median_chg_pct >= 0 ? "UP" : "DOWN")).toUpperCase() + '</div><div class="chg hold">median path</div></div>' +
           '<div class="card kpi"><div class="lbl">RANGE 10-90</div><div class="num" style="font-size:15px">' + num(f.low10_end, 0) + "–" + num(f.high90_end, 0) + '</div><div class="chg hold">10% – 90% band</div></div>';
       }
-      var mv = v.querySelectorAll(".card")[0];
-      var cards2 = Array.prototype.slice.call(v.querySelectorAll(".card"));
-      for (var ci = 0; ci < cards2.length; ci++) { var sh2 = cards2[ci].querySelectorAll(".sh2")[0]; if (sh2 && /Model View/i.test(sh2.textContent)) { mv = cards2[ci]; break; } }
+      var mv = v.querySelector(".card");
+      var sh2s = v.querySelectorAll(".card .sh2");
+      for (var ci = 0; ci < sh2s.length; ci++) { var sh2 = sh2s[ci]; if (/Model View/i.test(sh2.textContent)) { mv = sh2.closest(".card"); break; } }
       if (mv) {
-        var body = mv.querySelectorAll("div[style]")[0];
+        var body = mv.querySelector("div[style]");
         if (body) body.textContent = (f.name || f.symbol) + ": " + f.horizon_days + "-din ka median target " + num(f.median_end, 0) + " (" + pctS(f.median_chg_pct) + "). Model band " + num(f.low10_end, 0) + " se " + num(f.high90_end, 0) + " tak. Base case " + (f.median_chg_pct >= 0 ? "upar" : "neeche") + " — range ke andar trade karo, band ke bahar nahi.";
       }
     }).catch(function () {});

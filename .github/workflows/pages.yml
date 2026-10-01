@@ -25,18 +25,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build ArthaSaar (glass UI + demos + full EOD data)
+      - name: Build ArthaSaar (app UI + demos + full EOD data)
         run: |
           rm -rf site
-          mkdir -p site/data site/app site/demo
+          mkdir -p site/data site/app site/demo site/demo2
           cp index.html ping.html site/
           if [ -f app/index.html ]; then cp app/index.html site/app/index.html; fi
           if [ -f demo.html ]; then cp demo.html site/demo/index.html; fi
+          if [ -f demo2.html ]; then cp demo2.html site/demo2/index.html; fi
           if [ -f saar-v11.css ]; then cp saar-v11.css site/; fi
           if [ -f saar-v11.js ]; then cp saar-v11.js site/; fi
           if [ -f sw.js ]; then cp sw.js site/; fi
           cp data/*.json site/data/ 2>/dev/null || true
-          printf '%s\n' '{"site":"ArthaSaar v13 demos","pipeline":"NSE + yfinance + AMFI + free public sources","built_at":"'$(date -u +%FT%TZ)'"}' > site/data/site-build.json
+          printf '%s\n' '{"site":"ArthaSaar v14 app","pipeline":"NSE + yfinance + AMFI + free public sources","built_at":"'$(date -u +%FT%TZ)'"}' > site/data/site-build.json
           echo "site files:"; ls -1 site; echo "data files:"; ls -1 site/data | wc -l
 
       - uses: actions/configure-pages@v5

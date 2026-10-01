@@ -296,11 +296,14 @@ function boot() {
   });
 }
 
-var refreshBtn = el("idxRefresh");
-if (refreshBtn) refreshBtn.addEventListener("click", boot);
-bindSectorFilters();
-bindSectorRadarToggle();
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-else boot();
+function initLiveUI() {
+  var refreshBtn = el("idxRefresh");
+  if (refreshBtn) refreshBtn.addEventListener("click", boot);
+  bindSectorFilters();
+  bindSectorRadarToggle();
+  boot();
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initLiveUI);
+else initLiveUI();
 
 })();

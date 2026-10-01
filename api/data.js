@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
     const fs = require("fs"), path = require("path");
     const localPath = path.join(process.cwd(), p);
     if (ref === "main" && fs.existsSync(localPath)) {
-      const body = fs.readFileSync(localPath);
+      const body = await fs.promises.readFile(localPath);
       res.setHeader("Content-Type", TYPES[p.split(".").pop()] || TYPES.txt);
       res.setHeader("Cache-Control", "no-store");
       res.setHeader("X-Content-Type-Options", "nosniff");

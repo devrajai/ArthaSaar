@@ -342,7 +342,10 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 
 
 /* ===== live indices (added) ===== */
-.idxwrap{max-height:calc(100dvh - 250px);overflow:auto;-webkit-overflow-scrolling:touch}
+.idxwrap{overflow:auto;-webkit-overflow-scrolling:touch}
+#v-indices.on{display:flex;flex-direction:column;overflow:hidden}
+#v-indices .fshead,#v-indices .radarbtn,#v-indices .srow{flex:0 0 auto}
+#v-indices .idxwrap{flex:1 1 auto;min-height:0;max-height:none}
 .idxload{padding:18px 14px;color:var(--faint);font:500 11px var(--mono)}
 </style>
 </head>

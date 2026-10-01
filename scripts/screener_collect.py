@@ -111,12 +111,13 @@ def main():
     if limit:
         tier1 = tier1[:limit]
     out, fails = {}, []
-    for n, sym in enumerate(tier1, 1):
+    import concurrent.futures
+
+    def process_sym(sym):
         try:
             h, consolidated = get_symbol(sym)
             if not h:
-                fails.append(sym)
-                continue
+                return sym, False, None, "No HTML"
             row = {"consolidated": consolidated}
             row.update(parse_top_ratios(h))
             row.update(parse_quarters(h))
@@ -124,13 +125,29 @@ def main():
             pl = parse_pledge(h)
             if pl is not None:
                 row["pledge_pct"] = pl
-            out[sym] = row
+            time.sleep(random.uniform(*SLEEP))
+            return sym, True, row, None
+        except Exception as e:
+            return sym, False, None, e
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {executor.submit(process_sym, sym): sym for sym in tier1}
+        for n, future in enumerate(concurrent.futures.as_completed(futures), 1):
+            sym = futures[future]
+            try:
+                sym_res, ok, row, err = future.result()
+                if ok:
+                    out[sym_res] = row
+                else:
+                    fails.append(sym_res)
+                    if err != "No HTML":
+                        print(f"FAIL {sym_res}: {err}", flush=True)
+            except Exception as e:
+                fails.append(sym)
+                print(f"FAIL {sym}: {e}", flush=True)
+
             if n % 50 == 0 or n == len(tier1):
                 print(f"{n}/{len(tier1)} done ({len(fails)} failed)", flush=True)
-        except Exception as e:
-            fails.append(sym)
-            print(f"FAIL {sym}: {e}", flush=True)
-        time.sleep(random.uniform(*SLEEP))
     payload = {
         "updated": datetime.now(timezone.utc).isoformat(),
         "count": len(out),

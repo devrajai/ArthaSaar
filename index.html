@@ -444,35 +444,23 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 </section>
 <!-- ═══════════ WINDOW: SECTOR MAP — opens when its nav button is clicked · edit content below ═══════════ -->
 <section class="view win" id="v-heatmap">
-<div class="fshead"><h2>Sector Map — today</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
+<div class="fshead"><h2>Sector Map — live snapshot</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
 <div class="smradar"><div class="smpill">
   <span class="smic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-  <span class="t"><b>SECTOR MAP RADAR</b><small>aaj ka rotation map</small></span>
+  <span class="t"><b>SECTOR MAP RADAR</b><small>rotation · breadth · daily NSE snapshot</small></span>
 </div></div>
 <div class="chips">
   <span class="fch2 on">Sectors</span><span class="fch2">All Indices</span><span class="fch2">IT</span><span class="fch2">Bank</span><span class="fch2">Auto</span><span class="fch2">Pharma</span><span class="fch2">FMCG</span><span class="fch2">Metal</span><span class="fch2">Energy</span><span class="fch2">Oil & Gas</span><span class="fch2">Realty</span><span class="fch2">Infra</span><span class="fch2">Media</span><span class="fch2">Fin Serv</span><span class="fch2">Cons Dur</span><span class="fch2">Healthcare</span>
 </div>
 <div class="card" style="margin-top:12px">
-  <div class="sh2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="vertical-align:-1px;margin-right:4px"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>MCAP TREEMAP — BLOOMBERG STYLE · SIZE = MARKET CAP</div>
-  <div class="tmap">
-    <div class="tcell big g2" style="grid-column:span 3;grid-row:span 2"><b>RELIANCE</b><span class="up">+0.6%</span></div>
-    <div class="tcell big r3" style="grid-column:span 3;grid-row:span 2"><b>INFY</b><span class="dn">-1.4%</span></div>
-    <div class="tcell g2" style="grid-column:span 2"><b>LICI</b><span class="up">+0.8%</span></div>
-    <div class="tcell g1" style="grid-column:span 2"><b>HINDUNILVR</b><span class="up">+0.5%</span></div>
-    <div class="tcell g2" style="grid-column:span 2"><b>TITAN</b><span class="up">+1.1%</span></div>
-    <div class="tcell r2" style="grid-column:span 2"><b>ICICIBANK</b><span class="dn">-0.6%</span></div>
-    <div class="tcell r1" style="grid-column:span 2"><b>TCS</b><span class="dn">-0.2%</span></div>
-    <div class="tcell g3" style="grid-column:span 2"><b>M&M</b><span class="up">+1.8%</span></div>
-    <div class="tcell r1" style="grid-column:span 2"><b>ETERNAL</b><span class="dn">-0.1%</span></div>
-    <div class="tcell g1" style="grid-column:span 2"><b>SBIN</b><span class="up">+0.4%</span></div>
-    <div class="tcell r1" style="grid-column:span 2"><b>BHARTIARTL</b><span class="dn">-0.3%</span></div>
-    <div class="tcell g2" style="grid-column:span 2"><b>ITC</b><span class="up">+0.9%</span></div>
-    <div class="tcell r2" style="grid-column:span 2"><b>HDFCBANK</b><span class="dn">-0.5%</span></div>
-    <div class="tcell g2" style="grid-column:span 2"><b>KOTAKBANK</b><span class="up">+1.0%</span></div>
-    <div class="tcell g1" style="grid-column:span 2"><b>LT</b><span class="up">+0.3%</span></div>
-    <div class="tcell g3" style="grid-column:span 2"><b>HINDALCO</b><span class="up">+1.4%</span></div>
-    <div class="tcell r2" style="grid-column:span 2"><b>TATAMOTORS</b><span class="dn">-0.7%</span></div>
-  </div>
+  <div class="sh2">SECTOR PERFORMANCE · GREEN/RED = DAY CHANGE</div>
+  <div class="tmap" id="sectorMapGrid"><div class="idxload">Loading sector map from NSE snapshot…</div></div>
+  <div class="mono" id="sectorMeta" style="padding:0 12px 12px;color:var(--faint);font-size:9.5px">Waiting for data…</div>
+</div>
+<div class="card" style="margin-top:10px;padding:12px 14px" id="sectorRadar"><div class="sect" style="margin-top:0">SECTOR MAP RADAR</div><div class="mono" style="color:var(--faint);font-size:10px">Loading rotation radar…</div></div>
+<div class="card" style="margin-top:10px">
+  <div class="sh2">MCAP TREEMAP · STOCK-LEVEL VIEW</div>
+  <div id="tmBox"><div class="idxload">Stock treemap loads from fundamentals + daily change…</div></div>
 </div>
 </section>
 <!-- ═══════════ WINDOW: SCREENER — opens when its nav button is clicked · edit content below ═══════════ -->

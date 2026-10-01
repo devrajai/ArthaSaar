@@ -5,6 +5,8 @@ Polite crawl: 1.5-2.5s delay between screener requests, weekly cadence, personal
 Run:  python3 scripts/company_cards_collect.py [--limit N] [--symbols A,B,C]
 Writes: data/companies/<SYM>.json + data/company-index.json
 """
+
+import concurrent.futures
 import html
 import json
 import os
@@ -17,9 +19,11 @@ from datetime import datetime, timezone
 import requests
 import yfinance as yf
 
-UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-                    "(KHTML, like Gecko) Chrome/120 Safari/537.36",
-      "Accept-Language": "en-US,en;q=0.9"}
+UA = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+}
 DATA = "data"
 OUTDIR = os.path.join(DATA, "companies")
 FUND = os.path.join(DATA, "screener-fundamentals.json")
@@ -28,7 +32,9 @@ NOW = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M UTC")
 
 
 def clean(txt):
-    return html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", txt.replace("&nbsp;", " ")))).strip()
+    return html.unescape(
+        re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", txt.replace("&nbsp;", " ")))
+    ).strip()
 
 
 def parse_screener(html):
@@ -39,7 +45,9 @@ def parse_screener(html):
     m = re.search(r'class="sub show-more-box about"[^>]*>(.*?)</div>', html, re.S)
     d["about"] = clean(m.group(1)) if m else None
 
-    m = re.search(r'class="sub commentary always-show-more-box"[^>]*>(.*?)</div>', html, re.S)
+    m = re.search(
+        r'class="sub commentary always-show-more-box"[^>]*>(.*?)</div>', html, re.S
+    )
     d["key_points"] = clean(m.group(1)) if m else None
 
     top = {}
@@ -48,7 +56,7 @@ def parse_screener(html):
         for li in re.findall(r"<li.*?</li>", m.group(1), re.S):
             nm = re.search(r'name">\s*(.*?)\s*</span>', li, re.S)
             if nm:
-                val = clean(li[nm.end():]).lstrip("\u20b9").strip()
+                val = clean(li[nm.end() :]).lstrip("\u20b9").strip()
                 top[nm.group(1).strip()] = val
     d["top"] = top
 
@@ -58,7 +66,9 @@ def parse_screener(html):
             return None
         rows = []
         for r in re.findall(r"<tr[^>]*>(.*?)</tr>", m.group(0), re.S):
-            cells = [clean(c) for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S)]
+            cells = [
+                clean(c) for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S)
+            ]
             if any(c != "" for c in cells):
                 rows.append(cells)
         if last_cols and rows and len(rows[0]) > last_cols + 1:
@@ -69,8 +79,15 @@ def parse_screener(html):
     pl = table("profit-loss", last_cols=10)
     if pl and len(pl[0]) >= 5:
         w = len(pl[0])
-        pl = [r for r in pl if len(r) == w or (len(r) == 2 and r[0] in
-               ("Last Year:", "3 Years:", "5 Years:", "10 Years:"))]
+        pl = [
+            r
+            for r in pl
+            if len(r) == w
+            or (
+                len(r) == 2
+                and r[0] in ("Last Year:", "3 Years:", "5 Years:", "10 Years:")
+            )
+        ]
     d["profit_loss"] = pl
     d["ratios"] = table("ratios", last_cols=9)
 
@@ -79,7 +96,9 @@ def parse_screener(html):
     if sh:
         cut = None
         for i, r in enumerate(sh[1:], start=1):
-            if r[0] == "" and all(re.match(r"^[A-Z][a-z]{2} \d{4}$", c) for c in r[1:3]):
+            if r[0] == "" and all(
+                re.match(r"^[A-Z][a-z]{2} \d{4}$", c) for c in r[1:3]
+            ):
                 cut = i
                 break
         if cut:
@@ -102,8 +121,14 @@ def yf_profile(sym):
     officers = []
     for o in (info.get("companyOfficers") or [])[:8]:
         if o.get("name"):
-            officers.append({"name": o.get("name"), "title": o.get("title") or "-",
-                             "age": o.get("age"), "pay": o.get("totalPay")})
+            officers.append(
+                {
+                    "name": o.get("name"),
+                    "title": o.get("title") or "-",
+                    "age": o.get("age"),
+                    "pay": o.get("totalPay"),
+                }
+            )
     p["officers"] = officers
     return p
 
@@ -141,9 +166,7 @@ def main():
         symbols = symbols[:limit]
     os.makedirs(OUTDIR, exist_ok=True)
 
-    index = {}
-    ok, fail = 0, 0
-    for n, sym in enumerate(symbols, 1):
+    def process_sym(n, sym, total_symbols):
         path = os.path.join(OUTDIR, sym + ".json")
         try:
             with open(path, encoding="utf-8") as f:
@@ -153,27 +176,53 @@ def main():
 
         data = fetch_symbol(sym)
         if not data or not data.get("name"):
-            fail += 1
-            print("[%d/%d] %s: screener fetch failed" % (n, len(symbols), sym), flush=True)
-            time.sleep(2.0)
-            continue
+            print(
+                "[%d/%d] %s: screener fetch failed" % (n, total_symbols, sym),
+                flush=True,
+            )
+            return {"status": "fail", "sym": sym, "index_data": None}
 
         prof = yf_profile(sym)
-        rec = {"symbol": sym, "updated": NOW,
-               "source": "screener.in + yfinance",
-               "url": "https://www.screener.in/company/%s/consolidated/" % sym}
+        rec = {
+            "symbol": sym,
+            "updated": NOW,
+            "source": "screener.in + yfinance",
+            "url": "https://www.screener.in/company/%s/consolidated/" % sym,
+        }
         rec.update(data)
         rec["profile"] = prof
 
         with open(path, "w", encoding="utf-8") as f:
             json.dump(rec, f, ensure_ascii=False, separators=(",", ":"))
-        index[sym] = {"name": rec["name"],
-                     "sector": prof.get("sector") or "",
-                     "industry": prof.get("industry") or ""}
-        ok += 1
-        if n % 25 == 0 or n == len(symbols):
-            print("[%d/%d] %s ok" % (n, len(symbols), sym), flush=True)
+
+        idx_data = {
+            "name": rec["name"],
+            "sector": prof.get("sector") or "",
+            "industry": prof.get("industry") or "",
+        }
+
+        if n % 25 == 0 or n == total_symbols:
+            print("[%d/%d] %s ok" % (n, total_symbols, sym), flush=True)
+
         time.sleep(random.uniform(1.5, 2.5))
+        return {"status": "ok", "sym": sym, "index_data": idx_data}
+
+    index = {}
+    ok, fail = 0, 0
+    total_symbols = len(symbols)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {
+            executor.submit(process_sym, n, sym, total_symbols): sym
+            for n, sym in enumerate(symbols, 1)
+        }
+        for future in concurrent.futures.as_completed(futures):
+            res = future.result()
+            if res["status"] == "ok":
+                ok += 1
+                index[res["sym"]] = res["index_data"]
+            else:
+                fail += 1
 
     # merge into index: keep existing entries for symbols not fetched this run
     idx_path = os.path.join(DATA, "company-index.json")

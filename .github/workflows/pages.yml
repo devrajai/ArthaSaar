@@ -25,14 +25,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build ArthaSaar UI v10 (new site + full EOD data)
+      - name: Build ArthaSaar (liquid-glass UI + full EOD data)
         run: |
           rm -rf site
-          mkdir -p site/data
-          cp index.html ping.html saar-v11.css saar-v11.js site/
+          mkdir -p site/data site/app
+          cp index.html ping.html site/
+          if [ -f app/index.html ]; then cp app/index.html site/app/index.html; fi
+          if [ -f saar-v11.css ]; then cp saar-v11.css site/; fi
+          if [ -f saar-v11.js ]; then cp saar-v11.js site/; fi
           if [ -f sw.js ]; then cp sw.js site/; fi
           cp data/*.json site/data/ 2>/dev/null || true
-          printf '%s\n' '{"site":"ArthaSaar v10","pipeline":"NSE + yfinance + AMFI + free public sources","built_at":"'$(date -u +%FT%TZ)'"}' > site/data/site-build.json
+          printf '%s\n' '{"site":"ArthaSaar v12 glass","pipeline":"NSE + yfinance + AMFI + free public sources","built_at":"'$(date -u +%FT%TZ)'"}' > site/data/site-build.json
           echo "site files:"; ls -1 site; echo "data files:"; ls -1 site/data | wc -l
 
       - uses: actions/configure-pages@v5

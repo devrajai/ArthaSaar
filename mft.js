@@ -235,7 +235,7 @@
     if (!hits.length) { box.innerHTML = "<div class='note'>kuch nahi mila</div>"; return; }
     box.innerHTML = '<div class="tblwrap"><table><thead><tr><th>Fund</th><th>NAV ₹</th><th>Day%</th></tr></thead><tbody>' +
       hits.map(function (f) {
-        return '<tr data-mc="' + f.c + '"><td class="note">' + esc2(f.n).slice(0, 44) + "</td><td>" + f.v + "</td><td>" + pc(f.p) + "</td></tr>";
+        return '<tr data-mc="' + esc2(f.c) + '"><td class="note">' + esc2(f.n).slice(0, 44) + "</td><td>" + f.v + "</td><td>" + pc(f.p) + "</td></tr>";
       }).join("") + "</tbody></table></div>" +
       (hits.length >= 25 ? '<div class="note">…25 tak dikhaya</div>' : "");
     box.querySelectorAll("[data-mc]").forEach(function (tr) {

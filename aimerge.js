@@ -64,8 +64,8 @@
       var L = (typeof loaders !== "undefined") ? loaders : window;
       var old = L.aibrain || null;
       L.aibrain = function () {
-        try { if (typeof renderAI === "function") renderAI(); } catch (e) {}
-        try { if (old) old(); } catch (e) {}
+        if (typeof renderAI === "function") renderAI();
+        if (typeof old === "function") old();
       };
     } catch (e) {}
   }

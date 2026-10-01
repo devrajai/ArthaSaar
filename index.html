@@ -5,7 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>ArthaSaar — India's Free Market, Mutual Fund &amp; Learning Workspace</title>
 <meta name="description" content="ArthaSaar is a free, India-first market workspace: learn the markets, search every Indian mutual fund, compare SIPs, screen NSE/BSE stocks, track FII/DII, OI and global markets — plus IPO analysis via IpoBodh."/>
-<link rel="stylesheet" href="saar.css"/>
+<link rel="stylesheet" href="saar-v11.css"/>
+<!-- inline watchdog: runs even if the main script is stale/blocked. Purges old service workers + caches
+     and shows a visible message instead of a silent blank page. -->
+<script>
+(function () {
+  try { if ("serviceWorker" in navigator) { navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }); } } catch (e) {}
+  try { if (window.caches && caches.keys) { caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); }); } } catch (e) {}
+  window.addEventListener("error", function (ev) {
+    var g = document.getElementById("gateErr");
+    if (g && !window.__SAAR_READY) g.textContent = "Error: " + (ev.message || "script failed to load");
+  });
+  setTimeout(function () {
+    if (!window.__SAAR_READY) {
+      var g = document.getElementById("gateErr");
+      if (g) g.textContent = "App script did not load. Please hard-refresh (Ctrl/Cmd+Shift+R) or clear this site's data.";
+    }
+  }, 6000);
+})();
+</script>
 </head>
 <body>
 
@@ -19,7 +37,7 @@
     <input type="password" id="gateInput" placeholder="Enter access code" autocomplete="off"/>
     <div class="err" id="gateErr"></div>
     <button class="btn" style="width:100%;margin-top:6px" id="gateGo">Enter ArthaSaar</button>
-    <div class="hint">Demo gate (client-side). Set your own code in <b>saar.js → ACCESS_CODE</b>.<br>This is a cosmetic gate, not real security — a static site can't hide data.</div>
+    <div class="hint">Demo gate (client-side). Set your own code in <b>saar-v11.js → ACCESS_CODE</b>.<br>This is a cosmetic gate, not real security — a static site can't hide data.</div>
   </div>
 </div>
 
@@ -71,6 +89,6 @@
 <div class="drawer" id="drawer" hidden><div class="drawer-in" id="drawerIn"></div></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="saar.js"></script>
+<script src="saar-v11.js"></script>
 </body>
 </html>

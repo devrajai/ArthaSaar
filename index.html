@@ -261,7 +261,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 .rchip b{font-weight:600}
 .rnote{margin-top:22px;font-style:italic;color:var(--faint);font-size:11.5px;line-height:1.65;text-align:center}
 /* ================= SECTOR MAP window ================= */
-.smradar{border:var(--bw,1px) solid var(--border);border-radius:14px;background:var(--bg2);padding:12px;display:flex;justify-content:center;margin:2px 0 12px}
+.smradarbtn{width:100%;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s,transform .15s}.smradarbtn:hover{border-color:var(--accent);transform:translateY(-1px)}.smradarbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.smradarbtn .smpill{width:min(100%,760px);justify-content:flex-start}.smchev{margin-left:auto;color:var(--accent);font:700 20px var(--mono);line-height:1;transition:transform .15s}.smradarbtn[aria-expanded="true"] .smchev{transform:rotate(180deg)}#sectorRadarPanel[hidden]{display:none}.smradar{border:var(--bw,1px) solid var(--border);border-radius:14px;background:var(--bg2);padding:12px;display:flex;justify-content:center;margin:2px 0 12px}
 .smpill{display:inline-flex;align-items:center;gap:12px;background:var(--surface2);border:var(--bw,1px) solid var(--border);border-radius:999px;padding:9px 18px}
 .smpill .smic{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);display:grid;place-items:center;flex:0 0 auto}
 .smpill b{display:block;font:700 12.5px var(--font);letter-spacing:.14em;color:var(--accent)}
@@ -445,10 +445,12 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <!-- ═══════════ WINDOW: SECTOR MAP — opens when its nav button is clicked · edit content below ═══════════ -->
 <section class="view win" id="v-heatmap">
 <div class="fshead"><h2>Sector Map — live snapshot</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
-<div class="smradar"><div class="smpill">
+<button type="button" class="smradar smradarbtn" id="sectorRadarToggle" aria-expanded="false" aria-controls="sectorRadarPanel"><span class="smpill">
   <span class="smic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
   <span class="t"><b>SECTOR MAP RADAR</b><small>rotation · breadth · daily NSE snapshot</small></span>
-</div></div>
+  <span class="smchev" aria-hidden="true">⌄</span>
+</span></button>
+<div id="sectorRadarPanel" hidden>
 <div class="chips" id="sectorFilters">
   <span class="fch2 on" data-sector="Sectors">Sectors</span><span class="fch2" data-sector="All Indices">All Indices</span><span class="fch2" data-sector="IT">IT</span><span class="fch2" data-sector="BANK">Bank</span><span class="fch2" data-sector="AUTO">Auto</span><span class="fch2" data-sector="PHARMA">Pharma</span><span class="fch2" data-sector="FMCG">FMCG</span><span class="fch2" data-sector="METAL">Metal</span><span class="fch2" data-sector="ENERGY">Energy</span><span class="fch2" data-sector="OIL & GAS">Oil & Gas</span><span class="fch2" data-sector="REALTY">Realty</span><span class="fch2" data-sector="INFRA">Infra</span><span class="fch2" data-sector="MEDIA">Media</span><span class="fch2" data-sector="FIN SERV">Fin Serv</span><span class="fch2" data-sector="CONS DUR">Cons Dur</span><span class="fch2" data-sector="HEALTHCARE">Healthcare</span>
 </div>
@@ -461,6 +463,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <div class="card" style="margin-top:10px">
   <div class="sh2">MCAP TREEMAP · STOCK-LEVEL VIEW</div>
   <div id="tmBox"><div class="idxload">Stock treemap loads from fundamentals + daily change…</div></div>
+</div>
 </div>
 </section>
 <!-- ═══════════ WINDOW: SCREENER — opens when its nav button is clicked · edit content below ═══════════ -->

@@ -34,7 +34,6 @@ def yahoo(sym):
     try:
         r = d["chart"]["result"][0]
         m = r["meta"]
-        # FIX: chartPreviousClose = 5-din-purana close (galat). Last bar ka prev = dusra-aakhri bar.
         closes = [c for c in ((r.get("indicators") or {}).get("quote") or [{}])[0].get("close") or [] if c]
         pc = closes[-2] if len(closes) >= 2 else (m.get("chartPreviousClose") or m.get("previousClose"))
         return (m.get("regularMarketPrice"), pc,

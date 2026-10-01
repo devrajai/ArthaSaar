@@ -72,17 +72,23 @@ def nse_list():
 
 def to_bars(sub):
     sub = sub.dropna(subset=["Open", "High", "Low", "Close"])
-    t, o, h, l, c, v = [], [], [], [], [], []
-    for ts, row in sub.iterrows():
-        t.append(int(ts.timestamp()))
-        o.append(round(float(row["Open"]), 2))
-        h.append(round(float(row["High"]), 2))
-        l.append(round(float(row["Low"]), 2))
-        c.append(round(float(row["Close"]), 2))
-        vol = row.get("Volume")
-        v.append(int(vol) if vol == vol and vol else 0)
+    if sub.empty:
+        return None
+
+    t = [int(ts.timestamp()) for ts in sub.index]
     if not t:
         return None
+
+    o = sub["Open"].astype(float).round(2).tolist()
+    h = sub["High"].astype(float).round(2).tolist()
+    l = sub["Low"].astype(float).round(2).tolist()
+    c = sub["Close"].astype(float).round(2).tolist()
+
+    if "Volume" in sub.columns:
+        v = sub["Volume"].fillna(0).astype(int).tolist()
+    else:
+        v = [0] * len(sub)
+
     return {"t": t, "o": o, "h": h, "l": l, "c": c, "v": v}
 
 def universe_build():

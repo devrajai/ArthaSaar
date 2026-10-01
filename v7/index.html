@@ -1325,4 +1325,49 @@ async function main(){
 }
 main();
 })();
+</script><script>
+(function(){
+"use strict";
+function q(id){return document.getElementById("v-"+id);}
+function wait(){
+  if(document.documentElement.dataset.live!=="1"){setTimeout(wait,120);return;}
+  const badge=document.getElementById("asLiveBadge"); if(badge) badge.textContent="DATA · REAL SNAPSHOTS";
+  document.querySelectorAll(".pg").forEach(x=>{
+    if(x.textContent.indexOf("LIVE ·")===0)x.textContent=x.textContent.replace("LIVE ·","REAL ·");
+  });
+  const specs={
+    portfolio:"Portfolio holdings/transactions are not connected to a broker feed yet. The master UI shell stays here; no sample P&L is shown.",
+    futures:"F&O chain / OI feed is not present in the repository yet. The master Futures UI stays here; no sample contracts are shown.",
+    gtizones:"GTI demand/supply/POC feed is not present in the repository yet. The master GTI UI stays here; no sample price zones are shown.",
+    gtiai:"AI forecast/model output is not present in the repository yet. The master AI UI stays here; no sample target or confidence is shown.",
+    filings:"Company-filings feed is not present in the repository yet. The master Filings UI stays here; no sample filings are shown.",
+    ipo:"IPO/GMP/listing feed is not present in the repository yet. The master IPO UI stays here; no sample IPO values are shown.",
+    mf:"Mutual-fund NAV/category feed is not present in the repository yet. The master MF UI stays here; no sample fund performance is shown."
+  };
+  Object.entries(specs).forEach(([id,msg])=>{
+    const s=q(id); if(!s)return;
+    const header=s.querySelector(".fshead"); const tabs=s.querySelector(".trow");
+    const keep=[];
+    if(header)keep.push(header.outerHTML);
+    if(tabs)keep.push(tabs.outerHTML);
+    s.innerHTML=keep.join("")+
+      '<div class="card" style="margin-top:12px;border-color:var(--accent)">'+
+      '<div class="sh2">DATA SOURCE STATUS</div>'+
+      '<div style="padding:14px;font-size:12px;line-height:1.7;color:var(--dim)">'+
+      msg+'</div></div>';
+    const st=document.createElement("div");
+    st.setAttribute("data-live-stamp","1");
+    st.style.cssText="font:600 9px var(--mono);letter-spacing:.12em;color:var(--faint);margin:-2px 0 9px;padding-left:2px";
+    st.textContent="MASTER UI PRESERVED · DATA FEED NOT CONNECTED";
+    const h=s.querySelector(".fshead"); if(h)h.insertAdjacentElement("afterend",st);
+  });
+  const learn=document.getElementById("v-learn");
+  if(learn){
+    const notes=[...learn.querySelectorAll(".card.kpi .num")];
+    notes.forEach(n=>{if(n.textContent.includes("GTI zones"))n.textContent="Study notes remain static learning content; not connected to market feeds.";});
+  }
+  const ipoBadge=q("ipo")?.querySelector(".buy"); if(ipoBadge)ipoBadge.textContent="UI ONLY";
+}
+wait();
+})();
 </script></body></html>

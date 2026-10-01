@@ -15,6 +15,7 @@
 
 Run:  python3 scripts/history_collect.py
 """
+import concurrent.futures
 import datetime as dt
 import io
 import json
@@ -99,9 +100,8 @@ def universe_build():
 def collect(universe, period, prefix, names):
     """ek pass: period=5y/max -> daily-XX / full-XX chunks. names: disp->name."""
     got = {}
-    i = 0
-    while i < len(universe):
-        batch = universe[i:i + BATCH]
+
+    def fetch_batch(i, batch):
         tickers = [ys for _, ys, _ in batch]
         df = None
         for attempt in range(2):
@@ -113,25 +113,37 @@ def collect(universe, period, prefix, names):
             except Exception as e:  # noqa: BLE001
                 print("batch fail @", i, e, "- retry")
                 time.sleep(5)
-        if df is not None and not df.empty:
-            single = len(tickers) == 1
-            for disp, ys, name in batch:
-                try:
-                    sub = df[ys] if not single else df
-                except KeyError:
-                    continue
-                if sub is None:
-                    continue
-                try:
-                    bars = to_bars(sub)
-                except Exception:
-                    bars = None
-                if bars and len(bars["t"]) >= 30:
-                    got[disp] = bars
-                    names[disp] = name
-        print(f"  {prefix} {min(i + BATCH, len(universe))}/{len(universe)} -> {len(got)} ok", flush=True)
-        i += BATCH
-        time.sleep(1)
+        return i, batch, df
+
+    batches = []
+    for i in range(0, len(universe), BATCH):
+        batches.append((i, universe[i:i + BATCH]))
+
+    completed = 0
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {executor.submit(fetch_batch, b[0], b[1]): b for b in batches}
+        for future in concurrent.futures.as_completed(futures):
+            i, batch, df = future.result()
+            tickers = [ys for _, ys, _ in batch]
+            if df is not None and not df.empty:
+                single = len(tickers) == 1
+                for disp, ys, name in batch:
+                    try:
+                        sub = df[ys] if not single else df
+                    except KeyError:
+                        continue
+                    if sub is None:
+                        continue
+                    try:
+                        bars = to_bars(sub)
+                    except Exception:
+                        bars = None
+                    if bars and len(bars["t"]) >= 30:
+                        got[disp] = bars
+                        names[disp] = name
+            completed += len(batch)
+            print(f"  {prefix} {min(completed, len(universe))}/{len(universe)} -> {len(got)} ok", flush=True)
+
     return got
 
 def write_chunks(got, universe, prefix):

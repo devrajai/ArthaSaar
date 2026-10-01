@@ -102,8 +102,16 @@ tabs.forEach((t) => t.addEventListener("click", () => {
 
 /* ---------- dashboard ---------- */
 function idxByName(list, name) {
-  return list.find((i) => i.index === name) ||
-    list.find((i) => (i.index || "").includes(name));
+  let partialMatch;
+  for (let i = 0; i < list.length; i++) {
+    let item = list[i];
+    let idx = item.index;
+    if (idx === name) return item;
+    if (!partialMatch && idx && idx.includes(name)) {
+      partialMatch = item;
+    }
+  }
+  return partialMatch;
 }
 function kpi(name, idx) {
   if (!idx) return "";

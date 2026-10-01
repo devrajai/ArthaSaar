@@ -974,25 +974,355 @@ document.querySelectorAll(".fch2").forEach(function(c){c.addEventListener("click
 </script>
 <script>
 (function(){
-const F=["indices-all","global","fii-dii","breadth","radar","crypto"];
+"use strict";
+/* ARTHASAAR REAL-DATA BRIDGE
+   Source-of-truth UI remains the uploaded master 5-mode / multi-window file.
+   This layer only fills places where the repo already has a real feed.
+*/
+const FILES=[
+  "indices-all","global","fii-dii","breadth","radar","crypto",
+  "news","economy-pulse","stock-scores","preopen","delivery","candles"
+];
 const D={};
-const load=async k=>{try{const r=await fetch("./data/"+k+".json?x="+Date.now(),{cache:"no-store"});if(r.ok)D[k]=await r.json()}catch(e){}};
-const leaf=(root,txt)=>[...root.querySelectorAll("*")].find(e=>e.children.length===0&&e.textContent.trim()===txt);
-const nfmt=x=>Number(x||0).toLocaleString("en-IN",{maximumFractionDigits:2});
-const pfmt=x=>(Number(x)>=0?"+":"")+Number(x||0).toFixed(2)+"%";
-async function live(){
- await Promise.all(F.map(load));
- const I=D["indices-all"]?.indices||[], by=n=>I.find(x=>x.index===n);
- const replace=(old,val)=>{const e=leaf(document,old);if(e&&val!==undefined)e.textContent=val};
- const n=by("NIFTY 50"),s=by("SENSEX"),b=by("NIFTY BANK")||by("BANK NIFTY"),v=by("INDIA VIX");
- if(n){replace("26,429.27",nfmt(n.price));replace("▲ +0.74% · +193.4",(n.change_pct>=0?"▲ ":"▼ ")+pfmt(n.change_pct)+" · "+nfmt(n.change));}
- if(s)replace("81,712.56",nfmt(s.price));if(b)replace("58,412.30",nfmt(b.price));if(v)replace("13.84",nfmt(v.price));
- const g=D.global?.items||[],rows=[...document.querySelectorAll("#v-global tbody tr")];
- g.slice(0,rows.length).forEach((x,i)=>{const c=rows[i]?.children;if(!c)return;if(c[0])c[0].textContent=x.name||c[0].textContent;if(c[1])c[1].textContent=nfmt(x.price);if(c[2])c[2].textContent=pfmt(x.chg_pct)});
- const body=document.getElementById("idxBody");if(body&&I.length)body.innerHTML=I.map(x=>"<tr><td>"+x.index+"</td><td>"+nfmt(x.price)+"</td><td class='"+(Number(x.change_pct)>=0?"up":"dn")+"'>"+pfmt(x.change_pct)+"</td><td>"+(x.pos_52w??"—")+"</td><td>"+(x.pe??"—")+"</td><td>"+(x.pb??"—")+"</td></tr>").join("");
- const r=D.radar?.accumulation?.[0];if(r)replace("3.8× above normal",(r.sym||"RADAR")+" · "+pfmt(r.chg));
- document.documentElement.dataset.live="1";
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const num=x=>Number(x||0);
+const nfmt=x=>num(x).toLocaleString("en-IN",{maximumFractionDigits:2});
+const pfmt=x=>(num(x)>=0?"+":"")+num(x).toFixed(2)+"%";
+const cls=x=>num(x)>=0?"up":"dn";
+const load=async k=>{
+  try{
+    const r=await fetch("./data/"+k+".json?"+Date.now(),{cache:"no-store"});
+    if(r.ok) D[k]=await r.json();
+  }catch(e){}
+};
+const leaf=(root,txt)=>{
+  const q=String(txt).trim();
+  return [...root.querySelectorAll("*")].find(e=>e.children.length===0&&e.textContent.trim()===q);
+};
+const textAt=(sel,val)=>{
+  const e=document.querySelector(sel);
+  if(e&&val!=null)e.textContent=String(val);
+  return e;
+};
+const setFirst=(root,selectors,val)=>{
+  for(const s of selectors){const e=root.querySelector(s);if(e){e.textContent=String(val);return e;}}
+};
+function stamp(sectionId,label="REAL DATA"){
+  const s=document.getElementById(sectionId);
+  if(!s)return;
+  let b=s.querySelector("[data-live-stamp]");
+  if(!b){
+    b=document.createElement("div");
+    b.setAttribute("data-live-stamp","1");
+    b.style.cssText="font:600 9px var(--mono);letter-spacing:.12em;color:var(--faint);margin:-2px 0 9px;padding-left:2px";
+    const h=s.querySelector(".fshead");
+    if(h)h.insertAdjacentElement("afterend",b);else s.prepend(b);
+  }
+  b.textContent=label;
 }
-live();
+function staticStamp(sectionId,label){
+  stamp(sectionId,label);
+}
+function pathFrom(values,w=800,h=160,p=8){
+  if(!values||!values.length)return "";
+  const finite=values.filter(Number.isFinite); if(!finite.length)return "";
+  let lo=Math.min(...finite),hi=Math.max(...finite); if(hi===lo){hi+=1;lo-=1;}
+  return values.map((v,i)=>{
+    const x=p+(w-2*p)*(i/Math.max(1,values.length-1));
+    const y=h-p-(num(v)-lo)*(h-2*p)/(hi-lo);
+    return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+  }).join(" ");
+}
+function pathArea(values,w=800,h=160,p=8){
+  const line=pathFrom(values,w,h,p); if(!line)return "";
+  return line+" L "+(w-p).toFixed(1)+" "+h+" L "+p.toFixed(1)+" "+h+" Z";
+}
+function lastClose(key,tf){
+  const s=D.candles?.syms?.[key]; const b=s?.[tf]||s?.["1d"]||s?.["1h"]||s?.["1m"];
+  if(!b?.c?.length)return null;
+  return b.c[b.c.length-1];
+}
+function renderHomeChart(){
+  const s=D.candles?.syms?.NIFTY, b=s?.["5m"]||s?.["1h"]||s?.["1m"]; if(!b?.c?.length)return;
+  const vals=b.c.slice(-80), line=pathFrom(vals), area=pathArea(vals);
+  const card=[...document.querySelectorAll("#v-home .card")].find(x=>x.textContent.includes("NIFTY 50 · 1D"));
+  const svg=card?.querySelector("svg"); if(!svg)return;
+  const pths=svg.querySelectorAll("path");
+  if(pths[1])pths[1].setAttribute("d",area);
+  if(pths[2])pths[2].setAttribute("d",line);
+  const n=D["indices-all"]?.indices?.find(x=>x.index==="NIFTY 50");
+  if(n){
+    const h=card.querySelector(".sh2");
+    if(h)h.innerHTML='NIFTY 50 · LIVE <span class="'+cls(n.change_pct)+'">'+pfmt(n.change_pct)+'</span><span class="fr">H '+nfmt(n.year_high)+' · L '+nfmt(n.year_low)+'</span>';
+  }
+}
+function renderIndices(){
+  const I=D["indices-all"]?.indices||[], body=document.getElementById("idxBody"); if(!body||!I.length)return;
+  body.innerHTML=I.map(x=>{
+    const pos=(x.year_high!=null&&x.year_low!=null&&x.year_high!==x.year_low)
+      ?Math.max(0,Math.min(100,(num(x.price)-num(x.year_low))*100/(num(x.year_high)-num(x.year_low))))
+      :null;
+    return "<tr><td>"+esc(x.index)+"</td><td>"+nfmt(x.price)+"</td><td><span class='"+cls(x.change_pct)+"'>"+pfmt(x.change_pct)+"</span></td><td>"+(pos==null?"—":pos.toFixed(0)+"%")+"</td><td>"+(x.pe??"—")+"</td><td>"+(x.pb??"—")+"</td></tr>";
+  }).join("");
+  const h=document.querySelector("#v-indices .fshead h2"); if(h)h.textContent="Indices — "+I.length+" tracked · "+(D["indices-all"]?.updated||"").slice(0,10);
+  stamp("v-indices","REAL NSE INDEX FEED · 139 INDEX SNAPSHOT");
+}
+function renderIndexRadar(){
+  const I=D["indices-all"]?.indices||[], up=[...I].filter(x=>num(x.change_pct)>0).sort((a,b)=>num(b.change_pct)-num(a.change_pct)), dn=[...I].filter(x=>num(x.change_pct)<0).sort((a,b)=>num(a.change_pct)-num(b.change_pct));
+  const s=document.getElementById("v-idxradar"); if(!s||!I.length)return;
+  const cards=s.querySelectorAll(".ridx");
+  const n=I.find(x=>x.index==="NIFTY 50"), b=I.find(x=>/NIFTY BANK|BANK NIFTY/i.test(x.index)), nx=I.find(x=>x.index==="NIFTY NEXT 50");
+  [n,b,nx].forEach((x,i)=>{if(x&&cards[i]){cards[i].querySelector(".val").textContent=nfmt(x.price);cards[i].querySelector(".chg").textContent=pfmt(x.change_pct);cards[i].querySelector(".chg").className="chg "+cls(x.change_pct);}});
+  const green=I.filter(x=>num(x.change_pct)>0).length, red=I.filter(x=>num(x.change_pct)<0).length, flat=I.length-green-red;
+  setFirst(s,[".blab"],green+"/"+I.length+" GREEN");
+  setFirst(s,[".rbar i"],null)?.setAttribute("style","width:"+((green/Math.max(1,I.length))*100).toFixed(1)+"%");
+  setFirst(s,[".rcap"],red+" red · "+flat+" flat · "+(D["indices-all"]?.updated||"").slice(0,10));
+  const chips=s.querySelectorAll(".rchips");
+  if(chips[0])chips[0].innerHTML=up.slice(0,5).map(x=>'<span class="rchip g"><b>'+esc(x.index)+'</b> '+pfmt(x.change_pct)+'</span>').join("");
+  if(chips[1])chips[1].innerHTML=dn.slice(0,5).map(x=>'<span class="rchip r"><b>'+esc(x.index)+'</b> '+pfmt(x.change_pct)+'</span>').join("");
+  const note=s.querySelector(".rnote"); if(note)note.textContent="NSE index breadth: "+green+" of "+I.length+" indices positive, "+red+" negative, "+flat+" flat. Derived from the repo's latest index snapshot.";
+  stamp("v-idxradar","REAL NSE INDEX FEED · RADAR DERIVED FROM 139 INDICES");
+}
+function renderHome(){
+  const I=D["indices-all"]?.indices||[], by=n=>I.find(x=>x.index===n);
+  const n=by("NIFTY 50"), s=by("SENSEX"), b=by("NIFTY BANK")||by("BANK NIFTY"), v=by("INDIA VIX");
+  const cards=document.querySelectorAll("#v-home .kpi");
+  [n,s,b,v].forEach((x,i)=>{if(!x||!cards[i])return;cards[i].querySelector(".num").textContent=nfmt(x.price);const c=cards[i].querySelector(".chg");c.textContent=(num(x.change_pct)>=0?"▲ ":"▼ ")+pfmt(x.change_pct)+(x.change!=null?" · "+(num(x.change)>=0?"+":"")+nfmt(x.change):"");c.className="chg "+cls(x.change_pct);});
+  const br=D.breadth;
+  if(br){
+    const bc=[...document.querySelectorAll("#v-home .card")].find(x=>x.textContent.includes("Market Breadth"));
+    if(bc){
+      const bar=bc.querySelector(".breadth i"); if(bar)bar.style.width=num(br.above_ema200_pct)+"%";
+      const mono=bc.querySelector(".mono.s11");if(mono)mono.innerHTML='<b>'+nfmt(br.stocks)+'</b> tracked · <b>'+nfmt(br.above_ema200_pct)+'%</b> above EMA200';
+      const zr=bc.querySelectorAll(".zrow");
+      const vals=[["RSI > 60",br.rsi_above_60],["RSI < 40",br.rsi_below_40],["2× volume",br.volume_spike_2x]];
+      vals.forEach((z,i)=>{if(zr[i]){zr[i].querySelector("span").textContent=z[0];zr[i].querySelector("b").textContent=nfmt(z[1]);zr[i].querySelector("b").className=i===1?"dn":"hold";}});
+    }
+  }
+  const f=D["fii-dii"]?.categories;
+  if(f){
+    const c=[...document.querySelectorAll("#v-home .card")].find(x=>x.textContent.includes("FII / DII"));
+    if(c){
+      const rows=c.querySelectorAll(".zrow");
+      const fii=f["FII/FPI"], dii=f.DII;
+      const vals=[["FII/FPI",fii?.net_cr],["DII",dii?.net_cr]];
+      vals.forEach((z,i)=>{if(rows[i]){rows[i].querySelector("span").textContent=z[0];const q=rows[i].querySelectorAll("b");if(q[0])q[0].textContent=(num(z[1])>=0?"+":"")+nfmt(z[1])+" Cr";}});
+      if(rows[2])rows[2].remove(); if(rows[3])rows[3].remove();
+      const extra=document.createElement("div");extra.className="zrow";extra.innerHTML='<span>Date</span><span>'+esc(D["fii-dii"].date||"—")+'</span>';c.querySelector("div[style*='padding']").appendChild(extra);
+    }
+  }
+  const g=D.preopen?.top20_gainers?.[0], l=D.preopen?.top20_losers?.[0], mod=document.querySelectorAll("#v-home .minirow .kpi");
+  if(g&&mod[0]){mod[0].querySelector(".lbl").textContent="PREOPEN GAINER";mod[0].querySelector(".num").textContent=esc(g.symbol);mod[0].querySelector(".chg").textContent=pfmt(g.change_pct);}
+  if(l&&mod[1]){mod[1].querySelector(".lbl").textContent="PREOPEN LOSER";mod[1].querySelector(".num").textContent=esc(l.symbol);mod[1].querySelector(".chg").textContent=pfmt(l.change_pct);}
+  if(br&&mod[2]){mod[2].querySelector(".lbl").textContent="2× VOLUME SPIKE";mod[2].querySelector(".num").textContent=nfmt(br.volume_spike_2x);mod[2].querySelector(".chg").textContent="stocks";}
+  if(br&&mod[3]){mod[3].querySelector(".lbl").textContent="52W HIGH AREA";mod[3].querySelector(".num").textContent=nfmt(br.near_52w_high);mod[3].querySelector(".chg").textContent="stocks";}
+  renderHomeChart();
+  stamp("v-home","REAL DATA · NSE INDEX SNAPSHOT · BREADTH · FII/DII · PREOPEN");
+}
+function renderSectorMap(){
+  const I=D["indices-all"]?.indices||[], names=["NIFTY IT","NIFTY BANK","NIFTY AUTO","NIFTY PHARMA","NIFTY FMCG","NIFTY METAL","NIFTY ENERGY","NIFTY REALTY","NIFTY MEDIA","NIFTY FINANCIAL SERVICES","NIFTY HEALTHCARE","NIFTY INFRA","NIFTY CONSUMER DURABLES","NIFTY OIL & GAS"];
+  const cells=[...document.querySelectorAll("#v-heatmap .tcell")];
+  const data=names.map(n=>I.find(x=>x.index===n)).filter(Boolean).sort((a,b)=>Math.abs(num(b.change_pct))-Math.abs(num(a.change_pct)));
+  if(cells.length&&data.length){
+    cells.forEach((c,i)=>{const x=data[i%data.length];c.className="tcell "+(num(x.change_pct)>=0?"g2":"r2")+(i<2?" big":"");c.style.gridColumn=i<2?"span 3":"span 2";c.style.gridRow=i<2?"span 2":"";c.innerHTML="<b>"+esc(x.index.replace(/^NIFTY /,""))+"</b><span class='"+cls(x.change_pct)+"'>"+pfmt(x.change_pct)+"</span>";});
+  }
+  const h=document.querySelector("#v-heatmap .sh2"); if(h)h.innerHTML=h.textContent.replace(/MCAP TREEMAP — BLOOMBERG STYLE · SIZE = MARKET CAP/i,"SECTOR SNAPSHOT · REAL NSE INDEX CHANGE");
+  stamp("v-heatmap","REAL NSE DATA · SECTOR INDEX SNAPSHOT · NOT MARKET-CAP TREEMAP");
+}
+function scoreRows(){
+  return D["stock-scores"]?.top||[];
+}
+function renderScreener(){
+  const s=document.getElementById("v-screener"); if(!s)return; const top=scoreRows(); if(!top.length)return;
+  let c=s.querySelector("[data-live-screener]");
+  if(!c){c=document.createElement("div");c.setAttribute("data-live-screener","1");c.className="card";c.style.cssText="margin-top:12px;padding:0;overflow:auto";s.appendChild(c);}
+  c.innerHTML='<div class="sh2">ARTHASAAR SCORE™ · REAL FEED</div><table><thead><tr><th>Symbol</th><th>Total</th><th>Tech</th><th>Fund</th><th>Reasons</th></tr></thead><tbody>'+
+    top.map(x=>'<tr><td>'+esc(x.sym)+'</td><td><b class="'+(num(x.total)>=7?"up":"hold")+'">'+num(x.total).toFixed(1)+'</b></td><td>'+nfmt(x.t)+'</td><td>'+nfmt(x.f)+'</td><td style="white-space:normal;min-width:250px">'+esc((x.r||[]).join(" · "))+'</td></tr>').join("")+
+    '</tbody></table>';
+  stamp("v-screener","REAL REPO FEED · STOCK-SCORES · 40 STOCKS");
+}
+function renderFundamentals(){
+  const s=document.getElementById("v-fundamentals"); if(!s)return; const top=scoreRows(); if(!top.length)return;
+  const rows=s.querySelectorAll(".bullrow");
+  top.slice(0,2).forEach((x,i)=>{if(rows[i]){const b=rows[i].querySelector(".bn");if(b)b.textContent=x.sym;const bar=rows[i].querySelector(".bbar i");if(bar)bar.style.width=Math.max(0,Math.min(100,num(x.total)*10))+"%";const bs=rows[i].querySelector(".bs");if(bs)bs.textContent=num(x.total).toFixed(1);const bd=rows[i].querySelector(".bd");if(bd)bd.textContent="T "+nfmt(x.t)+" · F "+nfmt(x.f);}});
+  const p=s.querySelector(".biasrow"); if(p)p.innerHTML='<span class="bias">Score feed: <b>Tech 60% · Fund 40%</b></span><span class="bias">Stocks: <b>'+top.length+'</b></span>';
+  const note=s.querySelector(".mono[style*='font-size:9.5px']"); if(note)note.textContent="This Week · real repository stock-score feed";
+  stamp("v-fundamentals","REAL REPO FEED · STOCK-SCORES · TECH 60% / FUND 40%");
+}
+function renderDeepFund(){
+  const s=document.getElementById("v-deepfund"); if(!s)return; const top=scoreRows(); if(!top.length)return;
+  const body=s.querySelector("tbody"); if(!body)return;
+  body.innerHTML=top.slice(0,12).map(x=>'<tr><td>'+esc(x.sym)+'</td><td>Score '+num(x.total).toFixed(1)+'</td><td>'+nfmt(x.t)+'</td><td>'+nfmt(x.f)+'</td><td>—</td><td style="white-space:normal;min-width:240px">'+esc((x.r||[]).join(" · "))+'</td></tr>').join("");
+  const th=s.querySelector("thead"); if(th)th.innerHTML="<tr><th>Symbol</th><th>Total</th><th>Technical</th><th>Fund</th><th>ROE</th><th>Reasons</th></tr>";
+  stamp("v-deepfund","REAL REPO FEED · STOCK-SCORES · NO ROE FIELD IN SOURCE");
+}
+function findInstrument(sym){
+  sym=String(sym||"").trim().toUpperCase(); if(!sym)return null;
+  const c=D.candles?.syms?.[sym];
+  const p=(D.preopen?.top20_gainers||[]).concat(D.preopen?.top20_losers||[]).find(x=>String(x.symbol||"").toUpperCase()===sym);
+  const sc=(D["stock-scores"]?.top||[]).find(x=>String(x.sym||"").toUpperCase()===sym);
+  const del=D.delivery?.d?.[sym];
+  const last=(c?.c?.length?c.c[c.c.length-1]:null) ?? p?.last_price ?? null;
+  const prev=p?.prev_close ?? c?.pc ?? null;
+  const chg=last!=null&&prev!=null&&prev!==0?(last-prev)*100/prev:null;
+  const yh=p?.year_high??null, yl=p?.year_low??null;
+  return {sym,price:last,chg,yh,yl,sc,del};
+}
+function renderCompany(sym){
+  const s=document.getElementById("v-company"); if(!s)return;
+  const x=findInstrument(sym)||findInstrument("RELIANCE"); if(!x)return;
+  const cards=s.querySelectorAll(".kpi");
+  if(cards[0]){cards[0].querySelector(".lbl").textContent=x.sym;cards[0].querySelector(".num").textContent=x.price==null?"—":"₹"+nfmt(x.price);cards[0].querySelector(".chg").textContent=x.chg==null?"data feed":"▲ "+pfmt(x.chg);cards[0].querySelector(".chg").className="chg "+(x.chg==null?"hold":cls(x.chg));}
+  if(cards[1]){cards[1].querySelector(".lbl").textContent="SCORE";cards[1].querySelector(".num").textContent=x.sc?num(x.sc.total).toFixed(1):"—";cards[1].querySelector(".chg").textContent=x.sc?"Tech "+nfmt(x.sc.t)+" · Fund "+nfmt(x.sc.f):"not in score feed";}
+  if(cards[2]){cards[2].querySelector(".lbl").textContent="DELIVERY";cards[2].querySelector(".num").textContent=x.del==null?"—":nfmt(x.del)+"%";cards[2].querySelector(".chg").textContent=x.del==null?"source missing":"NSE EOD";}
+  if(cards[3]){cards[3].querySelector(".lbl").textContent="52W RANGE";cards[3].querySelector(".num").textContent=x.yh!=null&&x.yl!=null?(nfmt(x.yl)+" – "+nfmt(x.yh)):"—";cards[3].querySelector(".chg").textContent=x.yh!=null?"preopen feed":"source missing";}
+  const grids=s.querySelectorAll(".grid2 .card");
+  if(grids[0]){const sh=grids[0].querySelector(".sh2");if(sh)sh.textContent="LIVE DATA · "+x.sym;const p=grids[0].querySelector("div[style*='font-size']");if(p)p.textContent=(x.sc?.r||[]).join(" · ")||"No narrative field in repo feed. Use score, delivery, and price fields above.";}
+  if(grids[1]){const sh=grids[1].querySelector(".sh2");if(sh)sh.textContent="DATA COVERAGE";const p=grids[1].querySelector("div[style*='padding']");if(p)p.innerHTML='<div class="breadth"><i style="width:'+Math.max(0,Math.min(100,num(x.sc?.total)*10))+'%"></i></div><div class="mono s11" style="margin-top:8px">Score <b>'+(x.sc?num(x.sc.total).toFixed(1):"—")+'</b> · Delivery <b>'+(x.del==null?"—":nfmt(x.del)+"%")+'</b> · Repo feed</div>';}
+  stamp("v-company","REAL FEED · CANDLES + PREOPEN + STOCK-SCORES + DELIVERY · SEARCH SUPPORTED SYMBOLS");
+}
+function bindCompany(){
+  const inp=document.querySelector("#v-company input[type=search]");if(!inp)return;
+  inp.value="RELIANCE"; inp.setAttribute("placeholder","Search supported symbol — RELIANCE, INFY, TCS...");
+  inp.addEventListener("input",()=>{const v=inp.value.trim();if(v)renderCompany(v);});
+  renderCompany("RELIANCE");
+}
+function renderGlobal(){
+  const items=D.global?.items||[]; const s=document.getElementById("v-global"); if(!s||!items.length)return;
+  const rows=[...s.querySelectorAll("tbody tr")];
+  const map=new Map(items.map(x=>[String(x.name).toUpperCase(),x]));
+  const aliases={
+    "S&P 500":"S&P 500","NASDAQ":"Nasdaq Composite","DOW JONES":"Dow Jones Industrial Average",
+    "NIKKEI 225":"Nikkei 225","HANG SENG":"Hang Seng","GOLD (COMEX)":"Gold","CRUDE OIL WTI":"Crude Oil WTI","USD-INR":"USDINR=X"
+  };
+  rows.forEach(r=>{
+    const name=r.children[0]?.textContent.trim(); const key=(aliases[name]||name||"").toUpperCase(); let x=map.get(key);
+    if(!x) x=items.find(it=>String(it.name).toUpperCase().includes(key)||key.includes(String(it.name).toUpperCase()));
+    if(!x)return;
+    r.children[1].textContent=nfmt(x.price);r.children[2].innerHTML='<span class="'+cls(x.chg_pct)+'">'+pfmt(x.chg_pct)+'</span>';if(r.children[3])r.children[3].textContent=nfmt(x.high_52w);
+  });
+  const topNames=["S&P 500","Gold","Crude Oil WTI","USDINR=X"];
+  const cards=s.querySelectorAll(".ridx");
+  topNames.forEach((k,i)=>{const x=map.get(k.toUpperCase())||items.find(it=>String(it.name).toUpperCase().includes(k.toUpperCase()));if(x&&cards[i]){cards[i].querySelector(".val").textContent=nfmt(x.price);const c=cards[i].querySelector(".chg");c.textContent=pfmt(x.chg_pct);c.className="chg "+cls(x.chg_pct);}});
+  stamp("v-global","REAL YAHOO-FINANCE SNAPSHOT · "+(D.global.updated||"").slice(0,10));
+}
+function renderCrypto(){
+  const c=D.crypto, s=document.getElementById("v-crypto"); if(!c||!s)return;
+  const fg=c.fear_greed, g=c.global, topg=c.gainers_24h||[];
+  const numEl=s.querySelector(".card .num"); if(numEl&&fg)numEl.innerHTML=nfmt(fg.value)+'<span style="font-size:14px;color:var(--dim)">/100</span>';
+  const mood=s.querySelector(".card .up"); if(mood&&fg)mood.textContent=String(fg.label||"");
+  const zr=s.querySelectorAll(".card .zrow");
+  const vals=[
+    ["Total market cap","$"+(num(g.total_market_cap_usd)/1e12).toFixed(2)+"T"],
+    ["BTC / ETH dominance",(num(g.btc_dominance)).toFixed(1)+"% / "+(num(g.eth_dominance)).toFixed(1)+"%"],
+    ["24h volume","$"+(num(g.total_volume_usd)/1e9).toFixed(1)+"B"]
+  ];
+  vals.forEach((v,i)=>{if(zr[i]){zr[i].querySelector("span").textContent=v[0];zr[i].querySelector("b").textContent=v[1];}});
+  const card=s.querySelectorAll(".card")[1];if(card){
+    const wrap=card.querySelector("div[style*='padding:4px']")||card.querySelector("div");
+    if(wrap)wrap.innerHTML=topg.slice(0,6).map((x,i)=>'<div class="fgrow"><span>'+esc(x.name)+' ('+esc(x.symbol)+')</span><b class="up">'+pfmt(x.chg_24h_pct)+'</b></div><div class="gbar" style="width:'+Math.max(10,Math.min(100,Math.abs(num(x.chg_24h_pct))/(Math.abs(num(topg[0]?.chg_24h_pct)||1))*100))+'%"></div>').join("");
+  }
+  stamp("v-crypto","REAL COINGECKO FEED · TOP 100 · FEAR & GREED");
+}
+function renderNews(){
+  const items=(D.news?.items||[]).slice().sort((a,b)=>String(b.published).localeCompare(String(a.published)));
+  const s=document.getElementById("v-news");if(!s||!items.length)return;
+  const sect=[...s.querySelectorAll(".sect")].find(x=>x.textContent.includes("LATEST FEED")); if(!sect)return;
+  [...s.querySelectorAll(".newscard")].forEach(x=>x.remove());
+  items.slice(0,10).forEach((x,i)=>{
+    const c=document.createElement("a");c.className="newscard";c.href=x.link||"#";c.target="_blank";c.rel="noopener";c.style.cssText=(i?"margin-top:8px;":"")+"display:block;text-decoration:none;color:inherit";
+    c.innerHTML='<span class="nbadge">'+esc(x.topic||"NEWS")+'</span><div class="nh">'+esc(x.title||"")+'</div><small style="display:block;color:var(--faint);margin-top:5px">'+esc(x.publisher||"")+" · "+esc(String(x.published||"").replace("T"," ").slice(0,16))+"</small>";
+    sect.insertAdjacentElement("afterend",c);
+  });
+  stamp("v-news","REAL GOOGLE NEWS RSS FEED · 60 ITEMS · LATEST PUBLISHED FIRST");
+}
+function renderEvents(){
+  const s=document.getElementById("v-events");if(!s)return;
+  const last=D["fii-dii"]?.date||D["breadth"]?.updated||"";
+  const note=s.querySelector(".closed-banner");if(note)note.textContent="DATA SNAPSHOT · "+last+" · SESSION TIMES ARE UI REFERENCE";
+  stamp("v-events","REAL DATA TIMESTAMPS SHOWN · SESSION CLOCKS REMAIN UI REFERENCE");
+}
+function renderInternals(){
+  const s=document.getElementById("v-internals"),b=D.breadth;if(!s||!b)return;
+  const cards=s.querySelectorAll(".kpi");
+  const vals=[["STOCKS TRACKED",b.stocks,"repo universe"],["ABOVE EMA200",b.above_ema200_pct+"%","breadth"],["RSI > 60",b.rsi_above_60,"stocks"],["2× VOLUME",b.volume_spike_2x,"stocks"]];
+  vals.forEach((v,i)=>{if(cards[i]){cards[i].querySelector(".lbl").textContent=v[0];cards[i].querySelector(".num").textContent=nfmt(v[1]);cards[i].querySelector(".chg").textContent=v[2];}});
+  const pcr=s.querySelector(".card:nth-of-type(3)"); if(pcr)pcr.querySelector(".sh2").textContent="RSI / VOLUME INTERNALS";
+  stamp("v-internals","REAL BREADTH FEED · NO TRIN / MCCLELLAN FIELD IN REPO");
+}
+function renderChart(){
+  const s=document.getElementById("v-gticharts");if(!s)return;
+  const svg=s.querySelector("svg"); const b=D.candles?.syms?.NIFTY?.["5m"]||D.candles?.syms?.NIFTY?.["1m"]; if(!svg||!b?.c?.length)return;
+  const vals=b.c.slice(-80); const w=560,h=290,p=12; const lo=Math.min(...vals),hi=Math.max(...vals);
+  const y=v=>h-p-(num(v)-lo)*((h-2*p)/Math.max(.000001,hi-lo));
+  const xs=vals.map((_,i)=>p+(w-2*p)*i/Math.max(1,vals.length-1));
+  const poly=vals.map((v,i)=>xs[i].toFixed(1)+","+y(v).toFixed(1)).join(" ");
+  const last=vals[vals.length-1], first=vals[0], chg=first?(last-first)*100/first:0;
+  svg.innerHTML='<rect x="0" y="10" width="560" height="290" fill="var(--bg2)"><\/rect>'+
+    [25,75,125,175,225,275].map(yy=>'<line x1="0" y1="'+yy+'" x2="560" y2="'+yy+'" stroke="var(--border)" stroke-width="1" opacity=".6"><\/line>').join("")+
+    '<polyline points="'+poly+'" fill="none" stroke="var(--accent)" stroke-width="2"><\/polyline>'+
+    '<text x="0" y="318" font-family="var(--mono)" font-size="9" fill="var(--faint)">5m · repo candles · '+esc(D.candles.updated||"")+'</text>'+
+    '<text x="555" y="22" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">'+nfmt(hi)+'</text>'+
+    '<text x="555" y="285" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">'+nfmt(lo)+'</text>';
+  const title=[...s.querySelectorAll(".sh2")].find(x=>x.textContent.includes("NIFTY · 5M")); if(title)title.textContent="NIFTY · 5M · REAL CANDLES";
+  const price=s.querySelector(".card .card b"); if(price)price.textContent=nfmt(last);
+  const ch=s.querySelector(".card .card .dn");if(ch){ch.textContent=(chg>=0?"+":"")+nfmt(last-first)+" pts · "+pfmt(chg);ch.className=cls(chg)+" mono";}
+  stamp("v-gticharts","REAL CANDLES FEED · data/candles.json · NIFTY 5M");
+}
+function renderAIBrain(){
+  const s=document.getElementById("v-aibrain"),b=D.breadth,I=D["indices-all"]?.indices;if(!s||!b||!I?.length)return;
+  const n=I.find(x=>x.index==="NIFTY 50"),v=I.find(x=>x.index==="INDIA VIX");
+  const first=s.querySelector(".grid2 .num");if(first)first.textContent=(num(b.above_ema200_pct)>=50?"BROAD":"SELECTIVE")+" BREADTH";
+  const meta=s.querySelector(".grid2 .breadth i");if(meta)meta.style.width=num(b.above_ema200_pct)+"%";
+  const small=s.querySelector(".grid2 .mono.s11");if(small)small.textContent="above EMA200 "+nfmt(b.above_ema200_pct)+"% · volume spikes "+nfmt(b.volume_spike_2x);
+  const cr=s.querySelectorAll(".grid2 .card")[1];if(cr){const ks=cr.querySelectorAll(".kpi");if(ks[0])ks[0].querySelector(".num").textContent=v?nfmt(v.price):"—";if(ks[1])ks[1].querySelector(".num").textContent=b.above_ema200_pct+"%";if(ks[2]){ks[2].querySelector(".lbl").textContent="VOLUME SPIKES";ks[2].querySelector(".num").textContent=nfmt(b.volume_spike_2x);ks[2].querySelector(".num").className="num hold";}}
+  const rr=s.querySelector(".card[style*='margin-top']");if(rr)rr.querySelector("[style*='font-size:12px']").textContent="Live repo context: Nifty "+(n?pfmt(n.change_pct):"—")+", above EMA200 "+b.above_ema200_pct+"%, volume spikes "+b.volume_spike_2x+". No forecast model is sourced from this repo.";
+  stamp("v-aibrain","REAL CONTEXT FEED · NO FORECAST MODEL IN REPO");
+}
+function markCoverage(){
+  staticStamp("v-portfolio","LOCAL USER PORTFOLIO UI · NO HOLDINGS FEED CONNECTED");
+  staticStamp("v-futures","UI READY · NO F&O JSON FEED IN REPO");
+  staticStamp("v-filings","UI READY · NO FILINGS JSON FEED IN REPO");
+  staticStamp("v-ipo","UI READY · NO IPO JSON FEED IN REPO");
+  staticStamp("v-mf","UI READY · NO MUTUAL-FUND JSON FEED IN REPO");
+  staticStamp("v-gtizones","UI READY · NO ZONE FEED IN REPO");
+  staticStamp("v-gtiai","UI READY · NO FORECAST FEED IN REPO");
+  staticStamp("v-learn","STATIC LEARNING CONTENT · NOT A MARKET-DATA FEED");
+}
+function renderSearch(){
+  const pl=document.getElementById("palList"),q=document.getElementById("palQ");if(!pl||!q)return;
+  const f=(q.value||"").toLowerCase().trim(), groups=[];
+  const push=(title,arr,go)=>{
+    const a=(arr||[]).filter(x=>((x.n||"")+" "+(x.d||"")).toLowerCase().includes(f)).slice(0,8);
+    if(a.length)groups.push('<div class="pg">'+title+'</div>'+a.map(x=>'<div class="pi" data-go="'+x.go+'"><b>'+esc(x.n)+'</b><small>'+esc(x.d)+'</small></div>').join(""));
+  };
+  const idx=(D["indices-all"]?.indices||[]).map(x=>({n:x.index,d:nfmt(x.price)+" · "+pfmt(x.change_pct),go:"indices"}));
+  const st=scoreRows().map(x=>({n:x.sym,d:"score "+num(x.total).toFixed(1)+" · tech "+nfmt(x.t)+" · fund "+nfmt(x.f),go:"company"}));
+  const pr=(D.preopen?.top20_gainers||[]).concat(D.preopen?.top20_losers||[]).map(x=>({n:x.symbol,d:"preopen "+nfmt(x.last_price)+" · "+pfmt(x.change_pct),go:"company"}));
+  const cr=(D.crypto?.top||[]).map(x=>({n:x.symbol,d:"$"+nfmt(x.price_usd)+" · "+pfmt(x.chg_24h_pct),go:"crypto"}));
+  const gl=(D.global?.items||[]).map(x=>({n:x.name,d:nfmt(x.price)+" · "+pfmt(x.chg_pct),go:"global"}));
+  const nw=(D.news?.items||[]).slice(0,20).map(x=>({n:x.title,d:(x.publisher||"")+" · "+String(x.published||"").slice(0,10),go:"news"}));
+  push("LIVE · INDICES",idx,"indices");push("LIVE · SCORE FEED",st,"company");push("LIVE · PREOPEN",pr,"company");push("LIVE · CRYPTO",cr,"crypto");push("LIVE · GLOBAL",gl,"global");push("LIVE · NEWS",nw,"news");
+  const sids=["home","indices","idxradar","heatmap","screener","fundamentals","company","deepfund","portfolio","futures","gti","gticharts","gtizones","gtiai","aibrain","internals","crypto","global","news","events","ipo","filings","mf","learn"];
+  const labels={"home":"Home","indices":"Indices","idxradar":"Indices Radar","heatmap":"Sector Map","screener":"Screener","fundamentals":"Fundamentals","company":"Company Card","deepfund":"Deep Fund","portfolio":"Portfolio","futures":"Futures","gti":"GTI · Charts · AI","gticharts":"Charts","gtizones":"GTI Zones","gtiai":"AI Forecast","aibrain":"AI Brain","internals":"Internals","crypto":"Crypto","global":"Global","news":"News","events":"Events","ipo":"IPO","filings":"Filings","mf":"MF Tracker","learn":"Learn"};
+  const secs=sids.filter(id=>!f||labels[id].toLowerCase().includes(f)).slice(0,12);
+  if(secs.length)groups.push('<div class="pg">SECTIONS · MASTER UI</div>'+secs.map(id=>'<div class="pi" data-go="'+id+'"><b>'+labels[id]+'</b><small>open workspace</small></div>').join(""));
+  pl.innerHTML=groups.join("")||'<div class="pg">No live match — try RELIANCE, NIFTY, BTC, news</div>';
+}
+function addLiveBadge(){
+  const sg=document.querySelector(".sg");if(!sg||document.getElementById("asLiveBadge"))return;
+  const b=document.createElement("span");b.id="asLiveBadge";b.className="pill";b.style.cssText="font-size:9px;letter-spacing:.08em";b.textContent="DATA · REAL FEEDS";sg.insertBefore(b,sg.firstChild);
+}
+async function main(){
+  await Promise.all(FILES.map(load));
+  renderHome();renderIndices();renderIndexRadar();renderSectorMap();renderScreener();renderFundamentals();renderDeepFund();bindCompany();renderGlobal();renderCrypto();renderNews();renderEvents();renderInternals();renderChart();renderAIBrain();markCoverage();addLiveBadge();
+  const pq=document.getElementById("palQ");if(pq){pq.addEventListener("input",renderSearch);setTimeout(renderSearch,0);}
+  document.querySelectorAll(".mb").forEach(btn=>{
+    if((btn.textContent||"").includes("Refresh data"))btn.addEventListener("click",e=>{e.stopImmediatePropagation();location.reload();},true);
+  });
+  document.querySelectorAll("#v-news .fch").forEach(ch=>ch.addEventListener("click",()=>setTimeout(renderNews,0)));
+  document.documentElement.dataset.live="1";
+}
+main();
 })();
 </script></body></html>

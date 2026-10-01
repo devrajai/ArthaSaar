@@ -20,11 +20,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build ArthaSaar v4 Market Canvas
+      - name: Build ArthaSaar v5 Finance Workspace
         run: |
           rm -rf site
           mkdir -p site/data
-          cp -R v4/. site/
+          cp -R v5/. site/
           for f in indices-all global fii-dii breadth radar news economy-pulse crypto stock-scores preopen candles constituents delivery; do
             cp "data/$f.json" "site/data/$f.json"
           done

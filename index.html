@@ -2,90 +2,104 @@
 <html lang="en" data-theme="midnight">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#070a12"/>
 <title>ArthaSaar — India's Free Market, Mutual Fund &amp; Learning Workspace</title>
 <meta name="description" content="ArthaSaar is a free, India-first market workspace: learn the markets, search every Indian mutual fund, compare SIPs, screen NSE/BSE stocks, track FII/DII, OI and global markets — plus IPO analysis via IpoBodh."/>
 <style>
-/* ArthaSaar — new UI (v10). Three selectable themes via [data-theme]. */
+/* ArthaSaar — Liquid Glass UI. Frosted panels, soft aurora background, simple pill buttons. */
 :root{
-  --bg:#080c13; --bg2:#0f1622; --card:#131c2b; --card2:#182334; --line:#243147;
-  --tx:#eaf1fb; --mut:#93a6c0; --dim:#66788f;
-  --up:#2ad18a; --dn:#ff5d6e; --acc:#5b9dff; --acc2:#8b5cf6; --warn:#ffb547; --gold:#f6c453;
-  --r:16px; --sh:0 10px 30px rgba(0,0,0,.4);
-  --hero1:#0e1a33; --hero2:#1b1140; --glow:#5b9dff;
+  --bg:#070a12;
+  --b1:rgba(91,157,255,.55); --b2:rgba(139,92,246,.45); --b3:rgba(45,212,191,.35);
+  --tx:#eef4ff; --mut:#9fb0c9; --dim:#6c7d95;
+  --up:#38e08a; --dn:#ff6b7d; --acc:#6aa8ff; --acc2:#a07cff; --warn:#ffc266;
+  --glass:rgba(255,255,255,.08); --glass2:rgba(255,255,255,.045);
+  --stroke:rgba(255,255,255,.16); --stroke2:rgba(255,255,255,.09);
+  --r:22px; --sh:0 16px 40px rgba(0,0,0,.45);
 }
 [data-theme="paper"]{
-  --bg:#f4f6fb; --bg2:#ffffff; --card:#ffffff; --card2:#f7f9fd; --line:#e2e8f2;
-  --tx:#101828; --mut:#5a6b85; --dim:#8496ad;
-  --up:#0f9d63; --dn:#e04050; --acc:#2563eb; --acc2:#7c3aed; --warn:#c77700; --gold:#b8860b;
-  --sh:0 8px 24px rgba(20,40,90,.08);
-  --hero1:#e8efff; --hero2:#f3ecff; --glow:#2563eb;
+  --bg:#eef2fb;
+  --b1:rgba(120,170,255,.55); --b2:rgba(180,150,255,.5); --b3:rgba(120,220,210,.45);
+  --tx:#0f1729; --mut:#54637c; --dim:#7d8ba0;
+  --up:#0f9d63; --dn:#e0404f; --acc:#2f6bff; --acc2:#7c3aed; --warn:#b87200;
+  --glass:rgba(255,255,255,.66); --glass2:rgba(255,255,255,.5);
+  --stroke:rgba(255,255,255,.85); --stroke2:rgba(20,40,90,.10);
+  --sh:0 16px 40px rgba(30,50,90,.14);
 }
 [data-theme="saffron"]{
-  --bg:#140d07; --bg2:#1e1409; --card:#241810; --card2:#2c1e13; --line:#402c1c;
-  --tx:#fdf2e3; --mut:#d3ab84; --dim:#a17e58;
-  --up:#3fcf8e; --dn:#ff6b5e; --acc:#ff9d3d; --acc2:#ff5f6d; --warn:#ffca5c; --gold:#ffcf6b;
-  --sh:0 10px 30px rgba(0,0,0,.45);
-  --hero1:#3a1c07; --hero2:#4a1220; --glow:#ff9d3d;
+  --bg:#120b06;
+  --b1:rgba(255,157,61,.5); --b2:rgba(255,95,109,.45); --b3:rgba(255,207,107,.35);
+  --tx:#fff3e4; --mut:#d8b28b; --dim:#a8845f;
+  --up:#4fd894; --dn:#ff7061; --acc:#ffab52; --acc2:#ff5f6d; --warn:#ffd06a;
+  --glass:rgba(255,255,255,.08); --glass2:rgba(255,255,255,.045);
+  --stroke:rgba(255,255,255,.16); --stroke2:rgba(255,255,255,.09);
+  --sh:0 16px 40px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);
-  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+html,body{margin:0;padding:0;min-height:100%}
+body{
+  color:var(--tx);
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background:var(--bg);
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(58vw 58vw at 12% 6%, var(--b1), transparent 62%),
+    radial-gradient(52vw 52vw at 88% 16%, var(--b2), transparent 62%),
+    radial-gradient(60vw 60vw at 50% 104%, var(--b3), transparent 62%),
+    var(--bg);
+}
 a{color:var(--acc);text-decoration:none} a:hover{text-decoration:underline}
 .up{color:var(--up)} .down{color:var(--dn)} .mut{color:var(--mut)} .dim{color:var(--dim)}
 
-/* ---------- password gate ---------- */
-.gate{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;
-  background:radial-gradient(900px 500px at 20% 10%,var(--hero1),transparent 60%),radial-gradient(900px 500px at 90% 90%,var(--hero2),transparent 60%),var(--bg)}
-.gate .box{width:min(430px,100%);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:var(--sh);text-align:center}
-.gate .logo{width:64px;height:64px;border-radius:20px;margin:0 auto 12px;display:grid;place-items:center;font-size:32px;font-weight:800;color:#fff;
-  background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 10px 30px color-mix(in srgb,var(--acc) 45%,transparent)}
-.gate h1{margin:6px 0 2px;font-size:23px;letter-spacing:-.3px}
-.gate p{color:var(--mut);font-size:13px;margin:0 0 16px}
-.gate input{width:100%;text-align:center;letter-spacing:2px;font-size:16px;padding:12px}
-.gate .err{color:var(--dn);font-size:12.5px;min-height:16px;margin-top:8px}
-.gate .hint{color:var(--dim);font-size:11.5px;margin-top:14px}
-
-/* ---------- top bar ---------- */
-.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  padding:10px 16px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-.brand .logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:21px;color:#fff;
-  background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:var(--sh)}
-.brand b{display:block;font-size:16px} .brand small{display:block;font-size:10.5px;color:var(--mut);margin-top:-1px;letter-spacing:.3px}
-.nav{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none} .nav::-webkit-scrollbar{display:none}
-.nv{white-space:nowrap;border:0;background:transparent;color:var(--mut);padding:8px 12px;border-radius:10px;font:inherit;font-size:13.5px;cursor:pointer}
-.nv:hover{color:var(--tx);background:color-mix(in srgb,var(--tx) 7%,transparent)}
-.nv.active{color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px color-mix(in srgb,var(--acc) 40%,transparent)}
+/* ---------- top bar (glass) ---------- */
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:12px 16px;background:var(--glass2);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);
+  border-bottom:1px solid var(--stroke2)}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none}
+.brand .logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:21px;color:#fff;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 8px 22px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.4)}
+.brand b{display:block;font-size:16px;letter-spacing:.2px}
+.brand small{display:block;font-size:10.5px;color:var(--mut);margin-top:-1px;letter-spacing:.3px}
+.nav{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none} .nav::-webkit-scrollbar{display:none}
+.nv{white-space:nowrap;border:1px solid transparent;background:transparent;color:var(--mut);padding:9px 14px;border-radius:999px;
+  font:inherit;font-size:13.5px;cursor:pointer;transition:.15s}
+.nv:hover{color:var(--tx);background:var(--glass);border-color:var(--stroke2)}
+.nv.active{color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;
+  box-shadow:0 8px 20px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.4)}
 [data-theme="paper"] .nv.active{color:#fff}
 .tools{display:flex;align-items:center;gap:8px}
-.themeSel{background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:7px 9px;font:inherit;font-size:12.5px}
-.ipoBtn{background:linear-gradient(135deg,#ff9d3d,#ff5f6d);border:0;color:#fff;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:13px;white-space:nowrap;box-shadow:0 4px 14px rgba(255,95,109,.35)}
-.ipoBtn:hover{filter:brightness(1.08)}
+.themeSel{background:var(--glass);border:1px solid var(--stroke);color:var(--tx);border-radius:999px;padding:8px 12px;font:inherit;font-size:12.5px;backdrop-filter:blur(10px)}
+.ipoBtn{background:linear-gradient(135deg,#ffb457,#ff6b7d);border:1px solid rgba(255,255,255,.35);color:#fff;font-weight:700;
+  padding:9px 16px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap;
+  box-shadow:0 10px 24px rgba(255,107,125,.34),inset 0 1px 0 rgba(255,255,255,.45)}
+.ipoBtn:hover{filter:brightness(1.06)}
 .status{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut)}
 .status .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 10px var(--warn)}
 .status.ok .dot{background:var(--up)} .status.bad .dot{background:var(--dn)}
 
 main{padding:18px;max-width:1300px;margin:0 auto}
-.view{display:none;animation:fade .28s ease} .view.active{display:block}
+.view{display:none;animation:fade .3s ease} .view.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* ---------- hero ---------- */
-.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:26px;padding:30px 28px;margin-bottom:18px;
-  background:radial-gradient(700px 300px at 8% 0%,var(--hero1),transparent 65%),radial-gradient(700px 300px at 100% 100%,var(--hero2),transparent 65%),var(--card)}
-.hero .kicker{display:inline-block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--acc);font-weight:700;
-  background:color-mix(in srgb,var(--acc) 14%,transparent);border:1px solid color-mix(in srgb,var(--acc) 35%,transparent);padding:4px 12px;border-radius:999px}
-.hero h1{font-size:clamp(26px,4.4vw,46px);line-height:1.08;margin:14px 0 8px;letter-spacing:-1px;font-weight:800}
+/* ---------- hero (glass) ---------- */
+.hero{position:relative;overflow:hidden;border:1px solid var(--stroke);border-radius:28px;padding:30px 28px;margin-bottom:18px;
+  background:linear-gradient(160deg,var(--glass),var(--glass2));backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);
+  box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.22)}
+.hero .kicker{display:inline-block;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--tx);font-weight:700;
+  background:var(--glass);border:1px solid var(--stroke);padding:5px 13px;border-radius:999px}
+.hero h1{font-size:clamp(27px,4.6vw,48px);line-height:1.06;margin:14px 0 8px;letter-spacing:-1.1px;font-weight:800}
 .hero h1 .grad{background:linear-gradient(120deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero .lead{color:var(--mut);font-size:15.5px;max-width:760px;margin:0 0 16px}
+.hero .lead{color:var(--mut);font-size:15.5px;max-width:770px;margin:0 0 18px}
 .hero .cta{display:flex;gap:10px;flex-wrap:wrap}
-.feat{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:20px}
-.feat .f{border:1px solid var(--line);border-radius:14px;padding:12px;background:color-mix(in srgb,var(--card2) 70%,transparent)}
+.feat{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:22px}
+.feat .f{border:1px solid var(--stroke2);border-radius:18px;padding:13px;background:var(--glass2);backdrop-filter:blur(8px)}
 .feat .f b{display:block;font-size:13.5px;margin-bottom:3px}
 .feat .f span{font-size:12px;color:var(--mut)}
 
-h2.sec{font-size:20px;margin:6px 0 4px;letter-spacing:-.2px}
+h2.sec{font-size:20px;margin:8px 0 4px;letter-spacing:-.2px}
 p.sub{color:var(--mut);margin:0 0 14px;font-size:13.5px}
 h3{font-size:15px;margin:18px 0 8px}
 .grid{display:grid;gap:12px}
@@ -93,98 +107,97 @@ h3{font-size:15px;margin:18px 0 8px}
 @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
 
-.card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--sh)}
-.card h4{margin:0 0 8px;font-size:12.5px;color:var(--mut);font-weight:700;letter-spacing:.4px;text-transform:uppercase}
-.kpi{font-size:24px;font-weight:800;letter-spacing:-.4px} .kpi.sm{font-size:18px}
+/* ---------- glass card ---------- */
+.card{background:linear-gradient(160deg,var(--glass),var(--glass2));border:1px solid var(--stroke);border-radius:var(--r);padding:16px;
+  backdrop-filter:blur(20px) saturate(165%);-webkit-backdrop-filter:blur(20px) saturate(165%);
+  box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.18)}
+.card h4{margin:0 0 9px;font-size:12px;color:var(--mut);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.kpi{font-size:25px;font-weight:800;letter-spacing:-.5px} .kpi.sm{font-size:18px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .chg{font-size:13px;font-weight:600}
-.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;background:color-mix(in srgb,var(--tx) 10%,transparent);color:var(--mut)}
-.pill.up{background:color-mix(in srgb,var(--up) 18%,transparent);color:var(--up)} .pill.dn{background:color-mix(in srgb,var(--dn) 18%,transparent);color:var(--dn)}
-.pill.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)} .pill.acc{background:color-mix(in srgb,var(--acc) 18%,transparent);color:var(--acc)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;background:var(--glass);color:var(--mut);border:1px solid var(--stroke2)}
+.pill.up{background:color-mix(in srgb,var(--up) 20%,transparent);color:var(--up);border-color:transparent}
+.pill.dn{background:color-mix(in srgb,var(--dn) 20%,transparent);color:var(--dn);border-color:transparent}
+.pill.warn{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn);border-color:transparent}
+.pill.acc{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc);border-color:transparent}
 
 .spark{width:100%;height:34px;display:block;opacity:.95}
 .chart{width:100%;height:auto;display:block}
-.bar{height:8px;border-radius:6px;background:color-mix(in srgb,var(--tx) 10%,transparent);overflow:hidden} .bar>i{display:block;height:100%;border-radius:6px}
+.bar{height:8px;border-radius:6px;background:var(--glass);overflow:hidden} .bar>i{display:block;height:100%;border-radius:6px}
 
+/* ---------- tables ---------- */
 table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:right;padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+th,td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--stroke2);white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
-th{color:var(--mut);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;position:sticky;top:0;background:var(--card2);z-index:1}
-tbody tr:hover{background:color-mix(in srgb,var(--tx) 5%,transparent)}
-.tbl-wrap{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:var(--r)}
+th{color:var(--mut);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;position:sticky;top:0;
+  background:var(--glass);backdrop-filter:blur(14px);z-index:1}
+tbody tr:hover{background:var(--glass2)}
+.tbl-wrap{max-height:520px;overflow:auto;border:1px solid var(--stroke);border-radius:var(--r);background:var(--glass2);backdrop-filter:blur(12px)}
 .sym{font-weight:700} .co{color:var(--mut);font-size:11.5px;display:block;font-weight:400}
 
-input,select,button.btn{font:inherit;background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:11px;padding:9px 11px}
-input:focus,select:focus{outline:none;border-color:var(--acc)}
-.btn{cursor:pointer;background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;color:#fff;font-weight:700}
-.btn:hover{filter:brightness(1.08)}
-.btn.ghost{background:color-mix(in srgb,var(--tx) 7%,transparent);border:1px solid var(--line);color:var(--tx)}
-.btn.sm{padding:6px 11px;font-size:12.5px}
+/* ---------- controls ---------- */
+input,select,button.btn{font:inherit;background:var(--glass);border:1px solid var(--stroke);color:var(--tx);border-radius:999px;padding:10px 14px;backdrop-filter:blur(10px)}
+input:focus,select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 25%,transparent)}
+.btn{cursor:pointer;background:linear-gradient(135deg,var(--acc),var(--acc2));border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;
+  box-shadow:0 10px 24px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:var(--glass);border-color:var(--stroke);color:var(--tx)}
+.btn.sm{padding:7px 13px;font-size:12.5px}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .toolbar input[type=text]{min-width:220px;flex:1}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.tab{border:1px solid var(--line);background:color-mix(in srgb,var(--tx) 6%,transparent);color:var(--mut);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:12.5px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:1px solid var(--stroke2);background:var(--glass2);color:var(--mut);padding:7px 14px;border-radius:999px;cursor:pointer;font-size:12.5px}
 .tab.active{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;color:#fff}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{background:color-mix(in srgb,var(--tx) 7%,transparent);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--mut)}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{background:var(--glass2);border:1px solid var(--stroke2);border-radius:999px;padding:4px 12px;font-size:12px;color:var(--mut)}
 .chip.acc{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent}
 .list{list-style:none;margin:0;padding:0}
-.list li{padding:9px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+.list li{padding:10px 0;border-bottom:1px solid var(--stroke2);display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
 .list li:last-child{border-bottom:0}
 .note{font-size:12px;color:var(--dim);margin-top:8px}
-.acc-h{display:flex;justify-content:space-between;cursor:pointer;padding:10px 0;border-bottom:1px solid var(--line);font-weight:700}
+.acc-h{display:flex;justify-content:space-between;cursor:pointer;padding:11px 0;border-bottom:1px solid var(--stroke2);font-weight:700}
 .acc-b{display:none;padding:6px 0 12px;color:var(--mut);font-size:13.5px} .acc.open .acc-b{display:block}
-.sig{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px} .sig:last-child{border-bottom:0}
+.sig{display:flex;gap:8px;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--stroke2);font-size:13.5px} .sig:last-child{border-bottom:0}
 .mini{font-size:12px;color:var(--mut)}
-.hl{background:color-mix(in srgb,var(--acc) 9%,transparent);border:1px solid color-mix(in srgb,var(--acc) 28%,transparent);border-radius:12px;padding:10px 12px;margin:8px 0}
+.hl{background:var(--glass);border:1px solid var(--stroke);border-radius:16px;padding:12px 14px;margin:9px 0;backdrop-filter:blur(10px)}
 .gauge{display:flex;align-items:center;gap:10px}
 .gauge .g{flex:1;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--dn),var(--warn),var(--up));position:relative}
 .gauge .g i{position:absolute;top:-3px;width:4px;height:16px;background:var(--tx);border-radius:3px;transform:translateX(-2px)}
 
-.drawer{position:fixed;inset:0;z-index:120;background:color-mix(in srgb,#000 55%,transparent);backdrop-filter:blur(3px);display:flex;justify-content:flex-end}
-.drawer-in{width:min(600px,100%);height:100%;overflow:auto;background:var(--bg2);border-left:1px solid var(--line);padding:18px}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;padding:10px 16px;border-radius:12px;z-index:200;box-shadow:var(--sh)}
-.foot{border-top:1px solid var(--line);margin-top:26px;padding:18px;color:var(--dim);font-size:12px;max-width:1300px;margin-inline:auto}
+.drawer{position:fixed;inset:0;z-index:120;background:rgba(4,7,14,.5);backdrop-filter:blur(6px);display:flex;justify-content:flex-end}
+.drawer-in{width:min(600px,100%);height:100%;overflow:auto;padding:18px;
+  background:linear-gradient(160deg,var(--glass),var(--glass2));backdrop-filter:blur(30px) saturate(170%);-webkit-backdrop-filter:blur(30px) saturate(170%);
+  border-left:1px solid var(--stroke)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;
+  padding:11px 18px;border-radius:999px;z-index:200;box-shadow:var(--sh);border:1px solid rgba(255,255,255,.3)}
+.foot{border-top:1px solid var(--stroke2);margin-top:26px;padding:18px;color:var(--dim);font-size:12px;max-width:1300px;margin-inline:auto}
 .foot b{color:var(--mut)}
 .loader{display:grid;place-items:center;min-height:200px;color:var(--mut)}
 
 </style>
-<!-- inline watchdog: purges old service workers + caches and shows a visible message instead of a blank page -->
+<!-- watchdog: purges old service workers/caches and shows a visible message instead of a blank page -->
 <script>
 (function () {
+  function showMsg(m) {
+    var b = document.getElementById("saarBanner");
+    if (!b) { b = document.createElement("div"); b.id = "saarBanner";
+      b.style.cssText = "position:fixed;left:12px;right:12px;top:12px;z-index:9999;background:rgba(255,93,110,.96);color:#fff;padding:12px 14px;border-radius:14px;font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.45)";
+      document.body.appendChild(b); }
+    b.textContent = m;
+  }
+  window.__saarMsg = showMsg;
   try { if ("serviceWorker" in navigator) { navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }); } } catch (e) {}
   try { if (window.caches && caches.keys) { caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); }); } } catch (e) {}
-  window.addEventListener("error", function (ev) {
-    var g = document.getElementById("gateErr");
-    if (g && !window.__SAAR_READY) g.textContent = "Error: " + (ev.message || "script failed to load");
-  });
+  window.addEventListener("error", function (ev) { if (!window.__SAAR_READY) showMsg("Error: " + (ev.message || "script failed to load")); });
   setTimeout(function () {
-    if (!window.__SAAR_READY) {
-      var g = document.getElementById("gateErr");
-      if (g) g.textContent = "App script did not load. Please hard-refresh (Ctrl/Cmd+Shift+R) or clear this site's data.";
-    }
+    if (!window.__SAAR_READY) showMsg("The app script did not load. Please hard-refresh (Ctrl/Cmd+Shift+R) or clear this site's data.");
   }, 6000);
 })();
 </script>
 </head>
 <body>
 
-<!-- ===== password gate ===== -->
-<div class="gate" id="gate">
-  <div class="box">
-    <div class="logo">आ</div>
-    <h1>ArthaSaar</h1>
-    <p><b>आपका मार्केट साथी</b> · India's free market &amp; mutual-fund workspace</p>
-    <p class="mini" style="margin-top:-6px">Learn · Mutual Funds · SIPs · Stocks · F&amp;O · Global · IPO</p>
-    <input type="password" id="gateInput" placeholder="Enter access code" autocomplete="off"/>
-    <div class="err" id="gateErr"></div>
-    <button class="btn" style="width:100%;margin-top:6px" id="gateGo">Enter ArthaSaar</button>
-    <div class="hint">Demo gate (client-side). Set your own access code in the app script (search for <b>ACCESS_CODE</b>).<br>This is a cosmetic gate, not real security — a static site can't hide data.</div>
-  </div>
-</div>
-
-<!-- ===== top bar ===== -->
-<header class="topbar" id="topbar" style="display:none">
+<header class="topbar" id="topbar">
   <div class="brand" data-view="dash" role="button" tabindex="0">
     <span class="logo">आ</span>
     <div><b>ArthaSaar</b><small>मार्केट · MF · Learning</small></div>
@@ -202,8 +215,8 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
   </nav>
   <div class="tools">
     <select class="themeSel" id="themeSel" title="Choose a look">
-      <option value="midnight">🌙 Midnight</option>
-      <option value="paper">☀️ Paper</option>
+      <option value="midnight">🌌 Aurora</option>
+      <option value="paper">❄️ Frost</option>
       <option value="saffron">🪔 Saffron</option>
     </select>
     <button class="ipoBtn" id="ipoBtn" title="IPO analysis on IpoBodh">🚀 IPO · IpoBodh</button>
@@ -211,8 +224,8 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
   </div>
 </header>
 
-<main id="app" style="display:none">
-  <section class="view" id="v-dash"></section>
+<main id="app">
+  <section class="view active" id="v-dash"></section>
   <section class="view" id="v-learn"></section>
   <section class="view" id="v-mf"></section>
   <section class="view" id="v-invest"></section>
@@ -223,7 +236,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
   <section class="view" id="v-news"></section>
 </main>
 
-<footer class="foot" id="foot" style="display:none">
+<footer class="foot" id="foot">
   <p><b>ArthaSaar</b> — free, open, India-first market workspace. Data is end-of-day (EOD), collected after market close from free sources (NSE/BSE bhavcopy, AMFI/mfapi, Yahoo, Google News RSS). It is <b>not live intraday tick data</b> and not investment advice. Markets carry risk; verify before you act. IPO deep-dives live at <a href="https://devrajai.github.io/IpoBodh/" target="_blank" rel="noopener">IpoBodh</a>.</p>
   <p class="mut" id="footMeta"></p>
 </footer>
@@ -238,16 +251,10 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
 
 /* Surface any runtime error on the gate, so "nothing happens" becomes a visible message. */
 window.addEventListener("error", function (e) {
-  try {
-    var g = document.getElementById("gateErr"), gate = document.getElementById("gate");
-    if (g && gate && gate.style.display !== "none") g.textContent = "Error: " + (e.message || "script error");
-  } catch (_) {}
+  try { if (typeof banner === "function") banner("Error: " + (e.message || "script error")); } catch (_) {}
 });
 window.addEventListener("unhandledrejection", function (e) {
-  try {
-    var g = document.getElementById("gateErr"), gate = document.getElementById("gate");
-    if (g && gate && gate.style.display !== "none") g.textContent = "Error: " + ((e.reason && e.reason.message) || e.reason || "promise error");
-  } catch (_) {}
+  try { if (typeof banner === "function") banner("Error: " + ((e.reason && e.reason.message) || e.reason || "promise error")); } catch (_) {}
 });
 
 /* ------------------------------ utils ------------------------------ */
@@ -395,6 +402,19 @@ async function show(view) {
   try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
   return true;
 }
+
+/* visible, style-independent banner — guarantees the page never silently goes blank */
+function banner(msg) {
+  var b = document.getElementById("saarBanner");
+  if (!b) {
+    b = document.createElement("div");
+    b.id = "saarBanner";
+    b.style.cssText = "position:fixed;left:12px;right:12px;top:12px;z-index:9999;background:rgba(255,93,110,.96);color:#fff;padding:12px 14px;border-radius:14px;font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.45)";
+    document.body.appendChild(b);
+  }
+  b.textContent = msg;
+}
+window.saarBanner = banner;
 
 /* ------------------------------ shared bits ------------------------------ */
 function card(title, inner) { return `<div class="card"><h4>${esc(title)}</h4>${inner}</div>`; }
@@ -1176,12 +1196,11 @@ function applyTheme(t) {
 window.applyTheme = applyTheme;
 
 async function boot() {
-  const gate = $("#gate"), ge = $("#gateErr"), tb = $("#topbar"), ap = $("#app"), ft = $("#foot");
+  const tb = $("#topbar"), ap = $("#app"), ft = $("#foot");
   try {
     if (tb) tb.style.display = "flex";
     if (ap) ap.style.display = "block";
     if (ft) ft.style.display = "block";
-    if (ge) ge.textContent = "Unlocked — loading your dashboard…";
     const ok = await probeBase();
     const st = $("#status");
     try {
@@ -1200,10 +1219,9 @@ async function boot() {
     const ts = $("#themeSel"); if (ts) ts.onchange = () => applyTheme(ts.value);
     const ib = $("#ipoBtn"); if (ib) ib.onclick = openIpo;
     const rendered = await show("dash");
-    if (rendered) { if (gate) gate.style.display = "none"; }
-    else if (ge) ge.textContent = "Unlocked, but market data could not load. Check your internet and reload. (base: " + BASE + ")";
+    if (!rendered) banner("Could not load market data. Check your internet connection and reload.");
   } catch (err) {
-    if (ge) ge.textContent = "Error: " + (err && err.message ? err.message : err);
+    banner("Error: " + (err && err.message ? err.message : err));
   }
 }
 
@@ -1211,18 +1229,8 @@ async function boot() {
   try { if ("serviceWorker" in navigator) { const rs = await navigator.serviceWorker.getRegistrations(); rs.forEach((r) => r.unregister()); } } catch (e) {}
   let saved = "midnight"; try { saved = localStorage.getItem("saar-theme") || "midnight"; } catch (e) {}
   applyTheme(saved);
-  const gi = $("#gateInput"), ge = $("#gateErr");
-  const tryGo = () => {
-    if (gi.value.trim().toLowerCase() === ACCESS_CODE.toLowerCase()) {
-      try { localStorage.setItem("saar-unlocked", "1"); } catch (e) {}
-      boot();
-    } else { ge.textContent = "Wrong code — try again."; gi.value = ""; gi.focus(); }
-  };
-  $("#gateGo").onclick = tryGo;
-  window.__SAAR_READY = true; // signals the inline watchdog in index.html that the app script loaded
-  gi.addEventListener("keydown", (e) => { if (e.key === "Enter") tryGo(); });
-  let unlocked = false; try { unlocked = localStorage.getItem("saar-unlocked") === "1"; } catch (e) {}
-  if (unlocked) { boot(); } else { gi.focus(); }
+  window.__SAAR_READY = true;
+  boot();
 })();
 
 </script>

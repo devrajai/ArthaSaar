@@ -1,0 +1,183 @@
+/* ==========================================================================
+   Arthasaar — LIVE indices bridge
+   Pulls the daily snapshot the repo already produces:
+     data/indices-all.json  (every NSE index + BSE Sensex; refreshed after
+                             market close by the brain-collect workflow)
+     data/global.json       (global indices — used only for the Sensex fallback)
+   Fills:
+     - Home index KPI cards  (NIFTY 50 · SENSEX · BANK NIFTY · INDIA VIX)
+     - Indices window        (full, scrollable list of every tracked index)
+     - Indices Radar         (breadth + top gainers / losers)
+   ========================================================================== */
+(function () {
+"use strict";
+
+var SRC_IDX = "data/indices-all.json";
+var SRC_GLOB = "data/global.json";
+
+function el(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function n2(v) {
+  if (v == null || isNaN(v)) return "--";
+  return Number(v).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function pctStr(v) {
+  if (v == null || isNaN(v)) return "--";
+  var n = Number(v);
+  return (n >= 0 ? "+" : "") + n.toFixed(2) + "%";
+}
+function dirCls(v) { return Number(v) >= 0 ? "up" : "dn"; }
+function arrow(v) { return Number(v) >= 0 ? "\u25B2" : "\u25BC"; }
+
+function get(url) {
+  return fetch(url + "?v=" + Date.now(), { cache: "no-store" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; });
+}
+
+function byName(L, name) {
+  var i, up = String(name).toUpperCase();
+  for (i = 0; i < L.length; i++) if (String(L[i].index || "").toUpperCase() === up) return L[i];
+  for (i = 0; i < L.length; i++) if (String(L[i].index || "").toUpperCase().indexOf(up) > -1) return L[i];
+  return null;
+}
+function pos52(r) {
+  if (!r || !r.year_high || !r.year_low || r.year_high === r.year_low) return null;
+  return Math.round((r.price - r.year_low) / (r.year_high - r.year_low) * 100);
+}
+function fmtUpdated(iso) {
+  if (!iso) return "--";
+  try {
+    return new Date(iso).toLocaleString("en-IN",
+      { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: true });
+  } catch (e) { return iso; }
+}
+
+/* ---------- home index KPI cards ---------- */
+function paintHome(idx, glob) {
+  var sensex = byName(idx, "SENSEX");
+  if (!sensex && glob && glob.items) {
+    for (var i = 0; i < glob.items.length; i++) {
+      if (String(glob.items[i].name || "").toUpperCase().indexOf("SENSEX") > -1) {
+        var g = glob.items[i];
+        sensex = { index: "SENSEX", price: g.price, change_pct: g.chg_pct, change: null };
+        break;
+      }
+    }
+  }
+  var map = [
+    ["kpiNifty", byName(idx, "NIFTY 50")],
+    ["kpiSensex", sensex],
+    ["kpiBank", byName(idx, "NIFTY BANK")],
+    ["kpiVix", byName(idx, "INDIA VIX")]
+  ];
+  map.forEach(function (p) {
+    var card = el(p[0]); if (!card) return;
+    var r = p[1];
+    var num = card.querySelector(".num"), chg = card.querySelector(".chg");
+    if (!r) { if (num) num.textContent = "--"; if (chg) { chg.className = "chg"; chg.textContent = "·"; } return; }
+    if (num) num.textContent = n2(r.price);
+    if (chg) {
+      chg.className = "chg " + dirCls(r.change_pct);
+      chg.textContent = arrow(r.change_pct) + " " + pctStr(r.change_pct) +
+        (r.change != null ? " \u00b7 " + (r.change >= 0 ? "+" : "") + n2(r.change) : "");
+    }
+  });
+}
+
+/* ---------- Indices window: full scrollable list ---------- */
+function paintIndices(data, glob) {
+  var L = (data.indices || []).slice();
+  var tb = el("idxBody"); if (!tb) return;
+
+  // add a BSE Sensex row (from global.json) if the snapshot doesn't carry one
+  if (!byName(L, "SENSEX") && glob && glob.items) {
+    for (var i = 0; i < glob.items.length; i++) {
+      if (String(glob.items[i].name || "").toUpperCase().indexOf("SENSEX") > -1) {
+        var g = glob.items[i];
+        L.push({ index: "BSE SENSEX", price: g.price, change_pct: g.chg_pct,
+                 year_high: g.high_52w, year_low: g.low_52w, pe: "", pb: "", source: "Yahoo" });
+        break;
+      }
+    }
+  }
+
+  L.sort(function (a, b) { return String(a.index || "").localeCompare(String(b.index || "")); });
+
+  tb.innerHTML = L.map(function (r) {
+    var pos = pos52(r);
+    return "<tr><td>" + esc(r.index) + "</td><td>" + n2(r.price) + "</td>" +
+      "<td><span class='" + dirCls(r.change_pct) + "'>" + pctStr(r.change_pct) + "</span></td>" +
+      "<td>" + (pos == null ? "\u2014" : pos + "%") + "</td>" +
+      "<td>" + (r.pe || "\u2014") + "</td><td>" + (r.pb || "\u2014") + "</td></tr>";
+  }).join("");
+
+  var title = el("idxTitle");
+  if (title) title.textContent = "Indices \u2014 " + L.length + " tracked";
+
+  var meta = el("idxMeta");
+  if (meta) meta.textContent = "LIVE \u00b7 " + L.length + " indices \u00b7 NSE + BSE \u00b7 updated " +
+    fmtUpdated(data.updated) + " \u00b7 refreshes daily after market close";
+}
+
+/* ---------- Indices Radar ---------- */
+function paintRadar(data) {
+  var L = data.indices || [];
+  if (!L.length) return;
+
+  var box = el("radarCards");
+  if (box) {
+    box.innerHTML = ["NIFTY 50", "NIFTY BANK", "NIFTY NEXT 50"].map(function (nm) {
+      var r = byName(L, nm); if (!r) return "";
+      return '<div class="ridx"><div class="lbl">' + esc(r.index) + '</div><div class="val">' +
+        n2(r.price) + '</div><div class="chg ' + dirCls(r.change_pct) + '">' + pctStr(r.change_pct) + '</div></div>';
+    }).join("");
+  }
+
+  var up = 0, dn = 0, flat = 0;
+  L.forEach(function (r) { var c = Number(r.change_pct); if (c > 0) up++; else if (c < 0) dn++; else flat++; });
+  var total = L.length, upPct = total ? (up / total * 100) : 0;
+  var br = el("radarBreadth");
+  if (br) {
+    br.innerHTML =
+      '<div class="blab">' + up + '/' + total + ' GREEN</div>' +
+      '<div class="rbar"><i style="width:' + upPct.toFixed(1) + '%"></i><em></em></div>' +
+      '<div class="rcap">' + dn + ' red \u00b7 ' + flat + ' flat \u00b7 ' + fmtUpdated(data.updated) + '</div>';
+  }
+
+  var movers = L.filter(function (r) { return r.price != null && !isNaN(Number(r.change_pct)); });
+  var sorted = movers.slice().sort(function (a, b) { return Number(b.change_pct) - Number(a.change_pct); });
+  var g = el("radarGainers");
+  if (g) g.innerHTML = sorted.slice(0, 6).map(function (r) {
+    return '<span class="rchip g"><b>' + esc(r.index) + '</b> ' + pctStr(r.change_pct) + '</span>';
+  }).join("");
+  var lo = el("radarLosers");
+  if (lo) lo.innerHTML = sorted.slice(-6).reverse().map(function (r) {
+    return '<span class="rchip r"><b>' + esc(r.index) + '</b> ' + pctStr(r.change_pct) + '</span>';
+  }).join("");
+}
+
+function fail() {
+  var tb = el("idxBody");
+  if (tb) tb.innerHTML = '<tr><td colspan="6" class="idxload">Live indices load nahi hue \u2014 data/indices-all.json check karo.</td></tr>';
+  var m = el("idxMeta"); if (m) m.textContent = "offline \u00b7 snapshot load nahi hua";
+}
+
+function boot() {
+  Promise.all([get(SRC_IDX), get(SRC_GLOB)]).then(function (res) {
+    var idx = res[0], glob = res[1];
+    if (!idx || !idx.indices || !idx.indices.length) { fail(); return; }
+    paintHome(idx.indices, glob);
+    paintIndices(idx, glob);
+    paintRadar(idx);
+  });
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
+
+})();

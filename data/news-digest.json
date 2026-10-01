@@ -1,43 +1,43 @@
 {
- "u": "30 Sep 2026, 21:12 IST",
+ "u": "01 Oct 2026, 21:11 IST",
  "cats": [
   {
    "name": "INDIA MARKETS",
    "stories": [
     {
-     "t": "India is the Second-Worst-Performing Emerging Market This Year for Equities",
+     "t": "Indian firms defy stock market slump with record $25 billion half-year equity fundraise",
+     "n": 1,
+     "srcs": [
+      "reuters.com"
+     ],
+     "age": 1.5,
+     "x": 0
+    },
+    {
+     "t": "India Brushes Off Stock Struggles to Set IPO Record in September",
      "n": 1,
      "srcs": [
       "Bloomberg.com"
      ],
-     "age": 3.2,
+     "age": 10.5,
      "x": 0
     },
     {
-     "t": "India benchmark shares log worst month since March as oil, global rate hikes spark outflows",
+     "t": "Accel-backed Moneyview soars 76% in India debut, tops $1 billion valuation",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 5.0,
+     "age": 11.4,
      "x": 0
     },
     {
-     "t": "India's Elevate Campuses debuts at discount, valued at $625 million",
+     "t": "Indian benchmark shares post longest weekly losing run in 25 years",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 11.2,
-     "x": 0
-    },
-    {
-     "t": "Indian shares set for weak October as foreign investors ramp up shorts, brokerages say",
-     "n": 1,
-     "srcs": [
-      "Reuters"
-     ],
-     "age": 12.0,
+     "age": 13.3,
      "x": 0
     }
    ]
@@ -50,12 +50,21 @@
    "name": "GLOBAL",
    "stories": [
     {
-     "t": "US oil and gas production rises in Q3 2026 but price uncertainty plagues producers, Dallas Fed survey says",
+     "t": "S&P 500 dips, Nasdaq higher after data shows moderate inflation rise",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 0.4,
+     "age": 16.0,
+     "x": 0
+    },
+    {
+     "t": "US oil, gas output up in Q3, producers wary of price outlook, Dallas Fed says",
+     "n": 1,
+     "srcs": [
+      "reuters.com"
+     ],
+     "age": 23.1,
      "x": 0
     }
    ]
@@ -68,54 +77,54 @@
    "name": "AUTHENTIC WIRE",
    "stories": [
     {
-     "t": "DoorDash to create 3,000 jobs at global tech centre in India",
+     "t": "India's HDFC Bank appoints Anup Bagchi as CEO",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 1.3,
+     "age": 0.7,
      "x": 0
     },
     {
-     "t": "India approves $19 billion for renewable energy programme",
+     "t": "Why are world bond markets selling off again?",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 3.2,
+     "age": 2.4,
      "x": 0
     },
     {
-     "t": "India has yet to decide on dropping pre-shipment inspections of scrap metal imports",
+     "t": "Amazon, Walmart's Flipkart launch review of unlicensed security camera listings on India platforms",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 3.6,
+     "age": 2.8,
      "x": 0
     },
     {
-     "t": "State Bank of India buys nearly 40% of Reliance's $1.35 billion debt sale",
+     "t": "India will ask private fuel retailers to end sales rationing",
      "n": 1,
      "srcs": [
-      "Reuters"
+      "reuters.com"
      ],
-     "age": 4.1,
+     "age": 4.0,
      "x": 0
     }
    ]
   }
  ],
  "xray": {
-  "o": 22665,
-  "h": 22809,
-  "l": 22595,
-  "c": 22620,
-  "chg": -0.42,
+  "o": 22544,
+  "h": 22611,
+  "l": 22217,
+  "c": 22422,
+  "chg": -0.88,
   "pattern": "gap-down open, red close - pure selling pressure",
-  "fii": -10148,
-  "dii": 11272,
-  "fii_streak": 4,
+  "fii": -9484,
+  "dii": 10042,
+  "fii_streak": 5,
   "puppato": 1
  }
 }

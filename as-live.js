@@ -261,6 +261,15 @@ function bindSectorFilters() {
     });
   });
 }
+function bindSectorRadarToggle() {
+  var btn=el("sectorRadarToggle"), panel=el("sectorRadarPanel");
+  if(!btn || !panel) return;
+  btn.addEventListener("click",function(){
+    var open=btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", open ? "false" : "true");
+    panel.hidden=open;
+  });
+}
 
 function fail() {
   var tb = el("idxBody");
@@ -282,6 +291,7 @@ function boot() {
 var refreshBtn = el("idxRefresh");
 if (refreshBtn) refreshBtn.addEventListener("click", boot);
 bindSectorFilters();
+bindSectorRadarToggle();
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
 else boot();
 

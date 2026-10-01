@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#090909"><title>ArthaSaar — Market Canvas</title><link rel="stylesheet" href="./styles.css?v=1"></head><body><div class="canvas">
+<header><div class="brand"><b>AS</b><span>ARTHASAAR</span></div><div class="session"><i></i><span id="clock">--:-- IST</span><em id="state">POST MARKET</em></div><button id="theme">◐</button></header>
+<main>
+<section class="scene">
+<div class="scene-label"><span>MARKET CANVAS</span><small id="stamp">NSE EOD · loading</small></div>
+<div class="orbit" id="orbit"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><button class="node n1" data-open="sectors">SECTORS</button><button class="node n2" data-open="radar">RADAR</button><button class="node n3" data-open="flows">FLOW</button><button class="node n4" data-open="global">WORLD</button><div class="core" id="core"><span>NIFTY 50</span><strong>—</strong><b>—</b><small>NSE SNAPSHOT</small></div></div>
+<div class="ribbon" id="ribbon"></div>
+</section>
+<section class="peek">
+<div class="peek-card" id="breadth"></div><div class="peek-card" id="sector"></div><div class="peek-card" id="world"></div>
+</section>
+</main>
+<nav class="dock"><button class="active" data-open="home"><i>⌂</i><span>Canvas</span></button><button data-open="india"><i>⌁</i><span>India</span></button><button data-open="radar"><i>◎</i><span>Radar</span></button><button data-open="flows"><i>⇄</i><span>Flows</span></button><button data-open="news"><i>≡</i><span>News</span></button><button id="search"><i>⌕</i><span>Find</span></button></nav>
+</div>
+<div id="sheet" class="sheet"><div class="shade"></div><div class="sheet-box"><button class="close">×</button><div id="sheetContent"></div></div></div>
+<div id="searchBox" class="sheet"><div class="shade"></div><div class="search-box"><input id="q" placeholder="Find index or stock…"><div id="results"></div></div></div>
+<script src="./app.js?v=1"></script></body></html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070a0e">
+<title>ArthaSaar — Market OS</title>
+<link rel="stylesheet" href="./styles.css?v=1">
+</head>
+<body>
+<div class="noise"></div>
+<div class="app">
+  <aside class="rail glass">
+    <div class="logo"><span>AS</span><b>ARTHA<br>SAAR</b></div>
+    <nav>
+      <button class="nav active" data-view="overview"><i>◈</i><span>Overview</span></button>
+      <button class="nav" data-view="india"><i>⌁</i><span>India</span></button>
+      <button class="nav" data-view="radar"><i>◎</i><span>Radar</span></button>
+      <button class="nav" data-view="flows"><i>⇄</i><span>Flows</span></button>
+      <button class="nav" data-view="global"><i>◌</i><span>Global</span></button>
+      <button class="nav" data-view="news"><i>▤</i><span>News</span></button>
+    </nav>
+    <div class="rail-bottom">
+      <button id="searchBtn" class="railbtn">⌕<span>Command</span></button>
+      <button id="theme" class="railbtn">◐<span>Theme</span></button>
+      <span class="rail-live"><i></i> DATA LINK</span>
+    </div>
+  </aside>
+
+  <header class="header glass">
+    <div class="crumb"><span>ARTHASAAR</span><i>/</i><b id="viewTitle">MARKET OS</b></div>
+    <div class="header-center">
+      <span class="pulse"></span><b id="marketState">POST MARKET</b><small id="clock">--:--:-- IST</small>
+    </div>
+    <div class="header-actions">
+      <button id="refresh" class="hbtn">↻ <span>Refresh</span></button>
+      <button id="focusBtn" class="hbtn">⌘ K</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="view active" id="overview">
+      <div class="hero glass">
+        <div class="hero-copy">
+          <span class="kicker">INDIA · GLOBAL · FLOW · SIGNAL</span>
+          <h1>Markets, without<br><em>the scroll.</em></h1>
+          <p>A compact market operating system built from the ArthaSaar data pipeline. Every panel is a live workspace, not another long dashboard.</p>
+        </div>
+        <div class="hero-index" id="heroIndex"></div>
+      </div>
+      <div class="ticker glass" id="ticker"></div>
+      <div class="overview-grid">
+        <div class="panel glass big" id="marketPulse"></div>
+        <div class="panel glass" id="breadthPanel"></div>
+        <div class="panel glass" id="sectorPanel"></div>
+        <div class="panel glass" id="radarPanel"></div>
+        <div class="panel glass wide" id="flowPanel"></div>
+        <div class="panel glass" id="worldPanel"></div>
+      </div>
+    </section>
+
+    <section class="view" id="india">
+      <div class="view-head"><div><span class="kicker">NSE UNIVERSE</span><h2>India command deck</h2></div><button class="soft" data-open="indices">139 INDICES</button></div>
+      <div class="india-grid"><div class="panel glass" id="coreBoard"></div><div class="panel glass" id="indexTrace"></div></div>
+      <div class="panel glass full" id="indiaTable"></div>
+    </section>
+
+    <section class="view" id="radar">
+      <div class="view-head"><div><span class="kicker">SIGNAL ENGINE</span><h2>Radar wall</h2></div><span class="fresh" id="radarFresh"></span></div>
+      <div class="radar-wall">
+        <div class="panel glass" id="accPanel"></div><div class="panel glass" id="volPanel"></div><div class="panel glass" id="sellPanel"></div>
+      </div>
+      <div class="panel glass" id="scoresPanel"></div>
+    </section>
+
+    <section class="view" id="flows">
+      <div class="view-head"><div><span class="kicker">CAPITAL MOVEMENT</span><h2>Flow desk</h2></div></div>
+      <div class="flow-desk"><div class="panel glass" id="flowsMain"></div><div class="panel glass" id="breadthMain"></div><div class="panel glass" id="preopenMain"></div></div>
+    </section>
+
+    <section class="view" id="global">
+      <div class="view-head"><div><span class="kicker">CROSS-MARKET</span><h2>World board</h2></div></div>
+      <div class="global-board panel glass" id="globalMain"></div>
+      <div class="lower-grid"><div class="panel glass" id="cryptoMain"></div><div class="panel glass" id="economyMain"></div></div>
+    </section>
+
+    <section class="view" id="news">
+      <div class="view-head"><div><span class="kicker">INFORMATION FLOW</span><h2>News room</h2></div><button class="soft" id="newsFilter">ALL</button></div>
+      <div class="news-layout"><div class="panel glass" id="newsMain"></div><div class="panel glass" id="newsTopics"></div></div>
+    </section>
+  </main>
+
+  <footer class="statusbar glass"><span>ARTHASAAR MARKET OS</span><span id="dataStatus">loading snapshots…</span><span>FREE SOURCES · EOD + YF ARCHIVE</span></footer>
+</div>
+
+<div id="command" class="modal"><div class="modal-bg" data-close></div><div class="command glass"><input id="cmd" placeholder="Search index, stock, panel or command…" autofocus><div id="cmdResults"></div><small>ESC close · ↑↓ navigate · ENTER open</small></div></div>
+<div id="drawer" class="modal"><div class="modal-bg" data-close></div><div class="drawer glass"><button class="x" data-close>×</button><div id="drawerBody"></div></div></div>
+<script src="./app.js?v=1"></script>
+</body>
+</html>

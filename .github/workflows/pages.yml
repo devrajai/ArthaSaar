@@ -20,12 +20,18 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Trim non-site files
+      - name: Build ArthaSaar v2 site
         run: |
-          rm -rf .git market-brain.apk xray_tg.py
+          rm -rf site
+          mkdir -p site/data
+          cp -R v2/. site/
+          for f in indices-all global fii-dii breadth radar news economy-pulse crypto stock-scores preopen candles constituents delivery; do
+            cp "data/$f.json" "site/data/$f.json"
+          done
+          printf '%s\n' '{"site":"ArthaSaar v2","pipeline":"NSE + yfinance + free public sources","built_at":"'"$(date -u +%FT%TZ)"'"}' > site/data/site-build.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v4

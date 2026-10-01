@@ -181,32 +181,79 @@ function sectorClass(p) {
   if(p>=1.5)return "g3"; if(p>=0.5)return "g2"; if(p>0)return "g1";
   if(p<=-1.5)return "r3"; if(p<=-0.5)return "r2"; return "r1";
 }
-function paintSectorMap(data) {
+function sectorLabelKey(label) {
+  return String(label || "").trim().toUpperCase();
+}
+function sectorRows(L, mode) {
+  var rows = [];
+  if (mode === "All Indices") {
+    return L.filter(function(r){ return r && r.price != null && r.change_pct != null; })
+      .map(function(r){ return { k: r.index, r: r, bucket: sectorBucket(r.index) }; })
+      .sort(function(a,b){ return Number(b.r.change_pct)-Number(a.r.change_pct); });
+  }
+  if (mode !== "Sectors") {
+    return L.filter(function(r){ return sectorBucket(r.index) === mode && r.price != null && r.change_pct != null; })
+      .map(function(r){ return { k: r.index, r: r, bucket: mode }; })
+      .sort(function(a,b){ return Number(b.r.change_pct)-Number(a.r.change_pct); });
+  }
+  var best = {};
+  L.forEach(function(r){
+    var b = sectorBucket(r.index);
+    if(!b || r.change_pct == null || r.price == null) return;
+    if(!best[b] || Math.abs(Number(r.change_pct)) > Math.abs(Number(best[b].change_pct))) best[b] = r;
+  });
+  return Object.keys(best).map(function(k){ return { k:k, r:best[k], bucket:k }; })
+    .sort(function(a,b){ return Number(b.r.change_pct)-Number(a.r.change_pct); });
+}
+function paintSectorMap(data, mode) {
   var host=el("sectorMapGrid"), meta=el("sectorMeta"), radar=el("sectorRadar");
   if(!host)return;
-  var best={};
-  (data.indices||[]).forEach(function(r){
-    var b=sectorBucket(r.index);
-    if(!b || r.change_pct==null)return;
-    if(!best[b] || Math.abs(Number(r.change_pct))>Math.abs(Number(best[b].change_pct))) best[b]=r;
-  });
-  var rows=Object.keys(best).map(function(k){return {k:k,r:best[k]};})
-    .sort(function(a,b){return Number(b.r.change_pct)-Number(a.r.change_pct);});
-  host.innerHTML=rows.map(function(x){
+  mode = mode || "Sectors";
+  var L=data.indices||[], rows=sectorRows(L,mode);
+  var title=el("sectorViewTitle");
+  if(title) title.textContent = mode === "Sectors" ? "SECTORS" : mode.toUpperCase();
+  host.innerHTML = rows.length ? rows.map(function(x){
     var p=Number(x.r.change_pct)||0;
-    return '<div class="tcell '+sectorClass(p)+'"><b>'+esc(x.k)+'</b><span class="'+dirCls(p)+'">'+pctStr(p)+'</span></div>';
-  }).join("");
+    var sub = mode === "Sectors" ? "" : "<small>"+esc(x.r.index)+"</small>";
+    return '<div class="tcell '+sectorClass(p)+'" data-sector-card="'+esc(x.bucket||"")+'" title="Open '+esc(x.k)+'"><b>'+esc(x.k)+'</b>'+sub+'<span class="'+dirCls(p)+'">'+pctStr(p)+'</span></div>';
+  }).join("") : '<div class="idxload">No matching index data in this snapshot.</div>';
   var green=rows.filter(function(x){return Number(x.r.change_pct)>0;}).length;
   var red=rows.filter(function(x){return Number(x.r.change_pct)<0;}).length;
-  if(meta) meta.textContent=green+" green · "+red+" red · NSE snapshot "+fmtUpdated(data.updated);
+  if(meta) meta.textContent=rows.length+" shown · "+green+" green · "+red+" red · NSE snapshot "+fmtUpdated(data.updated);
   if(radar){
-    var top=rows.slice().sort(function(a,b){return Math.abs(Number(b.r.change_pct))-Math.abs(Number(a.r.change_pct));}).slice(0,6);
-    radar.innerHTML='<div class="sect" style="margin-top:0">SECTOR MAP RADAR</div>'+
-      '<div class="rchips">'+top.map(function(x){
+    var top=rows.slice().sort(function(a,b){
+      return Math.abs(Number(b.r.change_pct))-Math.abs(Number(a.r.change_pct));
+    }).slice(0,6);
+    radar.innerHTML='<div class="sect" style="margin-top:0">SECTOR MAP RADAR · '+esc(mode)+'</div>'+
+      '<div class="rchips">'+(top.length ? top.map(function(x){
         var p=Number(x.r.change_pct)||0;
-        return '<span class="rchip '+(p>=0?'g':'r')+'"><b>'+esc(x.k)+'</b> '+pctStr(p)+'</span>';
-      }).join("")+'</div>';
+        return '<button type="button" class="rchip '+(p>=0?'g':'r')+'" data-radar-sector="'+esc(x.bucket||"")+'"><b>'+esc(x.k)+'</b> '+pctStr(p)+'</button>';
+      }).join("") : '<span class="mono" style="color:var(--faint);font-size:10px">No radar data for this filter.</span>')+'</div>'+
+      '<div class="mono" style="margin-top:7px;color:var(--faint);font-size:9.5px">'+
+      (mode==="Sectors" ? "Sector view · each tile represents the strongest-move tracked index in that sector." :
+       mode==="All Indices" ? "All tracked indices · click a radar chip to filter into its sector." :
+       "Filtered sector · constituent indices from the same NSE snapshot.")+
+      '</div>';
+    radar.querySelectorAll("[data-radar-sector]").forEach(function(btn){
+      btn.addEventListener("click",function(){
+        var target=btn.getAttribute("data-radar-sector");
+        if(target) setSectorFilter(target);
+      });
+    });
   }
+}
+function setSectorFilter(mode) {
+  var chips=document.querySelectorAll("#sectorFilters .fch2");
+  chips.forEach(function(c){ c.classList.toggle("on", c.getAttribute("data-sector") === mode); });
+  window.__arthaSectorMode = mode;
+  if(window.__arthaSectorData) paintSectorMap(window.__arthaSectorData, mode);
+}
+function bindSectorFilters() {
+  document.querySelectorAll("#sectorFilters .fch2").forEach(function(c){
+    c.addEventListener("click",function(){
+      setSectorFilter(c.getAttribute("data-sector") || c.textContent.trim());
+    });
+  });
 }
 
 function fail() {
@@ -221,12 +268,14 @@ function boot() {
     paintHome(idx.indices, glob);
     paintIndices(idx, glob);
     paintRadar(idx);
-    paintSectorMap(idx);
+    window.__arthaSectorData = idx;
+    paintSectorMap(idx, window.__arthaSectorMode || "Sectors");
   });
 }
 
 var refreshBtn = el("idxRefresh");
 if (refreshBtn) refreshBtn.addEventListener("click", boot);
+bindSectorFilters();
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
 else boot();
 

@@ -1,14 +1,14 @@
 {
- "updated": "2026-10-01T01:46:43.766983",
+ "updated": "2026-10-02T01:46:42.863092",
  "today": {
-  "date": "2026-10-01",
-  "crude": 90.15,
-  "dxy": 101.51,
-  "gold": 4193.1,
-  "us10y": 5.29,
-  "usdinr": 96.05,
-  "spx": 7651.54,
-  "fii_net_cr": -10148.4
+  "date": "2026-10-02",
+  "crude": 92.84,
+  "dxy": 102.11,
+  "gold": 4176.5,
+  "us10y": 5.24,
+  "usdinr": 95.93,
+  "spx": 7666.45,
+  "fii_net_cr": -9484.2
  },
  "history": [
   {
@@ -90,13 +90,23 @@
    "usdinr": 96.05,
    "spx": 7651.54,
    "fii_net_cr": -10148.4
+  },
+  {
+   "date": "2026-10-02",
+   "crude": 92.84,
+   "dxy": 102.11,
+   "gold": 4176.5,
+   "us10y": 5.24,
+   "usdinr": 95.93,
+   "spx": 7666.45,
+   "fii_net_cr": -9484.2
   }
  ],
- "streak_fii_sell_days": 5,
+ "streak_fii_sell_days": 6,
  "score": -3,
  "verdict": "CAUTION - macro headwind hai. Positions chhote, stop-loss pakka.",
  "signals": [
-  "US 10Y yields up (Fed hawkish)",
-  "FII bech rahe 5 din se"
+  "dollar index strong +0.8%",
+  "FII bech rahe 6 din se"
  ]
 }

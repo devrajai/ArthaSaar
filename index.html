@@ -2191,4 +2191,66 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 
+
+<style id="as-filings-css">
+#as-filings-card{font-size:12px}
+#as-filings-card .ftabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:2px 0 10px;-webkit-overflow-scrolling:touch}
+#as-filings-card .ftabs button{flex:0 0 auto;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 10px;font:700 10px var(--font);cursor:pointer;white-space:nowrap}
+#as-filings-card .ftabs button.on{background:var(--accent);color:#fff;border-color:transparent}
+#as-filings-card .fq{width:100%;box-sizing:border-box;padding:9px 11px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12.5px var(--font);outline:none;margin-bottom:9px}
+#as-filings-card .frow{padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer}
+#as-filings-card .frow:last-child{border-bottom:0}
+#as-filings-card .ftop{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+#as-filings-card .fcat{font:800 8.5px var(--font);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:6px;background:#e8eef7;color:#1b4a86;white-space:nowrap}
+#as-filings-card .fco{flex:1;min-width:0;font-weight:800;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#as-filings-card .fdt{font:700 9.5px var(--mono);color:var(--dim);white-space:nowrap}
+#as-filings-card .fsub{font-size:10.5px;color:var(--dim);line-height:1.45;margin-bottom:4px}
+#as-filings-card .fpdf{font:800 9.5px var(--font);color:var(--accent);text-decoration:none}
+#as-filings-card .fnote{font-size:10px;color:var(--dim);margin:2px 0 8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 22: Filings = live NSE corporate announcements (data/filings.json) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function dd(iso){ var p=String(iso||"").slice(0,10).split("-"); return p.length<3?String(iso||""):(p[2]+"/"+p[1]+"/"+p[0].slice(2)); }
+  var F=null, CAT="all", Q="";
+  function render(){
+    var tb=document.getElementById("filBody"); if(!tb||!F) return;
+    var list=(F.filings||[]).filter(function(x){
+      if(CAT!=="all" && x.category!==CAT) return false;
+      if(Q && (String(x.company||"")+" "+String(x.symbol||"")).toLowerCase().indexOf(Q)<0) return false;
+      return true;
+    });
+    document.getElementById("filCount").textContent=list.length+" filings";
+    tb.innerHTML=list.slice(0,400).map(function(x){
+      return '<div class="frow" data-sym="'+esc(x.symbol)+'"><div class="ftop"><span class="fcat">'+esc(x.category||"Other")+'</span><span class="fco">'+esc(x.company||x.symbol)+'</span><span class="fdt">'+dd(x.date)+'</span></div><div class="fsub">'+esc((x.subject||x.nse_desc||"").slice(0,160))+'</div>'+(x.pdf?'<a class="fpdf" href="'+esc(x.pdf)+'" target="_blank" rel="noopener">PDF \u2197</a>':'')+'</div>';
+    }).join("") || '<div class="fnote">No filings match.</div>';
+    tb.querySelectorAll(".frow").forEach(function(r){ r.addEventListener("click", function(e){ if(e.target.closest(".fpdf")) return; var s=r.getAttribute("data-sym"); if(s&&window.openCompanyFS) window.openCompanyFS(s); }); });
+  }
+  function build(){
+    var host=document.getElementById("v-filings"); if(!host||!F) return;
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){ if(el.id!=="as-filings-card") el.remove(); });
+    [].slice.call(host.children).forEach(function(el){ if(el.tagName==="H2") el.remove(); });
+    if(document.getElementById("as-filings-card")) return;
+    var cats={}; (F.filings||[]).forEach(function(x){ cats[x.category]=(cats[x.category]||0)+1; });
+    var order=["Results","AGM","Board Meeting","Buyerback","Investor Presentation","Shareholding","Buyback / Dividend","Fund Raise","Credit Rating","Loan / Order Win","Insider / Pledge"];
+    var keys=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; });
+    var h='<input class="fq" id="filQ" type="search" placeholder="Search company or symbol\u2026">';
+    h+='<div class="ftabs"><button class="on" data-c="all">ALL</button>'+keys.map(function(k){ return '<button data-c="'+esc(k)+'">'+esc(k)+'</button>'; }).join("")+'</div>';
+    h+='<div class="fnote">\uD83D\uDCC4 <b id="filCount">'+(F.filings||[]).length+' filings</b> \u00b7 live from NSE corporate announcements (last '+esc(F.window_days||7)+' days) \u00b7 tap a row for the company card, or open the PDF.</div>';
+    h+='<div id="filBody"></div>';
+    var card=document.createElement("div"); card.id="as-filings-card"; card.className="card"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+    card.querySelectorAll(".ftabs button").forEach(function(b){ b.addEventListener("click", function(){ card.querySelectorAll(".ftabs button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); CAT=b.getAttribute("data-c"); render(); }); });
+    var q=document.getElementById("filQ"); if(q) q.addEventListener("input", function(){ Q=(q.value||"").toLowerCase().trim(); render(); });
+    render();
+  }
+  J("filings.json").then(function(f){ F=f||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
 </body></html>

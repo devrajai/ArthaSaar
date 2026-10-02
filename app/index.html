@@ -302,17 +302,20 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
     <div class="nrow"><span class="ng">MARKETS</span>
       <button data-go="indices">Indices</button>
       <button data-go="heatmap">Sector Map</button>
-      <button data-go="screener">Screener</button>
+      <button data-go="news">News</button>
+      <button data-go="events">Events</button>
     </div>
     <div class="nrow"><span class="ng">STOCKS</span>
       <button data-go="fundamentals">Fundamentals</button>
       <button data-go="mf">MF</button>
+      <button data-go="screener">Screener</button>
     </div>
     <div class="nrow"><span class="ng">WATCH</span>
       <button data-go="crypto">Crypto</button>
       <button data-go="global">Global</button>
-      <button data-go="news">News</button>
-      <button data-go="events">Events</button><button data-go="forex">Forex</button><button data-go="commodities">Commodities</button><button data-go="bonds">Bonds</button>
+      <button data-go="forex">Forex</button>
+      <button data-go="commodities">Commodities</button>
+      <button data-go="bonds">Bonds</button>
     </div>
   </nav>
 </header>
@@ -879,9 +882,9 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     aibrain: function () { return D("smart-brain.json").then(function (s) { var g = s.guess || {}; return { t: "🧠 AI BRAIN RADAR", s: "mood · verdict", html: "<div class='zrow'><span>Verdict</span><b>" + esc(g.verdict || "—") + " (" + nf(g.score, 0) + ")</b></div>" }; }); },
     crypto: function () { return D("crypto.json").then(function (c) { var fg = c.fear_greed || {}, g = c.global || {}, top = (c.top || []).slice().sort(function (a, b) { return (b.chg_24h_pct || 0) - (a.chg_24h_pct || 0); }).slice(0, 4); return { t: "🪙 CRYPTO RADAR", s: "market ka mood", html: "<div class='zrow'><span>" + nf(fg.value, 0) + "/100 · " + esc(fg.label || "") + "</span><b class='" + (fg.value >= 55 ? "up" : fg.value <= 45 ? "dn" : "") + "'>" + (fg.value >= 55 ? "greed" : fg.value <= 45 ? "fear" : "neutral") + "</b></div><div class='gauge'><i style='left:" + nf(fg.value, 0) + "%'></i></div>" + rgrid([rc("mkt cap", "$" + nf(g.total_market_cap_usd / 1e12, 2) + "T", (g.mcap_chg_24h_pct || 0) >= 0 ? "up" : "dn"), rc("BTC dom", nf(g.btc_dominance, 1) + "%"), rc("24h vol", "$" + nf(g.total_volume_usd / 1e9, 1) + "B")]) + "<div class='rs'>Top gainers 24h</div>" + top.map(function (x) { return "<div class='zrow'><span>" + esc(x.symbol) + "</span><b class='up'>" + sign(x.chg_24h_pct, 1) + "</b></div>"; }).join("") }; }); },
     global: function () { return D("global.json").then(function (g) { var it = g.items || []; function f(n) { return it.filter(function (i) { return i.name === n; })[0] || {}; } var sp = f("S&P 500"), au = f("GOLD"), cr = f("CRUDE OIL WTI"), ux = f("USD/INR") || f("SENSEX"); return { t: "🌍 GLOBAL RADAR", s: "world indices · commodities · India asar", html: rgrid([rc("S&P 500", nf(sp.price, 1), (sp.chg_pct || 0) >= 0 ? "up" : "dn"), rc("GOLD", nf(au.price, 1), (au.chg_pct || 0) >= 0 ? "up" : "dn"), rc("CRUDE WTI", nf(cr.price, 2), (cr.chg_pct || 0) >= 0 ? "up" : "dn"), rc("USD-INR", nf(ux.price, 2))]) }; }); },
-    forex: function () { return D("global.json").then(function (g) { var it = (g.items || []).filter(function (i) { return /INR|Dollar|DXY/i.test(i.name); }); return { t: "💱 FOREX RADAR", s: "USD/INR · dollar index", html: it.map(function (i) { return "<div class='zrow'><span>" + esc(i.name) + "</span><b class='" + ((i.chg_pct || 0) >= 0 ? "up" : "dn") + "'>" + nf(i.price, 2) + " · " + sign(i.chg_pct) + "</b></div>"; }).join("") }; }); },
+    forex: function () { return D("global.json").then(function (g) { var it = (g.items || []).filter(function (i) { return /INR|Dollar|DXY|EUR|GBP|JPY|CNY|AUD|CAD|CHF|USD/i.test(i.name); }); return { t: "💱 FOREX RADAR", s: "USD/INR · dollar index", html: it.map(function (i) { return "<div class='zrow'><span>" + esc(i.name) + "</span><b class='" + ((i.chg_pct || 0) >= 0 ? "up" : "dn") + "'>" + nf(i.price, 2) + " · " + sign(i.chg_pct) + "</b></div>"; }).join("") }; }); },
     commodities: function () { return D("world.json").then(function (w) { return { t: "🛢️ COMMODITIES RADAR", s: "gold · crude · copper", html: (w.cmd || []).map(function (c) { return "<div class='zrow'><span>" + esc(c.n || "") + "</span><b class='" + ((c.d1 || 0) >= 0 ? "up" : "dn") + "'>" + nf(c.c, 2) + " · " + sign(c.d1) + "</b></div>"; }).join("") }; }); },
-    bonds: function () { return D("indices-all.json").then(function (ia) { var b = (ia.indices || []).filter(function (i) { return /G-SEC|BOND/i.test(i.index); }); return { t: "🏦 BOND RADAR", s: "G-Sec indices", html: b.slice(0, 5).map(function (i) { return "<div class='zrow'><span>" + i.index + "</span><b class='" + ((i.change_pct || 0) >= 0 ? "up" : "dn") + "'>" + nf(i.price, 2) + "</b></div>"; }).join("") || "<div class='rs'>No G-Sec data in feed</div>" }; }); },
+    bonds: function () { return D("indices-all.json").then(function (ia) { var b = (ia.indices || []).filter(function (i) { return /G-SEC|BOND/i.test(i.index); }); return { t: "🏦 BOND RADAR", s: "G-Sec indices", html: b.map(function (i) { return "<div class='zrow'><span>" + i.index + "</span><b class='" + ((i.change_pct || 0) >= 0 ? "up" : "dn") + "'>" + nf(i.price, 2) + "</b></div>"; }).join("") || "<div class='rs'>No G-Sec data in feed</div>" }; }); },
     news: function () { return D("news.json").then(function (n) { return { t: "📰 NEWS RADAR", s: "authentic feed", html: "<div class='zrow'><span>headlines today</span><b>" + nf(n.count || (n.items || []).length, 0) + "</b></div>" + (n.items || []).slice(0, 2).map(function (i) { return "<div class='zrow'><span>" + esc(String(i.title).slice(0, 46)) + "…</span><b class='mut'>" + esc(i.publisher || "") + "</b></div>"; }).join("") }; }); },
     events: function () { return Promise.resolve({ t: "⏱️ MARKET OPEN-CLOSE RADAR", s: "aaj ke sessions", html: sessions() }); },
     filings: function () { return D("results.json").then(function (r) { return { t: "📄 FILINGS RADAR", s: "results · dividends", html: (r.results || []).slice(0, 4).map(function (x) { return "<div class='zrow'><span>" + esc(x.sym || x.company || "") + "</span><b class='mut'>" + esc(x.div || x.date || "") + "</b></div>"; }).join("") || "<div class='rs'>No filings in feed</div>" }; }).catch(function () { return null; }); },
@@ -1062,7 +1065,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 
   function renderForex() {
     var g = C["global.json"], m = C["macro.json"]; var rows = [];
-    if (g) (g.items || []).forEach(function (i) { if (/INR|Dollar|DXY/i.test(i.name)) rows.push([i.name, i.price, i.chg_pct]); });
+    if (g) (g.items || []).forEach(function (i) { if (/INR|Dollar|DXY|EUR|GBP|JPY|CNY|AUD|CAD|CHF|USD/i.test(i.name)) rows.push([i.name, i.price, i.chg_pct]); });
     if (m && m.today) { rows.push(["USD/INR", m.today.usdinr, null]); rows.push(["Dollar Index (DXY)", m.today.dxy, null]); rows.push(["US 10Y yield", m.today.us10y, null]); rows.push(["Crude (WTI)", m.today.crude, null]); rows.push(["Gold", m.today.gold, null]); rows.push(["US S&P 500", m.today.spx, null]); }
     var t = document.getElementById("fxBody"); if (!t) return;
     t.innerHTML = rows.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td><td>" + nf(r[1], 2) + "</td><td>" + (r[2] == null ? "—" : "<span class='" + (up(r[2]) ? "up" : "dn") + "'>" + sign(r[2]) + "</span>") + "</td></tr>"; }).join("") || "<tr><td class='mut'>No forex data</td></tr>";
@@ -1719,7 +1722,9 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     if(document.getElementById("as-news-card")) return;
     var items=(N.items||[]);
     var econ=(P&&P.ind||[]).length;
-    var h='<div class="ntabs"><button class="on" data-t="all">All</button><button data-t="Markets">Markets</button><button data-t="Crypto">Crypto</button><button data-t="Global">Global</button><button data-t="Economy">Economy</button></div>';
+    var _tc={}; items.forEach(function(x){ var t=x.topic||"News"; _tc[t]=(_tc[t]||0)+1; });
+    var _topics=Object.keys(_tc).sort(function(a,b){ return _tc[b]-_tc[a]; });
+    var h='<div class="ntabs"><button class="on" data-t="all">All</button>'+_topics.map(function(t){ return '<button data-t="'+esc(t)+'">'+esc(t)+'</button>'; }).join("")+'</div>';
 h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
     h+=items.map(function(x){ return '<div class="nitem" data-topic="'+esc(x.topic)+'"><span class="tag">'+esc(x.topic||"NEWS")+'</span><b><a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a></b><small>'+esc(x.publisher||"")+' \u00b7 '+ago(x.published)+'</small></div>'; }).join("");
     h+='</div>';
@@ -2368,43 +2373,67 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
 #v-gticharts .chhead{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 4px}
 #v-gticharts .chhead b{font:800 13px var(--font)}
 #v-gticharts .chmeta{font-size:10px;color:var(--dim);margin-top:4px;line-height:1.5}
+#v-gticharts .panelgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+#v-gticharts .panel{border:1px solid var(--border);border-radius:9px;padding:5px}
+#v-gticharts .panel .pl{display:flex;justify-content:space-between;font-size:9.5px;font-weight:800;margin-bottom:2px}
 #v-gticharts canvas{width:100%;display:block}
 </style>
 <script>
-/* ArthaSaar — round 24: Charts = live intraday candles from data/candles.json */
+/* ArthaSaar — round 24b: Charts = live intraday candles + 4-timeframe panel (5m/15m/30m/4h) */
 (function(){ "use strict";
   function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
   function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
   function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
   var SYMS=null, cur=null, tf="15m";
-  function draw(cv, o){
-    var dpr=window.devicePixelRatio||1, w=cv.clientWidth||340, h=240;
+  function agg(ser,k){
+    if(!ser||!ser.c||!ser.c.length) return null;
+    var o={t:[],o:[],h:[],l:[],c:[],v:[]};
+    for(var i=0;i<ser.c.length;i+=k){
+      var e=Math.min(i+k,ser.c.length);
+      o.t.push(ser.t[i]); o.o.push(ser.o[i]); o.c.push(ser.c[e-1]);
+      o.h.push(Math.max.apply(null,ser.h.slice(i,e))); o.l.push(Math.min.apply(null,ser.l.slice(i,e)));
+      o.v.push(ser.v?ser.v.slice(i,e).reduce(function(a,b){return a+b;},0):0);
+    }
+    return o;
+  }
+  function seriesFor(sym,label){
+    var o=SYMS[sym]||{};
+    if(label==="30m") return agg(o["15m"],2)||agg(o["5m"],6);
+    if(label==="4h") return agg(o["1h"],4);
+    return o[label]||o["15m"]||o["1h"]||o["5m"];
+  }
+  function draw(cv, o, h){
+    var dpr=window.devicePixelRatio||1, w=cv.clientWidth||160; h=h||240;
     cv.width=w*dpr; cv.height=h*dpr; cv.style.height=h+"px";
     var ctx=cv.getContext("2d"); ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
     var n=(o.c||[]).length; if(!n) return;
-    var mn=Math.min.apply(null,o.l), mx=Math.max.apply(null,o.h); var pad=8, rng=(mx-mn)||1;
+    var mn=Math.min.apply(null,o.l), mx=Math.max.apply(null,o.h); var pad=6, rng=(mx-mn)||1;
     function X(i){ return pad+(w-2*pad)*(i+0.5)/n; }
     function Y(v){ return h-pad-(h-2*pad)*(v-mn)/rng; }
-    var bw=Math.max(1.5,(w-2*pad)/n*0.62);
+    var bw=Math.max(1,(w-2*pad)/n*0.62);
     for(var i=0;i<n;i++){
       var up=o.c[i]>=o.o[i]; ctx.strokeStyle=up?"#16a34a":"#dc2626"; ctx.fillStyle=up?"#16a34a":"#dc2626";
       ctx.beginPath(); ctx.moveTo(X(i),Y(o.h[i])); ctx.lineTo(X(i),Y(o.l[i])); ctx.stroke();
       var y1=Y(Math.max(o.o[i],o.c[i])), y2=Y(Math.min(o.o[i],o.c[i]));
       ctx.fillRect(X(i)-bw/2, y1, bw, Math.max(1,y2-y1));
     }
-    ctx.font="9px monospace"; ctx.fillStyle="rgba(255,255,255,.85)"; ctx.fillRect(pad,2,58,12); ctx.fillRect(pad,h-13,58,12);
-    ctx.fillStyle="rgba(120,120,130,.95)"; ctx.fillText(nf(mx,1),pad+1,11); ctx.fillText(nf(mn,1),pad+1,h-4);
+    ctx.font="8px monospace"; ctx.fillStyle="rgba(255,255,255,.85)"; ctx.fillRect(pad,1,52,11); ctx.fillRect(pad,h-12,52,11);
+    ctx.fillStyle="rgba(120,120,130,.95)"; ctx.fillText(nf(mx,1),pad+1,9); ctx.fillText(nf(mn,1),pad+1,h-3);
   }
   function render(){
     var host=document.getElementById("v-gticharts"); if(!host||!SYMS||!cur) return;
-    var o=SYMS[cur]||{}, ser=o[tf]||o["15m"]||o["1h"]||o["5m"];
-    if(!ser){ var el=document.getElementById("chMeta"); if(el) el.textContent="No series for this symbol."; return; }
-    var last=ser.c[ser.c.length-1], pc=o.pc;
-    var chg=(pc?((last-pc)/pc*100):null);
+    var o=SYMS[cur]||{}, ser=seriesFor(cur,tf), pc=o.pc;
+    var last=ser&&ser.c.length?ser.c[ser.c.length-1]:null;
+    var chg=(pc&&last!=null)?((last-pc)/pc*100):null;
     var hh=document.getElementById("chHead"); if(hh) hh.innerHTML='<b>'+cur+' \u00b7 '+tf+'</b><span class="'+(chg>=0?"up":"dn")+'" style="font-weight:800">'+(chg==null?"":(chg>=0?"+":"")+chg.toFixed(2)+"%")+'</span>';
     var meta=document.getElementById("chMeta");
-    if(meta) meta.textContent=ser.c.length+" bars \u00b7 O "+nf(ser.o[ser.o.length-1],2)+" H "+nf(ser.h[ser.h.length-1],2)+" L "+nf(ser.l[ser.l.length-1],2)+" C "+nf(last,2)+" \u00b7 prev close "+nf(pc,2);
-    var cv=document.getElementById("chCanvas"); if(cv) draw(cv, ser);
+    if(meta&&ser) meta.textContent=ser.c.length+" bars \u00b7 last C "+nf(last,2)+" \u00b7 prev close "+nf(pc,2)+" \u00b7 30m/4h are aggregated from 15m/1h";
+    var cv=document.getElementById("chCanvas"); if(cv&&ser) draw(cv, ser, 230);
+    ["5m","15m","30m","4h"].forEach(function(lb){
+      var c2=document.getElementById("pc-"+lb); if(!c2) return;
+      var s2=seriesFor(cur,lb); if(s2) draw(c2, s2, 110);
+      var l2=document.getElementById("pl-"+lb); if(l2&&s2&&s2.c.length){ var lc=s2.c[s2.c.length-1], lch=pc?((lc-pc)/pc*100):null; l2.innerHTML='<span>'+lb+'</span><span class="'+(lch>=0?"up":"dn")+'">'+(lch==null?"":(lch>=0?"+":"")+lch.toFixed(2)+"%")+'</span>'; }
+    });
   }
   function build(){
     var host=document.getElementById("v-gticharts"); if(!host||!SYMS) return;
@@ -2415,7 +2444,9 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
     h+='<div class="chhead" id="chHead"></div>';
     h+='<div class="card" style="padding:8px"><canvas id="chCanvas"></canvas></div>';
     h+='<div class="chmeta" id="chMeta"></div>';
-    h+='<div class="chmeta">Live intraday candles from data/candles.json \u2014 '+names.length+' symbols (indices + top stocks + BTC). Daily/weekly series are not in the free feed, so only 5m / 15m / 1h are offered here.</div></div>';
+    h+='<div class="chmeta" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-top:12px">4-Timeframe Panel</div>';
+    h+='<div class="panelgrid">'+["5m","15m","30m","4h"].map(function(lb){ return '<div class="panel"><div class="pl" id="pl-'+lb+'"><span>'+lb+'</span></div><canvas id="pc-'+lb+'"></canvas></div>'; }).join("")+'</div>';
+    h+='<div class="chmeta">Live intraday candles from data/candles.json \u2014 '+names.length+' symbols (indices + top stocks + BTC). 30m is built from 15m bars and 4h from 1h bars. Daily/weekly history since listing is not in this feed yet \u2014 that needs the pipeline step I describe in chat.</div></div>';
     var card=document.createElement("div"); card.id="as-charts-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
     [].slice.call(host.children).forEach(function(el){ if(el.id==="as-charts-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
     var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
@@ -2469,7 +2500,7 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
     if(TF&&(TF.rotation||[]).length){ h+='<div class="bsec">\uD83D\uDD04 Rotation (TimesFM 30d)</div>'+TF.rotation.slice(0,5).map(function(x){ return '<div class="brow"><span>'+esc(x.name)+'</span><b class="'+(x.chg30>=0?"up":"dn")+'">'+pc(x.chg30)+' \u00b7 conf '+esc(x.conf)+'%</b></div>'; }).join(""); }
     h+='<div class="bnote">'+esc(SB.disclaimer||"")+' Live from data/smart-brain.json'+(SB.updated?" \u00b7 "+esc(String(SB.updated).slice(0,10)):"")+'.</div>';
     var card=document.createElement("div"); card.id="as-brain-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
-    [].slice.call(host.querySelectorAll(".grid2, .card")).forEach(function(el){ if(el.id!=="as-brain-card") el.remove(); });
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-brain-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
     var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
   }
   function buildGTIQ(){
@@ -2525,7 +2556,6 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
   function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
   function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
   function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
-  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
   var B=null,BR=null;
   function build(){
     var host=document.getElementById("v-internals"); if(!host||!B||!BR) return;
@@ -2552,10 +2582,80 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
     h+='<div class="irow"><span>Down 3+ days</span><b class="dn">'+nf(dn3,0)+'</b></div>';
     h+='<div class="inote">Live from data/breadth.json + brain-screener.json ('+nf(st.length,0)+' stocks). TRIN and McClellan need an advance-decline volume history that no free feed provides, so those two tiles were removed rather than shown with fake numbers.</div>';
     var card=document.createElement("div"); card.id="as-int-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
-    [].slice.call(host.querySelectorAll(".grid3, .grid2, .card, .kpis")).forEach(function(el){ if(el.id!=="as-int-card") el.remove(); });
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-int-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
     var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
   }
   Promise.all([J("brain-screener.json"),J("breadth.json")]).then(function(r){ B=r[0]||{}; BR=r[1]||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+<style id="as-ai-css">
+#as-ai-card{font-size:12px}
+#as-ai-card .asec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+#as-ai-card .agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#as-ai-card .acell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+#as-ai-card .acell .k{font-size:9px;color:var(--dim);text-transform:uppercase}
+#as-ai-card .acell .v{font:800 12.5px var(--mono)}
+#as-ai-card .arow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+#as-ai-card .arow:last-child{border-bottom:0}
+#as-ai-card .arow small{display:block;color:var(--dim);font-size:9.5px}
+#as-ai-card .xpt{border-left:3px solid var(--accent);padding:5px 0 5px 9px;margin:7px 0}
+#as-ai-card .xpt.g{border-color:#16a34a}#as-ai-card .xpt.r{border-color:#dc2626}#as-ai-card .xpt.n{border-color:#94a3b8}
+#as-ai-card .xpt b{display:block;font-size:11.5px}
+#as-ai-card .xpt span{font-size:10.5px;color:var(--dim);line-height:1.45}
+#as-ai-card .anote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+#as-ai-card .scbar{display:inline-block;height:8px;border-radius:5px;background:var(--accent);vertical-align:middle;margin-left:6px}
+</style>
+<script>
+/* ArthaSaar — round 27: AI section = full TimesFM-3 output + X-ray daily analysis + ArthaSaar score */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var T=null,X=null,M=null;
+  function build(){
+    var host=document.getElementById("v-gtiai"); if(!host||!T) return;
+    if(document.getElementById("as-ai-card")) return;
+    var h='';
+    /* model */
+    h+='<div class="asec" style="margin-top:0">\uD83E\uDD16 TimesFM-3 Model</div>';
+    h+='<div class="agrid">';
+    h+='<div class="acell"><div class="k">model</div><div class="v" style="font-size:10px">'+esc((T.model||"").replace(/^google\//,""))+'</div></div>';
+    h+='<div class="acell"><div class="k">horizon</div><div class="v">'+(T.horizon_days||21)+'d</div></div>';
+    h+='<div class="acell"><div class="k">context</div><div class="v">'+(T.context_days||512)+'d</div></div>';
+    h+='</div>';
+    h+='<div class="arow" style="margin-top:6px"><span>Max horizon</span><b>'+esc(T.max_horizon||"—")+'</b></div>';
+    var ac=T.accuracy||{};
+    h+='<div class="arow"><span>Tracked accuracy</span><b>'+(ac.rate==null?("collecting ("+(ac.tracked||0)+" settled)"):(nf(ac.rate*100,1)+"%"))+'</b></div>';
+    /* x-ray */
+    if(X&&(X.points||[]).length){
+      h+='<div class="asec">\uD83E\uDE7B X-Ray \u00b7 today\u2019s read</div>';
+      if(X.headline) h+='<div class="arow"><span>'+esc(X.headline)+'</span><b>'+esc(X.date||"")+'</b></div>';
+      h+=X.points.map(function(p){ return '<div class="xpt '+esc(p.c||"n")+'"><b>'+esc(p.h)+'</b><span>'+esc(p.t)+'</span></div>'; }).join("");
+    }
+    /* forecasts */
+    var f=(T.forecasts||[]).slice().sort(function(a,b){ return Math.abs(b.median_chg_pct||0)-Math.abs(a.median_chg_pct||0); });
+    if(f.length){ h+='<div class="asec">\uD83C\uDFAF 21-day Forecasts ('+f.length+')</div>';
+      h+=f.slice(0,14).map(function(x){ return '<div class="arow"><span><b>'+esc(x.name||x.symbol)+'</b><small>'+esc(x.cat||"")+' \u00b7 conf '+esc(x.confidence||"—")+'% \u00b7 '+esc(x.direction||"")+'</small></span><b class="'+((x.median_chg_pct||0)>=0?"up":"dn")+'">'+pc(x.median_chg_pct)+'<small style="text-align:right">'+nf(x.low10_end,0)+'\u2013'+nf(x.high90_end,0)+'</small></b></div>'; }).join("");
+    }
+    if((T.rotation||[]).length){ h+='<div class="asec">\uD83D\uDD04 Rotation (30d)</div>'+T.rotation.map(function(x){ return '<div class="arow"><span>'+esc(x.name)+'</span><b class="'+(x.chg30>=0?"up":"dn")+'">'+pc(x.chg30)+' \u00b7 conf '+esc(x.conf)+'%</b></div>'; }).join(""); }
+    if((T.movers||[]).length){ h+='<div class="asec">\u26A1 Biggest Forecast Moves</div>'+T.movers.slice(0,8).map(function(m){ return '<div class="arow"><span>'+esc(m.name||m.sym)+' <small>'+esc(m.cat||"")+'</small></span><b class="'+(m.median>=0?"up":"dn")+'">'+pc(m.median)+'</b></div>'; }).join(""); }
+    /* artha score */
+    if(M&&M.stocks){ var arr=Object.keys(M.stocks).map(function(k){ var s=M.stocks[k]; return {sym:k,n:s.n,s:s.s,f:s.f,t:s.t,se:s.se,ai:s.ai,sm:s.sm,p:s.p}; }).sort(function(a,b){ return (b.s||0)-(a.s||0); });
+      h+='<div class="asec">\uD83C\uDFC6 ArthaSaar Score \u00b7 top 12</div>';
+      h+=arr.slice(0,12).map(function(x){ return '<div class="arow"><span><b>'+esc(x.sym)+'</b><small>'+esc(x.n||"")+'</small></span><b>'+nf(x.s,0)+'/100<span class="scbar" style="width:'+Math.max(0,Math.min(60,(x.s||0)*0.6))+'px"></span></b></div>'; }).join("");
+      h+='<div class="anote">'+esc(M.note||"")+'</div>';
+    }
+    h+='<div class="anote">Forecasts by TimesFM-3 (google/timesfm-3.0-pytorch) via your repo pipeline \u00b7 X-ray from data/xray.json \u00b7 Score from data/mb-score.json. Indicative, not advice.</div>';
+    var card=document.createElement("div"); card.id="as-ai-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-ai-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("timesfm_forecasts.json"),J("xray.json"),J("mb-score.json")]).then(function(r){ T=r[0]||{}; X=r[1]||{}; M=r[2]||{}; build(); });
   var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
   window.addEventListener("hashchange",function(){ setTimeout(build,300); });
 })();

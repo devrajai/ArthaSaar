@@ -1353,4 +1353,115 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 
+
+<style id="as-events-css">
+#as-events-card{font-size:12px}
+#as-events-card .evfil{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 12px}
+#as-events-card .evfil button{border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 11px;font:700 11px var(--font);cursor:pointer}
+#as-events-card .evfil button.on{background:var(--accent);color:#fff;border-color:transparent}
+#as-events-card .evgrp{margin:0 0 13px}
+#as-events-card .evgt{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:0 0 5px}
+#as-events-card .evday{margin:0}
+#as-events-card .evdate{font:700 10px var(--mono);color:var(--dim);margin:7px 0 2px}
+#as-events-card .evrow{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)}
+#as-events-card .evrow:last-child{border-bottom:0}
+#as-events-card .evd{font:700 10.5px var(--mono);min-width:44px;color:var(--dim);padding-top:1px}
+#as-events-card .evc{font-size:13px;min-width:18px}
+#as-events-card .evb{flex:1;min-width:0}
+#as-events-card .evb b{font-size:11px;font-weight:700;display:block;line-height:1.35}
+#as-events-card .evb small{font-size:9.5px;color:var(--dim)}
+#as-events-card .evi{font:800 9px var(--font);padding:2px 5px;border-radius:6px;white-space:nowrap}
+</style>
+<script>
+/* ArthaSaar — round 11: EVENTS card = full India + World events (calendar, results, dividends, earnings, economy, crypto, headlines) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function fmt(iso){ if(!iso) return ""; var p=String(iso).slice(0,10).split("-"); if(p.length<3) return String(iso); return p[2]+" "+M[(+p[1])-1]; }
+  var FL={USD:"\uD83C\uDDFA\uD83C\uDDF8",EUR:"\uD83C\uDDEA\uD83C\uDDFA",GBP:"\uD83C\uDDEC\uD83C\uDDE7",JPY:"\uD83C\uDDEF\uD83C\uDDF5",AUD:"\uD83C\uDDE6\uD83C\uDDFA",CAD:"\uD83C\uDDE8\uD83C\uDDE6",CHF:"\uD83C\uDDE8\uD83C\uDDED",CNY:"\uD83C\uDDE8\uD83C\uDDF3",INR:"\uD83C\uDDEE\uD83C\uDDF3",IND:"\uD83C\uDDEE\uD83C\uDDF3",IN:"\uD83C\uDDEE\uD83C\uDDF3",US:"\uD83C\uDDFA\uD83C\uDDF8"};
+  function ic(i){ i=(i||"").toLowerCase(); if(i.indexOf("high")>=0) return {t:"HIGH",bg:"#f7d0d0",fg:"#8a1414"}; if(i.indexOf("med")>=0) return {t:"MED",bg:"#fae6c0",fg:"#8a5a10"}; if(i.indexOf("hol")>=0) return {t:"HOL",bg:"#d6e4f7",fg:"#1b4a86"}; return {t:"LOW",bg:"#e8e8ea",fg:"#555"}; }
+  function isIN(c){ return /INR|IND|^IN$/i.test(c||""); }
+  var D=null;
+  function build(){
+    var host=document.getElementById("v-events"); if(!host||!D) return;
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){ if(el.id!=="as-events-card") el.remove(); });
+    if(document.getElementById("as-events-card")) return;
+    var E=D.events||{},R=D.results||{},P=D.pulse||{},N=D.news||{},CR=D.crypto||{};
+    var h="";
+    h+='<div class="evfil"><button class="on" data-f="all">ALL</button><button data-f="high">HIGH</button><button data-f="india">\uD83C\uDDEE\uD83C\uDDF3 INDIA</button><button data-f="world">\uD83C\uDF0D WORLD</button><button data-f="crypto">\uD83E\uDE99 CRYPTO</button></div>';
+
+    var kd=(E.key_dates||[]).slice().sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+    if(kd.length){ h+='<div class="evgrp"><div class="evgt">\uD83D\uDCC5 Key Dates \u00b7 market-moving</div>';
+      kd.forEach(function(k){var c=ic(k.impact); h+='<div class="evrow" data-imp="'+c.t+'" data-region="'+(isIN(k.country)?"india":"world")+'"><span class="evd">'+fmt(k.date)+(k.date_end?"\u2013"+fmt(k.date_end):"")+'</span><span class="evc">'+esc(FL[k.country]||"\uD83C\uDFF3\uFE0F")+'</span><span class="evb"><b>'+esc(k.title)+'</b></span><span class="evi" style="background:'+c.bg+';color:'+c.fg+'">'+c.t+'</span></div>';});
+      h+='</div>'; }
+
+    var rr=(R.results||[]).slice().sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+    if(rr.length){ h+='<div class="evgrp"><div class="evgt">\uD83C\uDDEE\uD83C\uDDF3 India \u00b7 Results &amp; Dividends \u00b7 '+esc(R.quarter||"")+'</div>';
+      rr.forEach(function(x){ h+='<div class="evrow" data-imp="MED" data-region="india"><span class="evd">'+fmt(x.date)+'</span><span class="evc">\uD83C\uDFE2</span><span class="evb"><b>'+esc(x.sym||x.company)+'</b><small>'+esc(x.div||"quarterly result")+(x.conf?" \u00b7 confirmed":"")+'</small></span></div>'; });
+      h+='</div>'; }
+
+    var er=(E.earnings||[]).slice().sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+    if(er.length){ h+='<div class="evgrp"><div class="evgt">\uD83D\uDCCA Earnings Calendar ('+er.length+')</div>';
+      er.forEach(function(x){ var ind=isIN(x.country); h+='<div class="evrow" data-imp="MED" data-region="'+(ind?"india":"world")+'"><span class="evd">'+fmt(x.date)+'</span><span class="evc">'+(ind?"\uD83C\uDDEE\uD83C\uDDF3":"\uD83C\uDDFA\uD83C\uDDF8")+'</span><span class="evb"><b>'+esc(x.symbol)+'</b><small>quarterly earnings</small></span></div>'; });
+      h+='</div>'; }
+
+    var wk=(E.week||[]).slice().sort(function(a,b){ return String(a.date_ist+ (a.time_ist||"")).localeCompare(String(b.date_ist+(b.time_ist||""))); });
+    if(wk.length){ h+='<div class="evgrp"><div class="evgt">\uD83C\uDF0D World Economic Calendar ('+wk.length+')</div>';
+      var cur="", openDay=false;
+      wk.forEach(function(x){
+        if(x.date_ist!==cur){ if(openDay) h+='</div>'; cur=x.date_ist; h+='<div class="evday"><div class="evdate">'+fmt(cur)+'</div>'; openDay=true; }
+        var c=ic(x.impact);
+        h+='<div class="evrow" data-imp="'+c.t+'" data-region="'+(isIN(x.country)?"india":"world")+'"><span class="evd">'+esc(x.time_ist||"")+'</span><span class="evc">'+esc(FL[x.country]||"\uD83C\uDFF3\uFE0F")+'</span><span class="evb"><b>'+esc(x.title)+'</b><small>'+(x.forecast?"fc "+esc(x.forecast):"")+(x.previous?" \u00b7 prev "+esc(x.previous):"")+'</small></span><span class="evi" style="background:'+c.bg+';color:'+c.fg+'">'+c.t+'</span></div>';
+      });
+      if(openDay) h+='</div>';
+      h+='</div>'; }
+
+    var pi=(P.ind||[]);
+    if(pi.length){ h+='<div class="evgrp"><div class="evgt">\uD83C\uDDEE\uD83C\uDDF3 India Economy \u00b7 govt releases</div>';
+      pi.slice(0,8).forEach(function(x){ h+='<div class="evrow" data-imp="MED" data-region="india"><span class="evd">'+esc(x.date||"")+'</span><span class="evc">'+esc(x.icon||"\uD83D\uDCCC")+'</span><span class="evb"><b>'+esc(x.name)+' \u00b7 '+esc(x.val||"")+'</b><small>'+esc(x.sub||"")+'</small></span></div>'; });
+      h+='</div>'; }
+
+    var fg=(CR.fear_greed||{}), mv=(CR.gainers_24h||CR.top||[]).slice(0,5);
+    h+='<div class="evgrp"><div class="evgt">\uD83E\uDE99 Crypto</div>';
+    h+='<div class="evrow" data-imp="MED" data-region="crypto"><span class="evd">now</span><span class="evc">\uD83D\uDE31</span><span class="evb"><b>Fear &amp; Greed '+esc(fg.value==null?"\u2014":fg.value)+'/100</b><small>'+esc(fg.label||"")+'</small></span></div>';
+    mv.forEach(function(x){ h+='<div class="evrow" data-imp="LOW" data-region="crypto"><span class="evd">24h</span><span class="evc">\uD83E\uDE99</span><span class="evb"><b>'+esc(x.symbol)+'</b><small>'+(x.chg_24h_pct!=null?(x.chg_24h_pct>=0?"+":"")+Number(x.chg_24h_pct).toFixed(1)+"%":"")+'</small></span></div>'; });
+    h+='<div class="evrow" data-imp="LOW" data-region="crypto"><span class="evd">\u2014</span><span class="evc">\u2139\uFE0F</span><span class="evb"><small>Token launches / new coins / listings: no free feed \u2014 surfaced via headlines below.</small></span></div></div>';
+
+    var it=(N.items||[]).slice(0,8);
+    if(it.length){ h+='<div class="evgrp"><div class="evgt">\uD83D\uDCF0 Market Headlines</div>';
+      it.forEach(function(x){ h+='<div class="evrow" data-imp="LOW" data-region="world"><span class="evd">'+fmt(x.published)+'</span><span class="evc">\uD83D\uDCF0</span><span class="evb"><b><a href="'+esc(x.link)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">'+esc(x.title)+'</a></b><small>'+esc(x.publisher||"")+' \u00b7 '+esc(x.topic||"")+'</small></span></div>'; });
+      h+='</div>'; }
+
+    var card=document.createElement("div"); card.id="as-events-card"; card.className="card"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead");
+    if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+
+    function apply(f){
+      card.querySelectorAll(".evrow").forEach(function(r){
+        var reg=r.getAttribute("data-region"), imp=r.getAttribute("data-imp");
+        var show = f==="all" ? true : (f==="high" ? imp==="HIGH" : reg===f);
+        r.style.display=show?"flex":"none";
+      });
+      card.querySelectorAll(".evday").forEach(function(d){
+        var any=[].some.call(d.querySelectorAll(".evrow"),function(r){return r.style.display!=="none";});
+        d.style.display=any?"block":"none";
+      });
+      card.querySelectorAll(".evgrp").forEach(function(g){
+        var any=[].some.call(g.querySelectorAll(".evrow"),function(r){return r.style.display!=="none";});
+        g.style.display=any?"block":"none";
+      });
+    }
+    card.querySelectorAll(".evfil button").forEach(function(b){ b.addEventListener("click",function(){
+      card.querySelectorAll(".evfil button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+      apply(b.getAttribute("data-f"));
+    });});
+  }
+  Promise.all([J("events.json"),J("results.json"),J("economy-pulse.json"),J("news.json"),J("crypto.json")]).then(function(r){ D={events:r[0]||{},results:r[1]||{},pulse:r[2]||{},news:r[3]||{},crypto:r[4]||{}}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },700);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
 </body></html>

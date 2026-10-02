@@ -26,6 +26,13 @@ SERIES = {
     "Dollar Index (DXY)": "DX-Y.NYB",
     "US 10Y Yield": "^TNX",
     "Copper": "HG=F",
+    "EUR-INR": "EURINR=X",
+    "GBP-INR": "GBPINR=X",
+    "JPY-INR": "JPYINR=X",
+    "AUD-INR": "AUDINR=X",
+    "EUR-USD": "EURUSD=X",
+    "USD-JPY": "USDJPY=X",
+    "USD-CNY": "USDCNY=X",
 }
 def collect():
     items = []

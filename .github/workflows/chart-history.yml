@@ -1,0 +1,46 @@
+name: Chart history (daily)
+
+on:
+  schedule:
+    # 18:30 IST (13:00 UTC), Mon-Fri — after market close
+    - cron: '0 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chart-history
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install yfinance
+        run: pip install -q yfinance
+      - name: Collect daily chart history
+        run: python3 scripts/chart_history.py
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/history data/history-index.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'data: daily chart history'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 15
+            done
+            echo 'ERROR: push failed'; exit 1
+          fi

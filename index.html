@@ -1298,4 +1298,59 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 
+
+<style id="as-radar-fix-css">
+#sectreemap-card .sechead{font-size:11.5px;padding:5px 9px}
+#sectreemap-card .blk{min-width:48px;flex-basis:48px;height:38px;font-size:9px}
+#sectreemap-card .blk b{font-size:9px}
+#sectreemap-card .blk span{font-size:8.5px}
+.as-holder{position:relative}
+.as-holder .rclose{position:absolute;top:8px;right:8px;z-index:3}
+</style>
+<script>
+/* ArthaSaar — round 10: RADAR button opens/closes its data card right under the header; smaller text */
+(function(){ "use strict";
+  function findHolder(fh){
+    var s=fh.nextElementSibling, i=0;
+    while(s && i<6){
+      if(s.classList && (s.classList.contains("radar") || (s.querySelector && s.querySelector(".radar")))) return s;
+      s=s.nextElementSibling; i++;
+    }
+    return null;
+  }
+  function fix(){
+    document.querySelectorAll(".view").forEach(function(v){
+      var fh=v.querySelector(".fshead"); if(!fh) return;
+      var btn=fh.querySelector(".rbtn"); if(!btn) return;
+      var holder=findHolder(fh);
+      if(holder){
+        if(holder.previousElementSibling!==fh){ fh.parentNode.insertBefore(holder, fh.nextSibling); }
+        holder.classList.add("as-holder");
+        if(!holder._init){ holder._init=1; holder.style.display="none"; }
+        if(!holder.querySelector(".rclose")){
+          var c=document.createElement("button"); c.className="xbtn rclose"; c.type="button"; c.textContent="✕ CLOSE";
+          c.addEventListener("click",function(e){ e.stopPropagation(); holder.style.display="none"; var bb=fh.querySelector(".rbtn"); if(bb) bb.classList.remove("on"); });
+          holder.insertBefore(c, holder.firstChild);
+        }
+      }
+      if(!btn._bound){
+        var nb=btn.cloneNode(true); nb._bound=1; btn.parentNode.replaceChild(nb, btn);
+        nb.addEventListener("click", function(e){
+          e.stopPropagation();
+          var h=findHolder(fh); if(!h) return;
+          var open=h.style.display!=="none";
+          h.style.display=open?"none":"block";
+          nb.classList.toggle("on", !open);
+          if(!open){ try{ h.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(_){} }
+        });
+      }
+    });
+  }
+  fix();
+  var n=0,iv=setInterval(function(){ fix(); if(++n>30) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(fix,300); });
+  document.addEventListener("click",function(){ setTimeout(fix,250); },true);
+})();
+</script>
+
 </body></html>

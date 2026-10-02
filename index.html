@@ -1936,13 +1936,22 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     h+='<div class="corow"><span>Debt / equity</span><b>'+nf(f.debtToEquity!=null?f.debtToEquity/100:null,2)+'</b></div>';
     /* holding */
     h+='<div class="cosec">\uD83C\uDFE6 Holding (shareholding)</div>';
-    var ins=(f.heldPercentInsiders!=null?f.heldPercentInsiders*100:null), inst=(f.heldPercentInstitutions!=null?f.heldPercentInstitutions*100:null), pub=(ins!=null&&inst!=null)?Math.max(0,100-ins-inst):null;
-    if(ins!=null||inst!=null){
-      h+='<div class="corow"><span>Promoters / Insiders</span><b>'+nf(ins,1)+'%</b></div>';
-      h+='<div class="corow"><span>Institutions (FII + DII)</span><b>'+nf(inst,1)+'%</b></div>';
-      h+='<div class="corow"><span>Public / others</span><b>'+nf(pub,1)+'%</b></div>';
-      h+='<div class="cobars" style="margin-top:6px"><i style="width:'+(ins||0)+'%;background:#3b82f6"></i><i style="width:'+(inst||0)+'%;background:#16a34a"></i><i style="width:'+(pub||0)+'%;background:#c9c9d0"></i></div>';
-    } else h+='<div class="conote">Shareholding split not in feed for this one.</div>';
+    var pr=sf.promoters_pct, fi=sf.fii_pct, di=sf.dii_pct, pu=sf.public_pct;
+    if(pr!=null||fi!=null||di!=null||pu!=null){
+      h+='<div class="corow"><span>Promoters</span><b>'+nf(pr,1)+'%</b></div>';
+      h+='<div class="corow"><span>FII (foreign)</span><b>'+nf(fi,1)+'%</b></div>';
+      h+='<div class="corow"><span>DII (domestic)</span><b>'+nf(di,1)+'%</b></div>';
+      h+='<div class="corow"><span>Public / others</span><b>'+nf(pu,1)+'%</b></div>';
+      h+='<div class="cobars" style="margin-top:6px"><i style="width:'+(pr||0)+'%;background:#3b82f6"></i><i style="width:'+(fi||0)+'%;background:#16a34a"></i><i style="width:'+(di||0)+'%;background:#8b5cf6"></i><i style="width:'+(pu||0)+'%;background:#c9c9d0"></i></div>';
+    } else {
+      var ins=(f.heldPercentInsiders!=null?f.heldPercentInsiders*100:null), inst=(f.heldPercentInstitutions!=null?f.heldPercentInstitutions*100:null), pub2=(ins!=null&&inst!=null)?Math.max(0,100-ins-inst):null;
+      if(ins!=null||inst!=null){
+        h+='<div class="corow"><span>Promoters / Insiders</span><b>'+nf(ins,1)+'%</b></div>';
+        h+='<div class="corow"><span>Institutions (FII + DII)</span><b>'+nf(inst,1)+'%</b></div>';
+        h+='<div class="corow"><span>Public / others</span><b>'+nf(pub2,1)+'%</b></div>';
+        h+='<div class="cobars" style="margin-top:6px"><i style="width:'+(ins||0)+'%;background:#3b82f6"></i><i style="width:'+(inst||0)+'%;background:#16a34a"></i><i style="width:'+(pub2||0)+'%;background:#c9c9d0"></i></div>';
+      } else h+='<div class="conote">Shareholding split not in feed for this one.</div>';
+    }
     /* dividend dates */
     var dv=RES.filter(function(r){ return (r.sym||r.company||"")===sym; });
     h+='<div class="cosec">\uD83D\uDCB0 Dividend</div>';
@@ -2080,6 +2089,105 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
   Promise.all([J("mf.json"),J("mf-top.json")]).then(function(r){ MF=r[0]||{}; TOP=r[1]||{}; NIFTY=TOP.nifty||{}; wire(); });
   var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
   window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
+})();
+</script>
+
+
+<style id="as-deep-css">
+#v-deepfund .deepwrap{font-size:12px}
+#v-deepfund .dsearch{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 13px var(--font);outline:none}
+#v-deepfund table{width:100%;min-width:0;border-collapse:collapse;font-size:10px;table-layout:fixed}
+#v-deepfund th{position:sticky;top:0;background:var(--surface);font:700 8.5px var(--font);text-transform:uppercase;letter-spacing:.03em;color:var(--dim);padding:7px 4px;text-align:right;border-bottom:1px solid var(--border)}
+#v-deepfund th:first-child{text-align:left}
+#v-deepfund td{padding:6px 4px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#v-deepfund td:first-child{text-align:left;white-space:normal;width:44%}
+#v-deepfund tr[data-sym]{cursor:pointer}
+#v-deepfund .qbadge{display:inline-block;border-radius:7px;padding:1px 6px;font:800 10px var(--mono)}
+#v-deepfund .deepnote{font-size:10px;color:var(--dim);margin:2px 0 8px;line-height:1.5}
+.codeep .cosec{margin-top:15px}
+.codeep .qrow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.codeep .qrow:last-child{border-bottom:0}
+</style>
+<script>
+/* ArthaSaar — round 21: Deep Fundamentals = computed Q-Score. Ranked quality screener + block inside the company card. */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  var SF={},FUND={},CI={},ROWS=[];
+  function qscore(sym){
+    var sf=SF[sym]||{}, f=FUND[sym]||{};
+    var roe=(sf["ROE"]!=null?sf["ROE"]:(f.returnOnEquity!=null?f.returnOnEquity*100:null));
+    var roce=sf["ROCE"];
+    var np=sf["Net Profit"]||[], sales=sf["Sales"]||[], opm=sf["OPM %"];
+    if(typeof opm!=="number") opm=null;
+    var dte=(f.debtToEquity!=null?f.debtToEquity/100:null);
+    var dy=(sf["Dividend Yield"]!=null?sf["Dividend Yield"]:f.dividendYield);
+    var pe=(sf["Stock P/E"]!=null?sf["Stock P/E"]:f.trailingPE);
+    var sy=sf["Sales_yoy"], ny=sf["Net Profit_yoy"];
+    var items=[
+      {l:"ROE \u2265 15%", ok: roe!=null && roe>=15, v: roe!=null?nf(roe,1)+"%":null},
+      {l:"ROCE \u2265 15%", ok: roce!=null && roce>=15, v: roce!=null?nf(roce,1)+"%":null},
+      {l:"Net profit positive", ok: np.length>0 && np[np.length-1]>0, v: np.length?nf(np[np.length-1],0):null},
+      {l:"Net profit growing YoY", ok: ny!=null && ny>0, v: ny!=null?nf(ny,1)+"%":null},
+      {l:"Sales growing YoY", ok: sy!=null && sy>0, v: sy!=null?nf(sy,1)+"%":null},
+      {l:"Operating margin \u2265 15%", ok: opm!=null && opm>=15, v: opm!=null?nf(opm,1)+"%":null},
+      {l:"Debt / Equity \u2264 1", ok: dte!=null && dte<=1, v: dte!=null?nf(dte,2):null},
+      {l:"Dividend yield \u2265 0.5%", ok: dy!=null && dy>=0.5, v: dy!=null?nf(dy,2)+"%":null},
+      {l:"P/E \u2264 40", ok: pe!=null && pe>0 && pe<=40, v: pe!=null?nf(pe,1):null}
+    ];
+    return {score:items.filter(function(i){return i.ok;}).length, items:items};
+  }
+  window.__qscore=qscore;
+  function badge(s){ var bg=s>=7?"#cdeccd":s>=5?"#fae6c0":"#f6c3c3", fg=s>=7?"#0a5c1e":s>=5?"#8a5a10":"#7a1010"; return '<span class="qbadge" style="background:'+bg+';color:'+fg+'">'+s+'/9</span>'; }
+  function deepInto(sym){
+    var body=document.querySelector(".cofs .cobody"); if(!body||body.querySelector(".codeep")) return;
+    var q=qscore(sym); if(!q) return;
+    var h='<div class="codeep"><div class="cosec">\uD83D\uDD2C Deep Fundamentals \u00b7 Q-Score</div>';
+    h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">'+badge(q.score)+'<span style="font-size:9.5px;color:var(--dim)">computed from screener-fundamentals \u2014 ROE, ROCE, growth, margin, debt, dividend, P/E</span></div>';
+    q.items.forEach(function(i){ h+='<div class="qrow"><span>'+esc(i.l)+'</span><b class="'+(i.ok?"up":"dn")+'">'+(i.ok?"\u2713":"\u2717")+(i.v?" "+esc(i.v):"")+'</b></div>'; });
+    h+='</div>';
+    var el=document.createElement("div"); el.innerHTML=h; el=el.firstChild;
+    var note=body.lastElementChild;
+    if(note && note.className && note.className.indexOf("conote")>-1) body.insertBefore(el, note); else body.appendChild(el);
+  }
+  /* wrap the company card so the deep block is always added */
+  function wrapFS(){
+    if(!window.openCompanyFS || window.openCompanyFS._deepw) return;
+    var orig=window.openCompanyFS;
+    var w=function(sym){ orig(sym); setTimeout(function(){ deepInto(sym); },40); };
+    w._deepw=1; window.openCompanyFS=w;
+  }
+  function buildDeep(){
+    var host=document.getElementById("v-deepfund"); if(!host) return;
+    [].slice.call(host.querySelectorAll(".kpis, .card")).forEach(function(el){ if(el.id!=="as-deep-card" && !(el.closest&&el.closest(".deepwrap"))) el.remove(); });
+    if(document.getElementById("as-deep-card")){ var tbx=document.getElementById("deepBody"); if(tbx && !tbx.querySelector("tr") && ROWS.length){ var qx=document.getElementById("deepQ"); render(qx?qx.value:""); } return; }
+    var wrap=document.createElement("div"); wrap.className="deepwrap";
+    wrap.innerHTML='<div class="card deepsearch" style="margin-bottom:8px"><div class="dsearch-w"><input class="dsearch" id="deepQ" type="search" placeholder="Search stock name or symbol\u2026"></div></div>'+
+      '<div class="deepnote">All '+ROWS.length+' stocks ranked by <b>Q-Score</b> (0\u20139) \u2014 a transparent formula on screener-fundamentals: ROE, ROCE, profit &amp; sales growth, operating margin, debt/equity, dividend yield, P/E. Tap any stock for its full card + deep fundamentals. Not investment advice.</div>'+
+      '<div class="card" id="as-deep-card" style="padding:0;overflow:auto;max-height:62vh"><table><thead><tr><th>Stock</th><th>Q</th><th>ROE</th><th>ROCE</th><th>P/E</th><th>D/E</th></tr></thead><tbody id="deepBody"></tbody></table></div>';
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(wrap, fh.nextSibling); else host.insertBefore(wrap, host.firstChild);
+    var q=document.getElementById("deepQ"); if(q) q.addEventListener("input", function(){ render(q.value); });
+    render("");
+  }
+  function render(q){
+    q=(q||"").toLowerCase().trim();
+    var list=ROWS.filter(function(r){ return !q || r.sym.toLowerCase().indexOf(q)>-1 || (r.name||"").toLowerCase().indexOf(q)>-1; });
+    var tb=document.getElementById("deepBody"); if(!tb) return;
+    tb.innerHTML=list.slice(0,500).map(function(r){
+      return '<tr data-sym="'+esc(r.sym)+'"><td><b>'+esc(r.sym)+'</b> <small style="color:var(--dim)">'+esc((r.name||"").slice(0,22))+'</small></td><td>'+badge(r.score)+'</td><td>'+nf(r.roe,1)+'%</td><td>'+nf(r.roce,1)+'%</td><td>'+nf(r.pe,1)+'</td><td>'+nf(r.dte,2)+'</td></tr>';
+    }).join("");
+    tb.querySelectorAll("tr[data-sym]").forEach(function(tr){ tr.addEventListener("click", function(){ var s=tr.getAttribute("data-sym"); if(window.openCompanyFS) window.openCompanyFS(s); }); });
+  }
+  Promise.all([J("screener-fundamentals.json"),J("fundamentals.json"),J("company-index.json")]).then(function(r){
+    SF=(r[0]&&r[0].stocks)||{}; FUND=r[1]||{}; CI=r[2]||{};
+    ROWS=Object.keys(SF).map(function(k){ var q=qscore(k), f=FUND[k]||{}; return {sym:k, name:(CI[k]||{}).name||"", score:q.score, roe:SF[k]["ROE"], roce:SF[k]["ROCE"], pe:(SF[k]["Stock P/E"]!=null?SF[k]["Stock P/E"]:f.trailingPE), dte:(f.debtToEquity!=null?f.debtToEquity/100:null)}; });
+    ROWS.sort(function(a,b){ return b.score-a.score || ((SF[b.sym]["Market Cap"]||0)-(SF[a.sym]["Market Cap"]||0)); });
+    buildDeep(); render(""); wrapFS();
+  });
+  var n=0,iv=setInterval(function(){ buildDeep(); wrapFS(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(function(){ buildDeep(); wrapFS(); },300); });
 })();
 </script>
 

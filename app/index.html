@@ -277,6 +277,13 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 .radar .rc span{font:400 10px var(--mono);color:var(--dim)}
 .gauge{height:9px;border-radius:999px;background:linear-gradient(90deg,#ef5b61,#f0a53a,#2bd477);position:relative;margin:8px 0 4px}
 .gauge i{position:absolute;top:-3px;width:4px;height:15px;background:var(--text);border-radius:3px;transform:translateX(-2px)}
+.fshead{display:flex;align-items:center;gap:8px}
+.fshead h2{flex:1}
+.rbtn{border:1px solid var(--border2);border-radius:999px;padding:6px 12px;background:var(--surface);color:var(--text);font:700 11px var(--font);cursor:pointer;white-space:nowrap}
+.rbtn.on{background:var(--accent);color:#fff;border-color:transparent}
+.secgrid-in{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+.seccard{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:10px 12px;cursor:pointer;font:600 12px var(--font)}
+.seccard.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
 </style>
 </head>
 <body>
@@ -1080,6 +1087,84 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
       D("macro.json").then(function () { renderForex(); }).catch(function () { renderForex(); });
       D("timesfm_forecasts.json").then(function () { renderAI(); }).catch(function () {});
     });
+  });
+})();
+</script>
+
+<script>
+/* ArthaSaar — round 5: radar -> small round toggle button; sector map -> clickable sector cards with per-sector stock lists (% + ₹ move). */
+(function () {
+  "use strict";
+  var BASE = "data/", C = {};
+  function nf(x, d) { return (x == null || isNaN(x)) ? "—" : Number(x).toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d }); }
+  function sign(x, d) { return (x == null || isNaN(x)) ? "—" : (x > 0 ? "+" : "") + nf(x, d == null ? 2 : d) + "%"; }
+  function J(n) { return fetch(BASE + n, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(n); return r.json(); }); }
+  function D(n) { return C[n] ? Promise.resolve(C[n]) : J(n).then(function (d) { C[n] = d; return d; }); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function up(x) { return (x || 0) >= 0; }
+
+  /* ---------- 1. every radar card -> small round button in the header line + toggle card ---------- */
+  function convertRadars() {
+    document.querySelectorAll(".view > .radar").forEach(function (r) {
+      if (r._conv) return; r._conv = 1;
+      var v = r.closest(".view"); if (!v) return;
+      var fh = v.querySelector(".fshead"); if (!fh) return;
+      var html = r.outerHTML; r.remove();
+      var btn = document.createElement("button"); btn.className = "rbtn"; btn.type = "button"; btn.innerHTML = "◉ RADAR";
+      var x = fh.querySelector(".xbtn"); fh.insertBefore(btn, x);
+      var holder = document.createElement("div"); holder.style.display = "none"; holder.innerHTML = html;
+      fh.parentNode.insertBefore(holder, fh.nextSibling);
+      btn.addEventListener("click", function () {
+        var open = holder.style.display !== "none";
+        holder.style.display = open ? "none" : "block";
+        btn.classList.toggle("on", !open);
+      });
+    });
+  }
+  convertRadars();
+  try { new MutationObserver(function () { convertRadars(); }).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+  var _n = 0, _iv = setInterval(function () { convertRadars(); if (++_n > 20) clearInterval(_iv); }, 700);
+
+  /* ---------- 2. SECTOR MAP: sector cards -> per-sector stock list ---------- */
+  function openSector(name, secs, map) {
+    var list = secs[name] || [];
+    var rows = list.map(function (x) { var s = map[x.symbol] || {}; return { sym: x.symbol, co: x.company, chg: s.change_pct, price: s.price }; })
+      .sort(function (a, b) { return (b.chg || 0) - (a.chg || 0); });
+    var html = "<div class='radar'><div class='rt'>" + esc(name) + " SECTOR</div><div class='rs'>" + rows.length + " stocks · % and ₹ move</div><div style='max-height:52vh;overflow:auto'>" +
+      rows.map(function (r) { var rs = (r.price != null && r.chg != null) ? (r.price * r.chg / 100) : null; return "<div class='zrow'><span><b>" + r.sym + "</b> <small class='mono'>" + esc((r.co || "").slice(0, 24)) + "</small></span><b class='" + (up(r.chg) ? "up" : "dn") + "'>" + sign(r.chg, 1) + " · ₹" + (rs == null ? "—" : nf(rs, 2)) + "</b></div>"; }).join("") +
+      "</div></div>";
+    var host = document.querySelector("#v-heatmap"); if (!host) return;
+    var old = host.querySelector(".secopen"); if (old) old.remove();
+    var div = document.createElement("div"); div.className = "secopen"; div.innerHTML = html;
+    var fh = host.querySelector(".fshead"); host.insertBefore(div, fh ? fh.nextSibling : host.firstChild);
+  }
+
+  fetch("data/fii-dii.json", { cache: "no-store" }).catch(function () { BASE = "../data/"; }).then(function () {
+    Promise.all([D("constituents.json"), D("brain-screener.json"), D("indices-all.json")]).then(function (r) {
+      var ct = r[0], b = r[1], ia = r[2];
+      var host = document.querySelector("#v-heatmap"); if (!host) return;
+      var map = {}; (b.stocks || []).forEach(function (s) { map[s.symbol] = s; });
+      var secs = ct.sectors || {};
+      var idx = ia.indices || [];
+      var grid = document.createElement("div"); grid.className = "card secgrid";
+      var html = "<div class='sh2'>SECTORS — today · tap to open</div><div class='secgrid-in'>";
+      Object.keys(secs).forEach(function (name) {
+        var key = name.toUpperCase().replace(/[^A-Z]/g, "");
+        var ind = idx.filter(function (i) { return i.index.toUpperCase().indexOf(key) > -1; })[0];
+        var chg = ind ? ind.change_pct : null;
+        html += "<button class='seccard' data-sec='" + esc(name) + "'><b>" + esc(name) + "</b><span class='" + (up(chg) ? "up" : "dn") + "'>" + (chg == null ? "—" : sign(chg, 1)) + "</span></button>";
+      });
+      html += "</div>";
+      grid.innerHTML = html;
+      var fh = host.querySelector(".fshead"); host.insertBefore(grid, fh ? fh.nextSibling : host.firstChild);
+      grid.querySelectorAll(".seccard").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          grid.querySelectorAll(".seccard").forEach(function (x) { x.classList.remove("on"); });
+          btn.classList.add("on");
+          openSector(btn.getAttribute("data-sec"), secs, map);
+        });
+      });
+    }).catch(function () {});
   });
 })();
 </script>

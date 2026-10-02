@@ -2361,4 +2361,304 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
 })();
 </script>
 
+
+<style id="as-charts-css">
+#v-gticharts .chwrap{font-size:12px}
+#v-gticharts .chips{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:2px 0 8px;-webkit-overflow-scrolling:touch}
+#v-gticharts .chips .chip{flex:0 0 auto;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 10px;font:700 10px var(--font);cursor:pointer;white-space:nowrap}
+#v-gticharts .chips .chip.on{background:var(--accent);color:#fff;border-color:transparent}
+#v-gticharts .tfrow{display:flex;gap:6px;margin:0 0 8px}
+#v-gticharts .tfrow button{flex:1;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:9px;padding:6px 4px;font:700 10.5px var(--font);cursor:pointer}
+#v-gticharts .tfrow button.on{background:var(--accent);color:#fff;border-color:transparent}
+#v-gticharts .chhead{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 4px}
+#v-gticharts .chhead b{font:800 13px var(--font)}
+#v-gticharts .chmeta{font-size:10px;color:var(--dim);margin-top:4px;line-height:1.5}
+#v-gticharts .panelgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+#v-gticharts .panel{border:1px solid var(--border);border-radius:9px;padding:5px}
+#v-gticharts .panel .pl{display:flex;justify-content:space-between;font-size:9.5px;font-weight:800;margin-bottom:2px}
+#v-gticharts canvas{width:100%;display:block}
+</style>
+<script>
+/* ArthaSaar — round 24b: Charts = live intraday candles + 4-timeframe panel (5m/15m/30m/4h) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  var SYMS=null, cur=null, tf="15m";
+  function agg(ser,k){
+    if(!ser||!ser.c||!ser.c.length) return null;
+    var o={t:[],o:[],h:[],l:[],c:[],v:[]};
+    for(var i=0;i<ser.c.length;i+=k){
+      var e=Math.min(i+k,ser.c.length);
+      o.t.push(ser.t[i]); o.o.push(ser.o[i]); o.c.push(ser.c[e-1]);
+      o.h.push(Math.max.apply(null,ser.h.slice(i,e))); o.l.push(Math.min.apply(null,ser.l.slice(i,e)));
+      o.v.push(ser.v?ser.v.slice(i,e).reduce(function(a,b){return a+b;},0):0);
+    }
+    return o;
+  }
+  function seriesFor(sym,label){
+    var o=SYMS[sym]||{};
+    if(label==="30m") return agg(o["15m"],2)||agg(o["5m"],6);
+    if(label==="4h") return agg(o["1h"],4);
+    return o[label]||o["15m"]||o["1h"]||o["5m"];
+  }
+  function draw(cv, o, h){
+    var dpr=window.devicePixelRatio||1, w=cv.clientWidth||160; h=h||240;
+    cv.width=w*dpr; cv.height=h*dpr; cv.style.height=h+"px";
+    var ctx=cv.getContext("2d"); ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+    var n=(o.c||[]).length; if(!n) return;
+    var mn=Math.min.apply(null,o.l), mx=Math.max.apply(null,o.h); var pad=6, rng=(mx-mn)||1;
+    function X(i){ return pad+(w-2*pad)*(i+0.5)/n; }
+    function Y(v){ return h-pad-(h-2*pad)*(v-mn)/rng; }
+    var bw=Math.max(1,(w-2*pad)/n*0.62);
+    for(var i=0;i<n;i++){
+      var up=o.c[i]>=o.o[i]; ctx.strokeStyle=up?"#16a34a":"#dc2626"; ctx.fillStyle=up?"#16a34a":"#dc2626";
+      ctx.beginPath(); ctx.moveTo(X(i),Y(o.h[i])); ctx.lineTo(X(i),Y(o.l[i])); ctx.stroke();
+      var y1=Y(Math.max(o.o[i],o.c[i])), y2=Y(Math.min(o.o[i],o.c[i]));
+      ctx.fillRect(X(i)-bw/2, y1, bw, Math.max(1,y2-y1));
+    }
+    ctx.font="8px monospace"; ctx.fillStyle="rgba(255,255,255,.85)"; ctx.fillRect(pad,1,52,11); ctx.fillRect(pad,h-12,52,11);
+    ctx.fillStyle="rgba(120,120,130,.95)"; ctx.fillText(nf(mx,1),pad+1,9); ctx.fillText(nf(mn,1),pad+1,h-3);
+  }
+  function render(){
+    var host=document.getElementById("v-gticharts"); if(!host||!SYMS||!cur) return;
+    var o=SYMS[cur]||{}, ser=seriesFor(cur,tf), pc=o.pc;
+    var last=ser&&ser.c.length?ser.c[ser.c.length-1]:null;
+    var chg=(pc&&last!=null)?((last-pc)/pc*100):null;
+    var hh=document.getElementById("chHead"); if(hh) hh.innerHTML='<b>'+cur+' \u00b7 '+tf+'</b><span class="'+(chg>=0?"up":"dn")+'" style="font-weight:800">'+(chg==null?"":(chg>=0?"+":"")+chg.toFixed(2)+"%")+'</span>';
+    var meta=document.getElementById("chMeta");
+    if(meta&&ser) meta.textContent=ser.c.length+" bars \u00b7 last C "+nf(last,2)+" \u00b7 prev close "+nf(pc,2)+" \u00b7 30m/4h are aggregated from 15m/1h";
+    var cv=document.getElementById("chCanvas"); if(cv&&ser) draw(cv, ser, 230);
+    ["5m","15m","30m","4h"].forEach(function(lb){
+      var c2=document.getElementById("pc-"+lb); if(!c2) return;
+      var s2=seriesFor(cur,lb); if(s2) draw(c2, s2, 110);
+      var l2=document.getElementById("pl-"+lb); if(l2&&s2&&s2.c.length){ var lc=s2.c[s2.c.length-1], lch=pc?((lc-pc)/pc*100):null; l2.innerHTML='<span>'+lb+'</span><span class="'+(lch>=0?"up":"dn")+'">'+(lch==null?"":(lch>=0?"+":"")+lch.toFixed(2)+"%")+'</span>'; }
+    });
+  }
+  function build(){
+    var host=document.getElementById("v-gticharts"); if(!host||!SYMS) return;
+    if(document.getElementById("as-charts-card")) return;
+    var names=Object.keys(SYMS);
+    var h='<div class="chwrap"><div class="chips">'+names.map(function(s){ return '<span class="chip'+(s===(cur||names[0])?" on":"")+'" data-s="'+s+'">'+s+'</span>'; }).join("")+'</div>';
+    h+='<div class="tfrow"><button data-tf="5m">5m</button><button data-tf="15m" class="on">15m</button><button data-tf="1h">1h</button></div>';
+    h+='<div class="chhead" id="chHead"></div>';
+    h+='<div class="card" style="padding:8px"><canvas id="chCanvas"></canvas></div>';
+    h+='<div class="chmeta" id="chMeta"></div>';
+    h+='<div class="chmeta" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-top:12px">4-Timeframe Panel</div>';
+    h+='<div class="panelgrid">'+["5m","15m","30m","4h"].map(function(lb){ return '<div class="panel"><div class="pl" id="pl-'+lb+'"><span>'+lb+'</span></div><canvas id="pc-'+lb+'"></canvas></div>'; }).join("")+'</div>';
+    h+='<div class="chmeta">Live intraday candles from data/candles.json \u2014 '+names.length+' symbols (indices + top stocks + BTC). 30m is built from 15m bars and 4h from 1h bars. Daily/weekly history since listing is not in this feed yet \u2014 that needs the pipeline step I describe in chat.</div></div>';
+    var card=document.createElement("div"); card.id="as-charts-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-charts-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+    card.querySelectorAll(".chip").forEach(function(c){ c.addEventListener("click", function(){ cur=c.getAttribute("data-s"); card.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");}); c.classList.add("on"); render(); }); });
+    card.querySelectorAll(".tfrow button").forEach(function(b){ b.addEventListener("click", function(){ tf=b.getAttribute("data-tf"); card.querySelectorAll(".tfrow button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); render(); }); });
+    render();
+  }
+  J("candles.json").then(function(c){ SYMS=(c&&c.syms)||{}; cur=Object.keys(SYMS)[0]; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+<style id="as-braint-css">
+#as-brain-card,#as-gtiq-card{font-size:12px}
+#as-brain-card .bsec,#as-gtiq-card .bsec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:13px 0 5px}
+#as-brain-card .brow,#as-gtiq-card .brow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+#as-brain-card .brow:last-child,#as-gtiq-card .brow:last-child{border-bottom:0}
+#as-brain-card .brow small{color:var(--dim);font-size:9.5px;display:block}
+#as-brain-card .verdict{display:inline-block;border-radius:9px;padding:5px 11px;font:800 14px var(--font)}
+#as-gtiq-card .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#as-gtiq-card .qcell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+#as-gtiq-card .qcell .k{font-size:9px;color:var(--dim);text-transform:uppercase}
+#as-gtiq-card .qcell .v{font:800 12.5px var(--mono)}
+#as-brain-card .bnote,#as-gtiq-card .bnote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 25: AI Brain body (smart-brain.json) + Trading Tools quick-view (futures/oi-gti/timesfm) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var SB=null,FU=null,OG=null,TF=null;
+  function niftyFc(){ var l=(TF&&TF.forecasts)||[]; return l.filter(function(x){ return /nifty 50|^nsei|nifty$/i.test((x.symbol||"")+" "+(x.name||"")) && !/bank/i.test(x.name||""); })[0] || l.filter(function(x){ return /nifty/i.test(x.name||""); })[0]; }
+  function buildBrain(){
+    var host=document.getElementById("v-aibrain"); if(!host||!SB) return;
+    if(document.getElementById("as-brain-card")) return;
+    var g=SB.guess||{}, sc=g.score;
+    var col=sc>=55?"#cdeccd":sc<=45?"#f6c3c3":"#fae6c0", fg=sc>=55?"#0a5c1e":sc<=45?"#7a1010":"#8a5a10";
+    var h='<div class="bsec" style="margin-top:0">Market Mood</div>';
+    h+='<span class="verdict" style="background:'+col+';color:'+fg+'">'+esc(g.verdict||"—")+(sc!=null?" \u00b7 "+esc(sc)+"/100":"")+'</span>';
+    h+='<div class="brow"><span>Median stock move</span><b class="'+(SB.market_med>=0?"up":"dn")+'">'+pc(SB.market_med)+'</b></div>';
+    if((g.points||[]).length){ h+='<div class="bsec">Why</div>'+g.points.map(function(p){ return '<div class="brow"><span>'+esc(p)+'</span></div>'; }).join(""); }
+    if((SB.bull||[]).length){ h+='<div class="bsec">\uD83D\uDFE2 Bullish Picks (score)</div>'+SB.bull.slice(0,5).map(function(x){ return '<div class="brow"><span><b>'+esc(x.symbol)+'</b><small>'+esc(x.why||"")+'</small></span><b>'+nf(x.price,1)+' <span class="'+(x.chg>=0?"up":"dn")+'">'+pc(x.chg)+'</span></b></div>'; }).join(""); }
+    if((SB.bear||[]).length){ h+='<div class="bsec">\uD83D\uDD34 Bearish Picks (score)</div>'+SB.bear.slice(0,5).map(function(x){ return '<div class="brow"><span><b>'+esc(x.symbol)+'</b><small>'+esc(x.why||"")+'</small></span><b>'+nf(x.price,1)+' <span class="'+(x.chg>=0?"up":"dn")+'">'+pc(x.chg)+'</span></b></div>'; }).join(""); }
+    if((SB.highs||[]).length){ h+='<div class="bsec">\uD83D\uDD3A New Highs</div>'+SB.highs.slice(0,6).map(function(x){ return '<div class="brow"><span><b>'+esc(x.symbol)+'</b><small>'+esc(x.company||"")+'</small></span><b class="up">'+pc(x.chg)+'</b></div>'; }).join(""); }
+    if((SB.lows||[]).length){ h+='<div class="bsec">\uD83D\uDD3B New Lows</div>'+SB.lows.slice(0,6).map(function(x){ return '<div class="brow"><span><b>'+esc(x.symbol)+'</b><small>'+esc(x.company||"")+'</small></span><b class="dn">'+pc(x.chg)+'</b></div>'; }).join(""); }
+    if((SB.rs||[]).length){ h+='<div class="bsec">\u26A1 Relative Strength</div>'+SB.rs.slice(0,6).map(function(x){ return '<div class="brow"><span><b>'+esc(x.symbol)+'</b><small>'+esc(x.company||"")+'</small></span><b>RS '+nf(x.rs,1)+'</b></div>'; }).join(""); }
+    if(TF&&(TF.rotation||[]).length){ h+='<div class="bsec">\uD83D\uDD04 Rotation (TimesFM 30d)</div>'+TF.rotation.slice(0,5).map(function(x){ return '<div class="brow"><span>'+esc(x.name)+'</span><b class="'+(x.chg30>=0?"up":"dn")+'">'+pc(x.chg30)+' \u00b7 conf '+esc(x.conf)+'%</b></div>'; }).join(""); }
+    h+='<div class="bnote">'+esc(SB.disclaimer||"")+' Live from data/smart-brain.json'+(SB.updated?" \u00b7 "+esc(String(SB.updated).slice(0,10)):"")+'.</div>';
+    var card=document.createElement("div"); card.id="as-brain-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-brain-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  function buildGTIQ(){
+    var host=document.getElementById("v-gti"); if(!host||!FU) return;
+    if(document.getElementById("as-gtiq-card")) return;
+    var pcr=FU.pcr||{}, og=(OG&&OG.symbols&&OG.symbols["NIFTY 50"])||{};
+    var idx=(FU.indices||[]).filter(function(i){ return /NIFTY/.test(i.symbol) && !/BANK/.test(i.symbol); })[0]||(FU.indices||[])[0]||{};
+    var c0=(idx.contracts||[])[0]||{};
+    var basis=(c0.close!=null&&idx.underlying!=null)?(c0.close-idx.underlying):null;
+    var fc=niftyFc();
+    var h='<div class="bsec" style="margin-top:0">Quick View \u00b7 live</div>';
+    h+='<div class="qgrid">';
+    h+='<div class="qcell"><div class="k">NIFTY LTP</div><div class="v">'+nf(idx.underlying||pcr.nifty_spot,2)+'</div></div>';
+    h+='<div class="qcell"><div class="k">fut OI chg</div><div class="v '+(c0.oi_chg>=0?"up":"dn")+'">'+nf(c0.oi_chg,0)+'</div></div>';
+    h+='<div class="qcell"><div class="k">basis</div><div class="v">'+(basis==null?"—":(basis>=0?"+":"")+nf(basis,1))+'</div></div>';
+    h+='</div>';
+    h+='<div class="bsec">Options</div>';
+    h+='<div class="brow"><span>PCR (OI)</span><b>'+nf(pcr.nifty_pcr_oi!=null?pcr.nifty_pcr_oi:og.pcr,2)+'</b></div>';
+    h+='<div class="brow"><span>Put wall / Call wall</span><b><span class="up">'+nf(og.put_wall,0)+'</span> / <span class="dn">'+nf(og.call_wall,0)+'</span></b></div>';
+    h+='<div class="brow"><span>Max pain</span><b>'+nf(pcr.nifty_max_pain!=null?pcr.nifty_max_pain:og.max_pain,0)+'</b></div>';
+    h+='<div class="brow"><span>Expiry</span><b>'+esc(og.expiry||pcr.nifty_expiry||"—")+'</b></div>';
+    h+='<div class="bsec">AI \u00b7 TimesFM</div>';
+    if(fc){ h+='<div class="brow"><span>'+esc(fc.name||fc.symbol)+' '+(fc.horizon_days||21)+'-day target</span><b>'+nf(fc.median_end,0)+' <span class="'+(fc.median_chg_pct>=0?"up":"dn")+'">'+pc(fc.median_chg_pct)+'</span></b></div>';
+      h+='<div class="brow"><span>Range (10\u201390%)</span><b>'+nf(fc.low10_end,0)+' \u2013 '+nf(fc.high90_end,0)+'</b></div>';
+    } else h+='<div class="brow"><span>Forecast</span><b>—</b></div>';
+    h+='<div class="bnote">Live from data/futures.json + oi-gti.json + timesfm_forecasts.json. F&O is for education, not advice.</div>';
+    var card=document.createElement("div"); card.id="as-gtiq-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){ if(el.id!=="as-gtiq-card" && /QUICK VIEW/i.test(el.textContent||"")) el.remove(); });
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("smart-brain.json"),J("futures.json"),J("oi-gti.json"),J("timesfm_forecasts.json")]).then(function(r){ SB=r[0]||{}; FU=r[1]||{}; OG=r[2]||{}; TF=r[3]||{}; buildBrain(); buildGTIQ(); });
+  var n=0,iv=setInterval(function(){ buildBrain(); buildGTIQ(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(function(){ buildBrain(); buildGTIQ(); },300); });
+})();
+</script>
+
+<style id="as-int-css">
+#as-int-card{font-size:12px}
+#as-int-card .igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#as-int-card .icell{border:1px solid var(--border);border-radius:9px;padding:7px 8px}
+#as-int-card .icell .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.03em}
+#as-int-card .icell .v{font:800 14px var(--mono)}
+#as-int-card .isec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:13px 0 6px}
+#as-int-card .ibar{display:flex;height:16px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-top:4px}
+#as-int-card .ibar i{display:block;height:100%}
+#as-int-card .irow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+#as-int-card .irow:last-child{border-bottom:0}
+#as-int-card .inote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 26: Market Internals = live (advances/declines from screener, breadth.json) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  var B=null,BR=null;
+  function build(){
+    var host=document.getElementById("v-internals"); if(!host||!B||!BR) return;
+    if(document.getElementById("as-int-card")) return;
+    var st=B.stocks||[], adv=0, dec=0, unch=0;
+    st.forEach(function(s){ var c=s.change_pct; if(c>0) adv++; else if(c<0) dec++; else unch++; });
+    var tot=adv+dec+unch||1, ap=adv/tot*100, dp=dec/tot*100;
+    var up200=BR.above_ema200_pct, near52=BR.near_52w_high, rsi60=BR.rsi_above_60, rsi40=BR.rsi_below_40, vs2=BR.volume_spike_2x, up3=BR.up_3plus_days, dn3=BR.down_3plus_days;
+    var h='<div class="igrid">';
+    h+='<div class="icell"><div class="k">advances</div><div class="v up">'+nf(adv,0)+'</div></div>';
+    h+='<div class="icell"><div class="k">declines</div><div class="v dn">'+nf(dec,0)+'</div></div>';
+    h+='<div class="icell"><div class="k">unchanged</div><div class="v">'+nf(unch,0)+'</div></div>';
+    h+='</div>';
+    h+='<div class="ibar"><i style="width:'+ap+'%;background:#16a34a"></i><i style="width:'+dp+'%;background:#dc2626"></i><i style="width:'+(100-ap-dp)+'%;background:#c9c9d0"></i></div>';
+    h+='<div class="inote">'+nf(ap,0)+'% advancing \u00b7 '+nf(dp,0)+'% declining \u00b7 across '+nf(st.length,0)+' stocks</div>';
+    h+='<div class="isec">\uD83D\uDCCA Breadth</div>';
+    h+='<div class="irow"><span>Above 200-DMA</span><b class="'+(up200>=50?"up":"dn")+'">'+nf(up200,1)+'%</b></div>';
+    h+='<div class="irow"><span>Near 52-week high</span><b>'+nf(near52,0)+'</b></div>';
+    h+='<div class="irow"><span>RSI &gt; 60 (momentum)</span><b class="up">'+nf(rsi60,0)+'</b></div>';
+    h+='<div class="irow"><span>RSI &lt; 40 (weak)</span><b class="dn">'+nf(rsi40,0)+'</b></div>';
+    h+='<div class="irow"><span>Volume spikes (2\u00d7 avg)</span><b>'+nf(vs2,0)+'</b></div>';
+    h+='<div class="isec">\uD83D\uDD01 Streaks</div>';
+    h+='<div class="irow"><span>Up 3+ days</span><b class="up">'+nf(up3,0)+'</b></div>';
+    h+='<div class="irow"><span>Down 3+ days</span><b class="dn">'+nf(dn3,0)+'</b></div>';
+    h+='<div class="inote">Live from data/breadth.json + brain-screener.json ('+nf(st.length,0)+' stocks). TRIN and McClellan need an advance-decline volume history that no free feed provides, so those two tiles were removed rather than shown with fake numbers.</div>';
+    var card=document.createElement("div"); card.id="as-int-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-int-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("brain-screener.json"),J("breadth.json")]).then(function(r){ B=r[0]||{}; BR=r[1]||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+<style id="as-ai-css">
+#as-ai-card{font-size:12px}
+#as-ai-card .asec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+#as-ai-card .agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#as-ai-card .acell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+#as-ai-card .acell .k{font-size:9px;color:var(--dim);text-transform:uppercase}
+#as-ai-card .acell .v{font:800 12.5px var(--mono)}
+#as-ai-card .arow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+#as-ai-card .arow:last-child{border-bottom:0}
+#as-ai-card .arow small{display:block;color:var(--dim);font-size:9.5px}
+#as-ai-card .xpt{border-left:3px solid var(--accent);padding:5px 0 5px 9px;margin:7px 0}
+#as-ai-card .xpt.g{border-color:#16a34a}#as-ai-card .xpt.r{border-color:#dc2626}#as-ai-card .xpt.n{border-color:#94a3b8}
+#as-ai-card .xpt b{display:block;font-size:11.5px}
+#as-ai-card .xpt span{font-size:10.5px;color:var(--dim);line-height:1.45}
+#as-ai-card .anote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+#as-ai-card .scbar{display:inline-block;height:8px;border-radius:5px;background:var(--accent);vertical-align:middle;margin-left:6px}
+</style>
+<script>
+/* ArthaSaar — round 27: AI section = full TimesFM-3 output + X-ray daily analysis + ArthaSaar score */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var T=null,X=null,M=null;
+  function build(){
+    var host=document.getElementById("v-gtiai"); if(!host||!T) return;
+    if(document.getElementById("as-ai-card")) return;
+    var h='';
+    /* model */
+    h+='<div class="asec" style="margin-top:0">\uD83E\uDD16 TimesFM-3 Model</div>';
+    h+='<div class="agrid">';
+    h+='<div class="acell"><div class="k">model</div><div class="v" style="font-size:10px">'+esc((T.model||"").replace(/^google\//,""))+'</div></div>';
+    h+='<div class="acell"><div class="k">horizon</div><div class="v">'+(T.horizon_days||21)+'d</div></div>';
+    h+='<div class="acell"><div class="k">context</div><div class="v">'+(T.context_days||512)+'d</div></div>';
+    h+='</div>';
+    h+='<div class="arow" style="margin-top:6px"><span>Max horizon</span><b>'+esc(T.max_horizon||"—")+'</b></div>';
+    var ac=T.accuracy||{};
+    h+='<div class="arow"><span>Tracked accuracy</span><b>'+(ac.rate==null?("collecting ("+(ac.tracked||0)+" settled)"):(nf(ac.rate*100,1)+"%"))+'</b></div>';
+    /* x-ray */
+    if(X&&(X.points||[]).length){
+      h+='<div class="asec">\uD83E\uDE7B X-Ray \u00b7 today\u2019s read</div>';
+      if(X.headline) h+='<div class="arow"><span>'+esc(X.headline)+'</span><b>'+esc(X.date||"")+'</b></div>';
+      h+=X.points.map(function(p){ return '<div class="xpt '+esc(p.c||"n")+'"><b>'+esc(p.h)+'</b><span>'+esc(p.t)+'</span></div>'; }).join("");
+    }
+    /* forecasts */
+    var f=(T.forecasts||[]).slice().sort(function(a,b){ return Math.abs(b.median_chg_pct||0)-Math.abs(a.median_chg_pct||0); });
+    if(f.length){ h+='<div class="asec">\uD83C\uDFAF 21-day Forecasts ('+f.length+')</div>';
+      h+=f.slice(0,14).map(function(x){ return '<div class="arow"><span><b>'+esc(x.name||x.symbol)+'</b><small>'+esc(x.cat||"")+' \u00b7 conf '+esc(x.confidence||"—")+'% \u00b7 '+esc(x.direction||"")+'</small></span><b class="'+((x.median_chg_pct||0)>=0?"up":"dn")+'">'+pc(x.median_chg_pct)+'<small style="text-align:right">'+nf(x.low10_end,0)+'\u2013'+nf(x.high90_end,0)+'</small></b></div>'; }).join("");
+    }
+    if((T.rotation||[]).length){ h+='<div class="asec">\uD83D\uDD04 Rotation (30d)</div>'+T.rotation.map(function(x){ return '<div class="arow"><span>'+esc(x.name)+'</span><b class="'+(x.chg30>=0?"up":"dn")+'">'+pc(x.chg30)+' \u00b7 conf '+esc(x.conf)+'%</b></div>'; }).join(""); }
+    if((T.movers||[]).length){ h+='<div class="asec">\u26A1 Biggest Forecast Moves</div>'+T.movers.slice(0,8).map(function(m){ return '<div class="arow"><span>'+esc(m.name||m.sym)+' <small>'+esc(m.cat||"")+'</small></span><b class="'+(m.median>=0?"up":"dn")+'">'+pc(m.median)+'</b></div>'; }).join(""); }
+    /* artha score */
+    if(M&&M.stocks){ var arr=Object.keys(M.stocks).map(function(k){ var s=M.stocks[k]; return {sym:k,n:s.n,s:s.s,f:s.f,t:s.t,se:s.se,ai:s.ai,sm:s.sm,p:s.p}; }).sort(function(a,b){ return (b.s||0)-(a.s||0); });
+      h+='<div class="asec">\uD83C\uDFC6 ArthaSaar Score \u00b7 top 12</div>';
+      h+=arr.slice(0,12).map(function(x){ return '<div class="arow"><span><b>'+esc(x.sym)+'</b><small>'+esc(x.n||"")+'</small></span><b>'+nf(x.s,0)+'/100<span class="scbar" style="width:'+Math.max(0,Math.min(60,(x.s||0)*0.6))+'px"></span></b></div>'; }).join("");
+      h+='<div class="anote">'+esc(M.note||"")+'</div>';
+    }
+    h+='<div class="anote">Forecasts by TimesFM-3 (google/timesfm-3.0-pytorch) via your repo pipeline \u00b7 X-ray from data/xray.json \u00b7 Score from data/mb-score.json. Indicative, not advice.</div>';
+    var card=document.createElement("div"); card.id="as-ai-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    [].slice.call(host.children).forEach(function(el){ if(el.id==="as-ai-card") return; if(el.classList&&(el.classList.contains("fshead")||el.classList.contains("as-holder"))) return; el.remove(); });
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("timesfm_forecasts.json"),J("xray.json"),J("mb-score.json")]).then(function(r){ T=r[0]||{}; X=r[1]||{}; M=r[2]||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
 </body></html>

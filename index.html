@@ -1305,7 +1305,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 #sectreemap-card .blk b{font-size:9px}
 #sectreemap-card .blk span{font-size:8.5px}
 .as-holder{position:relative}
-.as-holder .rclose{position:absolute;top:8px;right:8px;z-index:3}
+.as-holder .rclose{position:absolute;top:8px;right:8px;z-index:3;font:700 10px var(--font);padding:4px 9px;white-space:nowrap}
 </style>
 <script>
 /* ArthaSaar — round 10: RADAR button opens/closes its data card right under the header; smaller text */
@@ -1356,8 +1356,8 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 
 <style id="as-events-css">
 #as-events-card{font-size:12px}
-#as-events-card .evfil{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 12px}
-#as-events-card .evfil button{border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 11px;font:700 11px var(--font);cursor:pointer}
+#as-events-card .evfil{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:2px 0 12px;-webkit-overflow-scrolling:touch}
+#as-events-card .evfil button{flex:0 0 auto;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 10px;font:700 10px var(--font);cursor:pointer;white-space:nowrap}
 #as-events-card .evfil button.on{background:var(--accent);color:#fff;border-color:transparent}
 #as-events-card .evgrp{margin:0 0 13px}
 #as-events-card .evgt{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:0 0 5px}
@@ -1379,7 +1379,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
   function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
   var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  function fmt(iso){ if(!iso) return ""; var p=String(iso).slice(0,10).split("-"); if(p.length<3) return String(iso); return p[2]+" "+M[(+p[1])-1]; }
+  function fmt(iso){ if(!iso) return ""; var p=String(iso).slice(0,10).split("-"); if(p.length<3) return String(iso); return p[2]+"/"+p[1]+"/"+p[0].slice(2); }
   var FL={USD:"\uD83C\uDDFA\uD83C\uDDF8",EUR:"\uD83C\uDDEA\uD83C\uDDFA",GBP:"\uD83C\uDDEC\uD83C\uDDE7",JPY:"\uD83C\uDDEF\uD83C\uDDF5",AUD:"\uD83C\uDDE6\uD83C\uDDFA",CAD:"\uD83C\uDDE8\uD83C\uDDE6",CHF:"\uD83C\uDDE8\uD83C\uDDED",CNY:"\uD83C\uDDE8\uD83C\uDDF3",INR:"\uD83C\uDDEE\uD83C\uDDF3",IND:"\uD83C\uDDEE\uD83C\uDDF3",IN:"\uD83C\uDDEE\uD83C\uDDF3",US:"\uD83C\uDDFA\uD83C\uDDF8"};
   function ic(i){ i=(i||"").toLowerCase(); if(i.indexOf("high")>=0) return {t:"HIGH",bg:"#f7d0d0",fg:"#8a1414"}; if(i.indexOf("med")>=0) return {t:"MED",bg:"#fae6c0",fg:"#8a5a10"}; if(i.indexOf("hol")>=0) return {t:"HOL",bg:"#d6e4f7",fg:"#1b4a86"}; return {t:"LOW",bg:"#e8e8ea",fg:"#555"}; }
   function isIN(c){ return /INR|IND|^IN$/i.test(c||""); }
@@ -1459,6 +1459,286 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     });});
   }
   Promise.all([J("events.json"),J("results.json"),J("economy-pulse.json"),J("news.json"),J("crypto.json")]).then(function(r){ D={events:r[0]||{},results:r[1]||{},pulse:r[2]||{},news:r[3]||{},crypto:r[4]||{}}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },700);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+
+<style id="as-global-css">
+#as-global-card{font-size:12px}
+#as-global-card .grow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+#as-global-card .grow:last-child{border-bottom:0}
+#as-global-card .gflag{font-size:15px;width:22px;text-align:center}
+#as-global-card .gname{flex:1;min-width:0;font-weight:700;font-size:11.5px}
+#as-global-card .gname small{display:block;font-weight:400;font-size:9.5px;color:var(--dim)}
+#as-global-card .glvl{font:700 11px var(--mono);text-align:right;min-width:70px}
+#as-global-card .gchg{font:800 11px var(--mono);text-align:right;min-width:78px}
+#as-global-card .gsec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+</style>
+<script>
+/* ArthaSaar — round 12: GLOBAL card = all world main indices (points + %) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function num(x,d){ return (x==null||isNaN(x)) ? "—" : Number(x).toLocaleString("en-IN",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d}); }
+  function pct(x){ return (x==null||isNaN(x)) ? "—" : (x>=0?"+":"")+Number(x).toFixed(2)+"%"; }
+  function pts(level,p){ if(level==null||p==null||isNaN(level)||isNaN(p)) return null; return level - level/(1+p/100); }
+  function sgn(x){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toLocaleString("en-IN",{maximumFractionDigits:2}); }
+  var FL={"S&P 500":"\uD83C\uDDFA\uD83C\uDDF8","S&P500":"\uD83C\uDDFA\uD83C\uDDF8","Nasdaq":"\uD83C\uDDFA\uD83C\uDDF8","Dow Jones":"\uD83C\uDDFA\uD83C\uDDF8","Nikkei 225":"\uD83C\uDDEF\uD83C\uDDF5","Nikkei":"\uD83C\uDDEF\uD83C\uDDF5","Hang Seng":"\uD83C\uDDED\uD83C\uDDF0","Shanghai":"\uD83C\uDDE8\uD83C\uDDF3","DAX":"\uD83C\uDDE9\uD83C\uDDEA","FTSE 100":"\uD83C\uDDEC\uD83C\uDDE7","SENSEX":"\uD83C\uDDEE\uD83C\uDDF3","NIFTY 50":"\uD83C\uDDEE\uD83C\uDDF3"};
+  var CTRY={"S&P 500":"USA","Nasdaq":"USA","Dow Jones":"USA","Nikkei 225":"Japan","Nikkei":"Japan","Hang Seng":"Hong Kong","Shanghai":"China","DAX":"Germany","FTSE 100":"UK","SENSEX":"India"};
+  var W=null,G=null;
+  function build(){
+    var host=document.getElementById("v-global"); if(!host||!W||!G) return;
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){ if(el.id!=="as-global-card") el.remove(); });
+    if(document.getElementById("as-global-card")) return;
+    var m={};
+    (W.idx||[]).forEach(function(x){ if(/VIX/i.test(x.n)) return; m[x.n]={n:x.n,level:x.c,p:x.d1,m1:x.m1}; });
+    (G.items||[]).forEach(function(i){ if(/S&P 500|Nasdaq|Dow Jones|SENSEX|Nikkei|Hang Seng|FTSE|DAX|Shanghai/i.test(i.name) && !m[i.name]) m[i.name]={n:i.name,level:i.price,p:i.chg_pct,m1:null}; });
+    var list=Object.keys(m).map(function(k){return m[k];});
+    list.sort(function(a,b){ return Math.abs(b.p||0)-Math.abs(a.p||0); });
+    var h='<div class="gsec" style="margin-top:0">\uD83C\uDF0D World Main Indices ('+list.length+')</div>';
+    list.forEach(function(x){ var c=(x.p||0)>=0?"up":"dn"; var d=pts(x.level,x.p);
+      h+='<div class="grow"><span class="gflag">'+(FL[x.n]||"\uD83C\uDFF3\uFE0F")+'</span><span class="gname">'+esc(x.n)+'<small>'+esc(CTRY[x.n]||"")+(x.m1!=null?" \u00b7 1M "+pct(x.m1):"")+'</small></span><span class="glvl">'+num(x.level,2)+'</span><span class="gchg '+c+'">'+sgn(d)+'<br><small>'+pct(x.p)+'</small></span></div>';
+    });
+    h+='<div class="gsec">\uD83D\uDCB0 Commodities &amp; FX</div>';
+    (G.items||[]).filter(function(i){ return !/S&P 500|Nasdaq|Dow Jones|SENSEX|Nikkei|Hang Seng|FTSE|DAX|Shanghai/i.test(i.name); }).forEach(function(i){
+      var c=(i.chg_pct||0)>=0?"up":"dn";
+      h+='<div class="grow"><span class="gflag">'+(/Gold/i.test(i.name)?"\uD83E\uDD47":/Silver/i.test(i.name)?"\uD83E\uDE9E":/Crude|Gas/i.test(i.name)?"\uD83D\uDEE2\uFE0F":/USD-INR/i.test(i.name)?"\uD83D\uDCB1":/Dollar/i.test(i.name)?"\uD83D\uDCB5":/Yield/i.test(i.name)?"\uD83C\uDFE6":/Copper/i.test(i.name)?"\uD83D\uDD36":"\uD83D\uDCCA")+'</span><span class="gname">'+esc(i.name)+'</span><span class="glvl">'+num(i.price,2)+'</span><span class="gchg '+c+'">'+pct(i.chg_pct)+'</span></div>';
+    });
+    var card=document.createElement("div"); card.id="as-global-card"; card.className="card"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead");
+    if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("world.json"),J("global.json")]).then(function(r){ W=r[0]||{}; G=r[1]||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },700);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+<style id="as-fund-css">
+#v-fundamentals .funddetail{font-size:12px}
+#v-fundamentals .funddetail .fdhead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#v-fundamentals .funddetail .fdname{font:800 14px var(--font)}
+#v-fundamentals .funddetail .fdsub{font-size:10px;color:var(--dim)}
+#v-fundamentals .fdgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
+#v-fundamentals .fdcell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+#v-fundamentals .fdcell .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+#v-fundamentals .fdcell .v{font:800 13px var(--mono)}
+#v-fundamentals .fdsec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:12px 0 5px}
+#v-fundamentals .fdrow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+#v-fundamentals .fdrow:last-child{border-bottom:0}
+#v-fundamentals .fdsug{border:1px solid var(--border);border-radius:9px;overflow:hidden;margin:0 0 10px}
+#v-fundamentals .fdsug .sgr{padding:7px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:11.5px;display:flex;justify-content:space-between}
+#v-fundamentals .fdsug .sgr:last-child{border-bottom:0}
+#v-fundamentals tbody tr{cursor:pointer}
+</style>
+<script>
+/* ArthaSaar — round 13: Fundamentals search -> merged company card (summary + fundamental + technical) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var SF=null,FUND=null,B=null,CI=null,BM={};
+  function detail(sym){
+    var host=document.getElementById("v-fundamentals"); if(!host) return;
+    var f=(FUND||{})[sym]||{}, sf=(SF||{})[sym]||{}, sc=BM[sym]||{}, ci=(CI||{})[sym]||{};
+    var old=host.querySelector(".funddetail"); if(old) old.remove();
+    var h='<div class="fdhead"><div><div class="fdname">'+esc(ci.name||sym)+'</div><div class="fdsub">'+esc(sym)+' \u00b7 '+esc(ci.sector||"")+(ci.industry?" \u00b7 "+esc(ci.industry):"")+'</div></div><button class="xbtn fdx" type="button">\u2715</button></div>';
+    h+='<div class="fdgrid">';
+    h+='<div class="fdcell"><div class="k">price</div><div class="v">'+nf(sc.price,2)+'</div></div>';
+    h+='<div class="fdcell"><div class="k">day</div><div class="v '+(sc.change_pct>=0?"up":"dn")+'">'+pc(sc.change_pct)+'</div></div>';
+    h+='<div class="fdcell"><div class="k">mcap \u20b9Cr</div><div class="v">'+nf((sf["Market Cap"]||0)/100,0)+'</div></div>';
+    h+='<div class="fdcell"><div class="k">P/E</div><div class="v">'+nf(sf["Stock P/E"]!=null?sf["Stock P/E"]:f.trailingPE,1)+'</div></div>';
+    h+='<div class="fdcell"><div class="k">P/B</div><div class="v">'+nf((sf["Book Value"]&&sf["Current Price"])?sf["Current Price"]/sf["Book Value"]:f.priceToBook,2)+'</div></div>';
+    h+='<div class="fdcell"><div class="k">div yield</div><div class="v">'+nf(sf["Dividend Yield"],2)+'%</div></div>';
+    h+='<div class="fdcell"><div class="k">ROE</div><div class="v">'+nf(sf["ROE"]!=null?sf["ROE"]:(f.returnOnEquity!=null?f.returnOnEquity*100:null),1)+'%</div></div>';
+    h+='<div class="fdcell"><div class="k">ROCE</div><div class="v">'+nf(sf["ROCE"],1)+'%</div></div>';
+    h+='<div class="fdcell"><div class="k">face value</div><div class="v">'+nf(sf["Face Value"],1)+'</div></div>';
+    h+='</div>';
+    h+='<div class="fdsec">\uD83D\uDCCA Technical Analysis</div>';
+    h+='<div class="fdrow"><span>RSI-14</span><b>'+nf(sc.rsi14,0)+'</b></div>';
+    h+='<div class="fdrow"><span>EMA 20 / 200</span><b>'+nf(sc.ema20,1)+' / '+nf(sc.ema200,1)+'</b></div>';
+    h+='<div class="fdrow"><span>Above 200-DMA</span><b class="'+(sc.above_ema200?"up":"dn")+'">'+(sc.above_ema200?"Yes":"No")+'</b></div>';
+    h+='<div class="fdrow"><span>MACD hist</span><b>'+nf(sc.macd_hist,2)+'</b></div>';
+    h+='<div class="fdrow"><span>Vol vs 20d avg</span><b>'+nf(sc.vol_vs_avg20,1)+'\u00d7</b></div>';
+    h+='<div class="fdrow"><span>From 52w high</span><b class="dn">'+pc(sc.from_52w_high_pct)+'</b></div>';
+    h+='<div class="fdrow"><span>52w H / L</span><b>'+nf(sc.high_52w,1)+' / '+nf(sc.low_52w,1)+'</b></div>';
+    if(sf["Sales"]&&sf["Sales"].length){ h+='<div class="fdsec">\uD83D\uDCB9 Sales (\u20b9Cr, last 6q)</div><div class="fdrow"><span>'+sf["Sales"].slice(-6).map(function(v){return nf(v,0);}).join(" \u00b7 ")+'</span></div>'; }
+    if(sf["Net Profit"]&&sf["Net Profit"].length){ h+='<div class="fdsec">\uD83D\uDCB0 Net Profit (\u20b9Cr, last 6q)</div><div class="fdrow"><span>'+sf["Net Profit"].slice(-6).map(function(v){return nf(v,0);}).join(" \u00b7 ")+'</span></div>'; }
+    var card=document.createElement("div"); card.className="card funddetail"; card.style.margin="0 0 10px"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+    card.querySelector(".fdx").addEventListener("click", function(){ card.remove(); });
+    try{ card.scrollIntoView({behavior:"smooth",block:"start"}); }catch(_){}
+  }
+  function suggest(q){
+    var host=document.getElementById("v-fundamentals"); if(!host) return;
+    var old=host.querySelector(".fdsug"); if(old) old.remove();
+    q=(q||"").toLowerCase().trim(); if(q.length<1) return;
+    var keys=Object.keys(SF||{});
+    var hits=keys.filter(function(k){ var n=((CI||{})[k]||{}).name||""; return k.toLowerCase().indexOf(q)>-1 || n.toLowerCase().indexOf(q)>-1; }).slice(0,6);
+    if(!hits.length) return;
+    var box=document.createElement("div"); box.className="fdsug card"; box.style.padding="0";
+    box.innerHTML=hits.map(function(k){ return '<div class="sgr" data-sym="'+esc(k)+'"><span><b>'+esc(k)+'</b> '+esc(((CI||{})[k]||{}).name||"")+'</span><b>\u203a</b></div>'; }).join("");
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(box, fh.nextSibling); else host.insertBefore(box, host.firstChild);
+    box.querySelectorAll(".sgr").forEach(function(r){ r.addEventListener("click", function(){ var s=r.getAttribute("data-sym"); var inp=host.querySelector("input[type=search]"); if(inp) inp.value=s; box.remove(); detail(s); }); });
+  }
+  function wire(){
+    var host=document.getElementById("v-fundamentals"); if(!host||host._fdw) return; host._fdw=1;
+    var inp=host.querySelector("input[type=search]");
+    if(inp){
+      inp.addEventListener("input", function(){ suggest(inp.value); });
+      inp.addEventListener("keydown", function(e){ if(e.key==="Enter"){ var v=inp.value.toLowerCase().trim(); var k=Object.keys(SF||{}).filter(function(x){ return x.toLowerCase()===v || ((CI||{})[x]||{}).name && ((CI||{})[x]||{}).name.toLowerCase().indexOf(v)>-1; })[0]; if(k){ var b=host.querySelector(".fdsug"); if(b) b.remove(); detail(k); } } });
+    }
+    host.addEventListener("click", function(e){
+      var tr=e.target.closest("tbody tr"); if(!tr) return;
+      var m=tr.querySelector("small.mono"); if(!m) return;
+      detail(m.textContent.trim());
+    }, true);
+  }
+  Promise.all([J("screener-fundamentals.json"),J("fundamentals.json"),J("brain-screener.json"),J("company-index.json")]).then(function(r){
+    SF=(r[0]&&r[0].stocks)||{}; FUND=r[1]||{}; var b=r[2]||{}; CI=r[3]||{}; (b.stocks||[]).forEach(function(s){ BM[s.symbol]=s; });
+    wire();
+  });
+  var n=0,iv=setInterval(function(){ wire(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
+})();
+</script>
+
+<script>
+/* ArthaSaar — round 14: Events radar = the single biggest market-moving event for India */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function dd(iso){ var p=String(iso||"").slice(0,10).split("-"); return p.length<3?String(iso||""):(p[2]+"/"+p[1]+"/"+p[0].slice(2)); }
+  function row(lbl,date,title,cls){ return "<div class='zrow'><span><b>"+esc(lbl)+"</b><br><small style='color:var(--dim);font-size:10px'>"+esc(title)+"</small></span><b class='"+(cls||"")+"'>"+esc(date)+"</b></div>"; }
+  var E=null;
+  function build(){
+    var host=document.getElementById("v-events"); if(!host||!E) return;
+    var holder=host.querySelector(".as-holder"); if(!holder) return;
+    var r=holder.querySelector(".radar"); if(!r) return;
+    if(r._evr) return; r._evr=1;
+    var kd=(E.key_dates||[]).slice().sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+    var wk=(E.week||[]).slice().sort(function(a,b){ return String(a.date_ist+(a.time_ist||"")).localeCompare(String(b.date_ist+(b.time_ist||""))); });
+    var inKd=kd.filter(function(x){ return /IND|INR/i.test(x.country); });
+    var inWk=wk.filter(function(x){ return /INR|IND/i.test(x.country) && /high/i.test(x.impact||""); });
+    var gKd=kd.filter(function(x){ return !/IND|INR/i.test(x.country); });
+    var gWk=wk.filter(function(x){ return !/INR|IND/i.test(x.country) && /high/i.test(x.impact||""); });
+    var h="<div class='rt'>\u26A1 EVENT IMPACT RADAR</div><div class='rs'>India pe sabse zyada asar karne wale events</div>";
+    if(inKd[0]) h+=row("\uD83C\uDDEE\uD83C\uDDF3 "+inKd[0].title.slice(0,40), dd(inKd[0].date), inKd[0].title, "dn");
+    if(inWk[0]) h+=row("\uD83C\uDDEE\uD83C\uDDF3 "+inWk[0].title.slice(0,40), dd(inWk[0].date_ist), inWk[0].title, "dn");
+    if(gKd[0]) h+=row("\uD83C\uDF0D "+gKd[0].title.slice(0,40), dd(gKd[0].date), gKd[0].title, "hold");
+    else if(gWk[0]) h+=row("\uD83C\uDF0D "+gWk[0].title.slice(0,40), dd(gWk[0].date_ist), gWk[0].title, "hold");
+    h+="<div class='rs' style='margin-top:7px'>Rate decisions, inflation aur jobs data hi India ko sabse zyada hilate hain \u2014 FII flow aur USD/INR ke through.</div>";
+    r.innerHTML=h;
+  }
+  J("events.json").then(function(e){ E=e||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },700);
+  window.addEventListener("hashchange",function(){ setTimeout(function(){ var r=document.querySelector("#v-events .as-holder .radar"); if(r) r._evr=0; build(); },350); });
+})();
+</script>
+
+<style id="as-learn-css">
+#v-learn .lmods{display:flex;flex-wrap:nowrap;gap:6px;overflow:hidden}
+#v-learn .lmods .lmod{flex:1 1 0;min-width:0;padding:8px 6px}
+#v-learn .lmods .lmod b{font-size:11px;display:block;line-height:1.2}
+#v-learn .lmods .lmod span{font-size:9px;color:var(--dim);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#as-learn-hub{font-size:12px}
+#as-learn-hub .lhsec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:13px 0 5px}
+#as-learn-hub .lhline{padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px;line-height:1.45}
+#as-learn-hub .lhline:last-child{border-bottom:0}
+#as-learn-hub .lhline b{font-weight:700}
+#as-learn-hub .lhgl{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+#as-learn-hub .lhgl .t{font-weight:800;min-width:88px;font-size:11px}
+#as-learn-hub .lhgl .m{font-size:10.5px;color:var(--dim);flex:1}
+</style>
+<script>
+/* ArthaSaar — round 15: Learn hub — modules on one line + structured content + candlestick glossary */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  var L=null;
+  function build(){
+    var host=document.getElementById("v-learn"); if(!host||!L) return;
+    if(document.getElementById("as-learn-hub")) return;
+    var h="";
+    var lv=L.levels||{};
+    var lvk=Object.keys(lv);
+    if(lvk.length){ h+='<div class="lhsec">\uD83C\uDF31 Learning Path</div>'; lvk.forEach(function(k){ h+='<div class="lhline"><b style="text-transform:capitalize">'+esc(k)+'</b><br>'+(lv[k]||[]).slice(0,4).map(function(x){return "\u2022 "+esc(x);}).join("<br>")+'</div>'; }); }
+    if((L.rules||[]).length){ h+='<div class="lhsec">\uD83D\uDEE1\uFE0F Golden Rules ('+L.rules.length+')</div>'; L.rules.forEach(function(r){ h+='<div class="lhline"><b>'+esc(r.rule)+'</b><br><span style="color:var(--dim);font-size:10.5px">'+esc(r.why)+'</span></div>'; }); }
+    if((L.glossary||[]).length){ h+='<div class="lhsec">\uD83D\uDD6F\uFE0F Candlestick &amp; Market Glossary ('+L.glossary.length+')</div>'; L.glossary.forEach(function(g){ h+='<div class="lhgl"><span class="t">'+esc(g.term)+'</span><span class="m">'+esc(g.meaning)+'</span></div>'; }); }
+    if((L.psychology||[]).length){ h+='<div class="lhsec">\uD83E\uDDE0 Trading Psychology</div>'; L.psychology.slice(0,8).forEach(function(p){ h+='<div class="lhline"><b>'+esc(p.topic)+'</b><br><span style="color:var(--dim);font-size:10.5px">'+esc(p.point)+'</span></div>'; }); }
+    var st=L.strategies||{}, stk=Object.keys(st);
+    if(stk.length){ h+='<div class="lhsec">\uD83C\uDFAF Strategies</div>'; stk.forEach(function(k){ h+='<div class="lhline"><b style="text-transform:capitalize">'+esc(k)+'</b><br>'+(st[k]||[]).slice(0,3).map(function(s){ return "\u2022 <b>"+esc(s.name)+"</b> \u2014 "+esc((s.how||"").slice(0,120)); }).join("<br>")+'</div>'; }); }
+    var ss=L.stock_selection||{}, ssk=Object.keys(ss);
+    if(ssk.length){ h+='<div class="lhsec">\uD83D\uDD0D Stock Selection Checklist</div>'; ssk.forEach(function(k){ h+='<div class="lhline"><b style="text-transform:capitalize">'+esc(k.replace(/_/g," "))+'</b><br>'+(ss[k]||[]).slice(0,5).map(function(x){return "\u2022 "+esc(x);}).join("<br>")+'</div>'; }); }
+    if((L.quick_tips||[]).length){ h+='<div class="lhsec">\u26A1 Quick Tips</div>'; h+=(L.quick_tips||[]).map(function(t){ return '<div class="lhline">\u2022 '+esc(t)+'</div>'; }).join(""); }
+    if(L.note) h+='<div class="lhline" style="color:var(--dim);font-size:10px;margin-top:8px">'+esc(L.note)+'</div>';
+    var card=document.createElement("div"); card.id="as-learn-hub"; card.className="card"; card.style.marginTop="10px"; card.innerHTML=h;
+    host.appendChild(card);
+  }
+  J("learn-content.json").then(function(l){ L=l||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },700);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+<style id="as-news-css">
+#as-news-card{font-size:12px}
+#as-news-card .ntabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:2px 0 11px;-webkit-overflow-scrolling:touch}
+#as-news-card .ntabs button{flex:0 0 auto;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 11px;font:700 10.5px var(--font);cursor:pointer;white-space:nowrap}
+#as-news-card .ntabs button.on{background:var(--accent);color:#fff;border-color:transparent}
+#as-news-card .nfeat{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:12px}
+#as-news-card .nfcard{display:flex;align-items:center;gap:9px;border:1px solid var(--border);border-radius:10px;padding:8px 10px}
+#as-news-card .nfcard .ic{font-size:17px}
+#as-news-card .nfcard b{font-size:11px;display:block}
+#as-news-card .nfcard small{font-size:9.5px;color:var(--dim)}
+#as-news-card .nfeedt{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:0 0 5px}
+#as-news-card .nitem{padding:8px 0;border-bottom:1px solid var(--border)}
+#as-news-card .nitem:last-child{border-bottom:0}
+#as-news-card .nitem .tag{font:800 8.5px var(--font);letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+#as-news-card .nitem b{display:block;font-size:11.5px;font-weight:700;line-height:1.4;margin:2px 0}
+#as-news-card .nitem small{font-size:9.5px;color:var(--dim)}
+#as-news-card .nitem a{color:inherit;text-decoration:none}
+</style>
+<script>
+/* ArthaSaar — round 16: News card = tabs + featured cards + live real feed */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  var N=null,P=null;
+  function ago(iso){ if(!iso) return ""; try{ var d=new Date(iso), m=(Date.now()-d.getTime())/60000; if(isNaN(m)) return String(iso).slice(0,10); if(m<60) return Math.max(1,Math.round(m))+" min ago"; if(m<1440) return Math.round(m/60)+" hr ago"; return Math.round(m/1440)+" d ago"; }catch(e){ return ""; } }
+  function build(){
+    var host=document.getElementById("v-news"); if(!host||!N) return;
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){ if(el.id!=="as-news-card") el.remove(); });
+    if(document.getElementById("as-news-card")) return;
+    var items=(N.items||[]);
+    var econ=(P&&P.ind||[]).length;
+    var h='<div class="ntabs"><button class="on" data-t="all">All</button><button data-t="Markets">Markets</button><button data-t="Crypto">Crypto</button><button data-t="Global">Global</button><button data-t="Economy">Economy</button></div>';
+    h+='<div class="nfeat">';
+    h+='<div class="nfcard"><span class="ic">\uD83D\uDCCA</span><span><b>ECONOMY PULSE</b><small>macro \u00b7 rates \u00b7 policy \u2014 India ka pulse'+(econ?" \u00b7 "+econ+" releases":"")+'</small></span></div>';
+    h+='<div class="nfcard"><span class="ic">\uD83D\uDCF6</span><span><b>NEWS VOLUME</b><small>market news ki traffic \u2014 '+items.length+' items \u00b7 '+ago(N.updated)+'</small></span></div>';
+    h+='<div class="nfcard"><span class="ic">\u2705</span><span><b>DAILY AUTHENTIC NEWS</b><small>verified sources only \u2014 koi bhondu tip nahi</small></span></div>';
+    h+='</div>';
+    h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
+    h+=items.map(function(x){ return '<div class="nitem" data-topic="'+esc(x.topic)+'"><span class="tag">'+esc(x.topic||"NEWS")+'</span><b><a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a></b><small>'+esc(x.publisher||"")+' \u00b7 '+ago(x.published)+'</small></div>'; }).join("");
+    h+='</div>';
+    var card=document.createElement("div"); card.id="as-news-card"; card.className="card"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead");
+    if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+    card.querySelectorAll(".ntabs button").forEach(function(b){ b.addEventListener("click", function(){
+      card.querySelectorAll(".ntabs button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+      var t=b.getAttribute("data-t");
+      card.querySelectorAll(".nitem").forEach(function(it){ it.style.display=(t==="all"||it.getAttribute("data-topic")===t)?"block":"none"; });
+    });});
+  }
+  Promise.all([J("news.json"),J("economy-pulse.json")]).then(function(r){ N=r[0]||{}; P=r[1]||{}; build(); });
   var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },700);
   window.addEventListener("hashchange",function(){ setTimeout(build,300); });
 })();

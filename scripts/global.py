@@ -18,6 +18,10 @@ GLOBAL = [
     ("000001.SS", "Shanghai", "China", "idx"), ("^VIX", "VIX (Fear)", "US", "idx"),
     ("GC=F", "Gold", "commodity", "cmd"), ("CL=F", "Crude Oil", "commodity", "cmd"),
     ("HG=F", "Copper", "commodity", "cmd"), ("SI=F", "Silver", "commodity", "cmd"),
+    ("BZ=F", "Brent Crude", "commodity", "cmd"), ("NG=F", "Natural Gas", "commodity", "cmd"),
+    ("PL=F", "Platinum", "commodity", "cmd"), ("PA=F", "Palladium", "commodity", "cmd"),
+    ("ZC=F", "Corn", "commodity", "cmd"), ("ZW=F", "Wheat", "commodity", "cmd"),
+    ("ZS=F", "Soybean", "commodity", "cmd"), ("KC=F", "Coffee", "commodity", "cmd"),
     ("INR=X", "USD/INR", "fx", "cmd"),
 ]
 INDIA = [("^NSEI", "NIFTY 50"), ("^NSEBANK", "Bank Nifty"), ("^CNXIT", "Nifty IT"), ("^CNXPHARMA", "Nifty Pharma")]

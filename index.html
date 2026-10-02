@@ -303,7 +303,6 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       <button data-go="indices">Indices</button>
       <button data-go="heatmap">Sector Map</button>
       <button data-go="screener">Screener</button>
-      <button data-go="company">Company</button>
     </div>
     <div class="nrow"><span class="ng">STOCKS</span>
       <button data-go="fundamentals">Fundamentals</button>
@@ -446,7 +445,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <script>
 (function(){
 "use strict";
-var SECS=[["home","Home","aapka hub"],["company","Company Card","search any stock"],["indices","Indices","139 tracked"],["heatmap","Sector Map","today by sector"],["screener","Screener","2,085 stocks"],["fundamentals","Fundamentals","PE ROE debt"],["mf","MF Tracker","nav sip funds"],["deepfund","Deep Fund","screener.in weekly"],["filings","Filings","company results"],["futures","Futures","F&O chains"],["gti","GTI · Charts · AI","zones charts forecast"],["ipo","IPO","terminal GMP listing"],["aibrain","AI Brain","mood crash report"],["internals","Internals","breadth TRIN McClellan"],["crypto","Crypto","top 100 coins"],["global","Global","US gold crude"],["news","News","India market"],["events","Events","GDP jobs RBI"],["portfolio","Portfolio","holdings P/L"],["learn","Learn","strategies studies notes"]];
+var SECS=[["home","Home","aapka hub"],["indices","Indices","139 tracked"],["heatmap","Sector Map","today by sector"],["screener","Screener","2,085 stocks"],["fundamentals","Fundamentals","PE ROE debt"],["mf","MF Tracker","nav sip funds"],["deepfund","Deep Fund","screener.in weekly"],["filings","Filings","company results"],["futures","Futures","F&O chains"],["gti","GTI · Charts · AI","zones charts forecast"],["ipo","IPO","terminal GMP listing"],["aibrain","AI Brain","mood crash report"],["internals","Internals","breadth TRIN McClellan"],["crypto","Crypto","top 100 coins"],["global","Global","US gold crude"],["news","News","India market"],["events","Events","GDP jobs RBI"],["portfolio","Portfolio","holdings P/L"],["learn","Learn","strategies studies notes"]];
 var clk=document.getElementById("clock");
 function tick(){var d=new Date();var h=d.getHours();var ap=h>=12?"PM":"AM";h=h%12;if(h===0)h=12;clk.textContent=[h,d.getMinutes(),d.getSeconds()].map(function(n){return String(n).padStart(2,"0");}).join(":")+" "+ap;}
 tick();setInterval(tick,1000);
@@ -1031,6 +1030,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
   var cq = document.querySelector("#v-crypto input"); if (cq) cq.addEventListener("input", function () { renderCrypto(cq.value); });
 
   function companySummary(sym) {
+    if(window.openCompanyFS){ window.openCompanyFS(sym); return; }
     var f = FUND[sym] || {}, sc = (B.stocks || []).filter(function (s) { return s.symbol === sym; })[0] || {}, sq = sfFor(sym) || {}, ci = (window.__ci || {})[sym] || {};
     var html = "<div class='radar'><div class='rt'>🏢 " + sym + " — SUMMARY</div><div class='rs'>" + esc(ci.name || sym) + " · " + esc(ci.sector || f.sector || "") + "</div><div class='rgrid'>" +
       "<div class='rc'><b>" + nf(sc.price, 2) + "</b><span>price</span></div>" +
@@ -1544,6 +1544,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
   function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
   var SF=null,FUND=null,B=null,CI=null,BM={};
   function detail(sym){
+    if(window.openCompanyFS){ window.openCompanyFS(sym); return; }
     var host=document.getElementById("v-fundamentals"); if(!host) return;
     var f=(FUND||{})[sym]||{}, sf=(SF||{})[sym]||{}, sc=BM[sym]||{}, ci=(CI||{})[sym]||{};
     var old=host.querySelector(".funddetail"); if(old) old.remove();
@@ -1778,6 +1779,9 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     if(/MIDCAP\s*150/.test(n)) return {k:"NIFTY MIDCAP 150", l:L.niftymidcap150};
     if(/SMALLCAP\s*250/.test(n)) return {k:"NIFTY SMALLCAP 250", l:L.niftysmallcap250};
     if(/NIFTY\s*500/.test(n)) return {k:"NIFTY 500", l:L.nifty500};
+    if(/LARGEMIDCAP\s*250/.test(n)) return {k:"NIFTY LARGEMIDCAP 250", l:(L.nifty50||[]).concat(L.niftynext50||[]).concat(L.niftymidcap150||[])};
+    if(/MIDSMALLCAP\s*400/.test(n)) return {k:"NIFTY MIDSMALCAP 400", l:(L.niftymidcap150||[]).concat(L.niftysmallcap250||[])};
+    if(/NIFTY\s*100/.test(n) && !/500|200/.test(n)) return {k:"NIFTY 100", l:(L.nifty50||[]).concat(L.niftynext50||[])};
     if(/NIFTY\s*50/.test(n)) return {k:"NIFTY 50", l:L.nifty50};
     var map=[["BANK","Bank"],["IT","IT"],["AUTO","Auto"],["PHARMA","Pharma"],["FMCG","FMCG"],["METAL","Metal"],["ENERGY","Energy"],["REALTY","Realty"],["MEDIA","Media"],["FINANCIAL|FIN SERV|FINNIFTY","Fin Serv"],["HEALTHCARE","Healthcare"],["CONSUMER DUR|CONS DUR","Cons Dur"],["OIL","Oil & Gas"],["INFRA","Infra"]];
     for(var i=0;i<map.length;i++){ if(new RegExp(map[i][0]).test(n) && S[map[i][1]]) return {k:"NIFTY "+map[i][1].toUpperCase(), l:S[map[i][1]]}; }
@@ -1801,7 +1805,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     box.querySelector(".ifx").addEventListener("click", function(){ box.remove(); });
     box.querySelectorAll("tr[data-sym]").forEach(function(tr){ tr.addEventListener("click", function(){
       var s=tr.getAttribute("data-sym"); box.remove();
-      try{ if(typeof openCompany==="function"){ location.hash="#company"; setTimeout(function(){ openCompany(s); },350); return; } }catch(_){}
+      if(window.openCompanyFS){ window.openCompanyFS(s); return; }
       location.hash="#company";
     });});
   }
@@ -1814,6 +1818,156 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
   });
   var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
   window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
+})();
+</script>
+
+
+<style id="as-cofs-css">
+.cofs{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;flex-direction:column}
+.cofs .cohead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface)}
+.cofs .cohead b{font:800 14px var(--font)}
+.cofs .cohead small{display:block;font-weight:400;font-size:10px;color:var(--dim)}
+.cofs .cobody{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 14px 60px;font-size:12px}
+.cofs .cogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.cofs .cocell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+.cofs .cocell .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.cofs .cocell .v{font:800 13px var(--mono)}
+.cofs .cosec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:15px 0 6px}
+.cofs .corow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.cofs .corow:last-child{border-bottom:0}
+.cofs .cobadge{display:inline-block;border-radius:8px;padding:4px 9px;font:800 11px var(--font);margin-bottom:4px}
+.cofs .cobars{display:flex;height:16px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.cofs .cobars i{display:block;height:100%}
+.cofs .conews{padding:7px 0;border-bottom:1px solid var(--border)}
+.cofs .conews:last-child{border-bottom:0}
+.cofs .conews a{color:inherit;text-decoration:none;font-size:11.5px;font-weight:700;line-height:1.4}
+.cofs .conews small{display:block;font-size:9.5px;color:var(--dim)}
+.cofs .conote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 18: full-screen company card (summary + fundamental + technical + S/R + chart + stage + holding + news) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var FUND={},SF={},BM={},CI={},CAND={},GTI={},RES=[],NEWS=[];
+  function stage(sc){
+    if(!sc||sc.price==null) return {t:"—",bg:"#e8e8ea",fg:"#555"};
+    var a=sc.above_ema200, e20=sc.ema20, e200=sc.ema200;
+    if(a && e20!=null && e200!=null && e20>e200) return {t:"STAGE 2 \u00b7 UPTREND",bg:"#cdeccd",fg:"#0a5c1e"};
+    if(a) return {t:"STAGE 3 \u00b7 TOPPING",bg:"#fae6c0",fg:"#8a5a10"};
+    if(e20!=null && e200!=null && e20<e200) return {t:"STAGE 4 \u00b7 DOWNTREND",bg:"#f6c3c3",fg:"#7a1010"};
+    return {t:"STAGE 1 \u00b7 BASE",bg:"#e6e6ea",fg:"#555"};
+  }
+  function drawChart(cv, closes, prev){
+    var dpr=window.devicePixelRatio||1, w=cv.clientWidth||340, h=150;
+    cv.width=w*dpr; cv.height=h*dpr; cv.style.height=h+"px";
+    var ctx=cv.getContext("2d"); ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+    if(!closes||closes.length<2) return;
+    var mn=Math.min.apply(null,closes), mx=Math.max.apply(null,closes);
+    if(prev!=null){ mn=Math.min(mn,prev); mx=Math.max(mx,prev); }
+    var pad=8, rng=(mx-mn)||1;
+    function X(i){ return pad+(w-2*pad)*i/(closes.length-1); }
+    function Y(v){ return h-pad-(h-2*pad)*(v-mn)/rng; }
+    if(prev!=null){ ctx.strokeStyle="#c9c9d0"; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(pad,Y(prev)); ctx.lineTo(w-pad,Y(prev)); ctx.stroke(); ctx.setLineDash([]); }
+    var up=closes[closes.length-1]>=closes[0];
+    ctx.strokeStyle=up?"#16a34a":"#dc2626"; ctx.lineWidth=1.8; ctx.beginPath();
+    closes.forEach(function(v,i){ if(i===0) ctx.moveTo(X(i),Y(v)); else ctx.lineTo(X(i),Y(v)); });
+    ctx.stroke();
+    ctx.font="9px monospace";
+    ctx.fillStyle="rgba(255,255,255,.85)"; ctx.fillRect(pad,2,46,12); ctx.fillRect(pad,h-13,46,12);
+    ctx.fillStyle="rgba(120,120,130,.95)";
+    ctx.fillText(nf(mx,1),pad+1,11); ctx.fillText(nf(mn,1),pad+1,h-4);
+  }
+  function open(sym){
+    if(!sym) return;
+    sym=String(sym).toUpperCase();
+    var old=document.querySelector(".cofs"); if(old) old.remove();
+    var f=FUND[sym]||{}, sf=SF[sym]||{}, sc=BM[sym]||{}, ci=CI[sym]||{}, g=GTI[sym]||{}, cd=CAND[sym]||{};
+    var box=document.createElement("div"); box.className="cofs";
+    var h='<div class="cohead"><div><b>'+esc(ci.name||sym)+'</b><small>'+esc(sym)+' \u00b7 '+esc(ci.sector||f.sector||"")+(ci.industry||f.industry?" \u00b7 "+esc(ci.industry||f.industry):"")+'</small></div><button class="xbtn cox" type="button">\u2715 CLOSE</button></div>';
+    h+='<div class="cobody">';
+    /* summary */
+    h+='<div class="cogrid">';
+    h+='<div class="cocell"><div class="k">price</div><div class="v">'+nf(sc.price!=null?sc.price:sf["Current Price"],2)+'</div></div>';
+    h+='<div class="cocell"><div class="k">day</div><div class="v '+(sc.change_pct>=0?"up":"dn")+'">'+pc(sc.change_pct)+'</div></div>';
+    h+='<div class="cocell"><div class="k">mcap \u20b9Cr</div><div class="v">'+nf(((sf["Market Cap"]||0)||((f.marketCap||0)/1e7))/100,0)+'</div></div>';
+    h+='<div class="cocell"><div class="k">52w high</div><div class="v">'+nf(sc.high_52w||sf["high_52w"],1)+'</div></div>';
+    h+='<div class="cocell"><div class="k">52w low</div><div class="v">'+nf(sc.low_52w||sf["low_52w"],1)+'</div></div>';
+    h+='<div class="cocell"><div class="k">beta</div><div class="v">'+nf(f.beta,2)+'</div></div>';
+    h+='</div>';
+    /* stage */
+    var st=stage(sc);
+    h+='<div class="cosec">\uD83D\uDCCD Stage (Wyckoff-style)</div><span class="cobadge" style="background:'+st.bg+';color:'+st.fg+'">'+esc(st.t)+'</span>';
+    /* chart */
+    h+='<div class="cosec">\uD83D\uDCC8 Price Chart</div>';
+    if(cd["1h"]&&cd["1h"].c&&cd["1h"].c.length){ h+='<div class="card" style="padding:8px;margin:0 0 4px"><canvas id="coChart" style="width:100%;display:block"></canvas><div style="font-size:9.5px;color:var(--dim);margin-top:3px">intraday 1h \u00b7 '+cd["1h"].c.length+' bars \u00b7 prev close dashed</div></div>'; }
+    else if(sc.high_52w&&sc.low_52w){ var pos=Math.max(0,Math.min(100,((sc.price-sc.low_52w)/((sc.high_52w-sc.low_52w)||1))*100)); h+='<div class="card" style="padding:10px;margin:0 0 4px"><div style="font-size:10px;color:var(--dim)">52-week range position</div><div class="cobars" style="margin-top:6px"><i style="width:'+pos+'%;background:var(--accent)"></i></div><div style="font-size:9.5px;color:var(--dim);margin-top:3px">'+nf(sc.low_52w,0)+' \u2014 '+nf(sc.high_52w,0)+' \u00b7 now '+nf(pos,0)+'% of range</div></div>'; }
+    else h+='<div class="conote">Intraday chart feed covers 15 symbols only (RELIANCE, HDFCBANK, ICICIBANK, INFY, TCS, SBIN, TATASTEEL, ITC + indices) \u2014 this one is not in it.</div>';
+    /* support / resistance */
+    h+='<div class="cosec">\uD83D\uDEE1\uFE0F Support / Resistance</div>';
+    if(g.day_zones){ h+='<div class="corow"><span>Day support (SD)</span><b class="up">\u20b9'+(g.day_zones.SD||[]).join(" \u2013 ")+'</b></div><div class="corow"><span>Day resistance (SS)</span><b class="dn">\u20b9'+(g.day_zones.SS||[]).join(" \u2013 ")+'</b></div><div class="corow"><span>Day POC</span><b>'+nf(g.day_poc,1)+'</b></div>'; if(g.week_zones) h+='<div class="corow"><span>Week support / resistance</span><b>\u20b9'+(g.week_zones.SD||[])[0]+' / \u20b9'+(g.week_zones.SS||[])[1]+'</b></div>'; }
+    else if(sc.low_52w&&sc.high_52w) h+='<div class="corow"><span>Support (52w low)</span><b class="up">\u20b9'+nf(sc.low_52w,1)+'</b></div><div class="corow"><span>Resistance (52w high)</span><b class="dn">\u20b9'+nf(sc.high_52w,1)+'</b></div>';
+    else h+='<div class="conote">Zone feed covers ~20 large-caps \u2014 not available for this one.</div>';
+    /* fundamental */
+    h+='<div class="cosec">\uD83D\uDCCA Fundamental Analysis</div>';
+    h+='<div class="corow"><span>P/E (trailing)</span><b>'+nf(sf["Stock P/E"]!=null?sf["Stock P/E"]:f.trailingPE,1)+'</b></div>';
+    h+='<div class="corow"><span>P/B</span><b>'+nf((sf["Book Value"]&&sf["Current Price"])?sf["Current Price"]/sf["Book Value"]:f.priceToBook,2)+'</b></div>';
+    h+='<div class="corow"><span>ROE / ROCE</span><b>'+nf(sf["ROE"]!=null?sf["ROE"]:(f.returnOnEquity!=null?f.returnOnEquity*100:null),1)+'% / '+nf(sf["ROCE"],1)+'%</b></div>';
+    h+='<div class="corow"><span>Book value / Face value</span><b>'+nf(sf["Book Value"],1)+' / '+nf(sf["Face Value"],1)+'</b></div>';
+    h+='<div class="corow"><span>Dividend yield</span><b>'+nf(sf["Dividend Yield"]!=null?sf["Dividend Yield"]:f.dividendYield,2)+'%</b></div>';
+    h+='<div class="corow"><span>Profit margin</span><b>'+nf(f.profitMargins!=null?f.profitMargins*100:null,1)+'%</b></div>';
+    /* technical */
+    h+='<div class="cosec">\uD83D\uDCC9 Technical Analysis</div>';
+    h+='<div class="corow"><span>RSI-14</span><b>'+nf(sc.rsi14,0)+'</b></div>';
+    h+='<div class="corow"><span>EMA 20 / 200</span><b>'+nf(sc.ema20,1)+' / '+nf(sc.ema200,1)+'</b></div>';
+    h+='<div class="corow"><span>Above 200-DMA</span><b class="'+(sc.above_ema200?"up":"dn")+'">'+(sc.above_ema200?"Yes":"No")+'</b></div>';
+    h+='<div class="corow"><span>MACD hist</span><b>'+nf(sc.macd_hist,2)+'</b></div>';
+    h+='<div class="corow"><span>Vol vs 20d avg</span><b>'+nf(sc.vol_vs_avg20,1)+'\u00d7</b></div>';
+    h+='<div class="corow"><span>From 52w high</span><b class="dn">'+pc(sc.from_52w_high_pct)+'</b></div>';
+    /* growth / profit-loss / debt */
+    h+='<div class="cosec">\uD83D\uDCC8 Growth \u00b7 Profit/Loss \u00b7 Debt</div>';
+    h+='<div class="corow"><span>Revenue growth</span><b>'+pc(f.revenueGrowth!=null?f.revenueGrowth*100:null)+'</b></div>';
+    h+='<div class="corow"><span>Earnings growth</span><b>'+pc(f.earningsGrowth!=null?f.earningsGrowth*100:null)+'</b></div>';
+    if(sf["Sales"]&&sf["Sales"].length) h+='<div class="corow"><span>Sales (\u20b9Cr, last 6q)</span><b>'+sf["Sales"].slice(-6).map(function(v){return nf(v,0);}).join(" \u00b7 ")+'</b></div>';
+    if(sf["Net Profit"]&&sf["Net Profit"].length) h+='<div class="corow"><span>Net profit (\u20b9Cr, last 6q)</span><b>'+sf["Net Profit"].slice(-6).map(function(v){return nf(v,0);}).join(" \u00b7 ")+'</b></div>';
+    h+='<div class="corow"><span>Total debt / cash</span><b>\u20b9'+nf((f.totalDebt||0)/1e7,0)+'Cr / \u20b9'+nf((f.totalCash||0)/1e7,0)+'Cr</b></div>';
+    h+='<div class="corow"><span>Debt / equity</span><b>'+nf(f.debtToEquity!=null?f.debtToEquity/100:null,2)+'</b></div>';
+    /* holding */
+    h+='<div class="cosec">\uD83C\uDFE6 Holding (shareholding)</div>';
+    var ins=(f.heldPercentInsiders!=null?f.heldPercentInsiders*100:null), inst=(f.heldPercentInstitutions!=null?f.heldPercentInstitutions*100:null), pub=(ins!=null&&inst!=null)?Math.max(0,100-ins-inst):null;
+    if(ins!=null||inst!=null){
+      h+='<div class="corow"><span>Promoters / Insiders</span><b>'+nf(ins,1)+'%</b></div>';
+      h+='<div class="corow"><span>Institutions (FII + DII)</span><b>'+nf(inst,1)+'%</b></div>';
+      h+='<div class="corow"><span>Public / others</span><b>'+nf(pub,1)+'%</b></div>';
+      h+='<div class="cobars" style="margin-top:6px"><i style="width:'+(ins||0)+'%;background:#3b82f6"></i><i style="width:'+(inst||0)+'%;background:#16a34a"></i><i style="width:'+(pub||0)+'%;background:#c9c9d0"></i></div>';
+    } else h+='<div class="conote">Shareholding split not in feed for this one.</div>';
+    /* dividend dates */
+    var dv=RES.filter(function(r){ return (r.sym||r.company||"")===sym; });
+    h+='<div class="cosec">\uD83D\uDCB0 Dividend</div>';
+    h+='<div class="corow"><span>Dividend yield</span><b>'+nf(sf["Dividend Yield"]!=null?sf["Dividend Yield"]:f.dividendYield,2)+'%</b></div>';
+    if(dv.length) dv.forEach(function(d){ h+='<div class="corow"><span>'+esc(d.div||"dividend")+'</span><b>'+esc(d.date||"")+'</b></div>'; });
+    else h+='<div class="corow"><span>Upcoming ex-date</span><b>not in feed</b></div>';
+    /* company news */
+    var nm=(ci.name||sym), base=(nm.split(" ")[0]||"").toLowerCase();
+    var cn=NEWS.filter(function(x){ var t=(x.title||"").toLowerCase(); return t.indexOf(base)>-1 || t.indexOf(sym.toLowerCase())>-1; }).slice(0,6);
+    h+='<div class="cosec">\uD83D\uDCF0 Company News</div>';
+    h+= cn.length? cn.map(function(x){ return '<div class="conews"><a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a><small>'+esc(x.publisher||"")+' \u00b7 '+esc(x.topic||"")+'</small></div>'; }).join("") : '<div class="conote">No company-specific headline in today\u2019s feed.</div>';
+    h+='<div class="conote">Not in the free feed (so not shown): CEO/CFO &amp; management names, company history, and individual fund holdings. Everything above is from NSE/yfinance/AMFI + GTI zones.</div>';
+    h+='</div>';
+    box.innerHTML=h;
+    document.body.appendChild(box);
+    box.querySelector(".cox").addEventListener("click", function(){ box.remove(); });
+    var cv=box.querySelector("#coChart");
+    if(cv){ var cl=(cd["1h"]&&cd["1h"].c)||[]; if(cl.length) drawChart(cv, cl, cd.pc); }
+  }
+  window.openCompanyFS=open;
+  Promise.all([J("fundamentals.json"),J("screener-fundamentals.json"),J("brain-screener.json"),J("company-index.json"),J("candles.json"),J("gti.json"),J("results.json"),J("news.json")]).then(function(r){
+    FUND=r[0]||{}; SF=(r[1]&&r[1].stocks)||{}; var b=r[2]||{}; CI=r[3]||{}; CAND=(r[4]&&r[4].syms)||{}; GTI=(r[5]&&r[5].symbols)||{}; RES=(r[6]&&r[6].results)||[]; NEWS=(r[7]&&r[7].items)||[];
+    (b.stocks||[]).forEach(function(s){ BM[s.symbol]=s; });
+  });
 })();
 </script>
 

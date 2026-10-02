@@ -220,7 +220,9 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 .hc span{font:600 13px var(--mono)}
 @media(max-width:760px){.heat{grid-template-columns:repeat(2,1fr)}}
 .tgo{cursor:pointer;transition:transform .15s,border-color .15s}.tgo:hover{transform:translateY(-2px);border-color:var(--accent)}.tgo:active{transform:scale(.98)}.btk{border:1px solid var(--border2);background:var(--surface);color:var(--dim);padding:5px 12px;border-radius:999px;cursor:pointer;font:600 11px var(--font);transition:all .15s}.btk:hover{color:var(--text);border-color:var(--accent)}
-#v-gti.on{position:fixed;inset:0;z-index:70;background:var(--bg);overflow:auto;padding:16px 14px}.fshead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.fshead h2{margin:0;border-bottom:none!important;flex:0 0 auto}.xbtn{border:var(--bw,1px) solid var(--border2);background:var(--surface);color:var(--text);padding:7px 14px;border-radius:999px;cursor:pointer;font:700 11px var(--font)}.xbtn:hover{border-color:var(--accent)}.trow{display:flex;gap:3px;flex-wrap:nowrap;padding:8px 0 0}.tb{white-space:nowrap;border:1px solid transparent;background:transparent;color:var(--dim);padding:8px 9px;border-radius:8px;cursor:pointer;font:600 10.5px var(--font);transition:all .15s;flex:0 0 auto}.tb:hover{color:var(--text);border-color:var(--border2)}.tb:active{transform:scale(.97)}
+#v-gti.on,#v-learn.on,#v-portfolio.on{position:fixed;inset:0;z-index:70;background:var(--bg);overflow:auto;padding:16px 14px}
+.ov.open{padding:0;align-items:stretch}
+.ov.open .sheet{width:100vw;height:100vh;max-height:100vh;border-radius:0}.fshead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.fshead h2{margin:0;border-bottom:none!important;flex:0 0 auto}.xbtn{border:var(--bw,1px) solid var(--border2);background:var(--surface);color:var(--text);padding:7px 14px;border-radius:999px;cursor:pointer;font:700 11px var(--font)}.xbtn:hover{border-color:var(--accent)}.trow{display:flex;gap:3px;flex-wrap:nowrap;padding:8px 0 0}.tb{white-space:nowrap;border:1px solid transparent;background:transparent;color:var(--dim);padding:8px 9px;border-radius:8px;cursor:pointer;font:600 10.5px var(--font);transition:all .15s;flex:0 0 auto}.tb:hover{color:var(--text);border-color:var(--border2)}.tb:active{transform:scale(.97)}
 /* ===== structured preset buttons (added) ===== */
 .presets{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:6px 0 8px}
 .pt{display:flex;flex-direction:column;gap:3px;text-align:left;border:var(--bw,1px) solid var(--border);background:var(--surface);color:var(--text);border-radius:12px;padding:11px 13px;cursor:pointer;transition:all .15s}
@@ -317,7 +319,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
     <div class="breadth"><i style="width:50.3%"></i></div>
     <div class="mono s11" style="margin-top:8px">Promoter <b>50.3%</b> · FII <b>22.1%</b> · DII <b>17.0%</b> · Public <b>10.6%</b></div></div></div>
 </div></section>
-<section class="view" id="v-portfolio"><h2>Portfolio — holdings · P&L</h2>
+<section class="view" id="v-portfolio"><div class="fshead"><h2>Portfolio</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div>
 <div class="kpis"><div class="card kpi"><div class="lbl">INVESTED</div><div class="num">₹4,18,500</div><div class="chg hold">7 holdings</div></div><div class="card kpi"><div class="lbl">CURRENT</div><div class="num">₹4,52,310</div><div class="chg up">▲</div></div><div class="card kpi"><div class="lbl">UNREALIZED P/L</div><div class="num">+₹33,810</div><div class="chg up">+8.08%</div></div><div class="card kpi"><div class="lbl">TODAY</div><div class="num">+₹2,140</div><div class="chg up">+0.48%</div></div></div>
 <div style="margin-top:10px"><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Stock</th><th>Qty</th><th>Avg</th><th>LTP</th><th>P&L</th><th>%</th><th>Signal</th></tr></thead><tbody><tr><td>RELIANCE</td><td>15</td><td>1,410</td><td>1,486.20</td><td><span class='up'>+₹1,143</span></td><td><span class='up'>+5.4%</span></td><td><span class='b buy'>BUY</span></td></tr><tr><td>TCS</td><td>8</td><td>3,842</td><td>3,918.40</td><td><span class='up'>+₹611</span></td><td><span class='up'>+2.0%</span></td><td><span class='b hold'>HOLD</span></td></tr><tr><td>MARUTI</td><td>3</td><td>13,050</td><td>13,412</td><td><span class='up'>+₹1,086</span></td><td><span class='up'>+2.8%</span></td><td><span class='b buy'>BUY</span></td></tr><tr><td>LT</td><td>6</td><td>3,960</td><td>3,812</td><td><span class='dn'>−₹888</span></td><td><span class='dn'>−3.7%</span></td><td><span class='b dn'>REDUCE</span></td></tr><tr><td>HDFCBANK</td><td>12</td><td>1,780</td><td>1,742.55</td><td><span class='dn'>−₹449</span></td><td><span class='dn'>−2.1%</span></td><td><span class='b hold'>HOLD</span></td></tr></tbody></table></div></div></section>
 <section class="view" id="v-futures"><h2>Futures — F&O chains</h2><div style="margin:-4px 0 10px"><button class="btk" data-go="gti">◂ TOOLS</button></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Contract</th><th>LTP</th><th>Chg</th><th>OI</th><th>OI Chg</th><th>Basis</th></tr></thead><tbody><tr><td>NIFTY OCT FUT</td><td>26,518.50</td><td><span class='up'>+0.71%</span></td><td>1.24Cr</td><td><span class='up'>+6.2%</span></td><td>+89 pts</td></tr><tr><td>BANKNIFTY OCT FUT</td><td>58,640.00</td><td><span class='up'>+0.55%</span></td><td>42.1L</td><td><span class='dn'>−1.4%</span></td><td>+228 pts</td></tr><tr><td>RELIANCE OCT FUT</td><td>1,491.30</td><td><span class='up'>+2.02%</span></td><td>3.8Cr</td><td><span class='up'>+11.8%</span></td><td>+5.10</td></tr><tr><td>INFY OCT FUT</td><td>1,851.00</td><td><span class='up'>+0.98%</span></td><td>2.1Cr</td><td><span class='up'>+4.0%</span></td><td>+9.00</td></tr></tbody></table></div></section>
@@ -337,7 +339,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <section class="view" id="v-events"><h2>Events — GDP · jobs · Fed · RBI</h2><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Date</th><th>Event</th><th>Period</th><th>Impact</th></tr></thead><tbody><tr><td>01 Oct</td><td>RBI MPC Decision</td><td>—</td><td><span class='b dn'>HIGH</span></td></tr><tr><td>02 Oct</td><td>India CPI Inflation</td><td>Sep</td><td><span class='b dn'>HIGH</span></td></tr><tr><td>07 Oct</td><td>US Non-Farm Payrolls</td><td>Sep</td><td><span class='b dn'>HIGH</span></td></tr><tr><td>10 Oct</td><td>IIP Growth</td><td>Aug</td><td><span class='b hold'>MED</span></td></tr><tr><td>15 Oct</td><td>China GDP</td><td>Q3</td><td><span class='b hold'>MED</span></td></tr><tr><td>30 Oct</td><td>F&O Expiry</td><td>Monthly</td><td><span class='b hold'>MED</span></td></tr></tbody></table></div></section>
 <section class="view" id="v-ipo"><h2>IPO Terminal — GMP · listing</h2><div class="grid3"><div class="card"><div class="sh2">OPEN <span class="b buy">LIVE</span></div><div class="ni"><b>Artha Technologies</b><small>₹210–225 · 4.8× sub · GMP ₹38</small></div><div class="ni"><b>Nova Consumer</b><small>₹145–152 · 2.6× sub</small></div></div><div class="card"><div class="sh2">UPCOMING</div><div class="ni"><b>FinServe Digital</b><small>Opens 02 Oct · band TBA</small></div><div class="ni"><b>Green Infra</b><small>DRHP filed</small></div></div><div class="card"><div class="sh2">CLOSED</div><div class="ni"><b>Metro Retail</b><small>Listing 30 Sep</small></div><div class="ni"><b>DataCore Systems</b><small>Allotment out</small></div></div></div></section>
 <section class="view" id="v-crypto"><h2>Crypto — top 100 coins</h2><div class="srow"><input type="search" placeholder="Search coin…"></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Coin</th><th>Price</th><th>24h%</th><th>7d%</th><th>MCap</th></tr></thead><tbody><tr><td>BTC</td><td>$96,412</td><td><span class='up'>+1.8%</span></td><td><span class='up'>+4.2%</span></td><td>$1.91T</td></tr><tr><td>ETH</td><td>$3,412</td><td><span class='up'>+2.4%</span></td><td><span class='up'>+6.1%</span></td><td>$411B</td></tr><tr><td>BNB</td><td>$704</td><td><span class='up'>+0.9%</span></td><td><span class='dn'>−1.2%</span></td><td>$102B</td></tr><tr><td>SOL</td><td>$188.4</td><td><span class='dn'>−0.6%</span></td><td><span class='up'>+8.8%</span></td><td>$89B</td></tr><tr><td>XRP</td><td>$2.41</td><td><span class='up'>+1.1%</span></td><td><span class='up'>+2.9%</span></td><td>$138B</td></tr><tr><td>DOGE</td><td>$0.3184</td><td><span class='dn'>−2.2%</span></td><td><span class='dn'>−5.4%</span></td><td>$46B</td></tr></tbody></table></div></section>
-<section class="view" id="v-learn"><h2>Learn — strategies · studies · notes</h2><div class="sect">LEARN — MODULES</div>
+<section class="view" id="v-learn"><div class="fshead"><h2>Learn</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="sect">LEARN — MODULES</div>
 <div class="grid3">
 <div class="card kpi"><div class="lbl">MODULE 01</div><div class="num" style="font-size:16px">Candlesticks</div><div class="chg" style="font-family:var(--font);line-height:1.5;margin-top:4px">Body · wick · volume — price ki bhasha</div></div>
 <div class="card kpi"><div class="lbl">MODULE 02</div><div class="num" style="font-size:16px">Risk Management</div><div class="chg" style="font-family:var(--font);line-height:1.5;margin-top:4px">Position sizing · stop loss · drawdown limits</div></div>
@@ -542,6 +544,86 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
       }).join("");
     }).catch(function () {});
   });
+})();
+</script>
+
+<script>
+/* ArthaSaar — second live-data pass: screener, futures, internals, GTI zones, home modules. */
+(function () {
+  "use strict";
+  var BASE = "data/";
+  function nf(x, d) { return (x == null || isNaN(x)) ? "—" : Number(x).toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d }); }
+  function sign(x, d) { return (x == null || isNaN(x)) ? "—" : (x > 0 ? "+" : "") + nf(x, d == null ? 2 : d) + "%"; }
+  function J(n) { return fetch(BASE + n, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(n); return r.json(); }); }
+  function kpi(lbl) { var o = null; document.querySelectorAll(".card.kpi").forEach(function (c) { var l = c.querySelector(".lbl"); if (l && l.textContent.trim().toUpperCase() === lbl) o = c; }); return o; }
+  function setKpi(lbl, val, chg, cls) { var c = kpi(lbl); if (!c) return; var n = c.querySelector(".num"), ch = c.querySelector(".chg"); if (n) n.textContent = val; if (ch) { ch.textContent = chg || ""; ch.className = "chg " + (cls || ""); } }
+  fetch("data/fii-dii.json", { cache: "no-store" }).catch(function () { BASE = "../data/"; }).then(run);
+
+  function run() {
+    // ---- brain-screener: home modules + screener table + internals ----
+    J("brain-screener.json").then(function (b) {
+      var st = (b.stocks || []).slice();
+      if (!st.length) return;
+      var byChg = st.slice().sort(function (a, c) { return (c.change_pct || 0) - (a.change_pct || 0); });
+      var g = byChg[0], l = byChg[byChg.length - 1];
+      var vol = st.slice().sort(function (a, c) { return (c.vol_vs_avg20 || 0) - (a.vol_vs_avg20 || 0); })[0];
+      var nearHi = st.filter(function (s) { return (s.from_52w_high_pct || -100) > -3; }).length;
+      setKpi("TOP GAINER", g.symbol, sign(g.change_pct, 1), "up");
+      setKpi("TOP LOSER", l.symbol, sign(l.change_pct, 1), "dn");
+      setKpi("VOLUME SHOCKER", nf(vol.vol_vs_avg20, 1) + "×", "above normal", "");
+      setKpi("52W MOVERS", nf(nearHi, 0), "near high", "");
+      // screener table
+      var tb = document.getElementById("scrBody");
+      if (tb) tb.innerHTML = byChg.slice(0, 40).map(function (s) {
+        var u = (s.change_pct || 0) >= 0, sig = s.above_ema200 && u ? "BUY" : (s.rsi14 < 30 ? "WATCH" : "HOLD"), sigc = sig === "BUY" ? "buy" : sig === "WATCH" ? "hold" : "hold";
+        return "<tr><td>" + s.symbol + "</td><td>" + nf(s.price, 2) + "</td><td><span class='" + (u ? "up" : "dn") + "'>" + sign(s.change_pct, 1) + "</span></td><td>—</td><td>—</td><td>" + (s.rsi14 != null ? nf(s.rsi14, 0) : "—") + "</td><td><span class='b " + sigc + "'>" + sig + "</span></td></tr>";
+      }).join("");
+      // internals: advances / declines
+      var adv = st.filter(function (s) { return (s.change_pct || 0) > 0; }).length;
+      var dec = st.filter(function (s) { return (s.change_pct || 0) < 0; }).length;
+      setKpi("ADVANCES", nf(adv, 0), "aaj ke winner", "up");
+      setKpi("DECLINES", nf(dec, 0), "aaj ke loser", "dn");
+      var trin = dec ? (adv / dec) : 0;
+      setKpi("TRIN (ARMS)", nf(trin, 2), trin > 1 ? "bullish breadth" : "weak breadth", trin > 1 ? "up" : "dn");
+    }).catch(function () {});
+
+    // ---- breadth: 52w highs/lows ----
+    J("breadth.json").then(function (br) {
+      var c = document.querySelector("#v-internals");
+      if (!c) return;
+      // New highs / lows row inside "52w Highs vs Lows" card
+      var cards = c.querySelectorAll(".card");
+      cards.forEach(function (cd) {
+        if (/52w Highs vs Lows/.test(cd.textContent)) {
+          var rows = cd.querySelectorAll(".zrow");
+          if (rows[0]) rows[0].innerHTML = "<span>New highs</span><b class='up'>" + nf(br.near_52w_high, 0) + "</b>";
+          if (rows[1]) rows[1].innerHTML = "<span>New lows</span><b class='dn'>" + nf(br.rsi_below_40, 0) + "</b>";
+        }
+      });
+    }).catch(function () {});
+
+    // ---- futures table ----
+    J("futures.json").then(function (f) {
+      var t = document.querySelector("#v-futures tbody");
+      if (!t) return;
+      var rows = [];
+      (f.indices || []).forEach(function (i) { var c0 = (i.contracts || [])[0] || {}; rows.push({ n: i.symbol + " FUT", ltp: c0.close, chg: i.underlying ? (c0.close - i.underlying) / i.underlying * 100 : null, oi: c0.oi, oich: c0.oi_chg, basis: i.underlying ? (c0.close - i.underlying) : null }); });
+      (f.stocks || []).slice(0, 6).forEach(function (s) { rows.push({ n: s.symbol + " FUT", ltp: s.close, chg: s.basis_pct, oi: s.oi, oich: s.oi_chg, basis: (s.close - s.underlying) }); });
+      t.innerHTML = rows.map(function (r) {
+        return "<tr><td>" + r.n + "</td><td>" + nf(r.ltp, 2) + "</td><td><span class='" + ((r.chg || 0) >= 0 ? "up" : "dn") + "'>" + sign(r.chg, 2) + "</span></td><td>" + nf(r.oi, 0) + "</td><td><span class='" + ((r.oich || 0) >= 0 ? "up" : "dn") + "'>" + nf(r.oich, 0) + "</span></td><td>" + nf(r.basis, 2) + "</td></tr>";
+      }).join("");
+    }).catch(function () {});
+
+    // ---- GTI zones ----
+    J("gti.json").then(function (g) {
+      var s = (g.symbols || {})["NIFTY 50"]; if (!s) return;
+      var host = document.querySelector("#v-gtizones");
+      if (!host) return;
+      var dz = s.day_zones || {}, wz = s.week_zones || {};
+      var cards = host.querySelectorAll(".card");
+      if (cards[0]) cards[0].innerHTML = "<div class='sh2'>NIFTY 50 — Zones</div><div style='padding:6px 14px 10px'><div class='zrow'><span>Day demand</span><b class='up'>" + nf((dz.SD || [])[0], 0) + " – " + nf((dz.SD || [])[1], 0) + "</b></div><div class='zrow'><span>Day supply</span><b class='dn'>" + nf((dz.SS || [])[0], 0) + " – " + nf((dz.SS || [])[1], 0) + "</b></div><div class='zrow'><span>POC day</span><b>" + nf(s.day_poc, 0) + "</b></div></div>";
+    }).catch(function () {});
+  }
 })();
 </script>
 

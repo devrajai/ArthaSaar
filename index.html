@@ -307,6 +307,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
     <div class="nrow"><span class="ng">STOCKS</span>
       <button data-go="fundamentals">Fundamentals</button>
       <button data-go="mf">MF</button>
+      <button data-go="deepfund">Deep Fund</button>
     </div>
     <div class="nrow"><span class="ng">WATCH</span>
       <button data-go="crypto">Crypto</button>
@@ -2187,6 +2188,177 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
   });
   var n=0,iv=setInterval(function(){ buildDeep(); wrapFS(); if(++n>25) clearInterval(iv); },600);
   window.addEventListener("hashchange",function(){ setTimeout(function(){ buildDeep(); wrapFS(); },300); });
+})();
+</script>
+
+
+<style id="as-filings-css">
+#as-filings-card{font-size:12px}
+#as-filings-card .ftabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:2px 0 10px;-webkit-overflow-scrolling:touch}
+#as-filings-card .ftabs button{flex:0 0 auto;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 10px;font:700 10px var(--font);cursor:pointer;white-space:nowrap}
+#as-filings-card .ftabs button.on{background:var(--accent);color:#fff;border-color:transparent}
+#as-filings-card .fq{width:100%;box-sizing:border-box;padding:9px 11px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12.5px var(--font);outline:none;margin-bottom:9px}
+#as-filings-card .frow{padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer}
+#as-filings-card .frow:last-child{border-bottom:0}
+#as-filings-card .ftop{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+#as-filings-card .fcat{font:800 8.5px var(--font);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:6px;background:#e8eef7;color:#1b4a86;white-space:nowrap}
+#as-filings-card .fco{flex:1;min-width:0;font-weight:800;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#as-filings-card .fdt{font:700 9.5px var(--mono);color:var(--dim);white-space:nowrap}
+#as-filings-card .fsub{font-size:10.5px;color:var(--dim);line-height:1.45;margin-bottom:4px}
+#as-filings-card .fpdf{font:800 9.5px var(--font);color:var(--accent);text-decoration:none}
+#as-filings-card .fnote{font-size:10px;color:var(--dim);margin:2px 0 8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 22: Filings = live NSE corporate announcements (data/filings.json) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function dd(iso){ var p=String(iso||"").slice(0,10).split("-"); return p.length<3?String(iso||""):(p[2]+"/"+p[1]+"/"+p[0].slice(2)); }
+  var F=null, CAT="all", Q="";
+  function render(){
+    var tb=document.getElementById("filBody"); if(!tb||!F) return;
+    var list=(F.filings||[]).filter(function(x){
+      if(CAT!=="all" && x.category!==CAT) return false;
+      if(Q && (String(x.company||"")+" "+String(x.symbol||"")).toLowerCase().indexOf(Q)<0) return false;
+      return true;
+    });
+    document.getElementById("filCount").textContent=list.length+" filings";
+    tb.innerHTML=list.slice(0,400).map(function(x){
+      return '<div class="frow" data-sym="'+esc(x.symbol)+'"><div class="ftop"><span class="fcat">'+esc(x.category||"Other")+'</span><span class="fco">'+esc(x.company||x.symbol)+'</span><span class="fdt">'+dd(x.date)+'</span></div><div class="fsub">'+esc((x.subject||x.nse_desc||"").slice(0,160))+'</div>'+(x.pdf?'<a class="fpdf" href="'+esc(x.pdf)+'" target="_blank" rel="noopener">PDF \u2197</a>':'')+'</div>';
+    }).join("") || '<div class="fnote">No filings match.</div>';
+    tb.querySelectorAll(".frow").forEach(function(r){ r.addEventListener("click", function(e){ if(e.target.closest(".fpdf")) return; var s=r.getAttribute("data-sym"); if(s&&window.openCompanyFS) window.openCompanyFS(s); }); });
+  }
+  function build(){
+    var host=document.getElementById("v-filings"); if(!host||!F) return;
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){ if(el.id!=="as-filings-card") el.remove(); });
+    [].slice.call(host.children).forEach(function(el){ if(el.tagName==="H2") el.remove(); });
+    if(document.getElementById("as-filings-card")) return;
+    var cats={}; (F.filings||[]).forEach(function(x){ cats[x.category]=(cats[x.category]||0)+1; });
+    var order=["Results","AGM","Board Meeting","Buyerback","Investor Presentation","Shareholding","Buyback / Dividend","Fund Raise","Credit Rating","Loan / Order Win","Insider / Pledge"];
+    var keys=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; });
+    var h='<input class="fq" id="filQ" type="search" placeholder="Search company or symbol\u2026">';
+    h+='<div class="ftabs"><button class="on" data-c="all">ALL</button>'+keys.map(function(k){ return '<button data-c="'+esc(k)+'">'+esc(k)+'</button>'; }).join("")+'</div>';
+    h+='<div class="fnote">\uD83D\uDCC4 <b id="filCount">'+(F.filings||[]).length+' filings</b> \u00b7 live from NSE corporate announcements (last '+esc(F.window_days||7)+' days) \u00b7 tap a row for the company card, or open the PDF.</div>';
+    h+='<div id="filBody"></div>';
+    var card=document.createElement("div"); card.id="as-filings-card"; card.className="card"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+    card.querySelectorAll(".ftabs button").forEach(function(b){ b.addEventListener("click", function(){ card.querySelectorAll(".ftabs button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); CAT=b.getAttribute("data-c"); render(); }); });
+    var q=document.getElementById("filQ"); if(q) q.addEventListener("input", function(){ Q=(q.value||"").toLowerCase().trim(); render(); });
+    render();
+  }
+  J("filings.json").then(function(f){ F=f||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+
+<style id="as-crfs-css">
+.crfs{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;flex-direction:column}
+.crfs .crhead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface)}
+.crfs .crhead b{font:800 14px var(--font)}
+.crfs .crhead small{display:block;font-weight:400;font-size:10px;color:var(--dim)}
+.crfs .crbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 14px 60px;font-size:12px}
+.crfs .crgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.crfs .crcell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+.crfs .crcell .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.crfs .crcell .v{font:800 13px var(--mono)}
+.crfs .crsec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:15px 0 6px}
+.crfs .crrow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.crfs .crrow:last-child{border-bottom:0}
+.crfs .crbars{display:flex;gap:10px;align-items:flex-end;height:120px;padding:6px 4px 0}
+.crfs .crbgrp{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%}
+.crfs .crbgrp i{width:26px;border-radius:4px 4px 0 0;display:block}
+.crfs .crlab{text-align:center;font-size:9px;color:var(--dim);margin-top:3px}
+.crfs .crnote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+.crfs .crgauge{position:relative;height:8px;border-radius:6px;background:linear-gradient(90deg,#ef5b61,#f5c451,#2bd477);margin:6px 0 3px}
+.crfs .crgauge i{position:absolute;top:-3px;width:3px;height:14px;background:var(--text);border-radius:2px}
+</style>
+<script>
+/* ArthaSaar — round 23: Crypto -> full-screen coin card (price, 24h/7d/30d, mcap, volume, ATH, market context, chart) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  function usd(x){ if(x==null||isNaN(x)) return "—"; if(Math.abs(x)>=1e12) return "$"+nf(x/1e12,2)+"T"; if(Math.abs(x)>=1e9) return "$"+nf(x/1e9,2)+"B"; if(Math.abs(x)>=1e6) return "$"+nf(x/1e6,2)+"M"; return "$"+nf(x,2); }
+  var C=null, CAND={};
+  function drawChart(cv, closes, prev){
+    var dpr=window.devicePixelRatio||1, w=cv.clientWidth||340, h=140;
+    cv.width=w*dpr; cv.height=h*dpr; cv.style.height=h+"px";
+    var ctx=cv.getContext("2d"); ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+    if(!closes||closes.length<2) return;
+    var mn=Math.min.apply(null,closes), mx=Math.max.apply(null,closes);
+    if(prev!=null){ mn=Math.min(mn,prev); mx=Math.max(mx,prev); }
+    var pad=8, rng=(mx-mn)||1;
+    function X(i){ return pad+(w-2*pad)*i/(closes.length-1); }
+    function Y(v){ return h-pad-(h-2*pad)*(v-mn)/rng; }
+    if(prev!=null){ ctx.strokeStyle="#c9c9d0"; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(pad,Y(prev)); ctx.lineTo(w-pad,Y(prev)); ctx.stroke(); ctx.setLineDash([]); }
+    var up=closes[closes.length-1]>=closes[0];
+    ctx.strokeStyle=up?"#16a34a":"#dc2626"; ctx.lineWidth=1.8; ctx.beginPath();
+    closes.forEach(function(v,i){ if(i===0) ctx.moveTo(X(i),Y(v)); else ctx.lineTo(X(i),Y(v)); });
+    ctx.stroke();
+    ctx.font="9px monospace"; ctx.fillStyle="rgba(255,255,255,.85)"; ctx.fillRect(pad,2,58,12); ctx.fillRect(pad,h-13,58,12);
+    ctx.fillStyle="rgba(120,120,130,.95)"; ctx.fillText(nf(mx,0),pad+1,11); ctx.fillText(nf(mn,0),pad+1,h-4);
+  }
+  function open(sym){
+    if(!sym) return; sym=String(sym).toUpperCase();
+    var c=(C.top||[]).filter(function(x){ return String(x.symbol).toUpperCase()===sym; })[0]; if(!c) return;
+    var old=document.querySelector(".crfs"); if(old) old.remove();
+    var g=C.global||{}, fg=C.fear_greed||{};
+    var box=document.createElement("div"); box.className="crfs";
+    var h='<div class="crhead"><div><b>'+esc(c.name||sym)+'</b><small>'+esc(sym)+' \u00b7 rank #'+esc(c.rank||"—")+' \u00b7 crypto</small></div><button class="xbtn crx" type="button">\u2715 CLOSE</button></div>';
+    h+='<div class="crbody">';
+    h+='<div class="crgrid">';
+    h+='<div class="crcell"><div class="k">price</div><div class="v">'+usd(c.price_usd)+'</div></div>';
+    h+='<div class="crcell"><div class="k">24h</div><div class="v '+(c.chg_24h_pct>=0?"up":"dn")+'">'+pc(c.chg_24h_pct)+'</div></div>';
+    h+='<div class="crcell"><div class="k">7d</div><div class="v '+(c.chg_7d_pct>=0?"up":"dn")+'">'+pc(c.chg_7d_pct)+'</div></div>';
+    h+='<div class="crcell"><div class="k">30d</div><div class="v '+(c.chg_30d_pct>=0?"up":"dn")+'">'+pc(c.chg_30d_pct)+'</div></div>';
+    h+='<div class="crcell"><div class="k">market cap</div><div class="v">'+usd(c.market_cap)+'</div></div>';
+    h+='<div class="crcell"><div class="k">24h volume</div><div class="v">'+usd(c.volume_usd)+'</div></div>';
+    h+='</div>';
+    /* performance bars */
+    h+='<div class="crsec">\uD83D\uDCC8 Performance</div>';
+    var per=[["24h",c.chg_24h_pct],["7d",c.chg_7d_pct],["30d",c.chg_30d_pct]];
+    var mx=0; per.forEach(function(p){ if(p[1]!=null) mx=Math.max(mx,Math.abs(p[1])); }); mx=mx||1;
+    h+='<div class="crbars">'+per.map(function(p){ var hh=(p[1]!=null)?Math.max(3,Math.abs(p[1])/mx*95):0; return '<div style="flex:1"><div class="crbgrp"><i style="height:'+hh+'px;background:'+((p[1]||0)>=0?"#16a34a":"#dc2626")+'"></i></div><div class="crlab">'+p[0]+' '+pc(p[1])+'</div></div>'; }).join("")+'</div>';
+    /* chart */
+    h+='<div class="crsec">\uD83D\uDD6F\uFE0F Intraday Chart</div>';
+    var cd=CAND[sym];
+    if(cd && cd["1h"] && cd["1h"].c && cd["1h"].c.length){ h+='<div class="card" style="padding:8px;margin:0 0 4px"><canvas id="crChart" style="width:100%;display:block"></canvas><div style="font-size:9.5px;color:var(--dim);margin-top:3px">intraday 1h \u00b7 '+cd["1h"].c.length+' bars \u00b7 prev close dashed</div></div>'; }
+    else h+='<div class="crnote">Intraday candle feed covers BTC only \u2014 other coins have no free intraday series here.</div>';
+    /* ATH */
+    h+='<div class="crsec">\uD83C\uDFAF Distance from All-Time High</div>';
+    h+='<div class="crrow"><span>From ATH</span><b class="dn">'+pc(c.from_ath_pct)+'</b></div>';
+    /* market context */
+    h+='<div class="crsec">\uD83C\uDF10 Market Context</div>';
+    h+='<div class="crrow"><span>Fear &amp; Greed</span><b>'+esc(fg.value==null?"—":fg.value)+'/100 \u00b7 '+esc(fg.label||"")+'</b></div>';
+    h+='<div class="crgauge"><i style="left:'+Math.max(0,Math.min(100,fg.value||0))+'%"></i></div>';
+    h+='<div class="crrow"><span>Total market cap</span><b>'+usd(g.total_market_cap_usd)+' \u00b7 '+pc(g.mcap_chg_24h_pct)+'</b></div>';
+    h+='<div class="crrow"><span>BTC / ETH dominance</span><b>'+nf(g.btc_dominance,1)+'% / '+nf(g.eth_dominance,1)+'%</b></div>';
+    h+='<div class="crrow"><span>24h total volume</span><b>'+usd(g.total_volume_usd)+'</b></div>';
+    h+='<div class="crnote">Crypto has no P/E, promoter holding or dividends \u2014 so none of those stock sections apply. On-chain data (active addresses, TVL, supply schedule) is not in this free feed. Source: CoinGecko public API via the repo pipeline.</div>';
+    h+='</div>';
+    box.innerHTML=h;
+    document.body.appendChild(box);
+    box.querySelector(".crx").addEventListener("click", function(){ box.remove(); });
+    var cv=box.querySelector("#crChart"); if(cv){ var cl=(CAND[sym]&&CAND[sym]["1h"]&&CAND[sym]["1h"].c)||[]; if(cl.length) drawChart(cv, cl, CAND[sym].pc); }
+  }
+  window.openCryptoFS=open;
+  function wire(){
+    var sc=document.getElementById("v-crypto"); if(!sc||sc._crfsw) return; sc._crfsw=1;
+    sc.addEventListener("click", function(e){
+      var tr=e.target.closest("tbody tr"); if(!tr) return;
+      var b=tr.querySelector("td b"); if(!b) return;
+      var sym=b.textContent.trim();
+      if(sym && window.openCryptoFS) window.openCryptoFS(sym);
+    }, true);
+  }
+  Promise.all([J("crypto.json"),J("candles.json")]).then(function(r){ C=r[0]||{}; CAND=(r[1]&&r[1].syms)||{}; wire(); });
+  var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
 })();
 </script>
 

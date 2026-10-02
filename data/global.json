@@ -1,12 +1,12 @@
 {
- "updated": "2026-10-02T13:58:21.198339+00:00",
+ "updated": "2026-10-02T18:54:12.588740+00:00",
  "count": 21,
  "items": [
   {
    "name": "S&P 500",
    "symbol": "^GSPC",
-   "price": 7731.56,
-   "chg_pct": 0.85,
+   "price": 7720.55,
+   "chg_pct": 0.71,
    "high_52w": 7798.99,
    "low_52w": 6343.72,
    "as_of": "2026-10-02"
@@ -23,17 +23,17 @@
   {
    "name": "Nasdaq Composite",
    "symbol": "^IXIC",
-   "price": 27255.67,
-   "chg_pct": 1.43,
-   "high_52w": 27255.67,
+   "price": 27176.43,
+   "chg_pct": 1.13,
+   "high_52w": 27244.28,
    "low_52w": 20794.64,
    "as_of": "2026-10-02"
   },
   {
    "name": "Dow Jones",
    "symbol": "^DJI",
-   "price": 51171.52,
-   "chg_pct": 0.48,
+   "price": 51149.47,
+   "chg_pct": 0.44,
    "high_52w": 54349.12,
    "low_52w": 45166.64,
    "as_of": "2026-10-02"
@@ -41,8 +41,8 @@
   {
    "name": "Nikkei 225",
    "symbol": "^N225",
-   "price": 68309.46,
-   "chg_pct": -0.94,
+   "price": 68956.72,
+   "chg_pct": 3.3,
    "high_52w": 72366.34,
    "low_52w": 44936.73,
    "as_of": "2026-10-02"
@@ -50,8 +50,8 @@
   {
    "name": "Hang Seng",
    "symbol": "^HSI",
-   "price": 23972.29,
-   "chg_pct": -2.6,
+   "price": 24613.27,
+   "chg_pct": 0.37,
    "high_52w": 27968.09,
    "low_52w": 22671.86,
    "as_of": "2026-10-02"
@@ -59,8 +59,8 @@
   {
    "name": "Gold (COMEX)",
    "symbol": "GC=F",
-   "price": 4220.8,
-   "chg_pct": 0.44,
+   "price": 4170.4,
+   "chg_pct": -0.76,
    "high_52w": 5318.4,
    "low_52w": 3868.1,
    "as_of": "2026-10-02"
@@ -68,8 +68,8 @@
   {
    "name": "Silver (COMEX)",
    "symbol": "SI=F",
-   "price": 61.9,
-   "chg_pct": 1.93,
+   "price": 60.64,
+   "chg_pct": -0.14,
    "high_52w": 115.08,
    "low_52w": 46.0,
    "as_of": "2026-10-02"
@@ -77,8 +77,8 @@
   {
    "name": "Crude Oil WTI",
    "symbol": "CL=F",
-   "price": 89.72,
-   "chg_pct": -3.39,
+   "price": 91.1,
+   "chg_pct": -1.91,
    "high_52w": 112.95,
    "low_52w": 55.27,
    "as_of": "2026-10-02"
@@ -86,8 +86,8 @@
   {
    "name": "Natural Gas",
    "symbol": "NG=F",
-   "price": 2.97,
-   "chg_pct": 0.13,
+   "price": 3.03,
+   "chg_pct": 2.26,
    "high_52w": 7.46,
    "low_52w": 2.52,
    "as_of": "2026-10-02"
@@ -104,8 +104,8 @@
   {
    "name": "Dollar Index (DXY)",
    "symbol": "DX-Y.NYB",
-   "price": 101.83,
-   "chg_pct": -0.27,
+   "price": 101.94,
+   "chg_pct": -0.16,
    "high_52w": 102.1,
    "low_52w": 96.22,
    "as_of": "2026-10-02"
@@ -113,8 +113,8 @@
   {
    "name": "US 10Y Yield",
    "symbol": "^TNX",
-   "price": 5.2,
-   "chg_pct": -0.73,
+   "price": 5.28,
+   "chg_pct": 0.92,
    "high_52w": 5.29,
    "low_52w": 3.95,
    "as_of": "2026-10-02"
@@ -122,8 +122,8 @@
   {
    "name": "Copper",
    "symbol": "HG=F",
-   "price": 6.62,
-   "chg_pct": 2.11,
+   "price": 6.57,
+   "chg_pct": 1.33,
    "high_52w": 6.8,
    "low_52w": 4.85,
    "as_of": "2026-10-02"
@@ -131,8 +131,8 @@
   {
    "name": "EUR-INR",
    "symbol": "EURINR=X",
-   "price": 108.48,
-   "chg_pct": -0.14,
+   "price": 108.4,
+   "chg_pct": -0.22,
    "high_52w": 112.49,
    "low_52w": 101.66,
    "as_of": "2026-10-02"
@@ -140,8 +140,8 @@
   {
    "name": "GBP-INR",
    "symbol": "GBPINR=X",
-   "price": 127.41,
-   "chg_pct": 0.14,
+   "price": 127.44,
+   "chg_pct": 0.16,
    "high_52w": 130.59,
    "low_52w": 115.55,
    "as_of": "2026-10-02"
@@ -150,7 +150,7 @@
    "name": "JPY-INR",
    "symbol": "JPYINR=X",
    "price": 0.61,
-   "chg_pct": 0.35,
+   "chg_pct": 0.22,
    "high_52w": 0.62,
    "low_52w": 0.56,
    "as_of": "2026-10-02"
@@ -158,8 +158,8 @@
   {
    "name": "AUD-INR",
    "symbol": "AUDINR=X",
-   "price": 67.12,
-   "chg_pct": 0.74,
+   "price": 66.93,
+   "chg_pct": 0.46,
    "high_52w": 69.37,
    "low_52w": 56.81,
    "as_of": "2026-10-02"
@@ -168,7 +168,7 @@
    "name": "EUR-USD",
    "symbol": "EURUSD=X",
    "price": 1.13,
-   "chg_pct": -0.45,
+   "chg_pct": -0.65,
    "high_52w": 1.2,
    "low_52w": 1.13,
    "as_of": "2026-10-02"
@@ -176,8 +176,8 @@
   {
    "name": "USD-JPY",
    "symbol": "USDJPY=X",
-   "price": 157.53,
-   "chg_pct": -0.02,
+   "price": 157.8,
+   "chg_pct": 0.15,
    "high_52w": 163.86,
    "low_52w": 147.08,
    "as_of": "2026-10-02"
@@ -186,7 +186,7 @@
    "name": "USD-CNY",
    "symbol": "USDCNY=X",
    "price": 6.7,
-   "chg_pct": -0.09,
+   "chg_pct": 0.0,
    "high_52w": 7.17,
    "low_52w": 6.7,
    "as_of": "2026-10-02"

@@ -1222,61 +1222,11 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 </script>
 
 <script>
-/* ArthaSaar — round 7: remove the duplicate big sector grid; use one compact sector chip row that opens per-sector cards. */
-(function () {
-  "use strict";
-  var BASE = "data/", C = {};
-  function nf(x, d) { return (x == null || isNaN(x)) ? "—" : Number(x).toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d }); }
-  function sign(x, d) { return (x == null || isNaN(x)) ? "—" : (x > 0 ? "+" : "") + nf(x, d == null ? 2 : d) + "%"; }
-  function J(n) { return fetch(BASE + n, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(n); return r.json(); }); }
-  function D(n) { return C[n] ? Promise.resolve(C[n]) : J(n).then(function (d) { C[n] = d; return d; }); }
-  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function up(x) { return (x || 0) >= 0; }
-
-  /* remove the duplicate big grid + the old visual-only chips */
-  function cleanup() {
-    document.querySelectorAll("#v-heatmap .secgrid").forEach(function (x) { x.remove(); });
-    document.querySelectorAll("#v-heatmap .chips").forEach(function (x) { x.remove(); });
-  }
-  cleanup();
-
-  function openSector(name, secs, map, row, btn) {
-    row.querySelectorAll(".fch").forEach(function (x) { x.classList.remove("on"); }); btn.classList.add("on");
-    var list = secs[name] || [];
-    var rows = list.map(function (x) { var s = map[x.symbol] || {}; return { sym: x.symbol, co: x.company, chg: s.change_pct, price: s.price }; }).sort(function (a, b) { return (b.chg || 0) - (a.chg || 0); });
-    var html = "<div class='radar'><div class='rt'>" + esc(name) + " SECTOR</div><div class='rs'>" + rows.length + " stocks · % and ₹ move</div><div style='max-height:52vh;overflow:auto'>" +
-      rows.map(function (r) { var rs = (r.price != null && r.chg != null) ? (r.price * r.chg / 100) : null; return "<div class='zrow'><span><b>" + r.sym + "</b> <small class='mono'>" + esc((r.co || "").slice(0, 24)) + "</small></span><b class='" + (up(r.chg) ? "up" : "dn") + "'>" + sign(r.chg, 1) + " · ₹" + (rs == null ? "—" : nf(rs, 2)) + "</b></div>"; }).join("") + "</div></div>";
-    var host = document.querySelector("#v-heatmap"); if (!host) return;
-    var old = host.querySelector(".secopen"); if (old) old.remove();
-    var div = document.createElement("div"); div.className = "secopen"; div.innerHTML = html;
-    var cl = document.createElement("button"); cl.className = "xbtn"; cl.type = "button"; cl.innerHTML = "✕ CLOSE"; cl.style.cssText = "float:right;margin:-4px 0 8px 8px";
-    cl.onclick = function () { div.remove(); };
-    div.querySelector(".radar").insertBefore(cl, div.querySelector(".radar").firstChild);
-    var fh = host.querySelector(".fshead"); host.insertBefore(div, fh ? fh.nextSibling : host.firstChild);
-  }
-
-  function build() {
-    var host = document.querySelector("#v-heatmap"); if (!host || host.querySelector(".secchips")) return;
-    Promise.all([D("constituents.json"), D("brain-screener.json"), D("indices-all.json")]).then(function (r) {
-      var ct = r[0], b = r[1], ia = r[2];
-      var map = {}; (b.stocks || []).forEach(function (s) { map[s.symbol] = s; });
-      var secs = ct.sectors || {}, idx = ia.indices || [];
-      var row = document.createElement("div"); row.className = "chips secchips";
-      Object.keys(secs).forEach(function (name) {
-        var key = name.toUpperCase().replace(/[^A-Z]/g, "");
-        var ind = idx.filter(function (i) { return i.index.toUpperCase().indexOf(key) > -1; })[0];
-        var chg = ind ? ind.change_pct : null;
-        var chip = document.createElement("span"); chip.className = "fch"; chip.style.cursor = "pointer";
-        chip.innerHTML = esc(name) + (chg == null ? "" : " <b class='" + (up(chg) ? "up" : "dn") + "'>" + sign(chg, 1) + "</b>");
-        chip.addEventListener("click", function () { openSector(name, secs, map, row, chip); });
-        row.appendChild(chip);
-      });
-      var fh = host.querySelector(".fshead"); host.insertBefore(row, fh ? fh.nextSibling : host.firstChild);
-    }).catch(function () {});
-  }
-  build();
-  var n = 0, iv = setInterval(function () { cleanup(); build(); if (++n > 20) clearInterval(iv); }, 700);
-  window.addEventListener("hashchange", function () { setTimeout(function () { cleanup(); build(); }, 250); });
+/* round 7b: sector button row removed — keep only the treemap */
+(function(){ "use strict";
+  function rm(){ document.querySelectorAll("#v-heatmap .secgrid, #v-heatmap .secchips, #v-heatmap .chips, #v-heatmap .secopen").forEach(function(x){x.remove();}); }
+  rm(); var n=0,iv=setInterval(function(){ rm(); if(++n>30) clearInterval(iv); }, 500);
+  window.addEventListener("hashchange", function(){ setTimeout(rm,250); });
 })();
 </script>
 

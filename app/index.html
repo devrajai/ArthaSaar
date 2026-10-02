@@ -1230,4 +1230,72 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 
+
+<style id="as-sectreemap-css">
+#sectreemap-card .secpanel{margin-bottom:8px;border:1px solid #ececf0;border-radius:9px;overflow:hidden}
+#sectreemap-card .sechead{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;padding:6px 9px;background:#fafafc;letter-spacing:.2px}
+#sectreemap-card .secblocks{display:flex;flex-wrap:wrap;gap:2px;padding:3px}
+#sectreemap-card .blk{min-width:54px;height:42px;border-radius:5px;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:10px;line-height:1.12;overflow:hidden;flex-basis:54px;flex-shrink:0;padding:0 2px;text-align:center}
+#sectreemap-card .blk b{font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#sectreemap-card .blk span{font-size:9.5px;font-weight:700;opacity:.92}
+</style>
+<script>
+/* ArthaSaar — round 9: Sector Map = ALL SECTORS of the Indian market (sector-grouped heat map) */
+(function(){ "use strict";
+  function probeBase(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(probeBase()+f,{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function col(c){ if(c==null||isNaN(c)) return {bg:"#e6e6ea",fg:"#3a3a3a"}; if(c>0) return {bg:"#bfe9c8",fg:"#0a5c1e"}; if(c<0) return {bg:"#f6c3c3",fg:"#7a1010"}; return {bg:"#e6e6ea",fg:"#3a3a3a"}; }
+  var C=null,SF=null,B=null;
+  function build(){
+    if(!C||!SF||!B) return;
+    var host=document.getElementById("v-heatmap"); if(!host) return;
+    /* drop the old flat (large-cap-only) treemap card */
+    [].slice.call(host.querySelectorAll(".card")).forEach(function(el){
+      if(el.id!=="sectreemap-card" && /BLOOMBERG STYLE|MCAP TREEMAP/.test(el.textContent||"")) el.remove();
+    });
+    if(document.getElementById("sectreemap-card")) return;
+    var bmap={}; (B.stocks||[]).forEach(function(s){ bmap[s.symbol]=s; });
+    var src=C.sectors||{}, secs=[];
+    Object.keys(src).forEach(function(name){
+      var list=src[name].map(function(it){
+        var st=SF[it.symbol]||{}, mc=+st["Market Cap"]||0, bb=bmap[it.symbol]||{};
+        return {sym:it.symbol,name:it.company,mcap:mc,chg:(bb.change_pct!=null?+bb.change_pct:null)};
+      }).filter(function(x){ return x.mcap>0; });
+      if(!list.length) return;
+      var tot=list.reduce(function(a,x){return a+x.mcap;},0);
+      var wavg=list.reduce(function(a,x){return a+(x.chg||0)*x.mcap;},0)/tot;
+      secs.push({name:name,list:list,tot:tot,avg:wavg});
+    });
+    secs.sort(function(a,b){ return b.tot-a.tot; });
+    var nstk=secs.reduce(function(a,s){return a+s.list.length;},0);
+    var card=document.createElement("div"); card.id="sectreemap-card"; card.className="card";
+    var html='<div class="trow" style="display:flex;justify-content:space-between;align-items:center"><b>SECTOR MAP</b><span class="muted" style="font-size:10.5px">ALL SECTORS · INDIA · SIZE = MCAP</span></div>';
+    html+='<div style="font-size:11px;color:#777;margin:2px 0 9px">'+secs.length+' sectors · '+nstk+' stocks · tap a stock for its chart</div>';
+    secs.forEach(function(s){
+      var cc=col(s.avg);
+      html+='<div class="secpanel"><div class="sechead"><span>'+esc(s.name)+'</span><span style="color:'+cc.fg+'">'+(s.avg>=0?"+":"")+s.avg.toFixed(1)+'%</span></div><div class="secblocks">';
+      s.list.sort(function(a,b){return b.mcap-a.mcap;}).forEach(function(x){
+        var c=col(x.chg);
+        html+='<div class="blk" data-sym="'+esc(x.sym)+'" title="'+esc(x.name)+'" style="flex-grow:'+Math.max(x.mcap,1)+';background:'+c.bg+';color:'+c.fg+'"><b>'+esc(x.sym)+'</b><span>'+(x.chg==null?"":((x.chg>=0?"+":"")+x.chg.toFixed(1)+"%"))+'</span></div>';
+      });
+      html+='</div></div>';
+    });
+    card.innerHTML=html;
+    card.addEventListener("click",function(e){
+      var b=e.target.closest(".blk"); if(!b) return;
+      var sym=b.getAttribute("data-sym"); if(!sym) return;
+      try{ if(typeof openCompany==="function"){ openCompany(sym); return; } }catch(_){}
+      location.hash="#company";
+      setTimeout(function(){ try{ if(typeof openCompany==="function") openCompany(sym); }catch(_){} },400);
+    });
+    var fh=host.querySelector(".fshead");
+    if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("constituents.json"),J("screener-fundamentals.json"),J("brain-screener.json")]).then(function(r){ C=r[0]; SF=(r[1]&&r[1].stocks)||r[1]; B=r[2]; build(); }).catch(function(){});
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>20) clearInterval(iv); },700);
+})();
+</script>
+
 </body></html>

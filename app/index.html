@@ -1169,4 +1169,56 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 
+<script>
+/* ArthaSaar — round 6: remove old static sector blocks, robust radar toggle, closable sector card. */
+(function () {
+  "use strict";
+
+  /* ---------- 1. remove the OLD static sector blocks in the heat map ---------- */
+  function rmHeat() {
+    document.querySelectorAll("#v-heatmap .heat").forEach(function (h) {
+      var w = h.parentNode;
+      h.remove();
+      if (w && w.parentNode && w.classList && !w.classList.contains("view") && w.children.length === 0) w.remove();
+    });
+  }
+  rmHeat();
+
+  /* ---------- 2. robust radar -> small round toggle button ---------- */
+  function convertRadars() {
+    document.querySelectorAll(".view > .radar").forEach(function (r) {
+      if (r._conv) return; r._conv = 1;
+      var v = r.closest(".view"); if (!v) return;
+      var fh = v.querySelector(".fshead"); if (!fh) return;
+      var html = r.outerHTML; r.remove();
+      var btn = document.createElement("button"); btn.className = "rbtn"; btn.type = "button"; btn.innerHTML = "◉ RADAR";
+      var x = fh.querySelector(".xbtn"); fh.insertBefore(btn, x);
+      var holder = document.createElement("div"); holder.style.display = "none"; holder.innerHTML = html;
+      fh.parentNode.insertBefore(holder, fh.nextSibling);
+      btn.addEventListener("click", function () {
+        var open = holder.style.display !== "none";
+        holder.style.display = open ? "none" : "block";
+        btn.classList.toggle("on", !open);
+      });
+    });
+  }
+  convertRadars();
+  var n = 0, iv = setInterval(function () { rmHeat(); convertRadars(); if (++n > 30) clearInterval(iv); }, 600);
+  window.addEventListener("hashchange", function () { setTimeout(function () { rmHeat(); convertRadars(); }, 250); });
+  document.addEventListener("click", function () { setTimeout(function () { rmHeat(); convertRadars(); }, 150); }, true);
+
+  /* ---------- 3. give the opened sector card a close button ---------- */
+  function addClose() {
+    var sc = document.querySelector("#v-heatmap .secopen");
+    if (!sc || sc.querySelector(".scx")) return;
+    var b = document.createElement("button"); b.className = "xbtn scx"; b.type = "button"; b.innerHTML = "✕ CLOSE";
+    b.style.cssText = "float:right;margin:-4px 0 8px 8px";
+    b.addEventListener("click", function () { sc.remove(); });
+    sc.insertBefore(b, sc.firstChild);
+  }
+  var iv2 = setInterval(function () { addClose(); }, 600);
+  setTimeout(function () { clearInterval(iv2); }, 20000);
+})();
+</script>
+
 </body></html>

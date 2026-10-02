@@ -1285,9 +1285,8 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     card.addEventListener("click",function(e){
       var b=e.target.closest(".blk"); if(!b) return;
       var sym=b.getAttribute("data-sym"); if(!sym) return;
-      try{ if(typeof openCompany==="function"){ openCompany(sym); return; } }catch(_){}
+      if(window.openCompanyFS){ window.openCompanyFS(sym); return; }
       location.hash="#company";
-      setTimeout(function(){ try{ if(typeof openCompany==="function") openCompany(sym); }catch(_){} },400);
     });
     var fh=host.querySelector(".fshead");
     if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
@@ -1968,6 +1967,30 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     FUND=r[0]||{}; SF=(r[1]&&r[1].stocks)||{}; var b=r[2]||{}; CI=r[3]||{}; CAND=(r[4]&&r[4].syms)||{}; GTI=(r[5]&&r[5].symbols)||{}; RES=(r[6]&&r[6].results)||[]; NEWS=(r[7]&&r[7].items)||[];
     (b.stocks||[]).forEach(function(s){ BM[s.symbol]=s; });
   });
+})();
+</script>
+
+
+<script>
+/* ArthaSaar — round 19: Screener rows -> full-screen company card */
+(function(){ "use strict";
+  function wire(){
+    var sc=document.getElementById("v-screener");
+    if(sc && !sc._cofsw){
+      var tb=sc.querySelector("tbody");
+      if(tb){ sc._cofsw=1;
+        tb.addEventListener("click", function(e){
+          var tr=e.target.closest("tr"); if(!tr) return;
+          var td=tr.querySelector("td"); if(!td) return;
+          var sym=td.textContent.trim();
+          if(window.openCompanyFS){ window.openCompanyFS(sym); }
+        }, true);
+      }
+    }
+  }
+  wire();
+  var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
 })();
 </script>
 

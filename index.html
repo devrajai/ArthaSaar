@@ -1744,4 +1744,77 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 })();
 </script>
 
+
+<style id="as-idxfs-css">
+.idxfs{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column}
+.idxfs .ifhead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface)}
+.idxfs .ifhead b{font:800 14px var(--font)}
+.idxfs .ifhead small{display:block;font-weight:400;font-size:10px;color:var(--dim)}
+.idxfs .ifbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 0 40px}
+.idxfs table{width:100%;min-width:0;border-collapse:collapse;font-size:10px;table-layout:fixed}
+.idxfs th{position:sticky;top:0;background:var(--surface);font:700 8.5px var(--font);text-transform:uppercase;letter-spacing:.03em;color:var(--dim);padding:7px 4px;text-align:right;border-bottom:1px solid var(--border)}
+.idxfs th:first-child{text-align:left}
+.idxfs td{padding:6px 4px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap;font-size:10px;overflow:hidden;text-overflow:ellipsis}
+.idxfs th:nth-child(1){width:40%}.idxfs th:nth-child(2){width:17%}.idxfs th:nth-child(3){width:15%}.idxfs th:nth-child(4){width:13%}.idxfs th:nth-child(5){width:15%}
+.idxfs td:first-child{text-align:left;white-space:normal}
+.idxfs tr[data-sym]{cursor:pointer}
+.idxfs th:first-child,.idxfs td:first-child{width:42%}
+.idxfs td b{font-size:10.5px}
+.idxfs td small{color:var(--dim);font-size:9.5px;display:block}
+.idxfs .ifnote{padding:16px;color:var(--dim);font-size:11.5px}
+</style>
+<script>
+/* ArthaSaar — round 17: tap an index -> full-screen card of its constituent stocks + fundamentals */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var C=null,SF=null,BM={};
+  function resolve(name){
+    var n=String(name||"").toUpperCase(), L=(C&&C.lists)||{}, S=(C&&C.sectors)||{};
+    if(/NEXT\s*50/.test(n)) return {k:"NIFTY NEXT 50", l:L.niftynext50};
+    if(/MIDCAP\s*150/.test(n)) return {k:"NIFTY MIDCAP 150", l:L.niftymidcap150};
+    if(/SMALLCAP\s*250/.test(n)) return {k:"NIFTY SMALLCAP 250", l:L.niftysmallcap250};
+    if(/NIFTY\s*500/.test(n)) return {k:"NIFTY 500", l:L.nifty500};
+    if(/NIFTY\s*50/.test(n)) return {k:"NIFTY 50", l:L.nifty50};
+    var map=[["BANK","Bank"],["IT","IT"],["AUTO","Auto"],["PHARMA","Pharma"],["FMCG","FMCG"],["METAL","Metal"],["ENERGY","Energy"],["REALTY","Realty"],["MEDIA","Media"],["FINANCIAL|FIN SERV|FINNIFTY","Fin Serv"],["HEALTHCARE","Healthcare"],["CONSUMER DUR|CONS DUR","Cons Dur"],["OIL","Oil & Gas"],["INFRA","Infra"]];
+    for(var i=0;i<map.length;i++){ if(new RegExp(map[i][0]).test(n) && S[map[i][1]]) return {k:"NIFTY "+map[i][1].toUpperCase(), l:S[map[i][1]]}; }
+    return null;
+  }
+  function open(name){
+    var r=resolve(name); var old=document.querySelector(".idxfs"); if(old) old.remove();
+    var box=document.createElement("div"); box.className="idxfs";
+    if(!r||!r.l||!r.l.length){
+      box.innerHTML='<div class="ifhead"><b>'+esc(name)+'</b><button class="xbtn ifx" type="button">\u2715 CLOSE</button></div><div class="ifnote">Constituent list not available for this index in the free feed. Available: NIFTY 50 / NEXT 50 / MIDCAP 150 / SMALLCAP 250 / NIFTY 500 and the sectoral indices.</div>';
+    } else {
+      var list=r.l.map(function(it){ var sf=(SF||{})[it.symbol]||{}, b=BM[it.symbol]||{}; return {sym:it.symbol, co:it.company, price:b.price, chg:b.change_pct, mcap:sf["Market Cap"], pe:sf["Stock P/E"], roe:sf["ROE"], dy:sf["Dividend Yield"]}; });
+      list.sort(function(a,b){ return (b.mcap||0)-(a.mcap||0); });
+      var h='<div class="ifhead"><div><b>'+esc(name)+'</b><small>'+list.length+' stocks \u00b7 tap a stock for its card</small></div><button class="xbtn ifx" type="button">\u2715 CLOSE</button></div>';
+      h+='<div class="ifbody"><table><thead><tr><th>Stock</th><th>Price</th><th>Day%</th><th>P/E</th><th>ROE</th></tr></thead><tbody>';
+      h+=list.map(function(x){ return '<tr data-sym="'+esc(x.sym)+'"><td><b>'+esc(x.sym)+'</b><small>'+esc((x.co||"").slice(0,24))+(x.mcap?' \u00b7 \u20b9'+nf((x.mcap||0)/100,0)+'Cr':'')+(x.dy?' \u00b7 div '+nf(x.dy,2)+'%':'')+'</small></td><td>'+nf(x.price,2)+'</td><td class="'+(x.chg>=0?"up":"dn")+'">'+pc(x.chg)+'</td><td>'+nf(x.pe,1)+'</td><td>'+nf(x.roe,1)+'%</td></tr>'; }).join("");
+      h+='</tbody></table></div>';
+      box.innerHTML=h;
+    }
+    document.body.appendChild(box);
+    box.querySelector(".ifx").addEventListener("click", function(){ box.remove(); });
+    box.querySelectorAll("tr[data-sym]").forEach(function(tr){ tr.addEventListener("click", function(){
+      var s=tr.getAttribute("data-sym"); box.remove();
+      try{ if(typeof openCompany==="function"){ location.hash="#company"; setTimeout(function(){ openCompany(s); },350); return; } }catch(_){}
+      location.hash="#company";
+    });});
+  }
+  function wire(){
+    var tb=document.getElementById("idxBody"); if(!tb||tb._idxw) return; tb._idxw=1;
+    tb.addEventListener("click", function(e){ var tr=e.target.closest("tr"); if(!tr) return; var td=tr.querySelector("td"); if(!td) return; open(td.textContent.trim()); }, true);
+  }
+  Promise.all([J("constituents.json"),J("screener-fundamentals.json"),J("brain-screener.json")]).then(function(r){
+    C=r[0]||{}; SF=(r[1]&&r[1].stocks)||{}; var b=r[2]||{}; (b.stocks||[]).forEach(function(s){ BM[s.symbol]=s; }); wire();
+  });
+  var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
+})();
+</script>
+
 </body></html>

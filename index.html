@@ -444,7 +444,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <script>
 (function(){
 "use strict";
-var SECS=[["home","Home","aapka hub"],["indices","Indices","139 tracked"],["heatmap","Sector Map","today by sector"],["screener","Screener","2,085 stocks"],["fundamentals","Fundamentals","PE ROE debt"],["mf","MF Tracker","nav sip funds"],["deepfund","Deep Fund","screener.in weekly"],["filings","Filings","company results"],["futures","Futures","F&O chains"],["gti","GTI · Charts · AI","zones charts forecast"],["ipo","IPO","terminal GMP listing"],["aibrain","AI Brain","mood crash report"],["internals","Internals","breadth TRIN McClellan"],["crypto","Crypto","top 100 coins"],["global","Global","US gold crude"],["news","News","India market"],["events","Events","GDP jobs RBI"],["portfolio","Portfolio","holdings P/L"],["learn","Learn","strategies studies notes"]];
+var SECS=[["home","Home","aapka hub"],["indices","Indices","139 tracked"],["heatmap","Sector Map","today by sector"],["screener","Screener","2,085 stocks"],["fundamentals","Fundamentals","PE ROE debt"],["mf","MF Tracker","nav sip funds"],["filings","Filings","company results"],["futures","Futures","F&O chains"],["gti","GTI · Charts · AI","zones charts forecast"],["ipo","IPO","terminal GMP listing"],["aibrain","AI Brain","mood crash report"],["internals","Internals","breadth TRIN McClellan"],["crypto","Crypto","top 100 coins"],["global","Global","US gold crude"],["news","News","India market"],["events","Events","GDP jobs RBI"],["portfolio","Portfolio","holdings P/L"],["learn","Learn","strategies studies notes"]];
 var clk=document.getElementById("clock");
 function tick(){var d=new Date();var h=d.getHours();var ap=h>=12?"PM":"AM";h=h%12;if(h===0)h=12;clk.textContent=[h,d.getMinutes(),d.getSeconds()].map(function(n){return String(n).padStart(2,"0");}).join(":")+" "+ap;}
 tick();setInterval(tick,1000);
@@ -1720,12 +1720,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     var items=(N.items||[]);
     var econ=(P&&P.ind||[]).length;
     var h='<div class="ntabs"><button class="on" data-t="all">All</button><button data-t="Markets">Markets</button><button data-t="Crypto">Crypto</button><button data-t="Global">Global</button><button data-t="Economy">Economy</button></div>';
-    h+='<div class="nfeat">';
-    h+='<div class="nfcard"><span class="ic">\uD83D\uDCCA</span><span><b>ECONOMY PULSE</b><small>macro \u00b7 rates \u00b7 policy \u2014 India ka pulse'+(econ?" \u00b7 "+econ+" releases":"")+'</small></span></div>';
-    h+='<div class="nfcard"><span class="ic">\uD83D\uDCF6</span><span><b>NEWS VOLUME</b><small>market news ki traffic \u2014 '+items.length+' items \u00b7 '+ago(N.updated)+'</small></span></div>';
-    h+='<div class="nfcard"><span class="ic">\u2705</span><span><b>DAILY AUTHENTIC NEWS</b><small>verified sources only \u2014 koi bhondu tip nahi</small></span></div>';
-    h+='</div>';
-    h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
+h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
     h+=items.map(function(x){ return '<div class="nitem" data-topic="'+esc(x.topic)+'"><span class="tag">'+esc(x.topic||"NEWS")+'</span><b><a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a></b><small>'+esc(x.publisher||"")+' \u00b7 '+ago(x.published)+'</small></div>'; }).join("");
     h+='</div>';
     var card=document.createElement("div"); card.id="as-news-card"; card.className="card"; card.innerHTML=h;

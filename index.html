@@ -266,6 +266,17 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 .rstrip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px}
 .rst{flex:0 0 auto;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 12px;font-size:12px;white-space:nowrap}
 .rst b{color:var(--accent)}
+/* round 3: full screen everywhere + radar cards */
+.view.on:not(#v-home){position:fixed;inset:0;z-index:70;background:var(--bg);overflow:auto;padding:16px 14px}
+.radar{border:1px solid var(--border2);border-radius:16px;padding:12px 14px;margin:0 0 12px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,transparent),transparent)}
+.radar .rt{display:inline-flex;align-items:center;gap:7px;font:800 12px var(--font);letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border2);background:var(--surface);border-radius:999px;padding:5px 12px}
+.radar .rs{font:400 11px var(--mono);color:var(--dim);margin:8px 0 6px}
+.radar .rgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-top:6px}
+.radar .rc{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 11px}
+.radar .rc b{display:block;font:800 15px var(--font)}
+.radar .rc span{font:400 10px var(--mono);color:var(--dim)}
+.gauge{height:9px;border-radius:999px;background:linear-gradient(90deg,#ef5b61,#f0a53a,#2bd477);position:relative;margin:8px 0 4px}
+.gauge i{position:absolute;top:-3px;width:4px;height:15px;background:var(--text);border-radius:3px;transform:translateX(-2px)}
 </style>
 </head>
 <body>
@@ -803,6 +814,103 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
 
   /* ---------- boot ---------- */
   fetch("data/fii-dii.json", { cache: "no-store" }).catch(function () { BASE = "../data/"; }).then(function () { renderTF(); renderCS(); });
+})();
+</script>
+
+<script>
+/* ArthaSaar — round 3: full-screen + right-close on EVERY section, per-section RADAR cards (real data). */
+(function () {
+  "use strict";
+  var BASE = "data/", C = {};
+  function nf(x, d) { return (x == null || isNaN(x)) ? "—" : Number(x).toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d }); }
+  function sign(x, d) { return (x == null || isNaN(x)) ? "—" : (x > 0 ? "+" : "") + nf(x, d == null ? 2 : d) + "%"; }
+  function J(n) { return fetch(BASE + n, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(n); return r.json(); }); }
+  function D(n) { return C[n] ? Promise.resolve(C[n]) : J(n).then(function (d) { C[n] = d; return d; }); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function rc(l, v, cls) { return "<div class='rc'><b class='" + (cls || "") + "'>" + v + "</b><span>" + l + "</span></div>"; }
+  function rgrid(items) { return "<div class='rgrid'>" + items.join("") + "</div>"; }
+
+  /* hide the old vertical Learn module cards (we use the horizontal row) */
+  var lg = document.querySelectorAll("#v-learn .grid3"); if (lg[0]) lg[0].style.display = "none";
+
+  /* ---------- session radar (events) ---------- */
+  function mins(h, m) { return h * 60 + m; }
+  function sessions() {
+    var d = new Date(), now = d.getHours() * 60 + d.getMinutes();
+    var S = [
+      ["NSE PRE-OPEN", "09:00", "09:15", "bidding window"],
+      ["NSE LIVE", "09:15", "15:30", "India equity"],
+      ["NSE POST", "15:40", "16:00", "closing collection"],
+      ["GIFT NIFTY", "06:45", "15:45", "Singapore Nifty"],
+      ["EUROPE (DAX/FTSE)", "12:30", "21:00", "Frankfurt/London"],
+      ["US (DOW/NASDAQ)", "19:00", "01:30", "America"],
+      ["MCX COMMODITY", "09:00", "23:30", "gold · silver · crude"],
+      ["CRYPTO", "00:00", "00:00", "24x7 · always open"]
+    ];
+    return S.map(function (s) {
+      var o = s[1].split(":"), c = s[2].split(":"), om = mins(+o[0], +o[1]), cm = mins(+c[0], +c[1]);
+      var live = s[0] === "CRYPTO" ? true : (cm > om ? (now >= om && now < cm) : (now >= om || now < cm));
+      var state = live ? "LIVE" : (now < om ? "opens in " + Math.floor((om - now) / 60) + "h " + ((om - now) % 60) + "m" : "closed");
+      return "<div class='zrow'><span><b>" + s[0] + "</b> <small class='mono'>" + s[1] + "–" + s[2] + " · " + s[3] + "</small></span><b class='" + (live ? "up" : "mut") + "'>" + state + "</b></div>";
+    }).join("");
+  }
+
+  /* ---------- radar builders (real data) ---------- */
+  var R = {
+    indices: function () { return D("breadth.json").then(function (b) { return { t: "📊 INDICES RADAR", s: "breadth · movers", html: rgrid([rc("above 200-DMA", nf(b.above_ema200_pct, 1) + "%", b.above_ema200_pct >= 50 ? "up" : "dn"), rc("near 52w high", nf(b.near_52w_high, 0)), rc("vol spike 2×", nf(b.volume_spike_2x, 0)), rc("RSI<40 (weak)", nf(b.rsi_below_40, 0), "dn")]) }; }); },
+    heatmap: function () { return D("indices-all.json").then(function (ia) { var sec = (ia.indices || []).filter(function (i) { return /^NIFTY (IT|BANK|PHARMA|AUTO|METAL|FMCG|MEDIA|REALTY|PSU BANK|ENERGY|CEMENT|FINANCIAL)/.test(i.index); }); return { t: "🗺️ SECTOR MAP RADAR", s: "aaj ka rotation", html: sec.slice(0, 8).map(function (i) { return "<div class='zrow'><span>" + i.index.replace("NIFTY ", "") + "</span><b class='" + ((i.change_pct || 0) >= 0 ? "up" : "dn") + "'>" + sign(i.change_pct) + "</b></div>"; }).join("") }; }); },
+    screener: function () { return D("brain-screener.json").then(function (b) { var st = b.stocks || [], adv = st.filter(function (s) { return s.change_pct > 0; }).length, ab = st.filter(function (s) { return s.above_ema200; }).length; return { t: "🧭 SCREENER RADAR", s: "universe snapshot", html: rgrid([rc("stocks", nf(st.length, 0)), rc("advancers", nf(adv, 0), "up"), rc("above 200-DMA", nf(ab, 0)), rc("volume spikes", nf(st.filter(function (s) { return (s.vol_vs_avg20 || 0) >= 2; }).length, 0))]) }; }); },
+    fundamentals: function () { return D("brain-screener.json").then(function (b) { var st = b.stocks || [], cheap = st.filter(function (s) { return (s.rsi14 || 100) < 40 && s.above_ema200; }).length; return { t: "📈 FUNDAMENTAL RADAR", s: "sasta ya mehnga · quality", html: rgrid([rc("value screen PE<20·ROE>15", "run", ""), rc("oversold & uptrend", nf(cheap, 0)), rc("above 200-DMA", nf(st.filter(function (s) { return s.above_ema200; }).length, 0))]) }; }); },
+    mf: function () { return D("mf-top.json").then(function (m) { var f = (m.funds || []).slice(0, 1)[0] || {}, n = m.nifty || {}; return { t: "💠 MF RADAR", s: "aaj ka category winner", html: (f.n ? "<div class='zrow'><span>" + esc(f.n.split("·")[0].trim()) + "</span><b class='up'>1y " + sign(f.r1, 1) + "</b></div>" : "") + "<div class='zrow'><span>Nifty 50 benchmark</span><b>1y " + sign(n.r1, 1) + " · 3y " + sign(n.r3, 1) + "</b></div>" }; }); },
+    deepfund: function () { return D("mf-top.json").then(function (m) { var f = (m.funds || []).slice().sort(function (a, b) { return (b.r5 || 0) - (a.r5 || 0); }).slice(0, 4); return { t: "🔎 DEEP FUND RADAR", s: "5-year compounders", html: f.map(function (x) { return "<div class='zrow'><span>" + esc(x.n.split("·")[0].trim()) + "</span><b class='up'>5y " + sign(x.r5, 1) + "</b></div>"; }).join("") }; }); },
+    company: function () { return Promise.resolve({ t: "🏢 COMPANY RADAR", s: "search any stock", html: "<div class='rs'>Type a symbol to load its card (charts + fundamentals).</div>" }); },
+    portfolio: function () { return Promise.resolve({ t: "💼 PORTFOLIO RADAR", s: "holdings · P&L", html: "<div class='rs'>Add transactions to track live P&L (coming next).</div>" }); },
+    futures: function () { return D("futures.json").then(function (f) { var i = (f.indices || [])[0] || {}; var c0 = (i.contracts || [])[0] || {}; return { t: "⛓️ F&O RADAR", s: "index futures · OI", html: rgrid([rc(i.symbol || "NIFTY", nf(i.underlying, 1)), rc("fut OI", nf(c0.oi, 0)), rc("OI change", nf(c0.oi_chg, 0), (c0.oi_chg || 0) >= 0 ? "up" : "dn")]) }; }); },
+    gti: function () { return D("gti.json").then(function (g) { var s = (g.symbols || {})["NIFTY 50"] || {}; return { t: "🎯 GTI RADAR", s: "value zones", html: rgrid([rc("day POC", nf(s.day_poc, 0)), rc("week POC", nf(s.week_poc, 0)), rc("nearest", esc(((s.nearest || [])[0]) || "—"))]) }; }); },
+    gtizones: function () { return D("gti.json").then(function (g) { var s = (g.symbols || {})["NIFTY 50"] || {}; var dz = s.day_zones || {}; return { t: "🧱 GTI ZONES RADAR", s: "demand · supply · POC", html: rgrid([rc("demand", nf((dz.SD || [])[0], 0) + "–" + nf((dz.SD || [])[1], 0), "up"), rc("supply", nf((dz.SS || [])[0], 0) + "–" + nf((dz.SS || [])[1], 0), "dn"), rc("POC", nf(s.day_poc, 0))]) }; }); },
+    gticharts: function () { return Promise.resolve({ t: "📉 CHARTS RADAR", s: "candle · EMA · volume", html: "<div class='rs'>Tap a symbol above to draw its live intraday candle chart.</div>" }); },
+    gtiai: function () { return D("timesfm_forecasts.json").then(function (t) { var mv = (t.movers || []).slice(0, 3); return { t: "🤖 AI RADAR", s: "TimesFM · biggest moves", html: mv.map(function (m) { return "<div class='zrow'><span>" + esc(m.name) + "</span><b class='" + (m.median >= 0 ? "up" : "dn") + "'>" + sign(m.median, 1) + "</b></div>"; }).join("") }; }); },
+    internals: function () { return D("breadth.json").then(function (b) { return { t: "📶 INTERNALS RADAR", s: "breadth · momentum", html: rgrid([rc("RSI>60", nf(b.rsi_above_60, 0), "up"), rc("RSI<40", nf(b.rsi_below_40, 0), "dn"), rc("up 3+ days", nf(b.up_3plus_days, 0)), rc("down 3+ days", nf(b.down_3plus_days, 0), "dn")]) }; }); },
+    aibrain: function () { return D("smart-brain.json").then(function (s) { var g = s.guess || {}; return { t: "🧠 AI BRAIN RADAR", s: "mood · verdict", html: "<div class='zrow'><span>Verdict</span><b>" + esc(g.verdict || "—") + " (" + nf(g.score, 0) + ")</b></div>" }; }); },
+    crypto: function () { return D("crypto.json").then(function (c) { var fg = c.fear_greed || {}, g = c.global || {}, top = (c.top || []).slice().sort(function (a, b) { return (b.chg_24h_pct || 0) - (a.chg_24h_pct || 0); }).slice(0, 4); return { t: "🪙 CRYPTO RADAR", s: "market ka mood", html: "<div class='zrow'><span>" + nf(fg.value, 0) + "/100 · " + esc(fg.label || "") + "</span><b class='" + (fg.value >= 55 ? "up" : fg.value <= 45 ? "dn" : "") + "'>" + (fg.value >= 55 ? "greed" : fg.value <= 45 ? "fear" : "neutral") + "</b></div><div class='gauge'><i style='left:" + nf(fg.value, 0) + "%'></i></div>" + rgrid([rc("mkt cap", "$" + nf(g.total_market_cap_usd / 1e12, 2) + "T", (g.mcap_chg_24h_pct || 0) >= 0 ? "up" : "dn"), rc("BTC dom", nf(g.btc_dominance, 1) + "%"), rc("24h vol", "$" + nf(g.total_volume_usd / 1e9, 1) + "B")]) + "<div class='rs'>Top gainers 24h</div>" + top.map(function (x) { return "<div class='zrow'><span>" + esc(x.symbol) + "</span><b class='up'>" + sign(x.chg_24h_pct, 1) + "</b></div>"; }).join("") }; }); },
+    global: function () { return D("global.json").then(function (g) { var it = g.items || []; function f(n) { return it.filter(function (i) { return i.name === n; })[0] || {}; } var sp = f("S&P 500"), au = f("GOLD"), cr = f("CRUDE OIL WTI"), ux = f("USD/INR") || f("SENSEX"); return { t: "🌍 GLOBAL RADAR", s: "world indices · commodities · India asar", html: rgrid([rc("S&P 500", nf(sp.price, 1), (sp.chg_pct || 0) >= 0 ? "up" : "dn"), rc("GOLD", nf(au.price, 1), (au.chg_pct || 0) >= 0 ? "up" : "dn"), rc("CRUDE WTI", nf(cr.price, 2), (cr.chg_pct || 0) >= 0 ? "up" : "dn"), rc("USD-INR", nf(ux.price, 2))]) }; }); },
+    forex: function () { return D("global.json").then(function (g) { var it = (g.items || []).filter(function (i) { return /INR|Dollar|DXY/i.test(i.name); }); return { t: "💱 FOREX RADAR", s: "USD/INR · dollar index", html: it.map(function (i) { return "<div class='zrow'><span>" + esc(i.name) + "</span><b class='" + ((i.chg_pct || 0) >= 0 ? "up" : "dn") + "'>" + nf(i.price, 2) + " · " + sign(i.chg_pct) + "</b></div>"; }).join("") }; }); },
+    commodities: function () { return D("world.json").then(function (w) { return { t: "🛢️ COMMODITIES RADAR", s: "gold · crude · copper", html: (w.cmd || []).map(function (c) { return "<div class='zrow'><span>" + esc(c.n || "") + "</span><b class='" + ((c.d1 || 0) >= 0 ? "up" : "dn") + "'>" + nf(c.c, 2) + " · " + sign(c.d1) + "</b></div>"; }).join("") }; }); },
+    bonds: function () { return D("indices-all.json").then(function (ia) { var b = (ia.indices || []).filter(function (i) { return /G-SEC|BOND/i.test(i.index); }); return { t: "🏦 BOND RADAR", s: "G-Sec indices", html: b.slice(0, 5).map(function (i) { return "<div class='zrow'><span>" + i.index + "</span><b class='" + ((i.change_pct || 0) >= 0 ? "up" : "dn") + "'>" + nf(i.price, 2) + "</b></div>"; }).join("") || "<div class='rs'>No G-Sec data in feed</div>" }; }); },
+    news: function () { return D("news.json").then(function (n) { return { t: "📰 NEWS RADAR", s: "authentic feed", html: "<div class='zrow'><span>headlines today</span><b>" + nf(n.count || (n.items || []).length, 0) + "</b></div>" + (n.items || []).slice(0, 2).map(function (i) { return "<div class='zrow'><span>" + esc(String(i.title).slice(0, 46)) + "…</span><b class='mut'>" + esc(i.publisher || "") + "</b></div>"; }).join("") }; }); },
+    events: function () { return Promise.resolve({ t: "⏱️ MARKET OPEN-CLOSE RADAR", s: "aaj ke sessions", html: sessions() }); },
+    filings: function () { return D("results.json").then(function (r) { return { t: "📄 FILINGS RADAR", s: "results · dividends", html: (r.results || []).slice(0, 4).map(function (x) { return "<div class='zrow'><span>" + esc(x.sym || x.company || "") + "</span><b class='mut'>" + esc(x.div || x.date || "") + "</b></div>"; }).join("") || "<div class='rs'>No filings in feed</div>" }; }).catch(function () { return null; }); },
+    ipo: function () { return Promise.resolve({ t: "🚀 IPO RADAR", s: "GMP · subscription", html: "<div class='zrow'><span>Live IPO analysis</span><b><a href='https://devrajai.github.io/IpoBodh/' target='_blank' rel='noopener'>IpoBodh →</a></b></div>" }); },
+    ipocal: function () { return R.ipo(); },
+    learn: function () { return Promise.resolve({ t: "📚 LEARN RADAR", s: "modules · rules", html: "<div class='rs'>Tap a module below — opens full screen.</div>" }); }
+  };
+
+  /* ---------- inject fshead + radar into every section ---------- */
+  var titles = { indices: "Indices", heatmap: "Sector Map", screener: "Screener", fundamentals: "Fundamentals", company: "Company", portfolio: "Portfolio", futures: "Futures", global: "Global", gti: "Trading Tools", gtizones: "GTI Zones", gticharts: "Charts", gtiai: "AI Forecast", internals: "Internals", filings: "Filings", news: "News", events: "Events", ipo: "IPO", crypto: "Crypto", learn: "Learn", mf: "MF Tracker", deepfund: "Deep Fund", aibrain: "AI Brain", forex: "Forex", commodities: "Commodities", bonds: "Bonds & G-Sec", ipocal: "IPO Calendar" };
+  document.querySelectorAll(".view").forEach(function (v) {
+    var id = v.id.replace("v-", ""); if (id === "home") return;
+    if (!v.querySelector(".fshead")) {
+      var h = v.querySelector("h2"), t = titles[id] || (h ? h.textContent.split("—")[0].trim() : id);
+      var fh = document.createElement("div"); fh.className = "fshead";
+      fh.innerHTML = "<h2>" + t + "</h2><button class='xbtn' data-go='home'>✕ CLOSE</button>";
+      v.insertBefore(fh, v.firstChild);
+      if (h) h.style.display = "none";
+    }
+    if (R[id] && !v.querySelector(".radar")) {
+      R[id]().then(function (r) {
+        if (!r) return;
+        var rc2 = document.createElement("div"); rc2.className = "radar";
+        rc2.innerHTML = "<div class='rt'>" + r.t + "</div><div class='rs'>" + r.s + "</div>" + r.html;
+        var fh = v.querySelector(".fshead");
+        v.insertBefore(rc2, fh ? fh.nextSibling : v.firstChild);
+      }).catch(function () {});
+    }
+  });
+  /* wire the injected close buttons */
+  document.querySelectorAll(".xbtn[data-go]").forEach(function (b) {
+    if (b._w) return; b._w = 1;
+    b.addEventListener("click", function () { location.hash = "#" + b.getAttribute("data-go"); });
+  });
 })();
 </script>
 

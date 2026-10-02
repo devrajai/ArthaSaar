@@ -2661,4 +2661,85 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
 })();
 </script>
 
+
+<style id="as-geo-css">
+#as-geo-card{font-size:12px}
+#as-geo-card .gsec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+#as-geo-card .gdrv{padding:7px 0;border-bottom:1px solid var(--border)}
+#as-geo-card .gdrv:last-child{border-bottom:0}
+#as-geo-card .gtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+#as-geo-card .gtop b{font-size:11.5px}
+#as-geo-card .gval{font:800 11.5px var(--mono)}
+#as-geo-card .gimp{font-size:10.5px;line-height:1.5;margin-top:3px}
+#as-geo-card .gimp .hurt{color:#a11212;display:block}
+#as-geo-card .gimp .help{color:#0a5c1e;display:block}
+#as-geo-card .gimp .neu{color:var(--dim);display:block}
+#as-geo-card .gnews{padding:6px 0;border-bottom:1px solid var(--border)}
+#as-geo-card .gnews:last-child{border-bottom:0}
+#as-geo-card .gnews a{color:inherit;text-decoration:none;font-size:11.5px;font-weight:700;line-height:1.4}
+#as-geo-card .gnews small{display:block;font-size:9.5px;color:var(--dim)}
+#as-geo-card .gpb{padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;line-height:1.45}
+#as-geo-card .gpb:last-child{border-bottom:0}
+#as-geo-card .gnote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 28: Geo-Political Impact on India (live global drivers + world news + playbook) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?2:d)+"%"; }
+  var DRV=[
+    {k:"crude", l:"Crude Oil (WTI)", f:2, up:{h:"OMCs \u2014 IOC/BPCL/HPCL, aviation, paints, tyres", p:"Upstream \u2014 ONGC, Oil India"}, dn:{h:"Upstream \u2014 ONGC, Oil India", p:"OMCs, aviation, paints"}},
+    {k:"usdinr", l:"USD / INR", f:2, up:{h:"Importers, OMCs, aviation", p:"IT, Pharma, textiles exporters"}, dn:{h:"IT, Pharma, textiles exporters", p:"Importers, OMCs"}},
+    {k:"dxy", l:"Dollar Index (DXY)", f:2, up:{h:"FII flows, importers, metals", p:"IT & Pharma exporters (weak rupee)"}, dn:{h:"IT & Pharma exporters", p:"Importers, metals"}},
+    {k:"gold", l:"Gold", f:1, up:{h:"Jewellery demand", p:"Gold financiers \u2014 Muthoot, Manappuram"}, dn:{h:"Gold financiers", p:"Jewellery demand"}},
+    {k:"us10y", l:"US 10Y Yield", f:2, up:{h:"High-PE growth (IT), FII flows", p:"Banks (margin)"}, dn:{h:"Banks (margin)", p:"High-PE growth, FII flows"}},
+    {k:"spx", l:"S&P 500", f:1, up:{h:"", p:"Risk-on \u2014 IT, metals, FII inflows"}, dn:{h:"Risk-off \u2014 broad de-rating", p:""}},
+    {k:"fii_net_cr", l:"FII cash (net \u20b9Cr)", f:0, up:{h:"", p:"Inflow supports large caps, banks"}, dn:{h:"Outflow pressures large caps, banks", p:""}}
+  ];
+  var M=null,ND=null;
+  function build(){
+    var host=document.getElementById("v-global"); if(!host||!M||!M.today) return;
+    if(document.getElementById("as-geo-card")) return;
+    var t=M.today, h=M.history||[], prev=h.length>1?h[h.length-2]:null;
+    var H='<div class="gsec" style="margin-top:0">\uD83C\uDF0D Today\u2019s Global Drivers \u2192 India impact</div>';
+    DRV.forEach(function(d){
+      var cur=t[d.k]; if(cur==null) return;
+      var pv=prev?prev[d.k]:null;
+      var chg=(pv!=null&&pv!==0)?((cur-pv)/Math.abs(pv)*100):null;
+      var dir=(chg!=null&&chg>0)?"up":(chg!=null&&chg<0)?"dn":"flat";
+      var imp=(dir==="up")?d.up:(dir==="dn")?d.dn:{h:"",p:""};
+      H+='<div class="gdrv"><div class="gtop"><b>'+esc(d.l)+'</b><span class="gval">'+(d.k==="fii_net_cr"?("\u20b9"+nf(cur,0)+"Cr"):nf(cur,d.f))+' <span class="'+((chg==null)?"":(chg>=0?"up":"dn"))+'">'+pc(chg)+'</span></span></div>';
+      H+='<div class="gimp">';
+      if(imp.h) H+='<span class="hurt">\u25BC hurts: '+imp.h+'</span>';
+      if(imp.p) H+='<span class="help">\u25B2 helps: '+imp.p+'</span>';
+      if(!imp.h && !imp.p) H+='<span class="neu">No clear one-way read today</span>';
+      H+='</div></div>';
+    });
+    if((M.signals||[]).length) H+='<div class="gnote">Macro signals: '+esc((M.signals||[]).join(" \u00b7 "))+'</div>';
+    var cats=(ND&&ND.cats)||[], want=["GEOPOLITICS","GLOBAL","ECONOMY/POLICY","AUTHENTIC WIRE"], stories=[];
+    cats.forEach(function(c){ if(want.indexOf(c.name)>-1) (c.stories||[]).forEach(function(s){ stories.push({c:c.name,s:s}); }); });
+    if(stories.length){ H+='<div class="gsec">\uD83D\uDCF0 World &amp; Policy on Watch</div>';
+      H+=stories.slice(0,8).map(function(x){ var s=x.s; return '<div class="gnews"><small>'+esc(x.c)+'</small><a href="'+esc(s.u||s.link||"#")+'" target="_blank" rel="noopener">'+esc(s.t)+'</a><small>'+esc((s.srcs||[]).join(", "))+(s.age!=null?" \u00b7 "+nf(s.age,1)+"h ago":"")+'</small></div>'; }).join("");
+    }
+    H+='<div class="gsec">\uD83D\uDDE3\uFE0F Event \u2192 Sector Playbook (rule of thumb)</div>';
+    H+='<div class="gpb"><b>Middle-East tension / oil spike</b> \u2014 hurts OMCs, aviation, paints; helps ONGC, defence.</div>';
+    H+='<div class="gpb"><b>US Fed rate cut</b> \u2014 EM inflows rise; helps banks, realty, IT.</div>';
+    H+='<div class="gpb"><b>Rupee weakening</b> \u2014 helps IT, Pharma, textiles exporters; hurts importers.</div>';
+    H+='<div class="gpb"><b>US\u2013China trade tension</b> \u2014 India as alternate supplier (textiles, pharma); metals mixed.</div>';
+    H+='<div class="gpb"><b>China stimulus / slowdown</b> \u2014 drives metals &amp; commodity names.</div>';
+    H+='<div class="gpb"><b>US election / policy shift</b> \u2014 volatility; IT (visa), Pharma (drug pricing).</div>';
+    H+='<div class="gnote">Drivers live from data/macro.json (day change vs previous close); news from data/news-digest.json. The playbook is a general rule of thumb, not advice \u2014 position size your own risk.</div>';
+    var card=document.createElement("div"); card.id="as-geo-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=H;
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+  }
+  Promise.all([J("macro.json"),J("news-digest.json")]).then(function(r){ M=r[0]||{}; ND=r[1]||{}; build(); });
+  var n=0,iv=setInterval(function(){ build(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(build,300); });
+})();
+</script>
+
+
 </body></html>

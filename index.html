@@ -1007,7 +1007,7 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     var list = (mf.funds || []).filter(function (f) { return !qq || f.n.toLowerCase().indexOf(qq) > -1 || (f.h || "").toLowerCase().indexOf(qq) > -1; });
     var tb = document.querySelector("#v-mf tbody"); if (!tb) return;
     tb.innerHTML = rowsTo(list.slice(0, 600), [
-      function (f) { return "<b>" + esc(f.n.split("·")[0].trim()) + "</b><br><small class='mono'>" + esc(f.h || "") + "</small>"; },
+      function (f) { return "<b data-c='" + esc(f.c) + "'>" + esc(f.n.split("·")[0].trim()) + "</b><br><small class='mono'>" + esc(f.h || "") + "</small>"; },
       function (f) { return nf(f.v, 4); },
       function (f) { return "<span class='" + (up(f.p) ? "up" : "dn") + "'>" + sign(f.p, 2) + "</span>"; },
       function (f) { return esc((f.k || "").slice(0, 22)); }
@@ -1989,6 +1989,95 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
     }
   }
   wire();
+  var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
+})();
+</script>
+
+
+<style id="as-fofs-css">
+.fofs{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;flex-direction:column}
+.fofs .fohead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface)}
+.fofs .fohead b{font:800 14px var(--font)}
+.fofs .fohead small{display:block;font-weight:400;font-size:10px;color:var(--dim)}
+.fofs .fobody{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 14px 60px;font-size:12px}
+.fofs .fogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.fofs .focell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+.fofs .focell .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.fofs .focell .v{font:800 13px var(--mono)}
+.fofs .fosec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:15px 0 6px}
+.fofs .forow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.fofs .forow:last-child{border-bottom:0}
+.fofs .fobars{display:flex;gap:10px;align-items:flex-end;height:130px;padding:6px 4px 0}
+.fofs .fobgrp{flex:1;display:flex;gap:3px;align-items:flex-end;height:100%;justify-content:center}
+.fofs .fobgrp i{width:14px;border-radius:4px 4px 0 0;display:block}
+.fofs .folab{text-align:center;font-size:9px;color:var(--dim);margin-top:3px}
+.fofs .foleg{display:flex;gap:12px;font-size:9.5px;color:var(--dim);margin-top:6px}
+.fofs .foleg span{display:inline-flex;align-items:center;gap:4px}
+.fofs .foleg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.fofs .fonote{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 20: Mutual Fund -> full-screen card (NAV, returns vs Nifty, category, house) */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  var MF={},TOP={},NIFTY={};
+  function open(code){
+    if(!code) return;
+    var f=(MF.funds||[]).filter(function(x){ return String(x.c)===String(code); })[0]; if(!f) return;
+    var t=(TOP.funds||[]).filter(function(x){ return String(x.c)===String(code); })[0]||{};
+    var old=document.querySelector(".fofs"); if(old) old.remove();
+    var box=document.createElement("div"); box.className="fofs";
+    var nm=f.n||"";
+    var h='<div class="fohead"><div><b>'+esc(nm.split("\u00b7")[0].trim())+'</b><small>'+esc(f.h||"")+' \u00b7 '+esc(f.k||"")+'</small></div><button class="xbtn fox" type="button">\u2715 CLOSE</button></div>';
+    h+='<div class="fobody">';
+    h+='<div class="fogrid">';
+    h+='<div class="focell"><div class="k">nav</div><div class="v">\u20b9'+nf(f.v,4)+'</div></div>';
+    h+='<div class="focell"><div class="k">1-day</div><div class="v '+(f.p>=0?"up":"dn")+'">'+pc(f.p,2)+'</div></div>';
+    h+='<div class="focell"><div class="k">scheme code</div><div class="v">'+esc(f.c)+'</div></div>';
+    h+='</div>';
+    h+='<div class="fosec">\uD83C\uDFE6 Fund House &amp; Category</div>';
+    h+='<div class="forow"><span>AMC (fund house)</span><b>'+esc(f.h||"—")+'</b></div>';
+    h+='<div class="forow"><span>Category</span><b>'+esc((f.k||"—").split(" - ").pop())+'</b></div>';
+    h+='<div class="forow"><span>Scheme</span><b>'+esc(nm.indexOf("Direct")>-1?"Direct":"Regular")+'</b></div>';
+    /* returns chart */
+    h+='<div class="fosec">\uD83D\uDCC8 Returns \u2014 Fund vs Nifty 50</div>';
+    var periods=[["1Y",t.r1,NIFTY.r1],["3Y",t.r3,NIFTY.r3],["5Y",t.r5,NIFTY.r5]];
+    var have=periods.some(function(p){ return p[1]!=null; });
+    if(have){
+      var mx=0; periods.forEach(function(p){ if(p[1]!=null) mx=Math.max(mx,Math.abs(p[1])); if(p[2]!=null) mx=Math.max(mx,Math.abs(p[2])); }); mx=mx||1;
+      h+='<div class="fobars">';
+      periods.forEach(function(p){
+        var fh2=(p[1]!=null)?Math.max(3,Math.abs(p[1])/mx*110):0, nh=(p[2]!=null)?Math.max(3,Math.abs(p[2])/mx*110):0;
+        h+='<div style="flex:1"><div class="fobgrp"><i style="height:'+fh2+'px;background:'+((p[1]||0)>=0?"#16a34a":"#dc2626")+'"></i><i style="height:'+nh+'px;background:#94a3b8"></i></div><div class="folab">'+p[0]+'</div></div>';
+      });
+      h+='</div><div class="foleg"><span><i style="background:#16a34a"></i>Fund</span><span><i style="background:#94a3b8"></i>Nifty 50</span></div>';
+    } else h+='<div class="fonote">Historical returns not in feed for this scheme (only the top 32 funds carry returns).</div>';
+    h+='<div class="forow" style="margin-top:6px"><span>1Y / 3Y / 5Y return</span><b>'+pc(t.r1,1)+' / '+pc(t.r3,1)+' / '+pc(t.r5,1)+'</b></div>';
+    h+='<div class="forow"><span>Nifty 50 (benchmark) 1Y / 3Y / 5Y</span><b>'+pc(NIFTY.r1,1)+' / '+pc(NIFTY.r3,1)+' / '+pc(NIFTY.r5,1)+'</b></div>';
+    h+='<div class="fosec">\uD83D\uDCB0 SIP Snapshot (illustrative)</div>';
+    h+='<div class="forow"><span>\u20b910,000/mo @ fund 5Y CAGR</span><b>'+(t.r5!=null?("\u20b9"+nf(10000*(((Math.pow(1+t.r5/100,1/5)-1)*12)+1),0)+"/yr @ "+nf(Math.pow(1+t.r5/100,1/5)*100-100,1)+"%/yr"):"—")+'</b></div>';
+    h+='<div class="fonote">Fund-manager names, AUM, expense ratio, portfolio holdings and sector weightage are not in the free AMFI NAV feed (source is AMFI NAVAll). So they are not shown rather than invented. NAV is the latest published value.</div>';
+    h+='</div>';
+    box.innerHTML=h;
+    document.body.appendChild(box);
+    box.querySelector(".fox").addEventListener("click", function(){ box.remove(); });
+  }
+  window.openFundFS=open;
+  function wire(){
+    var sc=document.getElementById("v-mf"); if(!sc||sc._fofsw) return; sc._fofsw=1;
+    sc.addEventListener("click", function(e){
+      var tr=e.target.closest("tbody tr"); if(!tr) return;
+      var b=tr.querySelector("td b"); if(!b) return;
+      var c=b.getAttribute("data-c");
+      if(c && window.openFundFS) window.openFundFS(c);
+    }, true);
+  }
+  Promise.all([J("mf.json"),J("mf-top.json")]).then(function(r){ MF=r[0]||{}; TOP=r[1]||{}; NIFTY=TOP.nifty||{}; wire(); });
   var n=0,iv=setInterval(function(){ wire(); if(++n>30) clearInterval(iv); },600);
   window.addEventListener("hashchange",function(){ setTimeout(wire,300); });
 })();

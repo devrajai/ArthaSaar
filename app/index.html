@@ -237,9 +237,39 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 .dock .ds{min-width:64px}
 @media(max-width:380px){.dock .db small{display:none}.dock .db{min-width:40px;height:40px}}
 .nrow{flex-wrap:wrap;overflow:visible}
+/* ===== round 2 additions ===== */
+.nav{display:flex!important}
+.nrow{flex-wrap:nowrap!important;overflow-x:auto!important;gap:3px!important}
+.nav button{font-size:11px!important;padding:6px 10px!important}
+.ng{font-size:7px!important;letter-spacing:.1em!important}
+#v-gticharts.on,#v-gtizones.on,#v-gtiai.on,#v-aibrain.on,#v-internals.on,#v-futures.on,#v-company.on{position:fixed;inset:0;z-index:70;background:var(--bg);overflow:auto;padding:16px 14px}
+/* lockscreen */
+.lock{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse 60% 40% at 50% 0%,color-mix(in srgb,var(--accent) 12%,transparent),transparent),var(--bg)}
+.lock.hide{display:none}
+.lock .box{width:min(400px,100%);background:var(--surface);border:var(--bw,1px) solid var(--border2);border-radius:20px;padding:26px;text-align:center;box-shadow:var(--shadow)}
+.lock .mark{width:56px;height:56px;border-radius:16px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--accent),#7c5cff)}
+.lock h1{font-size:20px;margin:0 0 6px;letter-spacing:.06em}
+.lock p{color:var(--dim);font-size:12.5px;margin:0 0 16px}
+.lock input{width:100%;text-align:center;letter-spacing:3px;padding:12px;border-radius:12px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font:600 15px var(--font)}
+.lock .err{color:#e04050;font-size:12px;min-height:16px;margin:8px 0 0}
+/* home timeframe bar */
+.tfbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px}
+.tfb{border:1px solid var(--border2);background:var(--surface);color:var(--dim);border-radius:999px;padding:6px 12px;cursor:pointer;font:600 11px var(--font)}
+.tfb.on{background:var(--accent);color:#fff;border-color:transparent}
+/* learn modules horizontal */
+.lmods{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
+.lmod{flex:0 0 auto;min-width:160px;border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:12px;cursor:pointer;text-align:left}
+.lmod:hover{border-color:var(--accent)}
+.lmod b{display:block;font-size:13px}
+.lmod span{font-size:11px;color:var(--dim)}
+/* radar strip */
+.rstrip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px}
+.rst{flex:0 0 auto;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 12px;font-size:12px;white-space:nowrap}
+.rst b{color:var(--accent)}
 </style>
 </head>
 <body>
+<div class="lock" id="lock"><div class="box"><div class="mark">अ</div><h1>ARTHASAAR</h1><p>This terminal is private. <b>Authorised access only.</b></p><form id="lockForm" autocomplete="off"><input type="password" id="pw" placeholder="Enter password" autocomplete="off" autocapitalize="off"><button type="submit" style="width:100%;margin-top:10px;padding:12px;border:0;border-radius:12px;background:var(--accent);color:#fff;font:700 13px var(--font);cursor:pointer">ENTER</button><p class="err" id="lockErr"></p></form></div></div>
 <header class="hdr" id="hdr">
   <div class="top">
     <div class="brand"><div class="mk">AS</div><div><b>ARTHASAAR</b></div></div>
@@ -247,7 +277,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       <span class="pill"><span class="dot"></span>NSE</span>
       <button class="pill tbtn" id="themeBtn" title="Look toggle — theme change">◐ LOOK</button>
       <span class="clock" id="clockWrap"><b id="clock">--:--:--</b></span>
-      <button class="pill" data-go="ipo" style="cursor:pointer;padding:4px 14px">IPO</button>
+      <button class="pill" id="ipoBtn" style="cursor:pointer;padding:4px 14px">IPO</button>
     </div>
   </div>
   <nav class="nav">
@@ -266,7 +296,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
       <button data-go="crypto">Crypto</button>
       <button data-go="global">Global</button>
       <button data-go="news">News</button>
-      <button data-go="events">Events</button>
+      <button data-go="events">Events</button><button data-go="forex">Forex</button><button data-go="commodities">Commodities</button><button data-go="bonds">Bonds</button><button data-go="ipocal">IPO Cal</button>
     </div>
   </nav>
 </header>
@@ -284,6 +314,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
     <div class="zrow"><span>Small Cap</span><b class="dn">−0.44%</b></div>
   </div></div>
 </div>
+<div class="card" style="margin-top:10px"><div class="sh2">Live chart <span class="fr" id="tfSym">NIFTY 50</span></div><div style="padding:10px 12px"><div class="tfbar"><button class="tfb on" data-tf="NIFTY">NIFTY 50</button><button class="tfb" data-tf="BANKNIFTY">Bank Nifty</button><button class="tfb" data-tf="SENSEX">Sensex</button><button class="tfb" data-tf="FINNIFTY">Fin Nifty</button><button class="tfb on" data-mode="candle">Candle</button><button class="tfb" data-mode="line">Line</button></div><div id="tfChart"></div></div></div>
 <div class="card" style="margin-top:10px"><div class="sh2">FII / DII — 5 days</div><div style="padding:6px 14px 10px">
     <div class="zrow"><span>Mon</span><span><b class="dn">−2,140</b> <small class="mono">FII</small> · <b class="up">+1,785</b> <small class="mono">DII</small></span></div>
     <div class="zrow"><span>Fri</span><span><b class="up">+3,412</b> <small class="mono">FII</small> · <b class="dn">−820</b> <small class="mono">DII</small></span></div>
@@ -326,7 +357,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <section class="view" id="v-global"><h2>Global — US · gold · crude</h2><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Market</th><th>Value</th><th>Chg%</th></tr></thead><tbody><tr><td>Nasdaq</td><td>21,442.10</td><td><span class='up'>+0.61%</span></td></tr><tr><td>S&P 500</td><td>6,108.40</td><td><span class='up'>+0.28%</span></td></tr><tr><td>Dow Jones</td><td>45,212.05</td><td><span class='up'>+0.18%</span></td></tr><tr><td>Nikkei 225</td><td>42,104.80</td><td><span class='dn'>−0.36%</span></td></tr><tr><td>Hang Seng</td><td>26,412.55</td><td><span class='up'>+1.04%</span></td></tr><tr><td>Brent Crude</td><td>$71.84</td><td><span class='dn'>−0.82%</span></td></tr><tr><td>Gold</td><td>$3,912/oz</td><td><span class='up'>+0.44%</span></td></tr><tr><td>USD/INR</td><td>88.21</td><td><span class='dn'>−0.05%</span></td></tr></tbody></table></div></section>
 <section class="view" id="v-gti"><div class="fshead"><h2>Trading Tools</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="trow"><button class="tb" data-go="futures">Futures</button><button class="tb" data-go="gticharts">Charts</button><button class="tb" data-go="gtizones">GTI</button><button class="tb" data-go="gtiai">AI</button><button class="tb" data-go="aibrain">AI Brain</button><button class="tb" data-go="internals">Internals</button></div><div class="sect">QUICK VIEW</div><div class="grid3"><div class="card"><div class="sh2">Futures · NIFTY</div><div style="padding:6px 14px 10px"><div class="zrow"><span>LTP</span><b class="up">26,518.50</b></div><div class="zrow"><span>OI change</span><b class="up">+6.2%</b></div><div class="zrow"><span>Basis</span><b>+89 pts</b></div></div></div><div class="card"><div class="sh2">Options · PCR</div><div style="padding:6px 14px 10px"><div class="zrow"><span>Put wall</span><b class="up">26,200</b></div><div class="zrow"><span>Call wall</span><b class="dn">26,700</b></div><div class="zrow"><span>PCR</span><b>1.12</b></div></div></div><div class="card"><div class="sh2">AI · 21-day</div><div style="padding:6px 14px 10px"><div class="zrow"><span>Target</span><b class="up">27,100</b></div><div class="zrow"><span>Confidence</span><b>72%</b></div><div class="zrow"><span>Trend</span><b class="up">UP</b></div></div></div></div></section>
 <section class="view" id="v-gtizones"><h2>GTI Zones — demand · supply · POC</h2><div style="margin:-4px 0 10px"><button class="btk" data-go="gti">◂ TOOLS</button></div><div class="grid3"><div class="card"><div class="sh2">NIFTY 50 — Zones</div><div style="padding:6px 14px 10px"><div class="zrow"><span>Demand 15m</span><b class="up">26,180 – 26,260</b></div><div class="zrow"><span>Supply 15m</span><b class="dn">26,620 – 26,700</b></div><div class="zrow"><span>POC day</span><b class="">26,395</b></div></div></div><div class="card"><div class="sh2">BANK NIFTY — Zones</div><div style="padding:6px 14px 10px"><div class="zrow"><span>Demand 15m</span><b class="up">58,040 – 58,180</b></div><div class="zrow"><span>Supply 15m</span><b class="dn">59,100 – 59,240</b></div><div class="zrow"><span>POC day</span><b class="">58,405</b></div></div></div><div class="card"><div class="sh2">RELIANCE — Zones</div><div style="padding:6px 14px 10px"><div class="zrow"><span>Demand 1h</span><b class="up">1,448 – 1,462</b></div><div class="zrow"><span>Supply 1h</span><b class="dn">1,522 – 1,538</b></div><div class="zrow"><span>POC day</span><b class="">1,481</b></div></div></div></div></section>
-<section class="view" id="v-gticharts"><h2>Charts — TradingView</h2><div style="margin:-4px 0 10px"><button class="btk" data-go="gti">◂ TOOLS</button></div>
+<section class="view" id="v-gticharts"><div class="fshead"><h2>Charts</h2><button class="xbtn" data-go="gti">◂ TOOLS</button></div><div class="tfbar"><button class="tfb on" data-cs="NIFTY">NIFTY</button><button class="tfb" data-cs="BANKNIFTY">BANKNIFTY</button><button class="tfb" data-cs="SENSEX">SENSEX</button><button class="tfb" data-cs="FINNIFTY">FINNIFTY</button><button class="tfb" data-cs="RELIANCE">RELIANCE</button><button class="tfb" data-cs="TCS">TCS</button><button class="tfb" data-cs="INFY">INFY</button></div><div id="cChart"></div>
 <div class="pbar"><span class="plab">Timeframe presets</span></div><div class="chips"><span class="fch on">1D · 5m</span><span class="fch">1W · 1h</span><span class="fch">1M · 1D</span><span class="fch">1Y · 1W</span><span class="fch">MAX</span></div>
 <div class="card"><div class="sh2">NIFTY 50 · 1D <span class="up">+0.74%</span><span class="fr">H 26,466 · L 26,126</span></div><div style="padding:10px 12px"><svg viewBox="0 0 800 170" preserveAspectRatio="none" style="width:100%;height:160px"><path d="M0 30H800M0 85H800M0 140H800" class="gl"/><path d="M0 128L60 118L110 136L170 102L230 114L290 84L350 98L410 68L470 80L530 52L590 64L650 38L710 50L800 22V170H0Z" fill="var(--accent)" opacity=".1"/><path d="M0 128L60 118L110 136L170 102L230 114L290 84L350 98L410 68L470 80L530 52L590 64L650 38L710 50L800 22" fill="none" stroke="var(--accent)" stroke-width="2.5"/></svg></div></div>
 <div class="sect">REPO VERSION MEIN YAHAN AAPKA TRADINGVIEW WIDGET LIVE CHALEGA</div></section>
@@ -339,7 +370,7 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 <section class="view" id="v-events"><h2>Events — GDP · jobs · Fed · RBI</h2><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Date</th><th>Event</th><th>Period</th><th>Impact</th></tr></thead><tbody><tr><td>01 Oct</td><td>RBI MPC Decision</td><td>—</td><td><span class='b dn'>HIGH</span></td></tr><tr><td>02 Oct</td><td>India CPI Inflation</td><td>Sep</td><td><span class='b dn'>HIGH</span></td></tr><tr><td>07 Oct</td><td>US Non-Farm Payrolls</td><td>Sep</td><td><span class='b dn'>HIGH</span></td></tr><tr><td>10 Oct</td><td>IIP Growth</td><td>Aug</td><td><span class='b hold'>MED</span></td></tr><tr><td>15 Oct</td><td>China GDP</td><td>Q3</td><td><span class='b hold'>MED</span></td></tr><tr><td>30 Oct</td><td>F&O Expiry</td><td>Monthly</td><td><span class='b hold'>MED</span></td></tr></tbody></table></div></section>
 <section class="view" id="v-ipo"><h2>IPO Terminal — GMP · listing</h2><div class="grid3"><div class="card"><div class="sh2">OPEN <span class="b buy">LIVE</span></div><div class="ni"><b>Artha Technologies</b><small>₹210–225 · 4.8× sub · GMP ₹38</small></div><div class="ni"><b>Nova Consumer</b><small>₹145–152 · 2.6× sub</small></div></div><div class="card"><div class="sh2">UPCOMING</div><div class="ni"><b>FinServe Digital</b><small>Opens 02 Oct · band TBA</small></div><div class="ni"><b>Green Infra</b><small>DRHP filed</small></div></div><div class="card"><div class="sh2">CLOSED</div><div class="ni"><b>Metro Retail</b><small>Listing 30 Sep</small></div><div class="ni"><b>DataCore Systems</b><small>Allotment out</small></div></div></div></section>
 <section class="view" id="v-crypto"><h2>Crypto — top 100 coins</h2><div class="srow"><input type="search" placeholder="Search coin…"></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Coin</th><th>Price</th><th>24h%</th><th>7d%</th><th>MCap</th></tr></thead><tbody><tr><td>BTC</td><td>$96,412</td><td><span class='up'>+1.8%</span></td><td><span class='up'>+4.2%</span></td><td>$1.91T</td></tr><tr><td>ETH</td><td>$3,412</td><td><span class='up'>+2.4%</span></td><td><span class='up'>+6.1%</span></td><td>$411B</td></tr><tr><td>BNB</td><td>$704</td><td><span class='up'>+0.9%</span></td><td><span class='dn'>−1.2%</span></td><td>$102B</td></tr><tr><td>SOL</td><td>$188.4</td><td><span class='dn'>−0.6%</span></td><td><span class='up'>+8.8%</span></td><td>$89B</td></tr><tr><td>XRP</td><td>$2.41</td><td><span class='up'>+1.1%</span></td><td><span class='up'>+2.9%</span></td><td>$138B</td></tr><tr><td>DOGE</td><td>$0.3184</td><td><span class='dn'>−2.2%</span></td><td><span class='dn'>−5.4%</span></td><td>$46B</td></tr></tbody></table></div></section>
-<section class="view" id="v-learn"><div class="fshead"><h2>Learn</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="sect">LEARN — MODULES</div>
+<section class="view" id="v-learn"><div class="fshead"><h2>Learn</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="lmods"><button class="lmod" data-lm="structure"><b>Market Structure</b><span>trend · ranges · S/R</span></button><button class="lmod" data-lm="risk"><b>Risk Management</b><span>position size · stop loss</span></button><button class="lmod" data-lm="candles"><b>Candlesticks</b><span>body · wick · volume</span></button></div><div class="sect">LEARN — MODULES</div>
 <div class="grid3">
 <div class="card kpi"><div class="lbl">MODULE 01</div><div class="num" style="font-size:16px">Candlesticks</div><div class="chg" style="font-family:var(--font);line-height:1.5;margin-top:4px">Body · wick · volume — price ki bhasha</div></div>
 <div class="card kpi"><div class="lbl">MODULE 02</div><div class="num" style="font-size:16px">Risk Management</div><div class="chg" style="font-family:var(--font);line-height:1.5;margin-top:4px">Position sizing · stop loss · drawdown limits</div></div>
@@ -367,6 +398,10 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 </div>
 <div class="card" style="margin-top:10px"><div class="sh2">Rotation Report</div><div style="padding:12px 14px;font-size:12px;line-height:1.7;color:var(--dim)">Momentum IT → Pharma mein shift ho raha hai. Banks stable. Small cap underperform — avoid fresh entries. AI report daily 18:00 IST.</div></div></section>
 
+<section class="view" id="v-forex"><div class="fshead"><h2>Forex</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Pair</th><th>Rate</th><th>Chg%</th></tr></thead><tbody id="fxBody"></tbody></table></div></section>
+<section class="view" id="v-commodities"><div class="fshead"><h2>Commodities</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Commodity</th><th>Price</th><th>1d%</th><th>1m%</th></tr></thead><tbody id="cmdBody"></tbody></table></div></section>
+<section class="view" id="v-bonds"><div class="fshead"><h2>Bonds &amp; G-Sec</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Index</th><th>Price</th><th>Chg%</th></tr></thead><tbody id="bondBody"></tbody></table></div></section>
+<section class="view" id="v-ipocal"><div class="fshead"><h2>IPO Calendar</h2><button class="xbtn" data-go="home">✕ CLOSE</button></div><div class="grid3"><div class="card"><div class="sh2">OPEN <span class="b buy">LIVE</span></div><div class="ni"><b>Artha Technologies</b><small>₹210–225 · 4.8× sub · GMP ₹38</small></div><div class="ni"><b>Nova Consumer</b><small>₹145–152 · 2.6× sub</small></div></div><div class="card"><div class="sh2">UPCOMING</div><div class="ni"><b>FinServe Digital</b><small>Opens 02 Oct</small></div><div class="ni"><b>Green Infra</b><small>DRHP filed</small></div></div><div class="card"><div class="sh2">CLOSED</div><div class="ni"><b>Metro Retail</b><small>Listing 30 Sep</small></div></div></div><div class="row"><button class="btn amber" onclick="window.open('https://devrajai.github.io/IpoBodh/','_blank','noopener')">Open IpoBodh →</button></div></section>
 </main>
 
 <div class="dock">
@@ -624,6 +659,150 @@ filt("qIdx","idxBody");filt("qScr","scrBody");
       if (cards[0]) cards[0].innerHTML = "<div class='sh2'>NIFTY 50 — Zones</div><div style='padding:6px 14px 10px'><div class='zrow'><span>Day demand</span><b class='up'>" + nf((dz.SD || [])[0], 0) + " – " + nf((dz.SD || [])[1], 0) + "</b></div><div class='zrow'><span>Day supply</span><b class='dn'>" + nf((dz.SS || [])[0], 0) + " – " + nf((dz.SS || [])[1], 0) + "</b></div><div class='zrow'><span>POC day</span><b>" + nf(s.day_poc, 0) + "</b></div></div>";
     }).catch(function () {});
   }
+})();
+</script>
+
+<script>
+/* ArthaSaar — round 2: lockscreen, live charts, learn modules, forex/commodities/bonds, events, mood. */
+(function () {
+  "use strict";
+  var BASE = "data/";
+  function nf(x, d) { return (x == null || isNaN(x)) ? "—" : Number(x).toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d }); }
+  function sign(x, d) { return (x == null || isNaN(x)) ? "—" : (x > 0 ? "+" : "") + nf(x, d == null ? 2 : d) + "%"; }
+  function J(n) { return fetch(BASE + n, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(n); return r.json(); }); }
+
+  /* ---------- 1. LOCKSCREEN ---------- */
+  var PASS = "131217";
+  var lock = document.getElementById("lock"), pw = document.getElementById("pw"), err = document.getElementById("lockErr");
+  function unlocked() { try { return localStorage.getItem("as-unlock") === "1"; } catch (e) { return false; } }
+  function hideLock() { if (lock) lock.classList.add("hide"); }
+  if (unlocked()) hideLock();
+  var lf = document.getElementById("lockForm");
+  if (lf) lf.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (pw.value === PASS) { try { localStorage.setItem("as-unlock", "1"); } catch (x) {} hideLock(); }
+    else { err.textContent = "✕ Incorrect password. Try again."; pw.value = ""; pw.focus(); }
+  });
+  if (pw) pw.addEventListener("input", function () { err.textContent = ""; });
+
+  /* ---------- 2. CANDLE / LINE renderer (from candles.json) ---------- */
+  function ema(v, p) { var k = 2 / (p + 1), e = v[0], o = []; for (var i = 0; i < v.length; i++) { e = i ? v[i] * k + e * (1 - k) : v[i]; o.push(e); } return o; }
+  function candleSVG(d) {
+    var O = d.o, H = d.h, L = d.l, C = d.c, V = d.v || [], n = C.length; if (n < 4) return "<div class='mut'>no data</div>";
+    var w = 760, ph = 210, vh = 42, pad = 6, cw = (w - pad * 2) / n;
+    var hi = Math.max.apply(null, H), lo = Math.min.apply(null, L), rg = (hi - lo) || 1;
+    var X = function (i) { return pad + i * cw + cw / 2; }, Y = function (v) { return 6 + (hi - v) / rg * (ph - 12); };
+    var s = "<svg viewBox='0 0 " + w + " " + (ph + vh + 8) + "' preserveAspectRatio='none' style='width:100%;height:230px'>";
+    for (var gy = 0; gy <= 4; gy++) { var yy = 6 + gy * (ph - 12) / 4; s += "<line x1='0' y1='" + yy + "' x2='" + w + "' y2='" + yy + "' stroke='rgba(140,180,230,.14)'/>"; }
+    for (var i = 0; i < n; i++) { var up = C[i] >= O[i], col = up ? "#2bd477" : "#ef5b61";
+      s += "<line x1='" + X(i) + "' y1='" + Y(H[i]) + "' x2='" + X(i) + "' y2='" + Y(L[i]) + "' stroke='" + col + "'/>";
+      var y1 = Y(Math.max(O[i], C[i])), y2 = Y(Math.min(O[i], C[i]));
+      s += "<rect x='" + (X(i) - cw * .3) + "' y='" + y1 + "' width='" + (cw * .6) + "' height='" + Math.max(1, y2 - y1) + "' fill='" + col + "' rx='1'/>"; }
+    var e20 = ema(C, 20), e50 = ema(C, 50);
+    s += "<polyline points='" + e20.map(function (v, i) { return X(i) + "," + Y(v); }).join(" ") + "' fill='none' stroke='#4aa8ff' stroke-width='1.6'/>";
+    s += "<polyline points='" + e50.map(function (v, i) { return X(i) + "," + Y(v); }).join(" ") + "' fill='none' stroke='#ffb457' stroke-width='1.6'/>";
+    if (V.length) { var vmax = Math.max.apply(null, V) || 1, vy = ph + 6; for (var i = 0; i < n; i++) { var up = C[i] >= O[i], bh = V[i] / vmax * (vh - 6); s += "<rect x='" + (X(i) - cw * .3) + "' y='" + (vy + vh - bh) + "' width='" + (cw * .6) + "' height='" + bh + "' fill='" + (up ? "rgba(43,212,119,.5)" : "rgba(239,91,97,.5)") + "' rx='1'/>"; } }
+    return s + "</svg><div class='mut' style='font-size:11px'>candles · EMA20 (blue) · EMA50 (orange) · volume</div>";
+  }
+  function lineSVG(C) {
+    var n = C.length; if (n < 2) return "<div class='mut'>no data</div>";
+    var w = 760, h = 230, pad = 8, hi = Math.max.apply(null, C), lo = Math.min.apply(null, C), rg = (hi - lo) || 1;
+    var pts = C.map(function (v, i) { return (pad + i * (w - pad * 2) / (n - 1)).toFixed(1) + "," + (h - 20 - (v - lo) / rg * (h - 40)).toFixed(1); }).join(" ");
+    var id = "g" + (n % 97) + Math.floor(Math.random() * 1e4);
+    return "<svg viewBox='0 0 " + w + " " + h + "' preserveAspectRatio='none' style='width:100%;height:230px'><defs><linearGradient id='" + id + "' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4aa8ff' stop-opacity='.35'/><stop offset='1' stop-color='#4aa8ff' stop-opacity='0'/></linearGradient></defs><polygon points='" + pad + "," + (h - 20) + " " + pts + " " + (w - pad) + "," + (h - 20) + "' fill='url(#" + id + ")'/><polyline points='" + pts + "' fill='none' stroke='#4aa8ff' stroke-width='2.2'/></svg><div class='mut' style='font-size:11px'>line · close</div>";
+  }
+
+  /* ---------- 3. HOME timeframe chart ---------- */
+  var tf = { sym: "NIFTY", mode: "candle" };
+  function renderTF() {
+    J("candles.json").then(function (c) {
+      var s = (c.syms || {})[tf.sym]; var el = document.getElementById("tfChart"); if (!el) return;
+      if (!s) { el.innerHTML = "<div class='mut'>no data</div>"; return; }
+      var d = s["1h"] || s["15m"] || s["5m"];
+      el.innerHTML = tf.mode === "line" ? lineSVG(d.c) : candleSVG(d);
+      var lab = document.getElementById("tfSym"); if (lab) lab.textContent = tf.sym;
+    }).catch(function () {});
+  }
+  document.querySelectorAll("#v-home [data-tf]").forEach(function (b) {
+    b.onclick = function () { tf.sym = b.getAttribute("data-tf"); document.querySelectorAll("#v-home [data-tf]").forEach(function (x) { x.classList.remove("on"); }); b.classList.add("on"); renderTF(); };
+  });
+  document.querySelectorAll("#v-home [data-mode]").forEach(function (b) {
+    b.onclick = function () { tf.mode = b.getAttribute("data-mode"); document.querySelectorAll("#v-home [data-mode]").forEach(function (x) { x.classList.remove("on"); }); b.classList.add("on"); renderTF(); };
+  });
+
+  /* ---------- 4. CHARTS section ---------- */
+  var cs = "NIFTY";
+  function renderCS() {
+    J("candles.json").then(function (c) {
+      var s = (c.syms || {})[cs]; var el = document.getElementById("cChart"); if (!el) return;
+      if (!s) { el.innerHTML = "<div class='mut'>no data for " + cs + "</div>"; return; }
+      var d = s["1h"] || s["15m"] || s["5m"];
+      el.innerHTML = "<div class='card'><div class='sh2'>" + cs + " · intraday</div><div style='padding:10px 12px'>" + candleSVG(d) + "</div></div>";
+    }).catch(function () {});
+  }
+  document.querySelectorAll("#v-gticharts [data-cs]").forEach(function (b) {
+    b.onclick = function () { cs = b.getAttribute("data-cs"); document.querySelectorAll("#v-gticharts [data-cs]").forEach(function (x) { x.classList.remove("on"); }); b.classList.add("on"); renderCS(); };
+  });
+
+  /* ---------- 5. LEARN modules -> full-screen content ---------- */
+  function panel(title, html) {
+    var ov = document.createElement("div");
+    ov.className = "lock"; ov.style.zIndex = 200;
+    ov.innerHTML = "<div class='box' style='width:min(720px,100%);text-align:left;max-height:88vh;overflow:auto'><div style='display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px'><h1 style='font-size:18px;margin:0'>" + title + "</h1><button class='xbtn' id='pclose'>✕ CLOSE</button></div>" + html + "</div>";
+    document.body.appendChild(ov);
+    ov.querySelector("#pclose").onclick = function () { ov.remove(); };
+    ov.addEventListener("click", function (e) { if (e.target === ov) ov.remove(); });
+  }
+  document.querySelectorAll(".lmod").forEach(function (b) {
+    b.onclick = function () {
+      var k = b.getAttribute("data-lm");
+      J("learn-content.json").then(function (l) {
+        var rows = function (arr) { return (arr || []).map(function (x) { return "<div class='zrow'><span>" + (x.rule || x.term || x.topic || x) + "</span><b class='mut'>" + (x.why || x.meaning || x.point || "") + "</b></div>"; }).join(""); };
+        var html = "";
+        if (k === "structure") html = "<div class='card'><div class='sh2'>Market Structure</div><div style='padding:6px 14px 10px'>" + rows(l.stock_selection && l.stock_selection.short_term_checklist) + "</div></div>";
+        else if (k === "risk") html = "<div class='card'><div class='sh2'>Risk rules</div><div style='padding:6px 14px 10px'>" + rows(l.rules) + "</div></div>";
+        else html = "<div class='card'><div class='sh2'>Candlestick & glossary</div><div style='padding:6px 14px 10px'>" + rows(l.glossary) + "</div></div>";
+        panel(b.querySelector("b").textContent, html);
+      }).catch(function () {});
+    };
+  });
+
+  /* ---------- 6. FOREX / COMMODITIES / BONDS / EVENTS / MOOD ---------- */
+  J("global.json").then(function (g) {
+    var fx = (g.items || []).filter(function (i) { return /INR|DXY|Dollar/i.test(i.name); });
+    var t = document.getElementById("fxBody");
+    if (t && fx.length) t.innerHTML = fx.map(function (i) { var u = i.chg_pct >= 0; return "<tr><td>" + i.name + "</td><td>" + nf(i.price, 2) + "</td><td><span class='" + (u ? "up" : "dn") + "'>" + sign(i.chg_pct) + "</span></td></tr>"; }).join("");
+  }).catch(function () {});
+  J("world.json").then(function (w) {
+    var t = document.getElementById("cmdBody");
+    if (t && w.cmd) t.innerHTML = w.cmd.map(function (c) { var u = (c.d1 || 0) >= 0, u1 = (c.m1 || 0) >= 0; return "<tr><td>" + (c.n || "") + "</td><td>" + nf(c.c, 2) + "</td><td><span class='" + (u ? "up" : "dn") + "'>" + sign(c.d1, 2) + "</span></td><td><span class='" + (u1 ? "up" : "dn") + "'>" + sign(c.m1, 2) + "</span></td></tr>"; }).join("");
+    var fx2 = document.getElementById("fxBody");
+    if (fx2 && w.cmd) { /* add USD/INR from commodities if present */ }
+  }).catch(function () {});
+  J("indices-all.json").then(function (ia) {
+    var t = document.getElementById("bondBody"); if (!t) return;
+    var b = (ia.indices || []).filter(function (i) { return /G-SEC|BOND/i.test(i.index); });
+    t.innerHTML = b.slice(0, 12).map(function (i) { var u = (i.change_pct || 0) >= 0; return "<tr><td>" + i.index + "</td><td>" + nf(i.price, 2) + "</td><td><span class='" + (u ? "up" : "dn") + "'>" + sign(i.change_pct) + "</span></td></tr>"; }).join("") || "<tr><td class='mut'>No G-Sec index data in feed</td></tr>";
+  }).catch(function () {});
+  J("events.json").then(function (ev) {
+    var t = document.querySelector("#v-events tbody"); if (!t || !ev.week) return;
+    t.innerHTML = ev.week.slice(0, 10).map(function (e) { var hi = /High/i.test(e.impact || ""); return "<tr><td>" + (e.date_ist || "").slice(5) + "</td><td>" + e.title + "</td><td>" + (e.country || "") + "</td><td><span class='b " + (hi ? "dn" : "hold") + "'>" + (hi ? "HIGH" : "MED") + "</span></td></tr>"; }).join("");
+  }).catch(function () {});
+  Promise.all([J("mood.json"), J("forda.json")]).then(function (r) {
+    var mood = r[0], f = r[1];
+    var cards = document.querySelectorAll("#v-aibrain .card");
+    if (cards[0]) { var n = cards[0].querySelector(".num"); if (n) { n.textContent = (mood.tag || "").toUpperCase() + " LEAN"; n.className = "num " + (mood.overall >= 55 ? "up" : mood.overall <= 45 ? "dn" : ""); } }
+    var mini = document.querySelectorAll("#v-aibrain .card.kpi .num");
+    if (mini[0]) mini[0].textContent = nf(f.vix, 1);
+    if (mini[1]) mini[1].textContent = nf(f.pcr, 2);
+  }).catch(function () {});
+
+  /* ---------- 7. IPO button -> IpoBodh ---------- */
+  var ib = document.getElementById("ipoBtn");
+  if (ib) ib.onclick = function () { window.open("https://devrajai.github.io/IpoBodh/", "_blank", "noopener"); };
+
+  /* ---------- boot ---------- */
+  fetch("data/fii-dii.json", { cache: "no-store" }).catch(function () { BASE = "../data/"; }).then(function () { renderTF(); renderCS(); });
 })();
 </script>
 

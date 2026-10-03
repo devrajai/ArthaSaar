@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-03T07:59:04.360779+00:00",
+ "updated": "2026-10-03T08:00:36.990566+00:00",
  "healthy": false,
  "summary": {
-  "total": 16,
-  "ok": 10,
-  "problems": 5
+  "total": 17,
+  "ok": 15,
+  "problems": 1
  },
  "feeds": [
   {
@@ -66,12 +66,12 @@
    "id": "yahoo-history",
    "label": "Daily chart history",
    "source": "Yahoo Finance via yfinance",
-   "file": "data/history-index.json",
-   "status": "missing",
-   "updated": null,
-   "age_hours": null,
+   "file": "data/history/",
+   "status": "ok",
+   "updated": "2026-10-03T08:00:36.871698+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 72.0,
-   "coverage": "Full stock history archive"
+   "coverage": "2350 symbol history files"
   },
   {
    "id": "amfi-nav",
@@ -89,9 +89,9 @@
    "label": "Market news / news volume",
    "source": "Google News RSS",
    "file": "data/news.json + data/news-volume.json",
-   "status": "missing",
-   "updated": null,
-   "age_hours": null,
+   "status": "ok",
+   "updated": "2026-10-03T07:04:15.237815+00:00",
+   "age_hours": 0.9,
    "max_age_hours": 72.0,
    "coverage": "60 headlines + 41 company trackers"
   },
@@ -111,9 +111,9 @@
    "label": "Derived analytics",
    "source": "ArthaSaar calculations",
    "file": "data/breadth.json + data/gti.json + data/xray.json",
-   "status": "missing",
-   "updated": null,
-   "age_hours": null,
+   "status": "ok",
+   "updated": "2026-10-02T18:05:40.152657+05:30",
+   "age_hours": 19.4,
    "max_age_hours": 72.0,
    "coverage": "Model-dependent"
   },
@@ -121,10 +121,10 @@
    "id": "nse-index-history",
    "label": "All-index daily history",
    "source": "NSE India",
-   "file": "data/index-history-daily.json",
-   "status": "missing",
-   "updated": null,
-   "age_hours": null,
+   "file": "data/index-history.json",
+   "status": "stale",
+   "updated": "2026-09-27T02:37:04.286141+00:00",
+   "age_hours": 149.4,
    "max_age_hours": 72.0,
    "coverage": "139+ NSE indices"
   },
@@ -155,9 +155,9 @@
    "label": "Research Lab history + event outcomes",
    "source": "ArthaSaar calculations",
    "file": "data/research-signal-history.json + data/research-market-history.json",
-   "status": "missing",
-   "updated": null,
-   "age_hours": null,
+   "status": "ok",
+   "updated": "2026-10-03T07:58:59.607483+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 96.0,
    "coverage": "Historical signal outcomes, breadth replay and research snapshots"
   },
@@ -182,6 +182,17 @@
    "age_hours": 0.0,
    "max_age_hours": 168.0,
    "coverage": "NIFTY 50/100/200 snapshots"
+  },
+  {
+   "id": "intraday-candles",
+   "label": "Intraday OHLC candles",
+   "source": "Free collector snapshots",
+   "file": "data/candles.json",
+   "status": "ok",
+   "updated": "2026-10-02T16:02",
+   "age_hours": 16.0,
+   "max_age_hours": 48.0,
+   "coverage": "15 actively tracked symbols"
   }
  ]
 }

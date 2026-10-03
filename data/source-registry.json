@@ -137,13 +137,13 @@
     },
     {
       "id": "research-radar",
-      "label": "Research Radar — 10 free features",
+      "label": "Research Radar — 44 free features",
       "source": "NSE/public snapshots + ArthaSaar calculations",
       "source_url": "https://github.com/devrajai/ArthaSaar",
       "type": "derived-free",
       "cadence": "Daily after EOD",
       "file": "data/research-radar.json",
-      "coverage": "10 research modules",
+      "coverage": "44 research modules",
       "note": "Corporate filings, 52W, breadth history, index membership/weight changes, macro, bulk/block, results, sector rotation, descriptive regime and data resilience. NSE is primary; Yahoo remains historical backup.",
       "max_age_hours": 72
     }

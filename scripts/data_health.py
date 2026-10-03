@@ -124,8 +124,21 @@ def main():
             "coverage": coverage,
         })
 
+    # Detect collectors that succeeded but published no useful rows.
+    for fid, label, filename, key in [
+        ("dividends-empty", "Dividend calendar rows", "dividends.json", "items"),
+        ("social-empty", "Social scan posts", "social.json", "posts_scanned"),
+    ]:
+        obj = parse_json(DATA / filename) or {}
+        val = obj.get(key, []) if isinstance(obj, dict) else []
+        count = len(val) if isinstance(val, list) else int(val or 0)
+        results.append({"id": fid, "label": label, "source": "Content validation",
+                        "file": "data/" + filename, "status": "ok" if count else "empty",
+                        "updated": ts_of(obj), "age_hours": None, "max_age_hours": None,
+                        "coverage": str(count) + " rows/posts"})
+
     ok = sum(1 for x in results if x["status"] == "ok")
-    problems = [x for x in results if x["status"] in ("missing", "invalid", "stale")]
+    problems = [x for x in results if x["status"] in ("missing", "invalid", "stale", "empty")]
     out = {
         "updated": now.isoformat(),
         "healthy": not problems,

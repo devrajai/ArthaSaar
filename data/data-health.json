@@ -1,0 +1,187 @@
+{
+ "updated": "2026-10-03T07:59:04.360779+00:00",
+ "healthy": false,
+ "summary": {
+  "total": 16,
+  "ok": 10,
+  "problems": 5
+ },
+ "feeds": [
+  {
+   "id": "nse-equity",
+   "label": "Equity EOD / Screener",
+   "source": "NSE India",
+   "file": "data/brain-screener.json",
+   "status": "ok",
+   "updated": "2026-10-02T15:54:26.352506+00:00",
+   "age_hours": 16.1,
+   "max_age_hours": 72.0,
+   "coverage": "2,288 screened stocks"
+  },
+  {
+   "id": "nse-indices",
+   "label": "Index snapshot",
+   "source": "NSE India",
+   "file": "data/indices-all.json",
+   "status": "ok",
+   "updated": "2026-10-02T15:54:45.361325+00:00",
+   "age_hours": 16.1,
+   "max_age_hours": 72.0,
+   "coverage": "139 indices"
+  },
+  {
+   "id": "nse-fii-dii",
+   "label": "FII/FPI + DII",
+   "source": "NSE India",
+   "file": "data/fii-dii.json",
+   "status": "ok",
+   "updated": "2026-10-02T15:54:46.423990+00:00",
+   "age_hours": 16.1,
+   "max_age_hours": 72.0,
+   "coverage": "Cash market activity"
+  },
+  {
+   "id": "nse-delivery",
+   "label": "Security delivery %",
+   "source": "NSE India",
+   "file": "data/delivery.json",
+   "status": "unknown",
+   "updated": "02 Oct 2026, 19:28 IST",
+   "age_hours": null,
+   "max_age_hours": 72.0,
+   "coverage": "2,662 securities in latest snapshot"
+  },
+  {
+   "id": "nse-fo",
+   "label": "F&O Bhavcopy / PCR",
+   "source": "NSE India",
+   "file": "data/futures.json",
+   "status": "ok",
+   "updated": "2026-10-02T13:59:49.572414+00:00",
+   "age_hours": 18.0,
+   "max_age_hours": 72.0,
+   "coverage": "Index chains + 80 stock futures"
+  },
+  {
+   "id": "yahoo-history",
+   "label": "Daily chart history",
+   "source": "Yahoo Finance via yfinance",
+   "file": "data/history-index.json",
+   "status": "missing",
+   "updated": null,
+   "age_hours": null,
+   "max_age_hours": 72.0,
+   "coverage": "Full stock history archive"
+  },
+  {
+   "id": "amfi-nav",
+   "label": "Mutual fund NAV",
+   "source": "AMFI",
+   "file": "data/mf.json",
+   "status": "ok",
+   "updated": "2026-10-02T23:53:14.323318+00:00",
+   "age_hours": 8.1,
+   "max_age_hours": 72.0,
+   "coverage": "All schemes available from AMFI NAV download"
+  },
+  {
+   "id": "google-news",
+   "label": "Market news / news volume",
+   "source": "Google News RSS",
+   "file": "data/news.json + data/news-volume.json",
+   "status": "missing",
+   "updated": null,
+   "age_hours": null,
+   "max_age_hours": 72.0,
+   "coverage": "60 headlines + 41 company trackers"
+  },
+  {
+   "id": "coingecko",
+   "label": "Crypto market",
+   "source": "CoinGecko",
+   "file": "data/crypto.json",
+   "status": "ok",
+   "updated": "2026-10-03T06:24:28.062045+00:00",
+   "age_hours": 1.6,
+   "max_age_hours": 72.0,
+   "coverage": "Top 100"
+  },
+  {
+   "id": "derived",
+   "label": "Derived analytics",
+   "source": "ArthaSaar calculations",
+   "file": "data/breadth.json + data/gti.json + data/xray.json",
+   "status": "missing",
+   "updated": null,
+   "age_hours": null,
+   "max_age_hours": 72.0,
+   "coverage": "Model-dependent"
+  },
+  {
+   "id": "nse-index-history",
+   "label": "All-index daily history",
+   "source": "NSE India",
+   "file": "data/index-history-daily.json",
+   "status": "missing",
+   "updated": null,
+   "age_hours": null,
+   "max_age_hours": 72.0,
+   "coverage": "139+ NSE indices"
+  },
+  {
+   "id": "research-radar",
+   "label": "Research Radar \u2014 44 free features",
+   "source": "NSE/public snapshots + ArthaSaar calculations",
+   "file": "data/research-radar.json",
+   "status": "ok",
+   "updated": "2026-10-03T07:58:59.587704+00:00",
+   "age_hours": 0.0,
+   "max_age_hours": 72.0,
+   "coverage": "44 research modules"
+  },
+  {
+   "id": "research-alerts",
+   "label": "Research Radar alert feed",
+   "source": "ArthaSaar calculations",
+   "file": "data/research-alerts.json",
+   "status": "ok",
+   "updated": "2026-10-03T07:59:04.317373+00:00",
+   "age_hours": 0.0,
+   "max_age_hours": 72.0,
+   "coverage": "Breakout, volume, delivery, F&O, index and filing alerts"
+  },
+  {
+   "id": "research-lab-history",
+   "label": "Research Lab history + event outcomes",
+   "source": "ArthaSaar calculations",
+   "file": "data/research-signal-history.json + data/research-market-history.json",
+   "status": "missing",
+   "updated": null,
+   "age_hours": null,
+   "max_age_hours": 96.0,
+   "coverage": "Historical signal outcomes, breadth replay and research snapshots"
+  },
+  {
+   "id": "research-signal-history",
+   "label": "Research signal outcomes",
+   "source": "ArthaSaar calculations",
+   "file": "data/research-signal-history.json",
+   "status": "ok",
+   "updated": "2026-10-03T07:58:54.914334+00:00",
+   "age_hours": 0.0,
+   "max_age_hours": 168.0,
+   "coverage": "Historical signal outcome events"
+  },
+  {
+   "id": "research-membership-history",
+   "label": "Index membership history",
+   "source": "NSE/public constituents snapshot",
+   "file": "data/index-membership-history.json",
+   "status": "ok",
+   "updated": "2026-10-03T07:58:53.435072+00:00",
+   "age_hours": 0.0,
+   "max_age_hours": 168.0,
+   "coverage": "NIFTY 50/100/200 snapshots"
+  }
+ ]
+}

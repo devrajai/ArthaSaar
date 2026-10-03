@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "updated": "2026-10-03",
+  "policy": "ArthaSaar hosts collected snapshots on GitHub Pages. Browser refresh re-reads these files; it does not make exchange data live. Upstream GitHub Actions collectors must run and update the JSON for market data to change.",
+  "feeds": [
+    {
+      "id": "nse-equity",
+      "label": "Equity EOD / Screener",
+      "source": "NSE India",
+      "source_url": "https://www.nseindia.com/all-reports",
+      "type": "official-free",
+      "cadence": "Trading day, EOD",
+      "file": "data/breadth.json",
+      "coverage": "2,288 screened stocks",
+      "note": "Primary exchange reports are public; Yahoo is used for the price-history/technical calculation layer."
+    },
+    {
+      "id": "nse-indices",
+      "label": "Index snapshot",
+      "source": "NSE India",
+      "source_url": "https://www.nseindia.com/reports-indices-historical-index-data",
+      "type": "official-free",
+      "cadence": "Trading day, EOD",
+      "file": "data/indices-all.json",
+      "coverage": "139 indices",
+      "note": "Current/EOD snapshot, not a 139-index intraday stream."
+    },
+    {
+      "id": "nse-fii-dii",
+      "label": "FII/FPI + DII",
+      "source": "NSE India",
+      "source_url": "https://www.nseindia.com/reports/fii-dii",
+      "type": "official-free",
+      "cadence": "Trading day",
+      "file": "data/fii-dii.json",
+      "coverage": "Cash market activity",
+      "note": "NSE marks the report as provisional; figures can be revised."
+    },
+    {
+      "id": "nse-delivery",
+      "label": "Security delivery %",
+      "source": "NSE India",
+      "source_url": "https://www.nseindia.com/all-reports",
+      "type": "official-free",
+      "cadence": "Trading day, evening",
+      "file": "data/delivery.json",
+      "coverage": "2,662 securities in latest snapshot",
+      "note": "Derived directly from NSE security bhav/deliverable data."
+    },
+    {
+      "id": "nse-fo",
+      "label": "F&O Bhavcopy / PCR",
+      "source": "NSE India",
+      "source_url": "https://www.nseindia.com/all-reports-derivatives",
+      "type": "official-free",
+      "cadence": "Trading day, EOD",
+      "file": "data/futures.json",
+      "coverage": "Index chains + 80 stock futures",
+      "note": "EOD derivatives data; not a live option-chain socket."
+    },
+    {
+      "id": "yahoo-history",
+      "label": "Daily chart history",
+      "source": "Yahoo Finance via yfinance",
+      "source_url": "https://finance.yahoo.com/",
+      "type": "free-third-party",
+      "cadence": "Daily after market close",
+      "file": "data/history/<SYMBOL>.json",
+      "coverage": "Targeting full NSE equity universe",
+      "note": "Convenient free source with rate-limit/availability risk; not an NSE primary feed."
+    },
+    {
+      "id": "amfi-nav",
+      "label": "Mutual fund NAV",
+      "source": "AMFI",
+      "source_url": "https://www.amfiindia.com/net-asset-value/nav-download",
+      "type": "official-free",
+      "cadence": "Business day, after market",
+      "file": "data/mf.json",
+      "coverage": "All schemes available from AMFI NAV download",
+      "note": "AMFI publishes NAVs daily; NAV is end-of-day, not intraday."
+    },
+    {
+      "id": "google-news",
+      "label": "Market news / news volume",
+      "source": "Google News RSS",
+      "source_url": "https://news.google.com/rss",
+      "type": "free-public-feed",
+      "cadence": "Daily collectors",
+      "file": "data/news.json + data/news-volume.json",
+      "coverage": "60 headlines + 41 company trackers",
+      "note": "Headline aggregation; ranking/sentiment is indicative and rule-based."
+    },
+    {
+      "id": "coingecko",
+      "label": "Crypto market",
+      "source": "CoinGecko",
+      "source_url": "https://www.coingecko.com/en/api/pricing",
+      "type": "free-tier",
+      "cadence": "Collector snapshot",
+      "file": "data/crypto.json",
+      "coverage": "Top 100",
+      "note": "Free Demo plan exists but has usage limits and attribution requirements; keep collector-side caching low-volume."
+    },
+    {
+      "id": "derived",
+      "label": "Derived analytics",
+      "source": "ArthaSaar calculations",
+      "source_url": "https://github.com/devrajai/ArthaSaar",
+      "type": "derived",
+      "cadence": "After source feeds update",
+      "file": "data/breadth.json + data/gti.json + data/xray.json",
+      "coverage": "Model-dependent",
+      "note": "These are calculations/models, not exchange-provided facts."
+    }
+  ]
+}

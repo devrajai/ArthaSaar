@@ -534,6 +534,7 @@ function loadSupport(){
 }
 function boot(){
   var h=document.getElementById("research-radar");if(!h)return;
+  h.dataset.rrProfessional="1";
   installCSS();
   h.innerHTML='<div class="card" style="margin-top:10px;padding:18px">Loading Research Lab + 44 Research Radar modules…</div>';
   optionalJSON("data/research-radar.json",null).then(function(d){if(!d)throw Error("research-radar.json unavailable");STATE.radar=d;return loadSupport().then(function(){render(d);});}).catch(function(e){

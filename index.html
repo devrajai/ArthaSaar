@@ -285,6 +285,33 @@ tr:hover td{background:color-mix(in srgb,var(--border) 18%,transparent)}
 .seccard{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:10px 12px;cursor:pointer;font:600 12px var(--font)}
 .seccard.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
 </style>
+<style id="arthasaar-mobile-fix">
+@media(max-width:720px){
+  html,body{width:100%;min-width:0;overflow-x:hidden}
+  main{width:100%;max-width:100%;min-width:0;margin:0;padding:10px 8px 80px}
+  .view{width:100%;min-width:0;overflow:hidden}
+  .fshead{width:100%;min-width:0}
+  .fshead h2{min-width:0;max-width:calc(100% - 82px);font-size:15px!important;line-height:1.2;overflow-wrap:anywhere}
+  .xbtn{flex:0 0 auto;padding:7px 10px!important;font-size:10px!important}
+  .top{width:100%;min-width:0}
+  .nav{max-width:100%;overflow-x:auto}
+  .nav button{flex:0 0 auto}
+  .card,.kpi,.grid2,.grid3,.kpis,.minirow{min-width:0;max-width:100%}
+  .grid2,.grid3{grid-template-columns:1fr!important}
+  .kpis{grid-template-columns:1fr 1fr!important;gap:7px}
+  .minirow{grid-template-columns:1fr 1fr!important;gap:7px}
+  .card{border-radius:12px}
+  table{min-width:520px}
+  .tblwrap{max-width:100%;overflow-x:auto}
+  .rr-shell,.rr-command,.rr-module-grid,.rr-grid,.rr-lab-grid{max-width:100%;min-width:0}
+}
+@media(max-width:390px){
+  main{padding-left:6px;padding-right:6px}
+  .kpis,.minirow{grid-template-columns:1fr!important}
+  .brand b{font-size:13px}
+  .clock{font-size:8px}
+}
+</style>
 </head>
 <body>
 <div class="lock" id="lock"><div class="box"><div class="mark">अ</div><h1>ARTHASAAR</h1><p>This terminal is private. <b>Authorised access only.</b></p><form id="lockForm" autocomplete="off"><input type="password" id="pw" placeholder="Enter password" autocomplete="off" autocapitalize="off"><button type="submit" style="width:100%;margin-top:10px;padding:12px;border:0;border-radius:12px;background:var(--accent);color:#fff;font:700 13px var(--font);cursor:pointer">ENTER</button><p class="err" id="lockErr"></p></form></div></div>

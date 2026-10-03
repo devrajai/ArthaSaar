@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{},alerts:null,health:null,marketHistory:null,signalHistory:null};
+var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{},alerts:null,health:null,marketHistory:null,signalHistory:null,candles:{}};
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":">","\"":"&quot;"}[c];});}
 function n(x){return x==null||isNaN(x)?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:2});}
@@ -194,6 +194,41 @@ function localGet(key, fallback){
   try{var v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}
 }
 function localSet(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+
+function candleDayRows(sym){
+  var x=(STATE.candles||{})[sym]||{}, z=x["5m"]||{}, t=z.t||[],o=z.o||[],h=z.h||[],l=z.l||[],cl=z.c||[];
+  var map={};
+  for(var i=0;i<t.length;i++){
+    var dt=new Date(Number(t[i])*1000),day=dt.getUTCFullYear()+"-"+String(dt.getUTCMonth()+1).padStart(2,"0")+"-"+String(dt.getUTCDate()).padStart(2,"0");
+    if(!map[day])map[day]=[];
+    map[day].push({t:Number(t[i]),o:numv(o[i]),h:numv(h[i]),l:numv(l[i]),c:numv(cl[i])});
+  }
+  var days=Object.keys(map).sort();
+  return {days:days,map:map};
+}
+function candleGapRows(){
+  var out=[];
+  Object.keys(STATE.candles||{}).forEach(function(sym){
+    var x=candleDayRows(sym),days=x.days;if(days.length<2)return;
+    var lastDay=days[days.length-1],prevDay=days[days.length-2],a=x.map[lastDay]||[],p0=x.map[prevDay]||[];
+    var open=a.length?a[0].o:null,prevClose=p0.length?p0[p0.length-1].c:null;
+    if(open!=null&&prevClose){out.push({symbol:sym,gap_pct:(open/prevClose-1)*100,open:open,previous_close:prevClose,date:lastDay});}
+  });
+  out.sort(function(a,b){return Math.abs(b.gap_pct)-Math.abs(a.gap_pct);});
+  return out;
+}
+function candleRangeRows(){
+  var out=[];
+  Object.keys(STATE.candles||{}).forEach(function(sym){
+    var x=candleDayRows(sym),days=x.days;if(!days.length)return;
+    var a=x.map[days[days.length-1]]||[];if(!a.length)return;
+    var hi=Math.max.apply(null,a.map(function(z){return z.h==null?-Infinity:z.h;})),lo=Math.min.apply(null,a.map(function(z){return z.l==null?Infinity:z.l;})),op=a[0].o;
+    if(isFinite(hi)&&isFinite(lo)&&op){out.push({symbol:sym,session_range_pct:(hi-lo)/op*100,date:days[days.length-1]});}
+  });
+  out.sort(function(a,b){return b.session_range_pct-a.session_range_pct;});
+  return out;
+}
+
 
 function exportCSV(rows, filename){
   rows=rows||[];
@@ -451,10 +486,10 @@ function render(d){
     card("12","VOLUME SHOCK",rows(vs.rows,"symbol","vol_vs_avg20",function(){return"up";},7),"NSE/Yahoo history",d.updated),
     card("13","DELIVERY CONVICTION",row("Coverage",n(dc.coverage))+row("Avg delivery",pct0(dc.avg_delivery_pct))+rows(dc.high_delivery_up,"symbol","delivery_pct",function(){return"up";},4),"NSE delivery",ds.delivery_updated||d.updated),
     card("14","ACCUMULATION / DISTRIBUTION",'<div class="rr-cols"><div><div class="rr-sub">Accumulation</div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},4)+'</div><div><div class="rr-sub">Distribution</div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},4)+'</div></div>',"Derived",d.updated),
-    card("15","GAP RADAR",gap.available?rows(gap.rows,"symbol","gap_pct",function(){return"up";},8):unavailableBody("OHLC open prices not stored",gap.reason),"OHLC dependent",d.updated),
+    card("15","GAP RADAR",candleGapRows().length?'<div class="rr-kicker">Intraday OHLC coverage · '+n(Object.keys(STATE.candles||{}).length)+' symbols</div>'+rows(candleGapRows(),"symbol","gap_pct",function(x){return(x.gap_pct||0)>=0?"up":"dn";},8):unavailableBody("Intraday OHLC snapshot unavailable","No candle snapshot is available for the current published run."),"Candles · intraday subset",((STATE.candles&&STATE.candles.updated)||d.updated)),
     card("16","RELATIVE STRENGTH",row("NIFTY 20D",p(rs.benchmark_return_20d_pct))+rows(rs.leaders,"symbol","relative_strength_20d",function(){return"up";},5)+rows(rs.laggards,"symbol","relative_strength_20d",function(){return"dn";},5),"Derived",d.updated),
     card("18","VOLATILITY EXPANSION",rows(ve.rows,"symbol","vol_expansion",function(x){return(x.vol_expansion||0)>=1?"up":"";},7),"ArthaSaar history",d.updated),
-    card("19","RANGE EXPANSION",rx.available?rows(rx.rows||[],"symbol","atr_pct",function(){return"up";},7):unavailableBody("True ATR waiting on OHLC","Close-to-close volatility proxy is available; true ATR is not fabricated."),"OHLC dependent",d.updated),
+    card("19","RANGE EXPANSION",candleRangeRows().length?'<div class="rr-kicker">Session high-low range · intraday subset</div>'+rows(candleRangeRows(),"symbol","session_range_pct",function(){return"up";},8):unavailableBody("Intraday range snapshot unavailable","Close-to-close volatility proxy remains available in the Radar."),"Candles · intraday subset",((STATE.candles&&STATE.candles.updated)||d.updated)),
     card("20","MOMENTUM DASHBOARD",row("RSI >60",n((mo.rsi_high||[]).length),"up")+row("RSI <40",n((mo.rsi_low||[]).length),"dn")+row("MACD positive",n((mo.macd_positive||[]).length),"up")+rows(mo.roc_leaders,"symbol","return_20d",function(){return"up";},5),"RSI/MACD/ROC",d.updated),
     card("21","TREND HEALTH",row("Above EMA200",pct0(th.above_ema200_pct))+rows(th.above_ema200,"symbol","return_20d",function(){return"up";},4)+rows(th.below_ema200,"symbol","return_20d",function(){return"dn";},4),"Derived trend",d.updated),
     card("22","GOLDEN / DEATH CROSS",row("Golden",n(cross.golden_cross_count),"up")+row("Death",n(cross.death_cross_count),"dn")+rows(cross.golden_candidates,"symbol","return_20d",function(){return"up";},3)+rows(cross.death_candidates,"symbol","return_20d",function(){return"dn";},3),"50D / 200D",d.updated),
@@ -522,14 +557,15 @@ function loadSupport(){
     optionalJSON("data/research-alerts.json",{}),
     optionalJSON("data/data-health.json",{}),
     optionalJSON("data/research-market-history.json",{}),
-    optionalJSON("data/research-signal-history.json",{})
+    optionalJSON("data/research-signal-history.json",{}),
+    optionalJSON("data/candles.json",{})
   ]).then(function(vals){
     parseCSV(vals[0]).forEach(function(x){var sym=String(x.symbol||"").trim().toUpperCase();if(sym){x.return_20d=numv(x.return_20d);STATE.stocks[sym]=x;}});
     var d=vals[1]||{};STATE.delivery=d.d||{};
     STATE.futures=vals[2]||{};
     STATE.filings=(vals[3]||{}).filings||[];
     var rr=vals[4]||{};STATE.results={};(rr.results||[]).forEach(function(x){if(x.sym)STATE.results[String(x.sym).toUpperCase()]=x;});
-    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};maybeNotifyAlerts(STATE.alerts);
+    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};STATE.candles=(vals[9]||{}).syms||{};maybeNotifyAlerts(STATE.alerts);
   });
 }
 function boot(){

@@ -341,6 +341,87 @@ def history_metrics():
             continue
     return out
 
+
+
+def median(vals):
+    vals = sorted(float(x) for x in vals if x is not None)
+    if not vals:
+        return None
+    n = len(vals)
+    return vals[n//2] if n % 2 else (vals[n//2-1] + vals[n//2]) / 2
+
+def backtest_signals():
+    hp = DATA / "history"
+    configs = {
+        "near_52w_high": lambda closes, vols, i: i >= 20 and closes[i] >= max(closes[max(0, i-252):i]) * 0.99,
+        "volume_shock_2x": lambda closes, vols, i: i >= 20 and vols[i] > 0 and (mean(vols[i-20:i]) or 0) > 0 and vols[i] >= 2 * mean(vols[i-20:i]),
+        "above_200dma": lambda closes, vols, i: i >= 200 and closes[i] > (mean(closes[i-200:i]) or 0),
+        "momentum_20d_gt_5pct": lambda closes, vols, i: i >= 20 and closes[i] >= closes[i-20] * 1.05,
+        "trend_alignment": lambda closes, vols, i: i >= 200 and closes[i] > (mean(closes[i-20:i]) or 0) > (mean(closes[i-50:i]) or 0) > (mean(closes[i-200:i]) or 0),
+    }
+    stats = {k: {
+        "observations": 0,
+        "next5_n": 0, "next5_mean_pct": None, "next5_median_pct": None, "next5_positive_pct": None,
+        "next20_n": 0, "next20_mean_pct": None, "next20_median_pct": None, "next20_positive_pct": None,
+        "recent": []
+    } for k in configs}
+    samples = {k: {"5": [], "20": []} for k in configs}
+    files_seen = 0
+    for fp in hp.glob("*.json"):
+        if fp.name == "history-index.json":
+            continue
+        try:
+            arr = json.loads(fp.read_text(encoding="utf-8"))
+            rows = [r for r in arr if isinstance(r, dict) and num(r.get("close")) not in (None, 0)]
+            rows.sort(key=lambda r: str(r.get("date") or ""))
+            if len(rows) < 25:
+                continue
+            files_seen += 1
+            closes = [float(r["close"]) for r in rows]
+            vols = [num(r.get("volume")) or 0 for r in rows]
+            for i in range(20, len(rows) - 20):
+                for key, cond in configs.items():
+                    try:
+                        hit = cond(closes, vols, i)
+                    except Exception:
+                        hit = False
+                    if not hit:
+                        continue
+                    s = stats[key]
+                    s["observations"] += 1
+                    f5 = pct_change(closes[i+5], closes[i])
+                    f20 = pct_change(closes[i+20], closes[i])
+                    if f5 is not None:
+                        samples[key]["5"].append(f5)
+                        s["next5_n"] += 1
+                    if f20 is not None:
+                        samples[key]["20"].append(f20)
+                        s["next20_n"] += 1
+                    if len(s["recent"]) < 12:
+                        s["recent"].append({
+                            "symbol": fp.stem.upper(),
+                            "date": rows[i].get("date"),
+                            "close": closes[i],
+                            "next5_pct": f5,
+                            "next20_pct": f20
+                        })
+        except Exception:
+            continue
+    for key, s in stats.items():
+        five = samples[key]["5"]
+        twenty = samples[key]["20"]
+        s["next5_mean_pct"] = round(mean(five), 2) if five else None
+        s["next5_median_pct"] = round(median(five), 2) if five else None
+        s["next5_positive_pct"] = round(100 * sum(1 for x in five if x > 0) / len(five), 1) if five else None
+        s["next20_mean_pct"] = round(mean(twenty), 2) if twenty else None
+        s["next20_median_pct"] = round(median(twenty), 2) if twenty else None
+        s["next20_positive_pct"] = round(100 * sum(1 for x in twenty if x > 0) / len(twenty), 1) if twenty else None
+    return {
+        "history_files_scanned": files_seen,
+        "method": "Historical event study using ArthaSaar close+volume files. Current-universe history can contain survivorship bias; results are descriptive, not predictive.",
+        "signals": stats
+    }
+
 def filing_keyword_radar(filings):
     pats = {
         "promoter_insider": r"promoter|insider|director|key managerial|acquisition of shares|disposal of shares",
@@ -701,6 +782,22 @@ def main():
                              "coverage":len(stocks)},
         "data_reliability": resilience_detail(stocks,delivery,futures_obj,hmap),
         "data_resilience_detail": {**resilience_detail(stocks,delivery,futures_obj,hmap), "health_summary": health.get("summary") or {}, "health_updated": health.get("updated")},
+      },
+      "research_lab": {
+        "module_count": 44,
+        "daily_history": (hist.get("daily") or [])[-60:],
+        "backtests": backtest_signals(),
+        "search_universe": len(stocks),
+        "source_policy": "NSE/public exchange snapshots + ArthaSaar calculations; Yahoo historical backup only.",
+        "freshness": {
+          "radar_updated": datetime.now(timezone.utc).isoformat(),
+          "delivery_updated": delivery.get("updated"),
+          "futures_updated": futures_obj.get("updated"),
+          "filings_updated": filings_obj.get("updated"),
+          "results_updated": results.get("updated"),
+          "macro_updated": macro.get("updated"),
+          "membership_updated": (load("index-membership.json", {}) or {}).get("updated")
+        }
       },
       "notes": [
         "All sections are EOD / snapshot research unless a source explicitly says otherwise.",

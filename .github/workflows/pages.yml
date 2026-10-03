@@ -6,6 +6,9 @@ on:
     branches: [main]
   schedule:
     - cron: "0 * * * *"
+  workflow_run:
+    workflows: ["Research Radar"]
+    types: [completed]
 
 permissions:
   pages: write
@@ -18,6 +21,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

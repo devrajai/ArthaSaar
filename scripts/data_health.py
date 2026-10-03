@@ -6,7 +6,8 @@ This never calls paid APIs. It only checks the repository's committed JSON
 snapshots against data/source-registry.json and writes data/data-health.json.
 """
 import json
-from datetime import datetime, timezone
+import re
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +37,13 @@ def parse_ts(v):
         return None
     s = " ".join(str(v).strip().split())
     s = s.replace(" IST", "+05:30").replace(" IST.", "+05:30").replace("Z", "+00:00")
+    m = re.match(r"^(\d{1,2}) ([A-Za-z]{3}) (\d{4}), (\d{1,2}):(\d{2})(?::(\d{2}))? \+05:30$", s)
+    if m:
+        try:
+            base = datetime.strptime("%s %s %s %s %s %s" % (m.group(1),m.group(2),m.group(3),m.group(4),m.group(5),m.group(6) or "00"), "%d %b %Y %H %M %S")
+            return base.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
+        except Exception:
+            pass
     for fmt in ("%d %b %Y, %H:%M %z", "%d %b %Y, %H:%M:%S %z"):
         try:
             return datetime.strptime(s, fmt)

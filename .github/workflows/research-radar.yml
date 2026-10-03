@@ -1,5 +1,9 @@
 name: Research Radar
 on:
+  push:
+    paths:
+      - 'scripts/research_radar.py'
+      - '.github/workflows/research-radar.yml'
   schedule:
     # 20:25 IST daily, after the main EOD collectors and data-health pass
     - cron: '55 14 * * *'

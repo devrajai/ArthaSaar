@@ -2,7 +2,7 @@
 (function(){
   "use strict";
   var BASE=(location.pathname.indexOf("/app/")>=0?"../data/":"data/");
-  var state={stocks:[],chartSym:"NIFTY",chartRows:[]};
+  var state={stocks:[],indices:[],indexHistory:{},chartSym:"NIFTY",chartRows:[]};
 
   function J(name){return fetch(BASE+name,{cache:"no-store"}).then(function(r){if(!r.ok)throw Error(name);return r.json();});}
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -54,10 +54,12 @@
   function buildSourceCenter(meta){
     if(document.getElementById("as-data-center")) return;
     var home=document.getElementById("v-home"); if(!home) return;
-    var r=meta.registry||{}, feeds=r.feeds||[];
+    var r=meta.registry||{}, feeds=r.feeds||[], healthMap={};
+    (meta.health&&meta.health.feeds||[]).forEach(function(h){healthMap[h.id]=h;});
     var feedData={
-      "nse-equity":meta.breadth,
+      "nse-equity":meta.brain,
       "nse-indices":meta.indices,
+      "nse-index-history":meta.indexHistory,
       "nse-fii-dii":meta.fii,
       "nse-delivery":meta.delivery,
       "nse-fo":meta.futures,
@@ -68,9 +70,10 @@
       "derived":meta.xray
     };
     var rows=feeds.map(function(f){
-      var d=feedData[f.id]||{};
-      var updated=d.updated || (f.id==="yahoo-history"&&d.to?d.to:null);
-      var status=f.id==="yahoo-history"?(d.to?"HISTORY":"NO DATA"):freshness(updated);
+      var d=feedData[f.id]||{}, h=healthMap[f.id]||{};
+      var updated=d.updated || h.updated || null;
+      var status=h.status ? (h.status==="ok"?"OK":String(h.status).toUpperCase()) :
+        (f.id==="yahoo-history"?(d.to?"HISTORY":"NO DATA"):freshness(updated));
       var cov=f.coverage||"—";
       if(f.id==="nse-equity" && meta.brain && Array.isArray(meta.brain.stocks)) cov=nf(meta.brain.stocks.length,0)+" screened stocks";
       if(f.id==="nse-indices" && meta.indices && meta.indices.count) cov=nf(meta.indices.count,0)+" indices";
@@ -79,7 +82,7 @@
       if(f.id==="google-news" && meta.news && meta.news.count) cov=nf(meta.news.count,0)+" headlines";
       if(f.id==="coingecko" && meta.crypto && Array.isArray(meta.crypto.top)) cov=nf(meta.crypto.top.length,0)+" coins";
       if(f.id==="derived" && meta.gti && meta.gti.symbols) cov=nf(Object.keys(meta.gti.symbols).length,0)+" model symbols";
-      var cls=status==="FRESH"||status==="HISTORY"?"buy":(status==="EOD"?"hold":"dn");
+      var cls=status==="OK"||status==="FRESH"||status==="HISTORY"?"buy":(status==="EOD"?"hold":"dn");
       var stamp=updated||"—";
       return '<div class="dc-row"><div><b>'+esc(f.label)+'</b><small>'+esc(f.source)+' · '+esc(f.cadence)+'</small></div><div class="dc-mid"><span>'+esc(cov)+'</span><small>'+esc(ageLabel(stamp))+'</small></div><div class="dc-last"><span class="b '+cls+'">'+esc(status)+'</span><small>'+esc(stamp)+'</small></div><a href="'+esc(f.source_url||"#")+'" target="_blank" rel="noopener">SOURCE</a></div>';
     }).join("");
@@ -88,7 +91,7 @@
     card.className="hp-wrap";
     card.innerHTML='<div class="sect">FREE DATA CENTER <span class="fr">source + freshness + coverage</span></div>'+
       '<div class="card hp-card"><div class="sh2">HOSTED SNAPSHOT POLICY</div>'+
-      '<div class="dc-note">GitHub Pages serves the latest committed JSON snapshot. Refreshing this page does not fetch NSE/Yahoo/AMFI prices directly; GitHub Actions collectors update the hosted files. “FRESH/EOD” is a freshness label, not a real-time quote.</div>'+
+      '<div class="dc-note">GitHub Pages serves the latest committed JSON snapshot. Refreshing this page does not fetch exchange prices directly; GitHub Actions collectors update the hosted files. Status comes from the automated data-health check when available. “OK/EOD” is freshness, not a real-time quote.'+((meta.health&&meta.health.summary)?(" Overall: "+nf(meta.health.summary.ok,0)+"/"+nf(meta.health.summary.total,0)+" feeds healthy."):"")+'</div>'+
       '<div class="dc-list">'+rows+'</div></div>';
     var brief=document.getElementById("as-home-brief");
     if(brief) brief.insertAdjacentElement("afterend",card); else home.insertAdjacentElement("afterbegin",card);
@@ -155,28 +158,51 @@
   function buildChartSearch(){
     var host=document.getElementById("v-gticharts"); if(!host||document.getElementById("as-chart-universe")) return;
     var anchor=host.querySelector("#cChart"); if(!anchor) return;
+    var stockList=(state.stocks||[]).map(function(x){return {symbol:x.symbol,company:x.company||"",type:"stock"};});
+    var indexList=(state.indices||[]).map(function(x){return {symbol:x.index||x.symbol,company:"NSE Index",type:"index"};});
+    var universe=stockList.concat(indexList.filter(function(ix){
+      return !stockList.some(function(s){return s.symbol===ix.symbol;});
+    }));
     var box=document.createElement("div"); box.id="as-chart-universe"; box.innerHTML=
-      '<div class="pbar"><span class="plab">FULL STOCK UNIVERSE · '+nf(state.stocks.length,0)+' listed names</span></div>'+
-      '<div class="srow"><input id="asChartSearch" type="search" placeholder="Search 2,288 stocks by symbol or company…"></div>'+
+      '<div class="pbar"><span class="plab">FULL MARKET CHARTS · '+nf(stockList.length,0)+' stocks + '+nf(indexList.length,0)+' indices</span></div>'+
+      '<div class="srow"><input id="asChartSearch" type="search" placeholder="Search stock or index by name/symbol…"></div>'+
       '<div class="chips" id="asChartMatches"></div>'+
-      '<div class="card" id="asStockChart" style="margin-top:8px;padding:10px 12px"><div class="sh2" id="asStockChartHead">Select a stock</div><div id="asStockChartBody" class="mut">Search above to load its daily history.</div></div>';
+      '<div class="card" id="asStockChart" style="margin-top:8px;padding:10px 12px"><div class="sh2" id="asStockChartHead">Select a stock or index</div><div id="asStockChartBody" class="mut">Search above to load daily history.</div></div>';
     anchor.parentNode.insertBefore(box,anchor.nextSibling);
+
     function renderMatches(q){
       q=(q||"").toLowerCase().trim();
-      var list=state.stocks.filter(function(x){return !q||String(x.symbol).toLowerCase().indexOf(q)>=0||String(x.company||"").toLowerCase().indexOf(q)>=0;}).slice(0,40);
-      document.getElementById("asChartMatches").innerHTML=list.map(function(x){return '<button class="fch" data-sym="'+esc(x.symbol)+'">'+esc(x.symbol)+'</button>';}).join("");
-      document.querySelectorAll("#asChartMatches [data-sym]").forEach(function(b){b.onclick=function(){loadStockChart(b.getAttribute("data-sym"));};});
+      var list=universe.filter(function(x){
+        return !q||String(x.symbol).toLowerCase().indexOf(q)>=0||String(x.company||"").toLowerCase().indexOf(q)>=0;
+      }).slice(0,50);
+      document.getElementById("asChartMatches").innerHTML=list.map(function(x){
+        return '<button class="fch" data-sym="'+esc(x.symbol)+'" data-type="'+x.type+'">'+esc(x.symbol)+'</button>';
+      }).join("");
+      document.querySelectorAll("#asChartMatches [data-sym]").forEach(function(b){
+        b.onclick=function(){loadChart(b.getAttribute("data-sym"),b.getAttribute("data-type"));};
+      });
     }
-    function loadStockChart(sym){
+
+    function loadChart(sym,type){
       state.chartSym=sym;
-      var s=state.stocks.filter(function(x){return x.symbol===sym;})[0]||{};
-      document.getElementById("asStockChartHead").textContent=sym+" · daily history";
+      document.getElementById("asStockChartHead").textContent=sym+" · "+(type==="index"?"NSE daily history":"daily stock history");
       document.getElementById("asStockChartBody").innerHTML='<div class="mut">Loading '+esc(sym)+'…</div>';
+      if(type==="index"){
+        var rows=state.indexHistory[sym]||[];
+        if(rows.length>=2){
+          state.chartRows=rows;
+          document.getElementById("asStockChartBody").innerHTML=chartSVG(rows.slice(-260));
+        }else{
+          document.getElementById("asStockChartBody").innerHTML='<div class="mut">NSE history not yet archived for '+esc(sym)+'. Current index snapshot exists, but no historical series is available yet.</div>';
+        }
+        return;
+      }
       J("history/"+encodeURIComponent(sym)+".json").then(function(rows){
         state.chartRows=rows||[];
         document.getElementById("asStockChartBody").innerHTML=chartSVG(state.chartRows.slice(-260));
       }).catch(function(){document.getElementById("asStockChartBody").innerHTML='<div class="mut">History unavailable for '+esc(sym)+'</div>';});
     }
+
     document.getElementById("asChartSearch").addEventListener("input",function(){renderMatches(this.value);});
     renderMatches("");
   }
@@ -203,20 +229,27 @@
       J("xray.json"),
       J("source-registry.json").catch(function(){return {feeds:[]};}),
       J("indices-all.json").catch(function(){return {};}),
+      J("index-history-daily.json").catch(function(){return {};}),
       J("mf-top.json").catch(function(){return {};}),
       J("crypto.json").catch(function(){return {};}),
       J("news.json").catch(function(){return {};}),
+      J("history-index.json").catch(function(){return {};}),
+      J("data-health.json").catch(function(){return {};}),
       J("history/RELIANCE.json").catch(function(){return {};})
     ]).then(function(a){
       state.stocks=(a[0]&&a[0].stocks)||[];
       buildHome({brain:a[0]||{},fii:a[1]||{},breadth:a[2]||{},delivery:a[3]||{},big:a[4]||{},newsvol:a[5]||{},futures:a[6]||{},gti:a[7]||{},xray:a[8]||{}});
+      state.indices=(a[10]&&a[10].indices)||[];
+      state.indexHistory=(a[11]&&a[11].indices)||{};
       buildSourceCenter({
         registry:a[9]||{},
         indices:a[10]||{},
-        mfTop:a[11]||{},
-        crypto:a[12]||{},
-        news:a[13]||{},
-        historyProbe:a[14]||{},
+        indexHistory:a[11]||{},
+        mfTop:a[12]||{},
+        crypto:a[13]||{},
+        news:a[14]||{},
+        historyProbe:a[15]||{},
+        health:a[16]||{},
         brain:a[0]||{},
         breadth:a[2]||{},
         fii:a[1]||{},

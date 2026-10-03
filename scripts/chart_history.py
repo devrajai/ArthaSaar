@@ -9,6 +9,12 @@ chart, fast, on a phone.
 Output
   data/history/<SYM>.json   {"sym","rows","from","to","d":[YYYYMMDD..],"o":[],"h":[],"l":[],"c":[],"v":[]}
   data/history-index.json   {"updated","count","years","symbols":{SYM:{"rows","from","to"}}}
+  
+Coverage note:
+  - Stock history now uses data/universe.json (full active stock universe).
+  - Index history remains on the verified Yahoo mapping in INDICES; the site
+    separately tracks 139 NSE index snapshots in data/indices-all.json.
+
 
 Source: Yahoo Finance via yfinance (free). Runs daily after market close.
 """
@@ -30,16 +36,39 @@ INDICES = ["^NSEI", "^NSEBANK", "^BSESN", "^CNXIT", "^CNXPHARMA", "^CNXAUTO", "^
 
 
 def load_symbols():
+    """
+    Prefer the full exchange universe so the chart archive does not silently
+    shrink to index constituents. Fall back to constituents.json only if the
+    broader universe is unavailable.
+    """
     syms = []
+    seen = set()
+
+    try:
+        universe = json.loads((DATA / "universe.json").read_text())
+        for it in universe if isinstance(universe, list) else []:
+            s = (it.get("symbol") or "").strip().upper() if isinstance(it, dict) else ""
+            if s and s not in seen:
+                seen.add(s)
+                syms.append(s)
+        if syms:
+            print(f"universe.json: {len(syms)} symbols")
+            return syms
+    except Exception as e:  # noqa: BLE001
+        print("universe.json load failed:", e)
+
     try:
         c = json.loads((DATA / "constituents.json").read_text())
         for lst in (c.get("lists") or {}).values():
             for it in lst:
-                s = it.get("symbol")
-                if s and s not in syms:
+                s = (it.get("symbol") or "").strip().upper()
+                if s and s not in seen:
+                    seen.add(s)
                     syms.append(s)
     except Exception as e:  # noqa: BLE001
         print("constituents load failed:", e)
+
+    print(f"fallback chart universe: {len(syms)} symbols")
     return syms
 
 

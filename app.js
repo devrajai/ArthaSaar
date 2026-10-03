@@ -16,12 +16,12 @@
    "eventradar.js",
    "cryptoradar.js",
    "aimerge.js",
-   "procharts.js", "marketinternals.js", "treemap.js", "homepulse.js" ];
+   "procharts.js", "marketinternals.js", "treemap.js", "homepulse.js", "researchradar.js" ];
   var tries = {};
   function load(f) {
     var s = document.createElement("script");
-    s.src = f + "?v=as34";
-    s.async = false; /* execution order preserve, download parallel */
+    s.src = f + "?v=as35";
+    s.async = false;
     s.onload = function () { tries[f] = 0; };
     s.onerror = function () {
       try { if (s.parentNode) s.parentNode.removeChild(s); } catch (e) {}

@@ -50,7 +50,7 @@ jobs:
           git commit -m "build: ArthaSaar Android APK v1.0" || echo "no change"
           git pull --rebase || true
           git push
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: market-brain-apk
           path: market-brain.apk

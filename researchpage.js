@@ -49,6 +49,49 @@ function card(num,title,body,source,updated,wide){
 }
 
 function installCSS(){
+  if(document.getElementById("rr-mobile-css"))return;
+  var st=document.createElement("style");st.id="rr-mobile-css";
+  st.textContent=[
+    "#research-radar{width:100%;max-width:100%;overflow:hidden}",
+    "#research-radar .rr-command,#research-radar .rr-panel,#research-radar .rr-card{box-sizing:border-box;max-width:100%}",
+    "#research-radar .rr-command{margin-left:auto;margin-right:auto}",
+    "#research-radar .rr-tabs{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:8px 2px;position:sticky;top:0;z-index:5;background:var(--bg,#050505)}",
+    "#research-radar .rr-tabs::-webkit-scrollbar{display:none}",
+    "#research-radar .rr-tab{flex:0 0 auto;white-space:nowrap}",
+    "#research-radar .rr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}",
+    "#research-radar .rr-wide{grid-column:1/-1}",
+    "#research-radar .rr-card{min-width:0;overflow:hidden}",
+    "#research-radar .rr-card table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}",
+    "#research-radar .rr-card td,#research-radar .rr-card th{white-space:nowrap}",
+    "@media(max-width:720px){#research-radar{padding:0!important}",
+    "#research-radar .rr-command{border-radius:16px;margin:8px 0}",
+    "#research-radar .rr-title{font-size:26px!important;line-height:1.05}",
+    "#research-radar .rr-subtitle{font-size:9px!important;line-height:1.5}",
+    "#research-radar .rr-command-top{display:block!important}",
+    "#research-radar .rr-statusline{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px}",
+    "#research-radar .rr-hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}",
+    "#research-radar .rr-hero-kpi{padding:10px!important;min-width:0}",
+    "#research-radar .rr-hero-kpi b{font-size:16px!important}",
+    "#research-radar .rr-source-strip{grid-template-columns:1fr 1fr!important}",
+    "#research-radar .rr-grid{grid-template-columns:1fr!important;gap:9px!important}",
+    "#research-radar .rr-wide{grid-column:auto!important}",
+    "#research-radar .rr-card{border-radius:13px!important}",
+    "#research-radar .rr-head{font-size:10px!important}",
+    "#research-radar .rr-kicker{font-size:8px!important;line-height:1.45}",
+    "#research-radar .rr-row{grid-template-columns:minmax(0,1fr) auto!important}",
+    "#research-radar .rr-cols{grid-template-columns:1fr!important}",
+    "#research-radar .rr-lab-grid{grid-template-columns:1fr!important}",
+    "#research-radar .rr-tool-grid{grid-template-columns:1fr!important}",
+    "#research-radar .rr-search{display:flex!important;gap:5px!important}",
+    "#research-radar .rr-search input{min-width:0!important}",
+    "#research-radar .rr-btn{white-space:nowrap}",
+    "#research-radar .rr-metric-grid{grid-template-columns:1fr 1fr!important}",
+    "#research-radar .rr-note{display:none!important}",
+    "}",
+    "@media(max-width:380px){#research-radar .rr-hero-kpis{grid-template-columns:1fr!important}.rr-source-strip{grid-template-columns:1fr!important}}"
+  ].join("");
+  document.head.appendChild(st);
+
   if(document.getElementById("rr44-style"))return;
   var s=document.createElement("style");s.id="rr44-style";
   s.textContent=[
@@ -479,7 +522,7 @@ function render(d){
     card("05","RBI / MACRO PULSE",itemList(ma.indicators,function(x){return'<div class="ni"><b>'+esc(x.name||"Macro")+'</b><small>'+esc(x.value||"—")+' · '+esc(x.date||"")+'</small></div>';},5),"RBI/public macro",ma.macro_updated||d.updated),
     card("10","DATA RESILIENCE",row("Feeds OK",n((hs.ok||rdd.health_summary&&rdd.health_summary.ok))+"/"+n((hs.total||rdd.health_summary&&rdd.health_summary.total)))+row("Problems",n((hs.problems||rdd.health_summary&&rdd.health_summary.problems)),((hs.problems||rdd.health_summary&&rdd.health_summary.problems)||0)?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"Data health",dr.health_updated||rdd.health_updated||d.updated),
     card("43","DATA RELIABILITY",row("Coverage",pct0(rel.coverage_score_pct))+row("History ≥200D",pct0(rel.history_ge_200d_pct))+row("EMA200 coverage",pct0(rel.ema200_coverage_pct))+row("Delivery rows",n(rel.delivery_coverage)),"Repo coverage",d.updated),
-    '<div class="card rr-card rr-wide"><div class="sh2 rr-head"><span>DAILY DATA PIPELINE</span><span class="rr-badges">'+sourceBadge("GitHub Actions",d.updated)+'</span></div><div class="rr-kicker">Market collectors run after EOD, the second brain pass self-heals missing snapshots, then Research Radar rebuilds and GitHub Pages republishes the static data. No paid API is required.</div>'+row("Last radar",safeDate(ds.last_radar_update||d.updated))+row("Last market brain",safeDate(ds.market_data_updated))+row("Last delivery",safeDate(ds.delivery_updated))+row("Last F&O",safeDate(ds.futures_updated))+row("Data health",safeDate(ds.data_health_updated))+'</div>'
+
   ]);
 
   var signals=grid([
@@ -540,7 +583,7 @@ function render(d){
     '<section class="rr-panel" data-rr-panel="derivatives">'+panelHead("Derivatives terminal","Futures, OI build-up, basis and index options")+derivatives+'</section>'+
     '<section class="rr-panel" data-rr-panel="structure">'+panelHead("Market structure","Sectors, index buckets and leadership")+structure+'</section>'+
     '<section class="rr-panel" data-rr-panel="lab">'+panelHead("Research Lab","Replay, stock drill-down, compare, notebook, backtests and data health")+lab+'</section>'+
-    '<div class="rr-note"><b>Data contract.</b> Every research card is either <b>observed</b> from a public snapshot, <b>calculated</b> by ArthaSaar, <b>historical</b> from stored series, or explicitly <b>unavailable</b> when the free dataset lacks required fields. No blank values are invented.</div>';
+    '';
   wireLab();
 }
 

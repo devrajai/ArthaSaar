@@ -2843,4 +2843,98 @@ h+='<div class="nfeedt">Latest Feed</div><div class="nfeed">';
 })();
 </script>
 
+
+<style id="as-fo-css">
+#as-fo-card,#as-circ-card,#as-reg-card{font-size:12px}
+#as-fo-card .fq{width:100%;box-sizing:border-box;padding:9px 11px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:400 12.5px var(--font);outline:none;margin-bottom:8px}
+#as-fo-card table,#as-reg-card table{width:100%;min-width:0;border-collapse:collapse;font-size:10px;table-layout:fixed}
+#as-fo-card th,#as-reg-card th{position:sticky;top:0;background:var(--surface);font:700 8.5px var(--font);text-transform:uppercase;letter-spacing:.03em;color:var(--dim);padding:7px 4px;text-align:right;border-bottom:1px solid var(--border)}
+#as-fo-card th:first-child,#as-reg-card th:first-child{text-align:left}
+#as-fo-card td,#as-reg-card td{padding:6px 4px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#as-fo-card td:first-child,#as-reg-card td:first-child{text-align:left;white-space:normal}
+#as-fo-card tr[data-sym]{cursor:pointer}
+#as-circ-card .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#as-circ-card .ccell{border:1px solid var(--border);border-radius:9px;padding:6px 8px}
+#as-circ-card .ccell .k{font-size:9px;color:var(--dim);text-transform:uppercase}
+#as-circ-card .ccell .v{font:800 13px var(--mono)}
+#as-circ-card .csec{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:12px 0 5px}
+#as-circ-card .crow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px}
+#as-circ-card .crow:last-child{border-bottom:0}
+#as-circ-card .band{font:800 9.5px var(--mono);padding:1px 6px;border-radius:6px;background:#e8eef7;color:#1b4a86}
+#as-reg-card .rtabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:0 0 8px}
+#as-reg-card .rtabs button{flex:0 0 auto;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 10px;font:700 10px var(--font);cursor:pointer;white-space:nowrap}
+#as-reg-card .rtabs button.on{background:var(--accent);color:#fff;border-color:transparent}
+#as-reg-card .rrow{padding:7px 0;border-bottom:1px solid var(--border)}
+#as-reg-card .rrow:last-child{border-bottom:0}
+#as-reg-card .rrow b{font-size:11px}
+#as-reg-card .rrow small{display:block;font-size:9.5px;color:var(--dim)}
+#as-reg-card .rrow a{color:var(--accent);font:800 9.5px var(--font);text-decoration:none}
+.as-note{color:var(--dim);font-size:10px;margin-top:8px;line-height:1.5}
+</style>
+<script>
+/* ArthaSaar — round 30: Futures = stock F&O + circuit limits/band changes + NSE regulatory circulars */
+(function(){ "use strict";
+  function base(){ return location.pathname.indexOf("/app/")>=0 ? "../data/" : "data/"; }
+  function J(f){ return fetch(base()+f,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function nf(x,d){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d}); }
+  function pc(x,d){ return (x==null||isNaN(x))?"—":(x>=0?"+":"")+Number(x).toFixed(d==null?2:d)+"%"; }
+  function big(x){ if(x==null||isNaN(x)) return "—"; var a=Math.abs(x); if(a>=1e7) return (x/1e7).toFixed(2)+"Cr"; if(a>=1e5) return (x/1e5).toFixed(2)+"L"; return nf(x,0); }
+  var FU=null,CIR=null,REG=null,REGQ="all";
+  function buildFO(){
+    var host=document.getElementById("v-futures"); if(!host||!FU) return;
+    if(document.getElementById("as-fo-card")) return;
+    var st=(FU.stocks||[]).slice().sort(function(a,b){ return Math.abs(b.oi_chg||0)-Math.abs(a.oi_chg||0); });
+    var h='<input class="fq" id="foQ" type="search" placeholder="Search F&O stock\u2026">';
+    h+='<div class="as-note">Stock futures \u2014 '+st.length+' underlyings \u00b7 close, basis, OI and OI change \u00b7 tap a row for the company card.</div>';
+    h+='<div class="card" style="padding:0;overflow:auto;max-height:52vh;margin-top:6px"><table><thead><tr><th>Stock</th><th>Fut</th><th>Spot</th><th>Basis%</th><th>OI</th><th>OI chg</th></tr></thead><tbody id="foBody"></tbody></table></div>';
+    var card=document.createElement("div"); card.id="as-fo-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    var fh=host.querySelector(".fshead"); if(fh) host.insertBefore(card, fh.nextSibling); else host.insertBefore(card, host.firstChild);
+    function render(q){ q=(q||"").toLowerCase().trim();
+      var list=st.filter(function(x){ return !q || String(x.symbol).toLowerCase().indexOf(q)>-1; });
+      var tb=document.getElementById("foBody"); if(!tb) return;
+      tb.innerHTML=list.slice(0,120).map(function(x){ return '<tr data-sym="'+esc(x.symbol)+'"><td><b>'+esc(x.symbol)+'</b><small style="color:var(--dim)">'+esc(x.expiry||"")+'</small></td><td>'+nf(x.close,2)+'</td><td>'+nf(x.underlying,2)+'</td><td class="'+((x.basis_pct||0)>=0?"up":"dn")+'">'+pc(x.basis_pct,2)+'</td><td>'+big(x.oi)+'</td><td class="'+((x.oi_chg||0)>=0?"up":"dn")+'">'+big(x.oi_chg)+'</td></tr>'; }).join("");
+      tb.querySelectorAll("tr[data-sym]").forEach(function(tr){ tr.addEventListener("click", function(){ var s=tr.getAttribute("data-sym"); if(window.openCompanyFS) window.openCompanyFS(s); }); });
+    }
+    var q=document.getElementById("foQ"); if(q) q.addEventListener("input", function(){ render(q.value); });
+    render("");
+  }
+  function buildCirc(){
+    var host=document.getElementById("v-futures"); if(!host||!CIR) return;
+    if(document.getElementById("as-circ-card")) return;
+    var b=CIR.bands||{}, ch=b.ch||[], hist=b.hist||[], uc=CIR.uc||[], lc=CIR.lc||[], tr=CIR.tr||[];
+    var h='<div class="csec" style="margin-top:0">\uD83D\uDEA6 Circuit Limits \u00b7 today</div>';
+    h+='<div class="cgrid"><div class="ccell"><div class="k">upper circuit</div><div class="v up">'+nf(CIR.n_uc,0)+'</div></div><div class="ccell"><div class="k">lower circuit</div><div class="v dn">'+nf(CIR.n_lc,0)+'</div></div><div class="ccell"><div class="k">bands changed</div><div class="v">'+nf(ch.length,0)+'</div></div></div>';
+    if(tr.length){ h+='<div class="csec">7-day trend</div><div class="crow" style="font-weight:700"><span>day</span><span>UC / LC</span></div>'+tr.slice(-6).map(function(x){ return '<div class="crow"><span>'+esc(x.d)+'</span><span><span class="up">'+nf(x.uc,0)+'</span> / <span class="dn">'+nf(x.lc,0)+'</span></span></div>'; }).join(""); }
+    if(ch.length){ h+='<div class="csec">\u26A0\uFE0F Price-band revisions today ('+ch.length+')</div>'+ch.slice(0,12).map(function(x){ return '<div class="crow"><span><b>'+esc(x.s)+'</b> <small style="color:var(--dim)">'+esc((x.n||"").slice(0,26))+'</small></span><span><span class="band">'+esc(x.f)+'%</span> \u2192 <span class="band" style="background:#fae6c0;color:#8a5a10">'+esc(x.t)+'%</span></span></div>'; }).join(""); }
+    else h+='<div class="as-note">No band revisions in the latest feed \u2014 NSE revises price bands daily and brokers act on it first; this shows them as they appear.</div>';
+    if(uc.length&&uc[0].top){ h+='<div class="csec">Top upper-circuit stocks ('+uc[0].b+'% band)</div>'+uc[0].top.slice(0,8).map(function(x){ return '<div class="crow"><span><b>'+esc(x.s)+'</b></span><span class="up">'+pc(x.p,1)+' \u00b7 '+nf(x.c,2)+'</span></div>'; }).join(""); }
+    h+='<div class="as-note">From data/circuits.json (NSE bhavcopy). Upper = locked at high (no sellers); lower = locked at low. Band % = allowed daily move. '+(CIR.updated?("Updated "+esc(CIR.updated)+"."):"")+'</div>';
+    var card=document.createElement("div"); card.id="as-circ-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    host.appendChild(card);
+  }
+  function buildReg(){
+    var host=document.getElementById("v-futures"); if(!host||!REG) return;
+    if(document.getElementById("as-reg-card")) return;
+    var items=REG.items||[], cats={};
+    items.forEach(function(x){ cats[x.cat||"Other"]=(cats[x.cat||"Other"]||0)+1; });
+    var keys=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; });
+    var h='<div class="as-note" style="margin-top:0">\uD83D\uDCCB NSE regulatory circulars \u2014 '+items.length+' recent (the layer brokers see first: band changes, margin, SLB, expiry, listing).</div>';
+    h+='<div class="rtabs"><button class="on" data-c="all">ALL</button>'+keys.map(function(k){ return '<button data-c="'+esc(k)+'">'+esc(k)+'</button>'; }).join("")+'</div>';
+    h+='<div id="regBody"></div>';
+    var card=document.createElement("div"); card.id="as-reg-card"; card.className="card"; card.style.marginTop="8px"; card.innerHTML=h;
+    host.appendChild(card);
+    function render(){ var tb=document.getElementById("regBody"); if(!tb) return;
+      var list=items.filter(function(x){ return REGQ==="all" || (x.cat||"Other")===REGQ; });
+      tb.innerHTML=list.slice(0,60).map(function(x){ return '<div class="rrow"><small>'+esc(x.date||"")+' \u00b7 '+esc(x.cat||"")+'</small><b>'+esc((x.subj&&x.subj.length?x.subj:(x.dept||"")))+'</b><small>'+esc(x.dept||"")+(x.no?" \u00b7 "+esc(x.no):"")+(x.pdf?' \u00b7 <a href="'+esc(x.pdf)+'" target="_blank" rel="noopener">PDF \u2197</a>':"")+'</small></div>'; }).join("");
+    }
+    card.querySelectorAll(".rtabs button").forEach(function(btn){ btn.addEventListener("click", function(){ card.querySelectorAll(".rtabs button").forEach(function(x){x.classList.remove("on");}); btn.classList.add("on"); REGQ=btn.getAttribute("data-c"); render(); }); });
+    render();
+  }
+  Promise.all([J("futures.json"),J("circuits.json"),J("circulars.json")]).then(function(r){ FU=r[0]||{}; CIR=r[1]||{}; REG=r[2]||{}; buildFO(); buildCirc(); buildReg(); });
+  var n=0,iv=setInterval(function(){ buildFO(); buildCirc(); buildReg(); if(++n>25) clearInterval(iv); },600);
+  window.addEventListener("hashchange",function(){ setTimeout(function(){ buildFO(); buildCirc(); buildReg(); },300); });
+})();
+</script>
+
 </body></html>

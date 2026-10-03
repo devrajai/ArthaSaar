@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03T08:04:54.242862+00:00",
+ "updated": "2026-10-03T08:05:35.860656+00:00",
  "healthy": true,
  "summary": {
   "total": 17,
@@ -68,7 +68,7 @@
    "source": "Yahoo Finance via yfinance",
    "file": "data/history/",
    "status": "ok",
-   "updated": "2026-10-03T08:04:54.139348+00:00",
+   "updated": "2026-10-03T08:05:35.763949+00:00",
    "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "2350 symbol history files"
@@ -190,7 +190,7 @@
    "file": "data/candles.json",
    "status": "ok",
    "updated": "2026-10-02T16:02",
-   "age_hours": 16.0,
+   "age_hours": 16.1,
    "max_age_hours": 48.0,
    "coverage": "15 actively tracked symbols"
   }

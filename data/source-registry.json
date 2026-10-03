@@ -146,6 +146,30 @@
       "coverage": "44 research modules",
       "note": "Corporate filings, 52W, breadth history, index membership/weight changes, macro, bulk/block, results, sector rotation, descriptive regime and data resilience. NSE is primary; Yahoo remains historical backup.",
       "max_age_hours": 72
+    },
+    {
+      "id": "research-alerts",
+      "label": "Research Radar alert feed",
+      "source": "ArthaSaar calculations",
+      "source_url": "https://github.com/devrajai/ArthaSaar",
+      "type": "derived-free",
+      "cadence": "After Research Radar EOD build",
+      "file": "data/research-alerts.json",
+      "coverage": "Breakout, volume, delivery, F&O, index and filing alerts",
+      "note": "Descriptive alerts generated from committed public snapshots; not recommendations.",
+      "max_age_hours": 72
+    },
+    {
+      "id": "research-lab-history",
+      "label": "Research Lab history + event outcomes",
+      "source": "ArthaSaar calculations",
+      "source_url": "https://github.com/devrajai/ArthaSaar",
+      "type": "derived-free",
+      "cadence": "Daily after EOD",
+      "file": "data/research-signal-history.json + data/research-market-history.json",
+      "coverage": "Historical signal outcomes, breadth replay and research snapshots",
+      "note": "Outcome statistics use only prices after each stored signal date. General backtests may contain survivorship bias; NIFTY 50-aware companion statistics use stored membership history.",
+      "max_age_hours": 96
     }
   ]
 }

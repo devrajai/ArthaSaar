@@ -283,6 +283,7 @@
 
   function boot(){
     css();
+    if(!document.getElementById("research-edge-script")){ var rs=document.createElement("script"); rs.id="research-edge-script"; rs.src="researchextensions.js?v=1"; document.body.appendChild(rs); }
     Promise.all([
       J("research-radar.json"),
       J("research-signal-history.json"),

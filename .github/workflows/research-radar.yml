@@ -6,8 +6,11 @@ on:
       - 'scripts/research_alerts.py'
       - '.github/workflows/research-radar.yml'
   schedule:
-    # 20:25 IST daily, after the main EOD collectors and data-health pass
-    - cron: '55 14 * * *'
+    # 21:50 IST Mon-Sat, after the second daily brain pass (21:05 IST).
+    - cron: '20 16 * * 1-6'
+  workflow_run:
+    workflows: ["Daily Brain Collect"]
+    types: [completed]
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,6 +19,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   radar:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

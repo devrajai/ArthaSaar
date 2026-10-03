@@ -22,6 +22,86 @@
     }).join("")+'</div>';
   }
 
+  function parseTs(s){
+    if(!s) return null;
+    var d=new Date(s);
+    if(!isNaN(d.getTime())) return d;
+    var m=String(s).match(/(\d{2}) (\w{3}) (\d{4}), (\d{2}):(\d{2}) IST/);
+    if(m){
+      var months={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      return new Date(Date.UTC(Number(m[3]),months[m[2]]||0,Number(m[1]),Number(m[4]),Number(m[5]))-330*60000);
+    }
+    m=String(s).match(/(\d{2})-(\w{3})-(\d{4})/);
+    if(m){
+      var mm={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      return new Date(Date.UTC(Number(m[3]),mm[m[2]]||0,Number(m[1]))-330*60000);
+    }
+    return null;
+  }
+  function ageLabel(s){
+    var d=parseTs(s); if(!d) return "timestamp unavailable";
+    var mins=Math.max(0,Math.round((Date.now()-d.getTime())/60000));
+    if(mins<60) return mins+"m ago";
+    var hrs=Math.round(mins/60);
+    if(hrs<48) return hrs+"h ago";
+    return Math.round(hrs/24)+"d ago";
+  }
+  function freshness(s){
+    var d=parseTs(s); if(!d) return "UNKNOWN";
+    var hrs=Math.max(0,(Date.now()-d.getTime())/3600000);
+    return hrs<=30?"FRESH":(hrs<=72?"EOD":"STALE");
+  }
+  function buildSourceCenter(meta){
+    if(document.getElementById("as-data-center")) return;
+    var home=document.getElementById("v-home"); if(!home) return;
+    var r=meta.registry||{}, feeds=r.feeds||[];
+    var feedData={
+      "nse-equity":meta.breadth,
+      "nse-indices":meta.indices,
+      "nse-fii-dii":meta.fii,
+      "nse-delivery":meta.delivery,
+      "nse-fo":meta.futures,
+      "yahoo-history":meta.historyProbe,
+      "amfi-nav":meta.mfTop,
+      "google-news":meta.news,
+      "coingecko":meta.crypto,
+      "derived":meta.xray
+    };
+    var rows=feeds.map(function(f){
+      var d=feedData[f.id]||{};
+      var updated=d.updated || (f.id==="yahoo-history"&&d.to?d.to:null);
+      var status=f.id==="yahoo-history"?(d.to?"HISTORY":"NO DATA"):freshness(updated);
+      var cov=f.coverage||"—";
+      if(f.id==="nse-equity" && meta.brain && Array.isArray(meta.brain.stocks)) cov=nf(meta.brain.stocks.length,0)+" screened stocks";
+      if(f.id==="nse-indices" && meta.indices && meta.indices.count) cov=nf(meta.indices.count,0)+" indices";
+      if(f.id==="nse-delivery" && meta.delivery && meta.delivery.n) cov=nf(meta.delivery.n,0)+" securities";
+      if(f.id==="nse-fo" && meta.futures && meta.futures.stock_count) cov=nf(meta.futures.stock_count,0)+" stock futures";
+      if(f.id==="google-news" && meta.news && meta.news.count) cov=nf(meta.news.count,0)+" headlines";
+      if(f.id==="coingecko" && meta.crypto && Array.isArray(meta.crypto.top)) cov=nf(meta.crypto.top.length,0)+" coins";
+      if(f.id==="derived" && meta.gti && meta.gti.symbols) cov=nf(Object.keys(meta.gti.symbols).length,0)+" model symbols";
+      var cls=status==="FRESH"||status==="HISTORY"?"buy":(status==="EOD"?"hold":"dn");
+      var stamp=updated||"—";
+      return '<div class="dc-row"><div><b>'+esc(f.label)+'</b><small>'+esc(f.source)+' · '+esc(f.cadence)+'</small></div><div class="dc-mid"><span>'+esc(cov)+'</span><small>'+esc(ageLabel(stamp))+'</small></div><div class="dc-last"><span class="b '+cls+'">'+esc(status)+'</span><small>'+esc(stamp)+'</small></div><a href="'+esc(f.source_url||"#")+'" target="_blank" rel="noopener">SOURCE</a></div>';
+    }).join("");
+    var card=document.createElement("div");
+    card.id="as-data-center";
+    card.className="hp-wrap";
+    card.innerHTML='<div class="sect">FREE DATA CENTER <span class="fr">source + freshness + coverage</span></div>'+
+      '<div class="card hp-card"><div class="sh2">HOSTED SNAPSHOT POLICY</div>'+
+      '<div class="dc-note">GitHub Pages serves the latest committed JSON snapshot. Refreshing this page does not fetch NSE/Yahoo/AMFI prices directly; GitHub Actions collectors update the hosted files. “FRESH/EOD” is a freshness label, not a real-time quote.</div>'+
+      '<div class="dc-list">'+rows+'</div></div>';
+    var brief=document.getElementById("as-home-brief");
+    if(brief) brief.insertAdjacentElement("afterend",card); else home.insertAdjacentElement("afterbegin",card);
+  }
+  function updateCoverageLabels(count){
+    if(!count) return;
+    document.querySelectorAll("h2,.ng,.sect,.plab,.ds span,button").forEach(function(el){
+      if(el.childElementCount===0 && /2,085 stocks/.test(el.textContent)) el.textContent=el.textContent.replace(/2,085 stocks/g,nf(count,0)+" stocks");
+    });
+    var h=document.querySelector("#v-screener h2");
+    if(h) h.innerHTML="Screener — "+nf(count,0)+" stocks";
+  }
+
   function buildHome(data){
     var home=document.getElementById("v-home"); if(!home||document.getElementById("as-home-brief")) return;
     var b=data.brain||{}, stocks=(b.stocks||[]).slice();
@@ -120,10 +200,32 @@
       J("news-volume.json"),
       J("futures.json"),
       J("gti.json"),
-      J("xray.json")
+      J("xray.json"),
+      J("source-registry.json").catch(function(){return {feeds:[]};}),
+      J("indices-all.json").catch(function(){return {};}),
+      J("mf-top.json").catch(function(){return {};}),
+      J("crypto.json").catch(function(){return {};}),
+      J("news.json").catch(function(){return {};}),
+      J("history/RELIANCE.json").catch(function(){return {};})
     ]).then(function(a){
       state.stocks=(a[0]&&a[0].stocks)||[];
       buildHome({brain:a[0]||{},fii:a[1]||{},breadth:a[2]||{},delivery:a[3]||{},big:a[4]||{},newsvol:a[5]||{},futures:a[6]||{},gti:a[7]||{},xray:a[8]||{}});
+      buildSourceCenter({
+        registry:a[9]||{},
+        indices:a[10]||{},
+        mfTop:a[11]||{},
+        crypto:a[12]||{},
+        news:a[13]||{},
+        historyProbe:a[14]||{},
+        brain:a[0]||{},
+        breadth:a[2]||{},
+        fii:a[1]||{},
+        delivery:a[3]||{},
+        futures:a[6]||{},
+        gti:a[7]||{},
+        xray:a[8]||{}
+      });
+      updateCoverageLabels(state.stocks.length);
       buildChartSearch();
     }).catch(function(e){console.warn("ArthaSaar Home Pulse",e);});
   }

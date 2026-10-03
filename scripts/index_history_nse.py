@@ -87,8 +87,7 @@ def main():
         (i for i, line in enumerate(lines) if "closing" in line.lower() and "index" in line.lower()),
         0,
     )
-    text = "
-".join(lines[header_idx:])
+    text = "\n".join(lines[header_idx:])
     rows = list(csv.DictReader(io.StringIO(text)))
     if not rows:
         print("empty NSE index CSV")

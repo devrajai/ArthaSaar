@@ -16,6 +16,7 @@ jobs:
       - run: python3 scripts/birthday.py
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          BIRTHDAY_MEMBERS_JSON: ${{ secrets.BIRTHDAY_MEMBERS_JSON }}
       - run: python3 scripts/panchak.py
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}

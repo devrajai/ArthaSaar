@@ -1,5 +1,10 @@
 name: Data Health
 on:
+  push:
+    paths:
+      - 'scripts/data_health.py'
+      - 'data/source-registry.json'
+      - '.github/workflows/data-health.yml'
   schedule:
     # 20:00 IST daily
     - cron: '30 14 * * *'

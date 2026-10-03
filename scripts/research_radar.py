@@ -62,6 +62,12 @@ def fetch_csv(url):
 
 def membership_snapshot():
     current, failed = {}, []
+    fallback = load("constituents.json", {}).get("lists") or {}
+    fallback_map = {
+        "NIFTY 50": "nifty50",
+        "NIFTY 100": "nifty100",
+        "NIFTY 200": "nifty200",
+    }
     for index_name, url in NSE_MEMBERSHIP.items():
         try:
             rows = list(csv.DictReader(io.StringIO(fetch_csv(url))))
@@ -90,6 +96,23 @@ def membership_snapshot():
             current[index_name] = {"source": "NSE", "source_url": url, "count": len(members), "members": members}
         except Exception as exc:
             failed.append({"index": index_name, "error": str(exc)[:160]})
+            # GitHub Pages data already contains a weekly NSE constituents snapshot.
+            # Use it as a transparent fallback instead of turning all membership-driven
+            # research modules into empty cards when NSE blocks the runner.
+            key = fallback_map.get(index_name)
+            rows = fallback.get(key) or [] if key else []
+            if rows:
+                members = {}
+                for r in rows:
+                    sym = str(r.get("symbol") or "").strip().upper()
+                    if sym:
+                        members[sym] = {"symbol":sym,"company":str(r.get("company") or "").strip(),"weight_pct":None}
+                current[index_name] = {
+                    "source":"ArthaSaar constituents snapshot",
+                    "source_url":"data/constituents.json",
+                    "count":len(members),
+                    "members":members
+                }
     return current, failed
 
 def membership_changes(current, previous):
@@ -732,9 +755,11 @@ def concentration_feature(members):
     for idx,snap in members.items():
         vals=[dict(v) for v in (snap.get("members") or {}).values() if v.get("weight_pct") is not None]
         vals.sort(key=lambda x:x.get("weight_pct",0),reverse=True)
-        out.append({"index":idx,"count":len(vals),"top5_weight_pct":round(sum(x.get("weight_pct",0) for x in vals[:5]),2),
-                    "top10_weight_pct":round(sum(x.get("weight_pct",0) for x in vals[:10]),2),
-                    "top10":vals[:10]})
+        if vals:
+            out.append({"index":idx,"available":True,"count":len(vals),"top5_weight_pct":round(sum(x.get("weight_pct",0) for x in vals[:5]),2),
+                        "top10_weight_pct":round(sum(x.get("weight_pct",0) for x in vals[:10]),2),"top10":vals[:10]})
+        else:
+            out.append({"index":idx,"available":False,"count":len(snap.get("members") or {}),"reason":"Current free constituent snapshot does not include index weights; ArthaSaar does not invent concentration figures."})
     return out
 
 def nifty_leadership(members, rows):
@@ -785,7 +810,8 @@ def main():
     previous = load("index-membership.json", {})
     old_members = previous.get("indices") or {}
     if members:
-        save("index-membership.json", {"updated": datetime.now(timezone.utc).isoformat(), "source": "NSE", "indices": members})
+        sources=sorted(set(str(x.get("source") or "unknown") for x in members.values()))
+        save("index-membership.json", {"updated": datetime.now(timezone.utc).isoformat(), "source": " + ".join(sources), "indices": members, "fetch_warnings": failed})
     else:
         members = old_members
     changes = membership_changes(members, old_members) if members and old_members else {}
@@ -891,9 +917,25 @@ def main():
         bulk.append({"symbol":sym,"company":x.get("n"),"deal_value_cr":x.get("t"),"days":x.get("d"),"change_pct":s.get("change_pct")})
     bulk.sort(key=lambda x:x.get("deal_value_cr") or 0, reverse=True)
 
+    daily_status = {
+        "auto_update": True,
+        "last_radar_update": datetime.now(timezone.utc).isoformat(),
+        "market_data_updated": (load("brain-screener.json", {}) or {}).get("updated"),
+        "delivery_updated": delivery.get("updated"),
+        "futures_updated": futures_obj.get("updated"),
+        "filings_updated": filings_obj.get("updated"),
+        "results_updated": results.get("updated"),
+        "constituents_updated": (load("constituents.json", {}) or {}).get("updated"),
+        "data_health_updated": health.get("updated"),
+        "membership_source": (load("index-membership.json", {}) or {}).get("source"),
+        "schedule": "GitHub Actions EOD collectors -> Data Health -> Research Radar; second brain pass is followed by a radar refresh.",
+        "hosted_on": "GitHub Pages",
+        "paid_api": False
+    }
     out = {
       "updated": datetime.now(timezone.utc).isoformat(),
       "schema_version": "44-modules",
+      "daily_status": daily_status,
       "source_policy": "Free/public sources only; NSE primary where available, Yahoo historical backup.",
       "features": {
         "corporate_actions": {"count":len(action_ev),"events":action_ev,"source":"NSE corporate filings snapshot"},

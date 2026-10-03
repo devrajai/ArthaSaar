@@ -173,6 +173,8 @@ function stockUniverseSearch(q){
   return arr.filter(function(x){return String(x.symbol||"").toUpperCase().indexOf(q)>=0||String(x.company||"").toUpperCase().indexOf(q)>=0;}).slice(0,10);
 }
 
+window.ArthaSaarResearchOpen=function(symbol){ openDetail(symbol); };
+
 function openDetail(symbol){
   symbol=String(symbol||"").toUpperCase().trim();if(!symbol)return;
   var profile=STATE.stocks[symbol]||{};

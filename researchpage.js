@@ -388,7 +388,7 @@ function render(d){
   var ib=f.index_bucket_breadth||{},ls=f.liquidity_stress||{},rel=f.data_reliability||{},rdd=f.data_resilience_detail||{};
   var ds=d.daily_status||{};
   var hs=dr.summary||{};
-  var alertCount=(STATE.alerts||{}).count||0, health=(STATE.health||{}).summary||{};
+  var alertCount=(STATE.alerts||{}).count||0, health=(STATE.health||{}).summary||{}, healthReady=(health.total||0)>0, healthProblems=health.problems||0;
   var source=ds.membership_source||"public snapshots";
 
   function grid(a){return '<div class="rr-module-grid">'+a.filter(Boolean).join("")+'</div>';}
@@ -416,7 +416,7 @@ function render(d){
 
   var hero='<div class="rr-command">'+
     '<div class="rr-command-top"><div><div class="rr-eyebrow">ARTHASAAR · RESEARCH TERMINAL</div><div class="rr-title">Daily Market Research</div><div class="rr-subtitle">44 free-data modules · '+esc(source)+' · generated '+esc(safeDate(d.updated))+'</div></div>'+
-    '<div class="rr-statusline">'+sourceBadge("GitHub Actions",d.updated)+'<span class="rr-badge '+(health.problems?"stale":"fresh")+'">'+esc(health.problems?String(health.problems)+" data issues":"DATA HEALTH OK")+'</span><span class="rr-badge rr-source">'+n(alertCount)+" alerts"+'</span></div></div>'+
+    '<div class="rr-statusline">'+sourceBadge("GitHub Actions",d.updated)+'<span class="rr-badge '+(healthReady?(healthProblems?"stale":"fresh"):"neutral")+'">'+esc(healthReady?(healthProblems?String(healthProblems)+" data issues":"DATA HEALTH OK"):"HEALTH SNAPSHOT PENDING")+'</span><span class="rr-badge rr-source">'+n(alertCount)+" alerts"+'</span></div></div>'+
     '<div class="rr-hero-kpis">'+
       '<div class="rr-hero-kpi"><small>REGIME</small><b class="'+regimeClass+'">'+esc(rg.label||"—")+'</b></div>'+
       '<div class="rr-hero-kpi"><small>NIFTY 50</small><b class="'+((rg.nifty_change_pct||0)>=0?"up":"dn")+'">'+p(rg.nifty_change_pct)+'</b></div>'+
@@ -441,7 +441,7 @@ function render(d){
     card("36","INSTITUTIONAL FLOWS",row("FII current",n((iflow.current||{}).net_cr),(iflow.current&&iflow.current.net_cr||0)>=0?"up":"dn")+row("DII current",n((iflow.dii_current||{}).net_cr),(iflow.dii_current&&iflow.dii_current.net_cr||0)>=0?"up":"dn")+row("FII sell days",n(iflow.fii_sell_days),(iflow.fii_sell_days||0)>0?"dn":"up"),"FII/DII snapshot",d.updated),
     card("04","INDEX / MEMBERSHIP",Object.keys(ix.membership_changes||{}).map(function(k){var z=ix.membership_changes[k]||{};return row(k,(z.added||[]).length+" in · "+(z.removed||[]).length+" out");}).join("")+row("Indices tracked",n(ix.indices_count))+row("Membership source",source),"NSE/public",d.updated),
     card("05","RBI / MACRO PULSE",itemList(ma.indicators,function(x){return'<div class="ni"><b>'+esc(x.name||"Macro")+'</b><small>'+esc(x.value||"—")+' · '+esc(x.date||"")+'</small></div>';},5),"RBI/public macro",ma.macro_updated||d.updated),
-    card("10","DATA RESILIENCE",row("Feeds OK",n(hs.ok)+"/"+n(hs.total))+row("Problems",n(hs.problems),hs.problems?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"Data health",dr.health_updated||d.updated),
+    card("10","DATA RESILIENCE",row("Feeds OK",n((hs.ok||rdd.health_summary&&rdd.health_summary.ok))+"/"+n((hs.total||rdd.health_summary&&rdd.health_summary.total)))+row("Problems",n((hs.problems||rdd.health_summary&&rdd.health_summary.problems)),((hs.problems||rdd.health_summary&&rdd.health_summary.problems)||0)?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"Data health",dr.health_updated||rdd.health_updated||d.updated),
     card("43","DATA RELIABILITY",row("Coverage",pct0(rel.coverage_score_pct))+row("History ≥200D",pct0(rel.history_ge_200d_pct))+row("EMA200 coverage",pct0(rel.ema200_coverage_pct))+row("Delivery rows",n(rel.delivery_coverage)),"Repo coverage",d.updated),
     '<div class="card rr-card rr-wide"><div class="sh2 rr-head"><span>DAILY DATA PIPELINE</span><span class="rr-badges">'+sourceBadge("GitHub Actions",d.updated)+'</span></div><div class="rr-kicker">Market collectors run after EOD, the second brain pass self-heals missing snapshots, then Research Radar rebuilds and GitHub Pages republishes the static data. No paid API is required.</div>'+row("Last radar",safeDate(ds.last_radar_update||d.updated))+row("Last market brain",safeDate(ds.market_data_updated))+row("Last delivery",safeDate(ds.delivery_updated))+row("Last F&O",safeDate(ds.futures_updated))+row("Data health",safeDate(ds.data_health_updated))+'</div>'
   ]);
@@ -491,8 +491,8 @@ function render(d){
     card("39","MARKET CONCENTRATION",concBody(),"NSE weights when available",d.updated),
     card("40","NIFTY LEADERSHIP",leaderBody(),"NIFTY 50 + derived RS",d.updated),
     card("41","INDEX BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"NSE/public membership",d.updated),
-    card("14","PRICE × VOLUME CONTEXT",'<div class="rr-cols"><div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},4)+'</div><div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},4)+'</div></div>',"Derived",d.updated),
-    card("43","DATA COVERAGE",row("History files",n(rdd.history_files))+row("History ≥200D",pct0(rdd.history_ge_200d_pct))+row("EMA200",pct0(rdd.ema200_coverage_pct))+row("Delivery",n(rdd.delivery_coverage))+row("Futures",n(rdd.futures_stock_coverage)),"System coverage",rdd.health_updated||d.updated)
+    card("43","DATA COVERAGE",row("History files",n(rdd.history_files))+row("History ≥200D",pct0(rdd.history_ge_200d_pct))+row("EMA200",pct0(rdd.ema200_coverage_pct))+row("Delivery",n(rdd.delivery_coverage))+row("Futures",n(rdd.futures_stock_coverage)),"System coverage",rdd.health_updated||d.updated),
+    card("44","DATA RESILIENCE DETAIL",row("Coverage score",pct0(rdd.coverage_score_pct))+row("Health snapshot",healthReady?"READY":"PENDING",healthReady?(healthProblems?"dn":"up"):"")+row("Membership source",source)+row("EOD fallback","NSE → Yahoo → last valid"),"System health",rdd.health_updated||d.updated)
   ]);
 
   var lab='<div class="rr-panel-content">'+renderResearchLab(d)+'</div>';

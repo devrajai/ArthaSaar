@@ -174,6 +174,38 @@ function wrapFund(){
 }
 
 
+
+function enhanceFundamentals(){
+  var sec=document.getElementById("v-fundamentals");if(!sec)return;
+  var input=sec.querySelector(".srow input"),tbody=sec.querySelector("tbody");if(!tbody)return;
+  if(!DATA.fundamentals||!Object.keys(DATA.fundamentals).length)return;
+  var all=Object.keys(DATA.fundamentals).map(function(sym){
+    var ff=DATA.fundamentals[sym]||{}, bs=DATA.stocks[String(sym).toUpperCase()]||{};
+    return {symbol:String(sym).toUpperCase(),company:bs.company||ff.Company||sym,ff:ff};
+  });
+  function v(ff,keys){return fv(ff,keys);}
+  function render(q){
+    q=String(q||"").toUpperCase().trim();
+    var a=all.filter(function(x){return !q||x.symbol.indexOf(q)>=0||String(x.company).toUpperCase().indexOf(q)>=0;}).slice(0,100);
+    tbody.innerHTML=a.map(function(x){
+      var ff=x.ff||{};
+      return '<tr><td><button class="as-stock-link" data-research-stock="'+esc(x.symbol)+'">'+esc(x.company||x.symbol)+'</button><small style="display:block;color:var(--faint);font:400 8px var(--mono)">'+esc(x.symbol)+'</small></td>'+
+        '<td>'+esc(fundCell(v(ff,["Market Cap","MCap","market_cap"])))+'</td>'+
+        '<td>'+esc(fundCell(v(ff,["P/E","PE","pe"])))+'</td>'+
+        '<td>'+esc(fundCell(v(ff,["P/B","PB","pb"])))+'</td>'+
+        '<td>'+esc(fundCell(v(ff,["ROE","roe"])))+'</td>'+
+        '<td>'+esc(fundCell(v(ff,["ROCE","roce"])))+'</td>'+
+        '<td>'+esc(fundCell(v(ff,["D/E","Debt/Equity","de"])))+'</td>'+
+        '<td>'+esc(fundCell(v(ff,["Div Yield","Dividend Yield","dividend_yield"])))+'</td></tr>';
+    }).join("");
+  }
+  render(input&&input.value||"");
+  if(input&&!input.dataset.asResearchFundBound){
+    input.dataset.asResearchFundBound="1";
+    input.addEventListener("input",function(){render(input.value);});
+  }
+}
+
 function openStock(sym){
   sym=String(sym||"").trim().toUpperCase().replace(/\s+/g,"");
   if(!sym)return;
@@ -208,9 +240,9 @@ function enrichEvents(){
 
 function boot(){
   load().then(function(){
-    wrapCompany();wrapFund();bindExistingStockViews();
+    wrapCompany();wrapFund();enhanceFundamentals();bindExistingStockViews();
     var n=0,iv=setInterval(function(){
-      wrapCompany();wrapFund();bindExistingStockViews();
+      wrapCompany();wrapFund();enhanceFundamentals();bindExistingStockViews();
       if(++n>40)clearInterval(iv);
     },400);
   });

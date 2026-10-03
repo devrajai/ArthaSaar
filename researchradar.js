@@ -10,7 +10,8 @@
   function row(a,b,cl){return '<div class="zrow"><span>'+esc(a)+'</span><b class="'+(cl||"")+'">'+esc(b)+"</b></div>";}
   function mount(d){
     var home=document.getElementById("v-home")||document.querySelector("section#home");
-    if(!home||document.getElementById("as-research-radar"))return;
+    var target=document.getElementById("research-radar")||home;
+    if(!target||document.getElementById("as-research-radar"))return;
     var f=d.features||{}, hp=f.corporate_actions||{}, w=f.week52||{}, br=f.breadth_history||{}, ix=f.index_changes||{}, macro=f.rbi_macro||{}, bb=f.bulk_block||{}, res=f.results||{}, sec=f.sector_rotation||{}, reg=f.market_regime||{}, dr=f.data_resilience||{}, hs=(br.history||[]).slice(-14);
     var events=(hp.events||[]).slice(0,8).map(function(x){return '<div class="ni"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(x.symbol)+" · "+esc(x.kind)+'</b><small>'+esc(x.date||"—")+"</small></div><small>"+esc(x.subject||"")+(x.pdf?' · <a target="_blank" rel="noopener" href="'+esc(x.pdf)+'">filing</a>':"")+"</small></div>";}).join("");
     var highs=(w.near_highs||[]).slice(0,6).map(function(x){return row(x.symbol,pct(x.from_high_pct),"up");}).join("");
@@ -40,7 +41,7 @@
       card("10 · DATA RESILIENCE",row("Feeds OK",nf(health.ok,0)+"/"+nf(health.total,0))+row("Problems",nf(health.problems,0),health.problems?"dn":"up")+row("Policy","NSE EOD → Yahoo → last valid"),"updated "+(dr.health_updated||d.updated||"—"))+
       '</div><div class="rr-note">Free/public-data architecture: NSE public reports are primary for Indian EOD data; Yahoo remains the historical backup. Research Radar is informational and preserves previous valid snapshots when a collector fails.</div></div>';
     var brief=document.getElementById("as-home-brief");
-    if(brief)brief.insertAdjacentHTML("afterend",html);else home.insertAdjacentHTML("afterbegin",html);
+    if(document.getElementById("research-radar")) target.insertAdjacentHTML("afterbegin",html); else if(brief)brief.insertAdjacentHTML("afterend",html); else home.insertAdjacentHTML("afterbegin",html);
   }
   function css(){if(document.getElementById("as-research-radar-css"))return;var s=document.createElement("style");s.id="as-research-radar-css";s.textContent='.rr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.rr-card{min-width:0}.rr-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 14px 8px}.rr-spark{padding:8px 14px 6px;border-bottom:1px solid var(--border)}.rr-spark svg{width:100%;height:70px;display:block}.rr-note{margin-top:9px;padding:10px 12px;border:1px dashed var(--border);border-radius:9px;color:var(--dim);font:400 10px var(--mono);line-height:1.5}.rr-card a{color:var(--accent);text-decoration:none}.rr-card a:hover{text-decoration:underline}.mut{padding:10px 14px;color:var(--dim);font:400 10px var(--mono)}@media(max-width:720px){.rr-grid{grid-template-columns:1fr}.rr-cols{grid-template-columns:1fr}}';document.head.appendChild(s);}
   function boot(){css();J("research-radar.json").then(mount).catch(function(){});}

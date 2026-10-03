@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03T11:56:30.669233+00:00",
+ "updated": "2026-10-03T11:57:25.119123+00:00",
  "healthy": true,
  "summary": {
   "total": 17,
@@ -58,7 +58,7 @@
    "file": "data/futures.json",
    "status": "ok",
    "updated": "2026-10-02T13:59:49.572414+00:00",
-   "age_hours": 21.9,
+   "age_hours": 22.0,
    "max_age_hours": 72.0,
    "coverage": "Index chains + 80 stock futures"
   },
@@ -68,7 +68,7 @@
    "source": "Yahoo Finance via yfinance",
    "file": "data/history/",
    "status": "ok",
-   "updated": "2026-10-03T11:56:30.535409+00:00",
+   "updated": "2026-10-03T11:55:28.374676+00:00",
    "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "2350 symbol history files"
@@ -113,7 +113,7 @@
    "file": "data/breadth.json + data/gti.json + data/xray.json",
    "status": "ok",
    "updated": "2026-10-02T18:05:40.152657+05:30",
-   "age_hours": 23.3,
+   "age_hours": 23.4,
    "max_age_hours": 72.0,
    "coverage": "Model-dependent"
   },
@@ -134,8 +134,8 @@
    "source": "NSE/public snapshots + ArthaSaar calculations",
    "file": "data/research-radar.json",
    "status": "ok",
-   "updated": "2026-10-03T08:04:16.886698+00:00",
-   "age_hours": 3.9,
+   "updated": "2026-10-03T11:57:20.903840+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "44 research modules"
   },
@@ -145,8 +145,8 @@
    "source": "ArthaSaar calculations",
    "file": "data/research-alerts.json",
    "status": "ok",
-   "updated": "2026-10-03T08:04:22.631275+00:00",
-   "age_hours": 3.9,
+   "updated": "2026-10-03T11:57:25.083328+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "Breakout, volume, delivery, F&O, index and filing alerts"
   },
@@ -156,8 +156,8 @@
    "source": "ArthaSaar calculations",
    "file": "data/research-signal-history.json + data/research-market-history.json",
    "status": "ok",
-   "updated": "2026-10-03T08:04:16.909786+00:00",
-   "age_hours": 3.9,
+   "updated": "2026-10-03T11:57:20.921163+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 96.0,
    "coverage": "Historical signal outcomes, breadth replay and research snapshots"
   },
@@ -167,8 +167,8 @@
    "source": "ArthaSaar calculations",
    "file": "data/research-signal-history.json",
    "status": "ok",
-   "updated": "2026-10-03T08:04:11.194098+00:00",
-   "age_hours": 3.9,
+   "updated": "2026-10-03T11:57:16.706981+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 168.0,
    "coverage": "Historical signal outcome events"
   },
@@ -178,8 +178,8 @@
    "source": "NSE/public constituents snapshot",
    "file": "data/index-membership-history.json",
    "status": "ok",
-   "updated": "2026-10-03T08:04:09.367838+00:00",
-   "age_hours": 3.9,
+   "updated": "2026-10-03T11:57:15.412862+00:00",
+   "age_hours": 0.0,
    "max_age_hours": 168.0,
    "coverage": "NIFTY 50/100/200 snapshots"
   },

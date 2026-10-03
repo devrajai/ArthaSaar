@@ -34,7 +34,13 @@ def ts_of(obj):
 def parse_ts(v):
     if not v:
         return None
-    s = str(v).replace("Z", "+00:00")
+    s = str(v).strip()
+    s = s.replace(" IST", "+05:30").replace("Z", "+00:00")
+    for fmt in ("%d %b %Y, %H:%M %z", "%d %b %Y, %H:%M:%S %z"):
+        try:
+            return datetime.strptime(s, fmt)
+        except Exception:
+            pass
     try:
         d = datetime.fromisoformat(s)
         if d.tzinfo is None:
@@ -43,6 +49,26 @@ def parse_ts(v):
     except Exception:
         return None
 
+def inspect_feed(path):
+    items = [x.strip() for x in str(path or "").split(" + ") if x.strip()]
+    found = []
+    for item in items:
+        p = ROOT / item if item.startswith("data/") else ROOT / "data" / item
+        if p.is_dir():
+            files = list(p.glob("*.json"))
+            if files:
+                latest = max(fp.stat().st_mtime for fp in files)
+                found.append((True, datetime.fromtimestamp(latest, tz=timezone.utc).isoformat(), f"{len(files)} files"))
+            continue
+        if p.exists():
+            obj = parse_json(p)
+            found.append((True, ts_of(obj), "file"))
+    if not found:
+        return False, None, "missing"
+    explicit = [x for x in found if x[1]]
+    latest = max(explicit, key=lambda x: str(x[1]))[1] if explicit else None
+    coverage = ", ".join(sorted(set(x[2] for x in found)))
+    return True, latest, coverage
 
 def main():
     reg = parse_json(REG) or {"feeds": []}
@@ -54,17 +80,12 @@ def main():
         path = f.get("file", "")
         if "<SYMBOL>" in path:
             path = "data/history-index.json"
-        rel = path[5:] if path.startswith("data/") else path
-        p = ROOT / "data" / rel if not path.startswith("data/") else ROOT / path
-        obj = parse_json(p) if p.exists() else None
-        updated = ts_of(obj)
+        exists, updated, inferred_coverage = inspect_feed(path)
         dt = parse_ts(updated)
         age_h = round((now - dt).total_seconds() / 3600, 1) if dt else None
         max_age = float(f.get("max_age_hours", 72))
-        if not p.exists():
+        if not exists:
             status = "missing"
-        elif obj is None:
-            status = "invalid"
         elif dt is None and "history" not in fid:
             status = "unknown"
         elif age_h is not None and age_h > max_age:
@@ -73,10 +94,16 @@ def main():
             status = "ok"
 
         coverage = f.get("coverage", "—")
-        if fid == "nse-index-history" and isinstance(obj, dict):
-            coverage = f'{len(obj.get("indices", {}))} indices'
-        if fid == "yahoo-history" and isinstance(obj, dict):
-            coverage = f'{obj.get("count", 0)} symbol histories'
+        if inferred_coverage not in ("file", "missing") and coverage == "—":
+            coverage = inferred_coverage
+        if fid == "nse-index-history":
+            obj = parse_json(ROOT / "data" / "index-history.json") or {}
+            if isinstance(obj, dict):
+                val = obj.get("indices", obj.get("history", {}))
+                coverage = f"{len(val)} indices" if isinstance(val, dict) else coverage
+        if fid == "yahoo-history":
+            hp = DATA / "history"
+            coverage = f"{sum(1 for _ in hp.glob("*.json"))} symbol history files" if hp.exists() else "missing"
         results.append({
             "id": fid,
             "label": f.get("label", fid),

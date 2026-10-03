@@ -129,11 +129,11 @@
       "source": "NSE India",
       "source_url": "https://www.nseindia.com/reports-indices-historical-index-data",
       "type": "official-free",
-      "cadence": "Trading day, EOD",
+      "cadence": "Weekly / trading-day refresh",
       "file": "data/index-history.json",
       "coverage": "139+ NSE indices",
-      "max_age_hours": 72,
-      "note": "Daily all-index close archive from NSE public ind_close_all CSV."
+      "max_age_hours": 168,
+      "note": "NSE public daily index history archive; refresh cadence is slower than the main EOD equity snapshot."
     },
     {
       "id": "research-radar",

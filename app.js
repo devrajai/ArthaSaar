@@ -16,7 +16,7 @@
    "eventradar.js",
    "cryptoradar.js",
    "aimerge.js",
-   "procharts.js", "marketinternals.js", "treemap.js" ];
+   "procharts.js", "marketinternals.js", "treemap.js", "homepulse.js" ];
   var tries = {};
   function load(f) {
     var s = document.createElement("script");

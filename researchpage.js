@@ -606,7 +606,7 @@ function render(d){
     card("17","SECTOR STRENGTH MATRIX",rows(sm.sectors,"sector","avg_20d_pct",function(x){return(x.avg_20d_pct||0)>=0?"up":"dn";},10),"Derived",d.updated),
     card("39","MARKET CONCENTRATION",concBody(),"NSE weights when available",d.updated),
     card("40","NIFTY LEADERSHIP",leaderBody(),"NIFTY 50 + derived RS",d.updated),
-    card("41","INDEX BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"NSE/public membership",d.updated),
+    card("41","INDEX BUCKET BREADTH",(ib.buckets||[]).map(function(x){return x.available?row(x.bucket,pct0(x.breadth_pct),(x.breadth_pct||0)>=50?"up":"dn"):row(x.bucket,"UNAVAILABLE");}).join("")||empty("Bucket data unavailable","The current free membership snapshot does not contain every NSE bucket."),"NSE/public membership",d.updated),
     card("43","DATA COVERAGE",row("History files",n(rdd.history_files))+row("History ≥200D",pct0(rdd.history_ge_200d_pct))+row("EMA200",pct0(rdd.ema200_coverage_pct))+row("Delivery",n(rdd.delivery_coverage))+row("Futures",n(rdd.futures_stock_coverage)),"System coverage",rdd.health_updated||d.updated),
     card("44","DATA RESILIENCE DETAIL",row("Coverage score",pct0(rdd.coverage_score_pct))+row("Health snapshot",healthReady?"READY":"PENDING",healthReady?(healthProblems?"dn":"up"):"")+row("Membership source",source)+row("EOD fallback","NSE → Yahoo → last valid"),"System health",rdd.health_updated||d.updated)
   ]);

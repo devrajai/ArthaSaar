@@ -175,6 +175,18 @@ function stockUniverseSearch(q){
 
 window.ArthaSaarResearchOpen=function(symbol){ openDetail(symbol); };
 
+
+function fundamentalValue(obj, keys){
+  obj=obj||{};
+  for(var i=0;i<keys.length;i++){var k=keys[i];if(obj[k]!==undefined&&obj[k]!==null&&obj[k]!=="")return obj[k];}
+  return null;
+}
+function fundamentalCell(v){
+  if(v===null||v===undefined||v==="")return "—";
+  if(typeof v==="number")return n(v);
+  return String(v);
+}
+
 function openDetail(symbol){
   symbol=String(symbol||"").toUpperCase().trim();if(!symbol)return;
   var profile=STATE.stocks[symbol]||{};
@@ -228,7 +240,30 @@ function openDetail(symbol){
       row("Expiry",fo?fo.expiry:"Not available")+row("OI",fo?n(fo.oi):"—")+row("OI change",fo?n(fo.oi_chg):"—")+row("Basis",fo?p(fo.basis_pct):"—")+'</div>';
     body+='<div class="rr-detail-section"><div class="sh2">CORPORATE / RESULTS</div>'+eventBody(filings)+
       (next?'<div class="ni"><b>Next result / event: '+esc(next.date||"—")+'</b><small>'+esc(next.company||"")+'</small></div>':"")+'</div>';
+    var ff=STATE.fundamentals[symbol]||STATE.fundamentals[symbol+".NS"]||{};    var fMcap=fundamentalValue(ff,["Market Cap","MCap","MarketCap","market_cap"]);
+    var fPE=fundamentalValue(ff,["P/E","PE","pe","Price/Earnings"]);
+    var fPB=fundamentalValue(ff,["P/B","PB","pb","Price/Book"]);
+    var fROE=fundamentalValue(ff,["ROE","roe","Return on Equity"]);
+    var fROCE=fundamentalValue(ff,["ROCE","roce","Return on Capital Employed"]);
+    var fDE=fundamentalValue(ff,["D/E","Debt/Equity","de","Debt to Equity"]);
+    var fDY=fundamentalValue(ff,["Div Yield","Dividend Yield","dividend_yield"]);
+    var fSales=fundamentalValue(ff,["Sales Growth","Sales growth","sales_growth"]);
+    var fProfit=fundamentalValue(ff,["Profit Growth","Profit growth","profit_growth"]);
+    body+='<div class="rr-detail-section"><div class="sh2">FUNDAMENTALS · DEEP SNAPSHOT</div><div class="rr-metric-grid" style="padding:10px 12px">'+
+      '<div class="rr-metric"><small>MARKET CAP</small><b>'+esc(fundamentalCell(fMcap))+'</b></div>'+
+      '<div class="rr-metric"><small>P/E</small><b>'+esc(fundamentalCell(fPE))+'</b></div>'+
+      '<div class="rr-metric"><small>P/B</small><b>'+esc(fundamentalCell(fPB))+'</b></div>'+
+      '<div class="rr-metric"><small>DIV YIELD</small><b>'+esc(fundamentalCell(fDY))+'</b></div>'+
+      '<div class="rr-metric"><small>ROE</small><b>'+esc(fundamentalCell(fROE))+'</b></div>'+
+      '<div class="rr-metric"><small>ROCE</small><b>'+esc(fundamentalCell(fROCE))+'</b></div>'+
+      '<div class="rr-metric"><small>D/E</small><b>'+esc(fundamentalCell(fDE))+'</b></div>'+
+      '<div class="rr-metric"><small>HISTORY</small><b>'+n(r.history_days)+'</b></div>'+
+      '</div>'+
+      '<div class="rr-kicker">Fundamentals come from the repository screener snapshot. Research context below combines the same stock with EOD history, delivery, F&O, filings and results.</div>'+
+      '<div class="rr-detail-section" style="margin:0 10px 10px;border-radius:8px"><div class="sh2">GROWTH / OPERATING FIELDS</div>'+
+      row("Sales growth",fundamentalCell(fSales))+row("Profit growth",fundamentalCell(fProfit))+'</div></div>';
     var nb0=notebook(),isWatched=(nb0.watch||[]).indexOf(symbol)>=0,note0=(nb0.notes||{})[symbol]||"";
+
     body+='<div class="rr-detail-section"><div class="sh2">RESEARCH NOTEBOOK</div><div style="padding:10px 12px"><button class="rr-btn" data-toggle-watch="'+esc(symbol)+'">'+(isWatched?"REMOVE FROM WATCHLIST":"ADD TO WATCHLIST")+'</button><textarea id="rr-modal-note" style="width:100%;margin-top:7px;min-height:65px" placeholder="Browser-local research note…">'+esc(note0)+'</textarea><button class="rr-btn" style="margin-top:6px" data-save-modal-note="'+esc(symbol)+'">SAVE NOTE</button></div></div>';
     body+='<div class="rr-detail-section"><div class="sh2">DATA SOURCE</div>'+row("Screener","ArthaSaar brain-screener snapshot")+row("Historical","ArthaSaar history file")+row("Corporate","NSE/public filings snapshot")+row("Research timestamp",safeDate((STATE.radar||{}).updated))+'</div>';
     host.innerHTML='<div class="rr-modal"><div class="rr-modal-head"><div class="rr-modal-title"><b>'+esc(symbol)+' · '+esc(r.company||"")+'</b><small>'+esc(r.industry||"")+'</small></div><button class="rr-btn" data-close-rr>✕ CLOSE</button></div><div class="rr-modal-body">'+body+'</div></div>';
@@ -604,14 +639,15 @@ function loadSupport(){
     optionalJSON("data/data-health.json",{}),
     optionalJSON("data/research-market-history.json",{}),
     optionalJSON("data/research-signal-history.json",{}),
-    optionalJSON("data/candles.json",{})
+    optionalJSON("data/candles.json",{}),
+    optionalJSON("data/screener-fundamentals.json",{})
   ]).then(function(vals){
     parseCSV(vals[0]).forEach(function(x){var sym=String(x.symbol||"").trim().toUpperCase();if(sym){x.return_20d=numv(x.return_20d);STATE.stocks[sym]=x;}});
     var d=vals[1]||{};STATE.delivery=d.d||{};
     STATE.futures=vals[2]||{};
     STATE.filings=(vals[3]||{}).filings||[];
     var rr=vals[4]||{};STATE.results={};(rr.results||[]).forEach(function(x){if(x.sym)STATE.results[String(x.sym).toUpperCase()]=x;});
-    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};STATE.candles=(vals[9]||{}).syms||{};STATE.candlesUpdated=(vals[9]||{}).updated||null;maybeNotifyAlerts(STATE.alerts);
+    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};STATE.candles=(vals[9]||{}).syms||{};STATE.candlesUpdated=(vals[9]||{}).updated||null;STATE.fundamentals=(vals[10]||{}).stocks||{};maybeNotifyAlerts(STATE.alerts);
   });
 }
 function boot(){

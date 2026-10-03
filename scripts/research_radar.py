@@ -350,7 +350,7 @@ def median(vals):
     n = len(vals)
     return vals[n//2] if n % 2 else (vals[n//2-1] + vals[n//2]) / 2
 
-def backtest_signals():
+def backtest_signals(membership_history=None):
     hp = DATA / "history"
     configs = {
         "near_52w_high": lambda closes, vols, i: i >= 20 and closes[i] >= max(closes[max(0, i-252):i]) * 0.99,
@@ -366,6 +366,7 @@ def backtest_signals():
         "recent": []
     } for k in configs}
     samples = {k: {"5": [], "20": []} for k in configs}
+    n50_stats = {k: {"observations":0,"5":[],"20":[]} for k in configs}
     files_seen = 0
     for fp in hp.glob("*.json"):
         if fp.name == "history-index.json":
@@ -387,6 +388,7 @@ def backtest_signals():
                         hit = False
                     if not hit:
                         continue
+                    is_n50 = bool(membership_history and membership_on_date(membership_history, rows[i].get("date"), "NIFTY 50") and fp.stem.upper() in membership_on_date(membership_history, rows[i].get("date"), "NIFTY 50"))
                     s = stats[key]
                     s["observations"] += 1
                     f5 = pct_change(closes[i+5], closes[i])
@@ -403,8 +405,13 @@ def backtest_signals():
                             "date": rows[i].get("date"),
                             "close": closes[i],
                             "next5_pct": f5,
-                            "next20_pct": f20
+                            "next20_pct": f20,
+                            "nifty50_member": is_n50
                         })
+                    if is_n50:
+                        n50_stats[key]["observations"] += 1
+                        if f5 is not None: n50_stats[key]["5"].append(f5)
+                        if f20 is not None: n50_stats[key]["20"].append(f20)
         except Exception:
             continue
     for key, s in stats.items():
@@ -416,9 +423,12 @@ def backtest_signals():
         s["next20_mean_pct"] = round(mean(twenty), 2) if twenty else None
         s["next20_median_pct"] = round(median(twenty), 2) if twenty else None
         s["next20_positive_pct"] = round(100 * sum(1 for x in twenty if x > 0) / len(twenty), 1) if twenty else None
+        ns=n50_stats[key]
+        s["nifty50"]={"observations":ns["observations"],"next5_mean_pct":round(mean(ns["5"]),2) if ns["5"] else None,"next5_positive_pct":round(100*sum(1 for x in ns["5"] if x>0)/len(ns["5"]),1) if ns["5"] else None,"next20_mean_pct":round(mean(ns["20"]),2) if ns["20"] else None,"next20_positive_pct":round(100*sum(1 for x in ns["20"] if x>0)/len(ns["20"]),1) if ns["20"] else None}
     return {
         "history_files_scanned": files_seen,
-        "method": "Historical event study using ArthaSaar close+volume files. Current-universe history can contain survivorship bias; results are descriptive, not predictive.",
+        "nifty50_membership_history_days": len((membership_history or {}).get("daily") or []),
+        "method": "Historical event study using ArthaSaar close+volume files. NIFTY 50-aware companion statistics use the stored membership snapshot nearest to each signal date. General statistics can still contain survivorship bias; results are descriptive, not predictive.",
         "signals": stats
     }
 
@@ -925,7 +935,7 @@ def main():
         "module_count": 44,
         "daily_history": (hist.get("daily") or [])[-60:],
         "market_replay": update_market_replay_history(br, hl, sector_rotation(stocks), regime(stocks,fii,delivery,indices)),
-        "backtests": backtest_signals(),
+        "backtests": backtest_signals(membership_history),
         "signal_outcomes": signal_history,
         "survivorship": {"status":"improving","membership_history_days":len(membership_history.get("daily") or []),"nifty50_membership_history_available":bool(membership_history.get("daily")),"note":"Backtests still reflect the repository history files; NIFTY 50 membership history is stored daily so index-aware studies can exclude non-members as of each date."},
         "search_universe": len(stocks),

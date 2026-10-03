@@ -13,7 +13,7 @@
     var dedicated=document.getElementById("research-radar");
     var target=dedicated||home;
     if(!target)return;
-    if(dedicated && dedicated.querySelector(".rr-grid"))return;
+    if(dedicated && (dedicated.querySelector(".rr-command") || dedicated.dataset.rrProfessional==="1"))return;
     if(!dedicated && document.getElementById("as-research-radar"))return;
     var f=d.features||{}, hp=f.corporate_actions||{}, w=f.week52||{}, br=f.breadth_history||{}, ix=f.index_changes||{}, macro=f.rbi_macro||{}, bb=f.bulk_block||{}, res=f.results||{}, sec=f.sector_rotation||{}, reg=f.market_regime||{}, dr=f.data_resilience||{}, hs=(br.history||[]).slice(-14);
     var events=(hp.events||[]).slice(0,8).map(function(x){return '<div class="ni"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(x.symbol)+" · "+esc(x.kind)+'</b><small>'+esc(x.date||"—")+"</small></div><small>"+esc(x.subject||"")+(x.pdf?' · <a target="_blank" rel="noopener" href="'+esc(x.pdf)+'">filing</a>':"")+"</small></div>";}).join("");

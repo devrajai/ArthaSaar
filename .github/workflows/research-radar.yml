@@ -4,6 +4,7 @@ on:
     paths:
       - 'scripts/research_radar.py'
       - 'scripts/research_alerts.py'
+      - 'scripts/research_finalize.py'
       - '.github/workflows/research-radar.yml'
   schedule:
     # 21:50 IST Mon-Sat, after the second daily brain pass (21:05 IST).
@@ -35,6 +36,8 @@ jobs:
         run: python3 scripts/research_alerts.py
       - name: Recompute data health after radar products
         run: python3 scripts/data_health.py
+      - name: Finalize radar freshness metadata
+        run: python3 scripts/research_finalize.py
       - name: Commit radar snapshots
         run: |
           git config user.name 'github-actions[bot]'

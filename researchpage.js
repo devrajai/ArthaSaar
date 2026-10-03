@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{}};
+var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{},alerts:null,health:null,marketHistory:null,signalHistory:null};
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":">","\"":"&quot;"}[c];});}
 function n(x){return x==null||isNaN(x)?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:2});}
@@ -74,6 +74,15 @@ function installCSS(){
     ".rr-history{max-height:250px;overflow:auto}",
     ".rr-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;display:none;align-items:flex-start;justify-content:center;padding:7vh 10px 20px}.rr-overlay.open{display:flex}.rr-modal{width:min(760px,96vw);max-height:86vh;overflow:auto;background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:var(--shadow)}.rr-modal-head{position:sticky;top:0;z-index:2;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);display:flex;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}.rr-modal-title b{display:block;font-size:15px}.rr-modal-title small{display:block;margin-top:3px;color:var(--faint);font:400 9px var(--mono)}.rr-modal-body{padding:12px}.rr-metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.rr-metric{padding:9px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:9px}.rr-metric small{display:block;color:var(--faint);font:500 8px var(--mono);letter-spacing:.08em}.rr-metric b{display:block;margin-top:3px;font:600 12px var(--mono)}.rr-detail-section{margin-top:10px;border:1px solid var(--border);border-radius:10px;overflow:hidden}.rr-detail-section .sh2{border-bottom:1px solid var(--border)}",
     "@media(max-width:900px){.rr-lab-grid{grid-template-columns:1fr}.rr-metric-grid{grid-template-columns:1fr 1fr}}",
+    ".rr-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}",
+    ".rr-tools input,.rr-tools select,.rr-tools textarea{width:100%;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:9px;padding:8px 10px;font:500 10px var(--mono);outline:none}",
+    ".rr-tools textarea{min-height:70px;resize:vertical}.rr-tools label{display:block;color:var(--faint);font:600 8px var(--mono);letter-spacing:.1em;margin:8px 0 4px;text-transform:uppercase}",
+    ".rr-mini-table{width:100%;border-collapse:collapse;font-size:9.5px}.rr-mini-table th,.rr-mini-table td{padding:6px 7px;border-bottom:1px solid var(--border)}.rr-mini-table th{position:static}.rr-mini-table td.numr{text-align:right;font-family:var(--mono)}",
+    ".rr-alert{padding:8px 10px;border-bottom:1px solid var(--border)}.rr-alert:last-child{border:0}.rr-alert b{display:block;font-size:10px}.rr-alert small{display:block;color:var(--faint);font:400 8.5px var(--mono);margin-top:2px}",
+    ".rr-pill-ok{color:var(--up)}.rr-pill-bad{color:var(--down)}",
+    ".rr-note-save{margin-top:7px}.rr-watch{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}.rr-watch-item{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:999px;padding:4px 7px;font:600 8px var(--mono)}.rr-watch-item button{border:0;background:none;color:var(--faint);cursor:pointer}",
+    ".rr-replay-body{margin-top:7px;padding:9px;background:var(--bg2);border:1px solid var(--border);border-radius:9px}",
+
     "@media(max-width:720px){.rr-grid{grid-template-columns:1fr}.rr-wide{grid-column:auto}.rr-cols{grid-template-columns:1fr}.rr-head{align-items:flex-start;flex-direction:column}.rr-badges{justify-content:flex-start}.rr-metric-grid{grid-template-columns:1fr 1fr}}"
   ].join("");
   document.head.appendChild(s);
@@ -166,8 +175,94 @@ function openDetail(symbol){
   });
 }
 
+
+function localGet(key, fallback){
+  try{var v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}
+}
+function localSet(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+
+function exportCSV(rows, filename){
+  rows=rows||[];
+  if(!rows.length){alert("No rows to export.");return;}
+  var keys=[],seen={};
+  rows.forEach(function(r){Object.keys(r||{}).forEach(function(k){if(!seen[k]){seen[k]=1;keys.push(k);}});});
+  function cell(v){var s=v==null?"":String(v);return '"'+s.replace(/"/g,'""')+'"';}
+  var csv=keys.map(cell).join(",")+"\n"+rows.map(function(r){return keys.map(function(k){return cell(r[k]);}).join(",");}).join("\n");
+  var blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename||"arthasaar-export.csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},0);
+}
+
+function compareProfile(sym){
+  var p=STATE.stocks[String(sym||"").toUpperCase()]||{};
+  return {symbol:String(sym||"").toUpperCase(),company:p.company||"",price:numv(p.price),change_pct:numv(p.change_pct),return_20d:numv(p.return_20d),return_60d:numv(p.return_60d),rsi14:numv(p.rsi14),ema200:numv(p.ema200),vol_vs_avg20:numv(p.vol_vs_avg20),above_ema200:String(p.above_ema200)==="true",industry:p.industry||""};
+}
+function renderCompare(a,b){
+  var x=compareProfile(a),y=compareProfile(b);
+  function diff(v1,v2){if(v1==null||v2==null)return "—";var d=v1-v2;return (d>=0?"+":"")+d.toFixed(2);}
+  return '<div class="rr-mini-table-wrap"><table class="rr-mini-table"><thead><tr><th>Metric</th><th>'+esc(x.symbol)+'</th><th>'+esc(y.symbol)+'</th><th>Δ A-B</th></tr></thead><tbody>'+
+    [["Price",x.price,y.price,n],["1D %",x.change_pct,y.change_pct,p],["20D %",x.return_20d,y.return_20d,p],["60D %",x.return_60d,y.return_60d,p],["RSI",x.rsi14,y.rsi14,n],["EMA200",x.ema200,y.ema200,n],["Volume / 20D",x.vol_vs_avg20,y.vol_vs_avg20,n],["Above EMA200",x.above_ema200?"YES":"NO",y.above_ema200?"YES":"NO",function(){return"—";}],["Sector",x.industry||"—",y.industry||"—",function(){return x.industry===y.industry?"same":"different";}]]
+    .map(function(r){var fmt=r[3];return'<tr><td>'+esc(r[0])+'</td><td class="numr">'+esc(typeof fmt==="function"&&r[1]!==null&&r[1]!==undefined?fmt(r[1]):r[1])+'</td><td class="numr">'+esc(typeof fmt==="function"&&r[2]!==null&&r[2]!==undefined?fmt(r[2]):r[2])+'</td><td class="numr">'+esc(diff(r[1],r[2]))+'</td></tr>';}).join("")+
+    '</tbody></table></div>';
+}
+function sectorRows(sector){
+  var arr=Object.keys(STATE.stocks).map(function(k){return STATE.stocks[k];}).filter(function(x){return String(x.industry||"Other")===sector;});
+  arr.sort(function(a,b){return numv(b.return_20d||b.change_pct)-numv(a.return_20d||a.change_pct);});
+  return arr.slice(0,12);
+}
+function renderSectorPick(sector){
+  var host=document.getElementById("rr-sector-result");if(!host)return;
+  var rows=sectorRows(sector);
+  host.innerHTML=rows.length?'<table class="rr-mini-table"><thead><tr><th>Symbol</th><th>Company</th><th>1D</th><th>20D</th><th>RSI</th></tr></thead><tbody>'+rows.map(function(x){return'<tr><td><button class="rr-btn" data-symbol="'+esc(x.symbol)+'">'+esc(x.symbol)+'</button></td><td>'+esc(x.company||"")+'</td><td class="numr">'+p(numv(x.change_pct))+'</td><td class="numr">'+p(numv(x.return_20d))+'</td><td class="numr">'+n(numv(x.rsi14))+'</td></tr>';}).join("")+'</tbody></table>':'<div class="mut">No stock rows for this sector.</div>';
+}
+function marketReplay(date){
+  var hist=(STATE.marketHistory||{}).daily||[];
+  return hist.find(function(x){return x.date===date;})||null;
+}
+function renderReplay(date){
+  var host=document.getElementById("rr-replay-body");if(!host)return;
+  var x=marketReplay(date);
+  if(!x){host.innerHTML='<div class="mut">No market replay snapshot for this date.</div>';return;}
+  host.innerHTML=row("Advancers",n(x.breadth&&x.breadth.advancers))+row("Decliners",n(x.breadth&&x.breadth.decliners))+row("Advance ratio",pct0(x.breadth&&x.breadth.advance_ratio_pct))+row("EMA200 participation",pct0(x.breadth&&x.breadth.ema200_pct))+row("New-high zone",n(x.high_low&&x.high_low.new_high_zone),"up")+row("New-low zone",n(x.high_low&&x.high_low.new_low_zone),"dn")+row("Regime",x.regime&&x.regime.label||"—")+row("NIFTY change",p(x.regime&&x.regime.nifty_change_pct))+row("FII net",n(x.regime&&x.regime.fii_net_cr))+
+    '<div class="rr-sub">Sector leaders</div>'+rows(x.sector_top||[],"sector","avg_1d_pct",function(){return"up";},6)+'<div class="rr-sub">Sector laggards</div>'+rows(x.sector_bottom||[],"sector","avg_1d_pct",function(){return"dn";},6);
+}
+function notebook(){
+  var obj=localGet("artha_research_notebook_v1",{watch:[],notes:{}});
+  return obj&&obj.watch?obj:{watch:[],notes:{}};
+}
+function toggleWatch(sym){
+  var nb=notebook(),s=String(sym||"").toUpperCase();
+  nb.watch=nb.watch||[];var i=nb.watch.indexOf(s);
+  if(i>=0)nb.watch.splice(i,1);else nb.watch.unshift(s);
+  localSet("artha_research_notebook_v1",nb);
+  return nb;
+}
+function saveNote(sym,textv){
+  var nb=notebook();nb.notes=nb.notes||{};nb.notes[String(sym||"").toUpperCase()]=textv||"";localSet("artha_research_notebook_v1",nb);
+}
+function enableBrowserAlerts(){
+  if(!("Notification" in window)){alert("Browser notifications are not supported here.");return;}
+  Notification.requestPermission().then(function(p){alert(p==="granted"?"Browser alerts enabled for this session/browser.":"Notification permission was not granted.");});
+}
+function alertsBody(){
+  var arr=(STATE.alerts||{}).alerts||[];
+  return arr.slice(0,18).map(function(x){return'<div class="rr-alert"><b>'+esc(x.symbol||"")+' · '+esc(x.title||x.kind||"Alert")+'</b><small>'+esc(x.detail||"")+' · '+esc(x.source||"")+'</small></div>';}).join("")||'<div class="mut">No alerts in the latest committed snapshot.</div>';
+}
+function renderDataHealth(){
+  var h=STATE.health||{};var s=h.summary||{};
+  return row("Feeds OK",n(s.ok)+"/"+n(s.total),s.problems?"dn":"up")+row("Problems",n(s.problems),s.problems?"dn":"up")+row("Health updated",safeDate(h.updated))+
+    '<div class="rr-history"><table class="rr-mini-table"><thead><tr><th>Feed</th><th>Status</th><th>Age</th><th>Coverage</th><th>Source</th></tr></thead><tbody>'+
+    (h.feeds||[]).map(function(x){return'<tr><td>'+esc(x.label||x.id)+'</td><td class="'+(x.status==="ok"?"up":"dn")+'">'+esc(String(x.status||"").toUpperCase())+'</td><td class="numr">'+(x.age_hours==null?"—":n(x.age_hours)+"h")+'</td><td>'+esc(x.coverage||"—")+'</td><td>'+esc(x.source||"")+'</td></tr>';}).join("")+
+    '</tbody></table></div>';
+}
+function signalOutcomeBody(){
+  var sh=STATE.signalHistory||{},agg=sh.aggregate||{},keys=Object.keys(agg);
+  return '<div style="overflow:auto"><table class="rr-mini-table"><thead><tr><th>Signal</th><th>Events</th><th>5D avg</th><th>5D +%</th><th>20D avg</th><th>20D +%</th></tr></thead><tbody>'+
+    keys.map(function(k){var x=agg[k]||{};return'<tr><td>'+esc(k.replace(/_/g," ").toUpperCase())+'</td><td class="numr">'+n(x.observations)+'</td><td class="numr">'+p(x.next5_mean_pct)+'</td><td class="numr">'+pct0(x.next5_positive_pct)+'</td><td class="numr">'+p(x.next20_mean_pct)+'</td><td class="numr">'+pct0(x.next20_positive_pct)+'</td></tr>';}).join("")+
+    '</tbody></table></div><div class="rr-kicker">Outcome tracker is based only on prices after each stored signal date. Pending signals are excluded from completed statistics.</div>';
+}
+
 function renderResearchLab(d){
-  var lab=d.research_lab||{},bt=(lab.backtests||{}).signals||{},daily=lab.daily_history||[];
+  var lab=d.research_lab||{},bt=(lab.backtests||{}).signals||{},daily=lab.daily_history||[],mh=(lab.market_replay||{}).daily||[],surv=lab.survivorship||{},fresh=lab.freshness||{};
   var signals=Object.keys(bt);
   var back='<div style="overflow:auto"><table class="rr-lab-table"><thead><tr><th>Signal</th><th>Events</th><th>Next 5D avg</th><th>5D positive</th><th>Next 20D avg</th><th>20D positive</th></tr></thead><tbody>'+
     (signals.map(function(k){var x=bt[k]||{};return'<tr><td><b>'+esc(k.replace(/_/g," ").toUpperCase())+'</b></td><td class="numr">'+n(x.observations)+'</td><td class="numr">'+p(x.next5_mean_pct)+'</td><td class="numr">'+pct0(x.next5_positive_pct)+'</td><td class="numr">'+p(x.next20_mean_pct)+'</td><td class="numr">'+pct0(x.next20_positive_pct)+'</td></tr>';}).join("")||'<tr><td colspan="6">No backtest observations yet.</td></tr>')+
@@ -175,11 +270,24 @@ function renderResearchLab(d){
   var hist='<div class="rr-history"><table class="rr-lab-table"><thead><tr><th>Date</th><th>Advancers</th><th>Decliners</th><th>Advance ratio</th><th>High zone</th><th>Low zone</th></tr></thead><tbody>'+
     daily.slice(-20).reverse().map(function(x){return'<tr><td>'+esc(x.date)+'</td><td class="numr">'+n(x.advancers)+'</td><td class="numr">'+n(x.decliners)+'</td><td class="numr">'+pct0(x.advance_ratio_pct)+'</td><td class="numr">'+n(x.new_high_zone_count)+'</td><td class="numr">'+n(x.new_low_zone_count)+'</td></tr>';}).join("")+
     '</tbody></table></div>';
+  var sectors=(d.features&&d.features.sector_matrix&&d.features.sector_matrix.sectors)||[];
+  var sectorOptions=sectors.map(function(x){return'<option value="'+esc(x.sector)+'">'+esc(x.sector)+'</option>';}).join("");
+  var replayOptions=mh.slice(-120).reverse().map(function(x){return'<option value="'+esc(x.date)+'">'+esc(x.date)+'</option>';}).join("");
+  var nb=notebook(),notesHtml=(nb.watch||[]).slice(0,12).map(function(s){return'<span class="rr-watch-item">'+esc(s)+'<button data-unwatch="'+esc(s)+'">×</button></span>';}).join("")||'<span class="mut">No saved stocks yet.</span>';
+  var alertCount=(STATE.alerts||{}).count||0;
+  var health=(STATE.health||{}).summary||{};
   return '<div class="rr-lab-grid">'+
-    '<div class="card rr-card"><div class="sh2">RESEARCH LAB · STOCK DRILL-DOWN</div><div style="padding:10px 12px"><div class="rr-search"><input id="rr-stock-search" type="search" placeholder="Search symbol or company…"><button class="rr-btn" id="rr-clear-search">CLEAR</button></div><div id="rr-search-results"></div><div class="rr-chiprow"><button class="rr-chip" data-symbol="RELIANCE">RELIANCE</button><button class="rr-chip" data-symbol="HDFCBANK">HDFCBANK</button><button class="rr-chip" data-symbol="ICICIBANK">ICICIBANK</button><button class="rr-chip" data-symbol="TCS">TCS</button><button class="rr-chip" data-symbol="INFY">INFY</button></div><div class="rr-kicker">Click any symbol anywhere in Research Radar to open a full stock research profile.</div></div></div>'+
-    '<div class="card rr-card"><div class="sh2">RESEARCH LAB · COVERAGE</div>'+row("Universe searchable",n(lab.search_universe))+row("Radar modules",n(lab.module_count))+row("Source policy","Free/public only")+row("Updated",safeDate((d||{}).updated))+'</div>'+
-    '<div class="card rr-card rr-wide"><div class="sh2">SIGNAL HISTORY / BACKTEST</div>'+back+'</div>'+
-    '<div class="card rr-card rr-wide"><div class="sh2">BREADTH HISTORY</div>'+hist+'</div>'+
+    '<div class="card rr-card"><div class="sh2">RESEARCH LAB · STOCK DRILL-DOWN</div><div style="padding:10px 12px"><div class="rr-search"><input id="rr-stock-search" type="search" placeholder="Search symbol or company…"><button class="rr-btn" id="rr-clear-search">CLEAR</button></div><div id="rr-search-results"></div><div class="rr-chiprow"><button class="rr-chip" data-symbol="RELIANCE">RELIANCE</button><button class="rr-chip" data-symbol="HDFCBANK">HDFCBANK</button><button class="rr-chip" data-symbol="ICICIBANK">ICICIBANK</button><button class="rr-chip" data-symbol="TCS">TCS</button><button class="rr-chip" data-symbol="INFY">INFY</button></div></div></div>'+
+    '<div class="card rr-card rr-tools"><div class="sh2">RESEARCH LAB · COVERAGE</div>'+row("Universe searchable",n(lab.search_universe))+row("Radar modules",n(lab.module_count))+row("Alerts",n(alertCount))+row("Feeds OK",n(health.ok)+"/"+n(health.total))+row("Source policy","Free/public only")+row("Updated",safeDate(d.updated))+'<div class="rr-kicker">NSE/public exchange snapshots · ArthaSaar calculations · Yahoo historical backup.</div></div>'+
+    '<div class="card rr-card rr-wide rr-tools"><div class="sh2">MARKET REPLAY</div><div style="padding:10px 12px"><label>Select historical date</label><select id="rr-replay-select">'+replayOptions+'</select><div id="rr-replay-body" class="rr-replay-body"></div></div></div>'+
+    '<div class="card rr-card rr-tools"><div class="sh2">COMPARE TWO STOCKS</div><div style="padding:10px 12px"><label>Stock A</label><input id="rr-compare-a" value="RELIANCE"><label>Stock B</label><input id="rr-compare-b" value="ONGC"><button class="rr-btn" id="rr-compare-go" style="margin-top:7px">COMPARE</button><div id="rr-compare-body" style="margin-top:8px"></div><div class="rr-kicker">Comparison uses the same EOD snapshot and historical methods for both symbols.</div></div></div>'+
+    '<div class="card rr-card rr-tools"><div class="sh2">SECTOR → STOCK DRILL-DOWN</div><div style="padding:10px 12px"><label>Sector</label><select id="rr-sector-select">'+sectorOptions+'</select><div id="rr-sector-result" style="margin-top:8px"></div></div></div>'+
+    '<div class="card rr-card rr-tools"><div class="sh2">RESEARCH NOTEBOOK</div><div style="padding:10px 12px"><div class="rr-watch">'+notesHtml+'</div><label>Note for stock</label><div class="rr-search"><input id="rr-note-symbol" value="'+esc((nb.watch||[])[0]||"RELIANCE")+'"><button class="rr-btn" id="rr-note-watch">WATCH</button></div><textarea id="rr-note-text" placeholder="Private browser-local research note…">'+esc(((nb.notes||{})[(nb.watch||[])[0]||"RELIANCE"]||""))+'</textarea><button class="rr-btn rr-note-save" id="rr-note-save">SAVE NOTE</button><div class="rr-kicker">Stored only in this browser via localStorage. Nothing is sent to GitHub.</div></div></div>'+
+    '<div class="card rr-card rr-wide rr-tools"><div class="sh2">SIGNAL OUTCOME TRACKER</div><div style="padding:10px 12px">'+signalOutcomeBody()+'</div></div>'+
+    '<div class="card rr-card rr-tools"><div class="sh2">SIGNAL HISTORY / BACKTEST</div>'+back+'<div class="rr-kicker"><button class="rr-btn" id="rr-export-backtest">EXPORT BACKTEST CSV</button></div></div>'+
+    '<div class="card rr-card rr-tools"><div class="sh2">DATA QUALITY CENTER</div><div style="padding:10px 12px">'+renderDataHealth()+'<div class="rr-kicker">Survivorship status: '+esc(surv.status||"tracking")+' · membership-history days: '+n(surv.membership_history_days)+'</div></div></div>'+
+    '<div class="card rr-card rr-wide rr-tools"><div class="sh2">ALERT CENTER</div><div class="rr-kicker">Latest committed public-data signals. <button class="rr-btn" id="rr-browser-alerts">ENABLE BROWSER ALERTS</button> <button class="rr-btn" id="rr-export-alerts">EXPORT ALERTS CSV</button></div>'+alertsBody()+'</div>'+
+    '<div class="card rr-card rr-wide rr-tools"><div class="sh2">BREADTH HISTORY</div>'+hist+'</div>'+
     '</div>';
 }
 
@@ -194,9 +302,25 @@ function wireLab(){
   if(input)input.addEventListener("input",function(){paint(input.value);});
   var clear=document.getElementById("rr-clear-search");
   if(clear)clear.addEventListener("click",function(){if(input)input.value="";paint("");if(input)input.focus();});
-  document.querySelectorAll("[data-symbol]").forEach(function(el){
-    el.addEventListener("click",function(e){e.preventDefault();openDetail(el.getAttribute("data-symbol"));});
-  });
+
+  var replay=document.getElementById("rr-replay-select");
+  if(replay){renderReplay(replay.value);replay.addEventListener("change",function(){renderReplay(replay.value);});}
+  var ca=document.getElementById("rr-compare-a"),cb=document.getElementById("rr-compare-b"),cg=document.getElementById("rr-compare-go"),cp=document.getElementById("rr-compare-body");
+  function doCompare(){if(cp)cp.innerHTML=renderCompare(ca&&ca.value,cb&&cb.value);}
+  if(cg)cg.addEventListener("click",doCompare);doCompare();
+
+  var ss=document.getElementById("rr-sector-select");if(ss){renderSectorPick(ss.value);ss.addEventListener("change",function(){renderSectorPick(ss.value);});}
+
+  var nb=notebook(),ns=document.getElementById("rr-note-symbol"),nt=document.getElementById("rr-note-text"),nw=document.getElementById("rr-note-watch"),nsv=document.getElementById("rr-note-save");
+  if(nw)nw.addEventListener("click",function(){toggleWatch(ns.value);render(STATE.radar);});
+  if(nsv)nsv.addEventListener("click",function(){saveNote(ns.value,nt.value);alert("Saved in this browser.");});
+  if(ns)ns.addEventListener("change",function(){var x=notebook();if(nt)nt.value=(x.notes||{})[String(ns.value).toUpperCase()]||"";});
+
+  var ex=document.getElementById("rr-export-backtest");if(ex)ex.addEventListener("click",function(){var bt=(STATE.radar.research_lab||{}).backtests||{};var rows=Object.keys(bt.signals||{}).map(function(k){return Object.assign({signal:k},bt.signals[k]);});exportCSV(rows,"arthasaar-backtest.csv");});
+  var ea=document.getElementById("rr-export-alerts");if(ea)ea.addEventListener("click",function(){exportCSV((STATE.alerts||{}).alerts||[],"arthasaar-alerts.csv");});
+  var en=document.getElementById("rr-browser-alerts");if(en)en.addEventListener("click",enableBrowserAlerts);
+
+  document.querySelectorAll("[data-unwatch]").forEach(function(el){el.addEventListener("click",function(){var x=notebook();x.watch=(x.watch||[]).filter(function(v){return v!==el.getAttribute("data-unwatch");});localSet("artha_research_notebook_v1",x);render(STATE.radar);});});
 }
 
 function render(d){
@@ -270,13 +394,22 @@ function optionalJSON(path,def){
 function loadSupport(){
   var csvP=fetch("data/brain-screener.csv?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("csv "+r.status);return r.text();}).catch(function(){return"";});
   return Promise.all([
-    csvP,optionalJSON("data/delivery.json",{}),optionalJSON("data/futures.json",{}),optionalJSON("data/filings.json",{}),optionalJSON("data/results.json",{})
+    csvP,
+    optionalJSON("data/delivery.json",{}),
+    optionalJSON("data/futures.json",{}),
+    optionalJSON("data/filings.json",{}),
+    optionalJSON("data/results.json",{}),
+    optionalJSON("data/research-alerts.json",{}),
+    optionalJSON("data/data-health.json",{}),
+    optionalJSON("data/research-market-history.json",{}),
+    optionalJSON("data/research-signal-history.json",{})
   ]).then(function(vals){
-    parseCSV(vals[0]).forEach(function(x){var sym=String(x.symbol||"").trim().toUpperCase();if(sym)STATE.stocks[sym]=x;});
+    parseCSV(vals[0]).forEach(function(x){var sym=String(x.symbol||"").trim().toUpperCase();if(sym){x.return_20d=numv(x.return_20d);STATE.stocks[sym]=x;}});
     var d=vals[1]||{};STATE.delivery=d.d||{};
     STATE.futures=vals[2]||{};
     STATE.filings=(vals[3]||{}).filings||[];
     var rr=vals[4]||{};STATE.results={};(rr.results||[]).forEach(function(x){if(x.sym)STATE.results[String(x.sym).toUpperCase()]=x;});
+    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};
   });
 }
 function boot(){

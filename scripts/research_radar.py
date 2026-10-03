@@ -928,7 +928,7 @@ def main():
         "constituents_updated": (load("constituents.json", {}) or {}).get("updated"),
         "data_health_updated": health.get("updated"),
         "membership_source": (load("index-membership.json", {}) or {}).get("source"),
-        "schedule": "GitHub Actions EOD collectors -> Data Health -> Research Radar; second brain pass is followed by a radar refresh.",
+        "schedule": "GitHub Actions EOD collectors -> second brain pass -> final Data Health -> Research Radar refresh at 22:10 IST.",
         "hosted_on": "GitHub Pages",
         "paid_api": False
     }

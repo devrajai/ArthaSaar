@@ -47,7 +47,7 @@ function render(d){
  var dv=f.dividend_radar||{},bo=f.buyback_open_offer||{},foi=f.fo_oi_change||{},op=f.option_pulse||{};
  var fm=f.futures_basis||{},fb=f.fo_buildup||{},bt=f.bulk_followthrough||{},iflow=f.institutional_flow_trend||{};
  var bm=f.breadth_momentum||{},hlb=f.high_low_breadth||{},mc=f.market_concentration||{},nl=f.nifty_leadership||{};
- var ib=f.index_bucket_breadth||{},ls=f.liquidity_stress||{},rel=f.data_reliability||{};
+ var ib=f.index_bucket_breadth||{},ls=f.liquidity_stress||{},rel=f.data_reliability||{},rdd=f.data_resilience_detail||{};
 
  var html='<div class="rr-grid">';
  html+=card("01","CORPORATE ACTIONS",eventBody(ca.events),n(ca.count)+" events");
@@ -94,7 +94,7 @@ function render(d){
  html+=card("41","SMALL / MID / LARGE BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"index buckets");
  html+=card("42","LIQUIDITY STRESS RADAR",row("Low volume <0.5×",n(ls.low_volume_lt_0_5x),"dn")+row("High volume >2×",n(ls.high_volume_gt_2x),"up")+row("History <60D",n(ls.illiquid_history_lt_60d),"dn")+row("Universe",n(ls.coverage)),"coverage");
  html+=card("43","DATA RELIABILITY SCORE",row("Coverage score",p(rel.coverage_score_pct))+row("History ≥200D",p(rel.history_ge_200d_pct))+row("Delivery rows",n(rel.delivery_coverage))+row("F&O rows",n(rel.futures_stock_coverage)),"repo coverage");
- html+=card("44","DATA RESILIENCE DETAIL",row("History files",n(rel.history_files))+row("EMA200 coverage",p(rel.ema200_coverage_pct))+row("Delivery coverage",n(rel.delivery_coverage))+row("Futures coverage",n(rel.futures_stock_coverage))+row("EOD fallback","NSE → Yahoo → last valid"),"system health");
+ html+=card("44","DATA RESILIENCE DETAIL",row("History files",n(rdd.history_files))+row("EMA200 coverage",p(rdd.ema200_coverage_pct))+row("Delivery coverage",n(rdd.delivery_coverage))+row("Futures coverage",n(rdd.futures_stock_coverage))+row("Coverage score",p(rdd.coverage_score_pct))+row("EOD fallback","NSE → Yahoo → last valid"),"system health");
  html+='</div><div class="rr-note"><b>44 free-data research modules.</b> NSE/public exchange snapshots remain primary; Yahoo is used only for historical backup. Modules explicitly mark unavailable calculations when the stored public snapshot lacks the required field, rather than fabricating values. Updated '+esc(d.updated||"—")+'.</div>';
  host.innerHTML=html;
 }

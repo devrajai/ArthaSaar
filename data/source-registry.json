@@ -10,9 +10,10 @@
       "source_url": "https://www.nseindia.com/all-reports",
       "type": "official-free",
       "cadence": "Trading day, EOD",
-      "file": "data/breadth.json",
+      "file": "data/brain-screener.json",
       "coverage": "2,288 screened stocks",
-      "note": "Primary exchange reports are public; Yahoo is used for the price-history/technical calculation layer."
+      "note": "Latest EOD close is overlaid from NSE security bhav data when available; historical technicals use Yahoo/yfinance with fallback.",
+      "max_age_hours": 72
     },
     {
       "id": "nse-indices",
@@ -23,7 +24,8 @@
       "cadence": "Trading day, EOD",
       "file": "data/indices-all.json",
       "coverage": "139 indices",
-      "note": "Current/EOD snapshot, not a 139-index intraday stream."
+      "note": "Current/EOD snapshot, not a 139-index intraday stream.",
+      "max_age_hours": 72
     },
     {
       "id": "nse-fii-dii",
@@ -34,7 +36,8 @@
       "cadence": "Trading day",
       "file": "data/fii-dii.json",
       "coverage": "Cash market activity",
-      "note": "NSE marks the report as provisional; figures can be revised."
+      "note": "NSE marks the report as provisional; figures can be revised.",
+      "max_age_hours": 72
     },
     {
       "id": "nse-delivery",
@@ -45,7 +48,8 @@
       "cadence": "Trading day, evening",
       "file": "data/delivery.json",
       "coverage": "2,662 securities in latest snapshot",
-      "note": "Derived directly from NSE security bhav/deliverable data."
+      "note": "Derived directly from NSE security bhav/deliverable data.",
+      "max_age_hours": 72
     },
     {
       "id": "nse-fo",
@@ -56,7 +60,8 @@
       "cadence": "Trading day, EOD",
       "file": "data/futures.json",
       "coverage": "Index chains + 80 stock futures",
-      "note": "EOD derivatives data; not a live option-chain socket."
+      "note": "EOD derivatives data; not a live option-chain socket.",
+      "max_age_hours": 72
     },
     {
       "id": "yahoo-history",
@@ -65,9 +70,10 @@
       "source_url": "https://finance.yahoo.com/",
       "type": "free-third-party",
       "cadence": "Daily after market close",
-      "file": "data/history/<SYMBOL>.json",
-      "coverage": "Targeting full NSE equity universe",
-      "note": "Convenient free source with rate-limit/availability risk; not an NSE primary feed."
+      "file": "data/history-index.json",
+      "coverage": "Full stock history archive",
+      "note": "Convenient free source with rate-limit/availability risk; not an NSE primary feed.",
+      "max_age_hours": 72
     },
     {
       "id": "amfi-nav",
@@ -78,7 +84,8 @@
       "cadence": "Business day, after market",
       "file": "data/mf.json",
       "coverage": "All schemes available from AMFI NAV download",
-      "note": "AMFI publishes NAVs daily; NAV is end-of-day, not intraday."
+      "note": "AMFI publishes NAVs daily; NAV is end-of-day, not intraday.",
+      "max_age_hours": 72
     },
     {
       "id": "google-news",
@@ -89,7 +96,8 @@
       "cadence": "Daily collectors",
       "file": "data/news.json + data/news-volume.json",
       "coverage": "60 headlines + 41 company trackers",
-      "note": "Headline aggregation; ranking/sentiment is indicative and rule-based."
+      "note": "Headline aggregation; ranking/sentiment is indicative and rule-based.",
+      "max_age_hours": 72
     },
     {
       "id": "coingecko",
@@ -100,7 +108,8 @@
       "cadence": "Collector snapshot",
       "file": "data/crypto.json",
       "coverage": "Top 100",
-      "note": "Free Demo plan exists but has usage limits and attribution requirements; keep collector-side caching low-volume."
+      "note": "Free Demo plan exists but has usage limits and attribution requirements; keep collector-side caching low-volume.",
+      "max_age_hours": 72
     },
     {
       "id": "derived",
@@ -111,7 +120,20 @@
       "cadence": "After source feeds update",
       "file": "data/breadth.json + data/gti.json + data/xray.json",
       "coverage": "Model-dependent",
-      "note": "These are calculations/models, not exchange-provided facts."
+      "note": "These are calculations/models, not exchange-provided facts.",
+      "max_age_hours": 72
+    },
+    {
+      "id": "nse-index-history",
+      "label": "All-index daily history",
+      "source": "NSE India",
+      "source_url": "https://www.nseindia.com/reports-indices-historical-index-data",
+      "type": "official-free",
+      "cadence": "Trading day, EOD",
+      "file": "data/index-history-daily.json",
+      "coverage": "139+ NSE indices",
+      "max_age_hours": 72,
+      "note": "Daily all-index close archive from NSE public ind_close_all CSV."
     }
   ]
 }

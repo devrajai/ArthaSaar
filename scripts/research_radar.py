@@ -254,7 +254,7 @@ def main():
         save("index-membership.json", {"updated": datetime.now(timezone.utc).isoformat(), "source": "NSE", "indices": members})
     else:
         members = old_members
-    changes = membership_changes(members, old_members) if members else {}
+    changes = membership_changes(members, old_members) if members and old_members else {}
 
     hl = high_low(stocks)
     br = breadth(stocks)

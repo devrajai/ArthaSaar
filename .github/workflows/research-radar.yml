@@ -1,0 +1,40 @@
+name: Research Radar
+on:
+  schedule:
+    # 20:25 IST daily, after the main EOD collectors and data-health pass
+    - cron: '55 14 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: research-radar
+  cancel-in-progress: false
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build 10-feature Research Radar
+        run: python3 scripts/research_radar.py
+      - name: Commit radar snapshots
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/research-radar.json data/research-history.json data/index-membership.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'data: refresh research radar'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 10
+            done
+            echo 'ERROR: push failed'; exit 1
+          fi

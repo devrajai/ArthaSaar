@@ -5,6 +5,7 @@ on:
       - 'scripts/research_radar.py'
       - 'scripts/research_alerts.py'
       - 'scripts/research_finalize.py'
+      - 'scripts/research_edge_pack.py'
       - '.github/workflows/research-radar.yml'
   schedule:
     # 21:50 IST Mon-Sat, after the second daily brain pass (21:05 IST).
@@ -38,11 +39,13 @@ jobs:
         run: python3 scripts/data_health.py
       - name: Finalize radar freshness metadata
         run: python3 scripts/research_finalize.py
+      - name: Build Research Edge Pack
+        run: python3 scripts/research_edge_pack.py
       - name: Commit radar snapshots
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/research-radar.json data/research-history.json data/index-membership.json data/index-membership-history.json data/research-signal-history.json data/research-market-history.json data/research-alerts.json data/data-health.json
+          git add data/research-radar.json data/research-history.json data/index-membership.json data/index-membership-history.json data/research-signal-history.json data/research-market-history.json data/research-alerts.json data/research-edge-pack.json data/data-health.json
           if git diff --cached --quiet; then
             echo 'No changes.'
           else

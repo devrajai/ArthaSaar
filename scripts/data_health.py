@@ -137,6 +137,13 @@ def main():
                         "updated": ts_of(obj), "age_hours": None, "max_age_hours": None,
                         "coverage": str(count) + " rows/posts"})
 
+    gp = DATA / "greeks.json"
+    go = parse_json(gp) or {}
+    gu = go.get("u", {}) if isinstance(go, dict) else {}
+    gcount = len(gu) if isinstance(gu, dict) else 0
+    gage = (now - datetime.fromtimestamp(gp.stat().st_mtime, tz=timezone.utc)).total_seconds() / 3600 if gp.exists() else None
+    gstatus = "missing" if not gp.exists() else ("empty" if not gcount else ("stale" if gage > 48 else "ok"))
+    results.append({"id":"greeks-freshness","label":"Options Greeks freshness","source":"Content validation","file":"data/greeks.json","status":gstatus,"updated":go.get("updated") if isinstance(go,dict) else None,"age_hours":round(gage,1) if gage is not None else None,"max_age_hours":48,"coverage":str(gcount)+" underlyings"})
     ok = sum(1 for x in results if x["status"] == "ok")
     problems = [x for x in results if x["status"] in ("missing", "invalid", "stale", "empty")]
     out = {

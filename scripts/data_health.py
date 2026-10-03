@@ -36,7 +36,7 @@ def parse_ts(v):
     if not v:
         return None
     s = " ".join(str(v).strip().split())
-    s = s.replace(" IST", "+05:30").replace(" IST.", "+05:30").replace("Z", "+00:00")
+    s = re.sub(r"\bIST\b", "+05:30", s).replace("Z", "+00:00")
     m = re.match(r"^(\d{1,2}) ([A-Za-z]{3}) (\d{4}), (\d{1,2}):(\d{2})(?::(\d{2}))? \+05:30$", s)
     if m:
         try:

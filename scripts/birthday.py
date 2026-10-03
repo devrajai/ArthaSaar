@@ -30,10 +30,19 @@ def main():
     if not tok:
         print("no TG_TOKEN"); return
     today = datetime.date.today().strftime("%d-%m")
+    # Private roster comes only from the BIRTHDAY_MEMBERS_JSON Actions secret.
+    # Never load personal data from a public repository file.
+    raw = os.environ.get("BIRTHDAY_MEMBERS_JSON", "")
+    if not raw:
+        print("birthday roster not configured; set BIRTHDAY_MEMBERS_JSON in Actions secrets")
+        return
     try:
-        members = json.load(open("data/members.json"))
+        members = json.loads(raw)
+        if not isinstance(members, list):
+            raise ValueError("roster must be a JSON list")
     except Exception:
-        print("no members.json"); return
+        print("invalid private birthday roster secret")
+        return
     for m in members:
         bd = (m.get("birthdate") or "").strip()
         if bd == today:

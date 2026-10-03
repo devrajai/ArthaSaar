@@ -1,10 +1,27 @@
-// ArthaSaar: old service worker retired. This one unregisters itself and clears caches,
-// so visitors stop getting the previous cached site.
-self.addEventListener('install', function (e) { self.skipWaiting(); });
-self.addEventListener('activate', function (e) {
-  e.waitUntil((async function () {
-    try { var keys = await caches.keys(); await Promise.all(keys.map(function (k) { return caches.delete(k); })); } catch (err) {}
-    try { await self.registration.unregister(); } catch (err) {}
-    try { var cs = await self.clients.matchAll({ type: 'window' }); cs.forEach(function (c) { try { c.navigate(c.url); } catch (e) {} }); } catch (err) {}
-  })());
+// ArthaSaar free offline cache
+const CACHE="arthasaar-shell-v2";
+const SHELL=[
+  "./",
+  "./index.html",
+  "./researchpage.js?v=7",
+  "./manifest.webmanifest?v=2"
+];
+self.addEventListener("install",event=>{
+  event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));
+});
+self.addEventListener("activate",event=>{
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+});
+self.addEventListener("fetch",event=>{
+  const req=event.request;
+  if(req.method!=="GET")return;
+  if(req.url.includes("/data/")){
+    event.respondWith(fetch(req,{cache:"no-store"}).then(resp=>{
+      const copy=resp.clone();caches.open(CACHE).then(c=>c.put(req,copy));return resp;
+    }).catch(()=>caches.match(req)));
+    return;
+  }
+  event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(resp=>{
+    const copy=resp.clone();caches.open(CACHE).then(c=>c.put(req,copy));return resp;
+  })));
 });

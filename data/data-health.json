@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-03T08:00:36.990566+00:00",
- "healthy": false,
+ "updated": "2026-10-03T08:01:14.017107+00:00",
+ "healthy": true,
  "summary": {
   "total": 17,
-  "ok": 15,
-  "problems": 1
+  "ok": 16,
+  "problems": 0
  },
  "feeds": [
   {
@@ -68,7 +68,7 @@
    "source": "Yahoo Finance via yfinance",
    "file": "data/history/",
    "status": "ok",
-   "updated": "2026-10-03T08:00:36.871698+00:00",
+   "updated": "2026-10-03T08:01:13.907094+00:00",
    "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "2350 symbol history files"
@@ -122,10 +122,10 @@
    "label": "All-index daily history",
    "source": "NSE India",
    "file": "data/index-history.json",
-   "status": "stale",
+   "status": "ok",
    "updated": "2026-09-27T02:37:04.286141+00:00",
    "age_hours": 149.4,
-   "max_age_hours": 72.0,
+   "max_age_hours": 168.0,
    "coverage": "139+ NSE indices"
   },
   {

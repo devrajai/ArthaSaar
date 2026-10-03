@@ -2,7 +2,7 @@
 (function(){
   "use strict";
   var BASE=(location.pathname.indexOf("/app/")>=0?"../data/":"data/");
-  var state={stocks:[],indices:[],indexHistory:{},chartSym:"NIFTY",chartRows:[]};
+  var state={stocks:[],universe:[],indices:[],indexHistory:{},chartSym:"NIFTY",chartRows:[]};
 
   function J(name){return fetch(BASE+name,{cache:"no-store"}).then(function(r){if(!r.ok)throw Error(name);return r.json();});}
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -158,7 +158,9 @@
   function buildChartSearch(){
     var host=document.getElementById("v-gticharts"); if(!host||document.getElementById("as-chart-universe")) return;
     var anchor=host.querySelector("#cChart"); if(!anchor) return;
-    var stockList=(state.stocks||[]).map(function(x){return {symbol:x.symbol,company:x.company||"",type:"stock"};});
+    var stockList=(state.universe&&state.universe.length?state.universe:state.stocks||[]).map(function(x){
+      return {symbol:x.symbol,company:x.company||"",type:"stock"};
+    });
     var indexList=(state.indices||[]).map(function(x){return {symbol:x.index||x.symbol,company:"NSE Index",type:"index"};});
     var universe=stockList.concat(indexList.filter(function(ix){
       return !stockList.some(function(s){return s.symbol===ix.symbol;});
@@ -235,12 +237,14 @@
       J("news.json").catch(function(){return {};}),
       J("history-index.json").catch(function(){return {};}),
       J("data-health.json").catch(function(){return {};}),
+      J("universe.json").catch(function(){return [];}),
       J("history/RELIANCE.json").catch(function(){return {};})
     ]).then(function(a){
       state.stocks=(a[0]&&a[0].stocks)||[];
       buildHome({brain:a[0]||{},fii:a[1]||{},breadth:a[2]||{},delivery:a[3]||{},big:a[4]||{},newsvol:a[5]||{},futures:a[6]||{},gti:a[7]||{},xray:a[8]||{}});
       state.indices=(a[10]&&a[10].indices)||[];
       state.indexHistory=(a[11]&&a[11].indices)||{};
+      state.universe=(a[17]&&Array.isArray(a[17]))?a[17]:state.stocks;
       buildSourceCenter({
         registry:a[9]||{},
         indices:a[10]||{},

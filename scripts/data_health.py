@@ -34,8 +34,8 @@ def ts_of(obj):
 def parse_ts(v):
     if not v:
         return None
-    s = str(v).strip()
-    s = s.replace(" IST", "+05:30").replace("Z", "+00:00")
+    s = " ".join(str(v).strip().split())
+    s = s.replace(" IST", "+05:30").replace(" IST.", "+05:30").replace("Z", "+00:00")
     for fmt in ("%d %b %Y, %H:%M %z", "%d %b %Y, %H:%M:%S %z"):
         try:
             return datetime.strptime(s, fmt)

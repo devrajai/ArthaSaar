@@ -790,6 +790,9 @@ def main():
         members = old_members
     changes = membership_changes(members, old_members) if members and old_members else {}
     membership_history = update_membership_history(members) if members else load("index-membership-history.json", {})
+    if not (DATA / "index-membership-history.json").exists():
+        membership_history = {"updated": datetime.now(timezone.utc).isoformat(), "daily": membership_history.get("daily") or []}
+        save("index-membership-history.json", membership_history)
 
     hmap = history_metrics()
     bench = hmap.get("NIFTY", {}).get("return_20d")

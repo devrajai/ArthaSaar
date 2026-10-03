@@ -34,3 +34,14 @@ Each card should identify whether data is LIVE/INTRADAY, EOD, PROVISIONAL, DERIV
 - https://news.google.com/rss
 - https://finance.yahoo.com/
 - https://www.coingecko.com/en/api/pricing
+
+
+## Research Lab architecture
+
+Research Radar / Research Lab separates:
+- **Observed** — directly published by NSE/public sources.
+- **Calculated** — computed by ArthaSaar from committed snapshots.
+- **Historical** — event-study and signal-outcome calculations using only dates after each recorded signal.
+- **Unavailable** — shown explicitly when required fields (for example true session-open gaps or OHLC-based ATR) are not present.
+
+The Research Lab also stores daily market-replay snapshots, research-signal outcomes, NIFTY 50 membership history and a free GitHub Actions alert feed. General historical studies can still have survivorship bias; NIFTY 50-aware companion statistics use the stored membership snapshot nearest to each event date.

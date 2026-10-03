@@ -1,0 +1,44 @@
+name: Data Health
+on:
+  schedule:
+    # 20:00 IST daily
+    - cron: '30 14 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/source-registry.json'
+      - 'scripts/data_health.py'
+      - 'data/*.json'
+      - 'data/history-index.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-health
+  cancel-in-progress: true
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate data snapshots
+        run: python3 scripts/data_health.py
+      - name: Commit health report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/data-health.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: update data health'
+            for i in 1 2 3; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then exit 0; fi
+              git rebase --abort || true
+              sleep 10
+            done
+            exit 1
+          fi

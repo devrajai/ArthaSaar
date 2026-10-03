@@ -1,10 +1,26 @@
 {
- "updated": "2026-10-03T01:34:06.543535+05:30",
+ "updated": "2026-10-03T07:33:08.940450+05:30",
  "method": "lexicon word-score on news headlines (free, rule-based AI)",
- "overall": 58,
- "tag": "Bullish",
+ "overall": 55,
+ "tag": "Neutral",
  "counted": 60,
  "pos": [
+  {
+   "t": "Dow Jones Futures: Nasdaq Hits High As Nvidia, SpaceX, Bloom Energy Flash Buy Signals. What To Do Now.",
+   "s": 78,
+   "pub": "Investor's Business Daily",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQVThkME9ydU1vNDRMUS1kT2lOZ0p1THhFV3owdS1JNUJpeWlLX1p3SGhBa1phaktqQlVqWmRGRDdTcEp6S3lncUVDUVNrSGNmSHZoQVRQb1hPTndoblJXS3hJaWE1TGFHMkRsbFVjUFF1bVItdGcwYUdyMnJMZ25hU3VibkhWN0tsZjFGU25NNUwxdDROU2MyQjZkaXNCbVV6TjE1dnhGNU9rdjFMNjI4T0lwcTVnbHotODBVdnY2cw?oc=5",
+   "syms": []
+  },
+  {
+   "t": "Stock Market Today, Oct. 2: Tesla Rises on Q3 Delivery Beat",
+   "s": 78,
+   "pub": "The Motley Fool",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOQVNhTzFacndFRWtfZTM0Y1FGd2dVYUkzZ1hKMnVaTUttY3liTUtGUlh5bVNXelQyVFJaMFVlVnBmWkxfNVhPNDFlalkxbnhBT0twWDlNOURKTzVFcWUwVkdXVVQ2LW94U0RhWmdRWDNDZHRzOC1NdFhpMGxSUmNlX1pIU0l1NEdXV05abTRFdGxiMDdOanF0Q1JDUUdUdGdaUUJyd1RqbUFBRGRwLVhXcVRLZ09KTUZf?oc=5",
+   "syms": []
+  },
   {
    "t": "Materion stock hits all-time high of 304.9 USD",
    "s": 78,
@@ -14,31 +30,31 @@
    "syms": []
   },
   {
-   "t": "Teekay Tankers Ltd stock hits 52-week high at 103.23 USD",
+   "t": "Energy's inverse grip on stock market hits a record high",
    "s": 78,
-   "pub": "Investing.com India",
+   "pub": "TradingView",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQemt0TXVGbnh5S2hPMG9JalNibDVxUGs2bnhKWU1KcEtVQlZPd0JRdVBiVUdyWG50NEVqbTRpalVTVlBiZ2JyQ2FockhkQmlHaXRvaXkxdGdhUTZPbEFuNmFZYmktclo4YmFWVjM2Z21hQ1pxQ01Gc2NNSW5yQ1JqMlgyRHJJOXQyOWs3cFk2bzhSUmNIeWpMLXNhdjVSQ0h3M1hFZjBQRFNyeWo4WkRoYnNSMUlaUQ?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Danaos Corp stock hits 52-week high at 163.75 USD",
-   "s": 78,
-   "pub": "Investing.com India",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQTm1NNVk2dTZkUnlJMmFHM2t1YkluWk11SE1sTkdfYXgyanVZVVZFWWNjNWNTZlVNb3hPVVZvcVNKMndwODFCUUZ3WVpGNFFlRXJ0a3JUSlkyOE1sekNHckxfSFN1RXkzbDU3ZkdGSEdtVzUtenpxVUxWNzhlU0NOVGFsRkVISjJBb2lRaWNLRXI2LUdzS3MwSkpXZVNBNUh5emRVekpqeFFRVmpN?oc=5",
-   "syms": []
-  },
-  {
-   "t": "Cohu stock hits all-time high at 74.69 USD",
-   "s": 78,
-   "pub": "Investing.com India",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQWm5UNWU3OXRlSDY4ZW1tVGRzWWxpcWlvbzlfbHhuU1RJbFZueHlPakFVcEFKRWtOeU1sT2tGYnUwZkQ4MzM0MmpUOGswSkxrc092YWk1YlRadEJ3ZzZvVk13V2dwTjdhY2VjdlBTN0otOExEM0M3ejNrMGNlN0E0MkdnU3lQUEQ2bzRRV1oxa1BJR2k0ZFZzb1IyX1RlMFY3WGxR?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQOEplNWdOTmhxdjB0amFQZkp1SWE4ZHpOZUVxd1p4TUtDRVc0WVEySmFud291UWhVWUF6VGxMZnYyV2drZzFRSHFtdEU3QjZrZU9yd29pNXkzQVJvdlctM2U5dGtsVjN5Q3hxLTNFa040b0x1dl9weDVBUHpKcElNbXlHTUx0MXpRcUdfYmNEbDVHNHZiaHNfeFZzcDE5VE0tTUdYLTRFVXJiUF9CaDZRclBOWGhWZnE3akxB?oc=5",
    "syms": []
   }
  ],
  "neg": [
+  {
+   "t": "Cramer's warning to investors: Making money in this stock market is a lot harder than before",
+   "s": 36,
+   "pub": "CNBC",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPYUJNcl8wQnR1SFREYWMyQ24zQ2RFeGp2WHVJQmE4WGpYQXJjaWZhQU95Yk5zNkVpWFRZWFM0WHpDWjJwLU1ScjNQTzh1dzA4N1d4T0NiNzlib3NXX0pCektxdzZvc0hheHJ3MU83c294SWRSRXk0d2dHMkR2dUs1S09xYmhpaE1rWXNrWG5IQVk4MkNkc0xCSXR5ZEtIeF9lSEdfWW12MmVxeHR2RW1RT245ZmJGbGJmSkZGY1B1Nm5yUDR3a1HSAcsBQVVfeXFMTU5jNlliT09MYml4ZktwdW5Zb1NzMVFycVZDbmpZMkpSYlhFQWQ5UWY5SU9nQlVabU1BSl9BdkNaSjYzczZMck9kbVV6TEktR3ozVjJDcU1FS3JvWDJJZEtuaTljYi1QMUxaZmdLZ3lWZndCU3dkOE1VcDhZYmtpNjBDeVVTa2dvZ0E1SjNpQmNwdnk1SHVua0txMjhxZnNydHloaG0tRzFpeFVycmZfeUFia0hwREZ0R2hNRy1HNnoyWU0xZ3ZtSThvWDQ?oc=5",
+   "syms": []
+  },
+  {
+   "t": "How to manage stock losses: a framework for cutting or holding",
+   "s": 36,
+   "pub": "Investing.com India",
+   "topic": "Markets",
+   "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQWWVqeldRTFB2d3FRVTBtdEhPYzFtOC1kT2JjUXZwUWZOX3kta2FheXFZbmZMX1BiODJoT3laUFdLT3d5QXFITDhMRkJtbW5Xdnk0ckVNM3hjTHIwMEVmUHpyNXZlbmNnWXhvNG9waW5BWVNxbmpVTjlUcGNkSDVUaC1KVXUxNmRzV1R1al9STzlwSzZtcDd3cmJDWkZQODZQMUg3YXNvU2RURjFhbVNyRUtaRDJJd1g0c1FKQjNBVQ?oc=5",
+   "syms": []
+  },
   {
    "t": "Tracking the outliers: 10 stocks zoom ahead amid weak and volatile markets",
    "s": 36,
@@ -52,32 +68,11 @@
    "src": "article"
   },
   {
-   "t": "Experts' view: Why would bears cheer Nifty's breakdown below 22,000?",
-   "s": 36,
-   "pub": "Livemint",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQMlM5WFZvYkhTY3lzdy1kS29LeWI2d25Ic1djV3B2SjRJTGhrOTM3anhYMnQwbno2ZXRlU2YyVjVhUFdCUFg4TllqRFItSWw2bUQwTzYtT1pmTWdMMms0eTQtNWRkcmtoV0V4Sm1zbWxqZGpBd1NKTmFvbnFIMndJRl9CV0l1VXh0WmNGVWN2OGJsNkI5bHVoaHNObjZWMHhibE9PN0o3QWs2b0NaWlk5Zlpib3d3cC1JVkQwLWx2ZEpxbHJTOTNuMjZ1MTJmUdIB0wFBVV95cUxNQ1JWQTU0UXRIZ0ZGV2VlR1FCUk5WaDBydC0ybEprVFdRTEFmbGRkYWM3RmZ6MkVSWFZBY25iWFpyRkR4WVRvTzZUSlJlUFlFZ0tleUVPM2pUdU0wV1FOcm1JazdLcVZ3ZkpEaXpIU0pYQnA3V3g4SVE2VDh0M3BacXpmMmhxaGE0d1d2aDUzU29mMUc3VlEtRzI3RGs0MVFsNFlISHUwY3R4b25FQ1lfOGhQR2ZzeTV5aDFJejZYdVc1dnNvQU56d25NblZNMlEyNWVV?oc=5",
-   "syms": [
-    "RELIANCE",
-    "TCS",
-    "HDFCBANK"
-   ],
-   "src": "article"
-  },
-  {
-   "t": "Why is Teradyne stock surging today?",
+   "t": "How the stock market has become increasingly \u2018narrow\u2019",
    "s": 50,
-   "pub": "Investing.com India",
+   "pub": "Fox Business",
    "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQUXloZEdoS01iTEV1MmFnUFNFSEk5eXQ5OFFaZ2c1empPa0lPaEc3cThIYXNyMUlyN1VjdlBKLWJUN3ZPcHd6TlRhYl96WFR1VEJ1SmlVU0NabjVFRE1oSjhVQ1hDMGlndWd6LTBuTno2RS1XWThOQmpWNU5sSXBIMkFMdzRXUGMwYXhhN2F1YnYxVVBrTnA2N2RQWlU?oc=5",
-   "syms": []
-  },
-  {
-   "t": "SpaceX and Seagate among market cap stock movers on Friday",
-   "s": 50,
-   "pub": "Investing.com India",
-   "topic": "Markets",
-   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOQzJDNHN0SEpvRW9LNmw1eTdtRkRjS2NZZmhWalNJakFGU3NvU2RybHlVa0dBODlTVUhZSG9MeTJuSFNrV0RSTXU0czZjdlduOURTdTE4Mkl6c1FmdERSdlhJazhyWW9uN1RUZ2NUSzA0VGVWaFBMN0FaUGJzUjQzRzBVM0xiS3RLWUlsVmRWUXI5WG9GNFg1YjNwcUF4eUpBVmliSkU1WXJsbHBEOUV3ZEdqMjRLMHhxVFlz?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9DWmw0TjR2cjVHalM3WFptUmNmbGtDX2xrUFctVHJMdl9HMVlyVlhGUWhjRDZ2RnBja1Zrc2ZXdXkyakp6OFpSakpDeHB4UHJOc1NkNzhiMm9ybnc?oc=5",
    "syms": []
   }
  ],

@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'scripts/research_radar.py'
+      - 'scripts/research_alerts.py'
       - '.github/workflows/research-radar.yml'
   schedule:
     # 20:25 IST daily, after the main EOD collectors and data-health pass
@@ -26,11 +27,13 @@ jobs:
         run: python3 -m py_compile scripts/research_radar.py
       - name: Build 44-module Research Radar
         run: python3 scripts/research_radar.py
+      - name: Build free alert feed
+        run: python3 scripts/research_alerts.py
       - name: Commit radar snapshots
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/research-radar.json data/research-history.json data/index-membership.json
+          git add data/research-radar.json data/research-history.json data/index-membership.json data/index-membership-history.json data/research-signal-history.json data/research-market-history.json data/research-alerts.json
           if git diff --cached --quiet; then
             echo 'No changes.'
           else

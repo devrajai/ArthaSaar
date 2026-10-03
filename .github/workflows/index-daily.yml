@@ -1,0 +1,40 @@
+name: NSE Index Daily History
+on:
+  schedule:
+    # 19:10 IST Mon-Fri, after NSE daily close files are normally available
+    - cron: '40 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nse-index-history
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect official NSE all-index close history
+        run: python3 scripts/index_history_nse.py
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/index-history-daily.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'data: NSE all-index daily history'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 10
+            done
+            echo 'ERROR: push failed'; exit 1
+          fi

@@ -1,246 +1,304 @@
 (function(){
 "use strict";
 
+var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{}};
+
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":">","\"":"&quot;"}[c];});}
-function n(x){return x==null||isNaN(x)?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:1});}
+function n(x){return x==null||isNaN(x)?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:2});}
 function p(x){return x==null||isNaN(x)?"—":(Number(x)>=0?"+":"")+Number(x).toFixed(2)+"%";}
-function row(a,b,cl){return '<div class="zrow"><span>'+esc(a)+'</span><b class="'+(cl||"")+'">'+esc(b)+'</b></div>';}
-function rows(arr, akey, bkey, clsFn, limit){
- return (arr||[]).slice(0,limit||8).map(function(x){
-   var a=x[akey], b=x[bkey], cl=clsFn?clsFn(x):"";
-   if((akey==="symbol"||akey==="sym") && a){
-     return '<div class="zrow"><button class="rr-symbol" data-symbol="'+esc(a)+'">'+esc(a)+'</button><b class="'+(cl||"")+'">'+esc(b==null?"—":b)+'</b></div>';
-   }
-   return row(a==null?"—":a,b==null?"—":b,cl);
- }).join("")||'<div class="mut">No snapshot rows.</div>';
+function pct0(x){return x==null||isNaN(x)?"—":Number(x).toFixed(1)+"%";}
+function safeDate(x){return x?String(x).replace("T"," ").replace("Z",""): "—";}
+
+function ageHours(updated){
+  if(!updated)return null;
+  var t=Date.parse(updated);
+  if(isNaN(t))return null;
+  return Math.max(0,(Date.now()-t)/3600000);
 }
-function itemList(arr, fn, limit){
- return (arr||[]).slice(0,limit||6).map(fn).join("")||'<div class="mut">No snapshot rows.</div>';
+function freshness(updated){
+  var h=ageHours(updated);
+  if(h==null)return {label:"SNAPSHOT",cls:"neutral"};
+  if(h<=30)return {label:"FRESH",cls:"fresh"};
+  if(h<=72)return {label:"RECENT",cls:"recent"};
+  return {label:"STALE",cls:"stale"};
 }
-function moduleSource(num){
- var n0=parseInt(num,10)||0;
- if(n0<=4) return "NSE / ArthaSaar";
- if(n0===5) return "RBI / public macro";
- if(n0<=8) return "NSE / filings";
- if(n0===9) return "Derived";
- if(n0===10) return "ArthaSaar health";
- if(n0<=14) return "NSE / EOD";
- if(n0===15) return "OHLC needed";
- if(n0<=23) return "EOD history";
- if(n0<=29) return "Filings / results";
- if(n0<=35) return "NSE F&O";
- if(n0<=38) return "NSE / universe";
- if(n0<=41) return "NSE constituents";
- return "ArthaSaar";
+function sourceBadge(source,updated){
+  var f=freshness(updated);
+  return '<span class="rr-badge rr-source">'+esc(source||"PUBLIC")+'</span><span class="rr-badge '+f.cls+'">'+f.label+'</span>';
 }
-function freshnessStamp(iso){
- if(!iso) return {label:"NO TIMESTAMP",cls:"no"};
- var t=Date.parse(iso);
- if(!isFinite(t)) return {label:"NO TIMESTAMP",cls:"no"};
- var h=Math.max(0,(Date.now()-t)/3600000);
- if(h<24) return {label:"FRESH",cls:"fresh"};
- if(h<72) return {label:"AGING",cls:"aging"};
- return {label:"STALE",cls:"stale"};
+function row(a,b,cl){
+  return '<div class="zrow"><span>'+esc(a)+'</span><b class="'+(cl||"")+'">'+esc(b)+'</b></div>';
 }
-function moduleUpdated(num,d){
- var f=(d&&d.features)||{}, n0=parseInt(num,10)||0;
- if(n0===7 && f.results && f.results.updated) return f.results.updated;
- if(n0===6 && f.bulk_block && f.bulk_block.updated) return f.bulk_block.updated;
- if(n0===10 && f.data_resilience && f.data_resilience.health_updated) return f.data_resilience.health_updated;
- return d&&d.updated;
+function stockRow(a,b,cl){
+  return '<button class="zrow rr-stock-row" data-symbol="'+esc(String(a||"").toUpperCase())+'"><span>'+esc(a==null?"—":a)+'</span><b class="'+(cl||"")+'">'+esc(b==null?"—":b)+'</b></button>';
 }
-function badgeHtml(num,d){
- var fr=freshnessStamp(moduleUpdated(num,d));
- return '<span class="rr-badges"><span class="rr-badge source">'+esc(moduleSource(num))+'</span><span class="rr-badge '+fr.cls+'">'+fr.label+'</span></span>';
+function rows(arr,akey,bkey,clsFn,limit){
+  var list=(arr||[]).slice(0,limit||8);
+  if(!list.length)return '<div class="mut">No snapshot rows.</div>';
+  return list.map(function(x){
+    var a=x[akey],b=x[bkey],cl=clsFn?clsFn(x):"";
+    if((akey==="symbol"||akey==="sym") && a) return stockRow(a,b,cl);
+    return row(a==null?"—":a,b==null?"—":b,cl);
+  }).join("");
 }
-function card(num,title,body,meta,wide){
- var d=window.__rr44Data||{};
- return '<div class="card rr-card '+(wide?'rr-wide':'')+'"><div class="sh2"><span>'+num+' · '+esc(title)+'</span><span class="rr-head-right">'+badgeHtml(num,d)+(meta?'<span class="fr">'+esc(meta)+'</span>':"")+'</span></div>'+body+'</div>';
-}
-function installCSS(){
- if(document.getElementById("rr44-style"))return;
- var s=document.createElement("style");s.id="rr44-style";
- s.textContent=[
- ".rr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}",
- ".rr-card{min-width:0}.rr-wide{grid-column:1/-1}",
- ".rr-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}",
- ".rr-sub{font:600 9px var(--mono);letter-spacing:.14em;color:var(--faint);padding:9px 12px 3px;text-transform:uppercase}",
- ".rr-note{margin:12px 2px 20px;padding:10px 12px;border:1px dashed var(--border2);border-radius:10px;color:var(--dim);font:400 9.5px var(--mono);line-height:1.55}",
- ".mut{padding:12px 14px;color:var(--faint);font:400 10px var(--mono)}",
- ".rr-kicker{padding:10px 12px 2px;color:var(--faint);font:500 9px var(--mono)}",
- ".rr-head-right{display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-end}.rr-badges{display:inline-flex;gap:4px;align-items:center}.rr-badge{font:600 7.5px var(--mono);letter-spacing:.04em;border:1px solid var(--border);border-radius:999px;padding:2px 5px}.rr-badge.source{color:var(--dim)}.rr-badge.fresh{color:var(--up);border-color:color-mix(in srgb,var(--up) 45%,transparent)}.rr-badge.aging{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}.rr-badge.stale,.rr-badge.no{color:var(--down);border-color:color-mix(in srgb,var(--down) 45%,transparent)}.rr-symbol{border:0;background:none;padding:0;color:var(--text);font:700 11px var(--font);cursor:pointer;text-decoration:underline;text-decoration-color:transparent}.rr-symbol:hover{text-decoration-color:var(--accent);color:var(--accent)}.rr-event-symbol{font-size:11px}.rr-lab{margin-top:10px;overflow:hidden}.rr-lab-top{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border)}.rr-lab-top b{font-size:13px}.rr-lab-top small{display:block;margin-top:3px;color:var(--dim);font:400 9px var(--mono)}.rr-lab-search{display:flex;gap:6px;min-width:320px}.rr-lab-search input{flex:1;min-width:180px;border:1px solid var(--border2);background:var(--surface);color:var(--text);padding:8px 10px;border-radius:8px;font:500 11px var(--mono)}.rr-lab-search button{border:1px solid var(--accent);background:var(--accent);color:var(--bg);padding:8px 11px;border-radius:8px;font:700 9px var(--mono);cursor:pointer}.rr-lab-grid{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:8px;padding:12px 14px}.rr-lab-grid>div{min-width:0}.rr-lab-symbol{font:800 16px var(--mono);letter-spacing:.04em}.rr-lab-price{font:800 25px var(--mono);margin:5px 0 2px}.rr-lab-events{padding:8px 14px;border-top:1px solid var(--border)}.rr-drill-note,.rr-lab-source{padding:8px 14px;color:var(--dim);font:400 9px var(--mono);line-height:1.5}.rr-backtest-bar{padding:9px 14px;border-top:1px solid var(--border);background:color-mix(in srgb,var(--border) 12%,var(--surface))}.rr-backtest-bar label{font:600 9px var(--mono);color:var(--dim)}.rr-backtest-bar select{margin-left:7px;border:1px solid var(--border2);background:var(--surface);color:var(--text);padding:5px 7px;border-radius:7px;font:600 9px var(--mono)}.rr-back-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:8px 0}.rr-back-grid .zrow{padding:7px 8px;display:block;background:var(--surface);border:1px solid var(--border);border-radius:7px}.rr-back-grid .zrow b{display:block;margin-top:3px}.rr-sub{font:600 8.5px var(--mono);letter-spacing:.12em;color:var(--faint);padding:7px 0 2px;text-transform:uppercase}",
- "@media(max-width:880px){.rr-lab-top{flex-direction:column;align-items:stretch}.rr-lab-search{min-width:0}.rr-lab-grid{grid-template-columns:1fr 1fr}.rr-back-grid{grid-template-columns:repeat(2,1fr)}}",
- "@media(max-width:720px){.rr-grid{grid-template-columns:1fr}.rr-wide{grid-column:auto}.rr-cols{grid-template-columns:1fr}.rr-lab-grid{grid-template-columns:1fr}.rr-back-grid{grid-template-columns:1fr 1fr}}"
- ].join("");
- document.head.appendChild(s);
-}
-function eventBody(arr){
- return itemList(arr,function(x){
-   var s=x.symbol||x.sym||"—";
-   var head=s!=="—"?'<button class="rr-symbol rr-event-symbol" data-symbol="'+esc(s)+'">'+esc(s)+'</button>':'<b>—</b>';
-   return '<div class="ni"><b>'+head+' · '+esc(x.kind||x.category||"Event")+'</b><small>'+esc(x.date||"")+' · '+esc(x.subject||x.expected||"")+'</small></div>';
- },6);
+function itemList(arr,fn,limit){return (arr||[]).slice(0,limit||6).map(fn).join("")||'<div class="mut">No snapshot rows.</div>';}
+
+function card(num,title,body,source,updated,wide){
+  var meta=sourceBadge(source||"ArthaSaar",updated||((STATE.radar||{}).updated));
+  return '<div class="card rr-card '+(wide?'rr-wide':'')+'"><div class="sh2 rr-head"><span>'+num+' · '+esc(title)+'</span><span class="rr-badges">'+meta+'</span></div>'+body+'</div>';
 }
 
-function historyRows(arr){
- return (arr||[]).filter(function(x){return x&&x.close!=null;}).sort(function(a,b){return String(a.date||"").localeCompare(String(b.date||""));});
+function installCSS(){
+  if(document.getElementById("rr44-style"))return;
+  var s=document.createElement("style");s.id="rr44-style";
+  s.textContent=[
+    ".rr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}",
+    ".rr-card{min-width:0}.rr-wide{grid-column:1/-1}",
+    ".rr-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.rr-badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}",
+    ".rr-badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 6px;font:500 8px var(--mono);letter-spacing:.04em;white-space:nowrap}",
+    ".rr-source{color:var(--dim)}.rr-badge.fresh{color:var(--up);border-color:color-mix(in srgb,var(--up) 45%,transparent);background:color-mix(in srgb,var(--up) 9%,transparent)}",
+    ".rr-badge.recent{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent)}",
+    ".rr-badge.stale{color:var(--down);border-color:color-mix(in srgb,var(--down) 45%,transparent);background:color-mix(in srgb,var(--down) 9%,transparent)}",
+    ".rr-badge.neutral{color:var(--faint)}",
+    ".rr-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}",
+    ".rr-sub{font:600 9px var(--mono);letter-spacing:.14em;color:var(--faint);padding:9px 12px 3px;text-transform:uppercase}",
+    ".rr-note{margin:12px 2px 20px;padding:10px 12px;border:1px dashed var(--border2);border-radius:10px;color:var(--dim);font:400 9.5px var(--mono);line-height:1.55}",
+    ".mut{padding:12px 14px;color:var(--faint);font:400 10px var(--mono)}",
+    ".rr-kicker{padding:10px 12px 2px;color:var(--faint);font:500 9px var(--mono);line-height:1.5}",
+    ".rr-stock-row{width:100%;font:inherit;color:var(--text);cursor:pointer;background:transparent;border-left:0;border-right:0;border-top:0;text-align:left}.rr-stock-row:hover{background:color-mix(in srgb,var(--border) 13%,transparent);color:var(--text)}",
+    ".rr-lab{margin-top:10px}.rr-lab-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}.rr-search{display:flex;gap:7px}.rr-search input{flex:1;min-width:0;border-radius:10px;border:1px solid var(--border2);background:var(--surface);padding:10px 12px;color:var(--text);font:500 12px var(--font);outline:none}.rr-search input:focus{border-color:var(--accent)}",
+    ".rr-btn{border:1px solid var(--border);background:var(--surface);color:var(--dim);border-radius:9px;padding:8px 10px;cursor:pointer;font:600 9px var(--mono)}.rr-btn:hover{border-color:var(--accent);color:var(--text)}",
+    ".rr-results{margin-top:7px;display:flex;flex-direction:column;gap:4px}.rr-result{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);cursor:pointer;text-align:left;color:var(--text)}.rr-result:hover{border-color:var(--accent)}.rr-result small{color:var(--faint);font:400 9px var(--mono)}",
+    ".rr-chiprow{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.rr-chip{border:1px solid var(--border);background:var(--surface);color:var(--dim);border-radius:999px;padding:5px 8px;cursor:pointer;font:500 8.5px var(--mono)}.rr-chip:hover{border-color:var(--accent);color:var(--text)}",
+    ".rr-lab-table{width:100%;border-collapse:collapse;font-size:10px}.rr-lab-table th,.rr-lab-table td{padding:7px 8px;border-bottom:1px solid var(--border)}.rr-lab-table th{position:static;text-align:left}.rr-lab-table td.numr{text-align:right;font-family:var(--mono)}",
+    ".rr-history{max-height:250px;overflow:auto}",
+    ".rr-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;display:none;align-items:flex-start;justify-content:center;padding:7vh 10px 20px}.rr-overlay.open{display:flex}.rr-modal{width:min(760px,96vw);max-height:86vh;overflow:auto;background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:var(--shadow)}.rr-modal-head{position:sticky;top:0;z-index:2;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);display:flex;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}.rr-modal-title b{display:block;font-size:15px}.rr-modal-title small{display:block;margin-top:3px;color:var(--faint);font:400 9px var(--mono)}.rr-modal-body{padding:12px}.rr-metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.rr-metric{padding:9px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:9px}.rr-metric small{display:block;color:var(--faint);font:500 8px var(--mono);letter-spacing:.08em}.rr-metric b{display:block;margin-top:3px;font:600 12px var(--mono)}.rr-detail-section{margin-top:10px;border:1px solid var(--border);border-radius:10px;overflow:hidden}.rr-detail-section .sh2{border-bottom:1px solid var(--border)}",
+    "@media(max-width:900px){.rr-lab-grid{grid-template-columns:1fr}.rr-metric-grid{grid-template-columns:1fr 1fr}}",
+    "@media(max-width:720px){.rr-grid{grid-template-columns:1fr}.rr-wide{grid-column:auto}.rr-cols{grid-template-columns:1fr}.rr-head{align-items:flex-start;flex-direction:column}.rr-badges{justify-content:flex-start}.rr-metric-grid{grid-template-columns:1fr 1fr}}"
+  ].join("");
+  document.head.appendChild(s);
 }
-function avgTail(vals,n0){
- var a=vals.slice(Math.max(0,vals.length-n0));
- return a.length?a.reduce(function(s,x){return s+x;},0)/a.length:null;
+
+function eventBody(arr){
+  return itemList(arr,function(x){
+    var sym=x.symbol||x.sym||"—";
+    var clickable=sym&&sym!=="—" ? '<button class="rr-stock-link rr-btn" data-symbol="'+esc(sym.toUpperCase())+'">'+esc(sym)+'</button>' : esc(sym);
+    return '<div class="ni"><b>'+clickable+' · '+esc(x.kind||x.category||"Event")+'</b><small>'+esc(x.date||"")+' · '+esc(x.subject||x.expected||"")+'</small></div>';
+  },6);
 }
-function median(vals){
- var a=vals.filter(function(x){return x!=null&&isFinite(x);}).slice().sort(function(a,b){return a-b;});
- if(!a.length)return null;
- var m=Math.floor(a.length/2);
- return a.length%2?a[m]:(a[m-1]+a[m])/2;
+
+function parseCSV(text){
+  var rows=[],line="",q=false,cur=[],cols=[];
+  for(var i=0;i<text.length;i++){
+    var ch=text[i];
+    if(ch==='"'){
+      if(q && text[i+1]==='"'){line+='"';i++;}else q=!q;
+    }else if(ch===','&&!q){cur.push(line);line="";}
+    else if((ch==='\n'||ch==='\r')&&!q){
+      if(ch==='\r'&&text[i+1]==='\n')i++;
+      cur.push(line);line="";
+      if(cols.length===0){cols=cur;cur=[];}else if(cur.length===cols.length){var o={};cols.forEach(function(k,j){o[k]=cur[j];});rows.push(o);cur=[];}
+    }else line+=ch;
+  }
+  if(line.length||cur.length){cur.push(line);if(!cols.length)cols=cur;else if(cur.length===cols.length){var o={};cols.forEach(function(k,j){o[k]=cur[j];});rows.push(o);}}
+  return rows;
 }
-function backtest(history,kind){
- var rows0=historyRows(history), triggers=[];
- if(rows0.length<80)return {count:0,reason:"Not enough history for this event study."};
- var closes=rows0.map(function(x){return Number(x.close)||0;}), vols=rows0.map(function(x){return Number(x.volume)||0;});
- function smaAt(i,n0){if(i+1<n0)return null;var s=0;for(var j=i-n0+1;j<=i;j++)s+=closes[j];return s/n0;}
- function volRatioAt(i){var av=avgTail(vols.slice(0,i),20);return av>0?vols[i]/av:null;}
- for(var i=20;i<rows0.length-25;i++){
-   var c0=closes[i], sma200=smaAt(i,200), vr=volRatioAt(i), prior=closes.slice(Math.max(0,i-252),i), ok=false;
-   if(kind==="52W BREAKOUT") ok=prior.length>=60 && c0>=Math.max.apply(Math,prior)*0.99;
-   else if(kind==="VOLUME SHOCK") ok=vr!=null && vr>=2;
-   else if(kind==="TREND > 200DMA") ok=sma200!=null && c0>sma200;
-   else if(kind==="20D MOMENTUM") ok=i>=20 && c0/closes[i-20]>=1.05;
-   if(!ok)continue;
-   triggers.push({date:rows0[i].date,r5:(closes[i+5]/c0-1)*100,r20:(closes[i+20]/c0-1)*100});
- }
- var r5=triggers.map(function(x){return x.r5;}),r20=triggers.map(function(x){return x.r20;});
- return {count:triggers.length,positive5:r5.length?100*r5.filter(function(x){return x>0;}).length/r5.length:null,positive20:r20.length?100*r20.filter(function(x){return x>0;}).length/r20.length:null,avg5:r5.length?r5.reduce(function(a,b){return a+b;},0)/r5.length:null,avg20:r20.length?r20.reduce(function(a,b){return a+b;},0)/r20.length:null,med5:median(r5),med20:median(r20),examples:triggers.slice(-8).reverse()};
+function numv(x){var v=parseFloat(String(x==null?"":x).replace(/,/g,""));return isNaN(v)?null:v;}
+
+function stockUniverseSearch(q){
+  q=String(q||"").trim().toUpperCase();
+  if(!q)return [];
+  var arr=Object.keys(STATE.stocks).map(function(k){return STATE.stocks[k];});
+  return arr.filter(function(x){return String(x.symbol||"").toUpperCase().indexOf(q)>=0||String(x.company||"").toUpperCase().indexOf(q)>=0;}).slice(0,10);
 }
-function stockFind(d,sym){
- var f=d.features||{}, out={symbol:sym};
- var pools=[
-   f.breakout_radar&&f.breakout_radar.rows,f.volume_shock&&f.volume_shock.rows,
-   f.relative_strength&&f.relative_strength.leaders,f.relative_strength&&f.relative_strength.laggards,
-   f.momentum_dashboard&&f.momentum_dashboard.rsi_high,f.momentum_dashboard&&f.momentum_dashboard.rsi_low,
-   f.trend_health&&f.trend_health.above_ema200,f.trend_health&&f.trend_health.below_ema200,
-   f.fo_oi_change&&f.fo_oi_change.rows,f.futures_basis&&f.futures_basis.rows,
-   f.bulk_followthrough&&f.bulk_followthrough.rows,f.nifty_leadership&&f.nifty_leadership.leaders
- ];
- pools.forEach(function(arr){(arr||[]).forEach(function(x){if(String(x.symbol||"").toUpperCase()===sym)Object.keys(x).forEach(function(k){if(out[k]==null)out[k]=x[k];});});});
- var del=[].concat((f.delivery_conviction&&f.delivery_conviction.high_delivery_up)||[],(f.delivery_conviction&&f.delivery_conviction.high_delivery_down)||[]).find(function(x){return String(x.symbol||"").toUpperCase()===sym;});
- if(del){out.delivery_pct=del.delivery_pct;out.delivery_change_pct=del.change_pct;}
- out.events=(f.corporate_actions&&f.corporate_actions.events||[]).filter(function(x){return String(x.symbol||"").toUpperCase()===sym;}).slice(0,5);
- var fb=f.fo_buildup||{};
- ["long_build","short_build","short_cover","long_unwind"].some(function(k){var z=(fb[k]||[]).find(function(x){return String(x.symbol||"").toUpperCase()===sym;});if(z){out.fo_build=z.build;out.oi_change_pct=z.oi_change_pct;return true;}return false;});
- return out;
+
+function openDetail(symbol){
+  symbol=String(symbol||"").toUpperCase().trim();if(!symbol)return;
+  var profile=STATE.stocks[symbol]||{};
+  var host=document.getElementById("rr-overlay");
+  if(!host)return;
+  host.classList.add("open");
+  host.innerHTML='<div class="rr-modal"><div class="rr-modal-head"><div class="rr-modal-title"><b>'+esc(symbol)+'</b><small>Loading stock research profile…</small></div><button class="rr-btn" data-close-rr>✕ CLOSE</button></div><div class="rr-modal-body"><div class="mut">Loading history, filings and F&O context…</div></div></div>';
+  var histUrl="data/history/"+encodeURIComponent(symbol)+".json?v="+Date.now();
+  Promise.all([
+    fetch(histUrl,{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("history "+r.status);return r.json();}).catch(function(){return[];})
+  ]).then(function(vals){
+    var hist=vals[0]||[];
+    STATE.historyCache[symbol]=hist;
+    var r=profile;
+    var del=STATE.delivery[symbol];
+    var fo=null;
+    ((STATE.futures||{}).stocks||[]).some(function(x){if(String(x.symbol||"").toUpperCase()===symbol){fo=x;return true;}return false;});
+    var filings=STATE.filings.filter(function(x){return String(x.symbol||"").toUpperCase()===symbol;}).slice(0,8);
+    var next=Object.keys(STATE.results).length?STATE.results[symbol]:null;
+    var last=hist.length?hist[hist.length-1]:null;
+    var prev=hist.length>1?hist[hist.length-2]:null;
+    var ret5=(hist.length>5&&numv(hist[hist.length-6].close))?((numv(last.close)/numv(hist[hist.length-6].close)-1)*100):null;
+    var ret20=(hist.length>20&&numv(hist[hist.length-21].close))?((numv(last.close)/numv(hist[hist.length-21].close)-1)*100):null;
+    var reasons=[];
+    if(numv(r.from_52w_high_pct)!=null&&numv(r.from_52w_high_pct)>=-1)reasons.push("within 1% of 52W high");
+    if(numv(r.vol_vs_avg20)!=null&&numv(r.vol_vs_avg20)>=2)reasons.push("volume >= 2x 20D average");
+    if(String(r.above_ema200)==="true")reasons.push("above 200D EMA");
+    if(numv(r.rsi14)!=null&&numv(r.rsi14)>=60)reasons.push("RSI >= 60");
+    if(del!=null&&numv(del)>=60)reasons.push("delivery >= 60%");
+    if(fo&&fo.oi_chg>0&&numv(r.change_pct)>0)reasons.push("long-build style F&O snapshot");
+    if(fo&&fo.oi_chg>0&&numv(r.change_pct)<0)reasons.push("short-build style F&O snapshot");
+    if(!reasons.length)reasons.push("no special trigger in the stored snapshot; profile is descriptive");
+    var body='<div class="rr-metric-grid">'+
+      '<div class="rr-metric"><small>PRICE</small><b>'+n(r.price||last&&last.close)+'</b></div>'+
+      '<div class="rr-metric"><small>1D</small><b class="'+(numv(r.change_pct)>=0?"up":"dn")+'">'+p(r.change_pct)+'</b></div>'+
+      '<div class="rr-metric"><small>5D</small><b class="'+(ret5>=0?"up":"dn")+'">'+p(ret5)+'</b></div>'+
+      '<div class="rr-metric"><small>20D</small><b class="'+(ret20>=0?"up":"dn")+'">'+p(ret20)+'</b></div>'+
+      '<div class="rr-metric"><small>52W HIGH</small><b>'+n(r.high_52w)+'</b></div>'+
+      '<div class="rr-metric"><small>RSI14</small><b>'+n(r.rsi14)+'</b></div>'+
+      '<div class="rr-metric"><small>EMA200</small><b>'+n(r.ema200)+'</b></div>'+
+      '<div class="rr-metric"><small>DELIVERY</small><b>'+pct0(del)+'</b></div>'+
+      '</div>';
+    body+='<div class="rr-detail-section"><div class="sh2">WHY THIS STOCK IS IN RESEARCH CONTEXT</div>'+reasons.map(function(x){return'<div class="ni"><b>'+esc(x)+'</b></div>';}).join("")+'</div>';
+    body+='<div class="rr-detail-section"><div class="sh2">TREND / MOMENTUM</div>'+
+      row("20D return",p(r.return_20d))+row("60D return",p(r.return_60d))+row("Relative strength vs NIFTY",p(r.relative_strength_20d))+row("MACD histogram",n(r.macd_hist))+row("20D volume ratio",n(r.vol_vs_avg20))+'</div>';
+    body+='<div class="rr-detail-section"><div class="sh2">F&O</div>'+
+      row("Expiry",fo?fo.expiry:"Not available")+row("OI",fo?n(fo.oi):"—")+row("OI change",fo?n(fo.oi_chg):"—")+row("Basis",fo?p(fo.basis_pct):"—")+'</div>';
+    body+='<div class="rr-detail-section"><div class="sh2">CORPORATE / RESULTS</div>'+eventBody(filings)+
+      (next?'<div class="ni"><b>Next result / event: '+esc(next.date||"—")+'</b><small>'+esc(next.company||"")+'</small></div>':"")+'</div>';
+    body+='<div class="rr-detail-section"><div class="sh2">DATA SOURCE</div>'+row("Screener","ArthaSaar brain-screener snapshot")+row("Historical","ArthaSaar history file")+row("Corporate","NSE/public filings snapshot")+row("Research timestamp",safeDate((STATE.radar||{}).updated))+'</div>';
+    host.innerHTML='<div class="rr-modal"><div class="rr-modal-head"><div class="rr-modal-title"><b>'+esc(symbol)+' · '+esc(r.company||"")+'</b><small>'+esc(r.industry||"")+'</small></div><button class="rr-btn" data-close-rr>✕ CLOSE</button></div><div class="rr-modal-body">'+body+'</div></div>';
+  });
 }
-function initResearchLab(d){
- var host=document.getElementById("rr-lab"); if(!host)return;
- var input=host.querySelector("#rr-stock-input"), btn=host.querySelector("#rr-stock-go"), detail=host.querySelector("#rr-stock-detail"), bt=host.querySelector("#rr-backtest"), out=host.querySelector("#rr-backtest-out");
- function runBack(h,kind){
-   var z=backtest(h,kind);
-   if(!z.count){out.innerHTML='<div class="mut">'+esc(z.reason||"No trigger occurrences.")+'</div>';return;}
-   out.innerHTML='<div class="rr-back-grid">'+row("Occurrences",n(z.count))+row("Positive after 5D",p(z.positive5))+row("Avg 5D",p(z.avg5),z.avg5>=0?"up":"dn")+row("Median 5D",p(z.med5),z.med5>=0?"up":"dn")+row("Positive after 20D",p(z.positive20))+row("Avg 20D",p(z.avg20),z.avg20>=0?"up":"dn")+row("Median 20D",p(z.med20),z.med20>=0?"up":"dn")+'</div><div class="rr-sub">Latest trigger dates</div>'+itemList(z.examples,function(x){return row(x.date,p(x.r20),x.r20>=0?"up":"dn");},8);
- }
- function loadSymbol(s){
-   s=String(s||"").trim().toUpperCase().replace(/\s+/g,"");
-   if(!s){detail.innerHTML='<div class="mut">Enter an NSE symbol.</div>';return;}
-   detail.innerHTML='<div class="mut">Loading '+esc(s)+' history…</div>';
-   Promise.all([
-     fetch("data/history/"+encodeURIComponent(s)+".json?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("history "+r.status);return r.json();}),
-     Promise.resolve(stockFind(d,s))
-   ]).then(function(a){
-     var h=historyRows(a[0]), x=a[1]||{}, last=h[h.length-1]||{}, price=last.close!=null?Number(last.close):x.price, prev=h.length>1?h[h.length-2].close:null;
-     var ch=prev?((price/prev-1)*100):x.change_pct, av=avgTail(h.map(function(z){return Number(z.volume)||0;}),20), vr=av&&last.volume!=null?Number(last.volume)/av:null, s20=h.length>=21?((price/h[h.length-21].close-1)*100):x.return_20d;
-     detail.innerHTML='<div class="rr-lab-grid">'+
-       '<div><b class="rr-lab-symbol">'+esc(s)+'</b><div class="rr-lab-price">'+n(price)+'</div><div class="'+(ch>=0?"up":"dn")+'">'+p(ch)+'</div></div>'+
-       '<div>'+row("20D return",p(s20),s20>=0?"up":"dn")+row("Delivery",x.delivery_pct==null?"—":n(x.delivery_pct)+"%")+row("Volume / 20D",vr==null?"—":vr.toFixed(2)+"×")+'</div>'+
-       '<div>'+row("RS vs NIFTY",x.relative_strength_20d==null?"—":p(x.relative_strength_20d))+row("EMA200",x.ema200==null?"—":n(x.ema200))+row("RSI14",x.rsi14==null?"—":n(x.rsi14))+row("52W distance",x.distance_252_high_pct==null?"—":p(x.distance_252_high_pct))+'</div>'+
-       '<div>'+row("F&O build",x.fo_build||"—")+row("OI change",x.oi_change_pct==null?"—":p(x.oi_change_pct))+row("History",n(h.length)+" bars")+'</div>'+
-       '</div><div class="rr-lab-events"><b>Recent research events</b>'+eventBody(x.events||[])+'</div>'+
-       '<div class="rr-drill-note">Historical statistics are event studies over the available file history. They do not predict future returns.</div>';
-     host.querySelectorAll(".rr-event-symbol").forEach(function(q){q.onclick=function(){loadSymbol(q.getAttribute("data-symbol"));};});
-     bt.dataset.history=JSON.stringify(h); runBack(h,bt.value||"52W BREAKOUT");
-   }).catch(function(e){detail.innerHTML='<div class="mut">No history found for '+esc(s)+'. '+esc(e.message)+'</div>';bt.dataset.history="[]";runBack([] ,bt.value);});
- }
- if(btn)btn.addEventListener("click",function(){loadSymbol(input.value);});
- if(input)input.addEventListener("keydown",function(e){if(e.key==="Enter")loadSymbol(input.value);});
- if(bt)bt.addEventListener("change",function(){var h=[];try{h=JSON.parse(bt.dataset.history||"[]");}catch(e){}runBack(h,bt.value);});
- host.querySelectorAll(".rr-symbol").forEach(function(q){q.onclick=function(){loadSymbol(q.getAttribute("data-symbol"));};});
+
+function renderResearchLab(d){
+  var lab=d.research_lab||{},bt=(lab.backtests||{}).signals||{},daily=lab.daily_history||[];
+  var signals=Object.keys(bt);
+  var back='<div style="overflow:auto"><table class="rr-lab-table"><thead><tr><th>Signal</th><th>Events</th><th>Next 5D avg</th><th>5D positive</th><th>Next 20D avg</th><th>20D positive</th></tr></thead><tbody>'+
+    (signals.map(function(k){var x=bt[k]||{};return'<tr><td><b>'+esc(k.replace(/_/g," ").toUpperCase())+'</b></td><td class="numr">'+n(x.observations)+'</td><td class="numr">'+p(x.next5_mean_pct)+'</td><td class="numr">'+pct0(x.next5_positive_pct)+'</td><td class="numr">'+p(x.next20_mean_pct)+'</td><td class="numr">'+pct0(x.next20_positive_pct)+'</td></tr>';}).join("")||'<tr><td colspan="6">No backtest observations yet.</td></tr>')+
+    '</tbody></table></div><div class="rr-kicker">'+esc((lab.backtests||{}).method||"")+' · scanned '+n((lab.backtests||{}).history_files_scanned)+' history files.</div>';
+  var hist='<div class="rr-history"><table class="rr-lab-table"><thead><tr><th>Date</th><th>Advancers</th><th>Decliners</th><th>Advance ratio</th><th>High zone</th><th>Low zone</th></tr></thead><tbody>'+
+    daily.slice(-20).reverse().map(function(x){return'<tr><td>'+esc(x.date)+'</td><td class="numr">'+n(x.advancers)+'</td><td class="numr">'+n(x.decliners)+'</td><td class="numr">'+pct0(x.advance_ratio_pct)+'</td><td class="numr">'+n(x.new_high_zone_count)+'</td><td class="numr">'+n(x.new_low_zone_count)+'</td></tr>';}).join("")+
+    '</tbody></table></div>';
+  return '<div class="rr-lab-grid">'+
+    '<div class="card rr-card"><div class="sh2">RESEARCH LAB · STOCK DRILL-DOWN</div><div style="padding:10px 12px"><div class="rr-search"><input id="rr-stock-search" type="search" placeholder="Search symbol or company…"><button class="rr-btn" id="rr-clear-search">CLEAR</button></div><div id="rr-search-results"></div><div class="rr-chiprow"><button class="rr-chip" data-symbol="RELIANCE">RELIANCE</button><button class="rr-chip" data-symbol="HDFCBANK">HDFCBANK</button><button class="rr-chip" data-symbol="ICICIBANK">ICICIBANK</button><button class="rr-chip" data-symbol="TCS">TCS</button><button class="rr-chip" data-symbol="INFY">INFY</button></div><div class="rr-kicker">Click any symbol anywhere in Research Radar to open a full stock research profile.</div></div></div>'+
+    '<div class="card rr-card"><div class="sh2">RESEARCH LAB · COVERAGE</div>'+row("Universe searchable",n(lab.search_universe))+row("Radar modules",n(lab.module_count))+row("Source policy","Free/public only")+row("Updated",safeDate((d||{}).updated))+'</div>'+
+    '<div class="card rr-card rr-wide"><div class="sh2">SIGNAL HISTORY / BACKTEST</div>'+back+'</div>'+
+    '<div class="card rr-card rr-wide"><div class="sh2">BREADTH HISTORY</div>'+hist+'</div>'+
+    '</div>';
+}
+
+function wireLab(){
+  var input=document.getElementById("rr-stock-search"),res=document.getElementById("rr-search-results");
+  function paint(q){
+    if(!res)return;
+    var arr=stockUniverseSearch(q);
+    if(!q){res.innerHTML="";return;}
+    res.innerHTML='<div class="rr-results">'+(arr.length?arr.map(function(x){return'<button class="rr-result" data-symbol="'+esc(String(x.symbol).toUpperCase())+'"><b>'+esc(x.symbol)+'</b><small>'+esc(x.company||"")+'</small></button>';}).join(""):'<div class="mut">No matching stock.</div>')+'</div>';
+  }
+  if(input)input.addEventListener("input",function(){paint(input.value);});
+  var clear=document.getElementById("rr-clear-search");
+  if(clear)clear.addEventListener("click",function(){if(input)input.value="";paint("");if(input)input.focus();});
+  document.querySelectorAll("[data-symbol]").forEach(function(el){
+    el.addEventListener("click",function(e){e.preventDefault();openDetail(el.getAttribute("data-symbol"));});
+  });
 }
 
 function render(d){
- var host=document.getElementById("research-radar"); if(!host)return;
- installCSS();
- window.__rr44Data=d; var f=d.features||{};
- var w=f.week52||{},br=f.breadth_history||{},ix=f.index_changes||{},ma=f.rbi_macro||{},bb=f.bulk_block||{},re=f.results||{},se=f.sector_rotation||{},rg=f.market_regime||{},dr=f.data_resilience||{},ca=f.corporate_actions||{};
- var h=f.breakout_radar||{},vs=f.volume_shock||{},dc=f.delivery_conviction||{},ad=f.accumulation_distribution||{},gap=f.gap_radar||{};
- var rs=f.relative_strength||{},sm=f.sector_matrix||{},ve=f.volatility_expansion||{},rx=f.range_expansion||{};
- var mo=f.momentum_dashboard||{},th=f.trend_health||{},cross=f.dma_cross_radar||{},dm=f.distance_map||{};
- var es=f.earnings_surprise||{},pi=f.promoter_insider||{},pl=f.pledge_watch||{},cc=f.corporate_calendar||{};
- var dv=f.dividend_radar||{},bo=f.buyback_open_offer||{},foi=f.fo_oi_change||{},op=f.option_pulse||{};
- var fm=f.futures_basis||{},fb=f.fo_buildup||{},bt=f.bulk_followthrough||{},iflow=f.institutional_flow_trend||{};
- var bm=f.breadth_momentum||{},hlb=f.high_low_breadth||{},mc=f.market_concentration||{},nl=f.nifty_leadership||{};
- var ib=f.index_bucket_breadth||{},ls=f.liquidity_stress||{},rel=f.data_reliability||{},rdd=f.data_resilience_detail||{};
+  STATE.radar=d;installCSS();
+  var host=document.getElementById("research-radar");if(!host)return;
+  var f=d.features||{};
+  var w=f.week52||{},br=f.breadth_history||{},ix=f.index_changes||{},ma=f.rbi_macro||{},bb=f.bulk_block||{},re=f.results||{},se=f.sector_rotation||{},rg=f.market_regime||{},dr=f.data_resilience||{},ca=f.corporate_actions||{};
+  var h=f.breakout_radar||{},vs=f.volume_shock||{},dc=f.delivery_conviction||{},ad=f.accumulation_distribution||{},gap=f.gap_radar||{};
+  var rs=f.relative_strength||{},sm=f.sector_matrix||{},ve=f.volatility_expansion||{},rx=f.range_expansion||{};
+  var mo=f.momentum_dashboard||{},th=f.trend_health||{},cross=f.dma_cross_radar||{},dm=f.distance_map||{};
+  var es=f.earnings_surprise||{},pi=f.promoter_insider||{},pl=f.pledge_watch||{},cc=f.corporate_calendar||{};
+  var dv=f.dividend_radar||{},bo=f.buyback_open_offer||{},foi=f.fo_oi_change||{},op=f.option_pulse||{};
+  var fm=f.futures_basis||{},fb=f.fo_buildup||{},bt=f.bulk_followthrough||{},iflow=f.institutional_flow_trend||{};
+  var bm=f.breadth_momentum||{},hlb=f.high_low_breadth||{},mc=f.market_concentration||{},nl=f.nifty_leadership||{};
+  var ib=f.index_bucket_breadth||{},ls=f.liquidity_stress||{},rel=f.data_reliability||{},rdd=f.data_resilience_detail||{};
 
- var html='<div id="rr-lab" class="rr-lab card">'+
-   '<div class="sh2"><span>RESEARCH LAB</span><span class="rr-head-right"><span class="rr-badge source">FREE GITHUB / LOCAL DATA</span><span class="rr-badge fresh">LIVE SNAPSHOT</span></span></div>'+
-   '<div class="rr-lab-top"><div><b>Stock drill-down + signal history</b><small>Search any NSE symbol to combine price history, Radar signals, corporate events, F&O and delivery context.</small></div><div class="rr-lab-search"><input id="rr-stock-input" type="search" placeholder="RELIANCE · HDFCBANK · TCS"><button id="rr-stock-go">RESEARCH</button></div></div>'+
-   '<div id="rr-stock-detail"><div class="mut">Enter a symbol to begin.</div></div>'+
-   '<div class="rr-backtest-bar"><label>Historical signal test <select id="rr-backtest"><option>52W BREAKOUT</option><option>VOLUME SHOCK</option><option>TREND > 200DMA</option><option>20D MOMENTUM</option></select></label><div id="rr-backtest-out"><div class="mut">Load a stock to calculate event-study statistics.</div></div></div>'+
-   '<div class="rr-lab-source">Source: ArthaSaar <code>data/history/</code> plus current Radar snapshots. Forward-return statistics describe historical occurrences only; they are not forecasts.</div></div><div class="rr-grid">';
- html+=card("01","CORPORATE ACTIONS",eventBody(ca.events),n(ca.count)+" events");
- html+=card("02","52-WEEK MAP",row("Near high zone",n(w.new_high_zone_count),"up")+row("Near low zone",n(w.new_low_zone_count),"dn")+rows(w.near_highs,"symbol","from_high_pct",function(){return"up";},4)+rows(w.near_lows,"symbol","from_low_pct",function(){return"dn";},4),"NSE screener");
- html+=card("03","BREADTH HISTORY",row("Advancers",n((br.today||{}).advancers))+row("Decliners",n((br.today||{}).decliners))+row("Advance ratio",p((br.today||{}).advance_ratio_pct))+row("200D EMA",p((br.today||{}).ema200_pct)), "daily history");
- html+=card("04","INDEX / CONSTITUENT CHANGES",Object.keys(ix.membership_changes||{}).map(function(k){var z=ix.membership_changes[k]||{};return row(k,(z.added||[]).length+" in · "+(z.removed||[]).length+" out");}).join("")+row("Indices tracked",n(ix.indices_count)),"NSE public data");
- html+=card("05","RBI / MACRO PULSE",itemList(ma.indicators,function(x){return'<div class="ni"><b>'+esc(x.name||"Macro")+'</b><small>'+esc(x.value||"—")+' · '+esc(x.date||"")+'</small></div>';},6),"macro snapshot");
- html+=card("06","BULK / BLOCK DEALS",'<div class="rr-cols"><div>'+rows(bb.bulk,"s","t",function(){return"";},5)+'</div><div>'+rows(bb.block,"s","t",function(){return"";},5)+'</div></div>',"NSE-derived");
- html+=card("07","RESULTS CALENDAR",rows(re.items,"sym","date",null,8),re.quarter||"results");
- html+=card("08","SECTOR ROTATION",rows(se.sectors,"sector","avg_1d_pct",function(x){return (x.avg_1d_pct||0)>=0?"up":"dn";},8),"1D rotation");
- html+=card("09","MARKET REGIME",row("Regime",rg.label||"—")+row("Composite",n(rg.score)+"/4")+row("Breadth",p(rg.advance_ratio_pct))+row("NIFTY 50",p(rg.nifty_change_pct),(rg.nifty_change_pct||0)>=0?"up":"dn"),"descriptive");
- var hs=dr.summary||{}; html+=card("10","DATA RESILIENCE",row("Feeds OK",n(hs.ok)+"/"+n(hs.total))+row("Problems",n(hs.problems),hs.problems?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"updated "+(dr.health_updated||d.updated||"—"));
+  var html=renderResearchLab(d)+'<div class="rr-grid">';
+  html+=card("01","CORPORATE ACTIONS",eventBody(ca.events),"NSE filings",d.updated);
+  html+=card("02","52-WEEK MAP",row("Near high zone",n(w.new_high_zone_count),"up")+row("Near low zone",n(w.new_low_zone_count),"dn")+rows(w.near_highs,"symbol","from_high_pct",function(){return"up";},4)+rows(w.near_lows,"symbol","from_low_pct",function(){return"dn";},4),"ArthaSaar screener",d.updated);
+  html+=card("03","BREADTH HISTORY",row("Advancers",n((br.today||{}).advancers))+row("Decliners",n((br.today||{}).decliners))+row("Advance ratio",p((br.today||{}).advance_ratio_pct))+row("200D EMA",pct0((br.today||{}).ema200_pct)),"Derived universe",d.updated);
+  html+=card("04","INDEX / CONSTITUENT CHANGES",Object.keys(ix.membership_changes||{}).map(function(k){var z=ix.membership_changes[k]||{};return row(k,(z.added||[]).length+" in · "+(z.removed||[]).length+" out");}).join("")+row("Indices tracked",n(ix.indices_count)),"NSE",d.updated);
+  html+=card("05","RBI / MACRO PULSE",itemList(ma.indicators,function(x){return'<div class="ni"><b>'+esc(x.name||"Macro")+'</b><small>'+esc(x.value||"—")+' · '+esc(x.date||"")+'</small></div>';},6),"RBI/public macro",ma.macro_updated||d.updated);
+  html+=card("06","BULK / BLOCK DEALS",'<div class="rr-cols"><div>'+rows(bb.bulk,"s","t",null,5)+'</div><div>'+rows(bb.block,"s","t",null,5)+'</div></div>',"NSE-derived",bb.updated||d.updated);
+  html+=card("07","RESULTS CALENDAR",rows(re.items,"sym","date",null,8),re.quarter||"Public results",re.updated||d.updated);
+  html+=card("08","SECTOR ROTATION",rows(se.sectors,"sector","avg_1d_pct",function(x){return(x.avg_1d_pct||0)>=0?"up":"dn";},8),"Derived sectors",d.updated);
+  html+=card("09","MARKET REGIME",row("Regime",rg.label||"—")+row("Composite",n(rg.score)+"/4")+row("Breadth",p(rg.advance_ratio_pct))+row("NIFTY 50",p(rg.nifty_change_pct),(rg.nifty_change_pct||0)>=0?"up":"dn"),"Derived, not forecast",d.updated);
+  var hs=dr.summary||{};html+=card("10","DATA RESILIENCE",row("Feeds OK",n(hs.ok)+"/"+n(hs.total))+row("Problems",n(hs.problems),hs.problems?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"Data health",dr.health_updated||d.updated);
 
- html+=card("11","52W BREAKOUT RADAR",row("Candidates",n(h.count))+rows(h.rows,"symbol","distance_252_high_pct",function(){return"up";},7),"≤0.75% from 252D high");
- html+=card("12","VOLUME SHOCK RADAR",rows(vs.rows,"symbol","vol_vs_avg20",function(){return"up";},8),"×20D avg");
- html+=card("13","DELIVERY CONVICTION",row("Coverage",n(dc.coverage))+row("Avg delivery",p((dc.avg_delivery_pct||0)-50))+rows(dc.high_delivery_up,"symbol","delivery_pct",function(){return"up";},4),"delivery %");
- html+=card("14","PRICE × VOLUME ACCUMULATION",'<div class="rr-cols"><div><div class="rr-sub">Accumulation</div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},5)+'</div><div><div class="rr-sub">Distribution</div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},5)+'</div></div>',"derived");
- html+=card("15","GAP-UP / GAP-DOWN RADAR",row("Status",gap.available?"LIVE":"WAITING"),'<span class="rr-kicker">'+esc(gap.reason||"")+'</span>',"OHLC requirement");
- html+=card("16","RELATIVE STRENGTH vs NIFTY",row("NIFTY 20D",p(rs.benchmark_return_20d_pct))+rows(rs.leaders,"symbol","relative_strength_20d",function(){return"up";},6)+rows(rs.laggards,"symbol","relative_strength_20d",function(){return"dn";},6),"20D");
- html+=card("17","SECTOR STRENGTH MATRIX",rows(sm.sectors,"sector","avg_20d_pct",function(x){return(x.avg_20d_pct||0)>=0?"up":"dn";},10),"1D + 20D + breadth");
- html+=card("18","VOLATILITY EXPANSION",rows(ve.rows,"symbol","vol_expansion",function(x){return(x.vol_expansion||0)>=1?"up":"";},8),"20D / 60D volatility");
- html+=card("19","ATR / RANGE EXPANSION",row("Status",rx.available?"LIVE":"Proxy only")+row("Proxy","Close-to-close volatility"),'<span class="rr-kicker">'+esc(rx.reason||"")+'</span>','range');
- html+=card("20","MOMENTUM DASHBOARD",row("RSI >60",n((mo.rsi_high||[]).length),"up")+row("RSI <40",n((mo.rsi_low||[]).length),"dn")+row("MACD positive",n((mo.macd_positive||[]).length),"up")+rows(mo.roc_leaders,"symbol","return_20d",function(){return"up";},5),"RSI · MACD · ROC");
- html+=card("21","TREND HEALTH",row("Above EMA200",p(th.above_ema200_pct))+rows(th.above_ema200,"symbol","return_20d",function(){return"up";},5)+rows(th.below_ema200,"symbol","return_20d",function(){return"dn";},5),"20/200 trend");
- html+=card("22","GOLDEN / DEATH CROSS",row("Golden",n(cross.golden_cross_count),"up")+row("Death",n(cross.death_cross_count),"dn")+rows(cross.golden_candidates,"symbol","return_20d",function(){return"up";},4)+rows(cross.death_candidates,"symbol","return_20d",function(){return"dn";},4),"50D vs 200D");
- html+=card("23","52W HIGH / LOW DISTANCE",rows(dm.near_high_200d,"symbol","distance_252_high_pct",function(){return"up";},5)+rows(dm.near_low_200d,"symbol","distance_252_low_pct",function(){return"dn";},5),"252-session map");
- html+=card("24","EARNINGS SURPRISE TRACKER",row("Standardized surprise","Unavailable")+row("Upcoming results",n((es.upcoming_results||[]).length))+eventBody(es.results_filing_events), "public data coverage");
- html+=card("25","PROMOTER / INSIDER ACTIVITY",row("Events",n(pi.count))+eventBody(pi.events),"filing keyword radar");
- html+=card("26","PLEDGE / ENCUMBRANCE WATCH",row("Events",n(pl.count))+eventBody(pl.events),"filing keyword radar");
- html+=card("27","CORPORATE ACTION CALENDAR",rows(cc.next_results,"sym","date",null,10),"upcoming");
- html+=card("28","DIVIDEND RADAR",row("Events",n(dv.count))+eventBody(dv.events),"filings");
- html+=card("29","BUYBACK / OPEN OFFER",row("Events",n(bo.count))+eventBody(bo.events),"filings");
- html+=card("30","F&O OI CHANGE RADAR",rows(foi.rows,"symbol","oi_change_pct",function(x){return(x.oi_change_pct||0)>=0?"up":"dn";},10),n(foi.coverage)+" contracts");
- html+=card("31","OI × PRICE MATRIX",row("Long build",n((fb.counts||{})["LONG BUILD"]),"up")+row("Short build",n((fb.counts||{})["SHORT BUILD"]),"dn")+row("Short cover",n((fb.counts||{})["SHORT COVER"]),"up")+row("Long unwind",n((fb.counts||{})["LONG UNWIND"]),"dn"),"F&O derived");
- html+=card("32","PUT / CALL + MAX PAIN",row("PCR OI",n(op.nifty_pcr_oi))+row("PCR volume",n(op.nifty_pcr_vol))+row("Max pain",n(op.max_pain))+row("Expiry",op.expiry||"—")+row("Spot",n(op.spot)),"NIFTY options");
- html+=card("33","FUTURES BASIS / SPREAD",rows(fm.rows,"symbol","basis_pct",function(x){return(x.basis_pct||0)>=0?"up":"dn";},10),"near-month");
- html+=card("34","LONG / SHORT BUILDUP RADAR",'<div class="rr-cols"><div>'+rows(fb.long_build,"symbol","oi_change_pct",function(){return"up";},5)+rows(fb.short_cover,"symbol","oi_change_pct",function(){return"up";},5)+'</div><div>'+rows(fb.short_build,"symbol","oi_change_pct",function(){return"dn";},5)+rows(fb.long_unwind,"symbol","oi_change_pct",function(){return"dn";},5)+'</div></div>',"F&O");
- html+=card("35","BULK DEAL FOLLOW-THROUGH",rows(bt.rows,"symbol","change_pct",function(x){return(x.change_pct||0)>=0?"up":"dn";},10),"deal joined to EOD move");
- html+=card("36","INSTITUTIONAL FLOW TREND",row("FII current",n((iflow.current||{}).net_cr))+row("DII current",n((iflow.dii_current||{}).net_cr))+row("FII sell days",n(iflow.fii_sell_days),(iflow.fii_sell_days||0)>0?"dn":"up")+rows(iflow.history,"date","fii_net_cr",function(x){return(x.fii_net_cr||0)>=0?"up":"dn";},6),"recent");
- html+=card("37","MARKET BREADTH MOMENTUM",row("3D up streak",n(bm.three_day_up),"up")+row("3D down streak",n(bm.three_day_down),"dn")+row("Volume >2×",n(bm.volume_spike_2x)), "universe");
- html+=card("38","NEW HIGH / NEW LOW BREADTH",row("New-high zone",n(hlb.new_high_zone),"up")+row("New-low zone",n(hlb.new_low_zone),"dn")+rows(hlb.near_highs,"symbol","change_pct",function(){return"up";},4)+rows(hlb.near_lows,"symbol","change_pct",function(){return"dn";},4),"universe");
- html+=card("39","MARKET CONCENTRATION",itemList(mc.indices,function(x){return row(x.index,"Top10 "+n(x.top10_weight_pct)+"%");},4),"constituent weights");
- html+=card("40","NIFTY LEADERSHIP RADAR",rows(nl.leaders,"symbol","relative_strength_20d",function(){return"up";},12),"weight + RS");
- html+=card("41","SMALL / MID / LARGE BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"index buckets");
- html+=card("42","LIQUIDITY STRESS RADAR",row("Low volume <0.5×",n(ls.low_volume_lt_0_5x),"dn")+row("High volume >2×",n(ls.high_volume_gt_2x),"up")+row("History <60D",n(ls.illiquid_history_lt_60d),"dn")+row("Universe",n(ls.coverage)),"coverage");
- html+=card("43","DATA RELIABILITY SCORE",row("Coverage score",p(rel.coverage_score_pct))+row("History ≥200D",p(rel.history_ge_200d_pct))+row("Delivery rows",n(rel.delivery_coverage))+row("F&O rows",n(rel.futures_stock_coverage)),"repo coverage");
- html+=card("44","DATA RESILIENCE DETAIL",row("History files",n(rdd.history_files))+row("EMA200 coverage",p(rdd.ema200_coverage_pct))+row("Delivery coverage",n(rdd.delivery_coverage))+row("Futures coverage",n(rdd.futures_stock_coverage))+row("Coverage score",p(rdd.coverage_score_pct))+row("EOD fallback","NSE → Yahoo → last valid"),"system health");
- html+='</div><div class="rr-note"><b>44 free-data research modules.</b> NSE/public exchange snapshots remain primary; Yahoo is used only for historical backup. Modules explicitly mark unavailable calculations when the stored public snapshot lacks the required field, rather than fabricating values. Updated '+esc(d.updated||"—")+'.</div>';
- host.innerHTML=html;
- initResearchLab(d);
+  html+=card("11","52W BREAKOUT RADAR",row("Candidates",n(h.count))+rows(h.rows,"symbol","distance_252_high_pct",function(){return"up";},7),"Derived 252D",d.updated);
+  html+=card("12","VOLUME SHOCK RADAR",rows(vs.rows,"symbol","vol_vs_avg20",function(){return"up";},8),"NSE/Yahoo history",d.updated);
+  html+=card("13","DELIVERY CONVICTION",row("Coverage",n(dc.coverage))+row("Avg delivery",pct0(dc.avg_delivery_pct))+rows(dc.high_delivery_up,"symbol","delivery_pct",function(){return"up";},4),"NSE delivery",d.updated);
+  html+=card("14","PRICE × VOLUME ACCUMULATION",'<div class="rr-cols"><div><div class="rr-sub">Accumulation</div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},5)+'</div><div><div class="rr-sub">Distribution</div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},5)+'</div></div>',"Derived",d.updated);
+  html+=card("15","GAP-UP / GAP-DOWN RADAR",row("Status",gap.available?"LIVE":"WAITING")+'<div class="rr-kicker">'+esc(gap.reason||"")+'</div>',"OHLC dependent",d.updated);
+  html+=card("16","RELATIVE STRENGTH vs NIFTY",row("NIFTY 20D",p(rs.benchmark_return_20d_pct))+rows(rs.leaders,"symbol","relative_strength_20d",function(){return"up";},6)+rows(rs.laggards,"symbol","relative_strength_20d",function(){return"dn";},6),"Derived",d.updated);
+  html+=card("17","SECTOR STRENGTH MATRIX",rows(sm.sectors,"sector","avg_20d_pct",function(x){return(x.avg_20d_pct||0)>=0?"up":"dn";},10),"Derived",d.updated);
+  html+=card("18","VOLATILITY EXPANSION",rows(ve.rows,"symbol","vol_expansion",function(x){return(x.vol_expansion||0)>=1?"up":"";},8),"ArthaSaar history",d.updated);
+  html+=card("19","ATR / RANGE EXPANSION",row("Status",rx.available?"LIVE":"Proxy only")+row("Proxy","Close-to-close volatility")+'<div class="rr-kicker">'+esc(rx.reason||"")+'</div>',"OHLC dependent",d.updated);
+  html+=card("20","MOMENTUM DASHBOARD",row("RSI >60",n((mo.rsi_high||[]).length),"up")+row("RSI <40",n((mo.rsi_low||[]).length),"dn")+row("MACD positive",n((mo.macd_positive||[]).length),"up")+rows(mo.roc_leaders,"symbol","return_20d",function(){return"up";},5),"RSI/MACD/ROC",d.updated);
+  html+=card("21","TREND HEALTH",row("Above EMA200",pct0(th.above_ema200_pct))+rows(th.above_ema200,"symbol","return_20d",function(){return"up";},5)+rows(th.below_ema200,"symbol","return_20d",function(){return"dn";},5),"Derived trend",d.updated);
+  html+=card("22","GOLDEN / DEATH CROSS",row("Golden",n(cross.golden_cross_count),"up")+row("Death",n(cross.death_cross_count),"dn")+rows(cross.golden_candidates,"symbol","return_20d",function(){return"up";},4)+rows(cross.death_candidates,"symbol","return_20d",function(){return"dn";},4),"50D / 200D",d.updated);
+  html+=card("23","52W HIGH / LOW DISTANCE",rows(dm.near_high_200d,"symbol","distance_252_high_pct",function(){return"up";},5)+rows(dm.near_low_200d,"symbol","distance_252_low_pct",function(){return"dn";},5),"252D history",d.updated);
+  html+=card("24","EARNINGS SURPRISE TRACKER",row("Standardized surprise","Unavailable")+row("Upcoming results",n((es.upcoming_results||[]).length))+eventBody(es.results_filing_events),"Public coverage",d.updated);
+  html+=card("25","PROMOTER / INSIDER ACTIVITY",row("Events",n(pi.count))+eventBody(pi.events),"NSE/public filings",d.updated);
+  html+=card("26","PLEDGE / ENCUMBRANCE WATCH",row("Events",n(pl.count))+eventBody(pl.events),"NSE/public filings",d.updated);
+  html+=card("27","CORPORATE ACTION CALENDAR",rows(cc.next_results,"sym","date",null,10),"Results/filings",re.updated||d.updated);
+  html+=card("28","DIVIDEND RADAR",row("Events",n(dv.count))+eventBody(dv.events),"NSE/public filings",d.updated);
+  html+=card("29","BUYBACK / OPEN OFFER",row("Events",n(bo.count))+eventBody(bo.events),"NSE/public filings",d.updated);
+  html+=card("30","F&O OI CHANGE RADAR",rows(foi.rows,"symbol","oi_change_pct",function(x){return(x.oi_change_pct||0)>=0?"up":"dn";},10),"NSE futures",f.futures_updated||d.updated);
+  html+=card("31","OI × PRICE MATRIX",row("Long build",n((fb.counts||{})["LONG BUILD"]),"up")+row("Short build",n((fb.counts||{})["SHORT BUILD"]),"dn")+row("Short cover",n((fb.counts||{})["SHORT COVER"]),"up")+row("Long unwind",n((fb.counts||{})["LONG UNWIND"]),"dn"),"NSE futures",f.futures_updated||d.updated);
+  html+=card("32","PUT / CALL + MAX PAIN",row("PCR OI",n(op.nifty_pcr_oi))+row("PCR volume",n(op.nifty_pcr_vol))+row("Max pain",n(op.max_pain))+row("Expiry",op.expiry||"—")+row("Spot",n(op.spot)),"NSE options",f.futures_updated||d.updated);
+  html+=card("33","FUTURES BASIS / SPREAD",rows(fm.rows,"symbol","basis_pct",function(x){return(x.basis_pct||0)>=0?"up":"dn";},10),"NSE futures",f.futures_updated||d.updated);
+  html+=card("34","LONG / SHORT BUILDUP RADAR",'<div class="rr-cols"><div>'+rows(fb.long_build,"symbol","oi_change_pct",function(){return"up";},5)+rows(fb.short_cover,"symbol","oi_change_pct",function(){return"up";},5)+'</div><div>'+rows(fb.short_build,"symbol","oi_change_pct",function(){return"dn";},5)+rows(fb.long_unwind,"symbol","oi_change_pct",function(){return"dn";},5)+'</div></div>',"NSE futures",f.futures_updated||d.updated);
+  html+=card("35","BULK DEAL FOLLOW-THROUGH",rows(bt.rows,"symbol","change_pct",function(x){return(x.change_pct||0)>=0?"up":"dn";},10),"NSE bulk deals",bb.updated||d.updated);
+  html+=card("36","INSTITUTIONAL FLOW TREND",row("FII current",n((iflow.current||{}).net_cr))+row("DII current",n((iflow.dii_current||{}).net_cr))+row("FII sell days",n(iflow.fii_sell_days),(iflow.fii_sell_days||0)>0?"dn":"up")+rows(iflow.history,"date","fii_net_cr",function(x){return(x.fii_net_cr||0)>=0?"up":"dn";},6),"FII/DII + macro history",d.updated);
+  html+=card("37","MARKET BREADTH MOMENTUM",row("3D up streak",n(bm.three_day_up),"up")+row("3D down streak",n(bm.three_day_down),"dn")+row("Volume >2×",n(bm.volume_spike_2x)),"Universe",d.updated);
+  html+=card("38","NEW HIGH / NEW LOW BREADTH",row("New-high zone",n(hlb.new_high_zone),"up")+row("New-low zone",n(hlb.new_low_zone),"dn")+rows(hlb.near_highs,"symbol","change_pct",function(){return"up";},4)+rows(hlb.near_lows,"symbol","change_pct",function(){return"dn";},4),"Universe",d.updated);
+  html+=card("39","MARKET CONCENTRATION",itemList(mc.indices,function(x){return row(x.index,"Top10 "+n(x.top10_weight_pct)+"%");},4),"NSE constituent weights",d.updated);
+  html+=card("40","NIFTY LEADERSHIP RADAR",rows(nl.leaders,"symbol","relative_strength_20d",function(){return"up";},12),"NIFTY 50 + derived RS",d.updated);
+  html+=card("41","SMALL / MID / LARGE BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"NSE membership",d.updated);
+  html+=card("42","LIQUIDITY STRESS RADAR",row("Low volume <0.5×",n(ls.low_volume_lt_0_5x),"dn")+row("High volume >2×",n(ls.high_volume_gt_2x),"up")+row("History <60D",n(ls.illiquid_history_lt_60d),"dn")+row("Universe",n(ls.coverage)),"ArthaSaar coverage",d.updated);
+  html+=card("43","DATA RELIABILITY SCORE",row("Coverage score",pct0(rel.coverage_score_pct))+row("History ≥200D",pct0(rel.history_ge_200d_pct))+row("Delivery rows",n(rel.delivery_coverage))+row("F&O rows",n(rel.futures_stock_coverage)),"Repo data-health",d.updated);
+  html+=card("44","DATA RESILIENCE DETAIL",row("History files",n(rdd.history_files))+row("EMA200 coverage",pct0(rdd.ema200_coverage_pct))+row("Delivery coverage",n(rdd.delivery_coverage))+row("Futures coverage",n(rdd.futures_stock_coverage))+row("Coverage score",pct0(rdd.coverage_score_pct))+row("EOD fallback","NSE → Yahoo → last valid"),"System health",rdd.health_updated||d.updated);
+  html+='</div><div class="rr-note"><b>Research Lab + 44 free-data modules.</b> Search any stock, open its drill-down, inspect signal history, and review event-study results. Freshness badges are derived from the published snapshot timestamps. No paid API is used.</div>';
+  host.innerHTML=html;
+  wireLab();
+}
+
+function optionalJSON(path,def){
+  return fetch(path+"?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw Error(path+" "+r.status);return r.json();}).catch(function(){return def;});
+}
+function loadSupport(){
+  var csvP=fetch("data/brain-screener.csv?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("csv "+r.status);return r.text();}).catch(function(){return"";});
+  return Promise.all([
+    csvP,optionalJSON("data/delivery.json",{}),optionalJSON("data/futures.json",{}),optionalJSON("data/filings.json",{}),optionalJSON("data/results.json",{})
+  ]).then(function(vals){
+    parseCSV(vals[0]).forEach(function(x){var sym=String(x.symbol||"").trim().toUpperCase();if(sym)STATE.stocks[sym]=x;});
+    var d=vals[1]||{};STATE.delivery=d.d||{};
+    STATE.futures=vals[2]||{};
+    STATE.filings=(vals[3]||{}).filings||[];
+    var rr=vals[4]||{};STATE.results={};(rr.results||[]).forEach(function(x){if(x.sym)STATE.results[String(x.sym).toUpperCase()]=x;});
+  });
 }
 function boot(){
- var h=document.getElementById("research-radar");if(!h)return;
- installCSS();
- h.innerHTML='<div class="card" style="margin-top:10px;padding:18px">Loading 44 Research Radar modules…</div>';
- fetch("data/research-radar.json?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("HTTP "+r.status);return r.json();}).then(render).catch(function(e){h.innerHTML='<div class="card" style="margin-top:10px;padding:18px"><b>Research Radar data could not load.</b><div class="mut" style="padding-left:0">Check Pages deployment / research-radar.json. '+esc(e.message)+'</div></div>';});
+  var h=document.getElementById("research-radar");if(!h)return;
+  installCSS();
+  h.innerHTML='<div class="card" style="margin-top:10px;padding:18px">Loading Research Lab + 44 Research Radar modules…</div>';
+  optionalJSON("data/research-radar.json",null).then(function(d){if(!d)throw Error("research-radar.json unavailable");STATE.radar=d;return loadSupport().then(function(){render(d);});}).catch(function(e){
+    h.innerHTML='<div class="card" style="margin-top:10px;padding:18px"><b>Research Radar data could not load.</b><div class="mut" style="padding-left:0">Check Pages deployment / published data files. '+esc(e.message)+'</div></div>';
+  });
 }
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+document.addEventListener("click",function(e){
+  var el=e.target.closest?e.target.closest("[data-symbol]"):null;
+  if(el&&!el.hasAttribute("data-close-rr")){
+    var sym=el.getAttribute("data-symbol");if(sym){e.preventDefault();openDetail(sym);}
+  }
+  if(e.target.closest&&e.target.closest("[data-close-rr]")){
+    var ov=document.getElementById("rr-overlay");if(ov)ov.classList.remove("open");
+  }
+});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){var ov=document.getElementById("rr-overlay");if(ov)ov.classList.remove("open");}});
 window.addEventListener("hashchange",function(){setTimeout(boot,100);});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){boot();});else boot();
+
+var ov=document.createElement("div");ov.id="rr-overlay";ov.className="rr-overlay";document.body.appendChild(ov);
 })();

@@ -174,6 +174,8 @@ function openDetail(symbol){
       row("Expiry",fo?fo.expiry:"Not available")+row("OI",fo?n(fo.oi):"—")+row("OI change",fo?n(fo.oi_chg):"—")+row("Basis",fo?p(fo.basis_pct):"—")+'</div>';
     body+='<div class="rr-detail-section"><div class="sh2">CORPORATE / RESULTS</div>'+eventBody(filings)+
       (next?'<div class="ni"><b>Next result / event: '+esc(next.date||"—")+'</b><small>'+esc(next.company||"")+'</small></div>':"")+'</div>';
+    var nb0=notebook(),isWatched=(nb0.watch||[]).indexOf(symbol)>=0,note0=(nb0.notes||{})[symbol]||"";
+    body+='<div class="rr-detail-section"><div class="sh2">RESEARCH NOTEBOOK</div><div style="padding:10px 12px"><button class="rr-btn" data-toggle-watch="'+esc(symbol)+'">'+(isWatched?"REMOVE FROM WATCHLIST":"ADD TO WATCHLIST")+'</button><textarea id="rr-modal-note" style="width:100%;margin-top:7px;min-height:65px" placeholder="Browser-local research note…">'+esc(note0)+'</textarea><button class="rr-btn" style="margin-top:6px" data-save-modal-note="'+esc(symbol)+'">SAVE NOTE</button></div></div>';
     body+='<div class="rr-detail-section"><div class="sh2">DATA SOURCE</div>'+row("Screener","ArthaSaar brain-screener snapshot")+row("Historical","ArthaSaar history file")+row("Corporate","NSE/public filings snapshot")+row("Research timestamp",safeDate((STATE.radar||{}).updated))+'</div>';
     host.innerHTML='<div class="rr-modal"><div class="rr-modal-head"><div class="rr-modal-title"><b>'+esc(symbol)+' · '+esc(r.company||"")+'</b><small>'+esc(r.industry||"")+'</small></div><button class="rr-btn" data-close-rr>✕ CLOSE</button></div><div class="rr-modal-body">'+body+'</div></div>';
   });

@@ -71,15 +71,13 @@ website second.
 4. Test: Actions → Telegram Morning Brief → Run workflow (manual dispatch)
 
 ### LIVE Telegram routing (21/09/26 — the names that ACTUALLY run)
-- Secrets that run the messages: TG_TOKEN (bot token) + TG_CHAT_ID (market msgs via
-  telegram.yml) + TG_CHAT_ID_IPO (IPO digest 8:45 AM via telegram-ipo.yml; fallback = TG_CHAT_ID)
-- Both TG_CHAT_ID and TG_CHAT_ID_IPO = "1392604324,1148261593,1785489570,1182983939" =
-  owner + Nandan + Hemant + Rahul + Vidhi + Jems Bonda.
-  All 4 get EVERYTHING (market + IPO). Verified sent to 4 chats 21/09/26.
-- To add a person: they must /start the bot first (Telegram blocks bots messaging strangers),
-  run "Telegram Who" workflow (telegram-who.yml) to see their chat_id, then update BOTH secrets
-  with comma-separated ids (encrypt via repo public key + PyNaCl sealed box, push via GitHub MCP
-  GITHUB_CREATE_OR_UPDATE_A_REPOSITORY_SECRET).
+- Secrets that run messages: TG_TOKEN (bot token), TG_CHAT_ID (market messages via
+  telegram.yml), and TG_CHAT_ID_IPO (IPO digest via telegram-ipo.yml; fallback = TG_CHAT_ID).
+- Recipient identifiers must exist ONLY in GitHub Actions secrets. Never commit Telegram chat IDs,
+  member names, birthdates, or a public member directory into this repository.
+- To add a recipient, have them start the bot, use the private Telegram Who workflow to obtain
+  their chat ID, then update the relevant repository secrets. Do not print IDs into logs or docs.
+
 
 ### Google Sheet "ArthaSaar Hub" (1sTq7IQ17i_CxGHiw1WHGi62O__9OGZvjfwIBACqrXdc, public)
 Tabs: Sheet1(README), Nifty500_Screener, Budget_Day_Study, Budget_Theme_Stocks,

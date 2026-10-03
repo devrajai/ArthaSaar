@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{},alerts:null,health:null,marketHistory:null,signalHistory:null,candles:{}};
+var STATE={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},historyCache:{},alerts:null,health:null,marketHistory:null,signalHistory:null,candles:{},candlesUpdated:null};
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":">","\"":"&quot;"}[c];});}
 function n(x){return x==null||isNaN(x)?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:2});}
@@ -486,7 +486,7 @@ function render(d){
     card("12","VOLUME SHOCK",rows(vs.rows,"symbol","vol_vs_avg20",function(){return"up";},7),"NSE/Yahoo history",d.updated),
     card("13","DELIVERY CONVICTION",row("Coverage",n(dc.coverage))+row("Avg delivery",pct0(dc.avg_delivery_pct))+rows(dc.high_delivery_up,"symbol","delivery_pct",function(){return"up";},4),"NSE delivery",ds.delivery_updated||d.updated),
     card("14","ACCUMULATION / DISTRIBUTION",'<div class="rr-cols"><div><div class="rr-sub">Accumulation</div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},4)+'</div><div><div class="rr-sub">Distribution</div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},4)+'</div></div>',"Derived",d.updated),
-    card("15","GAP RADAR",candleGapRows().length?'<div class="rr-kicker">Intraday OHLC coverage · '+n(Object.keys(STATE.candles||{}).length)+' symbols</div>'+rows(candleGapRows(),"symbol","gap_pct",function(x){return(x.gap_pct||0)>=0?"up":"dn";},8):unavailableBody("Intraday OHLC snapshot unavailable","No candle snapshot is available for the current published run."),"Candles · intraday subset",((STATE.candles&&STATE.candles.updated)||d.updated)),
+    card("15","GAP RADAR",candleGapRows().length?'<div class="rr-kicker">Intraday OHLC coverage · '+n(Object.keys(STATE.candles||{}).length)+' symbols</div>'+rows(candleGapRows(),"symbol","gap_pct",function(x){return(x.gap_pct||0)>=0?"up":"dn";},8):unavailableBody("Intraday OHLC snapshot unavailable","No candle snapshot is available for the current published run."),"Candles · intraday subset",(STATE.candlesUpdated||d.updated)),
     card("16","RELATIVE STRENGTH",row("NIFTY 20D",p(rs.benchmark_return_20d_pct))+rows(rs.leaders,"symbol","relative_strength_20d",function(){return"up";},5)+rows(rs.laggards,"symbol","relative_strength_20d",function(){return"dn";},5),"Derived",d.updated),
     card("18","VOLATILITY EXPANSION",rows(ve.rows,"symbol","vol_expansion",function(x){return(x.vol_expansion||0)>=1?"up":"";},7),"ArthaSaar history",d.updated),
     card("19","RANGE EXPANSION",candleRangeRows().length?'<div class="rr-kicker">Session high-low range · intraday subset</div>'+rows(candleRangeRows(),"symbol","session_range_pct",function(){return"up";},8):unavailableBody("Intraday range snapshot unavailable","Close-to-close volatility proxy remains available in the Radar."),"Candles · intraday subset",((STATE.candles&&STATE.candles.updated)||d.updated)),
@@ -565,7 +565,7 @@ function loadSupport(){
     STATE.futures=vals[2]||{};
     STATE.filings=(vals[3]||{}).filings||[];
     var rr=vals[4]||{};STATE.results={};(rr.results||[]).forEach(function(x){if(x.sym)STATE.results[String(x.sym).toUpperCase()]=x;});
-    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};STATE.candles=(vals[9]||{}).syms||{};maybeNotifyAlerts(STATE.alerts);
+    STATE.alerts=vals[5]||{};STATE.health=vals[6]||{};STATE.marketHistory=vals[7]||{};STATE.signalHistory=vals[8]||{};STATE.candles=(vals[9]||{}).syms||{};STATE.candlesUpdated=(vals[9]||{}).updated||null;maybeNotifyAlerts(STATE.alerts);
   });
 }
 function boot(){

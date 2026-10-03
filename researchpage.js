@@ -52,6 +52,13 @@ function installCSS(){
   if(document.getElementById("rr44-style"))return;
   var s=document.createElement("style");s.id="rr44-style";
   s.textContent=[
+    ".rr-shell{margin-top:8px}.rr-command{border:1px solid var(--border2);background:linear-gradient(180deg,var(--surface),var(--bg2));border-radius:14px;padding:12px;box-shadow:var(--shadow)}",
+    ".rr-command-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.rr-eyebrow{font:700 8px var(--mono);letter-spacing:.18em;color:var(--faint);text-transform:uppercase}.rr-title{font-size:20px;line-height:1.15;margin-top:3px}.rr-subtitle{font:400 9px var(--mono);color:var(--dim);margin-top:4px}.rr-statusline{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}",
+    ".rr-hero-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:10px}.rr-hero-kpi{border:1px solid var(--border);background:color-mix(in srgb,var(--bg2) 84%,transparent);border-radius:10px;padding:8px 9px;min-width:0}.rr-hero-kpi small{display:block;color:var(--faint);font:600 7.5px var(--mono);letter-spacing:.12em}.rr-hero-kpi b{display:block;margin-top:4px;font:700 14px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+    ".rr-tabs{position:sticky;top:0;z-index:20;display:flex;gap:5px;overflow:auto;scrollbar-width:none;padding:8px 0 6px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px)}.rr-tabs::-webkit-scrollbar{display:none}.rr-tab{flex:0 0 auto;border:1px solid var(--border);background:var(--surface);color:var(--dim);border-radius:999px;padding:7px 11px;cursor:pointer;font:700 8.5px var(--mono);letter-spacing:.06em}.rr-tab:hover{color:var(--text);border-color:var(--accent)}.rr-tab.on{background:var(--accent);color:var(--bg);border-color:var(--accent)}",
+    ".rr-panel{display:none}.rr-panel.on{display:block;animation:vi .18s ease}.rr-panel-head{display:flex;align-items:end;justify-content:space-between;gap:8px;margin:9px 0 7px}.rr-panel-head h3{font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase}.rr-panel-head small{font:400 8px var(--mono);color:var(--faint)}",
+    ".rr-module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.rr-module-grid .rr-wide{grid-column:1/-1}.rr-card{border-radius:11px}.rr-card .sh2{padding:8px 10px}.rr-card .zrow{padding:6px 10px;font-size:10px}.rr-card .ni{padding:7px 10px}.rr-card .rr-kicker{padding:7px 10px 3px;font-size:8px}",
+    ".rr-empty{padding:10px;color:var(--faint);font:500 9px var(--mono);border:1px dashed var(--border);border-radius:8px;background:color-mix(in srgb,var(--bg2) 70%,transparent)}.rr-source-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.rr-source-box{padding:8px;border:1px solid var(--border);border-radius:9px;background:var(--bg2)}.rr-source-box small{display:block;color:var(--faint);font:600 7px var(--mono);text-transform:uppercase}.rr-source-box b{display:block;margin-top:4px;font:600 9px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
     ".rr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}",
     ".rr-card{min-width:0}.rr-wide{grid-column:1/-1}",
     ".rr-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.rr-badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}",
@@ -83,7 +90,8 @@ function installCSS(){
     ".rr-note-save{margin-top:7px}.rr-watch{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}.rr-watch-item{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:999px;padding:4px 7px;font:600 8px var(--mono)}.rr-watch-item button{border:0;background:none;color:var(--faint);cursor:pointer}",
     ".rr-replay-body{margin-top:7px;padding:9px;background:var(--bg2);border:1px solid var(--border);border-radius:9px}",
 
-    "@media(max-width:720px){.rr-grid{grid-template-columns:1fr}.rr-wide{grid-column:auto}.rr-cols{grid-template-columns:1fr}.rr-head{align-items:flex-start;flex-direction:column}.rr-badges{justify-content:flex-start}.rr-metric-grid{grid-template-columns:1fr 1fr}}"
+    "@media(max-width:980px){.rr-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rr-hero-kpis{grid-template-columns:repeat(3,1fr)}}",
+    "@media(max-width:720px){.rr-grid{grid-template-columns:1fr}.rr-wide{grid-column:auto}.rr-module-grid{grid-template-columns:1fr}.rr-cols{grid-template-columns:1fr}.rr-head{align-items:flex-start;flex-direction:column}.rr-badges{justify-content:flex-start}.rr-metric-grid{grid-template-columns:1fr 1fr}.rr-command-top{flex-direction:column}.rr-statusline{justify-content:flex-start}.rr-hero-kpis{grid-template-columns:1fr 1fr}.rr-source-strip{grid-template-columns:1fr 1fr}}"
   ].join("");
   document.head.appendChild(s);
 }
@@ -306,6 +314,16 @@ function renderResearchLab(d){
 }
 
 function wireLab(){
+  var activeTab=localGet("artha_research_active_tab","overview");
+  function setTab(tab){
+    document.querySelectorAll("[data-rr-tab]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-rr-tab")===tab);});
+    document.querySelectorAll("[data-rr-panel]").forEach(function(p){p.classList.toggle("on",p.getAttribute("data-rr-panel")===tab);});
+    localSet("artha_research_active_tab",tab);
+    if(tab==="lab"){setTimeout(function(){var rs=document.getElementById("rr-replay-select");if(rs)renderReplay(rs.value);},0);}
+  }
+  document.querySelectorAll("[data-rr-tab]").forEach(function(b){b.addEventListener("click",function(){setTab(b.getAttribute("data-rr-tab"));});});
+  if(document.querySelector('[data-rr-tab="'+activeTab+'"]'))setTab(activeTab);else setTab("overview");
+
   var input=document.getElementById("rr-stock-search"),res=document.getElementById("rr-search-results");
   function paint(q){
     if(!res)return;
@@ -368,55 +386,125 @@ function render(d){
   var fm=f.futures_basis||{},fb=f.fo_buildup||{},bt=f.bulk_followthrough||{},iflow=f.institutional_flow_trend||{};
   var bm=f.breadth_momentum||{},hlb=f.high_low_breadth||{},mc=f.market_concentration||{},nl=f.nifty_leadership||{};
   var ib=f.index_bucket_breadth||{},ls=f.liquidity_stress||{},rel=f.data_reliability||{},rdd=f.data_resilience_detail||{};
+  var ds=d.daily_status||{};
+  var hs=dr.summary||{};
+  var alertCount=(STATE.alerts||{}).count||0, health=(STATE.health||{}).summary||{};
+  var source=ds.membership_source||"public snapshots";
 
-  var html=renderResearchLab(d)+'<div class="rr-grid">';
-  html+=card("01","CORPORATE ACTIONS",eventBody(ca.events),"NSE filings",d.updated);
-  html+=card("02","52-WEEK MAP",row("Near high zone",n(w.new_high_zone_count),"up")+row("Near low zone",n(w.new_low_zone_count),"dn")+rows(w.near_highs,"symbol","from_high_pct",function(){return"up";},4)+rows(w.near_lows,"symbol","from_low_pct",function(){return"dn";},4),"ArthaSaar screener",d.updated);
-  html+=card("03","BREADTH HISTORY",row("Advancers",n((br.today||{}).advancers))+row("Decliners",n((br.today||{}).decliners))+row("Advance ratio",p((br.today||{}).advance_ratio_pct))+row("200D EMA",pct0((br.today||{}).ema200_pct)),"Derived universe",d.updated);
-  html+=card("04","INDEX / CONSTITUENT CHANGES",Object.keys(ix.membership_changes||{}).map(function(k){var z=ix.membership_changes[k]||{};return row(k,(z.added||[]).length+" in · "+(z.removed||[]).length+" out");}).join("")+row("Indices tracked",n(ix.indices_count)),"NSE",d.updated);
-  html+=card("05","RBI / MACRO PULSE",itemList(ma.indicators,function(x){return'<div class="ni"><b>'+esc(x.name||"Macro")+'</b><small>'+esc(x.value||"—")+' · '+esc(x.date||"")+'</small></div>';},6),"RBI/public macro",ma.macro_updated||d.updated);
-  html+=card("06","BULK / BLOCK DEALS",'<div class="rr-cols"><div>'+rows(bb.bulk,"s","t",null,5)+'</div><div>'+rows(bb.block,"s","t",null,5)+'</div></div>',"NSE-derived",bb.updated||d.updated);
-  html+=card("07","RESULTS CALENDAR",rows(re.items,"sym","date",null,8),re.quarter||"Public results",re.updated||d.updated);
-  html+=card("08","SECTOR ROTATION",rows(se.sectors,"sector","avg_1d_pct",function(x){return(x.avg_1d_pct||0)>=0?"up":"dn";},8),"Derived sectors",d.updated);
-  html+=card("09","MARKET REGIME",row("Regime",rg.label||"—")+row("Composite",n(rg.score)+"/4")+row("Breadth",p(rg.advance_ratio_pct))+row("NIFTY 50",p(rg.nifty_change_pct),(rg.nifty_change_pct||0)>=0?"up":"dn"),"Derived, not forecast",d.updated);
-  var hs=dr.summary||{};html+=card("10","DATA RESILIENCE",row("Feeds OK",n(hs.ok)+"/"+n(hs.total))+row("Problems",n(hs.problems),hs.problems?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"Data health",dr.health_updated||d.updated);
+  function grid(a){return '<div class="rr-module-grid">'+a.filter(Boolean).join("")+'</div>';}
+  function empty(msg,meta){return '<div class="rr-empty"><b>'+esc(msg)+'</b>'+(meta?'<div style="margin-top:3px">'+esc(meta)+'</div>':"")+'</div>';}
+  function panelHead(title,sub){return '<div class="rr-panel-head"><h3>'+esc(title)+'</h3><small>'+esc(sub||"")+'</small></div>';}
+  function concBody(){
+    if(!(mc.indices||[]).length)return empty("Concentration weights unavailable","The current free constituents snapshot has membership but no index weights. No synthetic weights are shown.");
+    var rows=mc.indices.map(function(x){return x.available?row(x.index,"Top 10 "+n(x.top10_weight_pct)+"%"):row(x.index,"Weights unavailable");}).join("");
+    return rows || empty("No concentration snapshot","");
+  }
+  function leaderBody(){
+    if(!(nl.leaders||[]).length)return empty("NIFTY leadership waiting","The latest membership fallback is still settling. The daily constituent collector will repopulate this module.");
+    return rows(nl.leaders,"symbol","relative_strength_20d",function(){return"up";},12);
+  }
+  function unavailableBody(title,reason){return empty(title,reason||"This module is not populated by the current free public snapshot.");}
 
-  html+=card("11","52W BREAKOUT RADAR",row("Candidates",n(h.count))+rows(h.rows,"symbol","distance_252_high_pct",function(){return"up";},7),"Derived 252D",d.updated);
-  html+=card("12","VOLUME SHOCK RADAR",rows(vs.rows,"symbol","vol_vs_avg20",function(){return"up";},8),"NSE/Yahoo history",d.updated);
-  html+=card("13","DELIVERY CONVICTION",row("Coverage",n(dc.coverage))+row("Avg delivery",pct0(dc.avg_delivery_pct))+rows(dc.high_delivery_up,"symbol","delivery_pct",function(){return"up";},4),"NSE delivery",d.updated);
-  html+=card("14","PRICE × VOLUME ACCUMULATION",'<div class="rr-cols"><div><div class="rr-sub">Accumulation</div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},5)+'</div><div><div class="rr-sub">Distribution</div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},5)+'</div></div>',"Derived",d.updated);
-  html+=card("15","GAP-UP / GAP-DOWN RADAR",row("Status",gap.available?"LIVE":"WAITING")+'<div class="rr-kicker">'+esc(gap.reason||"")+'</div>',"OHLC dependent",d.updated);
-  html+=card("16","RELATIVE STRENGTH vs NIFTY",row("NIFTY 20D",p(rs.benchmark_return_20d_pct))+rows(rs.leaders,"symbol","relative_strength_20d",function(){return"up";},6)+rows(rs.laggards,"symbol","relative_strength_20d",function(){return"dn";},6),"Derived",d.updated);
-  html+=card("17","SECTOR STRENGTH MATRIX",rows(sm.sectors,"sector","avg_20d_pct",function(x){return(x.avg_20d_pct||0)>=0?"up":"dn";},10),"Derived",d.updated);
-  html+=card("18","VOLATILITY EXPANSION",rows(ve.rows,"symbol","vol_expansion",function(x){return(x.vol_expansion||0)>=1?"up":"";},8),"ArthaSaar history",d.updated);
-  html+=card("19","ATR / RANGE EXPANSION",row("Status",rx.available?"LIVE":"Proxy only")+row("Proxy","Close-to-close volatility")+'<div class="rr-kicker">'+esc(rx.reason||"")+'</div>',"OHLC dependent",d.updated);
-  html+=card("20","MOMENTUM DASHBOARD",row("RSI >60",n((mo.rsi_high||[]).length),"up")+row("RSI <40",n((mo.rsi_low||[]).length),"dn")+row("MACD positive",n((mo.macd_positive||[]).length),"up")+rows(mo.roc_leaders,"symbol","return_20d",function(){return"up";},5),"RSI/MACD/ROC",d.updated);
-  html+=card("21","TREND HEALTH",row("Above EMA200",pct0(th.above_ema200_pct))+rows(th.above_ema200,"symbol","return_20d",function(){return"up";},5)+rows(th.below_ema200,"symbol","return_20d",function(){return"dn";},5),"Derived trend",d.updated);
-  html+=card("22","GOLDEN / DEATH CROSS",row("Golden",n(cross.golden_cross_count),"up")+row("Death",n(cross.death_cross_count),"dn")+rows(cross.golden_candidates,"symbol","return_20d",function(){return"up";},4)+rows(cross.death_candidates,"symbol","return_20d",function(){return"dn";},4),"50D / 200D",d.updated);
-  html+=card("23","52W HIGH / LOW DISTANCE",rows(dm.near_high_200d,"symbol","distance_252_high_pct",function(){return"up";},5)+rows(dm.near_low_200d,"symbol","distance_252_low_pct",function(){return"dn";},5),"252D history",d.updated);
-  html+=card("24","EARNINGS SURPRISE TRACKER",row("Standardized surprise","Unavailable")+row("Upcoming results",n((es.upcoming_results||[]).length))+eventBody(es.results_filing_events),"Public coverage",d.updated);
-  html+=card("25","PROMOTER / INSIDER ACTIVITY",row("Events",n(pi.count))+eventBody(pi.events),"NSE/public filings",d.updated);
-  html+=card("26","PLEDGE / ENCUMBRANCE WATCH",row("Events",n(pl.count))+eventBody(pl.events),"NSE/public filings",d.updated);
-  html+=card("27","CORPORATE ACTION CALENDAR",rows(cc.next_results,"sym","date",null,10),"Results/filings",re.updated||d.updated);
-  html+=card("28","DIVIDEND RADAR",row("Events",n(dv.count))+eventBody(dv.events),"NSE/public filings",d.updated);
-  html+=card("29","BUYBACK / OPEN OFFER",row("Events",n(bo.count))+eventBody(bo.events),"NSE/public filings",d.updated);
-  html+=card("30","F&O OI CHANGE RADAR",rows(foi.rows,"symbol","oi_change_pct",function(x){return(x.oi_change_pct||0)>=0?"up":"dn";},10),"NSE futures",f.futures_updated||d.updated);
-  html+=card("31","OI × PRICE MATRIX",row("Long build",n((fb.counts||{})["LONG BUILD"]),"up")+row("Short build",n((fb.counts||{})["SHORT BUILD"]),"dn")+row("Short cover",n((fb.counts||{})["SHORT COVER"]),"up")+row("Long unwind",n((fb.counts||{})["LONG UNWIND"]),"dn"),"NSE futures",f.futures_updated||d.updated);
-  html+=card("32","PUT / CALL + MAX PAIN",row("PCR OI",n(op.nifty_pcr_oi))+row("PCR volume",n(op.nifty_pcr_vol))+row("Max pain",n(op.max_pain))+row("Expiry",op.expiry||"—")+row("Spot",n(op.spot)),"NSE options",f.futures_updated||d.updated);
-  html+=card("33","FUTURES BASIS / SPREAD",rows(fm.rows,"symbol","basis_pct",function(x){return(x.basis_pct||0)>=0?"up":"dn";},10),"NSE futures",f.futures_updated||d.updated);
-  html+=card("34","LONG / SHORT BUILDUP RADAR",'<div class="rr-cols"><div>'+rows(fb.long_build,"symbol","oi_change_pct",function(){return"up";},5)+rows(fb.short_cover,"symbol","oi_change_pct",function(){return"up";},5)+'</div><div>'+rows(fb.short_build,"symbol","oi_change_pct",function(){return"dn";},5)+rows(fb.long_unwind,"symbol","oi_change_pct",function(){return"dn";},5)+'</div></div>',"NSE futures",f.futures_updated||d.updated);
-  html+=card("35","BULK DEAL FOLLOW-THROUGH",rows(bt.rows,"symbol","change_pct",function(x){return(x.change_pct||0)>=0?"up":"dn";},10),"NSE bulk deals",bb.updated||d.updated);
-  html+=card("36","INSTITUTIONAL FLOW TREND",row("FII current",n((iflow.current||{}).net_cr))+row("DII current",n((iflow.dii_current||{}).net_cr))+row("FII sell days",n(iflow.fii_sell_days),(iflow.fii_sell_days||0)>0?"dn":"up")+rows(iflow.history,"date","fii_net_cr",function(x){return(x.fii_net_cr||0)>=0?"up":"dn";},6),"FII/DII + macro history",d.updated);
-  html+=card("37","MARKET BREADTH MOMENTUM",row("3D up streak",n(bm.three_day_up),"up")+row("3D down streak",n(bm.three_day_down),"dn")+row("Volume >2×",n(bm.volume_spike_2x)),"Universe",d.updated);
-  html+=card("38","NEW HIGH / NEW LOW BREADTH",row("New-high zone",n(hlb.new_high_zone),"up")+row("New-low zone",n(hlb.new_low_zone),"dn")+rows(hlb.near_highs,"symbol","change_pct",function(){return"up";},4)+rows(hlb.near_lows,"symbol","change_pct",function(){return"dn";},4),"Universe",d.updated);
-  html+=card("39","MARKET CONCENTRATION",itemList(mc.indices,function(x){return row(x.index,"Top10 "+n(x.top10_weight_pct)+"%");},4),"NSE constituent weights",d.updated);
-  html+=card("40","NIFTY LEADERSHIP RADAR",rows(nl.leaders,"symbol","relative_strength_20d",function(){return"up";},12),"NIFTY 50 + derived RS",d.updated);
-  html+=card("41","SMALL / MID / LARGE BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"NSE membership",d.updated);
-  html+=card("42","LIQUIDITY STRESS RADAR",row("Low volume <0.5×",n(ls.low_volume_lt_0_5x),"dn")+row("High volume >2×",n(ls.high_volume_gt_2x),"up")+row("History <60D",n(ls.illiquid_history_lt_60d),"dn")+row("Universe",n(ls.coverage)),"ArthaSaar coverage",d.updated);
-  html+=card("43","DATA RELIABILITY SCORE",row("Coverage score",pct0(rel.coverage_score_pct))+row("History ≥200D",pct0(rel.history_ge_200d_pct))+row("Delivery rows",n(rel.delivery_coverage))+row("F&O rows",n(rel.futures_stock_coverage)),"Repo data-health",d.updated);
-  html+=card("44","DATA RESILIENCE DETAIL",row("History files",n(rdd.history_files))+row("EMA200 coverage",pct0(rdd.ema200_coverage_pct))+row("Delivery coverage",n(rdd.delivery_coverage))+row("Futures coverage",n(rdd.futures_stock_coverage))+row("Coverage score",pct0(rdd.coverage_score_pct))+row("EOD fallback","NSE → Yahoo → last valid"),"System health",rdd.health_updated||d.updated);
-  html+='</div><div class="rr-note"><b>Research Lab + 44 free-data modules.</b> Search any stock, open its drill-down, inspect signal history, and review event-study results. Freshness badges are derived from the published snapshot timestamps. No paid API is used.</div>';
-  host.innerHTML=html;
+  var regimeClass=(rg.label||"").indexOf("RISK-OFF")>=0?"dn":(rg.label||"").indexOf("RISK-ON")>=0?"up":"";
+  var radarAge=freshness(d.updated);
+  var sourceStrip=[
+    ["Market brain",ds.market_data_updated],
+    ["Delivery",ds.delivery_updated],
+    ["F&O",ds.futures_updated],
+    ["Research radar",d.updated],
+  ].map(function(x){var fr=freshness(x[1]);return'<div class="rr-source-box"><small>'+esc(x[0])+'</small><b>'+esc(fr.label)+' · '+esc(safeDate(x[1]))+'</b></div>';}).join("");
+
+  var hero='<div class="rr-command">'+
+    '<div class="rr-command-top"><div><div class="rr-eyebrow">ARTHASAAR · RESEARCH TERMINAL</div><div class="rr-title">Daily Market Research</div><div class="rr-subtitle">44 free-data modules · '+esc(source)+' · generated '+esc(safeDate(d.updated))+'</div></div>'+
+    '<div class="rr-statusline">'+sourceBadge("GitHub Actions",d.updated)+'<span class="rr-badge '+(health.problems?"stale":"fresh")+'">'+esc(health.problems?String(health.problems)+" data issues":"DATA HEALTH OK")+'</span><span class="rr-badge rr-source">'+n(alertCount)+" alerts"+'</span></div></div>'+
+    '<div class="rr-hero-kpis">'+
+      '<div class="rr-hero-kpi"><small>REGIME</small><b class="'+regimeClass+'">'+esc(rg.label||"—")+'</b></div>'+
+      '<div class="rr-hero-kpi"><small>NIFTY 50</small><b class="'+((rg.nifty_change_pct||0)>=0?"up":"dn")+'">'+p(rg.nifty_change_pct)+'</b></div>'+
+      '<div class="rr-hero-kpi"><small>BREADTH</small><b>'+p(rg.advance_ratio_pct)+'</b></div>'+
+      '<div class="rr-hero-kpi"><small>EMA200</small><b>'+pct0(rg.ema200_pct)+'</b></div>'+
+      '<div class="rr-hero-kpi"><small>FII NET</small><b class="'+((rg.fii_net_cr||0)>=0?"up":"dn")+'">'+n(rg.fii_net_cr)+'</b></div>'+
+      '<div class="rr-hero-kpi"><small>UNIVERSE</small><b>'+n(rel.stocks||0)+'</b></div>'+
+    '</div>'+
+    '<div class="rr-source-strip">'+sourceStrip+'</div>'+
+  '</div>';
+
+  var tabs=[
+    ["overview","Overview"],["signals","Signals"],["events","Events"],["derivatives","Derivatives"],["structure","Structure"],["lab","Research Lab"]
+  ];
+  var nav='<div class="rr-tabs">'+tabs.map(function(x){return'<button class="rr-tab" data-rr-tab="'+x[0]+'">'+esc(x[1])+'</button>';}).join("")+'</div>';
+
+  var overview=grid([
+    card("09","MARKET REGIME",row("Regime",rg.label||"—",regimeClass)+row("Composite",n(rg.score)+"/4")+row("Breadth",p(rg.advance_ratio_pct))+row("NIFTY 50",p(rg.nifty_change_pct),(rg.nifty_change_pct||0)>=0?"up":"dn"),"Derived, descriptive",d.updated),
+    card("03","MARKET BREADTH",row("Advancers",n((br.today||{}).advancers),"up")+row("Decliners",n((br.today||{}).decliners),"dn")+row("Advance ratio",p((br.today||{}).advance_ratio_pct))+row("200D EMA",pct0((br.today||{}).ema200_pct)),"Derived universe",d.updated),
+    card("02","52-WEEK MAP",row("Near high zone",n(w.new_high_zone_count),"up")+row("Near low zone",n(w.new_low_zone_count),"dn")+rows(w.near_highs,"symbol","from_high_pct",function(){return"up";},3)+rows(w.near_lows,"symbol","from_low_pct",function(){return"dn";},3),"ArthaSaar screener",d.updated),
+    card("08","SECTOR ROTATION",rows(se.sectors,"sector","avg_1d_pct",function(x){return(x.avg_1d_pct||0)>=0?"up":"dn";},7),"Derived sectors",d.updated),
+    card("36","INSTITUTIONAL FLOWS",row("FII current",n((iflow.current||{}).net_cr),(iflow.current&&iflow.current.net_cr||0)>=0?"up":"dn")+row("DII current",n((iflow.dii_current||{}).net_cr),(iflow.dii_current&&iflow.dii_current.net_cr||0)>=0?"up":"dn")+row("FII sell days",n(iflow.fii_sell_days),(iflow.fii_sell_days||0)>0?"dn":"up"),"FII/DII snapshot",d.updated),
+    card("04","INDEX / MEMBERSHIP",Object.keys(ix.membership_changes||{}).map(function(k){var z=ix.membership_changes[k]||{};return row(k,(z.added||[]).length+" in · "+(z.removed||[]).length+" out");}).join("")+row("Indices tracked",n(ix.indices_count))+row("Membership source",source),"NSE/public",d.updated),
+    card("05","RBI / MACRO PULSE",itemList(ma.indicators,function(x){return'<div class="ni"><b>'+esc(x.name||"Macro")+'</b><small>'+esc(x.value||"—")+' · '+esc(x.date||"")+'</small></div>';},5),"RBI/public macro",ma.macro_updated||d.updated),
+    card("10","DATA RESILIENCE",row("Feeds OK",n(hs.ok)+"/"+n(hs.total))+row("Problems",n(hs.problems),hs.problems?"dn":"up")+row("Fallback","NSE → Yahoo → last valid"),"Data health",dr.health_updated||d.updated),
+    card("43","DATA RELIABILITY",row("Coverage",pct0(rel.coverage_score_pct))+row("History ≥200D",pct0(rel.history_ge_200d_pct))+row("EMA200 coverage",pct0(rel.ema200_coverage_pct))+row("Delivery rows",n(rel.delivery_coverage)),"Repo coverage",d.updated),
+    '<div class="card rr-card rr-wide"><div class="sh2 rr-head"><span>DAILY DATA PIPELINE</span><span class="rr-badges">'+sourceBadge("GitHub Actions",d.updated)+'</span></div><div class="rr-kicker">Market collectors run after EOD, the second brain pass self-heals missing snapshots, then Research Radar rebuilds and GitHub Pages republishes the static data. No paid API is required.</div>'+row("Last radar",safeDate(ds.last_radar_update||d.updated))+row("Last market brain",safeDate(ds.market_data_updated))+row("Last delivery",safeDate(ds.delivery_updated))+row("Last F&O",safeDate(ds.futures_updated))+row("Data health",safeDate(ds.data_health_updated))+'</div>'
+  ]);
+
+  var signals=grid([
+    card("11","52W BREAKOUT RADAR",row("Candidates",n(h.count),"up")+rows(h.rows,"symbol","distance_252_high_pct",function(){return"up";},7),"Derived 252D",d.updated),
+    card("12","VOLUME SHOCK",rows(vs.rows,"symbol","vol_vs_avg20",function(){return"up";},7),"NSE/Yahoo history",d.updated),
+    card("13","DELIVERY CONVICTION",row("Coverage",n(dc.coverage))+row("Avg delivery",pct0(dc.avg_delivery_pct))+rows(dc.high_delivery_up,"symbol","delivery_pct",function(){return"up";},4),"NSE delivery",ds.delivery_updated||d.updated),
+    card("14","ACCUMULATION / DISTRIBUTION",'<div class="rr-cols"><div><div class="rr-sub">Accumulation</div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},4)+'</div><div><div class="rr-sub">Distribution</div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},4)+'</div></div>',"Derived",d.updated),
+    card("15","GAP RADAR",gap.available?rows(gap.rows,"symbol","gap_pct",function(){return"up";},8):unavailableBody("OHLC open prices not stored",gap.reason),"OHLC dependent",d.updated),
+    card("16","RELATIVE STRENGTH",row("NIFTY 20D",p(rs.benchmark_return_20d_pct))+rows(rs.leaders,"symbol","relative_strength_20d",function(){return"up";},5)+rows(rs.laggards,"symbol","relative_strength_20d",function(){return"dn";},5),"Derived",d.updated),
+    card("18","VOLATILITY EXPANSION",rows(ve.rows,"symbol","vol_expansion",function(x){return(x.vol_expansion||0)>=1?"up":"";},7),"ArthaSaar history",d.updated),
+    card("19","RANGE EXPANSION",rx.available?rows(rx.rows||[],"symbol","atr_pct",function(){return"up";},7):unavailableBody("True ATR waiting on OHLC","Close-to-close volatility proxy is available; true ATR is not fabricated."),"OHLC dependent",d.updated),
+    card("20","MOMENTUM DASHBOARD",row("RSI >60",n((mo.rsi_high||[]).length),"up")+row("RSI <40",n((mo.rsi_low||[]).length),"dn")+row("MACD positive",n((mo.macd_positive||[]).length),"up")+rows(mo.roc_leaders,"symbol","return_20d",function(){return"up";},5),"RSI/MACD/ROC",d.updated),
+    card("21","TREND HEALTH",row("Above EMA200",pct0(th.above_ema200_pct))+rows(th.above_ema200,"symbol","return_20d",function(){return"up";},4)+rows(th.below_ema200,"symbol","return_20d",function(){return"dn";},4),"Derived trend",d.updated),
+    card("22","GOLDEN / DEATH CROSS",row("Golden",n(cross.golden_cross_count),"up")+row("Death",n(cross.death_cross_count),"dn")+rows(cross.golden_candidates,"symbol","return_20d",function(){return"up";},3)+rows(cross.death_candidates,"symbol","return_20d",function(){return"dn";},3),"50D / 200D",d.updated),
+    card("23","52W DISTANCE MAP",rows(dm.near_high_200d,"symbol","distance_252_high_pct",function(){return"up";},4)+rows(dm.near_low_200d,"symbol","distance_252_low_pct",function(){return"dn";},4),"252D history",d.updated),
+    card("37","BREADTH MOMENTUM",row("3D up streak",n(bm.three_day_up),"up")+row("3D down streak",n(bm.three_day_down),"dn")+row("Volume >2×",n(bm.volume_spike_2x)),"Universe",d.updated),
+    card("38","NEW HIGH / LOW BREADTH",row("New-high zone",n(hlb.new_high_zone),"up")+row("New-low zone",n(hlb.new_low_zone),"dn")+rows(hlb.near_highs,"symbol","change_pct",function(){return"up";},3)+rows(hlb.near_lows,"symbol","change_pct",function(){return"dn";},3),"Universe",d.updated),
+    card("42","LIQUIDITY STRESS",row("Low volume <0.5×",n(ls.low_volume_lt_0_5x),"dn")+row("High volume >2×",n(ls.high_volume_gt_2x),"up")+row("History <60D",n(ls.illiquid_history_lt_60d),"dn")+row("Universe",n(ls.coverage)),"ArthaSaar coverage",d.updated)
+  ]);
+
+  var events=grid([
+    card("01","CORPORATE ACTIONS",eventBody(ca.events),"NSE filings",d.updated),
+    card("06","BULK / BLOCK DEALS",'<div class="rr-cols"><div>'+rows(bb.bulk,"s","t",null,4)+'</div><div>'+rows(bb.block,"s","t",null,4)+'</div></div>',"NSE-derived",bb.updated||d.updated),
+    card("07","RESULTS CALENDAR",rows(re.items,"sym","date",null,7),re.quarter||"Public results",re.updated||d.updated),
+    card("24","EARNINGS SURPRISE",row("Standardized surprise","Unavailable")+row("Upcoming results",n((es.upcoming_results||[]).length))+eventBody(es.results_filing_events),"Public coverage",d.updated),
+    card("25","PROMOTER / INSIDER",row("Events",n(pi.count))+eventBody(pi.events),"NSE/public filings",d.updated),
+    card("26","PLEDGE / ENCUMBRANCE",row("Events",n(pl.count))+eventBody(pl.events),"NSE/public filings",d.updated),
+    card("27","CORPORATE CALENDAR",rows(cc.next_results,"sym","date",null,8),"Results/filings",re.updated||d.updated),
+    card("28","DIVIDEND RADAR",row("Events",n(dv.count))+eventBody(dv.events),"NSE/public filings",d.updated),
+    card("29","BUYBACK / OPEN OFFER",row("Events",n(bo.count))+eventBody(bo.events),"NSE/public filings",d.updated),
+    card("35","BULK FOLLOW-THROUGH",rows(bt.rows,"symbol","change_pct",function(x){return(x.change_pct||0)>=0?"up":"dn";},8),"NSE bulk deals",bb.updated||d.updated)
+  ]);
+
+  var derivatives=grid([
+    card("30","F&O OI CHANGE",rows(foi.rows,"symbol","oi_change_pct",function(x){return(x.oi_change_pct||0)>=0?"up":"dn";},9),"NSE futures",ds.futures_updated||d.updated),
+    card("31","OI × PRICE MATRIX",row("Long build",n((fb.counts||{})["LONG BUILD"]),"up")+row("Short build",n((fb.counts||{})["SHORT BUILD"]),"dn")+row("Short cover",n((fb.counts||{})["SHORT COVER"]),"up")+row("Long unwind",n((fb.counts||{})["LONG UNWIND"]),"dn"),"NSE futures",ds.futures_updated||d.updated),
+    card("32","PUT / CALL + MAX PAIN",row("PCR OI",n(op.nifty_pcr_oi))+row("PCR volume",n(op.nifty_pcr_vol))+row("Max pain",n(op.max_pain))+row("Expiry",op.expiry||"—")+row("Spot",n(op.spot)),"NSE options",ds.futures_updated||d.updated),
+    card("33","FUTURES BASIS",rows(fm.rows,"symbol","basis_pct",function(x){return(x.basis_pct||0)>=0?"up":"dn";},9),"NSE futures",ds.futures_updated||d.updated),
+    card("34","LONG / SHORT BUILDUP",'<div class="rr-cols"><div>'+rows(fb.long_build,"symbol","oi_change_pct",function(){return"up";},4)+rows(fb.short_cover,"symbol","oi_change_pct",function(){return"up";},4)+'</div><div>'+rows(fb.short_build,"symbol","oi_change_pct",function(){return"dn";},4)+rows(fb.long_unwind,"symbol","oi_change_pct",function(){return"dn";},4)+'</div></div>',"NSE futures",ds.futures_updated||d.updated),
+    '<div class="card rr-card rr-wide"><div class="sh2 rr-head"><span>DERIVATIVES DATA NOTE</span><span class="rr-badges">'+sourceBadge("NSE EOD",ds.futures_updated||d.updated)+'</span></div>'+row("Coverage",n(foi.coverage))+row("Snapshot date",(STATE.futures||{}).date||"—")+row("Live socket","Not used")+row("Policy","EOD public data only")+'</div>'
+  ]);
+
+  var structure=grid([
+    card("17","SECTOR STRENGTH MATRIX",rows(sm.sectors,"sector","avg_20d_pct",function(x){return(x.avg_20d_pct||0)>=0?"up":"dn";},10),"Derived",d.updated),
+    card("39","MARKET CONCENTRATION",concBody(),"NSE weights when available",d.updated),
+    card("40","NIFTY LEADERSHIP",leaderBody(),"NIFTY 50 + derived RS",d.updated),
+    card("41","INDEX BUCKET BREADTH",rows(ib.buckets,"bucket","breadth_pct",function(x){return(x.breadth_pct||0)>=50?"up":"dn";},4),"NSE/public membership",d.updated),
+    card("14","PRICE × VOLUME CONTEXT",'<div class="rr-cols"><div>'+rows(ad.accumulation,"symbol","volume_ratio",function(){return"up";},4)+'</div><div>'+rows(ad.distribution,"symbol","volume_ratio",function(){return"dn";},4)+'</div></div>',"Derived",d.updated),
+    card("43","DATA COVERAGE",row("History files",n(rdd.history_files))+row("History ≥200D",pct0(rdd.history_ge_200d_pct))+row("EMA200",pct0(rdd.ema200_coverage_pct))+row("Delivery",n(rdd.delivery_coverage))+row("Futures",n(rdd.futures_stock_coverage)),"System coverage",rdd.health_updated||d.updated)
+  ]);
+
+  var lab='<div class="rr-panel-content">'+renderResearchLab(d)+'</div>';
+
+  host.innerHTML=hero+nav+
+    '<section class="rr-panel on" data-rr-panel="overview">'+panelHead("Market overview","Start here for the daily research brief")+overview+'</section>'+
+    '<section class="rr-panel" data-rr-panel="signals">'+panelHead("Signals & technical context","Derived from committed EOD/history snapshots")+signals+'</section>'+
+    '<section class="rr-panel" data-rr-panel="events">'+panelHead("Events & corporate research","Exchange filings, results and deal context")+events+'</section>'+
+    '<section class="rr-panel" data-rr-panel="derivatives">'+panelHead("Derivatives terminal","Futures, OI build-up, basis and index options")+derivatives+'</section>'+
+    '<section class="rr-panel" data-rr-panel="structure">'+panelHead("Market structure","Sectors, index buckets and leadership")+structure+'</section>'+
+    '<section class="rr-panel" data-rr-panel="lab">'+panelHead("Research Lab","Replay, stock drill-down, compare, notebook, backtests and data health")+lab+'</section>'+
+    '<div class="rr-note"><b>Data contract.</b> Every research card is either <b>observed</b> from a public snapshot, <b>calculated</b> by ArthaSaar, <b>historical</b> from stored series, or explicitly <b>unavailable</b> when the free dataset lacks required fields. No blank values are invented.</div>';
   wireLab();
 }
 

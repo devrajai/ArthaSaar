@@ -1,6 +1,6 @@
 symbol,company,industry,tier,price,change_pct,high_52w,low_52w,high_200d,low_200d,from_52w_high_pct,ema20,ema200,above_ema200,rsi14,macd,macd_signal,macd_hist,vol_vs_avg20,consec_days,history_days,price_source,eod_date
 360ONE,360 ONE WAM Ltd.,Financial Services,1,1040.0,0.0,1210.0,923.89,1210.0,923.89,-14.05,1075.56,1104.91,False,36.05,-26.923,-24.74,-2.183,1.21,0,261,NSE EOD + Yahoo historical,2026-10-02
-ABB,ABB India Ltd.,Capital Goods,1,6900.0,0.0,7710.0,4618.02,7710.0,4618.02,-10.51,7086.1,6671.23,True,39.33,-142.993,-115.299,-27.694,1.35,0,262,NSE EOD + Yahoo historical,2026-10-02
+ABB,ABB India Ltd.,Capital Goods,1,6900.0,0.0,7710.0,4618.03,7710.0,4618.03,-10.51,7086.1,6671.23,True,39.33,-142.993,-115.299,-27.694,1.35,0,262,NSE EOD + Yahoo historical,2026-10-02
 ACC,ACC Ltd.,Construction Materials,1,1182.8,0.0,1902.69,1182.8,1772.25,1182.8,-37.84,1233.39,1426.33,False,27.48,-26.327,-22.879,-3.448,1.02,0,262,NSE EOD + Yahoo historical,2026-10-02
 ACMESOLAR,ACME Solar Holdings Ltd.,Power,1,432.55,0.0,458.65,198.78,458.65,198.78,-5.69,428.32,340.68,True,56.39,11.261,13.037,-1.776,0.44,0,262,NSE EOD + Yahoo historical,2026-10-02
 AIAENG,AIA Engineering Ltd.,Capital Goods,1,3824.4,0.0,5062.37,3041.87,5062.37,3303.48,-24.45,3978.3,4088.11,False,32.34,-123.689,-125.276,1.587,0.52,0,259,NSE EOD + Yahoo historical,2026-10-02
@@ -300,7 +300,7 @@ LLOYDSME,Lloyds Metals And Energy Ltd.,Metals & Mining,1,1776.8,0.0,2101.2,1097.
 LODHA,Lodha Developers Ltd.,Realty,1,1105.6,0.0,1311.74,674.63,1311.74,674.63,-15.72,1142.59,1081.03,True,41.48,-19.978,-18.731,-1.248,1.15,0,262,NSE EOD + Yahoo historical,2026-10-02
 LUPIN,Lupin Ltd.,Healthcare,1,2031.2,0.0,2514.8,1891.88,2514.8,2030.2,-19.23,2089.64,2214.07,False,31.7,-40.011,-40.254,0.243,1.24,0,262,NSE EOD + Yahoo historical,2026-10-02
 MMTC,MMTC Ltd.,Services,1,56.29,0.0,76.03,52.1,76.03,52.1,-25.96,59.2,63.46,False,28.68,-1.747,-1.417,-0.33,0.96,0,262,NSE EOD + Yahoo historical,2026-10-02
-MRF,MRF Ltd.,Automobile and Auto Components,1,123715.0,0.0,162005.81,122381.4,153628.81,122381.4,-23.64,125812.01,134089.07,False,35.57,-1867.783,-1911.28,43.497,1.14,0,261,NSE EOD + Yahoo historical,2026-10-02
+MRF,MRF Ltd.,Automobile and Auto Components,1,123715.0,0.0,162005.8,122381.4,153628.8,122381.4,-23.64,125812.01,134089.07,False,35.57,-1867.783,-1911.28,43.497,1.14,0,261,NSE EOD + Yahoo historical,2026-10-02
 MTARTECH,MTAR Technologies Ltd.,Capital Goods,1,7797.0,0.0,8374.5,1880.7,8374.5,2306.0,-6.9,7296.11,5715.29,True,62.62,163.664,99.728,63.936,2.05,0,254,NSE EOD + Yahoo historical,2026-10-02
 MGL,Mahanagar Gas Ltd.,Oil Gas & Consumable Fuels,1,1045.4,0.0,1279.21,893.92,1225.64,893.92,-18.28,1070.13,1108.48,False,39.72,-11.617,-8.667,-2.95,1.67,0,261,NSE EOD + Yahoo historical,2026-10-02
 M&MFIN,Mahindra & Mahindra Financial Services Ltd.,Financial Services,1,319.75,0.0,412.3,269.63,412.3,269.63,-22.45,343.42,335.2,False,24.52,-12.516,-9.812,-2.704,1.71,0,262,NSE EOD + Yahoo historical,2026-10-02
@@ -702,7 +702,7 @@ BANSALWIRE,Bansal Wire Industries Limited,,2,323.05,0.0,365.8,224.95,365.8,224.9
 BANSWRAS,Banswara Syntex Limited,,2,105.1,0.0,136.73,95.35,136.73,95.35,-23.13,110.41,118.97,False,32.53,-2.992,-2.731,-0.261,0.85,0,260,NSE EOD + Yahoo historical,2026-10-02
 BASF,BASF India Limited,,2,3417.1,0.0,4656.17,3142.26,4134.2,3142.26,-26.61,3575.25,3763.0,False,30.32,-96.007,-81.79,-14.217,0.6,0,262,NSE EOD + Yahoo historical,2026-10-02
 BATLIBOI,Batliboi Limited,,2,82.35,0.0,102.67,15.59,102.67,15.59,-19.79,84.1,63.27,True,45.21,-0.937,-0.861,-0.076,0.77,0,123,NSE EOD + Yahoo historical,2026-10-02
-BAYERCROP,Bayer Cropscience Limited,,2,3554.2,0.0,4942.0,3554.2,4920.38,3554.2,-28.08,3770.95,4271.18,False,15.53,-119.366,-96.725,-22.641,0.66,0,262,NSE EOD + Yahoo historical,2026-10-02
+BAYERCROP,Bayer Cropscience Limited,,2,3554.2,0.0,4942.01,3554.2,4920.38,3554.2,-28.08,3770.95,4271.18,False,15.53,-119.366,-96.725,-22.641,0.66,0,262,NSE EOD + Yahoo historical,2026-10-02
 BBL,Bharat Bijlee Limited,,2,2069.6,0.0,3275.72,2042.23,3174.94,2042.23,-36.82,2181.69,2550.94,False,26.76,-64.007,-56.581,-7.427,1.57,0,262,NSE EOD + Yahoo historical,2026-10-02
 BBTC,The Bombay Burmah Trading Corporation Limited,,2,1334.2,0.0,2083.07,1322.0,1885.97,1322.0,-35.95,1418.2,1571.01,False,33.23,-32.682,-20.507,-12.175,0.44,0,261,NSE EOD + Yahoo historical,2026-10-02
 BBTCL,B&B Triplewall Containers Limited,,2,229.49,0.0,247.06,159.06,247.06,159.06,-7.11,229.46,211.64,True,50.4,0.146,0.346,-0.199,0.64,0,259,NSE EOD + Yahoo historical,2026-10-02

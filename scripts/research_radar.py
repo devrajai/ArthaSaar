@@ -738,16 +738,16 @@ def index_bucket_breadth(members, stocks):
     n100=sets.get("NIFTY 100",set())
     n200=sets.get("NIFTY 200",set())
     buckets=[
-        ("NIFTY 50",n50),
-        ("NIFTY 100 ex-50",n100-n50),
-        ("NIFTY 200 ex-100",n200-n100),
-        ("Outside NIFTY 200",set(smap)-n200)
+        ("NIFTY 50",n50,True,"NSE/NIFTY 50 constituent snapshot"),
+        ("NIFTY 100 ex-50",n100-n50,bool(n100),"NIFTY 100 membership is not currently present in the free local snapshot"),
+        ("NIFTY 200 ex-100",n200-n100,bool(n200),"NIFTY 200 membership is not currently present in the free local snapshot"),
+        ("Outside NIFTY 200",set(smap)-n200,True,"Derived remainder of the searchable universe")
     ]
     out=[]
-    for name,syms in buckets:
+    for name,syms,available,reason in buckets:
         vals=[smap[x].get("change_pct") for x in syms if x in smap and smap[x].get("change_pct") is not None]
-        out.append({"bucket":name,"stocks":len(vals),"advancers":sum(1 for x in vals if x>0),"decliners":sum(1 for x in vals if x<0),
-                    "breadth_pct":round(100*sum(1 for x in vals if x>0)/len(vals),1) if vals else 0})
+        out.append({"bucket":name,"available":available,"stocks":len(vals),"advancers":sum(1 for x in vals if x>0),"decliners":sum(1 for x in vals if x<0),
+                    "breadth_pct":round(100*sum(1 for x in vals if x>0)/len(vals),1) if vals else None,"reason":reason if not available else None})
     return out
 
 def concentration_feature(members):

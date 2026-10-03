@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03T18:27:40.113059+00:00",
+ "updated": "2026-10-03T18:35:32.263318+00:00",
  "healthy": false,
  "summary": {
   "total": 20,
@@ -14,7 +14,7 @@
    "file": "data/brain-screener.json",
    "status": "ok",
    "updated": "2026-10-03T18:24:35.206377+00:00",
-   "age_hours": 0.1,
+   "age_hours": 0.2,
    "max_age_hours": 72.0,
    "coverage": "2,288 screened stocks"
   },
@@ -25,7 +25,7 @@
    "file": "data/indices-all.json",
    "status": "ok",
    "updated": "2026-10-03T18:24:54.256699+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.2,
    "max_age_hours": 72.0,
    "coverage": "139 indices"
   },
@@ -36,7 +36,7 @@
    "file": "data/fii-dii.json",
    "status": "ok",
    "updated": "2026-10-03T18:24:55.072527+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.2,
    "max_age_hours": 72.0,
    "coverage": "Cash market activity"
   },
@@ -47,7 +47,7 @@
    "file": "data/delivery.json",
    "status": "ok",
    "updated": "02 Oct 2026, 19:28 IST",
-   "age_hours": 28.5,
+   "age_hours": 28.6,
    "max_age_hours": 72.0,
    "coverage": "2,662 securities in latest snapshot"
   },
@@ -58,7 +58,7 @@
    "file": "data/futures.json",
    "status": "ok",
    "updated": "2026-10-02T13:59:49.572414+00:00",
-   "age_hours": 28.5,
+   "age_hours": 28.6,
    "max_age_hours": 72.0,
    "coverage": "Index chains + 80 stock futures"
   },
@@ -68,7 +68,7 @@
    "source": "Yahoo Finance via yfinance",
    "file": "data/history/",
    "status": "ok",
-   "updated": "2026-10-03T18:25:45.302139+00:00",
+   "updated": "2026-10-03T18:35:32.129387+00:00",
    "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "2943 symbol history files"
@@ -80,7 +80,7 @@
    "file": "data/mf.json",
    "status": "ok",
    "updated": "2026-10-02T23:53:14.323318+00:00",
-   "age_hours": 18.6,
+   "age_hours": 18.7,
    "max_age_hours": 72.0,
    "coverage": "All schemes available from AMFI NAV download"
   },
@@ -91,7 +91,7 @@
    "file": "data/news.json + data/news-volume.json",
    "status": "ok",
    "updated": "2026-10-03T17:11:39.512353+00:00",
-   "age_hours": 1.3,
+   "age_hours": 1.4,
    "max_age_hours": 72.0,
    "coverage": "60 headlines + 41 company trackers"
   },
@@ -102,7 +102,7 @@
    "file": "data/crypto.json",
    "status": "ok",
    "updated": "2026-10-03T15:01:17.547079+00:00",
-   "age_hours": 3.4,
+   "age_hours": 3.6,
    "max_age_hours": 72.0,
    "coverage": "Top 100"
   },
@@ -113,7 +113,7 @@
    "file": "data/breadth.json + data/gti.json + data/xray.json",
    "status": "ok",
    "updated": "2026-10-03T18:24:35.238446+00:00",
-   "age_hours": 0.1,
+   "age_hours": 0.2,
    "max_age_hours": 72.0,
    "coverage": "Model-dependent"
   },
@@ -124,7 +124,7 @@
    "file": "data/index-history.json",
    "status": "ok",
    "updated": "2026-09-27T02:37:04.286141+00:00",
-   "age_hours": 159.8,
+   "age_hours": 160.0,
    "max_age_hours": 168.0,
    "coverage": "139+ NSE indices"
   },
@@ -135,7 +135,7 @@
    "file": "data/research-radar.json",
    "status": "ok",
    "updated": "2026-10-03T18:27:36.280333+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.1,
    "max_age_hours": 72.0,
    "coverage": "44 research modules"
   },
@@ -146,7 +146,7 @@
    "file": "data/research-alerts.json",
    "status": "ok",
    "updated": "2026-10-03T18:27:40.063294+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.1,
    "max_age_hours": 72.0,
    "coverage": "Breakout, volume, delivery, F&O, index and filing alerts"
   },
@@ -157,7 +157,7 @@
    "file": "data/research-signal-history.json + data/research-market-history.json",
    "status": "ok",
    "updated": "2026-10-03T18:27:36.294563+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.1,
    "max_age_hours": 96.0,
    "coverage": "Historical signal outcomes, breadth replay and research snapshots"
   },
@@ -168,7 +168,7 @@
    "file": "data/research-signal-history.json",
    "status": "ok",
    "updated": "2026-10-03T18:27:32.631646+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.1,
    "max_age_hours": 168.0,
    "coverage": "Historical signal outcome events"
   },
@@ -179,7 +179,7 @@
    "file": "data/index-membership-history.json",
    "status": "ok",
    "updated": "2026-10-03T18:27:31.289582+00:00",
-   "age_hours": 0.0,
+   "age_hours": 0.1,
    "max_age_hours": 168.0,
    "coverage": "NIFTY 50/100/200 snapshots"
   },
@@ -190,7 +190,7 @@
    "file": "data/candles.json",
    "status": "ok",
    "updated": "2026-10-02T16:02",
-   "age_hours": 26.4,
+   "age_hours": 26.6,
    "max_age_hours": 48.0,
    "coverage": "15 actively tracked symbols"
   },

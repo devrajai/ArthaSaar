@@ -700,6 +700,7 @@ def main():
                              "illiquid_history_lt_60d":sum(1 for s in stocks if (s.get("history_days") or 0)<60),
                              "coverage":len(stocks)},
         "data_reliability": resilience_detail(stocks,delivery,futures_obj,hmap),
+        "data_resilience_detail": {**resilience_detail(stocks,delivery,futures_obj,hmap), "health_summary": health.get("summary") or {}, "health_updated": health.get("updated")},
       },
       "notes": [
         "All sections are EOD / snapshot research unless a source explicitly says otherwise.",

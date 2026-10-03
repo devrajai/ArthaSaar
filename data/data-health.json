@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03T11:54:54.644558+00:00",
+ "updated": "2026-10-03T11:56:30.669233+00:00",
  "healthy": true,
  "summary": {
   "total": 17,
@@ -47,7 +47,7 @@
    "file": "data/delivery.json",
    "status": "ok",
    "updated": "02 Oct 2026, 19:28 IST",
-   "age_hours": 21.9,
+   "age_hours": 22.0,
    "max_age_hours": 72.0,
    "coverage": "2,662 securities in latest snapshot"
   },
@@ -68,7 +68,7 @@
    "source": "Yahoo Finance via yfinance",
    "file": "data/history/",
    "status": "ok",
-   "updated": "2026-10-03T11:54:54.510417+00:00",
+   "updated": "2026-10-03T11:56:30.535409+00:00",
    "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "2350 symbol history files"
@@ -80,7 +80,7 @@
    "file": "data/mf.json",
    "status": "ok",
    "updated": "2026-10-02T23:53:14.323318+00:00",
-   "age_hours": 12.0,
+   "age_hours": 12.1,
    "max_age_hours": 72.0,
    "coverage": "All schemes available from AMFI NAV download"
   },
@@ -91,7 +91,7 @@
    "file": "data/news.json + data/news-volume.json",
    "status": "ok",
    "updated": "2026-10-03T07:04:15.237815+00:00",
-   "age_hours": 4.8,
+   "age_hours": 4.9,
    "max_age_hours": 72.0,
    "coverage": "60 headlines + 41 company trackers"
   },
@@ -135,7 +135,7 @@
    "file": "data/research-radar.json",
    "status": "ok",
    "updated": "2026-10-03T08:04:16.886698+00:00",
-   "age_hours": 3.8,
+   "age_hours": 3.9,
    "max_age_hours": 72.0,
    "coverage": "44 research modules"
   },
@@ -146,7 +146,7 @@
    "file": "data/research-alerts.json",
    "status": "ok",
    "updated": "2026-10-03T08:04:22.631275+00:00",
-   "age_hours": 3.8,
+   "age_hours": 3.9,
    "max_age_hours": 72.0,
    "coverage": "Breakout, volume, delivery, F&O, index and filing alerts"
   },
@@ -157,7 +157,7 @@
    "file": "data/research-signal-history.json + data/research-market-history.json",
    "status": "ok",
    "updated": "2026-10-03T08:04:16.909786+00:00",
-   "age_hours": 3.8,
+   "age_hours": 3.9,
    "max_age_hours": 96.0,
    "coverage": "Historical signal outcomes, breadth replay and research snapshots"
   },
@@ -168,7 +168,7 @@
    "file": "data/research-signal-history.json",
    "status": "ok",
    "updated": "2026-10-03T08:04:11.194098+00:00",
-   "age_hours": 3.8,
+   "age_hours": 3.9,
    "max_age_hours": 168.0,
    "coverage": "Historical signal outcome events"
   },
@@ -179,7 +179,7 @@
    "file": "data/index-membership-history.json",
    "status": "ok",
    "updated": "2026-10-03T08:04:09.367838+00:00",
-   "age_hours": 3.8,
+   "age_hours": 3.9,
    "max_age_hours": 168.0,
    "coverage": "NIFTY 50/100/200 snapshots"
   },

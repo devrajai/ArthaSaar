@@ -4,12 +4,6 @@ on:
     # 20:00 IST daily
     - cron: '30 14 * * *'
   workflow_dispatch:
-  push:
-    paths:
-      - 'data/source-registry.json'
-      - 'scripts/data_health.py'
-      - 'data/*.json'
-      - 'data/history-index.json'
 
 permissions:
   contents: write

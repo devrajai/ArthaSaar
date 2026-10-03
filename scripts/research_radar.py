@@ -422,6 +422,140 @@ def backtest_signals():
         "signals": stats
     }
 
+
+
+def update_membership_history(current):
+    history_obj = load("index-membership-history.json", {})
+    today = datetime.now(timezone.utc).date().isoformat()
+    daily = [x for x in (history_obj.get("daily") or []) if x.get("date") != today]
+    snap = {"date": today, "indices": {}}
+    for idx, obj in current.items():
+        members = obj.get("members") or {}
+        snap["indices"][idx] = {
+            "source": obj.get("source"),
+            "source_url": obj.get("source_url"),
+            "count": len(members),
+            "members": sorted(members.keys()),
+            "weights": {k:v.get("weight_pct") for k,v in members.items() if v.get("weight_pct") is not None}
+        }
+    daily.append(snap)
+    daily.sort(key=lambda x: x.get("date",""))
+    out = {"updated": datetime.now(timezone.utc).isoformat(), "daily": daily[-KEEP_HISTORY:]}
+    save("index-membership-history.json", out)
+    return out
+
+def membership_on_date(membership_history, date, index_name):
+    daily = membership_history.get("daily") or []
+    exact = None
+    prior = None
+    for d in daily:
+        if d.get("date") == date:
+            exact = d
+            break
+        if d.get("date","") <= str(date):
+            prior = d
+    snap = exact or prior
+    if not snap:
+        return set()
+    return set(((snap.get("indices") or {}).get(index_name) or {}).get("members") or [])
+
+def current_signal_candidates(rows, delivery, fo_rows, today):
+    out = []
+    dmap = delivery.get("d") or {}
+    fmap = {str(x.get("symbol") or "").upper():x for x in fo_rows}
+    for x in rows:
+        sym = str(x.get("symbol") or "").upper()
+        if not sym or x.get("price") is None:
+            continue
+        dv = num(dmap.get(sym))
+        if x.get("distance_252_high_pct") is not None and x["distance_252_high_pct"] >= -0.75:
+            out.append({"date":today,"symbol":sym,"signal":"52W_BREAKOUT_ZONE","entry_price":x.get("price"),"reason":"Within 0.75% of 252D high","source":"ArthaSaar history"})
+        if x.get("vol_vs_avg20") is not None and x["vol_vs_avg20"] >= 2:
+            out.append({"date":today,"symbol":sym,"signal":"VOLUME_SHOCK_2X","entry_price":x.get("price"),"reason":"Volume >= 2x 20D average","source":"ArthaSaar screener"})
+        if x.get("above_ema200") is True:
+            out.append({"date":today,"symbol":sym,"signal":"ABOVE_EMA200","entry_price":x.get("price"),"reason":"Price above EMA200","source":"ArthaSaar screener"})
+        if dv is not None and dv >= 60:
+            out.append({"date":today,"symbol":sym,"signal":"DELIVERY_60_PLUS","entry_price":x.get("price"),"reason":"Delivery >= 60%","source":"NSE delivery"})
+        if x.get("return_20d") is not None and x["return_20d"] >= 5:
+            out.append({"date":today,"symbol":sym,"signal":"MOMENTUM_20D_5_PLUS","entry_price":x.get("price"),"reason":"20D return >= 5%","source":"ArthaSaar history"})
+        f = fmap.get(sym)
+        if f and f.get("oi_change",0) > 0 and num(x.get("change_pct")) is not None:
+            if num(x.get("change_pct")) > 0:
+                out.append({"date":today,"symbol":sym,"signal":"LONG_BUILD_STYLE","entry_price":x.get("price"),"reason":"Price up + OI up","source":"NSE futures"})
+            elif num(x.get("change_pct")) < 0:
+                out.append({"date":today,"symbol":sym,"signal":"SHORT_BUILD_STYLE","entry_price":x.get("price"),"reason":"Price down + OI up","source":"NSE futures"})
+    # Avoid excessive duplication per symbol/signal/date.
+    uniq, seen = [], set()
+    for x in out:
+        k=(x.get("date"),x.get("symbol"),x.get("signal"))
+        if k in seen: continue
+        seen.add(k); uniq.append(x)
+    return uniq[:600]
+
+def update_signal_outcomes(current_candidates):
+    history_obj = load("research-signal-history.json", {})
+    records = history_obj.get("records") or []
+    bykey = {(x.get("date"),x.get("symbol"),x.get("signal")):x for x in records}
+    for x in current_candidates:
+        bykey[(x.get("date"),x.get("symbol"),x.get("signal"))] = {**bykey.get((x.get("date"),x.get("symbol"),x.get("signal")),{}), **x}
+    # Resolve outcomes from stored historical close series without looking ahead.
+    for rec in bykey.values():
+        if rec.get("outcome_status") == "complete":
+            continue
+        fp = DATA / "history" / (str(rec.get("symbol")) + ".json")
+        try:
+            arr = json.loads(fp.read_text(encoding="utf-8"))
+            rows = [r for r in arr if isinstance(r,dict) and num(r.get("close")) not in (None,0)]
+            rows.sort(key=lambda r:str(r.get("date") or ""))
+            idx = next((i for i,r in enumerate(rows) if str(r.get("date")) == str(rec.get("date"))), None)
+            if idx is None:
+                continue
+            base = num(rows[idx].get("close"))
+            if base in (None,0):
+                continue
+            for n,key in ((1,"outcome_1d_pct"),(5,"outcome_5d_pct"),(20,"outcome_20d_pct")):
+                if idx+n < len(rows):
+                    rec[key] = pct_change(num(rows[idx+n].get("close")), base)
+            rec["outcome_status"] = "complete" if rec.get("outcome_20d_pct") is not None else "pending"
+        except Exception:
+            continue
+    ordered = sorted(bykey.values(), key=lambda x:(str(x.get("date") or ""),str(x.get("symbol") or "")), reverse=True)[:5000]
+    completed = [x for x in ordered if x.get("outcome_status")=="complete"]
+    aggregate = {}
+    for x in completed:
+        s=aggregate.setdefault(x.get("signal"),{"observations":0,"outcome_5d":[],"outcome_20d":[]})
+        s["observations"] += 1
+        if x.get("outcome_5d_pct") is not None: s["outcome_5d"].append(x.get("outcome_5d_pct"))
+        if x.get("outcome_20d_pct") is not None: s["outcome_20d"].append(x.get("outcome_20d_pct"))
+    for k,v in aggregate.items():
+        v["next5_mean_pct"]=round(mean(v["outcome_5d"]),2) if v["outcome_5d"] else None
+        v["next5_positive_pct"]=round(100*sum(1 for z in v["outcome_5d"] if z>0)/len(v["outcome_5d"]),1) if v["outcome_5d"] else None
+        v["next20_mean_pct"]=round(mean(v["outcome_20d"]),2) if v["outcome_20d"] else None
+        v["next20_positive_pct"]=round(100*sum(1 for z in v["outcome_20d"] if z>0)/len(v["outcome_20d"]),1) if v["outcome_20d"] else None
+        del v["outcome_5d"]; del v["outcome_20d"]
+    out={"updated":datetime.now(timezone.utc).isoformat(),"records":ordered,"aggregate":aggregate}
+    save("research-signal-history.json",out)
+    return out
+
+def update_market_replay_history(br, hl, sectors, rg):
+    obj=load("research-market-history.json",{})
+    today=datetime.now(timezone.utc).date().isoformat()
+    daily=[x for x in (obj.get("daily") or []) if x.get("date")!=today]
+    ranked=sorted(sectors or [],key=lambda x:x.get("avg_1d_pct",0),reverse=True)
+    snap={
+        "date":today,
+        "breadth":{"advancers":br.get("advancers"),"decliners":br.get("decliners"),"advance_ratio_pct":br.get("advance_ratio_pct"),
+                   "ema200_pct":br.get("ema200_pct"),"volume_spike_2x":br.get("volume_spike_2x")},
+        "high_low":{"new_high_zone":hl.get("new_high_zone_count"),"new_low_zone":hl.get("new_low_zone_count")},
+        "sector_top":ranked[:8],
+        "sector_bottom":ranked[-8:][::-1] if ranked else [],
+        "regime":{"label":rg.get("label"),"score":rg.get("score"),"nifty_change_pct":rg.get("nifty_change_pct"),"fii_net_cr":rg.get("fii_net_cr")}
+    }
+    daily.append(snap); daily.sort(key=lambda x:x.get("date",""))
+    out={"updated":datetime.now(timezone.utc).isoformat(),"daily":daily[-KEEP_HISTORY:]}
+    save("research-market-history.json",out)
+    return out
+
 def filing_keyword_radar(filings):
     pats = {
         "promoter_insider": r"promoter|insider|director|key managerial|acquisition of shares|disposal of shares",
@@ -645,6 +779,7 @@ def main():
     else:
         members = old_members
     changes = membership_changes(members, old_members) if members and old_members else {}
+    membership_history = update_membership_history(members) if members else load("index-membership-history.json", {})
 
     hmap = history_metrics()
     bench = hmap.get("NIFTY", {}).get("return_20d")
@@ -657,7 +792,11 @@ def main():
     save("research-history.json", hist)
 
     filed = filing_keyword_radar(filings)
-    fo = fo_features(load("futures.json", {}), stocks)
+    futures_obj = load("futures.json", {})
+    fo = fo_features(futures_obj, stocks)
+    today = datetime.now(timezone.utc).date().isoformat()
+    signal_candidates = current_signal_candidates(rows, delivery, fo, today)
+    signal_history = update_signal_outcomes(signal_candidates)
     action_ev = filing_events(filings)
     rr = results.get("results") or []
     results_evidence = [x for x in rr if x.get("date")]
@@ -706,7 +845,6 @@ def main():
     short_cover.sort(key=lambda x:x.get("oi_change_pct") or 0, reverse=True)
     long_unwind.sort(key=lambda x:x.get("oi_change_pct") or 0, reverse=True)
 
-    futures_obj = load("futures.json", {})
     pcr = futures_obj.get("pcr") or {}
     basis = sorted([x for x in fo if x.get("basis_pct") is not None], key=lambda x:abs(x.get("basis_pct") or 0), reverse=True)
 
@@ -786,7 +924,10 @@ def main():
       "research_lab": {
         "module_count": 44,
         "daily_history": (hist.get("daily") or [])[-60:],
+        "market_replay": update_market_replay_history(br, hl, sector_rotation(stocks), regime(stocks,fii,delivery,indices)),
         "backtests": backtest_signals(),
+        "signal_outcomes": signal_history,
+        "survivorship": {"status":"improving","membership_history_days":len(membership_history.get("daily") or []),"nifty50_membership_history_available":bool(membership_history.get("daily")),"note":"Backtests still reflect the repository history files; NIFTY 50 membership history is stored daily so index-aware studies can exclude non-members as of each date."},
         "search_universe": len(stocks),
         "source_policy": "NSE/public exchange snapshots + ArthaSaar calculations; Yahoo historical backup only.",
         "freshness": {
@@ -796,7 +937,8 @@ def main():
           "filings_updated": filings_obj.get("updated"),
           "results_updated": results.get("updated"),
           "macro_updated": macro.get("updated"),
-          "membership_updated": (load("index-membership.json", {}) or {}).get("updated")
+          "membership_updated": (load("index-membership.json", {}) or {}).get("updated"),
+          "alerts_updated": (load("research-alerts.json", {}) or {}).get("updated")
         }
       },
       "notes": [
@@ -808,6 +950,7 @@ def main():
       ]
     }
     save("research-radar.json",out)
+    print("Signal candidates:",len(signal_candidates)," / tracked outcomes:",len(signal_history.get("records") or []))
     print("Research Radar built:",len(stocks),"stocks /",len(indices),"indices / 44 modules")
 
 if __name__ == "__main__":

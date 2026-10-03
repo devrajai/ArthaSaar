@@ -34,6 +34,7 @@ jobs:
           rm -rf site
           mkdir -p site/data site/data/history site/app site/demo site/demo2
           cp index.html ping.html site/
+          if [ -f manifest.webmanifest ]; then cp manifest.webmanifest site/; fi
           # Copy every root JS bundle used by the HTML/runtime loaders.
           # GitHub Pages publishes only the staged `site/` directory, so omitting these
           # files leaves dynamic pages (including Research Radar) blank even though the

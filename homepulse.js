@@ -129,7 +129,7 @@
         card("FII / DII",'<div class="hp-kpis">'+
           '<div><span>FII / FPI</span><b class="dn">₹'+nf((fii.categories&&fii.categories["FII/FPI"]&&fii.categories["FII/FPI"].net_cr)||0,0)+' Cr</b></div>'+
           '<div><span>DII</span><b class="up">₹'+nf((fii.categories&&fii.categories.DII&&fii.categories.DII.net_cr)||0,0)+' Cr</b></div>'+
-        '</div><div class="zrow"><span>Report date</span><b>'+esc(fii.date||"—")+'</b></div>',"cash flows")+
+        '</div><div class="zrow"><span>Report date</span><b>'+esc(fii.date||"—")+'</b></div>' ,"NSE provisional")+
         card("MARKET BREADTH",'<div class="hp-kpis"><div><span>Stocks</span><b>'+nf(br.stocks,0)+'</b></div><div><span>Above EMA200</span><b>'+nf(br.above_ema200_pct,1)+'%</b></div></div>'+
           '<div class="zrow"><span>RSI &gt; 60</span><b>'+nf(br.rsi_above_60,0)+'</b></div><div class="zrow"><span>RSI &lt; 40</span><b>'+nf(br.rsi_below_40,0)+'</b></div><div class="zrow"><span>Volume spike ≥2×</span><b>'+nf(br.volume_spike_2x,0)+'</b></div>',"breadth")+
       '</div>'+

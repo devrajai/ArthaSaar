@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-03T12:28:23.921427+00:00",
+ "updated": "2026-10-03T12:29:03.165622+00:00",
  "healthy": false,
  "summary": {
-  "total": 19,
-  "ok": 17,
+  "total": 20,
+  "ok": 18,
   "problems": 2
  },
  "feeds": [
@@ -68,7 +68,7 @@
    "source": "Yahoo Finance via yfinance",
    "file": "data/history/",
    "status": "ok",
-   "updated": "2026-10-03T12:28:23.812199+00:00",
+   "updated": "2026-10-03T12:29:03.027705+00:00",
    "age_hours": 0.0,
    "max_age_hours": 72.0,
    "coverage": "2350 symbol history files"
@@ -190,7 +190,7 @@
    "file": "data/candles.json",
    "status": "ok",
    "updated": "2026-10-02T16:02",
-   "age_hours": 20.4,
+   "age_hours": 20.5,
    "max_age_hours": 48.0,
    "coverage": "15 actively tracked symbols"
   },
@@ -215,6 +215,17 @@
    "age_hours": null,
    "max_age_hours": null,
    "coverage": "0 rows/posts"
+  },
+  {
+   "id": "greeks-freshness",
+   "label": "Options Greeks freshness",
+   "source": "Content validation",
+   "file": "data/greeks.json",
+   "status": "ok",
+   "updated": "23 Sep 2026",
+   "age_hours": 0.0,
+   "max_age_hours": 48,
+   "coverage": "216 underlyings"
   }
  ]
 }

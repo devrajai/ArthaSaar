@@ -810,6 +810,29 @@ def main():
     today = datetime.now(timezone.utc).date().isoformat()
     signal_candidates = current_signal_candidates(rows, delivery, fo, today)
     signal_history = update_signal_outcomes(signal_candidates)
+    historical_backtests = backtest_signals(membership_history)
+    # Seed the outcome tracker with the historical event-study aggregates so the
+    # Research Lab is useful immediately; daily signal records continue accumulating
+    # separately from the current snapshot.
+    mapping = {
+        "near_52w_high":"52W_BREAKOUT_ZONE",
+        "volume_shock_2x":"VOLUME_SHOCK_2X",
+        "above_200dma":"ABOVE_EMA200",
+        "momentum_20d_gt_5pct":"MOMENTUM_20D_5_PLUS",
+        "trend_alignment":"TREND_ALIGNMENT",
+    }
+    for src_name, dst_name in mapping.items():
+        bx=(historical_backtests.get("signals") or {}).get(src_name) or {}
+        if bx.get("observations"):
+            signal_history.setdefault("aggregate",{})[dst_name] = {
+                "observations":bx.get("observations"),
+                "next5_mean_pct":bx.get("next5_mean_pct"),
+                "next5_positive_pct":bx.get("next5_positive_pct"),
+                "next20_mean_pct":bx.get("next20_mean_pct"),
+                "next20_positive_pct":bx.get("next20_positive_pct"),
+                "method":"Historical event-study seed; exact current signal records tracked separately."
+            }
+    save("research-signal-history.json",signal_history)
     action_ev = filing_events(filings)
     rr = results.get("results") or []
     results_evidence = [x for x in rr if x.get("date")]
@@ -940,7 +963,7 @@ def main():
         "market_replay": update_market_replay_history(br, hl, sector_rotation(stocks), regime(stocks,fii,delivery,indices)),
         "backtests": backtest_signals(membership_history),
         "signal_outcomes": signal_history,
-        "survivorship": {"status":"improving","membership_history_days":len(membership_history.get("daily") or []),"nifty50_membership_history_available":bool(membership_history.get("daily")),"note":"Backtests still reflect the repository history files; NIFTY 50 membership history is stored daily so index-aware studies can exclude non-members as of each date."},
+        "survivorship": {"status":"available" if membership_history.get("daily") else "waiting","membership_history_days":len(membership_history.get("daily") or []),"nifty50_membership_history_available":bool(membership_history.get("daily")),"note":"Backtests still reflect repository history files; NIFTY 50 membership snapshots are used for companion index-aware statistics when available."},
         "search_universe": len(stocks),
         "source_policy": "NSE/public exchange snapshots + ArthaSaar calculations; Yahoo historical backup only.",
         "freshness": {

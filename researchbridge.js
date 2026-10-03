@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var DATA={radar:null,stocks:{},delivery:{},futures:{},filings:[],results:{},mfTop:null,ci:{}};
+var DATA={radar:null,stocks:{},fundamentals:{},delivery:{},futures:{},filings:[],results:{},mfTop:null,ci:{}};
 
 function base(){return location.pathname.indexOf("/app/")>=0?"../data/":"data/";}
 function J(file){
@@ -40,6 +40,7 @@ function load(){
     J("results.json"),
     J("mf-top.json"),
     J("company-index.json"),
+    J("screener-fundamentals.json"),
     fetch(base()+"brain-screener.csv?v="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():"";}).catch(function(){return "";})
   ]).then(function(v){
     DATA.radar=v[0]||{};
@@ -49,10 +50,19 @@ function load(){
     DATA.results=(v[4]||{}).results||[];
     DATA.mfTop=v[5]||{};
     DATA.ci=v[6]||{};
-    parseCSV(v[7]).forEach(function(x){var s=String(x.symbol||"").trim().toUpperCase();if(s)DATA.stocks[s]=x;});
+    DATA.fundamentals=(v[7]||{}).stocks||{};
+    parseCSV(v[8]).forEach(function(x){var s=String(x.symbol||"").trim().toUpperCase();if(s)DATA.stocks[s]=x;});
     return DATA;
   });
 }
+
+
+function fv(obj,keys){
+  obj=obj||{};
+  for(var i=0;i<keys.length;i++){var k=keys[i];if(obj[k]!==undefined&&obj[k]!==null&&obj[k]!=="")return obj[k];}
+  return null;
+}
+function fundCell(v){return v===null||v===undefined||v===""?"—":String(v);}
 
 function featureHits(sym){
   sym=String(sym||"").toUpperCase();
@@ -96,6 +106,21 @@ function stockResearchMarkup(sym){
   h+='<div><span>EMA200</span><b>'+nf(r.ema200)+'</b></div><div><span>Delivery</span><b>'+nf(del)+'%</b></div>';
   h+='<div><span>20D volume</span><b>'+nf(r.vol_vs_avg20)+'×</b></div><div><span>F&O build</span><b>'+esc(fx?fx.build:"—")+'</b></div>';
   h+='</div>';
+
+  var ff=DATA.fundamentals[sym]||DATA.fundamentals[sym+".NS"]||{};
+  var fm=fv(ff,["Market Cap","MCap","market_cap"]);
+  var fpe=fv(ff,["P/E","PE","pe","Price/Earnings"]);
+  var fpb=fv(ff,["P/B","PB","pb","Price/Book"]);
+  var froe=fv(ff,["ROE","roe","Return on Equity"]);
+  var froce=fv(ff,["ROCE","roce","Return on Capital Employed"]);
+  var fde=fv(ff,["D/E","Debt/Equity","de","Debt to Equity"]);
+  var fdy=fv(ff,["Div Yield","Dividend Yield","dividend_yield"]);
+  h+='<div class="asresearch-sub">FUNDAMENTALS · REPOSITORY SNAPSHOT</div><div class="asresearch-grid">'+
+    '<div><span>Market Cap</span><b>'+esc(fundCell(fm))+'</b></div><div><span>P/E</span><b>'+esc(fundCell(fpe))+'</b></div>'+
+    '<div><span>P/B</span><b>'+esc(fundCell(fpb))+'</b></div><div><span>ROE</span><b>'+esc(fundCell(froe))+'</b></div>'+
+    '<div><span>ROCE</span><b>'+esc(fundCell(froce))+'</b></div><div><span>D/E</span><b>'+esc(fundCell(fde))+'</b></div>'+
+    '<div><span>Div Yield</span><b>'+esc(fundCell(fdy))+'</b></div><div><span>History days</span><b>'+esc(fundCell(r.history_days))+'</b></div>'+
+    '</div>';
   h+='<div class="asresearch-sub">WHY THIS STOCK IS IN RESEARCH CONTEXT</div>';
   h+=hits.length?'<div class="asresearch-hits">'+hits.map(function(x){return'<div class="asresearch-hit"><b class="'+esc(x.cls||"")+'">'+esc(x.title)+'</b><small>'+esc(x.text)+'</small></div>';}).join("")+'</div>':'<div class="asresearch-empty">No dedicated trigger in the current Research Radar snapshot.</div>';
   if(events.length||result){
@@ -148,6 +173,33 @@ function wrapFund(){
   wrapped._asResearch=true;wrapped._orig=orig;window.openFundFS=wrapped;
 }
 
+
+function openStock(sym){
+  sym=String(sym||"").trim().toUpperCase().replace(/\s+/g,"");
+  if(!sym)return;
+  if(window.ArthaSaarResearchOpen){window.ArthaSaarResearchOpen(sym);return;}
+  if(window.openCompanyFS){window.openCompanyFS(sym);return;}
+  location.hash="#research";
+}
+function bindExistingStockViews(){
+  var fbody=document.querySelector("#v-fundamentals tbody");
+  var sbody=document.getElementById("scrBody");
+  [fbody,sbody].forEach(function(tb){
+    if(!tb||tb.dataset.asResearchBound==="1")return;
+    tb.dataset.asResearchBound="1";
+    tb.addEventListener("click",function(e){
+      var row=e.target.closest?e.target.closest("tr"):null;if(!row||!row.cells.length)return;
+      var cell=row.cells[0],sym=(cell.getAttribute("data-symbol")||cell.textContent||"").trim();
+      if(sym&&sym.length<40){e.preventDefault();openStock(sym);}
+    },true);
+  });
+  var tm=document.getElementById("tmBox");
+  if(tm&&!tm.dataset.asResearchBound){tm.dataset.asResearchBound="1";tm.addEventListener("click",function(e){
+    var el=e.target.closest?e.target.closest("[data-research-stock]"):null;
+    if(el)openStock(el.getAttribute("data-research-stock"));
+  },true);}
+}
+
 function enrichEvents(){
   var host=document.querySelector("#v-events");
   if(!host)return;
@@ -156,9 +208,9 @@ function enrichEvents(){
 
 function boot(){
   load().then(function(){
-    wrapCompany();wrapFund();
+    wrapCompany();wrapFund();bindExistingStockViews();
     var n=0,iv=setInterval(function(){
-      wrapCompany();wrapFund();
+      wrapCompany();wrapFund();bindExistingStockViews();
       if(++n>40)clearInterval(iv);
     },400);
   });

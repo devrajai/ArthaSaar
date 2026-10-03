@@ -81,6 +81,57 @@ def fetch_universe():
     return uni or None
 
 
+# ---------------------------------------------------------------- NSE EOD overlay
+def fetch_nse_eod():
+    """
+    Get the latest NSE securities bhav/deliverable file and return current
+    close/prev-close/volume for EQ/BE/BZ symbols. This is the primary official
+    EOD price layer; Yahoo/yfinance remains the historical backfill.
+    """
+    import datetime as dt2
+    for back in range(0, 6):
+        d = dt2.date.today() - dt2.timedelta(days=back)
+        if d.weekday() >= 5:
+            continue
+        url = (
+            "https://nsearchives.nseindia.com/products/content/"
+            f"sec_bhavdata_full_{d:%d%m%Y}.csv"
+        )
+        txt = try_get(url, timeout=40)
+        if not txt or len(txt) < 500 or "<html" in txt[:500].lower():
+            continue
+        try:
+            rd = csv.DictReader(io.StringIO(txt), skipinitialspace=True)
+            out = {}
+            for row in rd:
+                sym = (row.get("SYMBOL") or "").strip().upper()
+                ser = (row.get("SERIES") or "").strip().upper()
+                if not sym or ser not in ("EQ", "BE", "BZ"):
+                    continue
+                def f(k):
+                    try:
+                        return float((row.get(k) or "").strip().replace(",", ""))
+                    except Exception:
+                        return None
+                close = f("CLOSE_PRICE")
+                prev = f("PREV_CLOSE")
+                vol = f("TTL_TRD_QNTY")
+                if close is None:
+                    continue
+                out[sym] = {
+                    "date": d.isoformat(),
+                    "close": close,
+                    "prev_close": prev,
+                    "volume": int(vol or 0),
+                }
+            if out:
+                print(f"NSE EOD overlay: {len(out)} symbols for {d}")
+                return out
+        except Exception as e:  # noqa: BLE001
+            print("NSE EOD parse failed:", e)
+    print("NSE EOD overlay unavailable; using historical source")
+    return {}
+    
 # ---------------------------------------------------------------- history
 def _ticker(sym):
     return sym if sym.endswith(".NS") else sym + ".NS"
@@ -330,6 +381,13 @@ def main():
               f"(batch {got}/{len(chunk)} updated)")
         time.sleep(3.0)
 
+    # ---- official NSE EOD overlay for the latest completed session
+    nse_eod = fetch_nse_eod()
+    for sym, q in nse_eod.items():
+        old = load_hist(sym) or []
+        row = {"date": q["date"], "close": q["close"], "volume": q["volume"]}
+        save_hist(sym, merge_hist(old, [row]))
+
     # ---- analyse everything we have history for
     results = []
     for m in uni:
@@ -337,6 +395,9 @@ def main():
         if rows:
             a = analyse(m["symbol"], m, rows)
             if a:
+                q = nse_eod.get(m["symbol"])
+                a["price_source"] = "NSE EOD + Yahoo historical" if q else "Yahoo historical"
+                a["eod_date"] = q["date"] if q else None
                 results.append(a)
 
     results.sort(key=lambda x: x["change_pct"], reverse=True)

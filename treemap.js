@@ -59,7 +59,7 @@
       for (var i = 0; i < rects.length; i++) {
         var it = rects[i][0], x = rects[i][1], y = rects[i][2], w = rects[i][3], hh = rects[i][4];
         if (w < 2 || hh < 2) continue;
-        h += '<rect data-research-stock="' + esc(it.s) + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + Math.max(1, w - 1).toFixed(1) + '" height="' + Math.max(1, hh - 1).toFixed(1) + '" rx="2" fill="' + chgColor(it.p) + '" stroke="rgba(255,255,255,.18)" stroke-width="0.5"><title>' + esc(it.s) + ' \u00b7 mcap ' + Math.round(it.v) + ' Cr \u00b7 ' + (it.p == null ? "?" : (it.p >= 0 ? "+" : "") + it.p + "%") + '</title></rect>';
+        h += '<rect data-research-stock="' + esc(it.s) + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + Math.max(1, w - 1).toFixed(1) + '" height="' + Math.max(1, hh - 1).toFixed(1) + '" rx="2" fill="' + chgColor(it.p) + '" stroke="rgba(255,255,255,.18)" stroke-width="0.5" style="cursor:pointer"><title>' + esc(it.s) + ' \u00b7 mcap ' + Math.round(it.v) + ' Cr \u00b7 ' + (it.p == null ? "?" : (it.p >= 0 ? "+" : "") + it.p + "%") + '</title></rect>';
         if (w > it.s.length * 6 + 6 && hh > 16) { /* symbol fit ho tabhi label */
           var fs = Math.min(11, Math.max(6.5, (w - 6) / it.s.length));
           h += '<text x="' + (x + 3).toFixed(1) + '" y="' + (y + Math.min(13, hh / 2 + 4)).toFixed(1) + '" font-size="' + fs.toFixed(1) + '" fill="#fff" font-family="monospace" font-weight="600">' + esc(it.s) + '</text>';

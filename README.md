@@ -49,14 +49,13 @@ scripts/check_freshness.py the watchdog - fails when a feed goes stale
 INDEX.md                   what holds what (repo / Drive / Sheets)
 reference/                 ArthaSaar full source dump (323 files, reference only)
 .github/workflows/
-  update.yml               daily cron (13:30 UTC = 19:00 IST), commits new data
+  pipeline.yml             THE pipeline - collects everything, analyses, commits, alerts
   backfill.yml             manual one-off history backfill
+  health.yml               independent freshness watchdog (checks the pipeline itself)
   telegram.yml             close summary (16:00 IST)
   telegram-morning.yml     8:30 AM IST morning brief
   telegram-day.yml         manual day analysis
   telegram-who.yml         manual chat-id lookup
-  timesfm-forecast.yml     nightly TimesFM forecasts (20:35 IST)
-  health.yml               daily freshness watchdog, opens an issue if stale
 data/
   raw/<seg>/               original .csv.zip (git-ignored, kept local)
   parquet/<seg>/           normalised columnar files  <- backtest from these
@@ -141,6 +140,43 @@ How it reads: symbols come from an alias map (company/ticker names to NSE symbol
 it does not fire on stray uppercase words; themes are keyword buckets; sentiment is a
 rough bull-vs-bear keyword count. Swap in an LLM over the same input if you want
 deeper reading later - the data contract does not change.
+
+## One pipeline
+
+Everything runs as a single pipeline, in one file, on one schedule:
+
+```
+.github/workflows/pipeline.yml      13:30 UTC (19:00 IST) Mon-Fri, or by hand
+scripts/run_pipeline.sh             the same sequence, runnable locally
+```
+
+Order: bhavcopy -> Yahoo -> YouTube -> brain -> candles -> analytics -> features ->
+optional sources (Drive / Sheets / Notion / ArthaSaar) -> freshness check -> commit.
+Each step is independent: one failing does not abort the rest, and the run exits
+non-zero if anything failed so the `alert` job can open an issue.
+
+**Optional sources light up on their own.** Add a secret and the matching step starts
+running - nothing to edit:
+
+| Secret | Turns on |
+|---|---|
+| `GOOGLE_SA_JSON` + `ARTHASAAR_DRIVE_FOLDER` | Drive candle archive |
+| `GOOGLE_SA_JSON` + `SHEET_SOURCE_ID` + `SHEET_SOURCE_RANGE` | Google Sheets source |
+| `NOTION_TOKEN` + `NOTION_DATABASE_ID` | Notion source |
+| `ARTHASAAR_TOKEN` | ArthaSaar analytics JSONs |
+| repo variable `RUN_TIMESFM=true` | the TimesFM forecast job |
+
+Run it locally exactly as CI does:
+
+```bash
+bash scripts/run_pipeline.sh
+SKIP_YAHOO=1 bash scripts/run_pipeline.sh   # skip the slow step
+```
+
+**Why Telegram and the watchdog are separate files.** The Telegram briefs are
+time-of-day specific (8:30 AM, 4:00 PM) - folding them into a 19:00 pipeline would
+send them at the wrong time. And `health.yml` must be *independent*: a watchdog that
+runs inside the pipeline cannot notice the pipeline itself dying.
 
 ## Automating it
 

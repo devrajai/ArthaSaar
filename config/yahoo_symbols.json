@@ -1,16 +1,13 @@
 {
   "note": "Symbols to pull from Yahoo Finance (yfinance). Index ^ prefix, crypto -USD, NSE stocks .NS. Override with --symbols.",
+  "caveat": "Yahoo does NOT carry most NSE sector indices - ^CNXAUTO, ^CNXFMCG, ^CNXMETAL, ^CNXENERGY, ^CNXPSUBANK, ^CNXREALTY and friends return ~0 rows. Use the NSE bhavcopy / index files for sector data instead. Symbols returning under 50 rows are skipped automatically.",
   "groups": {
     "indices": [
       "^NSEI",
       "^NSEBANK",
       "^BSESN",
       "^CNXIT",
-      "^CNXAUTO",
       "^CNXPHARMA",
-      "^CNXFMCG",
-      "^CNXMETAL",
-      "^CNXENERGY",
       "^INDIAVIX"
     ],
     "global": [

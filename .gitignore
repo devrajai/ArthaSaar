@@ -1,0 +1,23 @@
+# secrets - never commit
+.env
+service-account*.json
+*credentials*.json
+
+# keep the repo small - raw bhavcopy zips stay local only; parquet + csv are committed
+data/raw/
+
+# ArthaSaar data is pulled fresh from its source repo each run.
+# fii-history.json is the one we accumulate ourselves, so it IS tracked.
+data/*.json
+!data/fii-history.json
+
+# candle archive + training sets are large - regenerate from Drive, don't commit
+data/candles/
+data/training/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/

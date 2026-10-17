@@ -1,0 +1,54 @@
+name: health
+
+# The watchdog. Runs a few times a week, independent of the data jobs, and opens an
+# issue if any feed has gone stale - so a silent breakage announces itself instead of
+# quietly stopping. Also resets the 60-day inactivity clock that disables scheduled
+# workflows on public repos.
+on:
+  schedule:
+    - cron: "0 4 * * *"      # daily 09:30 IST
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -q pandas pyarrow
+
+      - name: Check data freshness
+        run: python scripts/check_freshness.py --max-age 4
+
+      - name: Open an issue if stale
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="Data freshness alert: a feed has gone stale"
+          BODY=$(cat <<'EOF'
+          The freshness check failed, which means at least one feed has stopped
+          updating. Check the last few runs of **update-hub** (Actions tab), then:
+
+          - bhavcopy stale  -> NSE may have changed its file URL/columns (see fetch_bhavcopy.py)
+          - youtube stale   -> a channel may have gone quiet, or the feed changed
+          - candles stale   -> run `python scripts/candles_from_bhavcopy.py --latest`
+
+          This issue was opened automatically by .github/workflows/health.yml.
+          EOF
+          )
+          EXISTING=$(gh issue list --state open --search "$TITLE" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi

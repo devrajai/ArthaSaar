@@ -1,0 +1,44 @@
+name: backfill
+
+# Manual one-off backfill of history. Actions tab -> backfill -> Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "Start date (YYYY-MM-DD)"
+        required: true
+      end:
+        description: "End date (YYYY-MM-DD)"
+        required: true
+      segments:
+        description: "Segments (cm,fo)"
+        default: "cm"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Backfill range
+        run: |
+          python scripts/fetch_bhavcopy.py \
+            --start "${{ inputs.start }}" --end "${{ inputs.end }}" \
+            --segments "${{ inputs.segments }}" --formats parquet
+
+      - name: Commit backfilled data
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add data/
+          git commit -m "backfill: ${{ inputs.start }}..${{ inputs.end }}" || echo "no changes"
+          git push

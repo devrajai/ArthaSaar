@@ -1,0 +1,62 @@
+name: update-hub
+
+# Runs every trading weekday shortly after the NSE close.
+# 13:30 UTC = 19:00 IST. Cron is always UTC (GMT).
+on:
+  schedule:
+    - cron: "30 13 * * 1-5"
+  workflow_dispatch: {}   # lets you trigger it by hand from the Actions tab
+
+permissions:
+  contents: write         # so the job can push the new data back
+
+concurrency:
+  group: update-hub
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Fetch latest trading day (CM + F&O)
+        run: python scripts/fetch_bhavcopy.py --latest
+
+      - name: Poll YouTube channels for new uploads
+        run: python scripts/fetch_youtube.py
+
+      - name: Analyse uploads (the brain)
+        run: python scripts/analyze_youtube.py
+
+      - name: Grow the candle archive from today's bhavcopy
+        run: python scripts/candles_from_bhavcopy.py --from-local
+
+      - name: Regenerate analytics (futures, breadth)
+        run: python scripts/build_analytics.py
+
+      - name: Mirror to Google Drive + push watchlist to Sheet (optional)
+        if: ${{ secrets.GOOGLE_SA_JSON != '' }}
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+        run: |
+          python scripts/sync_google.py drive --folder-id "$DRIVE_FOLDER_ID" || true
+          DAY=$(python -c "import pandas as pd;print(pd.read_csv('data/manifest.csv').date.max())")
+          python scripts/sync_google.py sheet --spreadsheet-id "$SHEET_ID" --day "$DAY" || true
+
+      - name: Commit new data
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add data/
+          git commit -m "data: $(date -u +%FT%TZ)" || echo "no changes to commit"
+          git push

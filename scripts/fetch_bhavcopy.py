@@ -37,6 +37,15 @@ from pathlib import Path
 
 import pandas as pd
 
+# Cap Arrow's thread pool. Some containers (CI, sandboxes) have a low thread limit and
+# pyarrow's default pool can fail with "Failed to launch worker thread".
+try:
+    import pyarrow as _pa
+    _pa.set_cpu_count(1)
+    _pa.set_io_thread_count(1)
+except Exception:
+    pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from nse_source import NotATradingDay, build_source, download, fetch_day, parse  # noqa: E402
 

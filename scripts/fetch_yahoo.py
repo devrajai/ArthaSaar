@@ -31,6 +31,15 @@ from pathlib import Path
 
 import pandas as pd
 
+# Cap Arrow's thread pool. Some containers (CI, sandboxes) have a low thread limit and
+# pyarrow's default pool can fail with "Failed to launch worker thread".
+try:
+    import pyarrow as _pa
+    _pa.set_cpu_count(1)
+    _pa.set_io_thread_count(1)
+except Exception:
+    pass
+
 
 def _safe(sym: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", sym).strip("_")
@@ -72,6 +81,8 @@ def main() -> int:
     ap.add_argument("--period", default="2y", help="1d/5d/1mo/6mo/1y/2y/5y/10y/max")
     ap.add_argument("--interval", default="1d", help="1d/1wk/1mo (1m-1h for short ranges)")
     ap.add_argument("--out", default="data/yahoo")
+    ap.add_argument("--min-rows", type=int, default=50,
+                    help="drop symbols returning fewer rows than this (bad tickers)")
     args = ap.parse_args()
 
     if args.symbols:
@@ -96,6 +107,9 @@ def main() -> int:
     for sym in syms:
         df = _download(sym, args.period, args.interval)
         if df is None:
+            continue
+        if len(df) < args.min_rows:
+            print(f"  {sym}: only {len(df)} rows - skipped (bad/renamed ticker?)")
             continue
         df.to_parquet(out / f"{_safe(sym)}.parquet", index=False)
         frames.append(df)

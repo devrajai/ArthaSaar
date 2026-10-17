@@ -31,6 +31,15 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# Cap Arrow's thread pool. Some containers (CI, sandboxes) have a low thread limit and
+# pyarrow's default pool can fail with "Failed to launch worker thread".
+try:
+    import pyarrow as _pa
+    _pa.set_cpu_count(1)
+    _pa.set_io_thread_count(1)
+except Exception:
+    pass
+
 INDEX_FOR_PCR = "NIFTY"
 
 # UDiFF F&O instrument codes: STF stock futures, IDF index futures,

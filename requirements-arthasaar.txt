@@ -1,0 +1,11 @@
+# ArthaSaar layer dependencies
+#
+# The Telegram jobs (telegram_brain.py, telegram_alert.py, morning_unified.py,
+# telegram_who.py) use only the Python standard library, plus yfinance as an
+# optional Sensex fallback for the afternoon message.
+yfinance>=0.2.40
+
+# The TimesFM forecast job needs the model package. It is heavy (CPU torch), so
+# the workflow installs it inline rather than from here:
+#   pip install "timesfm[torch]" yfinance
+numpy>=1.26

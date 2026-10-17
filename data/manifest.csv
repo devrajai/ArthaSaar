@@ -1,0 +1,6 @@
+date,segment,rows,symbols,era,file_parquet,file_csv
+2019-06-14,cm,1928,1786,legacy,data/parquet/cm/cm_2019-06-14.parquet,data/csv/cm/cm_2019-06-14.csv
+2026-10-14,cm,3672,3672,udiff,data/parquet/cm/cm_2026-10-14.parquet,data/csv/cm/cm_2026-10-14.csv
+2026-10-15,cm,3673,3672,udiff,data/parquet/cm/cm_2026-10-15.parquet,data/csv/cm/cm_2026-10-15.csv
+2026-10-16,cm,3675,3674,udiff,data/parquet/cm/cm_2026-10-16.parquet,data/csv/cm/cm_2026-10-16.csv
+2026-10-16,fo,38162,219,udiff,data/parquet/fo/fo_2026-10-16.parquet,data/csv/fo/fo_2026-10-16.csv

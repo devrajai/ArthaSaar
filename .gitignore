@@ -15,6 +15,11 @@ data/*.json
 data/candles/
 data/training/
 
+# other free-source pulls (regenerate, don't commit)
+data/yahoo/
+data/sheets/
+data/notion/
+
 # python
 __pycache__/
 *.pyc

@@ -1,0 +1,45 @@
+{
+  "note": "Symbols to pull from Yahoo Finance (yfinance). Index ^ prefix, crypto -USD, NSE stocks .NS. Override with --symbols.",
+  "groups": {
+    "indices": [
+      "^NSEI",
+      "^NSEBANK",
+      "^BSESN",
+      "^CNXIT",
+      "^CNXAUTO",
+      "^CNXPHARMA",
+      "^CNXFMCG",
+      "^CNXMETAL",
+      "^CNXENERGY",
+      "^INDIAVIX"
+    ],
+    "global": [
+      "^GSPC",
+      "^IXIC",
+      "^DJI",
+      "^N225",
+      "^HSI",
+      "^FTSE",
+      "^GDAXI",
+      "GC=F",
+      "CL=F",
+      "DX-Y.NYB",
+      "BTC-USD"
+    ],
+    "fx": [
+      "INR=X",
+      "EURINR=X",
+      "GBPINR=X"
+    ],
+    "nse_stocks": [
+      "RELIANCE.NS",
+      "TCS.NS",
+      "HDFCBANK.NS",
+      "ICICIBANK.NS",
+      "INFY.NS",
+      "SBIN.NS",
+      "ITC.NS",
+      "LT.NS"
+    ]
+  }
+}

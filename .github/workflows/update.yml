@@ -30,6 +30,9 @@ jobs:
       - name: Fetch latest trading day (CM + F&O)
         run: python scripts/fetch_bhavcopy.py --latest
 
+      - name: Fetch Yahoo (indices + global)
+        run: python scripts/fetch_yahoo.py --group indices --period 5y
+
       - name: Poll YouTube channels for new uploads
         run: python scripts/fetch_youtube.py
 

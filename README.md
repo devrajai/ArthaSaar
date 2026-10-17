@@ -272,6 +272,30 @@ python scripts/check_freshness.py --max-age 4
 So the Telegram jobs still cannot run end to end. The analytics step is a partial
 revival; the remaining 11 need the old pipeline rebuilt or another source.
 
+## Data sources (what the hub pulls, and how)
+
+| Source | Script | What you get | Caveat |
+|---|---|---|---|
+| **NSE bhavcopy** | `fetch_bhavcopy.py` | equities + F&O, every listed symbol | none - the exchange's own record, free, no key |
+| **Yahoo Finance** | `fetch_yahoo.py` | indices, global, FX, commodities, crypto, longer history | unofficial (`yfinance`); rate-limited; not a licensed feed |
+| **YouTube** | `fetch_youtube.py` | 10 channels' uploads, views, thumbnails | the feed carries only the ~15 latest per channel |
+| **Google Sheets** | `fetch_from_sheets.py` | any tab you maintain, snapshotted per run | needs a service account |
+| **Notion** | `fetch_notion.py` | any database | needs `NOTION_TOKEN` + the DB shared with the integration |
+| **Google Finance** | - | **no API.** Only via `=GOOGLEFINANCE()` inside a Sheet, then pull that tab with `fetch_from_sheets.py` | historical data cannot be pulled via the API at all |
+| **ArthaSaar Drive archive** | `candles_from_drive.py` | 2,119 symbols, 5y daily + intraday | frozen 27 Sep 2026 |
+| **ArthaSaar data repo** | `fetch_arthasaar_data.py` | the 16 analytics JSONs | source is 404 - dead |
+
+```bash
+python scripts/fetch_yahoo.py --group indices --period 5y
+python scripts/fetch_from_sheets.py --spreadsheet-id <ID> --range "Quotes!A1:F50"
+NOTION_TOKEN=... python scripts/fetch_notion.py --database-id <ID> --name trades
+```
+
+Companion docs (Google Drive):
+- **Chart Patterns - reference** - the pattern shapes, plus the numeric rules to detect
+  them on the archive, and the discipline that decides whether they work.
+- **Market Data Hub - Index** - what holds what across the repo, Drive and Sheets.
+
 ## Limits & notes
 
 - Google Sheets: 10,000,000 cells per workbook — keep the Sheet a view, not the store.

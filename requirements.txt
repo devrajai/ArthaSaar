@@ -1,6 +1,8 @@
 requests>=2.31
 pandas>=2.0
 pyarrow>=14.0
+numpy>=1.26
+yfinance>=0.2.40
 # Optional - only needed for sync_google.py (Drive upload + Sheets update)
 google-api-python-client>=2.100
 google-auth>=2.20

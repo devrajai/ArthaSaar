@@ -46,6 +46,24 @@ Manifest of the backup (name, size, MD5): `reference/arthasaar_backup_manifest.c
 Rule of thumb: **files in Drive are the archive; the Sheet is the view; the repo is the pipeline.**
 Don't put bulk history in a Sheet — 10,000,000 cell limit.
 
+## Companion Google Docs
+
+| Doc | What it is |
+|---|---|
+| Chart Patterns - reference (ArthaSaar) | pattern shapes, numeric detection rules, discipline |
+| Market Data Hub - Index | this page, in Drive |
+
+## Data sources
+
+| Source | Script | Notes |
+|---|---|---|
+| NSE bhavcopy | fetch_bhavcopy.py | official, all symbols |
+| Yahoo Finance | fetch_yahoo.py | unofficial, indices/global/crypto |
+| YouTube | fetch_youtube.py | 10 channels |
+| Google Sheets | fetch_from_sheets.py | service account |
+| Notion | fetch_notion.py | NOTION_TOKEN |
+| Google Finance | (no API) | only via GOOGLEFINANCE() in a Sheet |
+
 ## Known gaps (as of this check)
 
 - **Telegram analytics**: 11 of the 16 JSONs the Telegram jobs read are not producible

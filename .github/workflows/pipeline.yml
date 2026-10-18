@@ -61,6 +61,15 @@ jobs:
             echo "no candle archive yet - skipping"
           fi
 
+      - name: "7b. Indicators (verified library)"
+        run: python scripts/build_indicators.py
+
+      - name: "7c. Forecasts (free models, walk-forward accuracy)"
+        run: python scripts/forecast.py --models naive,drift,mean,seasonal_naive,ets,arima
+
+      - name: "7d. Crypto"
+        run: python scripts/fetch_crypto.py
+
       - name: "8. Google Drive candle archive (optional)"
         if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
         env:

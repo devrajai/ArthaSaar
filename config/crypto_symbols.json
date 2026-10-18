@@ -1,0 +1,55 @@
+{
+  "note": "Crypto pairs. Binance is the primary source (free, no key, deep history); Yahoo is the fallback. 'binance' is the Binance symbol, 'yahoo' the Yahoo one.",
+  "pairs": [
+    {
+      "name": "Bitcoin",
+      "binance": "BTCUSDT",
+      "yahoo": "BTC-USD"
+    },
+    {
+      "name": "Ethereum",
+      "binance": "ETHUSDT",
+      "yahoo": "ETH-USD"
+    },
+    {
+      "name": "BNB",
+      "binance": "BNBUSDT",
+      "yahoo": "BNB-USD"
+    },
+    {
+      "name": "Solana",
+      "binance": "SOLUSDT",
+      "yahoo": "SOL-USD"
+    },
+    {
+      "name": "XRP",
+      "binance": "XRPUSDT",
+      "yahoo": "XRP-USD"
+    },
+    {
+      "name": "Cardano",
+      "binance": "ADAUSDT",
+      "yahoo": "ADA-USD"
+    },
+    {
+      "name": "Dogecoin",
+      "binance": "DOGEUSDT",
+      "yahoo": "DOGE-USD"
+    },
+    {
+      "name": "Chainlink",
+      "binance": "LINKUSDT",
+      "yahoo": "LINK-USD"
+    },
+    {
+      "name": "Avalanche",
+      "binance": "AVAXUSDT",
+      "yahoo": "AVAX-USD"
+    },
+    {
+      "name": "Tron",
+      "binance": "TRXUSDT",
+      "yahoo": "TRX-USD"
+    }
+  ]
+}

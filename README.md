@@ -332,6 +332,67 @@ Companion docs (Google Drive):
   them on the archive, and the discipline that decides whether they work.
 - **Market Data Hub - Index** - what holds what across the repo, Drive and Sheets.
 
+## Indicators (verified library)
+
+`indicators.py` is a dependency-light TA library (pure pandas/numpy) - SMA, EMA, WMA,
+RSI, MACD, Bollinger, ATR, Stochastic, ADX/DI, OBV, VWAP, Donchian, CCI, ROC,
+Williams %R, Supertrend, and `add_all()` for the whole set.
+
+```bash
+python scripts/test_indicators.py        # proves it correct - see below
+python scripts/build_indicators.py       # whole archive -> data/indicators/latest.parquet
+python scripts/build_indicators.py --history   # + per-symbol history
+```
+
+It is **verified**, not just written: `test_indicators.py` recomputes every indicator
+with an independent implementation (explicit loops, a different code path) and requires
+a match, then runs a **no-look-ahead** check - indicators computed on the full series
+must equal those computed on a truncated series for the overlapping rows. If a value at
+bar *i* depended on any bar after *i*, that test fails. All 31 columns pass.
+
+Conventions are stated in the file so nothing is ambiguous: EMA seeds from the first
+value (`adjust=False`), RSI/ATR/ADX use Wilder smoothing, windows are trailing.
+
+## Forecasts (free models, honest accuracy)
+
+`forecast.py` is model-agnostic. It runs whatever is available and reports how each
+model actually did on held-out data, so you can see whether a fancy model beats a dumb
+baseline instead of assuming it.
+
+| Model | What it is |
+|---|---|
+| naive / drift / mean / seasonal_naive | baselines - no dependencies |
+| ets | statsmodels Holt-Winters |
+| arima | statsmodels ARIMA(1,1,1) |
+| timesfm | Google TimesFM 3.0 (only if `timesfm` is installed - heavy) |
+| chronos | Amazon Chronos (only if `chronos` is installed) |
+
+```bash
+python scripts/forecast.py --horizon 21
+python scripts/forecast.py --models naive,ets --symbols RELIANCE
+```
+
+Validation is **walk-forward**: the last `horizon` points are held out, each model is
+fit only on earlier data, and the error is measured against the truth. Never a random
+split - that leaks the future and makes every model look good. Output lands in
+`data/forecast/` (`accuracy.csv` + `forecasts.parquet`).
+
+**The baseline is the bar to clear.** On real data, `naive` (carry the last price
+forward) is genuinely hard to beat - if a model cannot beat it, it is not earning its
+complexity. `timesfm`/`chronos` are optional: they need a large download and a lot of
+RAM, so the job skips them cleanly when they are not installed rather than failing.
+
+## Crypto
+
+```bash
+python scripts/fetch_crypto.py            # config/crypto_symbols.json
+python scripts/fetch_crypto.py --source yahoo
+```
+
+Binance public REST is the primary source (free, no key, deep history); Yahoo is the
+fallback. Both are unofficial for redistribution - fine for research, not for resale.
+Output: `data/crypto/<pair>.parquet`.
+
 ## Limits & notes
 
 - Google Sheets: 10,000,000 cells per workbook — keep the Sheet a view, not the store.

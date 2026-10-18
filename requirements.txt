@@ -3,6 +3,8 @@ pandas>=2.0
 pyarrow>=14.0
 numpy>=1.26
 yfinance>=0.2.40
+statsmodels>=0.14
+scikit-learn>=1.3
 # Optional - only needed for sync_google.py (Drive upload + Sheets update)
 google-api-python-client>=2.100
 google-auth>=2.20

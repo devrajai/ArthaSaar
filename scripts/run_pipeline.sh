@@ -62,6 +62,15 @@ else
 fi
 
 # ---------------------------------------------------------------- 4. optional sources
+step "7b. Indicators (verified library)"
+run python scripts/build_indicators.py || true
+
+step "7c. Forecasts (free models, walk-forward accuracy)"
+run python scripts/forecast.py --models naive,drift,mean,seasonal_naive,ets,arima || true
+
+step "7d. Crypto (Binance, Yahoo fallback)"
+run python scripts/fetch_crypto.py || true
+
 step "8. Google Drive archive (if configured)"
 if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${ARTHASAAR_DRIVE_FOLDER:-}" ]; then
   run python scripts/candles_from_drive.py --kind daily || true

@@ -4,12 +4,12 @@ name: pipeline
 # it, verifies it and commits it. Optional sources light up on their own the moment
 # you add their secret - nothing to edit.
 #
-# 13:30 UTC = 19:00 IST, after the NSE close. Cron is always UTC (GMT).
+# 17:30 UTC = 23:00 IST (11 PM), once a day, every day. Cron is always UTC (GMT).
 #
 # Same order as scripts/run_pipeline.sh, so a local run proves what CI will do.
 on:
   schedule:
-    - cron: "30 13 * * 1-5"     # weekdays, after close
+    - cron: "30 17 * * *"     # 23:00 IST daily
   workflow_dispatch: {}          # or run it by hand
 
 permissions:

@@ -146,7 +146,7 @@ deeper reading later - the data contract does not change.
 Everything runs as a single pipeline, in one file, on one schedule:
 
 ```
-.github/workflows/pipeline.yml      13:30 UTC (19:00 IST) Mon-Fri, or by hand
+.github/workflows/pipeline.yml      17:30 UTC (23:00 IST / 11 PM) daily, or by hand
 scripts/run_pipeline.sh             the same sequence, runnable locally
 ```
 
@@ -174,16 +174,16 @@ SKIP_YAHOO=1 bash scripts/run_pipeline.sh   # skip the slow step
 ```
 
 **Why Telegram and the watchdog are separate files.** The Telegram briefs are
-time-of-day specific (8:30 AM, 4:00 PM) - folding them into a 19:00 pipeline would
+time-of-day specific (8:30 AM, 4:00 PM) - folding them into an 11 PM pipeline would
 send them at the wrong time. And `health.yml` must be *independent*: a watchdog that
 runs inside the pipeline cannot notice the pipeline itself dying.
 
 ## Automating it
 
-Push this folder to a **public** GitHub repo. `update.yml` then runs every weekday
-after close and commits the new files. Public repos get unlimited Actions minutes —
-that's why public is the right call for a daily job. To backfill history, run the
-`backfill` workflow from the Actions tab with a date range.
+Push this folder to a **public** GitHub repo. `pipeline.yml` then runs once a day at
+23:00 IST (17:30 UTC) and commits the new files. Public repos get unlimited Actions
+minutes — that's why public is the right call for a daily job. To backfill history,
+run the `backfill` workflow from the Actions tab with a date range.
 
 ## Google Drive + Sheet (optional)
 

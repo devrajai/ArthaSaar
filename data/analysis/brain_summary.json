@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-19T03:35:33Z",
+  "generated_at": "2026-10-19T11:43:59Z",
   "channels": 10,
-  "videos": 159,
+  "videos": 170,
   "window_start": "2026-06-25",
-  "window_end": "2026-10-18",
-  "total_views": 9997987,
+  "window_end": "2026-10-19",
+  "total_views": 10192004,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
@@ -23,8 +23,13 @@
     },
     {
       "symbol": "RELIANCE",
-      "mentions": 5,
+      "mentions": 7,
       "channels": 4
+    },
+    {
+      "symbol": "ITC",
+      "mentions": 3,
+      "channels": 3
     },
     {
       "symbol": "WIPRO",
@@ -32,19 +37,14 @@
       "channels": 3
     },
     {
-      "symbol": "ITC",
-      "mentions": 2,
+      "symbol": "YESBANK",
+      "mentions": 3,
       "channels": 2
     },
     {
       "symbol": "INFY",
       "mentions": 2,
       "channels": 2
-    },
-    {
-      "symbol": "YESBANK",
-      "mentions": 2,
-      "channels": 1
     },
     {
       "symbol": "DMART",
@@ -60,28 +60,28 @@
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 41
+      "videos": 43
     },
     {
       "theme": "Beginner/Education",
-      "videos": 30
+      "videos": 34
+    },
+    {
+      "theme": "Earnings/Results",
+      "videos": 29
+    },
+    {
+      "theme": "Budget/Policy",
+      "videos": 29
     },
     {
       "theme": "Gold/Commodity",
       "videos": 28
     },
     {
-      "theme": "Budget/Policy",
-      "videos": 27
-    },
-    {
-      "theme": "Earnings/Results",
-      "videos": 26
-    },
-    {
       "theme": "Intraday",
       "videos": 24
     }
   ],
-  "net_sentiment": 24
+  "net_sentiment": 33
 }

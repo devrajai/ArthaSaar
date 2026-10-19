@@ -1,0 +1,29 @@
+{
+  "note": "Free RSS feeds. RSS is the stable, permitted free news route - no scraping, no key.",
+  "feeds": [
+    {
+      "name": "ET Markets",
+      "url": "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms"
+    },
+    {
+      "name": "ET Stocks",
+      "url": "https://economictimes.indiatimes.com/markets/stocks/rssfeeds/2146842.cms"
+    },
+    {
+      "name": "Moneycontrol",
+      "url": "https://www.moneycontrol.com/rss/marketreports.xml"
+    },
+    {
+      "name": "Moneycontrol Biz",
+      "url": "https://www.moneycontrol.com/rss/business.xml"
+    },
+    {
+      "name": "Business Standard",
+      "url": "https://www.business-standard.com/rss/markets-106.rss"
+    },
+    {
+      "name": "LiveMint Markets",
+      "url": "https://www.livemint.com/rss/markets"
+    }
+  ]
+}

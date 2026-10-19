@@ -70,6 +70,33 @@ jobs:
       - name: "7d. Crypto"
         run: python scripts/fetch_crypto.py
 
+      - name: "7e. Corporate actions + price adjustment"
+        run: |
+          python scripts/corporate_actions.py --fetch
+          python scripts/corporate_actions.py --adjust || echo "no archive to adjust yet"
+
+      - name: "7f. Data quality check"
+        run: python scripts/validate_data.py
+
+      - name: "7g. Patterns + relative strength + screens"
+        run: |
+          python scripts/patterns.py --all || true
+          python scripts/relative_strength.py || true
+          python scripts/screen.py --rule trend_up || true
+          python scripts/screen.py --rule oversold || true
+
+      - name: "7h. Reference backtest (a rule has to beat naive to matter)"
+        run: python scripts/backtest.py --strategy sma_cross --fast 20 --slow 50 --stop 0.08 --target 0.20 || true
+
+      - name: "7i. NSE reference data (FII/DII, symbol master, indices)"
+        run: python scripts/fetch_nse_extra.py
+
+      - name: "7j. Mutual fund NAVs (AMFI)"
+        run: python scripts/fetch_amfi.py || true
+
+      - name: "7k. News headlines (RSS)"
+        run: python scripts/fetch_news.py || true
+
       - name: "8. Google Drive candle archive (optional)"
         if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
         env:

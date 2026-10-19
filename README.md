@@ -393,6 +393,74 @@ Binance public REST is the primary source (free, no key, deep history); Yahoo is
 fallback. Both are unofficial for redistribution - fine for research, not for resale.
 Output: `data/crypto/<pair>.parquet`.
 
+## Correctness: corporate actions & validation
+
+**`corporate_actions.py`** fixes the biggest silent bug in the hub. The candle archive
+comes from the raw bhavcopy, which is *unadjusted* - so a 1:10 split looks like a -90%
+day, and every indicator, feature and forecast built on it is reading a fiction.
+
+```bash
+python scripts/corporate_actions.py --fetch     # NSE corporate actions
+python scripts/corporate_actions.py --adjust    # back-adjust the candle archive
+```
+
+Back-adjustment multiplies pre-ex-date prices by the action's factor, leaving the most
+recent price untouched. Verified on a synthetic 1:2 split: the fake -50% crash becomes
+a continuous series (max 1-day return 0.000000).
+
+**`validate_data.py`** checks for impossible bars (`high < low`), nulls, negative
+volume, duplicate symbol/date rows, long gaps, staleness, and unexplained extreme moves.
+It uses the corporate-actions file to *avoid* flagging legitimate splits as errors, and
+exits 1 on real errors so the pipeline can raise an alert.
+
+## Backtest (walk-forward, with costs)
+
+`backtest.py` is what turns indicators into evidence. Without it, everything else is
+just numbers.
+
+```bash
+python scripts/backtest.py --strategy sma_cross --fast 20 --slow 50 --stop 0.08 --target 0.20
+python scripts/backtest.py --strategy rsi_reversion --cost-bps 5
+```
+
+Strategies: `sma_cross`, `rsi_reversion`, `breakout`, `momentum`.
+
+It enforces the rules that make backtests lie when skipped:
+
+- **No look-ahead.** A signal from bar *i* executes at bar *i+1*'s **open**.
+- **Costs** charged per side; **stops/targets** checked intrabar against the low/high.
+- **Open positions at the end are closed**, not dropped.
+- **Time-sliced reporting** (`--windows`) so you can see if an edge is stable or lucky.
+
+`test_backtest.py` proves the timing rather than asserting it: entry/exit land on the
+right bar, the stop fills at the stop price, cost drag equals two sides, and a
+future-peeking signal does **not** produce an absurd return.
+
+## Screens, patterns, relative strength
+
+```bash
+python scripts/screen.py --list                  # 12 transparent rules
+python scripts/screen.py --rule oversold
+python scripts/patterns.py --all                 # numeric chart-pattern detection
+python scripts/relative_strength.py --benchmark NIFTY50
+```
+
+Screens are one-line predicates over `data/indicators/latest.parquet`. Patterns
+implement the rules from the Chart Patterns doc (double top/bottom, head & shoulders,
+bull flag, triangle, hammer, shooting star, engulfing). Relative strength ranks symbols
+against a benchmark - a stock up 5% while the index is up 12% is *weak*, not strong.
+
+## More free data
+
+| Script | What it adds |
+|---|---|
+| `fetch_nse_extra.py` | FII/DII flows, 2,619-symbol master, index constituents (Nifty 50/500/Bank/IT/Next50), corporate announcements |
+| `fetch_amfi.py` | every mutual fund's daily NAV (AMFI, plain text, no key) |
+| `fetch_news.py` | market headlines from free RSS feeds |
+
+`fetch_amfi.py` and `fetch_news.py` are blocked behind some proxies (including this
+sandbox) and skip cleanly with exit 0 - they work from normal CI runners.
+
 ## Limits & notes
 
 - Google Sheets: 10,000,000 cells per workbook — keep the Sheet a view, not the store.

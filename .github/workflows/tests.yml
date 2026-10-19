@@ -1,0 +1,37 @@
+name: tests
+
+# Guards the two things that must not silently break: the indicator maths and the
+# backtester's execution timing. Runs on every push and PR, so a future edit that
+# introduces look-ahead or a wrong formula fails here instead of quietly corrupting
+# results.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Indicator correctness + no look-ahead
+        run: python scripts/test_indicators.py
+
+      - name: Backtest execution timing + cost accounting
+        run: python scripts/test_backtest.py
+
+      - name: Every script compiles
+        run: python -m compileall -q scripts

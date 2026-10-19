@@ -1,0 +1,68 @@
+name: youtube-live
+
+# Near-live YouTube watching. Polls the channels EVERY HOUR, and when a new upload
+# appears it triggers the full pipeline - so a new video drives data collection
+# instead of waiting for the nightly run.
+#
+# Why hourly and not "instant": YouTube gives no webhook we can use without hosting a
+# public endpoint. The public Atom feed is the only free, key-less route, so polling
+# is the honest answer. Hourly is the practical floor for GitHub cron reliability.
+#
+# On a public repo Actions minutes are unlimited, so this costs nothing.
+on:
+  schedule:
+    - cron: "0 * * * *"      # every hour, on the hour (UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write            # commit the new videos
+  actions: write             # dispatch the pipeline workflow
+
+concurrency:
+  group: youtube-live
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -q requests pandas
+
+      - name: Poll the channels
+        run: python scripts/fetch_youtube.py
+
+      - name: Analyse the uploads (the brain)
+        run: python scripts/analyze_youtube.py
+
+      - name: Commit new videos
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add data/youtube data/analysis
+          git commit -m "youtube: $(date -u +%FT%TZ)" || echo "no new videos"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && break
+            git rebase --abort || true
+            sleep 10
+          done
+
+      - name: Trigger the full pipeline if a new video landed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEW=$(python -c "import json;print(json.load(open('data/youtube/last_run.json'))['new'])")
+          echo "new videos this poll: $NEW"
+          if [ "$NEW" -gt 0 ]; then
+            gh workflow run pipeline.yml
+            echo "-> dispatched the pipeline (new video)"
+          else
+            echo "-> nothing new; the pipeline keeps its nightly 23:00 IST run"
+          fi

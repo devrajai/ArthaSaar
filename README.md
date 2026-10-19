@@ -50,6 +50,8 @@ INDEX.md                   what holds what (repo / Drive / Sheets)
 reference/                 ArthaSaar full source dump (323 files, reference only)
 .github/workflows/
   pipeline.yml             THE pipeline - collects everything, analyses, commits, alerts
+  youtube-live.yml         hourly YouTube poll -> triggers the pipeline on a new video
+  tests.yml                indicator + backtest tests on every push
   backfill.yml             manual one-off history backfill
   health.yml               independent freshness watchdog (checks the pipeline itself)
   telegram.yml             close summary (16:00 IST)
@@ -177,6 +179,28 @@ SKIP_YAHOO=1 bash scripts/run_pipeline.sh   # skip the slow step
 time-of-day specific (8:30 AM, 4:00 PM) - folding them into an 11 PM pipeline would
 send them at the wrong time. And `health.yml` must be *independent*: a watchdog that
 runs inside the pipeline cannot notice the pipeline itself dying.
+
+## Live YouTube trigger
+
+A new upload should drive collection, not wait for 23:00. `youtube-live.yml` polls the
+10 channels **every hour** and, when something new appears, dispatches the full pipeline:
+
+```
+new video detected  ->  gh workflow run pipeline.yml  ->  full data collection
+```
+
+How it knows: `fetch_youtube.py` writes `data/youtube/last_run.json` with a `new` count,
+and the workflow triggers only when it is above zero. When nothing is new, the pipeline
+keeps its normal nightly run and nothing extra happens.
+
+**Why hourly and not instant:** YouTube offers no webhook we can use without hosting a
+public endpoint, so the public Atom feed is the only free, key-less route. Polling is
+the honest answer; hourly is the practical floor for GitHub cron reliability. On a
+public repo the minutes are free, so 24 polls a day cost nothing.
+
+The poll also **retries on throttling** - YouTube answers an existing channel with
+404/5xx when it is rate-limiting rather than saying so, which matters a lot at hourly
+frequency.
 
 ## Automating it
 

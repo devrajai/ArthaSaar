@@ -6,6 +6,9 @@ service-account*.json
 # keep the repo small - raw bhavcopy zips stay local only; parquet + csv are committed
 data/raw/
 
+# per-run heartbeat from the hourly YouTube poll - churns every hour, not worth tracking
+data/youtube/last_run.json
+
 # ArthaSaar data is pulled fresh from its source repo each run.
 # fii-history.json is the one we accumulate ourselves, so it IS tracked.
 data/*.json

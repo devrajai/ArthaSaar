@@ -60,6 +60,7 @@ def main() -> int:
     seen = set(combined["video_id"]) if not combined.empty else set()
 
     total_new = 0
+    per_channel: dict[str, int] = {}
     for ch in channels:
         cid = ch["channel_id"]
         name = ch.get("name", cid)
@@ -81,11 +82,23 @@ def main() -> int:
         newest = max((r["published"] for r in rows), default="-")
         print(f"  {name}: {len(rows)} in feed, {len(new)} new  (newest {newest[:10]})")
         total_new += len(new)
+        per_channel[name] = len(new)
 
     if not combined.empty:
         combined = combined.drop_duplicates(subset=["video_id"], keep="first")
         combined = combined.sort_values(["channel_name", "published"], ascending=[True, False])
         combined.to_csv(combined_path, index=False)
+    # Machine-readable run summary. The hourly workflow reads `new` and, when it is
+    # above zero, triggers the full pipeline - that is the "new video -> collect" link.
+    summary = {
+        "checked_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "new": int(total_new),
+        "total": int(len(combined)),
+        "channels_checked": len(channels),
+        "new_by_channel": {k: v for k, v in per_channel.items() if v},
+    }
+    (outdir / "last_run.json").write_text(json.dumps(summary, indent=2))
+
     print(f"Done. {total_new} new video(s); {len(combined)} total on record.")
     return 0
 

@@ -55,11 +55,35 @@ def _text(node, path, default=""):
     return el.text if el is not None and el.text else default
 
 
-def fetch_channel(channel_id: str, *, timeout: int = 30) -> tuple[str, list[Video]]:
-    """Return (channel_title, [Video, ...]) for a channel_id."""
-    r = requests.get(FEED.format(cid=channel_id), headers=HEADERS, timeout=timeout)
-    r.raise_for_status()
-    root = ET.fromstring(r.content)
+RETRY_STATUS = {404, 429, 500, 502, 503, 504}
+
+
+def fetch_channel(channel_id: str, *, timeout: int = 30,
+                  retries: int = 3) -> tuple[str, list[Video]]:
+    """Return (channel_title, [Video, ...]) for a channel_id.
+
+    Retries on throttling. YouTube answers an existing channel with 404/5xx when it is
+    rate-limiting rather than saying so - which matters a lot for an hourly poll.
+    """
+    import time as _t
+    last = None
+    for attempt in range(1, retries + 1):
+        try:
+            r = requests.get(FEED.format(cid=channel_id), headers=HEADERS, timeout=timeout)
+            if r.status_code in RETRY_STATUS and attempt < retries:
+                _t.sleep(2 * attempt)
+                last = f"HTTP {r.status_code}"
+                continue
+            r.raise_for_status()
+            root = ET.fromstring(r.content)
+            break
+        except requests.RequestException as e:  # noqa: PERF203
+            last = f"{type(e).__name__}"
+            if attempt >= retries:
+                raise
+            _t.sleep(2 * attempt)
+    else:
+        raise RuntimeError(f"feed unavailable after {retries} attempts ({last})")
     channel_title = _text(root, "a:title", channel_id)
 
     videos: list[Video] = []

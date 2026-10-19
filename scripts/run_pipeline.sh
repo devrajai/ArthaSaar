@@ -71,6 +71,31 @@ run python scripts/forecast.py --models naive,drift,mean,seasonal_naive,ets,arim
 step "7d. Crypto (Binance, Yahoo fallback)"
 run python scripts/fetch_crypto.py || true
 
+step "7e. Corporate actions + price adjustment"
+run python scripts/corporate_actions.py --fetch || true
+run python scripts/corporate_actions.py --adjust || true
+
+step "7f. Data quality check"
+run python scripts/validate_data.py || true
+
+step "7g. Patterns + relative strength + screens"
+run python scripts/patterns.py --all || true
+run python scripts/relative_strength.py || true
+run python scripts/screen.py --rule trend_up || true
+run python scripts/screen.py --rule oversold || true
+
+step "7h. Reference backtest"
+run python scripts/backtest.py --strategy sma_cross --fast 20 --slow 50 --stop 0.08 --target 0.20 || true
+
+step "7i. NSE reference data (FII/DII, symbol master, indices)"
+run python scripts/fetch_nse_extra.py || true
+
+step "7j. Mutual fund NAVs (AMFI)"
+run python scripts/fetch_amfi.py || true
+
+step "7k. News headlines (RSS)"
+run python scripts/fetch_news.py || true
+
 step "8. Google Drive archive (if configured)"
 if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${ARTHASAAR_DRIVE_FOLDER:-}" ]; then
   run python scripts/candles_from_drive.py --kind daily || true

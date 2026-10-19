@@ -52,7 +52,11 @@ def _load_config(path: Path) -> dict:
 
 
 def _download(sym: str, period: str, interval: str) -> pd.DataFrame | None:
-    import yfinance as yf  # imported lazily so the CLI --help works without it
+    try:
+        import yfinance as yf  # lazy, so --help works without it
+    except ImportError:
+        print("  yfinance is not installed - run: pip install yfinance")
+        return None
     for attempt in range(3):
         try:
             df = yf.download(sym, period=period, interval=interval,

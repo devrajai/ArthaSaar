@@ -90,8 +90,8 @@ def from_binance(symbol: str, interval: str, limit: int) -> pd.DataFrame | None:
 
 
 def from_yahoo(yahoo_symbol: str, period: str, interval: str) -> pd.DataFrame | None:
-    import yfinance as yf
     try:
+        import yfinance as yf
         df = yf.download(yahoo_symbol, period=period, interval=interval,
                          progress=False, auto_adjust=True)
         if df is None or df.empty:
@@ -107,6 +107,9 @@ def from_yahoo(yahoo_symbol: str, period: str, interval: str) -> pd.DataFrame | 
             if c not in df.columns:
                 df[c] = pd.NA
         return df[keep]
+    except ImportError:
+        print("    yahoo error: yfinance not installed (pip install yfinance)")
+        return None
     except Exception as e:  # noqa: BLE001
         print(f"    yahoo error: {type(e).__name__}: {str(e)[:60]}")
         return None

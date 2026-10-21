@@ -116,6 +116,12 @@ run python scripts/build_crypto_pages.py --top 120 || true
 step "7m4. Global pages (stocks by country)"
 run python scripts/build_global_pages.py || true
 
+step "7n1. Screener metrics"
+run python scripts/build_screener.py || true
+
+step "7n2. Search index"
+run python scripts/build_search_index.py || true
+
 step "7n. Website data (docs/data.json)"
 run python scripts/build_site_data.py || true
 

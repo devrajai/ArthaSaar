@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-21T12:47:00Z",
+  "generated_utc": "2026-10-21T13:19:55Z",
   "fno": {
     "date": "2026-10-19",
     "pcr": {
@@ -440,6 +440,176 @@
       ],
       "total": 1
     }
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^DJI",
+        52495.8789,
+        1.02,
+        "2026-10-20"
+      ],
+      [
+        "^HSI",
+        23651.8691,
+        -0.9,
+        "2026-10-21"
+      ],
+      [
+        "^N225",
+        64621.2383,
+        0.85,
+        "2026-10-21"
+      ],
+      [
+        "^GDAXI",
+        25390.4395,
+        0.34,
+        "2026-10-21"
+      ],
+      [
+        "^GSPC",
+        7712.5698,
+        0.28,
+        "2026-10-20"
+      ],
+      [
+        "^FTSE",
+        10729.4404,
+        -0.03,
+        "2026-10-21"
+      ],
+      [
+        "^IXIC",
+        26424.8203,
+        -0.02,
+        "2026-10-20"
+      ]
+    ],
+    "total": 7
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "CL=F",
+        99.0,
+        -4.5,
+        "2026-10-21"
+      ],
+      [
+        "GC=F",
+        4139.0,
+        -0.51,
+        "2026-10-21"
+      ]
+    ],
+    "total": 2
+  },
+  "fx": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "INR=X",
+        94.425,
+        -0.6,
+        "2026-10-21"
+      ],
+      [
+        "EURINR=X",
+        105.9704,
+        -0.38,
+        "2026-10-21"
+      ],
+      [
+        "GBPINR=X",
+        126.4601,
+        0.03,
+        "2026-10-21"
+      ]
+    ],
+    "total": 3
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "XRP-USD",
+        1.3605,
+        1.95,
+        "2026-10-21"
+      ],
+      [
+        "BNB-USD",
+        748.75,
+        1.07,
+        "2026-10-21"
+      ],
+      [
+        "ADA-USD",
+        0.2258,
+        0.89,
+        "2026-10-21"
+      ],
+      [
+        "LINK-USD",
+        12.398,
+        0.63,
+        "2026-10-21"
+      ],
+      [
+        "ETH-USD",
+        2462.0,
+        0.62,
+        "2026-10-21"
+      ],
+      [
+        "SOL-USD",
+        106.96,
+        0.51,
+        "2026-10-21"
+      ],
+      [
+        "DOGE-USD",
+        0.0821,
+        0.38,
+        "2026-10-21"
+      ],
+      [
+        "TRX-USD",
+        0.3308,
+        -0.08,
+        "2026-10-21"
+      ],
+      [
+        "AVAX-USD",
+        9.743,
+        -0.0,
+        "2026-10-21"
+      ]
+    ],
+    "total": 9
   },
   "archive": {
     "files": 7,
@@ -929,6 +1099,16 @@
     ],
     "total": 175
   },
+  "daily": {
+    "as_of": "2026-10-21T13:19:55Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-19 (7 files, 5 days)",
+      "Nifty PCR 0.86 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 6 dividends, 2 splits",
+      "175 videos across 10 channels"
+    ]
+  },
   "fm3": {
     "model": "TimesFM 2.5 200M (zero-shot)",
     "updated": "2026-10-21T12:46:59Z",
@@ -1072,15 +1252,5 @@
       ]
     ],
     "total": 13
-  },
-  "daily": {
-    "as_of": "2026-10-21T12:47:00Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-19 (7 files, 5 days)",
-      "Nifty PCR 0.86 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "Corporate actions: 6 dividends, 2 splits",
-      "175 videos across 10 channels"
-    ]
   }
 }

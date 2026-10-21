@@ -48,9 +48,28 @@
   button.active{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
   button.ibtn{padding:4px 10px;font-size:13px;font-weight:700;border-radius:50%;line-height:1.1}
 
+  /* Navigation is a GRID, not a scrolling strip - every section is visible at once,
+     so nothing is ever hidden off the side of a phone screen. */
   nav.tabs{background:var(--card);border-bottom:1px solid var(--line)}
-  .tabsrow{display:flex;gap:8px;padding:12px 0;overflow-x:auto}
-  .tabsrow button{white-space:nowrap}
+  .tabsrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:10px 0}
+  .tabsrow button{padding:11px 4px;font-size:13.5px;border-radius:9px;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+  @media(max-width:680px){.tabsrow{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+    .tabsrow button{padding:12px 4px;font-size:13px}}
+
+  /* stock pages */
+  .chart{width:100%;height:190px;display:block;margin:6px 0 2px}
+  .chart .area{fill:rgba(29,78,216,.12)}
+  .chart .line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+  .chart .base{stroke:var(--line);stroke-width:1;stroke-dasharray:4 4}
+  .chart .lbl{fill:var(--muted);font-size:10px;font-family:inherit}
+  .rowbtn{cursor:pointer}
+  .rowbtn:hover td{background:var(--head)}
+  .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:12px}
+  .kv div{font-size:14px}
+  .kv b{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+  .up{color:var(--up)} .down{color:var(--down)}
+  .back{margin-bottom:10px}
 
   main{padding:20px 0 40px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
@@ -168,7 +187,7 @@ function card(title, sub, kids, info){
 function para(t,b){return el("p",b?"big":"",esc(t));}
 function list(items){var u=el("ul");(items||[]).forEach(function(i){u.appendChild(el("li","",esc(i)));});return u;}
 function kpi(k,v,n){return el("div","kpi",'<div class="k">'+esc(k)+'</div><div class="v">'+v+'</div>'+(n?'<div class="n">'+esc(n)+'</div>':""));}
-function table(cols, rows, numCols, symCol){
+function table(cols, rows, numCols, symCol, onRow){
   if(!rows||!rows.length)return el("p","msg","No rows yet.");
   numCols=numCols||[];symCol=symCol||0;
   var nc={};numCols.forEach(function(c){nc[String(c).toLowerCase()]=1;});
@@ -202,6 +221,7 @@ function table(cols, rows, numCols, symCol){
         else{txt=esc(v);if(i===symCol)kl="sym";}
         tr.appendChild(el("td",kl,txt));
       });
+      if(onRow){ tr.className="rowbtn"; tr.addEventListener("click",function(){onRow(r);}); }
       tb.appendChild(tr);
     });
     ths.forEach(function(th,i){th.textContent=String(cols[i])+" "+(i===st.c?(st.d>0?"▲":"▼"):"↕");});
@@ -210,11 +230,40 @@ function table(cols, rows, numCols, symCol){
   paint();
   var w=el("div","tablewrap");w.appendChild(t);return w;
 }
-function tbl(sec, numCols, symCol){ return table(sec.columns, sec.rows, numCols, symCol); }
+function tbl(sec, numCols, symCol, onRow){ return table(sec.columns, sec.rows, numCols, symCol, onRow); }
+
+/* inline SVG price chart - no chart library, nothing to fail to load */
+function sparkline(series, w, h){
+  if(!series||series.length<2) return el("p","msg","No price history.");
+  var n=series.length, min=Math.min.apply(null,series), max=Math.max.apply(null,series);
+  if(max===min) max=min+1;
+  var pad=8;
+  function X(i){ return pad+(i/(n-1))*(w-2*pad); }
+  function Y(v){ return h-pad-((v-min)/(max-min))*(h-2*pad); }
+  var pts=series.map(function(v,i){return X(i).toFixed(1)+","+Y(v).toFixed(1);}).join(" ");
+  var area=pad+","+(h-pad)+" "+pts+" "+(w-pad)+","+(h-pad);
+  var stroke=(series[n-1]>=series[0])?"var(--up)":"var(--down)";
+  var svg='<svg class="chart" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">'+
+    '<polygon class="area" points="'+area+'"/>'+
+    '<polyline class="line" vector-effect="non-scaling-stroke" style="stroke:'+stroke+'" points="'+pts+'"/>'+
+    '<text class="lbl" x="'+(pad+2)+'" y="'+(Y(max)+13).toFixed(1)+'">'+max.toFixed(2)+'</text>'+
+    '<text class="lbl" x="'+(pad+2)+'" y="'+(h-pad-5).toFixed(1)+'">'+min.toFixed(2)+'</text>'+
+    '</svg>';
+  var box=el("div",""); box.innerHTML=svg; return box;
+}
+function kv(pairs){
+  var g=el("div","kv");
+  pairs.forEach(function(p){
+    if(p[1]===null||p[1]===undefined||p[1]==="") return;
+    g.appendChild(el("div","",'<b>'+esc(p[0])+'</b>'+p[1]));
+  });
+  return g;
+}
 
 /* ---------- sections ---------- */
 var SECTIONS=[
   {id:"overview",  label:"Overview"},
+  {id:"stocks",    label:"Stocks"},
   {id:"market",    label:"Market"},
   {id:"fno",       label:"F&O"},
   {id:"global",    label:"Global"},
@@ -280,6 +329,84 @@ function build(d){
         {what:"Symbols named most often across the watched YouTube channels.",
          source:"YouTube public Atom feeds + keyword analysis.", updated:when,
          note:"Mentions are not recommendations, and the analysis reads titles/descriptions only."}));
+  })();
+
+  /* ---------- STOCKS ---------- */
+  (function(){
+    var v=sec("stocks");
+    if(!STOCKS || !STOCKS.screener || !STOCKS.screener.length){
+      v.appendChild(card("Stocks","",[para("No stock pages yet. They are built from the Yahoo price history in the daily pipeline, so they appear after the first run.")],
+        {what:"One page per stock: price chart, fundamentals and technicals.",
+         source:"Yahoo Finance prices + yfinance fundamentals; indicators from the hub's verified library.",updated:when}));
+      return;
+    }
+    var holder=el("div");
+
+    function showList(){
+      holder.innerHTML="";
+      var q=el("input"); q.type="search"; q.placeholder="Filter by symbol, name or sector…";
+      var field=el("div","field"); field.appendChild(q);
+      var cols=["symbol","name","sector","close","chg_pct","rsi_14","trend","pe","div_yield"];
+      var rows=STOCKS.screener.map(function(s){ return [s.symbol,s.name,s.sector,s.close,s.chg_pct,s.rsi_14,s.trend,s.pe,s.div_yield]; });
+      var t=table(cols, rows, ["close","chg_pct","rsi_14","pe","div_yield"], 0, function(r){
+        var key=null;
+        for(var k in STOCKS.stocks){ if(STOCKS.stocks[k].symbol===r[0]){ key=k; break; } }
+        if(key) showStock(STOCKS.stocks[key]);
+      });
+      holder.appendChild(card("Stock screener", STOCKS.count+" stocks · tap a row for the full page",
+        [field, t],
+        {what:"Every stock with a page. Tap a row to open its chart, fundamentals and technicals.",
+         source:"Yahoo Finance prices; fundamentals from Yahoo's company data.",updated:STOCKS.updated?ago(STOCKS.updated):when,
+         note:"Fundamentals are Yahoo's figures and can lag a quarter. Not a recommendation."}));
+      q.addEventListener("input", function(){
+        var s=(q.value||"").trim().toLowerCase();
+        $$("tbody tr", t).forEach(function(tr){
+          tr.style.display=(!s||tr.textContent.toLowerCase().indexOf(s)>=0)?"":"none";
+        });
+      });
+    }
+
+    function showStock(r){
+      holder.innerHTML="";
+      var back=el("button","small back","← All stocks");
+      back.addEventListener("click", showList);
+      holder.appendChild(back);
+
+      var head=el("div","");
+      head.innerHTML='<div style="font-size:19px;font-weight:700">'+esc(r.name)+
+        ' <span style="color:var(--muted);font-weight:400;font-size:15px">'+esc(r.symbol)+
+        (r.sector?' · '+esc(r.sector):'')+'</span></div>'+
+        '<div style="margin-top:6px"><b style="font-size:26px">'+num(r.close)+'</b> '+
+        '<span class="'+(r.chg_pct>=0?'up':'down')+'" style="font-weight:700">'+sgn(r.chg_pct)+'%</span></div>';
+      holder.appendChild(card("Price", "last "+(r.series||[]).length+" sessions",
+        [head, sparkline(r.series, 600, 190)],
+        {what:"Closing price, back-adjusted for splits and bonuses.",
+         source:"Yahoo Finance daily candles.", updated:STOCKS.updated?ago(STOCKS.updated):when}));
+
+      var t=r.tech||{};
+      holder.appendChild(card("Technicals", t.trend?("trend: "+t.trend):"",
+        [kv([["RSI (14)", t.rsi_14], ["SMA 20", num(t.sma_20)], ["SMA 50", num(t.sma_50)],
+             ["SMA 200", num(t.sma_200)], ["ADX", t.adx], ["ATR %", t.atr_pct],
+             ["MACD hist", t.macd_hist], ["Bollinger %B", t.bb_pctb], ["Volume vs 20d avg", t.vol_x?t.vol_x+"x":null],
+             ["52w high", num(t.high_52w)], ["52w low", num(t.low_52w)]]),
+         para("Trend is read from the moving averages: up when price > SMA50 > SMA200, down when the reverse. ADX measures how strong a trend is, not its direction. RSI above 70 is often called overbought, below 30 oversold - both are descriptions, not signals.")],
+        {what:"Standard technical indicators computed on adjusted prices.",
+         source:"The hub's indicator library, independently tested for correctness and look-ahead.",
+         updated:STOCKS.updated?ago(STOCKS.updated):when}));
+
+      var f=r.fund||{};
+      holder.appendChild(card("Fundamentals","",
+        [kv([["Market cap", f.mcap?big(f.mcap):null], ["P/E", f.pe], ["P/B", f.pb],
+             ["EPS", f.eps], ["Dividend yield %", f.div_yield], ["Beta", f.beta],
+             ["52w high", num(f.high_52w)], ["52w low", num(f.low_52w)]]),
+         para("P/E is price divided by earnings - high can mean expensive or fast-growing. P/B compares price to book value. Beta measures how much the stock moves relative to the market.")],
+        {what:"Company-level valuation and risk figures.",
+         source:"Yahoo Finance company data.", updated:STOCKS.updated?ago(STOCKS.updated):when,
+         note:"Yahoo's numbers, refreshed daily, and they can lag a quarter. Verify against the company's own filings before acting on them."}));
+    }
+
+    showList();
+    v.appendChild(holder);
   })();
 
   /* ---------- MARKET ---------- */
@@ -468,9 +595,13 @@ function build(d){
 
 /* ---------- load ---------- */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-fetch(BASE+"data.json",{cache:"no-store"})
-  .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
-  .then(function(d){build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
+var STOCKS=null;
+function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
+Promise.all([
+  getJson(BASE+"data.json"),
+  getJson(BASE+"stocks.json").catch(function(){return null;})   // optional: the site works without it
+])
+  .then(function(res){var d=res[0];STOCKS=res[1];build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
     $("#stamp").textContent="No data";
     $("#app").innerHTML='<div class="card err"><h2>Could not load data.json</h2><p>'+esc(e.message)+

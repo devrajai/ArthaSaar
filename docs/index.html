@@ -1,255 +1,555 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ArthaSaar — market data hub</title>
 <meta name="description" content="NSE archive, F&O analytics, YouTube channel analysis and forecasts. Educational data, not investment advice.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+<script>
+  // set the theme before first paint so there is no flash
+  (function(){
+    try{
+      var t = localStorage.getItem('as-theme');
+      if(!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    }catch(e){}
+  })();
+</script>
 <style>
-  :root{
-    --bg:#0b0f14; --panel:#121821; --panel2:#0e141c; --line:#1e2836;
-    --fg:#e6edf3; --mut:#8b98a9; --acc:#4da3ff; --up:#3fb950; --dn:#f85149; --warn:#d29922;
-    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);
-       font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  a{color:var(--acc)}
-  header{border-bottom:1px solid var(--line);padding:22px 20px;background:var(--panel2)}
-  .wrap{max-width:1180px;margin:0 auto}
-  h1{margin:0;font-size:20px;letter-spacing:.2px}
-  h1 span{color:var(--acc)}
-  .sub{color:var(--mut);font-size:13px;margin-top:5px}
-  main{padding:20px}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
-  .kpi .k{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.6px}
-  .kpi .v{font-size:22px;font-weight:650;margin-top:5px;font-variant-numeric:tabular-nums}
-  .kpi .n{color:var(--mut);font-size:12px;margin-top:2px}
-  section{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:18px;overflow:hidden}
-  section > h2{margin:0;padding:13px 16px;font-size:14px;border-bottom:1px solid var(--line);
-               background:var(--panel2);letter-spacing:.3px}
-  section > h2 small{color:var(--mut);font-weight:400;margin-left:8px;font-size:12px}
-  .body{padding:14px 16px}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
-  th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
-  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono)}
-  tr:last-child td{border-bottom:none}
-  .pos{color:var(--up)} .neg{color:var(--dn)}
-  .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;
-        border:1px solid var(--line);color:var(--mut)}
-  .bars{display:flex;flex-direction:column;gap:7px}
-  .bar{display:grid;grid-template-columns:130px 1fr 62px;gap:10px;align-items:center;font-size:13px}
-  .bar .t{color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .bar .track{background:var(--panel2);border-radius:5px;height:16px;overflow:hidden}
-  .bar .fill{height:100%;background:linear-gradient(90deg,#1f6feb,#4da3ff);border-radius:5px}
-  .bar .v{text-align:right;font-family:var(--mono);font-size:12px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:820px){.grid2{grid-template-columns:1fr}}
-  .empty{color:var(--mut);font-size:13px}
-  .scroll{overflow-x:auto}
-  footer{color:var(--mut);font-size:12px;padding:8px 20px 34px;max-width:1180px;margin:0 auto}
-  .warn{color:var(--warn)}
-  .skel{color:var(--mut);padding:26px 20px;font-size:14px}
+/* ============================== tokens ============================== */
+:root{
+  --r-lg:22px; --r-md:16px; --r-sm:11px; --r-pill:999px;
+  --blur:22px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --maxw:1240px;
+}
+html[data-theme="dark"]{
+  --bg:#05070b;
+  --fg:#e9eff7; --muted:#8fa0b6; --faint:#61708a;
+  --glass:rgba(18,24,34,.52);
+  --glass-2:rgba(26,34,47,.42);
+  --brd:rgba(255,255,255,.10);
+  --brd-hi:rgba(255,255,255,.22);
+  --sheen:rgba(255,255,255,.055);
+  --shadow:0 10px 34px rgba(0,0,0,.55), inset 0 1px 0 var(--sheen);
+  --shadow-sm:0 4px 16px rgba(0,0,0,.4), inset 0 1px 0 var(--sheen);
+  --accent:#6fb3ff; --accent-2:#a98bff;
+  --up:#3ddc91; --down:#ff7a7a; --warn:#f2c14e;
+  --row:rgba(255,255,255,.028);
+  --blob-1:rgba(80,140,255,.34);
+  --blob-2:rgba(160,90,255,.28);
+  --blob-3:rgba(0,200,180,.20);
+}
+html[data-theme="light"]{
+  --bg:#eaeff7;
+  --fg:#0c141f; --muted:#54657d; --faint:#7d8ca1;
+  --glass:rgba(255,255,255,.58);
+  --glass-2:rgba(255,255,255,.42);
+  --brd:rgba(255,255,255,.85);
+  --brd-hi:rgba(255,255,255,1);
+  --sheen:rgba(255,255,255,.9);
+  --shadow:0 12px 34px rgba(30,50,90,.16), inset 0 1px 0 #fff;
+  --shadow-sm:0 4px 14px rgba(30,50,90,.12), inset 0 1px 0 #fff;
+  --accent:#2563eb; --accent-2:#7c3aed;
+  --up:#0d9a5b; --down:#d93a3a; --warn:#b8860b;
+  --row:rgba(15,35,70,.035);
+  --blob-1:rgba(90,150,255,.42);
+  --blob-2:rgba(180,120,255,.34);
+  --blob-3:rgba(60,210,190,.30);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--fg); background:var(--bg); font:15px/1.55 var(--font);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* living background */
+.bg{position:fixed; inset:-20%; z-index:-1; pointer-events:none; filter:blur(0px)}
+.bg i{position:absolute; display:block; border-radius:50%; filter:blur(90px); opacity:.9;
+      animation:float 26s var(--ease) infinite alternate}
+.bg i:nth-child(1){width:52vw;height:52vw;left:-8vw;top:-10vw;background:var(--blob-1)}
+.bg i:nth-child(2){width:46vw;height:46vw;right:-6vw;top:6vw;background:var(--blob-2);animation-delay:-8s}
+.bg i:nth-child(3){width:44vw;height:44vw;left:22vw;bottom:-16vw;background:var(--blob-3);animation-delay:-15s}
+@keyframes float{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(3vw,4vh,0) scale(1.14)}}
+@media (prefers-reduced-motion:reduce){ .bg i{animation:none} *{transition:none!important} }
+
+/* ============================== glass ============================== */
+.glass{
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(180%);
+  backdrop-filter:blur(var(--blur)) saturate(180%);
+  border:1px solid var(--brd);
+  box-shadow:var(--shadow);
+  border-radius:var(--r-lg);
+  position:relative;
+}
+/* top sheen on glass surfaces */
+.glass::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),transparent 42%);
+  opacity:.9;
+}
+html[data-theme="light"] .glass::after{background:linear-gradient(180deg,rgba(255,255,255,.7),transparent 46%)}
+
+/* ============================== shell ============================== */
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 20px}
+header.top{
+  position:sticky; top:0; z-index:40; padding:12px 0;
+  background:color-mix(in srgb, var(--bg) 62%, transparent);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  backdrop-filter:blur(16px) saturate(160%);
+  border-bottom:1px solid var(--brd);
+}
+.bar{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:11px; margin-right:auto; min-width:0}
+.mark{
+  width:38px;height:38px;border-radius:12px;flex:0 0 auto; display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--accent),var(--accent-2));
+  box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 45%, transparent), inset 0 1px 0 rgba(255,255,255,.5);
+  color:#fff; font-weight:800; font-size:17px; letter-spacing:-.5px;
+}
+.brand h1{margin:0;font-size:16.5px;font-weight:700;letter-spacing:-.2px;white-space:nowrap}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:1px}
+
+/* segmented tabs */
+.seg{display:flex; gap:4px; padding:4px; border-radius:var(--r-pill);
+     background:var(--glass-2); border:1px solid var(--brd); box-shadow:var(--shadow-sm)}
+.seg button{
+  border:0; cursor:pointer; color:var(--muted); font:inherit; font-size:13.5px; font-weight:600;
+  padding:8px 15px; border-radius:var(--r-pill); background:transparent; transition:all .22s var(--ease);
+  display:flex; align-items:center; gap:7px; white-space:nowrap;
+}
+.seg button:hover{color:var(--fg); background:var(--row)}
+.seg button[aria-selected="true"]{
+  color:var(--fg);
+  background:linear-gradient(180deg, color-mix(in srgb,var(--accent) 26%, transparent), color-mix(in srgb,var(--accent) 12%, transparent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px color-mix(in srgb,var(--accent) 28%, transparent);
+}
+.seg .ico{font-size:14px;line-height:1}
+
+/* buttons */
+.btn{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer; font:inherit; font-size:13.5px; font-weight:600;
+  color:var(--fg); padding:9px 14px; border-radius:var(--r-pill);
+  background:var(--glass-2); border:1px solid var(--brd); box-shadow:var(--shadow-sm);
+  transition:transform .18s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
+}
+.btn:hover{transform:translateY(-1px); border-color:var(--brd-hi)}
+.btn:active{transform:translateY(0) scale(.985)}
+.btn.icon{padding:9px 11px}
+.btn.accent{
+  background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 72%, #000 8%));
+  color:#fff; border-color:transparent;
+  box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 40%, transparent), inset 0 1px 0 rgba(255,255,255,.45);
+}
+.btn:focus-visible,.seg button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.pill{
+  display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:var(--r-pill);
+  font-size:12px; color:var(--muted); background:var(--glass-2); border:1px solid var(--brd);
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up)}
+.dot.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.dot.bad{background:var(--down);box-shadow:0 0 8px var(--down)}
+
+/* ============================== layout ============================== */
+main{padding:26px 0 10px}
+.view{display:none; animation:rise .34s var(--ease)}
+.view.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.grid{display:grid; gap:16px}
+.g-kpi{grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+.g-2{grid-template-columns:1fr 1fr}
+.g-3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+@media(max-width:900px){.g-2{grid-template-columns:1fr}}
+
+/* card */
+.card{padding:18px 18px 16px; display:flex; flex-direction:column; min-width:0}
+.card > .hd{display:flex; align-items:baseline; gap:10px; margin-bottom:13px}
+.card > .hd h2{margin:0;font-size:14.5px;font-weight:700;letter-spacing:-.1px}
+.card > .hd .note{color:var(--muted);font-size:12px;margin-left:auto;text-align:right}
+.card .sub{color:var(--muted);font-size:12.5px;margin:-4px 0 12px}
+
+/* kpi */
+.kpi{padding:16px 17px}
+.kpi .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:650}
+.kpi .v{font-size:26px;font-weight:750;letter-spacing:-.7px;margin-top:6px;font-variant-numeric:tabular-nums;
+        background:linear-gradient(180deg,var(--fg),color-mix(in srgb,var(--fg) 62%, transparent));
+        -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.kpi .n{color:var(--faint);font-size:12px;margin-top:3px}
+
+/* tables */
+.tw{overflow:auto; margin:0 -6px; padding:0 6px; max-height:520px}
+table{width:100%; border-collapse:separate; border-spacing:0; font-size:13px}
+thead th{
+  position:sticky; top:0; z-index:2; text-align:left; font-weight:650; font-size:10.5px; letter-spacing:.7px;
+  text-transform:uppercase; color:var(--muted); padding:9px 11px; white-space:nowrap;
+  background:color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--brd);
+}
+tbody td{padding:9px 11px; border-bottom:1px solid color-mix(in srgb,var(--brd) 55%, transparent); white-space:nowrap}
+tbody tr:nth-child(even) td{background:var(--row)}
+tbody tr:hover td{background:color-mix(in srgb,var(--accent) 12%, transparent)}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12.5px}
+td.sym{font-weight:650;letter-spacing:.2px}
+.pos{color:var(--up)} .neg{color:var(--down)} .mut{color:var(--muted)}
+.chip{display:inline-block;padding:2px 9px;border-radius:var(--r-pill);font-size:11px;font-weight:600;
+      border:1px solid var(--brd);background:var(--glass-2);color:var(--muted)}
+.chip.up{color:var(--up);border-color:color-mix(in srgb,var(--up) 40%, transparent)}
+.chip.dn{color:var(--down);border-color:color-mix(in srgb,var(--down) 40%, transparent)}
+
+/* bars */
+.bars{display:flex;flex-direction:column;gap:9px}
+.brow{display:grid;grid-template-columns:minmax(90px,150px) 1fr 68px;gap:11px;align-items:center;font-size:13px}
+.brow .t{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{height:9px;border-radius:var(--r-pill);background:color-mix(in srgb,var(--fg) 9%, transparent);overflow:hidden;
+       box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.fill{height:100%;border-radius:var(--r-pill);
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 12px color-mix(in srgb,var(--accent) 55%, transparent);
+      transition:width .7s var(--ease)}
+.brow .v{text-align:right;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 18px}
+.search{position:relative;flex:1 1 240px;max-width:340px}
+.search input{
+  width:100%; font:inherit; font-size:13.5px; color:var(--fg); padding:10px 14px 10px 36px;
+  border-radius:var(--r-pill); background:var(--glass-2); border:1px solid var(--brd);
+  box-shadow:var(--shadow-sm);
+}
+.search input::placeholder{color:var(--faint)}
+.search .si{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:13px}
+
+/* states */
+.empty{color:var(--muted);font-size:13.5px;padding:14px 2px}
+.skel{padding:34px 24px}
+.sh{height:14px;border-radius:8px;background:linear-gradient(90deg,var(--row),color-mix(in srgb,var(--fg) 10%, transparent),var(--row));
+    background-size:200% 100%; animation:sweep 1.4s linear infinite;margin-bottom:12px}
+.sh:nth-child(2){width:78%}.sh:nth-child(3){width:56%}
+@keyframes sweep{from{background-position:200% 0}to{background-position:-200% 0}}
+.err{border-color:color-mix(in srgb,var(--down) 45%, transparent)}
+
+footer{color:var(--faint);font-size:12px;padding:26px 0 46px;line-height:1.7}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.hr{height:1px;background:var(--brd);margin:16px 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--faint);font-size:12px;margin-top:10px}
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>Artha<span>Saar</span> — market data hub</h1>
-    <div class="sub" id="stamp">loading…</div>
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="top">
+  <div class="wrap bar">
+    <div class="brand">
+      <div class="mark">अ</div>
+      <div>
+        <h1>ArthaSaar</h1>
+        <div class="tag">market data hub</div>
+      </div>
+    </div>
+
+    <nav class="seg" id="tabs" role="tablist" aria-label="Sections"></nav>
+
+    <button class="btn icon" id="reload" title="Reload data" aria-label="Reload data">⟳</button>
+    <button class="btn icon" id="theme" title="Toggle dark / light" aria-label="Toggle colour theme">◐</button>
   </div>
 </header>
 
-<main class="wrap" id="app">
-  <div class="skel">Loading data.json…</div>
+<main class="wrap">
+  <div class="toolbar">
+    <div class="search">
+      <span class="si">⌕</span>
+      <input id="filter" type="search" placeholder="Filter rows in this view…" autocomplete="off">
+    </div>
+    <span class="pill" id="stamp"><span class="dot"></span> loading…</span>
+  </div>
+  <div id="app"><div class="card glass skel"><div class="sh"></div><div class="sh"></div><div class="sh"></div></div></div>
 </main>
 
-<footer>
-  <p><strong>Educational data, not investment advice.</strong> Built from free sources:
-  NSE bhavcopy and reference files (the exchange's own records), Yahoo Finance and Binance
-  for global/crypto, YouTube's public Atom feeds, AMFI and publisher RSS. NSE/BSE data is
-  governed by their Data Sharing &amp; Usage Policy — personal use is fine, public
-  redistribution may need a licence.</p>
-  <p id="src"></p>
+<footer class="wrap">
+  <div class="hr"></div>
+  <p><strong>Educational data, not investment advice.</strong> Built from free sources: NSE bhavcopy
+  and reference files (the exchange's own records), Yahoo Finance and Binance for global/crypto,
+  YouTube's public Atom feeds, AMFI and publisher RSS.</p>
+  <p>NSE/BSE data is governed by their Data Sharing &amp; Usage Policy — personal use is fine,
+  public redistribution may need a licence. Backtests and forecasts are hypotheses, not results.</p>
 </footer>
 
 <script>
-const $ = (s, r=document) => r.querySelector(s);
-const el = (t, c, h) => { const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; };
-const esc = s => String(s==null?'':s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-const num = v => (v==null||v==='') ? '—' : Number(v).toLocaleString('en-IN');
-const sign = v => { const n=Number(v); if(!isFinite(n)) return '—'; return (n>=0?'+':'')+n.toFixed(2); };
-const cls = v => Number(v)>=0 ? 'pos' : 'neg';
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+const nf = new Intl.NumberFormat("en-IN");
+const num = v => (v == null || v === "" || !isFinite(Number(v))) ? "—" : nf.format(Number(v));
+const sgn = v => { const n = Number(v); return !isFinite(n) ? "—" : (n >= 0 ? "+" : "") + n.toFixed(2); };
+const pcls = v => Number(v) >= 0 ? "pos" : "neg";
+const big = v => { const n = Number(v); if (!isFinite(n)) return "—";
+  const a = Math.abs(n);
+  if (a >= 1e7) return (n / 1e7).toFixed(2) + " Cr";
+  if (a >= 1e5) return (n / 1e5).toFixed(2) + " L";
+  if (a >= 1e3) return (n / 1e3).toFixed(1) + "k";
+  return nf.format(n); };
 
-function kpi(label, value, note){
-  return el('div','kpi', `<div class="k">${esc(label)}</div><div class="v">${value}</div>` +
-                         (note?`<div class="n">${esc(note)}</div>`:''));
+/* ---------- theme ---------- */
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem("as-theme", t); } catch(e){}
+  const b = $("#theme"); if (b) b.textContent = t === "dark" ? "☾" : "☀";
 }
-function table(cols, rows, numCols=[]){
-  if(!rows || !rows.length) return el('div','empty','no rows');
-  const nc = new Set(numCols.map(c=>String(c).toLowerCase()));
-  const t = el('table');
-  const th = el('tr');
-  cols.forEach(c => th.appendChild(el('th', nc.has(String(c).toLowerCase())?'num':'', esc(c))));
-  t.appendChild(el('thead','', '')).appendChild(th);
-  const tb = el('tbody');
+$("#theme").addEventListener("click", () =>
+  setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"));
+setTheme(document.documentElement.getAttribute("data-theme") || "dark");
+
+/* ---------- builders ---------- */
+function card(title, note, ...kids){
+  const c = el("div", "card glass");
+  if (title) c.appendChild(el("div", "hd", `<h2>${esc(title)}</h2>` + (note ? `<span class="note">${esc(note)}</span>` : "")));
+  kids.filter(Boolean).forEach(k => c.appendChild(k));
+  return c;
+}
+function kpi(label, value, note){
+  return el("div", "kpi card glass",
+    `<div class="k">${esc(label)}</div><div class="v">${value}</div>` + (note ? `<div class="n">${esc(note)}</div>` : ""));
+}
+function table(cols, rows, numCols = [], symCol = 0){
+  if (!rows || !rows.length) return el("div", "empty", "no rows");
+  const nc = new Set(numCols.map(c => String(c).toLowerCase()));
+  const t = el("table");
+  const thead = el("thead"), htr = el("tr");
+  cols.forEach(c => htr.appendChild(el("th", nc.has(String(c).toLowerCase()) ? "num" : "", esc(c))));
+  thead.appendChild(htr); t.appendChild(thead);
+  const tb = el("tbody");
   rows.forEach(r => {
-    const tr = el('tr');
-    r.forEach((v,i) => {
-      const c = String(cols[i]||'');
-      const isNum = nc.has(c.toLowerCase());
-      const isPct = /chg|pct|ret|mape|sentiment|oi_chg/i.test(c) && v!=='' && v!=null && isFinite(Number(v));
-      let txt = isNum ? num(v) : esc(v);
-      let klass = isNum ? 'num' : '';
-      if(isPct){ txt = sign(v); klass = 'num ' + cls(v); }
-      tr.appendChild(el('td', klass, txt));
+    const tr = el("tr");
+    r.forEach((v, i) => {
+      const c = String(cols[i] || ""), low = c.toLowerCase();
+      const isNum = nc.has(low);
+      const isPct = /chg|pct|ret|mape|sentiment|oi_chg|score/i.test(low) && v !== "" && v != null && isFinite(Number(v));
+      let txt, klass = isNum ? "num" : "";
+      if (isPct) { txt = sgn(v); klass = "num " + pcls(v); }
+      else if (isNum) { txt = (low.includes("oi")) ? big(v) : num(v); }
+      else { txt = esc(v); if (i === symCol) klass = "sym"; }
+      tr.appendChild(el("td", klass, txt));
     });
     tb.appendChild(tr);
   });
   t.appendChild(tb);
-  return el('div','scroll','').appendChild(t).parentNode;
+  const w = el("div", "tw"); w.appendChild(t); return w;
 }
 function bars(items, labelKey, valueKey, fmt){
-  if(!items || !items.length) return el('div','empty','nothing yet');
-  const max = Math.max(...items.map(i => Math.abs(Number(i[valueKey])||0)), 1);
-  const box = el('div','bars');
+  if (!items || !items.length) return el("div", "empty", "nothing yet");
+  const max = Math.max(...items.map(i => Math.abs(Number(i[valueKey]) || 0)), 1);
+  const box = el("div", "bars");
   items.forEach(i => {
-    const v = Number(i[valueKey])||0;
-    const pct = Math.max(2, Math.abs(v)/max*100);
-    box.appendChild(el('div','bar',
+    const v = Number(i[valueKey]) || 0, pct = Math.max(3, Math.abs(v) / max * 100);
+    box.appendChild(el("div", "brow",
       `<div class="t" title="${esc(i[labelKey])}">${esc(i[labelKey])}</div>
        <div class="track"><div class="fill" style="width:${pct}%"></div></div>
-       <div class="v">${fmt?fmt(v):num(v)}</div>`));
+       <div class="v">${fmt ? fmt(v) : num(v)}</div>`));
   });
   return box;
 }
-function section(title, note, ...children){
-  const s = el('section');
-  s.appendChild(el('h2','', esc(title) + (note?`<small>${esc(note)}</small>`:'')));
-  const b = el('div','body');
-  children.filter(Boolean).forEach(c => b.appendChild(c));
-  s.appendChild(b);
-  return s;
-}
-function objTable(obj, keyName='key'){
-  const rows = Object.entries(obj||{}).map(([k,v]) => [k, (typeof v==='object')?JSON.stringify(v):v]);
-  return table([keyName,'value'], rows);
+function objTable(obj, keyName){
+  const rows = Object.entries(obj || {}).map(([k, v]) => [k, typeof v === "object" ? JSON.stringify(v) : v]);
+  return table([keyName || "key", "value"], rows);
 }
 
-fetch('data.json', {cache:'no-store'})
-  .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-  .then(render)
-  .catch(e => {
-    $('#app').innerHTML = `<div class="skel">Could not load data.json (${esc(e.message)}).<br><br>
-      It is written by <code>scripts/build_site_data.py</code> during the pipeline run —
-      if the pipeline has not run yet, there is nothing to show.</div>`;
+/* ---------- views ---------- */
+const VIEWS = [
+  { id:"overview", ico:"◎", label:"Overview" },
+  { id:"market",   ico:"₹", label:"Market"   },
+  { id:"youtube",  ico:"▶", label:"YouTube"  },
+  { id:"signals",  ico:"◇", label:"Signals"  },
+  { id:"data",     ico:"⛁", label:"Data"     },
+];
+let DATA = null;
+
+function renderTabs(){
+  const nav = $("#tabs"); nav.innerHTML = "";
+  VIEWS.forEach(v => {
+    const b = el("button", "", `<span class="ico">${v.ico}</span>${esc(v.label)}`);
+    b.setAttribute("role", "tab"); b.dataset.view = v.id;
+    b.addEventListener("click", () => show(v.id));
+    nav.appendChild(b);
   });
-
-function render(d){
-  $('#stamp').textContent = 'updated ' + (d.generated_utc || '—') + '  ·  static site, no server';
-  const app = $('#app'); app.innerHTML = '';
-
-  // ---- KPIs
-  const k = el('div','kpis');
-  if(d.archive){
-    k.appendChild(kpi('Archive files', num(d.archive.files), (d.archive.first||'')+' → '+(d.archive.last||'')));
-    k.appendChild(kpi('Trading days', num(d.archive.dates), 'bhavcopy snapshots'));
-    k.appendChild(kpi('Symbols / day', num(d.archive.symbols_max), 'max in one file'));
-  }
-  if(d.brain){
-    k.appendChild(kpi('Channels', num(d.brain.channels), 'YouTube, watched'));
-    k.appendChild(kpi('Videos', num(d.brain.videos), (d.brain.window||[]).join(' → ')));
-    if(d.brain.total_views) k.appendChild(kpi('Views', num(d.brain.total_views), 'across the window'));
-  }
-  if(d.fno && d.fno.pcr){
-    if(d.fno.pcr.nifty_pcr_oi!=null) k.appendChild(kpi('Nifty PCR', d.fno.pcr.nifty_pcr_oi, 'OI-based'));
-    if(d.fno.pcr.nifty_max_pain!=null) k.appendChild(kpi('Max pain', num(d.fno.pcr.nifty_max_pain), 'Nifty'));
-  }
-  if(k.children.length) app.appendChild(k);
-
-  // ---- archive
-  if(d.archive && d.archive.recent){
-    app.appendChild(section('NSE bhavcopy archive', d.archive.last ? 'latest '+d.archive.last : '',
-      table(['date','segment','rows','symbols'], d.archive.recent.map(r=>[r.date,r.segment,r.rows,r.symbols]), ['rows','symbols'])));
-  }
-
-  // ---- F&O
-  if(d.fno){
-    const parts = [];
-    parts.push(el('div','sub', `<span class="pill">stock futures: ${num(d.fno.stock_futures)}</span>
-      &nbsp;<span class="pill">PCR ${esc(d.fno.pcr?.nifty_pcr_oi ?? '—')}</span>
-      &nbsp;<span class="pill">max pain ${num(d.fno.pcr?.nifty_max_pain)}</span>`));
-    parts.push(table(['symbol','oi','oi_chg','chg'], d.fno.top_oi.map(s=>[s.symbol,s.oi,s.oi_chg,s.chg]), ['oi','oi_chg','chg']));
-    if(d.fno.index_futures && d.fno.index_futures.length)
-      parts.push(el('div','sub','index futures OI: ' + d.fno.index_futures.map(i=>`${esc(i.symbol)} ${num(i.oi)}`).join(' · ')));
-    app.appendChild(section('F&O analytics', d.fno.date||'', ...parts));
-  }
-
-  // ---- YouTube brain
-  if(d.brain){
-    const left = el('div');
-    left.appendChild(el('div','sub','most-talked-about symbols'));
-    left.appendChild(table(['symbol','mentions','channels'], (d.brain.top_symbols||[]).map(s=>[s.symbol,s.mentions,s.channels]), ['mentions','channels']));
-    const right = el('div');
-    right.appendChild(el('div','sub','dominant themes'));
-    right.appendChild(bars(d.brain.top_themes||[], 'theme', 'videos'));
-    const g = el('div','grid2'); g.appendChild(left); g.appendChild(right);
-    app.appendChild(section('YouTube brain', `${d.brain.channels} channels · ${d.brain.videos} videos`, g));
-  }
-  if(d.channels){
-    app.appendChild(section('Channel reach', '',
-      table(d.channels.columns, d.channels.rows, ['videos_in_feed','avg_views','median_views','top_views'])));
-  }
-  if(d.videos){
-    app.appendChild(section('Latest uploads', '', table(d.videos.columns.slice(0,5), d.videos.rows.map(r=>r.slice(0,5)))));
-  }
-
-  // ---- indicators / screens / rs / patterns
-  if(d.indicators){
-    app.appendChild(section('Indicator snapshot', `${d.indicators.total} symbols`,
-      table(d.indicators.columns, d.indicators.rows, ['close','rsi_14','sma_50','sma_200','adx','atr_pct'])));
-  }
-  if(d.screens){
-    Object.entries(d.screens).forEach(([name, s]) => {
-      app.appendChild(section('Screen — '+name, `${s.total} matches`, table(s.columns, s.rows)));
-    });
-  }
-  if(d.relative_strength){
-    app.appendChild(section('Relative strength', '', table(d.relative_strength.columns, d.relative_strength.rows)));
-  }
-  if(d.patterns){
-    app.appendChild(section('Chart patterns detected', `${d.patterns.total} candidates`, table(d.patterns.columns, d.patterns.rows)));
-  }
-
-  // ---- forecast
-  if(d.forecast){
-    const rows = d.forecast.median_mape_by_model.map(([m,v]) => [m, v]);
-    app.appendChild(section('Forecast accuracy', 'median MAPE — lower is better',
-      table(['model','median_mape_pct'], rows, ['median_mape_pct']),
-      el('div','sub','Walk-forward, never a random split. The baseline (naive) is the bar to clear.')));
-  }
-
-  // ---- quality + reference
-  if(d.quality){
-    app.appendChild(section('Data quality', '',
-      el('div','sub', `errors: ${(d.quality.errors||[]).length? esc(d.quality.errors.join(', ')) : 'none'} ·
-        warnings: ${(d.quality.warnings||[]).length? esc(d.quality.warnings.join(', ')) : 'none'}`),
-      table(['rows','symbols','from','to'], [[d.quality.rows,d.quality.symbols,(d.quality.window||[])[0],(d.quality.window||[])[1]]])));
-  }
-  if(d.fii_dii){
-    app.appendChild(section('FII / DII flows', '', table(d.fii_dii.columns, d.fii_dii.rows)));
-  }
-  if(d.index_constituents){
-    app.appendChild(section('Index constituents', '', objTable(d.index_constituents, 'index')));
-  }
-
-  if(!app.children.length){
-    app.innerHTML = `<div class="skel">data.json loaded, but it has no sections yet —
-      the pipeline has not produced any outputs. Run <code>bash scripts/run_pipeline.sh</code>.</div>`;
-  }
 }
+function show(id){
+  $$("#tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === id)));
+  $$(".view").forEach(s => s.classList.toggle("on", s.id === "view-" + id));
+  if (location.hash.slice(1) !== id) history.replaceState(null, "", "#" + id);
+  applyFilter();
+}
+
+function build(d){
+  const app = $("#app"); app.innerHTML = "";
+  const sec = id => { const s = el("section", "view"); s.id = "view-" + id; app.appendChild(s); return s; };
+
+  /* ---------------- OVERVIEW ---------------- */
+  {
+    const v = sec("overview");
+    const k = el("div", "grid g-kpi");
+    if (d.archive){
+      k.appendChild(kpi("Archive files", num(d.archive.files), (d.archive.first || "") + " → " + (d.archive.last || "")));
+      k.appendChild(kpi("Trading days", num(d.archive.dates), "bhavcopy snapshots"));
+      k.appendChild(kpi("Symbols / day", num(d.archive.symbols_max), "max in one file"));
+    }
+    if (d.brain){
+      k.appendChild(kpi("Channels", num(d.brain.channels), "YouTube, watched"));
+      k.appendChild(kpi("Videos", num(d.brain.videos), (d.brain.window || []).filter(Boolean).join(" → ")));
+      if (d.brain.total_views) k.appendChild(kpi("Views", big(d.brain.total_views), "across the window"));
+    }
+    if (d.fno && d.fno.pcr){
+      if (d.fno.pcr.nifty_pcr_oi != null) k.appendChild(kpi("Nifty PCR", d.fno.pcr.nifty_pcr_oi, "OI-based"));
+      if (d.fno.pcr.nifty_max_pain != null) k.appendChild(kpi("Max pain", num(d.fno.pcr.nifty_max_pain), "Nifty"));
+    }
+    if (k.children.length) v.appendChild(el("div", "grid g-kpi")).appendChild(k);
+
+    const row = el("div", "grid g-2");
+    if (d.fno && d.fno.top_oi)
+      row.appendChild(card("Top open interest", d.fno.date || "", table(["symbol","oi","oi_chg","chg"], d.fno.top_oi.map(s => [s.symbol, s.oi, s.oi_chg, s.chg]), ["oi","oi_chg","chg"])));
+    if (d.brain && d.brain.top_symbols)
+      row.appendChild(card("Most-talked-about", "from the channels", table(["symbol","mentions","channels"], d.brain.top_symbols.map(s => [s.symbol, s.mentions, s.channels]), ["mentions","channels"])));
+    if (row.children.length) v.appendChild(row);
+
+    if (d.brain && d.brain.top_themes)
+      v.appendChild(card("Dominant themes", `${d.brain.videos || 0} videos`, bars(d.brain.top_themes, "theme", "videos")));
+    if (d.quality){
+      const bad = (d.quality.errors || []).length, warn = (d.quality.warnings || []).length;
+      v.appendChild(card("Data health", bad ? "attention needed" : "clean",
+        el("div", "legend",
+          `<span><span class="chip ${bad ? "dn" : "up"}">${bad ? "errors " + bad : "no errors"}</span></span>` +
+          `<span><span class="chip ${warn ? "" : "up"}">${warn ? "warnings " + warn : "no warnings"}</span></span>` +
+          (d.quality.rows ? `<span class="mut">${num(d.quality.rows)} rows · ${num(d.quality.symbols)} symbols</span>` : ""))));
+    }
+    if (!v.children.length) v.appendChild(card("Nothing yet", "", el("div", "empty", "The pipeline has not produced outputs yet.")));
+  }
+
+  /* ---------------- MARKET ---------------- */
+  {
+    const v = sec("market");
+    if (d.fno){
+      const head = el("div", "legend",
+        `<span class="chip">stock futures ${num(d.fno.stock_futures)}</span>` +
+        `<span class="chip">PCR ${esc(d.fno.pcr && d.fno.pcr.nifty_pcr_oi != null ? d.fno.pcr.nifty_pcr_oi : "—")}</span>` +
+        `<span class="chip">max pain ${num(d.fno.pcr && d.fno.pcr.nifty_max_pain)}</span>`);
+      v.appendChild(card("F&O analytics", d.fno.date || "", head,
+        table(["symbol","oi","oi_chg","chg"], (d.fno.top_oi || []).map(s => [s.symbol, s.oi, s.oi_chg, s.chg]), ["oi","oi_chg","chg"])));
+      if (d.fno.index_futures && d.fno.index_futures.length)
+        v.appendChild(card("Index futures OI", "", table(["symbol","oi"], d.fno.index_futures.map(i => [i.symbol, i.oi]), ["oi"])));
+    }
+    const row = el("div", "grid g-2");
+    if (d.fii_dii) row.appendChild(card("FII / DII flows", "", table(d.fii_dii.columns, d.fii_dii.rows)));
+    if (d.index_constituents) row.appendChild(card("Index constituents", "", objTable(d.index_constituents, "index")));
+    if (row.children.length) v.appendChild(row);
+    if (d.archive && d.archive.recent)
+      v.appendChild(card("Bhavcopy archive", d.archive.last ? "latest " + d.archive.last : "",
+        table(["date","segment","rows","symbols"], d.archive.recent.map(r => [r.date, r.segment, r.rows, r.symbols]), ["rows","symbols"])));
+    if (!v.children.length) v.appendChild(card("Market", "", el("div", "empty", "No market data yet.")));
+  }
+
+  /* ---------------- YOUTUBE ---------------- */
+  {
+    const v = sec("youtube");
+    if (d.brain){
+      const row = el("div", "grid g-2");
+      row.appendChild(card("Symbols mentioned", `${d.brain.videos || 0} videos`, table(["symbol","mentions","channels"], (d.brain.top_symbols || []).map(s => [s.symbol, s.mentions, s.channels]), ["mentions","channels"])));
+      row.appendChild(card("Themes", "", bars(d.brain.top_themes || [], "theme", "videos")));
+      v.appendChild(row);
+    }
+    if (d.channels) v.appendChild(card("Channel reach", "", table(d.channels.columns, d.channels.rows, ["videos_in_feed","avg_views","median_views","top_views"])));
+    if (d.videos) v.appendChild(card("Latest uploads", "", table(d.videos.columns.slice(0,5), d.videos.rows.map(r => r.slice(0,5)))));
+    if (!v.children.length) v.appendChild(card("YouTube", "", el("div", "empty", "No channel data yet.")));
+  }
+
+  /* ---------------- SIGNALS ---------------- */
+  {
+    const v = sec("signals");
+    if (d.indicators) v.appendChild(card("Indicator snapshot", `${num(d.indicators.total)} symbols`,
+      table(d.indicators.columns, d.indicators.rows, ["close","rsi_14","sma_50","sma_200","adx","atr_pct"])));
+    if (d.screens) Object.entries(d.screens).forEach(([n, s]) =>
+      v.appendChild(card("Screen · " + n, `${num(s.total)} matches`, table(s.columns, s.rows))));
+    if (d.relative_strength) v.appendChild(card("Relative strength", "vs benchmark", table(d.relative_strength.columns, d.relative_strength.rows)));
+    if (d.patterns) v.appendChild(card("Chart patterns", `${num(d.patterns.total)} candidates`, table(d.patterns.columns, d.patterns.rows)));
+    if (d.forecast)
+      v.appendChild(card("Forecast accuracy", "median MAPE — lower is better",
+        table(["model","median_mape_pct"], d.forecast.median_mape_by_model, ["median_mape_pct"]),
+        el("div", "sub", "Walk-forward, never a random split. The naive baseline is the bar to clear.")));
+    if (!v.children.length) v.appendChild(card("Signals", "", el("div", "empty", "No signals yet — indicators and screens need a longer candle archive.")));
+  }
+
+  /* ---------------- DATA ---------------- */
+  {
+    const v = sec("data");
+    if (d.quality) v.appendChild(card("Quality report", "", objTable({
+      rows: d.quality.rows, symbols: d.quality.symbols,
+      from: (d.quality.window || [])[0], to: (d.quality.window || [])[1],
+      errors: (d.quality.errors || []).join(", ") || "none",
+      warnings: (d.quality.warnings || []).join(", ") || "none",
+    }, "field")));
+    if (d.archive && d.archive.recent)
+      v.appendChild(card("Archive manifest", "recent files", table(["date","segment","rows","symbols"], d.archive.recent.map(r => [r.date, r.segment, r.rows, r.symbols]), ["rows","symbols"])));
+    v.appendChild(card("Sources", "", el("div", "empty",
+      `NSE bhavcopy &amp; reference · Yahoo Finance · Binance · YouTube Atom feeds · AMFI · publisher RSS.
+       <br>Generated ${esc(d.generated_utc || "—")}.`)));
+  }
+
+  /* tabs + hash */
+  renderTabs();
+  const want = (location.hash || "#overview").slice(1);
+  show(VIEWS.some(x => x.id === want) ? want : "overview");
+  window.addEventListener("hashchange", () => {
+    const id = (location.hash || "").slice(1);
+    if (VIEWS.some(x => x.id === id)) show(id);
+  });
+}
+
+/* ---------- filter ---------- */
+function applyFilter(){
+  const q = ($("#filter").value || "").trim().toLowerCase();
+  const view = $$(".view").find(s => s.classList.contains("on"));
+  if (!view) return;
+  $$(".tw table tbody tr", view).forEach(tr => {
+    tr.style.display = (!q || tr.textContent.toLowerCase().includes(q)) ? "" : "none";
+  });
+  $$(".bars .brow", view).forEach(b => {
+    b.style.display = (!q || b.textContent.toLowerCase().includes(q)) ? "" : "none";
+  });
+}
+$("#filter").addEventListener("input", applyFilter);
+
+/* ---------- load ---------- */
+function stamp(state, text){
+  const s = $("#stamp");
+  s.innerHTML = `<span class="dot ${state}"></span> ${esc(text)}`;
+}
+function load(){
+  stamp("warn", "loading…");
+  fetch("data.json", { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(d => { DATA = d; build(d); stamp("", "updated " + (d.generated_utc || "—")); })
+    .catch(e => {
+      stamp("bad", "no data");
+      $("#app").innerHTML = `<div class="card glass err" style="padding:22px">
+        <h2 style="margin:0 0 8px">Could not load data.json</h2>
+        <div class="empty">${esc(e.message)}<br><br>
+        It is written by <code>scripts/build_site_data.py</code> during the pipeline run.
+        If the pipeline has not run since this page was published, there is nothing to show yet.</div></div>`;
+    });
+}
+$("#reload").addEventListener("click", load);
+load();
 </script>
 </body>
 </html>

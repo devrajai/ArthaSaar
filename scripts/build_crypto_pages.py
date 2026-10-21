@@ -2,26 +2,22 @@
 """
 build_crypto_pages.py - per-coin pages for crypto: chart, technicals, market data.
 
-Crypto trades 24/7 and there are hundreds of pairs, so this mirrors the stock pages:
-a list ranked by traded volume, and a page per coin with a chart and the same
-technical read (RSI, moving averages, ADX, ATR, volume multiple).
+WHY YAHOO IS THE PRIMARY SOURCE
+  Binance geo-blocks US IP addresses, and GitHub Actions runners are in the US - so a
+  Binance-only build silently produces nothing in CI. Yahoo's <COIN>-USD feed works
+  from both a normal runner and a restricted container, so it drives the build.
+  Binance and CoinGecko are used only to enrich (real 24h volume, market cap) when
+  they happen to be reachable.
 
-Sources (free, no API key):
-  Binance public REST  /api/v3/ticker/24hr  - every pair, sorted by quote volume
-                       /api/v3/klines       - daily candles
-  Yahoo Finance        <COIN>-USD           - fallback price history and market cap
-
-Note on "fundamentals": a coin has no earnings, so P/E and ROE do not exist. What is
-meaningful is supply, market cap and volume - so those are what the page shows.
+  Verified: from this sandbox only Yahoo answered; Binance, CoinGecko, Kraken and
+  Coinbase all failed. That is exactly the case this ordering survives.
 
 Output: docs/crypto.json
-  {"updated": "...", "count": 120, "series_len": 120,
-   "rows": [ {symbol,base,quote,close,chg_pct,volume,quote_volume,trades,rsi_14,trend,atr_pct} ],
-   "coins": { "BTCUSDT": {..., "series": [...], "tech": {...}, "market": {...}} } }
+  {"updated","count","rows":[...],"coins":{"BTC":{"symbol","name","series","tech","market"}}}
 
 Usage:
-  python scripts/build_crypto_pages.py --top 120
-  python scripts/build_crypto_pages.py --top 20 --no-fetch      # offline, uses cache
+  python scripts/build_crypto_pages.py --top 100
+  python scripts/build_crypto_pages.py --top 20 --period 1y
 """
 
 from __future__ import annotations
@@ -47,8 +43,10 @@ sys.path.insert(0, str(Path(__file__).parent))
 import indicators as ind  # noqa: E402
 
 SERIES_LEN = 120
-MIN_BARS = 60          # crypto has no 200-day requirement for a useful read
-API = "https://api.binance.com"
+MIN_BARS = 60
+CHUNK = 20
+BINANCE = "https://api.binance.com"
+GECKO = "https://api.coingecko.com/api/v3"
 
 
 def round_or_none(v, nd=2):
@@ -59,160 +57,200 @@ def round_or_none(v, nd=2):
         return None
 
 
-def get_json(url: str, params: dict | None = None, tries: int = 3):
-    import requests
-    last = None
-    for i in range(tries):
-        try:
-            r = requests.get(url, params=params, timeout=30,
-                             headers={"User-Agent": "ArthaSaar/1.0"})
-            if r.status_code == 200:
-                return r.json()
-            last = f"HTTP {r.status_code}"
-        except Exception as e:
-            last = f"{type(e).__name__}"
-        time.sleep(2 * (i + 1))
-    print(f"    [warn] {url.split('/')[-1]}: {last}")
-    return None
+def load_coins(path: str, top: int) -> list[dict]:
+    try:
+        cfg = json.loads(Path(path).read_text())
+        coins = cfg.get("coins") or []
+    except Exception:
+        coins = []
+    return coins[:top] if top else coins
 
 
-def top_pairs(top: int) -> list[dict]:
-    """Every USDT pair, ranked by 24h quote volume."""
-    data = get_json(f"{API}/api/v3/ticker/24hr")
+def try_json(url: str, params: dict | None = None, timeout: int = 15):
+    """Best-effort JSON. Returns None on anything at all - these are enrichments."""
+    try:
+        import requests
+        r = requests.get(url, params=params, timeout=timeout,
+                         headers={"User-Agent": "ArthaSaar/1.0"})
+        return r.json() if r.status_code == 200 else None
+    except Exception:
+        return None
+
+
+def gecko_markets() -> dict:
+    """Market cap / rank / 24h volume from CoinGecko, if it answers."""
+    data = try_json(f"{GECKO}/coins/markets",
+                    {"vs_currency": "usd", "order": "market_cap_desc",
+                     "per_page": 250, "page": 1})
     if not isinstance(data, list):
-        return []
-    rows = []
+        return {}
+    out = {}
+    for c in data:
+        sym = str(c.get("symbol") or "").upper()
+        if not sym:
+            continue
+        out[sym] = {"rank": c.get("market_cap_rank"), "mcap": c.get("market_cap"),
+                    "volume_24h": c.get("total_volume"), "name": c.get("name"),
+                    "ath": c.get("ath"), "supply": c.get("circulating_supply")}
+    return out
+
+
+def binance_24h() -> dict:
+    """Real 24h stats from Binance, if it answers."""
+    data = try_json(f"{BINANCE}/api/v3/ticker/24hr")
+    if not isinstance(data, list):
+        return {}
+    out = {}
     for t in data:
         sym = t.get("symbol", "")
         if not sym.endswith("USDT"):
             continue
-        if any(x in sym for x in ("UPUSDT", "DOWNUSDT", "BULLUSDT", "BEARUSDT")):
-            continue  # leveraged tokens, not coins
+        out[sym[:-4]] = {"volume_24h": round_or_none(t.get("quoteVolume")),
+                         "trades": int(float(t.get("count") or 0)),
+                         "high_24h": round_or_none(t.get("highPrice"), 6),
+                         "low_24h": round_or_none(t.get("lowPrice"), 6),
+                         "chg_24h": round_or_none(t.get("priceChangePercent"))}
+    return out
+
+
+def fetch_history(coins: list[dict], ydir: Path, period: str) -> int:
+    """Daily history from Yahoo, in batches."""
+    try:
+        import yfinance as yf
+    except ImportError:
+        print("  yfinance not installed - nothing to fetch")
+        return 0
+    ydir.mkdir(parents=True, exist_ok=True)
+    tickers = [c["yahoo"] for c in coins]
+    missing = [t for t in tickers if not (ydir / (t.replace("-", "_") + ".parquet")).exists()]
+    if not missing:
+        return 0
+    got = 0
+    for i in range(0, len(missing), CHUNK):
+        batch = missing[i:i + CHUNK]
         try:
-            qv = float(t.get("quoteVolume") or 0)
-        except Exception:
+            data = yf.download(batch, period=period, interval="1d", progress=False,
+                               auto_adjust=True, group_by="ticker", threads=False)
+        except Exception as e:
+            print(f"  [warn] batch {i // CHUNK + 1}: {type(e).__name__}")
             continue
-        if qv <= 0:
-            continue
-        rows.append({
-            "symbol": sym, "base": sym[:-4], "quote": "USDT",
-            "close": round_or_none(t.get("lastPrice"), 6),
-            "chg_pct": round_or_none(t.get("priceChangePercent")),
-            "volume": round_or_none(t.get("volume")),
-            "quote_volume": round_or_none(qv),
-            "trades": int(float(t.get("count") or 0)),
-            "high_24h": round_or_none(t.get("highPrice"), 6),
-            "low_24h": round_or_none(t.get("lowPrice"), 6),
-        })
-    rows.sort(key=lambda r: -(r["quote_volume"] or 0))
-    return rows[:top]
+        for t in batch:
+            try:
+                d = data[t] if isinstance(data.columns, pd.MultiIndex) else data
+                d = d.dropna(subset=["Close"])
+                if len(d) < MIN_BARS:
+                    continue
+                pd.DataFrame({
+                    "date": pd.to_datetime(d.index).strftime("%Y-%m-%d"),
+                    "open": d["Open"].values, "high": d["High"].values,
+                    "low": d["Low"].values, "close": d["Close"].values,
+                    "volume": d["Volume"].values,
+                }).to_parquet(ydir / (t.replace("-", "_") + ".parquet"), index=False)
+                got += 1
+            except Exception:
+                continue
+        time.sleep(1)
+    print(f"  fetched history for {got}/{len(missing)} coins")
+    return got
 
 
-def klines(symbol: str, limit: int = 500) -> pd.DataFrame:
-    data = get_json(f"{API}/api/v3/klines",
-                    {"symbol": symbol, "interval": "1d", "limit": limit})
-    if not isinstance(data, list) or len(data) < MIN_BARS:
-        return pd.DataFrame()
-    df = pd.DataFrame(data, columns=[
-        "open_time", "open", "high", "low", "close", "volume", "close_time",
-        "quote_volume", "trades", "taker_base", "taker_quote", "ignore"])
-    for c in ("open", "high", "low", "close", "volume"):
-        df[c] = pd.to_numeric(df[c], errors="coerce")
-    df["date"] = pd.to_datetime(df["open_time"], unit="ms").dt.strftime("%Y-%m-%d")
-    return df[["date", "open", "high", "low", "close", "volume"]].dropna()
-
-
-def record(pair: dict, df: pd.DataFrame) -> dict | None:
-    if df.empty:
+def build_coin(coin: dict, ydir: Path, gecko: dict, binance: dict) -> dict | None:
+    t = coin["yahoo"]
+    p = ydir / (t.replace("-", "_") + ".parquet")
+    if not p.exists():
+        return None
+    try:
+        df = pd.read_parquet(p).sort_values("date").reset_index(drop=True)
+    except Exception:
+        return None
+    if len(df) < MIN_BARS:
         return None
     try:
         d = ind.add_all(df.copy())
     except Exception:
         return None
+
     vol_ma = d["volume"].rolling(20).mean()
     vol_x = (d["volume"].iloc[-1] / vol_ma.iloc[-1]) if vol_ma.iloc[-1] else None
-    last = d.iloc[-1]
+    last, prev = d.iloc[-1], d.iloc[-2]
     close = float(last["close"])
-    sma50, sma200 = round_or_none(last.get("sma_50")), round_or_none(last.get("sma_200"))
-    if sma50 is not None and sma200 is not None:
-        trend = "up" if close > sma50 > sma200 else ("down" if close < sma50 < sma200 else "mixed")
-    else:
-        trend = "n/a"
-    tech = {
-        "rsi_14": round_or_none(last.get("rsi_14"), 1), "sma_20": round_or_none(last.get("sma_20"), 6),
-        "sma_50": sma50, "sma_200": sma200, "adx": round_or_none(last.get("adx"), 1),
-        "atr_pct": round_or_none(last.get("atr_pct"), 2), "macd_hist": round_or_none(last.get("macd_hist"), 6),
-        "vol_x": round_or_none(vol_x, 2), "trend": trend,
-        "high_52w": round_or_none(d["high"].tail(365).max(), 6),
-        "low_52w": round_or_none(d["low"].tail(365).min(), 6),
-    }
+    chg = (close / float(prev["close"]) - 1) * 100 if float(prev["close"]) else 0.0
+    sma50, sma200 = round_or_none(last.get("sma_50"), 6), round_or_none(last.get("sma_200"), 6)
+    trend = ("up" if close > sma50 > sma200 else "down" if close < sma50 < sma200 else "mixed") \
+        if (sma50 is not None and sma200 is not None) else "n/a"
+
+    base = coin["symbol"]
+    g = gecko.get(base, {})
+    b = binance.get(base, {})
     return {
-        "symbol": pair["symbol"], "base": pair["base"], "quote": pair["quote"],
-        "close": pair.get("close"), "chg_pct": pair.get("chg_pct"),
+        "symbol": base, "name": g.get("name") or coin.get("name") or base,
+        "yahoo": t, "close": round(close, 6), "chg_pct": round(chg, 2),
         "series": [round(float(x), 6) for x in d["close"].tail(SERIES_LEN).tolist()],
-        "tech": tech,
-        "market": {k: pair.get(k) for k in
-                   ("volume", "quote_volume", "trades", "high_24h", "low_24h")},
+        "tech": {
+            "rsi_14": round_or_none(last.get("rsi_14"), 1), "sma_20": round_or_none(last.get("sma_20"), 6),
+            "sma_50": sma50, "sma_200": sma200, "adx": round_or_none(last.get("adx"), 1),
+            "atr_pct": round_or_none(last.get("atr_pct"), 2),
+            "macd_hist": round_or_none(last.get("macd_hist"), 6), "vol_x": round_or_none(vol_x, 2),
+            "trend": trend, "high_52w": round_or_none(d["high"].tail(365).max(), 6),
+            "low_52w": round_or_none(d["low"].tail(365).min(), 6),
+        },
+        "market": {
+            "rank": g.get("rank"), "mcap": g.get("mcap"),
+            "volume_24h": b.get("volume_24h") or g.get("volume_24h"),
+            "trades": b.get("trades"), "high_24h": b.get("high_24h"), "low_24h": b.get("low_24h"),
+            "ath": g.get("ath"), "supply": g.get("supply"),
+            "volume_source": "Binance" if b else ("CoinGecko" if g else "Yahoo"),
+        },
     }
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Crypto pages (list + per-coin technicals).")
-    ap.add_argument("--top", type=int, default=120)
+    ap.add_argument("--config", default="config/crypto_symbols.json")
+    ap.add_argument("--yahoo-dir", default="data/crypto/yahoo")
     ap.add_argument("--out", default="docs/crypto.json")
-    ap.add_argument("--cache", default="data/crypto/klines")
-    ap.add_argument("--no-fetch", action="store_true", help="use only cached klines")
+    ap.add_argument("--top", type=int, default=100)
+    ap.add_argument("--period", default="2y")
+    ap.add_argument("--no-fetch", action="store_true")
     args = ap.parse_args()
 
-    cache = Path(args.cache)
-    cache.mkdir(parents=True, exist_ok=True)
+    coins = load_coins(args.config, args.top)
+    if not coins:
+        print(f"no coins in {args.config}")
+        return 0
+    print(f"coins configured: {len(coins)}")
 
-    pairs = top_pairs(args.top) if not args.no_fetch else []
-    if not pairs:
-        # offline: fall back to whatever klines we have cached
-        pairs = [{"symbol": p.stem, "base": p.stem.replace("USDT", ""), "quote": "USDT",
-                  "close": None, "chg_pct": None} for p in sorted(cache.glob("*.csv"))]
-        if not pairs:
-            print("no pairs (Binance unreachable and no cache) - nothing to do")
-            return 0
-    print(f"pairs: {len(pairs)}")
+    ydir = Path(args.yahoo_dir)
+    if not args.no_fetch:
+        fetch_history(coins, ydir, args.period)
 
-    coins, rows = {}, []
-    for i, pair in enumerate(pairs, 1):
-        sym = pair["symbol"]
-        cp = cache / f"{sym}.csv"
-        df = pd.DataFrame()
-        if cp.exists():
-            try:
-                df = pd.read_csv(cp)
-            except Exception:
-                df = pd.DataFrame()
-        if df.empty and not args.no_fetch:
-            df = klines(sym)
-            if not df.empty:
-                df.to_csv(cp, index=False)
-        if df.empty:
-            continue
-        rec = record(pair, df)
+    gecko = gecko_markets()
+    print(f"  CoinGecko enrichment: {len(gecko)} coins" if gecko else "  CoinGecko: unreachable (fine)")
+    bnc = binance_24h()
+    print(f"  Binance enrichment : {len(bnc)} pairs" if bnc else "  Binance: unreachable (fine)")
+
+    built, rows = {}, []
+    for c in coins:
+        rec = build_coin(c, ydir, gecko, bnc)
         if not rec:
             continue
-        coins[sym] = rec
-        t = rec["tech"]
-        rows.append({**{k: pair.get(k) for k in ("symbol", "base", "close", "chg_pct",
-                                                 "quote_volume", "trades")},
-                     "rsi_14": t["rsi_14"], "trend": t["trend"], "atr_pct": t["atr_pct"]})
-        if i % 20 == 0:
-            print(f"  {i}/{len(pairs)} ...")
+        built[rec["symbol"]] = rec
+        t, m = rec["tech"], rec["market"]
+        rows.append({"symbol": rec["symbol"], "base": rec["symbol"], "name": rec["name"],
+                     "close": rec["close"], "chg_pct": rec["chg_pct"], "rsi_14": t["rsi_14"],
+                     "trend": t["trend"], "atr_pct": t["atr_pct"],
+                     "mcap": m.get("mcap"), "volume_24h": m.get("volume_24h"),
+                     "rank": m.get("rank")})
+    # rank by market cap when we have it, else by 24h volume, else keep config order
+    rows.sort(key=lambda r: (r.get("rank") or 10 ** 6, -(r.get("mcap") or 0)))
 
-    payload = {
-        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "count": len(coins), "series_len": SERIES_LEN,
-        "rows": rows, "coins": coins,
-    }
+    payload = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+               "count": len(built), "series_len": SERIES_LEN,
+               "rows": rows, "coins": built}
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(payload, separators=(",", ":")))
-    print(f"Wrote {dest}  ({dest.stat().st_size / 1e3:.0f} KB)  |  {len(coins)} coins")
+    print(f"Wrote {dest}  ({dest.stat().st_size / 1e3:.0f} KB)  |  {len(built)} coins")
     return 0
 
 

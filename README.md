@@ -432,6 +432,12 @@ Back-adjustment multiplies pre-ex-date prices by the action's factor, leaving th
 recent price untouched. Verified on a synthetic 1:2 split: the fake -50% crash becomes
 a continuous series (max 1-day return 0.000000).
 
+**The adjustment is actually used, not just produced.** It writes `<name>_adj.parquet`,
+and every consumer (features, indicators, forecast, backtest, patterns, relative
+strength, validation) resolves its input through `_archive.pick_candles()`, which
+prefers the adjusted file. The pipeline runs the adjustment at step 5b - *before* any
+analysis - so nothing downstream ever sees an unadjusted split.
+
 **`validate_data.py`** checks for impossible bars (`high < low`), nulls, negative
 volume, duplicate symbol/date rows, long gaps, staleness, and unexplained extreme moves.
 It uses the corporate-actions file to *avoid* flagging legitimate splits as errors, and

@@ -50,6 +50,11 @@ jobs:
       - name: "5. Candle archive from bhavcopy"
         run: python scripts/candles_from_bhavcopy.py --from-local
 
+      - name: "5b. Corporate actions + price adjustment (BEFORE any analysis)"
+        run: |
+          python scripts/corporate_actions.py --fetch
+          python scripts/corporate_actions.py --adjust || echo "no archive to adjust yet"
+
       - name: "6. Analytics (futures, breadth)"
         run: python scripts/build_analytics.py
 
@@ -69,11 +74,6 @@ jobs:
 
       - name: "7d. Crypto"
         run: python scripts/fetch_crypto.py
-
-      - name: "7e. Corporate actions + price adjustment"
-        run: |
-          python scripts/corporate_actions.py --fetch
-          python scripts/corporate_actions.py --adjust || echo "no archive to adjust yet"
 
       - name: "7f. Data quality check"
         run: python scripts/validate_data.py

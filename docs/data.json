@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-21T13:19:55Z",
+  "generated_utc": "2026-10-21T13:39:15Z",
   "fno": {
     "date": "2026-10-19",
     "pcr": {
@@ -362,6 +362,12 @@
       ],
       "rows": [
         [
+          "AEPL",
+          "Interim Dividend - Re 0.006 Per Share",
+          "2026-10-23",
+          "Artemis Electricals and Projects Limited"
+        ],
+        [
           "ANGELONE",
           "Interim Dividend - Rs 1.40 Per Share",
           "2026-10-22",
@@ -374,10 +380,34 @@
           "Elecon Engineering Company Limited"
         ],
         [
+          "GARUDA",
+          "Interim Dividend - Re 0.03 Per Share",
+          "2026-10-23",
+          "Garuda Construction and Engineering Limited"
+        ],
+        [
           "ICICIAMC",
           "Interim Dividend - Rs 30 Per Share",
           "2026-10-21",
           "ICICI Prudential Asset Management Company Limited"
+        ],
+        [
+          "IRFC",
+          "Interim Dividend - Rs 1.15 Per Share",
+          "2026-10-23",
+          "Indian Railway Finance Corporation Limited"
+        ],
+        [
+          "LTM",
+          "Interim Dividend - Rs 25 Per Share",
+          "2026-10-23",
+          "LTM Limited"
+        ],
+        [
+          "MODISONLTD",
+          "Interim Dividend - Rs 4 Per Share",
+          "2026-10-23",
+          "MODISON LIMITED"
         ],
         [
           "MRPL",
@@ -398,7 +428,7 @@
           "Tips Music Limited"
         ]
       ],
-      "total": 6
+      "total": 11
     },
     "split": {
       "columns": [
@@ -441,111 +471,6 @@
       "total": 1
     }
   },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^DJI",
-        52495.8789,
-        1.02,
-        "2026-10-20"
-      ],
-      [
-        "^HSI",
-        23651.8691,
-        -0.9,
-        "2026-10-21"
-      ],
-      [
-        "^N225",
-        64621.2383,
-        0.85,
-        "2026-10-21"
-      ],
-      [
-        "^GDAXI",
-        25390.4395,
-        0.34,
-        "2026-10-21"
-      ],
-      [
-        "^GSPC",
-        7712.5698,
-        0.28,
-        "2026-10-20"
-      ],
-      [
-        "^FTSE",
-        10729.4404,
-        -0.03,
-        "2026-10-21"
-      ],
-      [
-        "^IXIC",
-        26424.8203,
-        -0.02,
-        "2026-10-20"
-      ]
-    ],
-    "total": 7
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "CL=F",
-        99.0,
-        -4.5,
-        "2026-10-21"
-      ],
-      [
-        "GC=F",
-        4139.0,
-        -0.51,
-        "2026-10-21"
-      ]
-    ],
-    "total": 2
-  },
-  "fx": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "INR=X",
-        94.425,
-        -0.6,
-        "2026-10-21"
-      ],
-      [
-        "EURINR=X",
-        105.9704,
-        -0.38,
-        "2026-10-21"
-      ],
-      [
-        "GBPINR=X",
-        126.4601,
-        0.03,
-        "2026-10-21"
-      ]
-    ],
-    "total": 3
-  },
   "crypto": {
     "columns": [
       "symbol",
@@ -556,67 +481,295 @@
     "rows": [
       [
         "XRP-USD",
-        1.3605,
-        1.95,
-        "2026-10-21"
-      ],
-      [
-        "BNB-USD",
-        748.75,
-        1.07,
-        "2026-10-21"
-      ],
-      [
-        "ADA-USD",
-        0.2258,
-        0.89,
-        "2026-10-21"
-      ],
-      [
-        "LINK-USD",
-        12.398,
-        0.63,
-        "2026-10-21"
-      ],
-      [
-        "ETH-USD",
-        2462.0,
-        0.62,
-        "2026-10-21"
-      ],
-      [
-        "SOL-USD",
-        106.96,
-        0.51,
-        "2026-10-21"
-      ],
-      [
-        "DOGE-USD",
-        0.0821,
-        0.38,
-        "2026-10-21"
-      ],
-      [
-        "TRX-USD",
-        0.3308,
-        -0.08,
+        1.3551,
+        1.55,
         "2026-10-21"
       ],
       [
         "AVAX-USD",
-        9.743,
-        -0.0,
+        9.666,
+        -0.79,
+        "2026-10-21"
+      ],
+      [
+        "ETH-USD",
+        2462.8401,
+        0.66,
+        "2026-10-21"
+      ],
+      [
+        "ADA-USD",
+        0.2252,
+        0.65,
+        "2026-10-21"
+      ],
+      [
+        "LINK-USD",
+        12.392,
+        0.58,
+        "2026-10-21"
+      ],
+      [
+        "BTC-USD",
+        83415.9062,
+        0.57,
+        "2026-10-21"
+      ],
+      [
+        "BNB-USD",
+        743.92,
+        0.42,
+        "2026-10-21"
+      ],
+      [
+        "DOGE-USD",
+        0.082,
+        0.25,
+        "2026-10-21"
+      ],
+      [
+        "SOL-USD",
+        106.54,
+        0.11,
+        "2026-10-21"
+      ],
+      [
+        "TRX-USD",
+        0.3312,
+        0.05,
         "2026-10-21"
       ]
     ],
-    "total": 9
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "Sky Gold and Diamonds among 5 stocks that hit 52-week highs and rallied up to 45% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sky-gold-and-diamonds-among-5-stocks-that-hit-52-week-highs-and-rallied-up-to-45-in-a-month/slideshow/135093530.cms",
+        "Wed, 21 Oct 2026 18:50:01 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "IGI Q2 Results: Consolidated PAT surges 43% to Rs 185 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/igi-q2-results-consolidated-pat-surges-43-to-rs-185-crore/articleshow/135093213.cms",
+        "Wed, 21 Oct 2026 18:35:12 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "AI data center projects boost US warehouse demand and rents, real estate company JLL says",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ai-data-center-projects-boost-us-warehouse-demand-and-rents-real-estate-company-jll-says/articleshow/135093158.cms",
+        "Wed, 21 Oct 2026 18:32:00 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "UK annual house prices rise at weakest pace since March, ONS says",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/uk-annual-house-prices-rise-at-weakest-pace-since-march-ons-says/articleshow/135093001.cms",
+        "Wed, 21 Oct 2026 18:30:20 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "TVS ILP leases 80k sq ft at Visakhapatnam park in Andhra to Yokohoma group",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/tvs-ilp-leases-80k-sq-ft-at-visakhapatnam-park-in-andhra-to-yokohoma-group/articleshow/135092976.cms",
+        "Wed, 21 Oct 2026 18:20:40 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee rises 46 paise to 94.45 on India-US trade deal hopes; oil prices cap gains",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-46-paise-to-94-45-on-india-us-trade-deal-hopes-oil-prices-cap-gains/articleshow/135092741.cms",
+        "Wed, 21 Oct 2026 18:07:12 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Aye Finance Q2 Results: Net profit more than doubles to Rs 87 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/aye-finance-q2-results-net-profit-more-than-doubles-to-rs-87-crore/articleshow/135092689.cms",
+        "Wed, 21 Oct 2026 18:05:05 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Dow Jones| Nasdaq | S&amp;P 500 | US Stock Market Today |Live Updates: Nasdaq futures lead gains as SpaceX, Super Micro results lift AI stocks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-stock-market-live-updates-nasdaq-sp-500-us-iran-israel-war-hormuz-deal-brent-crude-oil-earnings-forecast-nvidia-ai-stocks-spacex-super-micro-tesla-netflix-fed-rate-hike-treasury-yields-stock-price-news-21st-september-2026/liveblog/135092299.cms",
+        "Wed, 21 Oct 2026 17:40:08 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Bitcoin rebounds above $83,000 as strong US earnings and falling oil prices lift risk appetite",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/bitcoin-rebounds-above-83000-as-strong-us-earnings-and-falling-oil-prices-lift-risk-appetite/articleshow/135091348.cms",
+        "Wed, 21 Oct 2026 17:09:14 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Market wrap: Infosys, HCL Tech, Bajaj Finance, BSE top gainers and losers on Nifty and Sensex on Wednesday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-infosys-hcl-tech-bajaj-finance-bse-top-gainers-and-losers-on-nifty-and-sensex-on-wednesday/articleshow/135090920.cms",
+        "Wed, 21 Oct 2026 16:59:52 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Want exposure to India's biggest banks? Zerodha launches new ETF",
+        "https://economictimes.indiatimes.com/markets/stocks/news/want-exposure-to-indias-biggest-banks-zerodha-launches-new-etf/articleshow/135090790.cms",
+        "Wed, 21 Oct 2026 16:54:00 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: Eurozone bond yields rise as French unrest fuels fiscal concerns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-eurozone-bond-yields-rise-as-french-unrest-fuels-fiscal-concerns/articleshow/135090708.cms",
+        "Wed, 21 Oct 2026 16:49:53 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: BOJ's Himino says Japan inflation near 2% target, signals further rate hikes",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-bojs-himino-says-japan-inflation-near-2-target-signals-further-rate-hikes/articleshow/135090643.cms",
+        "Wed, 21 Oct 2026 16:46:44 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "CAS swings: Nifty\u2019s indicative price jumps 500 points in seconds, closes higher than pre-CAS level",
+        "https://economictimes.indiatimes.com/markets/stocks/news/cas-swings-niftys-indicative-price-jumps-500-points-in-seconds-closes-higher-than-pre-cas-level/articleshow/135089898.cms",
+        "Wed, 21 Oct 2026 16:23:01 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Jio Platforms' IPO-linked inflows boost rupee; elevated oil prices spur caution",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/jio-platforms-ipo-linked-inflows-boost-rupee-elevated-oil-prices-spur-caution/articleshow/135089592.cms",
+        "Wed, 21 Oct 2026 16:07:48 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "MFs raise stakes in 10 stocks in Q2; shares rally up to 130% in FY27, including 3 multibaggers",
+        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-raise-stakes-in-10-stocks-in-q2-shares-rally-up-to-130-in-fy27-including-3-multibaggers/slideshow/135089578.cms",
+        "Wed, 21 Oct 2026 16:01:44 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Eternal Q2 Results: Profit soars 92% YoY to Rs 125 crore; revenue zooms 78%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/eternal-q2-results-profit-soars-92-yoy-to-rs-125-crore-revenue-surges-78/articleshow/135088651.cms",
+        "Wed, 21 Oct 2026 15:36:28 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: European shares struggle for direction as France unrest weighs on sentiment",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-shares-struggle-for-direction-as-france-unrest-weighs-on-sentiment/articleshow/135088232.cms",
+        "Wed, 21 Oct 2026 15:11:14 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: ECB sees Euro liquidity support boosting global currency role",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-ecb-sees-euro-liquidity-support-boosting-global-currency-role/articleshow/135088196.cms",
+        "Wed, 21 Oct 2026 15:09:58 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "US Market: Musk backs Tesla-SpaceX merger idea, envisioning a $3.5 trillion giant",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-musk-backs-tesla-spacex-merger-idea-envisioning-a-3-5-trillion-giant/articleshow/135088139.cms",
+        "Wed, 21 Oct 2026 15:06:33 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: UK inflation rises to 3.5% in September, boosting rate hike bets",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-uk-inflation-rises-to-3-5-in-september-boosting-rate-hike-bets/articleshow/135088109.cms",
+        "Wed, 21 Oct 2026 15:04:36 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "From Dhirubhai to Akash Ambani, Reliance made stocks popular with Indians",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/from-dhirubhai-to-akash-ambani-reliance-made-stocks-popular-with-indians/articleshow/135087652.cms",
+        "Wed, 21 Oct 2026 14:53:56 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Rs 8 lakh crore selloff! Sensex plunges 1,400 points from day\u2019s peak as bulls lose steam; 3 triggers",
+        "https://economictimes.indiatimes.com/markets/stocks/news/rs-8-lakh-crore-selloff-sensex-plunges-1400-points-from-days-peak-as-bulls-lose-steam-5-triggers/articleshow/135087547.cms",
+        "Wed, 21 Oct 2026 14:48:17 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Adani Green Q2 Results: Profit rises 15% YoY to Rs 673 crore; revenue jumps 39%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-green-q2-results-profit-rises-15-yoy-to-rs-673-crore-revenue-jumps-39/articleshow/135087375.cms",
+        "Wed, 21 Oct 2026 14:42:54 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Vishal Mega Mart shares sink 8% as Q2 margin takes a hit despite profit growth",
+        "https://economictimes.indiatimes.com/markets/stocks/news/vishal-mega-mart-shares-sink-8-as-q2-margin-takes-a-hit-despite-profit-growth/articleshow/135087535.cms",
+        "Wed, 21 Oct 2026 14:39:13 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Multibagger alert! PC Jeweller shares jump 6% to fresh 52-week high, rally over 100% in 2026",
+        "https://economictimes.indiatimes.com/markets/stocks/news/multibagger-alert-pc-jeweller-shares-jump-6-to-fresh-52-week-high-rally-over-100-in-2026/articleshow/135087063.cms",
+        "Wed, 21 Oct 2026 14:20:04 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: China, Hong Kong stocks fall as CATL slump, consumer worries weigh",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-china-hong-kong-stocks-fall-as-catl-slump-consumer-worries-weigh/articleshow/135086989.cms",
+        "Wed, 21 Oct 2026 14:12:45 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "HD Fire Protect shares list at 23% premium; expert highlights key factors to watch",
+        "https://economictimes.indiatimes.com/markets/stocks/news/hd-fire-protect-shares-list-at-23-premium-expert-highlights-key-factors-to-watch/articleshow/135086485.cms",
+        "Wed, 21 Oct 2026 13:50:55 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Jio IPO: Nithin Kamath explains how Jio played an important role in making what Zerodha is today",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/jio-ipo-nithin-kamath-explains-how-jio-played-an-important-role-in-making-what-zerodha-is-today/articleshow/135086123.cms",
+        "Wed, 21 Oct 2026 13:35:07 +0530",
+        "2026-10-21T13:38:52Z"
+      ],
+      [
+        "ET Markets",
+        "Carlsberg said to near public filing for $700 million India IPO",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/carlsberg-said-to-near-public-filing-for-700-million-india-ipo/articleshow/135086210.cms",
+        "Wed, 21 Oct 2026 13:32:27 +0530",
+        "2026-10-21T13:38:52Z"
+      ]
+    ],
+    "total": 168
   },
   "archive": {
-    "files": 7,
-    "dates": 5,
-    "symbols_max": 3674,
+    "files": 8,
+    "dates": 6,
+    "symbols_max": 3703,
     "first": "2019-06-14",
-    "last": "2026-10-19",
+    "last": "2026-10-21",
     "recent": [
       {
         "date": "2019-06-14",
@@ -680,53 +833,62 @@
         "era": "udiff",
         "file_parquet": "data/parquet/fo/fo_2026-10-19.parquet",
         "file_csv": "data/csv/fo/fo_2026-10-19.csv"
+      },
+      {
+        "date": "2026-10-21",
+        "segment": "cm",
+        "rows": "3708",
+        "symbols": "3703",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-21.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-21.csv"
       }
     ]
   },
   "brain": {
     "channels": 10,
-    "videos": 175,
+    "videos": 191,
     "window": [
       "2026-06-25",
       "2026-10-21"
     ],
-    "total_views": 10288873,
-    "net_sentiment": 29,
+    "total_views": 10570368,
+    "net_sentiment": 46,
     "top_symbols": [
       {
         "symbol": "NIFTY50",
-        "mentions": 42,
+        "mentions": 46,
         "channels": 5
       },
       {
         "symbol": "BANKNIFTY",
-        "mentions": 20,
+        "mentions": 22,
         "channels": 4
       },
       {
         "symbol": "SENSEX",
-        "mentions": 18,
+        "mentions": 20,
         "channels": 3
       },
       {
         "symbol": "RELIANCE",
-        "mentions": 9,
+        "mentions": 11,
         "channels": 4
+      },
+      {
+        "symbol": "YESBANK",
+        "mentions": 4,
+        "channels": 3
+      },
+      {
+        "symbol": "ITC",
+        "mentions": 3,
+        "channels": 3
       },
       {
         "symbol": "WIPRO",
         "mentions": 3,
         "channels": 3
-      },
-      {
-        "symbol": "YESBANK",
-        "mentions": 3,
-        "channels": 2
-      },
-      {
-        "symbol": "ITC",
-        "mentions": 2,
-        "channels": 2
       },
       {
         "symbol": "INFY",
@@ -747,27 +909,27 @@
     "top_themes": [
       {
         "theme": "MF/SIP",
-        "videos": 44
+        "videos": 46
       },
       {
         "theme": "Beginner/Education",
-        "videos": 36
-      },
-      {
-        "theme": "Budget/Policy",
-        "videos": 31
+        "videos": 39
       },
       {
         "theme": "Earnings/Results",
-        "videos": 28
+        "videos": 33
+      },
+      {
+        "theme": "Budget/Policy",
+        "videos": 33
       },
       {
         "theme": "Gold/Commodity",
-        "videos": 28
+        "videos": 30
       },
       {
         "theme": "IPO",
-        "videos": 28
+        "videos": 30
       }
     ]
   },
@@ -795,31 +957,31 @@
       ],
       [
         "Abhishek Kar",
-        "17",
-        "2026-10-18",
+        "18",
+        "2026-10-20",
         "2026-09-29",
-        "142222",
-        "126142",
+        "139840",
+        "113849",
         "Stock Market CRASH nifty sensex me kya kare?",
         "474041"
       ],
       [
         "Moneytalks by Groww",
-        "16",
-        "2026-10-18",
+        "17",
+        "2026-10-20",
         "2026-08-22",
-        "79646",
-        "26958",
+        "75035",
+        "26135",
         "How I Built a \u20b935 Crore Portfolio & Retired at 29 | Small Cap Mastercl",
         "483139"
       ],
       [
         "Groww Edge",
-        "22",
-        "2026-10-20",
+        "23",
+        "2026-10-21",
         "2026-10-09",
-        "48913",
-        "20288",
+        "46819",
+        "19824",
         "Is the Oil in Your Samosa the Same Oil Planes Want?",
         "255474"
       ],
@@ -835,51 +997,51 @@
       ],
       [
         "Ghanshyam Tech",
-        "16",
-        "2026-10-18",
+        "18",
+        "2026-10-21",
         "2026-09-29",
-        "39396",
-        "45105",
+        "37349",
+        "43453",
         "FAKE vs REAL BREAKOUT \u0915\u0948\u0938\u0947 \u092a\u0939\u091a\u093e\u0928\u0947\u0902? | 90% Traders \u092f\u0939\u0940\u0902 \u092b\u0902\u0938\u0924\u0947 \u0939\u0948\u0902!",
         "65943"
       ],
       [
         "Groww",
-        "16",
-        "2026-10-17",
+        "20",
+        "2026-10-20",
         "2026-10-06",
-        "31370",
-        "21606",
+        "30750",
+        "25018",
         "How to Buy US Stocks from India? Complete Guide",
         "165710"
       ],
       [
         "Markets by Zerodha",
-        "16",
-        "2026-10-19",
+        "19",
+        "2026-10-21",
         "2026-10-05",
-        "29422",
-        "26643",
+        "25641",
+        "25143",
         "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
         "85869"
       ],
       [
         "Markets by Zerodha Hindi",
-        "16",
-        "2026-10-19",
+        "17",
+        "2026-10-21",
         "2026-09-30",
-        "26005",
-        "12244",
+        "24940",
+        "12234",
         "Can India Become a Global Semiconductor Hub? | Markets by Zerodha Hind",
         "177939"
       ],
       [
         "Upstox",
-        "23",
+        "26",
         "2026-10-21",
         "2026-10-15",
-        "2521",
-        "2051",
+        "2261",
+        "1634",
         "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
         "10837"
       ]
@@ -901,6 +1063,19 @@
       "first_seen"
     ],
     "rows": [
+      [
+        "0dSxk47adtM",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Traders' Villa Exposed? The Reality of Trading Mentorships | Abhishek Kar ft. Manish Ghosttrader",
+        "2026-10-20T10:32:25+00:00",
+        "2026-10-20T10:32:27+00:00",
+        "https://www.youtube.com/watch?v=0dSxk47adtM",
+        "https://i1.ytimg.com/vi/0dSxk47adtM/hqdefault.jpg",
+        "99356",
+        "In this exclusive walkthrough at Traders Villa, Abhishek Kar spends a day inside the intensive trading boot camp led by renowned mentor Manishji from Ghost traders. Discover what really separates profitable market operators from the 94% who lose money in intraday trading.\nFrom demystifying Elliot Wave Theory, identifying institutional trap trading, and spotting market manipulation, to mastering trading psychology and risk management, this session breaks down actionable setups used by real studen",
+        "2026-10-21T13:38:17Z"
+      ],
       [
         "eqCPkaKbD0E",
         "Abhishek Kar",
@@ -1082,32 +1257,9 @@
         "173042",
         "",
         "2026-10-17T09:34:40Z"
-      ],
-      [
-        "5-_OxFSZcLI",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Bitcoin \u20b985 Lakh: America Ne Khel Diya!",
-        "2026-10-05T12:06:18+00:00",
-        "2026-10-15T10:13:46+00:00",
-        "https://www.youtube.com/watch?v=5-_OxFSZcLI",
-        "https://i2.ytimg.com/vi/5-_OxFSZcLI/hqdefault.jpg",
-        "79193",
-        "Bitcoin \u20b985 Lakh: America Ne Khel Diya!\nGet discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nWe dont give any paid tips or services like PMS. Several fake accounts do that on our name on telegram,instagrammfacebook etc. Kindly dont pay scammers a single ruppee and prefer to see our announcements via official channels.\n\nBitcoin just smashed past $86,377\u2014crossing roughly \u20b982 to \u20b985 Lakh in India. But",
-        "2026-10-17T09:34:40Z"
       ]
     ],
-    "total": 175
-  },
-  "daily": {
-    "as_of": "2026-10-21T13:19:55Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-19 (7 files, 5 days)",
-      "Nifty PCR 0.86 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "Corporate actions: 6 dividends, 2 splits",
-      "175 videos across 10 channels"
-    ]
+    "total": 191
   },
   "fm3": {
     "model": "TimesFM 2.5 200M (zero-shot)",
@@ -1252,5 +1404,167 @@
       ]
     ],
     "total": 13
+  },
+  "quality": {
+    "rows": 20175,
+    "symbols": 4449,
+    "window": [
+      "2019-06-14",
+      "2026-10-21"
+    ],
+    "errors": [],
+    "warnings": [
+      "extreme_move_unexplained",
+      "long_gaps"
+    ]
+  },
+  "fii_dii": {
+    "columns": [
+      "buyValue",
+      "category",
+      "date",
+      "netValue",
+      "sellValue"
+    ],
+    "rows": [
+      [
+        "14931.57",
+        "DII",
+        "21-Oct-2026",
+        "1614.32",
+        "13317.25"
+      ],
+      [
+        "17003.9",
+        "FII/FPI",
+        "21-Oct-2026",
+        "1022.32",
+        "15981.58"
+      ]
+    ],
+    "total": 2
+  },
+  "index_constituents": {
+    "nifty50": 50,
+    "nifty500": 501,
+    "niftybank": 14,
+    "niftyit": 10,
+    "niftynext50": 50
+  },
+  "daily": {
+    "as_of": "2026-10-21T13:39:15Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-21 (8 files, 6 days)",
+      "Nifty PCR 0.86 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 11 dividends, 2 splits",
+      "191 videos across 10 channels",
+      "168 news headlines"
+    ]
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^DJI",
+        52495.8789,
+        1.02,
+        "2026-10-20"
+      ],
+      [
+        "^HSI",
+        23651.8691,
+        -0.9,
+        "2026-10-21"
+      ],
+      [
+        "^N225",
+        64621.2383,
+        0.85,
+        "2026-10-21"
+      ],
+      [
+        "^GDAXI",
+        25390.4395,
+        0.34,
+        "2026-10-21"
+      ],
+      [
+        "^GSPC",
+        7712.5698,
+        0.28,
+        "2026-10-20"
+      ],
+      [
+        "^FTSE",
+        10729.4404,
+        -0.03,
+        "2026-10-21"
+      ],
+      [
+        "^IXIC",
+        26424.8203,
+        -0.02,
+        "2026-10-20"
+      ]
+    ],
+    "total": 7
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "CL=F",
+        99.0,
+        -4.5,
+        "2026-10-21"
+      ],
+      [
+        "GC=F",
+        4139.0,
+        -0.51,
+        "2026-10-21"
+      ]
+    ],
+    "total": 2
+  },
+  "fx": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "INR=X",
+        94.425,
+        -0.6,
+        "2026-10-21"
+      ],
+      [
+        "EURINR=X",
+        105.9704,
+        -0.38,
+        "2026-10-21"
+      ],
+      [
+        "GBPINR=X",
+        126.4601,
+        0.03,
+        "2026-10-21"
+      ]
+    ],
+    "total": 3
   }
 }

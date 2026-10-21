@@ -38,6 +38,9 @@ run python scripts/fetch_bhavcopy.py --latest || true
 step "2. Yahoo Finance (indices, global)"
 if [ "${SKIP_YAHOO:-0}" = "1" ]; then skip "yahoo"; else
   run python scripts/fetch_yahoo.py --group indices --period 5y || true
+  # global indices, commodities and FX for the Global tab
+  run python scripts/fetch_yahoo.py --group global --period 2y || true
+  run python scripts/fetch_yahoo.py --group fx --period 2y || true
 fi
 
 # ---------------------------------------------------------------- 2. youtube
@@ -96,7 +99,10 @@ run python scripts/fetch_amfi.py || true
 step "7k. News headlines (RSS)"
 run python scripts/fetch_news.py || true
 
-step "7l. Website data (docs/data.json)"
+step "7l. Spike detection (OI + volume)"
+run python scripts/build_spikes.py || true
+
+step "7m. Website data (docs/data.json)"
 run python scripts/build_site_data.py || true
 
 step "8. Google Drive archive (if configured)"

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-21T06:45:27Z",
+  "generated_utc": "2026-10-21T09:36:47Z",
   "fno": {
     "date": "2026-10-19",
     "pcr": {
@@ -155,6 +155,461 @@
       }
     ],
     "stock_futures": 213
+  },
+  "spikes": {
+    "oi": {
+      "columns": [
+        "date",
+        "symbol",
+        "oi",
+        "oi_change",
+        "oi_pct",
+        "price_chg",
+        "direction"
+      ],
+      "rows": [
+        [
+          "2026-10-19",
+          "AUROPHARMA",
+          "4030400",
+          "3786750",
+          "93.95",
+          "-2.51",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "JSWSTEEL",
+          "418500",
+          "373950",
+          "89.35",
+          "2.13",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "EICHERMOT",
+          "177900",
+          "153400",
+          "86.23",
+          "1.32",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "HINDUNILVR",
+          "721800",
+          "621900",
+          "86.16",
+          "-1.49",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "PRESTIGE",
+          "704700",
+          "590850",
+          "83.84",
+          "-1.38",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "NTPC",
+          "1206000",
+          "972000",
+          "80.6",
+          "-1.6",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "ADANIENT",
+          "227424",
+          "160371",
+          "70.52",
+          "-0.95",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "MPHASIS",
+          "213125",
+          "146300",
+          "68.65",
+          "0.05",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "INDUSTOWER",
+          "10682800",
+          "7282800",
+          "68.17",
+          "-0.49",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "PREMIERENE",
+          "2641600",
+          "1759550",
+          "66.61",
+          "-0.21",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "ICICIGI",
+          "288600",
+          "187525",
+          "64.98",
+          "-2.02",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "360ONE",
+          "733500",
+          "446500",
+          "60.87",
+          "-2.21",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "OBEROIRLTY",
+          "204050",
+          "122150",
+          "59.86",
+          "-2.06",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "SRF",
+          "239600",
+          "143400",
+          "59.85",
+          "-1.96",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "NAUKRI",
+          "274450",
+          "153450",
+          "55.91",
+          "-2.98",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "UNITDSPR",
+          "255200",
+          "136800",
+          "53.61",
+          "-1.26",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "ANANDRATHI",
+          "1557000",
+          "832500",
+          "53.47",
+          "0.78",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "LT",
+          "774025",
+          "404950",
+          "52.32",
+          "0.41",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "UPL",
+          "4539250",
+          "2357700",
+          "51.94",
+          "-0.84",
+          "build-up"
+        ],
+        [
+          "2026-10-19",
+          "SUNPHARMA",
+          "231000",
+          "112700",
+          "48.79",
+          "-1.03",
+          "build-up"
+        ]
+      ],
+      "total": 25
+    }
+  },
+  "corporate": {
+    "dividend": {
+      "columns": [
+        "symbol",
+        "subject",
+        "ex_date",
+        "company"
+      ],
+      "rows": [
+        [
+          "ANGELONE",
+          "Interim Dividend - Rs 1.40 Per Share",
+          "2026-10-22",
+          "Angel One Limited"
+        ],
+        [
+          "ELECON",
+          "Interim Dividend - Re 0.50 Per Share",
+          "2026-10-21",
+          "Elecon Engineering Company Limited"
+        ],
+        [
+          "ICICIAMC",
+          "Interim Dividend - Rs 30 Per Share",
+          "2026-10-21",
+          "ICICI Prudential Asset Management Company Limited"
+        ],
+        [
+          "MRPL",
+          "Interim Dividend - Rs 3 Per Share",
+          "2026-10-21",
+          "Mangalore Refinery and Petrochemicals Limited"
+        ],
+        [
+          "TECHM",
+          "Interim Dividend - Rs  15 Per Share",
+          "2026-10-23",
+          "Tech Mahindra Limited"
+        ],
+        [
+          "TIPSMUSIC",
+          "Interim Dividend - Rs 6.50 Per Share",
+          "2026-10-22",
+          "Tips Music Limited"
+        ]
+      ],
+      "total": 6
+    },
+    "split": {
+      "columns": [
+        "symbol",
+        "subject",
+        "ex_date",
+        "company"
+      ],
+      "rows": [
+        [
+          "AZADIND",
+          "Face Value Split (Sub-Division) - From Rs 10/- Per Share To Rs 2/- Per Share",
+          "2026-10-23",
+          "Azad India Mobility Limited"
+        ],
+        [
+          "JSWDULUX",
+          "Face Value Split (Sub-Division) - From Rs 10/- Per Share To Re 1/- Per Share",
+          "2026-10-22",
+          "JSW Dulux Limited"
+        ]
+      ],
+      "total": 2
+    },
+    "other": {
+      "columns": [
+        "symbol",
+        "subject",
+        "ex_date",
+        "company"
+      ],
+      "rows": [
+        [
+          "VRLLOG",
+          "Buy Back",
+          "2026-10-22",
+          "VRL Logistics Limited"
+        ]
+      ],
+      "total": 1
+    }
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^DJI",
+        52495.8789,
+        1.02,
+        "2026-10-20"
+      ],
+      [
+        "^HSI",
+        23651.8691,
+        -0.9,
+        "2026-10-21"
+      ],
+      [
+        "^N225",
+        64621.2383,
+        0.85,
+        "2026-10-21"
+      ],
+      [
+        "^GDAXI",
+        25390.4395,
+        0.34,
+        "2026-10-21"
+      ],
+      [
+        "^GSPC",
+        7712.5698,
+        0.28,
+        "2026-10-20"
+      ],
+      [
+        "^FTSE",
+        10729.4404,
+        -0.03,
+        "2026-10-21"
+      ],
+      [
+        "^IXIC",
+        26424.8203,
+        -0.02,
+        "2026-10-20"
+      ]
+    ],
+    "total": 7
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "CL=F",
+        99.0,
+        -4.5,
+        "2026-10-21"
+      ],
+      [
+        "GC=F",
+        4139.0,
+        -0.51,
+        "2026-10-21"
+      ]
+    ],
+    "total": 2
+  },
+  "fx": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "INR=X",
+        94.425,
+        -0.6,
+        "2026-10-21"
+      ],
+      [
+        "EURINR=X",
+        105.9704,
+        -0.38,
+        "2026-10-21"
+      ],
+      [
+        "GBPINR=X",
+        126.4601,
+        0.03,
+        "2026-10-21"
+      ]
+    ],
+    "total": 3
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "XRP-USD",
+        1.3605,
+        1.95,
+        "2026-10-21"
+      ],
+      [
+        "BNB-USD",
+        748.75,
+        1.07,
+        "2026-10-21"
+      ],
+      [
+        "ADA-USD",
+        0.2258,
+        0.89,
+        "2026-10-21"
+      ],
+      [
+        "LINK-USD",
+        12.398,
+        0.63,
+        "2026-10-21"
+      ],
+      [
+        "ETH-USD",
+        2462.0,
+        0.62,
+        "2026-10-21"
+      ],
+      [
+        "SOL-USD",
+        106.96,
+        0.51,
+        "2026-10-21"
+      ],
+      [
+        "DOGE-USD",
+        0.0821,
+        0.38,
+        "2026-10-21"
+      ],
+      [
+        "TRX-USD",
+        0.3308,
+        -0.08,
+        "2026-10-21"
+      ],
+      [
+        "AVAX-USD",
+        9.743,
+        -0.0,
+        "2026-10-21"
+      ]
+    ],
+    "total": 9
   },
   "archive": {
     "files": 7,
@@ -644,50 +1099,14 @@
     ],
     "total": 175
   },
-  "quality": {
-    "rows": 16472,
-    "symbols": 4411,
-    "window": [
-      "2019-06-14",
-      "2026-10-19"
-    ],
-    "errors": [],
-    "warnings": [
-      "extreme_move_unexplained",
-      "long_gaps"
+  "daily": {
+    "as_of": "2026-10-21T09:36:47Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-19 (7 files, 5 days)",
+      "Nifty PCR 0.86 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 6 dividends, 2 splits",
+      "175 videos across 10 channels"
     ]
-  },
-  "fii_dii": {
-    "columns": [
-      "buyValue",
-      "category",
-      "date",
-      "netValue",
-      "sellValue"
-    ],
-    "rows": [
-      [
-        "14781.31",
-        "DII",
-        "19-Oct-2026",
-        "3201.19",
-        "11580.12"
-      ],
-      [
-        "11240.64",
-        "FII/FPI",
-        "19-Oct-2026",
-        "-1148.64",
-        "12389.28"
-      ]
-    ],
-    "total": 2
-  },
-  "index_constituents": {
-    "nifty50": 50,
-    "nifty500": 501,
-    "niftybank": 14,
-    "niftyit": 10,
-    "niftynext50": 50
   }
 }

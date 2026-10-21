@@ -4,15 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ArthaSaar — market data</title>
-<meta name="description" content="NSE archive, F&O analytics, YouTube channel analysis and forecasts. Educational data, not investment advice.">
+<meta name="description" content="NSE archive, F&O, global markets, crypto, news, corporate actions, YouTube analysis. Educational data, not investment advice.">
 <script>
   /* Evict the previous site's service worker (it served a cached app shell). */
   (function(){
     try{
       if('serviceWorker' in navigator){
-        navigator.serviceWorker.getRegistrations().then(function(rs){
-          rs.forEach(function(r){ r.unregister(); });
-        }).catch(function(){});
+        navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }).catch(function(){});
       }
       if(window.caches && caches.keys){
         caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }).catch(function(){});
@@ -21,85 +19,72 @@
   })();
 </script>
 <style>
-  /* Plain, boring CSS. No colour-mix, no backdrop-filter, nothing that can fail. */
+  /* Plain CSS. No colour-mix, no backdrop-filter, nothing that can fail. */
   :root{
-    --bg:#f4f6f9; --card:#ffffff; --line:#d7dee8; --text:#101822; --muted:#5b6b80;
-    --accent:#1d4ed8; --accent-text:#ffffff; --up:#0a7d43; --down:#c02b2b;
-    --head:#eef2f7;
+    --bg:#f4f6f9; --card:#fff; --line:#d7dee8; --text:#101822; --muted:#5b6b80;
+    --accent:#1d4ed8; --accent-text:#fff; --up:#0a7d43; --down:#c02b2b; --head:#eef2f7; --info:#fffbe9; --infoline:#e8d9a0;
   }
   html[data-theme="dark"]{
     --bg:#151a21; --card:#1d242e; --line:#2d3745; --text:#e9eff7; --muted:#9aa8bb;
-    --accent:#5b8cff; --accent-text:#0b1220; --up:#4ade80; --down:#ff8080;
-    --head:#232c38;
+    --accent:#5b8cff; --accent-text:#0b1220; --up:#4ade80; --down:#ff8080; --head:#232c38;
+    --info:#2a2718; --infoline:#4a4227;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  }
-  .wrap{max-width:1100px; margin:0 auto; padding:0 16px}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 
-  /* header */
-  header{background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10}
-  .top{display:flex; align-items:center; gap:12px; padding:14px 0}
-  .logo{
-    width:40px;height:40px;border-radius:10px;background:#f0b24a;color:#3a2708;
-    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;
-  }
-  h1{margin:0; font-size:20px; letter-spacing:.5px}
-  .tag{color:var(--muted); font-size:13px}
-  .top .right{margin-left:auto}
+  header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+  .top{display:flex;align-items:center;gap:12px;padding:14px 0}
+  .logo{width:40px;height:40px;border-radius:10px;background:#f0b24a;color:#3a2708;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  h1{margin:0;font-size:20px;letter-spacing:.5px}
+  .tag{color:var(--muted);font-size:13px}
+  .top .right{margin-left:auto;display:flex;gap:8px}
 
-  /* buttons — normal, obvious */
-  button{
-    font:inherit; font-size:15px; font-weight:600; cursor:pointer;
-    padding:10px 16px; border-radius:8px;
-    border:1px solid var(--line); background:var(--card); color:var(--text);
-  }
+  button{font:inherit;font-size:15px;font-weight:600;cursor:pointer;padding:10px 16px;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);color:var(--text)}
   button:hover{background:var(--head)}
-  button.primary{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
-  button.primary:hover{opacity:.92}
-  button.small{padding:7px 12px; font-size:14px}
-  button.active{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
+  button.primary{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+  button.small{padding:7px 12px;font-size:14px}
+  button.active{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+  button.ibtn{padding:4px 10px;font-size:13px;font-weight:700;border-radius:50%;line-height:1.1}
 
-  /* nav */
-  nav.tabs{background:var(--card); border-bottom:1px solid var(--line)}
-  .tabsrow{display:flex; gap:8px; padding:12px 0; overflow:auto}
+  nav.tabs{background:var(--card);border-bottom:1px solid var(--line)}
+  .tabsrow{display:flex;gap:8px;padding:12px 0;overflow-x:auto}
   .tabsrow button{white-space:nowrap}
 
-  /* cards */
   main{padding:20px 0 40px}
-  .card{
-    background:var(--card); border:1px solid var(--line); border-radius:10px;
-    padding:18px; margin-bottom:16px;
-  }
-  .card h2{margin:0 0 4px; font-size:18px}
-  .card h2 .sub{display:block; font-weight:400; font-size:13px; color:var(--muted); margin-top:3px}
-  .card p{margin:10px 0 0; color:var(--muted)}
-  .card p.big{color:var(--text); font-size:17px; font-weight:600}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+  .cardhead{display:flex;align-items:flex-start;gap:10px}
+  .cardhead h2{margin:0;font-size:18px;flex:1}
+  .cardhead h2 .sub{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:3px}
+  .card p{margin:10px 0 0;color:var(--muted)}
+  .card p.big{color:var(--text);font-size:17px;font-weight:600}
+  .card ul{margin:10px 0 0;padding-left:22px;color:var(--text)}
+  .card li{margin:4px 0}
+  .info{display:none;margin-top:12px;padding:12px 14px;border:1px solid var(--infoline);background:var(--info);border-radius:8px;font-size:14px;color:var(--text)}
+  .info.on{display:block}
+  .info b{display:inline-block;min-width:74px}
   .section{display:none}
   .section.on{display:block}
 
-  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:16px}
-  .kpi{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px}
-  .kpi .k{font-size:12px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); font-weight:700}
-  .kpi .v{font-size:26px; font-weight:800; margin-top:6px}
-  .kpi .n{font-size:12px; color:var(--muted); margin-top:3px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:16px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .kpi .k{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
+  .kpi .v{font-size:26px;font-weight:800;margin-top:6px}
+  .kpi .n{font-size:12px;color:var(--muted);margin-top:3px}
 
-  /* tables */
-  table{width:100%; border-collapse:collapse; font-size:15px; margin-top:12px}
-  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line)}
-  th{background:var(--head); font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:15px;margin-top:12px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+  th{background:var(--head);font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
   th.sortable{cursor:pointer}
   th.sortable:hover{color:var(--text)}
   td.num,th.num{text-align:right}
   td.sym{font-weight:700}
   .up{color:var(--up)} .down{color:var(--down)}
-  .tablewrap{overflow:auto}
-
-  .msg{color:var(--muted); padding:8px 0}
+  .tablewrap{overflow-x:auto}
+  .msg{color:var(--muted);padding:8px 0}
   .err{border-color:var(--down)}
-  footer{color:var(--muted); font-size:13px; padding:8px 0 30px}
+  footer{color:var(--muted);font-size:13px;padding:8px 0 30px}
 </style>
 </head>
 <body>
@@ -117,265 +102,363 @@
   </div>
 </header>
 
-<nav class="tabs">
-  <div class="wrap tabsrow" id="tabs"></div>
-</nav>
+<nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
-<main class="wrap" id="app">
-  <div class="card"><p class="msg">Loading data…</p></div>
-</main>
+<main class="wrap" id="app"><div class="card"><p class="msg">Loading data…</p></div></main>
 
 <footer class="wrap">
   <p><strong>Educational data, not investment advice.</strong> Sources: NSE bhavcopy &amp; reference files,
-  Yahoo Finance, Binance, YouTube feeds, AMFI, publisher RSS.</p>
+  Yahoo Finance, Binance, YouTube feeds, AMFI, publisher RSS. NSE/BSE data is governed by their
+  Data Sharing &amp; Usage Policy — personal use is fine, public redistribution may need a licence.</p>
 </footer>
 
 <script>
 "use strict";
-var $ = function(s,r){ return (r||document).querySelector(s); };
-var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
-function el(t,c,h){ var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; }
-function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(m){
-  return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]; }); }
-function num(v){ if(v==null||v===""||!isFinite(Number(v)))return "—"; return Number(v).toLocaleString("en-IN"); }
-function sgn(v){ var n=Number(v); if(!isFinite(n))return "—"; return (n>=0?"+":"")+n.toFixed(2); }
-function big(v){ var n=Number(v); if(!isFinite(n))return "—"; var a=Math.abs(n);
-  if(a>=1e7)return (n/1e7).toFixed(2)+" Cr"; if(a>=1e5)return (n/1e5).toFixed(2)+" L";
-  if(a>=1e3)return (n/1e3).toFixed(1)+"k"; return num(n); }
-function ago(iso){ if(!iso)return "—"; var s=(Date.now()-new Date(iso).getTime())/1000;
-  if(!isFinite(s)||s<0)return "just now"; if(s<90)return Math.round(s)+"s ago";
-  if(s<5400)return Math.round(s/60)+"m ago"; if(s<172800)return Math.round(s/3600)+"h ago";
-  return Math.round(s/86400)+"d ago"; }
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m];});}
+function num(v){if(v==null||v===""||!isFinite(Number(v)))return "—";return Number(v).toLocaleString("en-IN");}
+function sgn(v){var n=Number(v);if(!isFinite(n))return "—";return (n>=0?"+":"")+n.toFixed(2);}
+function big(v){var n=Number(v);if(!isFinite(n))return "—";var a=Math.abs(n);
+  if(a>=1e7)return (n/1e7).toFixed(2)+" Cr";if(a>=1e5)return (n/1e5).toFixed(2)+" L";
+  if(a>=1e3)return (n/1e3).toFixed(1)+"k";return num(n);}
+function ago(iso){if(!iso)return "—";var s=(Date.now()-new Date(iso).getTime())/1000;
+  if(!isFinite(s)||s<0)return "just now";if(s<90)return Math.round(s)+"s ago";
+  if(s<5400)return Math.round(s/60)+"m ago";if(s<172800)return Math.round(s/3600)+"h ago";
+  return Math.round(s/86400)+"d ago";}
 
-/* ---------- theme (light by default) ---------- */
-var saved = null;
-try { saved = localStorage.getItem("as-theme"); } catch(e){}
-setTheme(saved === "dark" ? "dark" : "light");
+/* theme: light by default */
+var saved=null;try{saved=localStorage.getItem("as-theme");}catch(e){}
+setTheme(saved==="dark"?"dark":"light");
 function setTheme(t){
-  if(t === "dark") document.documentElement.setAttribute("data-theme","dark");
+  if(t==="dark")document.documentElement.setAttribute("data-theme","dark");
   else document.documentElement.removeAttribute("data-theme");
-  try { localStorage.setItem("as-theme", t); } catch(e){}
-  var b = $("#themeBtn"); if(b) b.textContent = (t === "dark" ? "Light mode" : "Dark mode");
+  try{localStorage.setItem("as-theme",t);}catch(e){}
+  var b=$("#themeBtn");if(b)b.textContent=(t==="dark"?"Light mode":"Dark mode");
 }
-$("#themeBtn").addEventListener("click", function(){
-  setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+$("#themeBtn").addEventListener("click",function(){
+  setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");
 });
 
 /* ---------- builders ---------- */
-function card(title, sub, kids){
-  var c = el("div","card");
-  if(title) c.appendChild(el("h2","", esc(title) + (sub ? '<span class="sub">'+esc(sub)+'</span>' : "")));
-  (kids||[]).forEach(function(k){ if(k) c.appendChild(k); });
+function card(title, sub, kids, info){
+  var c=el("div","card");
+  var head=el("div","cardhead");
+  head.appendChild(el("h2","",esc(title)+(sub?'<span class="sub">'+esc(sub)+'</span>':"")));
+  if(info){
+    var b=el("button","ibtn","i"); b.title="What is this?";
+    b.addEventListener("click",function(){
+      var p=$(".info",c); if(p) p.className = (p.className.indexOf("on")>=0 ? "info" : "info on");
+    });
+    head.appendChild(b);
+  }
+  c.appendChild(head);
+  (kids||[]).forEach(function(k){if(k)c.appendChild(k);});
+  if(info){
+    var rows=[["What",""],["Source",""],["Updated",""]];
+    c.appendChild(el("div","info",
+      "<div><b>What</b> "+esc(info.what||"")+"</div>"+
+      "<div><b>Source</b> "+esc(info.source||"")+"</div>"+
+      "<div><b>Updated</b> "+esc(info.updated||"")+"</div>"+
+      (info.note?"<div><b>Note</b> "+esc(info.note)+"</div>":"")));
+  }
   return c;
 }
-function para(text, big){ return el("p", big ? "big" : "", esc(text)); }
-function kpi(k,v,n){
-  return el("div","kpi", '<div class="k">'+esc(k)+'</div><div class="v">'+v+'</div>'+
-                         (n ? '<div class="n">'+esc(n)+'</div>' : ""));
-}
+function para(t,b){return el("p",b?"big":"",esc(t));}
+function list(items){var u=el("ul");(items||[]).forEach(function(i){u.appendChild(el("li","",esc(i)));});return u;}
+function kpi(k,v,n){return el("div","kpi",'<div class="k">'+esc(k)+'</div><div class="v">'+v+'</div>'+(n?'<div class="n">'+esc(n)+'</div>':""));}
 function table(cols, rows, numCols, symCol){
-  if(!rows || !rows.length) return el("p","msg","No rows.");
-  numCols = numCols || []; symCol = symCol || 0;
-  var nc = {}; numCols.forEach(function(c){ nc[String(c).toLowerCase()] = 1; });
-  var t = el("table"), thead = el("thead"), htr = el("tr");
-  var ths = cols.map(function(c,i){
-    var low = String(c).toLowerCase();
-    var th = el("th", (nc[low] ? "num " : "") + "sortable", esc(c) + " ↕");
-    th.addEventListener("click", function(){ sortBy(i); });
-    htr.appendChild(th); return th;
+  if(!rows||!rows.length)return el("p","msg","No rows yet.");
+  numCols=numCols||[];symCol=symCol||0;
+  var nc={};numCols.forEach(function(c){nc[String(c).toLowerCase()]=1;});
+  var t=el("table"),thead=el("thead"),htr=el("tr");
+  var ths=cols.map(function(c,i){
+    var low=String(c).toLowerCase();
+    var th=el("th",(nc[low]?"num ":"")+"sortable",esc(c)+" ↕");
+    th.addEventListener("click",function(){sortBy(i);});
+    htr.appendChild(th);return th;
   });
-  thead.appendChild(htr); t.appendChild(thead);
-  var tb = el("tbody"); t.appendChild(tb);
-  var st = { c:-1, d:1 };
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=el("tbody");t.appendChild(tb);
+  var st={c:-1,d:1};
   function paint(){
-    var data = rows.slice();
-    if(st.c >= 0){
-      var c = st.c, low = String(cols[c]||"").toLowerCase(), isN = nc[low];
-      data.sort(function(a,b){
-        var x=a[c], y=b[c];
-        if(isN){ var nx=Number(x), ny=Number(y);
-          return ((isFinite(nx)?nx:-Infinity) - (isFinite(ny)?ny:-Infinity)) * st.d; }
-        return String(x).localeCompare(String(y)) * st.d;
-      });
+    var data=rows.slice();
+    if(st.c>=0){
+      var c=st.c,low=String(cols[c]||"").toLowerCase(),isN=nc[low];
+      data.sort(function(a,b){var x=a[c],y=b[c];
+        if(isN){var nx=Number(x),ny=Number(y);return ((isFinite(nx)?nx:-Infinity)-(isFinite(ny)?ny:-Infinity))*st.d;}
+        return String(x).localeCompare(String(y))*st.d;});
     }
-    tb.innerHTML = "";
+    tb.innerHTML="";
     data.forEach(function(r){
-      var tr = el("tr");
+      var tr=el("tr");
       r.forEach(function(v,i){
-        var c = String(cols[i]||""), low = c.toLowerCase(), isN = nc[low];
-        var isPct = /chg|pct|ret|mape|sentiment|oi_chg|score/i.test(low) && v!=="" && v!=null && isFinite(Number(v));
-        var txt, klass = isN ? "num" : "";
-        if(isPct){ txt = sgn(v); klass = "num " + (Number(v)>=0 ? "up" : "down"); }
-        else if(isN){ txt = low.indexOf("oi") >= 0 ? big(v) : num(v); }
-        else { txt = esc(v); if(i === symCol) klass = "sym"; }
-        tr.appendChild(el("td", klass, txt));
+        var c=String(cols[i]||""),low=c.toLowerCase(),isN=nc[low];
+        var isPct=/chg|pct|ret|mape|sentiment|oi_chg|score|oi_pct|vol_x/i.test(low)&&v!==""&&v!=null&&isFinite(Number(v));
+        var txt,kl=isN?"num":"";
+        if(isPct){txt=sgn(v);kl="num "+(Number(v)>=0?"up":"down");}
+        else if(isN){txt=low.indexOf("oi")>=0||low.indexOf("volume")>=0?big(v):num(v);}
+        else{txt=esc(v);if(i===symCol)kl="sym";}
+        tr.appendChild(el("td",kl,txt));
       });
       tb.appendChild(tr);
     });
-    ths.forEach(function(th,i){
-      th.textContent = String(cols[i]) + " " + (i === st.c ? (st.d > 0 ? "▲" : "▼") : "↕");
-    });
+    ths.forEach(function(th,i){th.textContent=String(cols[i])+" "+(i===st.c?(st.d>0?"▲":"▼"):"↕");});
   }
-  function sortBy(i){ if(st.c === i) st.d = -st.d; else { st.c = i; st.d = 1; } paint(); }
+  function sortBy(i){if(st.c===i)st.d=-st.d;else{st.c=i;st.d=1;}paint();}
   paint();
-  var w = el("div","tablewrap"); w.appendChild(t); return w;
+  var w=el("div","tablewrap");w.appendChild(t);return w;
 }
+function tbl(sec, numCols, symCol){ return table(sec.columns, sec.rows, numCols, symCol); }
 
 /* ---------- sections ---------- */
-var SECTIONS = [
-  { id:"overview", label:"Overview" },
-  { id:"market",   label:"Market"   },
-  { id:"fno",      label:"F&O"      },
-  { id:"youtube",  label:"YouTube"  },
-  { id:"data",     label:"Data"     }
+var SECTIONS=[
+  {id:"overview",  label:"Overview"},
+  {id:"market",    label:"Market"},
+  {id:"fno",       label:"F&O"},
+  {id:"global",    label:"Global"},
+  {id:"crypto",    label:"Crypto"},
+  {id:"news",      label:"News"},
+  {id:"corporate", label:"Corporate"},
+  {id:"youtube",   label:"YouTube"},
+  {id:"data",      label:"Data"}
 ];
-var FEEDS = ["archive","fno","brain","channels","videos","indicators","screens","relative_strength",
-             "patterns","forecast","quality","fii_dii","index_constituents","news","amfi","crypto",
-             "corporate_actions","candles","features","manifest"];
+var FEEDS=["archive","fno","spikes","corporate","markets","commodities","fx","crypto","news",
+           "brain","channels","videos","indicators","screens","relative_strength","patterns",
+           "forecast","fm3","quality","fii_dii","index_constituents"];
 
 function renderTabs(){
-  var nav = $("#tabs"); nav.innerHTML = "";
+  var nav=$("#tabs");nav.innerHTML="";
   SECTIONS.forEach(function(s){
-    var b = el("button","", esc(s.label)); b.setAttribute("data-go", s.id);
-    b.addEventListener("click", function(){ show(s.id); });
+    var b=el("button","",esc(s.label));b.setAttribute("data-go",s.id);
+    b.addEventListener("click",function(){show(s.id);});
     nav.appendChild(b);
   });
 }
 function show(id){
-  $$("#tabs button").forEach(function(b){ b.className = (b.getAttribute("data-go") === id ? "active" : ""); });
-  $$(".section").forEach(function(s){ s.className = (s.id === "sec-" + id ? "section on" : "section"); });
+  $$("#tabs button").forEach(function(b){b.className=(b.getAttribute("data-go")===id?"active":"");});
+  $$(".section").forEach(function(s){s.className=(s.id==="sec-"+id?"section on":"section");});
 }
 
 function build(d){
-  var app = $("#app"); app.innerHTML = "";
-  function sec(id){ var s = el("div","section"); s.id = "sec-" + id; app.appendChild(s); return s; }
-  var have = FEEDS.filter(function(f){ return d[f] != null; }).length;
+  var app=$("#app");app.innerHTML="";
+  function sec(id){var s=el("div","section");s.id="sec-"+id;app.appendChild(s);return s;}
+  var have=FEEDS.filter(function(f){return d[f]!=null;}).length;
+  var when=d.generated_utc?ago(d.generated_utc):"—";
 
-  /* overview */
+  /* ---------- OVERVIEW ---------- */
   (function(){
-    var v = sec("overview");
-    v.appendChild(card("Quick Brief", have + "/" + FEEDS.length + " feeds reporting · updated " + ago(d.generated_utc), [
-      para(have < FEEDS.length
-        ? "Some feeds are not reporting yet. Open the Data tab to see which ones."
-        : "All feeds are reporting.", true),
-      para("Market information for education, not investment advice. Values may be delayed.")
-    ]));
+    var v=sec("overview");
+    v.appendChild(card("Daily market update", "Generated " + (d.generated_utc||"—") + " · " + when,
+      [ d.daily && d.daily.items && d.daily.items.length ? list(d.daily.items) : para("No summary yet."),
+        para("Market information for education, not investment advice. Values may be delayed; check each source timestamp.") ],
+      {what:"Headline of what the pipeline collected on its last run.",
+       source:"Every feed in this hub.", updated:when}));
 
-    var grid = el("div","kpis");
-    if(d.archive){
-      grid.appendChild(kpi("Archive files", num(d.archive.files), (d.archive.first||"") + " to " + (d.archive.last||"")));
-      grid.appendChild(kpi("Trading days", num(d.archive.dates), "bhavcopy snapshots"));
-      grid.appendChild(kpi("Symbols / day", num(d.archive.symbols_max), "max in one file"));
+    var grid=el("div","kpis");
+    if(d.fno&&d.fno.pcr){
+      if(d.fno.pcr.nifty_pcr_oi!=null)grid.appendChild(kpi("Nifty PCR",d.fno.pcr.nifty_pcr_oi,"open-interest based"));
+      if(d.fno.pcr.nifty_max_pain!=null)grid.appendChild(kpi("Max pain",num(d.fno.pcr.nifty_max_pain),"Nifty"));
     }
-    if(d.brain){
-      grid.appendChild(kpi("Channels", num(d.brain.channels), "YouTube watched"));
-      grid.appendChild(kpi("Videos", num(d.brain.videos), (d.brain.window||[]).filter(Boolean).join(" to ")));
-      if(d.brain.total_views) grid.appendChild(kpi("Views", big(d.brain.total_views), "across window"));
-    }
-    if(d.fno && d.fno.pcr){
-      if(d.fno.pcr.nifty_pcr_oi != null) grid.appendChild(kpi("Nifty PCR", d.fno.pcr.nifty_pcr_oi, "OI based"));
-      if(d.fno.pcr.nifty_max_pain != null) grid.appendChild(kpi("Max pain", num(d.fno.pcr.nifty_max_pain), "Nifty"));
-    }
-    if(grid.children.length) v.appendChild(grid);
+    if(d.spikes&&d.spikes.oi)grid.appendChild(kpi("OI spikes",num(d.spikes.oi.total),"stock futures"));
+    if(d.corporate){var cd=(d.corporate.dividend||{}).total||0, cs=(d.corporate.split||{}).total||0;
+      grid.appendChild(kpi("Dividends",num(cd),"announced")); grid.appendChild(kpi("Splits",num(cs),"announced"));}
+    if(d.brain){grid.appendChild(kpi("Channels",num(d.brain.channels),"YouTube watched"));
+      grid.appendChild(kpi("Videos",num(d.brain.videos),"collected"));}
+    if(d.archive)grid.appendChild(kpi("Trading days",num(d.archive.dates),"in the archive"));
+    if(grid.children.length)v.appendChild(grid);
 
-    if(d.fno && d.fno.top_oi)
-      v.appendChild(card("Top open interest", d.fno.date || "", [
-        table(["symbol","oi","oi_chg","chg"], d.fno.top_oi.map(function(s){ return [s.symbol,s.oi,s.oi_chg,s.chg]; }), ["oi","oi_chg","chg"])
-      ]));
-    if(d.brain && d.brain.top_symbols)
-      v.appendChild(card("Most talked about", "From the watched channels", [
-        table(["symbol","mentions","channels"], d.brain.top_symbols.map(function(s){ return [s.symbol,s.mentions,s.channels]; }), ["mentions","channels"])
-      ]));
+    if(d.fno&&d.fno.top_oi)
+      v.appendChild(card("Top open interest", d.fno.date||"", [ tbl({columns:["symbol","oi","oi_chg","chg"],
+        rows:d.fno.top_oi.map(function(s){return [s.symbol,s.oi,s.oi_chg,s.chg];})}, ["oi","oi_chg","chg"]) ],
+        {what:"Largest stock-futures open interest, with the change in OI and the price move.",
+         source:"NSE F&O bhavcopy (exchange's own end-of-day file).", updated:d.fno.date||""}));
+    if(d.brain&&d.brain.top_symbols)
+      v.appendChild(card("Most talked about", "From the watched channels",
+        [ tbl({columns:["symbol","mentions","channels"],rows:d.brain.top_symbols.map(function(s){return [s.symbol,s.mentions,s.channels];})},["mentions","channels"]) ],
+        {what:"Symbols named most often across the watched YouTube channels.",
+         source:"YouTube public Atom feeds + keyword analysis.", updated:when,
+         note:"Mentions are not recommendations, and the analysis reads titles/descriptions only."}));
   })();
 
-  /* market */
+  /* ---------- MARKET ---------- */
   (function(){
-    var v = sec("market");
-    if(d.archive && d.archive.recent)
-      v.appendChild(card("Bhavcopy archive", d.archive.last ? "Latest " + d.archive.last : "", [
-        table(["date","segment","rows","symbols"], d.archive.recent.map(function(r){ return [r.date,r.segment,r.rows,r.symbols]; }), ["rows","symbols"])
-      ]));
-    if(d.fii_dii) v.appendChild(card("FII / DII flows","",[ table(d.fii_dii.columns, d.fii_dii.rows) ]));
+    var v=sec("market");
+    if(d.archive&&d.archive.recent)
+      v.appendChild(card("Bhavcopy archive", d.archive.last?"Latest "+d.archive.last:"",
+        [ tbl({columns:["date","segment","rows","symbols"],rows:d.archive.recent.map(function(r){return [r.date,r.segment,r.rows,r.symbols];})},["rows","symbols"]) ],
+        {what:"Every end-of-day bhavcopy file archived so far.",source:"NSE archives.",updated:d.archive.last||""}));
+    if(d.fii_dii)
+      v.appendChild(card("FII / DII flows","",[ tbl(d.fii_dii) ],
+        {what:"Net buying/selling by foreign and domestic institutions in cash market.",
+         source:"NSE FII/DII endpoint.", updated:when}));
     if(d.index_constituents){
-      var rows = Object.keys(d.index_constituents).map(function(k){ return [k, d.index_constituents[k]]; });
-      v.appendChild(card("Index constituents","",[ table(["index","count"], rows, ["count"]) ]));
+      var rows=Object.keys(d.index_constituents).map(function(k){return [k,d.index_constituents[k]];});
+      v.appendChild(card("Index constituents","",[ table(["index","count"],rows,["count"]) ],
+        {what:"How many names each index list carries.",source:"NSE index constituent CSVs.",updated:when}));
     }
-    if(!v.children.length) v.appendChild(card("Market","",[ para("No market data yet.") ]));
+    if(!v.children.length)v.appendChild(card("Market","",[para("No market data yet.")]));
   })();
 
-  /* fno */
+  /* ---------- F&O ---------- */
   (function(){
-    var v = sec("fno");
+    var v=sec("fno");
     if(d.fno){
-      v.appendChild(card("F&O analytics", d.fno.date || "", [
-        para("Stock futures: " + num(d.fno.stock_futures) +
-             "   |   Nifty PCR: " + (d.fno.pcr && d.fno.pcr.nifty_pcr_oi != null ? d.fno.pcr.nifty_pcr_oi : "—") +
-             "   |   Max pain: " + num(d.fno.pcr && d.fno.pcr.nifty_max_pain), true),
-        table(["symbol","oi","oi_chg","chg"], (d.fno.top_oi||[]).map(function(s){ return [s.symbol,s.oi,s.oi_chg,s.chg]; }), ["oi","oi_chg","chg"])
-      ]));
-      if(d.fno.index_futures && d.fno.index_futures.length)
-        v.appendChild(card("Index futures OI","",[ table(["symbol","oi"], d.fno.index_futures.map(function(i){ return [i.symbol,i.oi]; }), ["oi"]) ]));
+      v.appendChild(card("F&O overview", d.fno.date||"",
+        [ para("Stock futures: "+num(d.fno.stock_futures)+
+               "   |   Nifty PCR: "+(d.fno.pcr&&d.fno.pcr.nifty_pcr_oi!=null?d.fno.pcr.nifty_pcr_oi:"—")+
+               "   |   Max pain: "+num(d.fno.pcr&&d.fno.pcr.nifty_max_pain), true) ],
+        {what:"PCR is put/call open-interest ratio; max pain is the strike with the largest total OI.",
+         source:"NSE F&O bhavcopy (UDiFF).", updated:d.fno.date||"",
+         note:"PCR above 1 is often read as bearish positioning, below 1 as bullish - it is a sentiment gauge, not a signal."}));
+      if(d.fno.top_oi)
+        v.appendChild(card("Top open interest","",[ tbl({columns:["symbol","oi","oi_chg","chg"],
+          rows:d.fno.top_oi.map(function(s){return [s.symbol,s.oi,s.oi_chg,s.chg];})},["oi","oi_chg","chg"]) ],
+          {what:"Stock futures ranked by open interest.",source:"NSE F&O bhavcopy.",updated:d.fno.date||""}));
+      if(d.fno.index_futures&&d.fno.index_futures.length)
+        v.appendChild(card("Index futures OI","",[ tbl({columns:["symbol","oi"],rows:d.fno.index_futures.map(function(i){return [i.symbol,i.oi];})},["oi"]) ],
+          {what:"Open interest in index futures.",source:"NSE F&O bhavcopy.",updated:d.fno.date||""}));
     }
-    if(!v.children.length) v.appendChild(card("F&O","",[ para("No derivatives data yet.") ]));
+    if(d.spikes&&d.spikes.oi)
+      v.appendChild(card("OI spikes", ">= 12% change in open interest",
+        [ tbl(d.spikes.oi,["oi","oi_change","oi_pct","price_chg"]) ],
+        {what:"Stock futures where open interest moved sharply versus its own size. Build-up = OI up, unwind = OI down.",
+         source:"NSE F&O bhavcopy.", updated:(d.spikes.oi.rows[0]||[])[0]||"",
+         note:"Rising OI with rising price is often read as fresh longs; rising OI with falling price as fresh shorts."}));
+    if(d.spikes&&d.spikes.volume)
+      v.appendChild(card("Volume spikes", ">= 2.5x its own 20-day average", [ tbl(d.spikes.volume,["close","chg","volume","vol_avg","vol_x"]) ],
+        {what:"Cash-market names trading far above their own recent volume.",source:"Candle archive built from the bhavcopy.",updated:when}));
+    else
+      v.appendChild(card("Volume spikes","",[para("Needs at least 20 days of history per symbol in the candle archive. It will fill in as the daily run accumulates data.")],
+        {what:"Volume versus each stock's own trailing average.",source:"Candle archive.",updated:when,
+         note:"The archive currently starts from a handful of days, so this is empty by design, not broken."}));
+    if(!v.children.length)v.appendChild(card("F&O","",[para("No derivatives data yet.")]));
   })();
 
-  /* youtube */
+  /* ---------- GLOBAL ---------- */
   (function(){
-    var v = sec("youtube");
-    if(d.brain && d.brain.top_symbols)
-      v.appendChild(card("Symbols mentioned", num(d.brain.videos) + " videos", [
-        table(["symbol","mentions","channels"], d.brain.top_symbols.map(function(s){ return [s.symbol,s.mentions,s.channels]; }), ["mentions","channels"])
-      ]));
-    if(d.channels) v.appendChild(card("Channel reach","",[ table(d.channels.columns, d.channels.rows, ["videos_in_feed","avg_views","median_views","top_views"]) ]));
-    if(d.videos) v.appendChild(card("Latest uploads","",[ table(d.videos.columns.slice(0,5), d.videos.rows.map(function(r){ return r.slice(0,5); })) ]));
-    if(!v.children.length) v.appendChild(card("YouTube","",[ para("No channel data yet.") ]));
+    var v=sec("global");
+    if(d.markets)v.appendChild(card("Global indices","",[ tbl(d.markets,["close","chg_pct"]) ],
+      {what:"Major world equity indices, last close and one-day change.",source:"Yahoo Finance (unofficial).",updated:when}));
+    if(d.commodities)v.appendChild(card("Commodities","",[ tbl(d.commodities,["close","chg_pct"]) ],
+      {what:"Gold, crude and other commodity futures.",source:"Yahoo Finance (unofficial).",updated:when}));
+    if(d.fx)v.appendChild(card("Currency","",[ tbl(d.fx,["close","chg_pct"]) ],
+      {what:"Currency pairs, including the rupee crosses.",source:"Yahoo Finance (unofficial).",updated:when}));
+    if(!v.children.length)v.appendChild(card("Global","",[para("No global data yet - the Yahoo fetch runs in the daily pipeline.")],
+      {what:"Global markets, commodities and currencies.",source:"Yahoo Finance.",updated:when}));
   })();
 
-  /* data */
+  /* ---------- CRYPTO ---------- */
   (function(){
-    var v = sec("data");
-    var rows = FEEDS.map(function(f){ return [f, d[f] != null ? "OK" : "missing"]; });
-    v.appendChild(card("Data status", have + "/" + FEEDS.length + " reporting", [ table(["feed","status"], rows) ]));
-    if(d.indicators) v.appendChild(card("Indicator snapshot", num(d.indicators.total) + " symbols", [
-      table(d.indicators.columns, d.indicators.rows, ["close","rsi_14","sma_50","sma_200","adx","atr_pct"])
-    ]));
-    if(d.relative_strength) v.appendChild(card("Relative strength","",[ table(d.relative_strength.columns, d.relative_strength.rows) ]));
-    if(d.patterns) v.appendChild(card("Chart patterns", num(d.patterns.total) + " candidates", [ table(d.patterns.columns, d.patterns.rows) ]));
-    if(d.forecast) v.appendChild(card("Forecast accuracy","Median error, lower is better", [
-      table(["model","median_mape_pct"], d.forecast.median_mape_by_model, ["median_mape_pct"])
-    ]));
-    if(d.quality) v.appendChild(card("Quality report","",[
-      table(["field","value"], [
-        ["rows", num(d.quality.rows)], ["symbols", num(d.quality.symbols)],
-        ["from", (d.quality.window||[])[0]], ["to", (d.quality.window||[])[1]],
-        ["errors", (d.quality.errors||[]).join(", ") || "none"],
-        ["warnings", (d.quality.warnings||[]).join(", ") || "none"]
-      ])
-    ]));
-    v.appendChild(card("Sources","",[ para("NSE bhavcopy and reference files, Yahoo Finance, Binance, YouTube feeds, AMFI, publisher RSS. Generated " + (d.generated_utc||"—") + ".") ]));
+    var v=sec("crypto");
+    if(d.crypto)v.appendChild(card("Crypto","",[ tbl(d.crypto,["close","chg_pct"]) ],
+      {what:"Crypto pairs, last price and one-day change.",source:"Binance public API, with Yahoo as fallback.",updated:when,
+       note:"Crypto trades 24/7, so the date shown is the latest daily candle."}));
+    else v.appendChild(card("Crypto","",[para("No crypto data yet.")]));
+  })();
+
+  /* ---------- NEWS ---------- */
+  (function(){
+    var v=sec("news");
+    if(d.news)v.appendChild(card("Market headlines", d.news.total+" stories",[ tbl(d.news) ],
+      {what:"Headlines from publisher RSS feeds.",source:"Economic Times, Moneycontrol, Business Standard, LiveMint RSS.",updated:when,
+       note:"RSS only - headlines, no article text, and nothing is interpreted."}));
+    else v.appendChild(card("News","",[para("No headlines yet. RSS is blocked from some networks (including the build sandbox); it works from normal CI runners.")],
+      {what:"Market headlines from free RSS feeds.",source:"Publisher RSS.",updated:when}));
+  })();
+
+  /* ---------- CORPORATE ACTIONS ---------- */
+  (function(){
+    var v=sec("corporate");
+    var C=d.corporate||{};
+    function block(key,title,what){
+      if(!C[key])return null;
+      return card(title, C[key].total+" entries",[ tbl({columns:["symbol","subject","ex_date","company"],rows:C[key].rows},[],0) ],
+        {what:what, source:"NSE corporate actions endpoint.", updated:when,
+         note:"Ex-date is the day the price adjusts. This is also what the hub uses to back-adjust history for splits and bonuses."});
+    }
+    [block("dividend","Dividend stocks","Companies going ex-dividend."),
+     block("split","Stock splits","Face-value splits, with the ratio in the subject."),
+     block("bonus","Bonus issues","Bonus share issues."),
+     block("rights","Rights issues","Rights offers.")].forEach(function(b){ if(b) v.appendChild(b); });
+    if(!v.children.length)v.appendChild(card("Corporate actions","",[para("No corporate actions yet.")]));
+  })();
+
+  /* ---------- YOUTUBE ---------- */
+  (function(){
+    var v=sec("youtube");
+    if(d.brain&&d.brain.top_symbols)
+      v.appendChild(card("Symbols mentioned", num(d.brain.videos)+" videos",[ tbl({columns:["symbol","mentions","channels"],
+        rows:d.brain.top_symbols.map(function(s){return [s.symbol,s.mentions,s.channels];})},["mentions","channels"]) ],
+        {what:"Which stocks the watched channels keep naming.",source:"YouTube Atom feeds + keyword analysis.",updated:when,
+         note:"Reads titles and descriptions only; Hindi/Hinglish mentions without a company name are missed."}));
+    if(d.brain&&d.brain.top_themes)
+      v.appendChild(card("Themes","",[ tbl({columns:["theme","videos"],rows:(d.brain.top_themes||[]).map(function(t){return [t.theme,t.videos];})},["videos"]) ],
+        {what:"Topic buckets across the collected videos.",source:"Keyword analysis of titles/descriptions.",updated:when}));
+    if(d.channels)v.appendChild(card("Channel reach","",[ tbl(d.channels,["videos_in_feed","avg_views","median_views","top_views"]) ],
+      {what:"Per-channel upload volume and view counts.",source:"YouTube Atom feeds.",updated:when}));
+    if(d.videos)v.appendChild(card("Latest uploads","",[ tbl({columns:d.videos.columns.slice(0,5),rows:d.videos.rows.map(function(r){return r.slice(0,5);})}) ],
+      {what:"The most recent uploads across all watched channels.",source:"YouTube Atom feeds.",updated:when}));
+    if(!v.children.length)v.appendChild(card("YouTube","",[para("No channel data yet.")]));
+  })();
+
+  /* ---------- DATA ---------- */
+  (function(){
+    var v=sec("data");
+    var rows=FEEDS.map(function(f){return [f, d[f]!=null?"OK":"missing"];});
+    v.appendChild(card("Data status", have+"/"+FEEDS.length+" reporting",[ table(["feed","status"],rows) ],
+      {what:"Which feeds produced data on the last run.",source:"This hub's own pipeline.",updated:when}));
+    if(d.indicators)v.appendChild(card("Indicator snapshot", num(d.indicators.total)+" symbols",
+      [ tbl(d.indicators,["close","rsi_14","sma_50","sma_200","adx","atr_pct"]) ],
+      {what:"Technical indicators per symbol, computed on adjusted prices.",
+       source:"Verified indicator library (independently tested, no look-ahead).",updated:when}));
+    if(d.screens)Object.keys(d.screens).forEach(function(n){
+      var s=d.screens[n];
+      v.appendChild(card("Screen: "+n, num(s.total)+" matches",[ tbl(s) ],
+        {what:"Symbols passing a named rule.",source:"Indicator snapshot + rule.",updated:when}));
+    });
+    if(d.relative_strength)v.appendChild(card("Relative strength","",[ tbl(d.relative_strength) ],
+      {what:"Performance versus a benchmark - what is leading, not just what is up.",source:"Candle archive.",updated:when}));
+    if(d.patterns)v.appendChild(card("Chart patterns", num(d.patterns.total)+" candidates",[ tbl(d.patterns) ],
+      {what:"Numerically detected chart shapes.",source:"Candle archive + rule-based detectors.",updated:when,
+       note:"Candidates to inspect, not signals. Most patterns fail."}));
+    if(d.forecast)v.appendChild(card("Forecast accuracy","Median error, lower is better",
+      [ tbl({columns:["model","median_mape_pct"],rows:d.forecast.median_mape_by_model},["median_mape_pct"]) ],
+      {what:"How each forecasting model did on held-out data (walk-forward, never a random split).",
+       source:"statsmodels baselines + ETS/ARIMA.", updated:when,
+       note:"The naive baseline is the bar to clear. If a model cannot beat it, it is not earning its complexity."}));
+    v.appendChild(card("FM3 / TimesFM","",
+      [ d.fm3 ? tbl(d.fm3,["median_chg_pct","confidence"])
+              : para("Not running. The TimesFM (FM3) job is gated behind the RUN_TIMESFM repo variable and its inference is unverified - it needs about 3-4 GB of RAM. Enable it only after watching it produce forecasts.") ],
+      {what:"Google TimesFM zero-shot forecasts (FM3).",source:"google/timesfm-2.5-200m-pytorch via the timesfm package.",updated:when,
+       note:"Honest status: the API is fixed and the model downloads, but no forecast has been verified end to end yet."}));
+    if(d.quality)v.appendChild(card("Quality report","",[ table(["field","value"],[
+      ["rows",num(d.quality.rows)],["symbols",num(d.quality.symbols)],
+      ["from",(d.quality.window||[])[0]],["to",(d.quality.window||[])[1]],
+      ["errors",(d.quality.errors||[]).join(", ")||"none"],
+      ["warnings",(d.quality.warnings||[]).join(", ")||"none"]]) ],
+      {what:"Checks for impossible bars, duplicates, gaps and unexplained extreme moves.",source:"Candle archive.",updated:when}));
+    v.appendChild(card("Sources & method","",[
+      para("NSE bhavcopy and reference files (the exchange's own records), Yahoo Finance, Binance, YouTube public Atom feeds, AMFI, publisher RSS."),
+      para("Prices are back-adjusted for splits and bonuses before any analysis. Backtests are walk-forward with costs. Nothing here is a recommendation.")
+    ], {what:"Where all of this comes from.",source:"Free and public sources only.",updated:when}));
   })();
 
   renderTabs();
-  var want = (location.hash||"#overview").slice(1);
-  show(SECTIONS.some(function(s){ return s.id === want; }) ? want : "overview");
+  var want=(location.hash||"#overview").slice(1);
+  show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
 }
 
 /* ---------- load ---------- */
-var BASE = (function(){
-  var p = location.pathname || "/";
-  if(p.charAt(p.length-1) !== "/") p = p.replace(/[^/]*$/, "");
-  return p;
-})();
-fetch(BASE + "data.json", { cache:"no-store" })
-  .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-  .then(function(d){
-    build(d);
-    $("#stamp").textContent = "Updated " + (d.generated_utc || "—") + " · " + ago(d.generated_utc);
-  })
+var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
+fetch(BASE+"data.json",{cache:"no-store"})
+  .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
+  .then(function(d){build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
-    $("#stamp").textContent = "No data";
-    $("#app").innerHTML = '<div class="card err"><h2>Could not load data.json</h2>' +
-      '<p>' + esc(e.message) + '</p><p>It is written by scripts/build_site_data.py during the pipeline run.</p></div>';
+    $("#stamp").textContent="No data";
+    $("#app").innerHTML='<div class="card err"><h2>Could not load data.json</h2><p>'+esc(e.message)+
+      '</p><p>It is written by scripts/build_site_data.py during the pipeline run.</p></div>';
   });
 </script>
 </body>

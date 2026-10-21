@@ -104,8 +104,17 @@ run python scripts/fetch_news.py || true
 step "7l. Spike detection (OI + volume)"
 run python scripts/build_spikes.py || true
 
-step "7m. Stock pages (fundamentals + technicals)"
-run python scripts/build_stock_pages.py || true
+step "7m1. Full listed universe (all NSE symbols)"
+run python scripts/build_universe.py || true
+
+step "7m2. Stock pages - deepen a slice of the universe"
+run python scripts/build_stock_pages.py --rotate 300 || true
+
+step "7m3. Crypto pages (list + per-coin technicals)"
+run python scripts/build_crypto_pages.py --top 120 || true
+
+step "7m4. Global pages (stocks by country)"
+run python scripts/build_global_pages.py || true
 
 step "7n. Website data (docs/data.json)"
 run python scripts/build_site_data.py || true

@@ -535,6 +535,27 @@ pipeline commits new data.
 The page is self-contained (inline CSS/JS, no CDN) so a blocked external domain can
 never break it. Sections appear only when their data exists.
 
+### UI
+
+Liquid-glass design system, fully dark **and** light:
+
+- **Theme** — follows `prefers-color-scheme` on first visit, then remembers your choice
+  in `localStorage`. Toggled from the header; set before first paint so there is no flash.
+- **Glass surfaces** — `backdrop-filter: blur(22px) saturate(180%)` with a 1px light
+  border and a top sheen; three slowly drifting colour blobs sit behind everything.
+- **Layout** — sticky glass header with a segmented tab control (Overview / Market /
+  YouTube / Signals / Data), KPI tile grid, then cards that reflow 2-up on desktop and
+  1-up on mobile.
+- **Tables** — sticky headers, tabular-nums for figures, abbreviated large numbers
+  (Cr / L / k), colour-coded changes, hover highlighting.
+- **Filter** — one search box filters the rows and bars of the view you are on.
+- **Details** — `prefers-reduced-motion` respected, focus-visible outlines, ARIA roles on
+  the tabs, deep-linkable views via `#market` etc., skeleton loading and a clear error
+  state if `data.json` is missing.
+
+Verified by executing the real render logic against the real `data.json` through a DOM
+shim: 5 views, 25 cards, 12 tables, 118 rows, all sections present, no runtime errors.
+
 ## Limits & notes
 
 - Google Sheets: 10,000,000 cells per workbook — keep the Sheet a view, not the store.

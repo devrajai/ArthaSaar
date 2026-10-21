@@ -428,11 +428,27 @@ function build(d){
       {what:"How each forecasting model did on held-out data (walk-forward, never a random split).",
        source:"statsmodels baselines + ETS/ARIMA.", updated:when,
        note:"The naive baseline is the bar to clear. If a model cannot beat it, it is not earning its complexity."}));
-    v.appendChild(card("FM3 / TimesFM","",
-      [ d.fm3 ? tbl(d.fm3,["median_chg_pct","confidence"])
-              : para("Not running. The TimesFM (FM3) job is gated behind the RUN_TIMESFM repo variable and its inference is unverified - it needs about 3-4 GB of RAM. Enable it only after watching it produce forecasts.") ],
-      {what:"Google TimesFM zero-shot forecasts (FM3).",source:"google/timesfm-2.5-200m-pytorch via the timesfm package.",updated:when,
-       note:"Honest status: the API is fixed and the model downloads, but no forecast has been verified end to end yet."}));
+    (function(){
+      var f=d.fm3;
+      if(f){
+        var kids=[];
+        if(f.nifty) kids.push(para("Nifty "+(f.horizon_days||21)+"-day median: "+sgn(f.nifty.median_chg_pct)+"%  "+
+          "(band "+sgn(f.nifty.low10_chg_pct)+"% to "+sgn(f.nifty.high90_chg_pct)+"%, confidence "+num(f.nifty.confidence)+")", true));
+        kids.push(tbl(f, ["last","median_chg_pct","low10_chg_pct","high90_chg_pct","confidence"]));
+        v.appendChild(card("FM3 / TimesFM", (f.model||"TimesFM")+" · "+(f.horizon_days||21)+"d · "+num(f.total)+" series", kids,
+          {what:"Zero-shot price forecasts per series, with a 10-90 band and a confidence score.",
+           source:"Google TimesFM 2.5 (200M) via the timesfm package, run nightly on GitHub Actions.",
+           updated:f.updated?ago(f.updated):when,
+           note:"Zero-shot means the model was never trained on your data. Confidence is how tight the band is, not a probability of being right. Nothing here is a recommendation."}));
+      } else {
+        v.appendChild(card("FM3 / TimesFM","runs nightly at 20:35 IST",
+          [ para("No forecast file yet. This runs in its own workflow because loading the model needs about 3-4 GB of RAM - more than a small container has."),
+            para("The model cache and the output are stored in Google Drive, so the nightly job does not re-download a 1 GB checkpoint.") ],
+          {what:"Google TimesFM zero-shot forecasts (FM3).",
+           source:"google/timesfm-2.5-200m-pytorch via the timesfm package.",updated:when,
+           note:"It appears here as soon as the TimesFM workflow has run once and committed its JSON."}));
+      }
+    })();
     if(d.quality)v.appendChild(card("Quality report","",[ table(["field","value"],[
       ["rows",num(d.quality.rows)],["symbols",num(d.quality.symbols)],
       ["from",(d.quality.window||[])[0]],["to",(d.quality.window||[])[1]],

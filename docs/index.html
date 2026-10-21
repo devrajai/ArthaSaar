@@ -368,12 +368,14 @@ function build(d){
     if(opts.market){
       var m = rec.market || {};
       holder.appendChild(card(opts.market.title, opts.market.sub||"",
-        [kv([[opts.market.title+" (24h)", m.quote_volume?big(m.quote_volume):null],
-             ["Units traded (24h)", m.volume?big(m.volume):null],
+        [kv([["Market rank", m.rank?("#"+m.rank):null], ["Market cap", m.mcap?big(m.mcap):null],
+             ["Volume (24h)", m.volume_24h?big(m.volume_24h):null],
              ["Trades (24h)", m.trades?num(m.trades):null],
-             ["24h high", num(m.high_24h)], ["24h low", num(m.low_24h)]]),
-         para(opts.market.note)],
-        {what:"Traded volume and range for the last 24 hours.", source:"Binance public API.", updated:opts.updated||when}));
+             ["24h high", num(m.high_24h)], ["24h low", num(m.low_24h)],
+             ["All-time high", num(m.ath)], ["Circulating supply", m.supply?big(m.supply):null]]),
+         para(opts.market.note),
+         el("p","", "Volume and 24h figures come from "+esc(m.volume_source||"Yahoo")+".")],
+        {what:"Supply, market cap and traded volume.", source:"Yahoo Finance; Binance or CoinGecko for volume where reachable.", updated:opts.updated||when}));
     } else {
       var f = rec.fund || {};
       holder.appendChild(card("Fundamentals","",
@@ -574,9 +576,9 @@ function build(d){
         holder.innerHTML="";
         var q=el("input"); q.type="search"; q.placeholder="Filter coins…";
         var field=el("div","field"); field.appendChild(q);
-        var cols=["symbol","base","close","chg_pct","quote_volume","trades","rsi_14","trend"];
-        var rows=CRYPTO.rows.map(function(r){ return [r.symbol,r.base,r.close,r.chg_pct,r.quote_volume,r.trades,r.rsi_14,r.trend]; });
-        var t=table(cols, rows, ["close","chg_pct","quote_volume","trades","rsi_14"], 1, function(row){
+        var cols=["symbol","name","close","chg_pct","mcap","volume_24h","rsi_14","trend"];
+        var rows=CRYPTO.rows.map(function(r){ return [r.symbol,r.name||r.base,r.close,r.chg_pct,r.mcap,r.volume_24h,r.rsi_14,r.trend]; });
+        var t=table(cols, rows, ["close","chg_pct","mcap","volume_24h","rsi_14"], 0, function(row){
           var rec=byCoin[row[0]];
           if(rec) renderDetail(holder, rec, "All coins", showList, {
             updated:CRYPTO.updated?ago(CRYPTO.updated):when,

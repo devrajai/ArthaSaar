@@ -51,5 +51,483 @@
       "binance": "TRXUSDT",
       "yahoo": "TRX-USD"
     }
+  ],
+  "_comment": "Coins for the crypto pages. History comes from Yahoo (<SYMBOL>-USD) because it works from GitHub's US runners, where Binance is geo-blocked. Add or remove freely.",
+  "coins": [
+    {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "yahoo": "BTC-USD"
+    },
+    {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "yahoo": "ETH-USD"
+    },
+    {
+      "symbol": "BNB",
+      "name": "BNB",
+      "yahoo": "BNB-USD"
+    },
+    {
+      "symbol": "SOL",
+      "name": "Solana",
+      "yahoo": "SOL-USD"
+    },
+    {
+      "symbol": "XRP",
+      "name": "XRP",
+      "yahoo": "XRP-USD"
+    },
+    {
+      "symbol": "ADA",
+      "name": "Cardano",
+      "yahoo": "ADA-USD"
+    },
+    {
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "yahoo": "DOGE-USD"
+    },
+    {
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "yahoo": "AVAX-USD"
+    },
+    {
+      "symbol": "TRX",
+      "name": "TRON",
+      "yahoo": "TRX-USD"
+    },
+    {
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "yahoo": "DOT-USD"
+    },
+    {
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "yahoo": "LINK-USD"
+    },
+    {
+      "symbol": "POL",
+      "name": "Polygon",
+      "yahoo": "POL-USD"
+    },
+    {
+      "symbol": "TON",
+      "name": "Toncoin",
+      "yahoo": "TON-USD"
+    },
+    {
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "yahoo": "SHIB-USD"
+    },
+    {
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "yahoo": "LTC-USD"
+    },
+    {
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "yahoo": "BCH-USD"
+    },
+    {
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "yahoo": "UNI-USD"
+    },
+    {
+      "symbol": "XLM",
+      "name": "Stellar",
+      "yahoo": "XLM-USD"
+    },
+    {
+      "symbol": "ATOM",
+      "name": "Cosmos",
+      "yahoo": "ATOM-USD"
+    },
+    {
+      "symbol": "ETC",
+      "name": "Ethereum Classic",
+      "yahoo": "ETC-USD"
+    },
+    {
+      "symbol": "XMR",
+      "name": "Monero",
+      "yahoo": "XMR-USD"
+    },
+    {
+      "symbol": "FIL",
+      "name": "Filecoin",
+      "yahoo": "FIL-USD"
+    },
+    {
+      "symbol": "APT",
+      "name": "Aptos",
+      "yahoo": "APT-USD"
+    },
+    {
+      "symbol": "ARB",
+      "name": "Arbitrum",
+      "yahoo": "ARB-USD"
+    },
+    {
+      "symbol": "OP",
+      "name": "Optimism",
+      "yahoo": "OP-USD"
+    },
+    {
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "yahoo": "NEAR-USD"
+    },
+    {
+      "symbol": "INJ",
+      "name": "Injective",
+      "yahoo": "INJ-USD"
+    },
+    {
+      "symbol": "SUI",
+      "name": "Sui",
+      "yahoo": "SUI-USD"
+    },
+    {
+      "symbol": "IMX",
+      "name": "Immutable",
+      "yahoo": "IMX-USD"
+    },
+    {
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "yahoo": "HBAR-USD"
+    },
+    {
+      "symbol": "VET",
+      "name": "VeChain",
+      "yahoo": "VET-USD"
+    },
+    {
+      "symbol": "MKR",
+      "name": "Maker",
+      "yahoo": "MKR-USD"
+    },
+    {
+      "symbol": "AAVE",
+      "name": "Aave",
+      "yahoo": "AAVE-USD"
+    },
+    {
+      "symbol": "GRT",
+      "name": "The Graph",
+      "yahoo": "GRT-USD"
+    },
+    {
+      "symbol": "LDO",
+      "name": "Lido DAO",
+      "yahoo": "LDO-USD"
+    },
+    {
+      "symbol": "SEI",
+      "name": "Sei",
+      "yahoo": "SEI-USD"
+    },
+    {
+      "symbol": "TIA",
+      "name": "Celestia",
+      "yahoo": "TIA-USD"
+    },
+    {
+      "symbol": "ALGO",
+      "name": "Algorand",
+      "yahoo": "ALGO-USD"
+    },
+    {
+      "symbol": "FTM",
+      "name": "Fantom",
+      "yahoo": "FTM-USD"
+    },
+    {
+      "symbol": "SAND",
+      "name": "The Sandbox",
+      "yahoo": "SAND-USD"
+    },
+    {
+      "symbol": "MANA",
+      "name": "Decentraland",
+      "yahoo": "MANA-USD"
+    },
+    {
+      "symbol": "AXS",
+      "name": "Axie Infinity",
+      "yahoo": "AXS-USD"
+    },
+    {
+      "symbol": "EGLD",
+      "name": "MultiversX",
+      "yahoo": "EGLD-USD"
+    },
+    {
+      "symbol": "THETA",
+      "name": "Theta Network",
+      "yahoo": "THETA-USD"
+    },
+    {
+      "symbol": "FLOW",
+      "name": "Flow",
+      "yahoo": "FLOW-USD"
+    },
+    {
+      "symbol": "CHZ",
+      "name": "Chiliz",
+      "yahoo": "CHZ-USD"
+    },
+    {
+      "symbol": "APE",
+      "name": "ApeCoin",
+      "yahoo": "APE-USD"
+    },
+    {
+      "symbol": "CRV",
+      "name": "Curve DAO",
+      "yahoo": "CRV-USD"
+    },
+    {
+      "symbol": "SNX",
+      "name": "Synthetix",
+      "yahoo": "SNX-USD"
+    },
+    {
+      "symbol": "COMP",
+      "name": "Compound",
+      "yahoo": "COMP-USD"
+    },
+    {
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "yahoo": "ZEC-USD"
+    },
+    {
+      "symbol": "DASH",
+      "name": "Dash",
+      "yahoo": "DASH-USD"
+    },
+    {
+      "symbol": "EOS",
+      "name": "EOS",
+      "yahoo": "EOS-USD"
+    },
+    {
+      "symbol": "XTZ",
+      "name": "Tezos",
+      "yahoo": "XTZ-USD"
+    },
+    {
+      "symbol": "IOTA",
+      "name": "IOTA",
+      "yahoo": "IOTA-USD"
+    },
+    {
+      "symbol": "NEO",
+      "name": "Neo",
+      "yahoo": "NEO-USD"
+    },
+    {
+      "symbol": "QTUM",
+      "name": "Qtum",
+      "yahoo": "QTUM-USD"
+    },
+    {
+      "symbol": "KSM",
+      "name": "Kusama",
+      "yahoo": "KSM-USD"
+    },
+    {
+      "symbol": "ZIL",
+      "name": "Zilliqa",
+      "yahoo": "ZIL-USD"
+    },
+    {
+      "symbol": "ONE",
+      "name": "Harmony",
+      "yahoo": "ONE-USD"
+    },
+    {
+      "symbol": "ENJ",
+      "name": "Enjin Coin",
+      "yahoo": "ENJ-USD"
+    },
+    {
+      "symbol": "BAT",
+      "name": "Basic Attention",
+      "yahoo": "BAT-USD"
+    },
+    {
+      "symbol": "ZRX",
+      "name": "0x Protocol",
+      "yahoo": "ZRX-USD"
+    },
+    {
+      "symbol": "ANKR",
+      "name": "Ankr",
+      "yahoo": "ANKR-USD"
+    },
+    {
+      "symbol": "CELO",
+      "name": "Celo",
+      "yahoo": "CELO-USD"
+    },
+    {
+      "symbol": "ROSE",
+      "name": "Oasis Network",
+      "yahoo": "ROSE-USD"
+    },
+    {
+      "symbol": "GALA",
+      "name": "Gala",
+      "yahoo": "GALA-USD"
+    },
+    {
+      "symbol": "DYDX",
+      "name": "dYdX",
+      "yahoo": "DYDX-USD"
+    },
+    {
+      "symbol": "ENS",
+      "name": "Ethereum Name Service",
+      "yahoo": "ENS-USD"
+    },
+    {
+      "symbol": "1INCH",
+      "name": "1inch",
+      "yahoo": "1INCH-USD"
+    },
+    {
+      "symbol": "SUSHI",
+      "name": "SushiSwap",
+      "yahoo": "SUSHI-USD"
+    },
+    {
+      "symbol": "YFI",
+      "name": "yearn.finance",
+      "yahoo": "YFI-USD"
+    },
+    {
+      "symbol": "BAL",
+      "name": "Balancer",
+      "yahoo": "BAL-USD"
+    },
+    {
+      "symbol": "KNC",
+      "name": "Kyber Network",
+      "yahoo": "KNC-USD"
+    },
+    {
+      "symbol": "STORJ",
+      "name": "Storj",
+      "yahoo": "STORJ-USD"
+    },
+    {
+      "symbol": "OCEAN",
+      "name": "Ocean Protocol",
+      "yahoo": "OCEAN-USD"
+    },
+    {
+      "symbol": "RNDR",
+      "name": "Render",
+      "yahoo": "RNDR-USD"
+    },
+    {
+      "symbol": "AKT",
+      "name": "Akash Network",
+      "yahoo": "AKT-USD"
+    },
+    {
+      "symbol": "PYTH",
+      "name": "Pyth Network",
+      "yahoo": "PYTH-USD"
+    },
+    {
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "yahoo": "JUP-USD"
+    },
+    {
+      "symbol": "WIF",
+      "name": "dogwifhat",
+      "yahoo": "WIF-USD"
+    },
+    {
+      "symbol": "BONK",
+      "name": "Bonk",
+      "yahoo": "BONK-USD"
+    },
+    {
+      "symbol": "PEPE",
+      "name": "Pepe",
+      "yahoo": "PEPE-USD"
+    },
+    {
+      "symbol": "FLOKI",
+      "name": "Floki",
+      "yahoo": "FLOKI-USD"
+    },
+    {
+      "symbol": "ORDI",
+      "name": "ORDI",
+      "yahoo": "ORDI-USD"
+    },
+    {
+      "symbol": "STX",
+      "name": "Stacks",
+      "yahoo": "STX-USD"
+    },
+    {
+      "symbol": "CFX",
+      "name": "Conflux",
+      "yahoo": "CFX-USD"
+    },
+    {
+      "symbol": "KAS",
+      "name": "Kaspa",
+      "yahoo": "KAS-USD"
+    },
+    {
+      "symbol": "MINA",
+      "name": "Mina",
+      "yahoo": "MINA-USD"
+    },
+    {
+      "symbol": "AR",
+      "name": "Arweave",
+      "yahoo": "AR-USD"
+    },
+    {
+      "symbol": "WLD",
+      "name": "Worldcoin",
+      "yahoo": "WLD-USD"
+    },
+    {
+      "symbol": "BLUR",
+      "name": "Blur",
+      "yahoo": "BLUR-USD"
+    },
+    {
+      "symbol": "GMT",
+      "name": "STEPN",
+      "yahoo": "GMT-USD"
+    },
+    {
+      "symbol": "MASK",
+      "name": "Mask Network",
+      "yahoo": "MASK-USD"
+    },
+    {
+      "symbol": "GMX",
+      "name": "GMX",
+      "yahoo": "GMX-USD"
+    }
   ]
 }

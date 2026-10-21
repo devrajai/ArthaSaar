@@ -50,6 +50,7 @@ jobs:
           python scripts/fetch_yahoo.py --group indices --period 5y || true
           python scripts/fetch_yahoo.py --group global --period 2y || true
           python scripts/fetch_yahoo.py --group fx --period 2y || true
+          python scripts/fetch_yahoo.py --group nse_stocks --period 2y || true
 
       - name: "3. YouTube channels -> uploads"
         run: python scripts/fetch_youtube.py
@@ -110,7 +111,10 @@ jobs:
       - name: "7l. Spike detection (OI + volume)"
         run: python scripts/build_spikes.py || true
 
-      - name: "7m. Build the website data (docs/data.json)"
+      - name: "7m. Stock pages (fundamentals + technicals)"
+        run: python scripts/build_stock_pages.py || true
+
+      - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 
       - name: "8. Google Drive candle archive (optional)"

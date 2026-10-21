@@ -25,6 +25,10 @@ jobs:
   forecast:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      HF_HOME: ${{ github.workspace }}/.hf
+      # `secrets` cannot be used in a step-level if: - compute the flag here instead.
+      HAS_DRIVE: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,25 +44,22 @@ jobs:
           pip install google-api-python-client google-auth
 
       - name: Restore the model cache from Google Drive
-        if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+        if: env.HAS_DRIVE == 'true'
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
-          HF_HOME: ${{ github.workspace }}/.hf
         run: python scripts/timesfm_drive.py --pull || true
 
       - name: Run TimesFM forecasts
         env:
-          HF_HOME: ${{ github.workspace }}/.hf
           OMP_NUM_THREADS: '2'
         run: python scripts/timesfm_forecast.py --max-series 60 --context 512 --horizon 63
 
       - name: Save the model cache and forecasts to Google Drive
-        if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+        if: env.HAS_DRIVE == 'true'
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
-          HF_HOME: ${{ github.workspace }}/.hf
         run: |
           python scripts/timesfm_drive.py --push || true
           python scripts/timesfm_drive.py --push-forecasts || true

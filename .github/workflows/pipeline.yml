@@ -25,6 +25,13 @@ jobs:
   collect:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # Flags are computed here because the `secrets` context is NOT available inside a
+    # step-level `if:` - using it there makes the whole workflow fail to parse.
+    env:
+      HAS_DRIVE: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+      HAS_SHEETS: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.SHEET_SOURCE_ID != '' }}
+      HAS_NOTION: ${{ secrets.NOTION_TOKEN != '' && secrets.NOTION_DATABASE_ID != '' }}
+      HAS_ARTHASAAR: ${{ secrets.ARTHASAAR_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -107,25 +114,25 @@ jobs:
         run: python scripts/build_site_data.py
 
       - name: "8. Google Drive candle archive (optional)"
-        if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+        if: env.HAS_DRIVE == 'true'
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
         run: python scripts/candles_from_drive.py --folder-id "${{ secrets.ARTHASAAR_DRIVE_FOLDER }}" --kind daily
 
       - name: "9. Google Sheets source (optional)"
-        if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.SHEET_SOURCE_ID != '' }}
+        if: env.HAS_SHEETS == 'true'
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
         run: python scripts/fetch_from_sheets.py --spreadsheet-id "${{ secrets.SHEET_SOURCE_ID }}" --range "${{ secrets.SHEET_SOURCE_RANGE }}"
 
       - name: "10. Notion source (optional)"
-        if: ${{ secrets.NOTION_TOKEN != '' && secrets.NOTION_DATABASE_ID != '' }}
+        if: env.HAS_NOTION == 'true'
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: python scripts/fetch_notion.py --database-id "${{ secrets.NOTION_DATABASE_ID }}" --name notion
 
       - name: "11. ArthaSaar analytics JSONs (optional)"
-        if: ${{ secrets.ARTHASAAR_TOKEN != '' }}
+        if: env.HAS_ARTHASAAR == 'true'
         env:
           ARTHASAAR_TOKEN: ${{ secrets.ARTHASAAR_TOKEN }}
         run: python scripts/fetch_arthasaar_data.py

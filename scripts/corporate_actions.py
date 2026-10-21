@@ -112,40 +112,37 @@ def classify(subject: str) -> tuple[str, float | None]:
 
 # ------------------------------------------------------------------ adjust
 def adjust(candles: pd.DataFrame, actions: pd.DataFrame, sortcol: str = "date") -> pd.DataFrame:
-    """Back-adjust OHLC for splits/bonuses. Volume is inverse-scaled."""
+    """Back-adjust OHLC for splits/bonuses. Volume is inverse-scaled.
+
+    Vectorised over rows, looped only over the (few) actions. An earlier version built
+    one frame per symbol and concatenated them - which blew memory on a 4,600-symbol
+    archive. This touches each row a handful of times instead.
+    """
     df = candles.copy()
     if "date" not in df.columns and "ts" in df.columns:
         df["date"] = pd.to_datetime(df["ts"], unit="s", utc=True).dt.strftime("%Y-%m-%d")
-    df["_d"] = pd.to_datetime(df["date"], errors="coerce")
+    d = pd.to_datetime(df["date"], errors="coerce").to_numpy()
+    syms = df["symbol"].astype(str).to_numpy()
 
-    acts = actions[actions["factor"].notna()].copy()
-    if acts.empty:
-        df.drop(columns=["_d"], inplace=True)
-        df["adj_factor"] = 1.0
-        return df
+    fac = pd.Series(1.0, index=df.index, dtype="float64")
+    acts = actions[actions["factor"].notna()]
+    for a in acts.itertuples(index=False):
+        # everything strictly BEFORE the ex-date gets multiplied by the factor
+        try:
+            ex = pd.Timestamp(a.ex_date).to_datetime64()
+        except Exception:
+            continue
+        mask = (syms == str(a.symbol)) & (d < ex)
+        if mask.any():
+            fac.loc[mask] = fac.loc[mask].to_numpy() * float(a.factor)
 
-    out = []
-    for sym, g in df.groupby("symbol", sort=False):
-        a = acts[acts["symbol"] == sym].sort_values("ex_date")
-        if a.empty:
-            g = g.copy(); g["adj_factor"] = 1.0
-            out.append(g); continue
-        g = g.copy()
-        fac = pd.Series(1.0, index=g.index)
-        for _, act in a.iterrows():
-            # everything strictly BEFORE the ex-date gets multiplied by the factor
-            mask = g["_d"] < act["ex_date"]
-            fac.loc[mask] = fac.loc[mask] * float(act["factor"])
-        g["adj_factor"] = fac
-        for c in ("open", "high", "low", "close"):
-            if c in g.columns:
-                g[c] = pd.to_numeric(g[c], errors="coerce") * fac
-        if "volume" in g.columns:
-            g["volume"] = (pd.to_numeric(g["volume"], errors="coerce") / fac).round()
-        out.append(g)
-
-    res = pd.concat(out, ignore_index=True).drop(columns=["_d"])
-    return res.sort_values(["symbol", sortcol]).reset_index(drop=True)
+    for c in ("open", "high", "low", "close"):
+        if c in df.columns:
+            df[c] = pd.to_numeric(df[c], errors="coerce") * fac
+    if "volume" in df.columns:
+        df["volume"] = (pd.to_numeric(df["volume"], errors="coerce") / fac).round()
+    df["adj_factor"] = fac
+    return df.sort_values(["symbol", sortcol]).reset_index(drop=True)
 
 
 def main() -> int:

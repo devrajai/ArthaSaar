@@ -96,6 +96,9 @@ run python scripts/fetch_amfi.py || true
 step "7k. News headlines (RSS)"
 run python scripts/fetch_news.py || true
 
+step "7l. Website data (docs/data.json)"
+run python scripts/build_site_data.py || true
+
 step "8. Google Drive archive (if configured)"
 if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${ARTHASAAR_DRIVE_FOLDER:-}" ]; then
   run python scripts/candles_from_drive.py --kind daily || true

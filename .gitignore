@@ -13,6 +13,9 @@ data/youtube/last_run.json
 # fii-history.json is the one we accumulate ourselves, so it IS tracked.
 data/*.json
 !data/fii-history.json
+# FM3 forecasts are the model's output, written by .github/workflows/timesfm.yml and
+# read by the website - they must be committed, so exempt them from the rule above.
+!data/timesfm_forecasts.json
 
 # candle archive + training sets are large - regenerate from Drive, don't commit
 data/candles/

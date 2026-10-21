@@ -143,34 +143,9 @@ jobs:
           git push
 
   # ------------------------------------------------------------------ forecast
-  # TimesFM is heavy (CPU torch) and independent of the collection, so it is its own
-  # job. Set the repo variable RUN_TIMESFM=true to enable it (Settings > Variables).
-  forecast:
-    needs: collect
-    if: ${{ vars.RUN_TIMESFM == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install TimesFM 3.0 + yfinance
-        run: |
-          python -m pip install --upgrade pip
-          pip install "timesfm[torch]" yfinance
-      - name: Run TimesFM forecasts
-        run: python scripts/timesfm_forecast.py
-      - name: Commit forecasts
-        run: |
-          git config user.name "data-bot"
-          git config user.email "data-bot@users.noreply.github.com"
-          git add -A data
-          git commit -m "pipeline: timesfm forecasts" || echo "no changes"
-          git pull --rebase --autostash || true
-          git push
+  # TimesFM lives in its own workflow (.github/workflows/timesfm.yml): loading the
+  # 200M checkpoint needs 3-4 GB of RAM, so it runs on a separate schedule with the
+  # model cached on Google Drive.
 
   # ------------------------------------------------------------------ alert
   # If the pipeline itself fails, say so loudly instead of going quiet.

@@ -406,11 +406,11 @@ forward) is genuinely hard to beat - if a model cannot beat it, it is not earnin
 complexity. `timesfm`/`chronos` are optional: they need a large download and a lot of
 RAM, so the job skips them cleanly when they are not installed rather than failing.
 
-### TimesFM status: API fixed, inference still unproven
+### TimesFM (FM3): own workflow, model cached on Drive
 
 The bundled `timesfm_forecast.py` imported `from timesfm3 import ...`, which **does not
 exist** in the package it needs - so it had never actually been run. It has been
-rewritten against the real API (verified by inspecting the installed `timesfm` 3.0.2):
+rewritten against the real API (verified by inspecting the installed `timesfm`):
 
 ```python
 TimesFM_2p5_200M_torch.from_pretrained("google/timesfm-2.5-200m-pytorch")
@@ -426,9 +426,30 @@ What it did **not** prove: inference. The 200M checkpoint plus torch needs rough
 That is a container limit, not a code fault - but it means **nobody has seen this model
 produce a forecast yet**.
 
-It is therefore gated **off by default** (`RUN_TIMESFM` repo variable). Do not turn it
-on and trust the output until you have watched it run on a machine with the memory.
-Until then, the baselines in `forecast.py` are the honest reference.
+So it does not run inside the daily pipeline. It has its own workflow instead:
+
+| | |
+|---|---|
+| Workflow | `.github/workflows/timesfm.yml` - daily 20:35 IST (15:05 UTC) |
+| Runner | `ubuntu-latest` (~7 GB RAM, enough for the 200M checkpoint) |
+| Model store | Google Drive folder **ArthaSaar TimesFM (model cache)** |
+| Cache script | `scripts/timesfm_drive.py --pull` / `--push` / `--push-forecasts` |
+| Output | `data/timesfm_forecasts.json`, then `docs/data.json` |
+| Test | `scripts/test_timesfm.py` - runs in CI on every push |
+
+**Drive as the model store.** The checkpoint is ~1 GB, so re-downloading it nightly is
+slow and rate-limited. The first run downloads from HuggingFace and saves a zip to
+Drive; every later run restores it. The forecast JSON is mirrored to Drive too.
+
+Needs two repo secrets: `GOOGLE_SA_JSON` and `ARTHASAAR_DRIVE_FOLDER`
+(the Drive folder id).
+
+**What is verified, and what is not.** `test_timesfm.py` substitutes a stub model that
+returns known numbers and checks the arithmetic end to end - the 21-day median, the
+10-90 band, the confidence score, the direction rule, the sort order, and the exact
+JSON keys the site reads. All 16 checks pass in CI. What that does *not* prove is the
+real checkpoint's output, because no machine I can reach has the RAM to load it. The
+first nightly run is the real test - watch it once before trusting the numbers.
 
 ## Crypto
 

@@ -1,0 +1,86 @@
+name: TimesFM forecasts (FM3)
+
+# Why a separate workflow: loading the 2.5-200M checkpoint needs about 3-4 GB of RAM.
+# That fits a GitHub runner but not a small container, so this does not run inside the
+# daily pipeline. It runs on its own schedule and commits one JSON the site reads.
+#
+# The model cache (~1 GB) is stored on Google Drive so it is not re-downloaded from
+# HuggingFace every night. First run downloads from HF and saves it to Drive; every
+# later run restores it from Drive.
+
+on:
+  schedule:
+    # daily 20:35 IST (15:05 UTC) - after the EOD data is in
+    - cron: '5 15 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: timesfm
+  cancel-in-progress: false
+
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install TimesFM, torch (CPU) and helpers
+        run: |
+          python -m pip install --upgrade pip
+          pip install --index-url https://download.pytorch.org/whl/cpu torch
+          pip install "timesfm" yfinance pandas pyarrow
+          pip install google-api-python-client google-auth
+
+      - name: Restore the model cache from Google Drive
+        if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
+          HF_HOME: ${{ github.workspace }}/.hf
+        run: python scripts/timesfm_drive.py --pull || true
+
+      - name: Run TimesFM forecasts
+        env:
+          HF_HOME: ${{ github.workspace }}/.hf
+          OMP_NUM_THREADS: '2'
+        run: python scripts/timesfm_forecast.py --max-series 60 --context 512 --horizon 63
+
+      - name: Save the model cache and forecasts to Google Drive
+        if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
+          HF_HOME: ${{ github.workspace }}/.hf
+        run: |
+          python scripts/timesfm_drive.py --push || true
+          python scripts/timesfm_drive.py --push-forecasts || true
+
+      - name: Rebuild the site data so the page picks it up
+        run: python scripts/build_site_data.py || true
+
+      - name: Commit the forecasts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/timesfm_forecasts.json docs/data.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: TimesFM (FM3) forecasts'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed.'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 15
+            done
+            echo 'ERROR: could not push after 5 attempts'; exit 1
+          fi

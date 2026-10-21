@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """ARTHASAAR — TimesFM 3.0 daily forecasts (multi-horizon).
 
-Google Research's TimesFM 3.0 (330M params) zero-shot forecaster.
+Google Research's TimesFM zero-shot forecaster (2.5-200M checkpoint via the
+`timesfm` package).
+
+STATUS: the model downloads and the API is correct, but inference was NOT verified in
+the build environment - it needs ~3-4 GB of RAM and the sandbox had 2 GB. The pipeline
+gates this behind the RUN_TIMESFM repo variable and does not run it by default. Treat
+its output as unproven until you have seen it produce forecasts on your own machine.
 
 Features in this version (TimesFM 3.0 wishlist):
   1. multi-horizon: 7d / 14d / 21d / 30d / 3m from one 63-step forecast
@@ -189,8 +195,6 @@ def horizon_block(med, qs, last, n):
 
 
 def main():
-    from timesfm3 import ModelConfig, TimesFM3Forecaster
-
     DATA.mkdir(exist_ok=True)
     add_top_stocks()
     print(f"series to forecast: {len(SERIES)}")
@@ -207,22 +211,41 @@ def main():
     dates = {s: [d.strftime("%Y-%m-%d") for d in raw[s].index[-CONTEXT:]]
              for s in raw}
 
-    # 2. load TimesFM 3.0 (CPU)
-    print("loading google/timesfm-3.0-pytorch on CPU ...")
-    cfg = ModelConfig(checkpoint_path="google/timesfm-3.0-pytorch",
-                      per_core_batch_size=8, device="cpu")
-    forecaster = TimesFM3Forecaster(cfg)
+    # 2. load TimesFM (CPU).
+    # The `timesfm` package ships TimesFM 2.5 as `timesfm.timesfm_2p5.*`. The older
+    # `from timesfm3 import ModelConfig, TimesFM3Forecaster` API does not exist in it -
+    # which is why this script had never actually been run. Verified against
+    # timesfm 3.0.2 by inspecting the installed package:
+    #   TimesFM_2p5_200M_torch.from_pretrained("google/timesfm-2.5-200m-pytorch")
+    #   model.compile(ForecastConfig(max_context=..., max_horizon=...))
+    #   points, quantiles = model.forecast(horizon=H, inputs=[series, ...])
+    from timesfm.timesfm_2p5.timesfm_2p5_torch import TimesFM_2p5_200M_torch
+    from timesfm.configs import ForecastConfig
+
+    print("loading google/timesfm-2.5-200m-pytorch on CPU ...")
+    try:
+        forecaster = TimesFM_2p5_200M_torch.from_pretrained(
+            "google/timesfm-2.5-200m-pytorch")
+        forecaster.compile(ForecastConfig(max_context=CONTEXT, max_horizon=HORIZON,
+                                          per_core_batch_size=1))
+    except Exception as e:  # noqa: BLE001
+        print(f"FATAL: could not load TimesFM ({type(e).__name__}: {str(e)[:120]})")
+        print("  The 200M checkpoint plus torch needs roughly 3-4 GB of RAM.")
+        print("  If this is a memory error, run it on a larger machine or leave")
+        print("  RUN_TIMESFM=false - the rest of the pipeline does not depend on it.")
+        return
 
     # 3. forecast (batched, 63-step horizon)
     syms = list(hist)
-    outs = list(forecaster.predict_batch(
-        contexts=[hist[s] for s in syms],
-        horizon=HORIZON, return_quantiles=True, use_symmetric_averaging=False))
+    points, quantiles = forecaster.forecast(horizon=HORIZON,
+                                            inputs=[hist[s] for s in syms])
+    points = np.asarray(points, dtype=float)
+    quantiles = np.asarray(quantiles, dtype=float)
 
     results = []
-    for sym, out in zip(syms, outs):
-        med = np.asarray(out.forecast, dtype=float)
-        qs = np.asarray(out.quantiles, dtype=float)
+    for i, sym in enumerate(syms):
+        med = points[i]
+        qs = quantiles[i]
         last = float(hist[sym][-1])
 
         # legacy fields stay 21-day so the website keeps working

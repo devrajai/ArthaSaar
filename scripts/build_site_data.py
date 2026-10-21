@@ -248,15 +248,23 @@ def build() -> dict:
         except Exception:
             pass
 
-    # TimesFM (FM3) - only present when the RUN_TIMESFM job has been enabled
+    # TimesFM (FM3) - written nightly by .github/workflows/timesfm.yml
     tf = _json(Path("data/timesfm_forecasts.json"))
     if tf:
         rows = tf if isinstance(tf, list) else tf.get("forecasts", [])
         if rows:
-            d["fm3"] = {"columns": ["symbol", "median_chg_pct", "direction", "confidence"],
-                        "rows": [[r.get("symbol"), r.get("median_chg_pct"),
-                                  r.get("direction"), r.get("confidence")] for r in rows[:25]],
-                        "total": len(rows)}
+            d["fm3"] = {
+                "model": tf.get("model") if isinstance(tf, dict) else "TimesFM",
+                "updated": tf.get("updated") if isinstance(tf, dict) else None,
+                "horizon_days": tf.get("horizon_days") if isinstance(tf, dict) else None,
+                "nifty": tf.get("nifty") if isinstance(tf, dict) else None,
+                "columns": ["symbol", "last", "median_chg_pct", "low10_chg_pct",
+                            "high90_chg_pct", "direction", "confidence"],
+                "rows": [[r.get("symbol"), r.get("last"), r.get("median_chg_pct"),
+                          r.get("low10_chg_pct"), r.get("high90_chg_pct"),
+                          r.get("direction"), r.get("confidence")] for r in rows[:25]],
+                "total": len(rows),
+            }
 
     q = _json(Path("data/quality/report.json"))
     if q:

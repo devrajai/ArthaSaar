@@ -3,7 +3,11 @@
 One page to stop you re-deriving the layout in six months. Update the "last checked"
 line when you change something.
 
-_Last checked: 2026-10-17_
+_Last checked: 2026-10-21_
+
+**Live site:** https://devrajai.github.io/ArthaSaar/ — static dashboard in `docs/`,
+served by GitHub Pages from `main` / `docs`. It reads `docs/data.json`, written by
+`scripts/build_site_data.py` on every pipeline run.
 
 ## The repo — `market-data-hub`
 

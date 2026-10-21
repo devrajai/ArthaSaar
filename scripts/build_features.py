@@ -47,6 +47,11 @@ try:
 except Exception:
     pass
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from _archive import pick_candles  # noqa: E402
+
 FEATURES = ["ret_1", "ret_5", "ret_20", "sma20_ratio", "sma50_ratio",
             "vol_20", "rsi_14", "range_pct", "vol_z"]
 LABELS = ["fwd_ret_1", "fwd_up_1"]
@@ -105,10 +110,7 @@ def main() -> int:
     args = ap.parse_args()
 
     if not args.infile:
-        for cand in ("data/candles/daily.parquet", "data/candles/cm_daily.parquet"):
-            if Path(cand).exists():
-                args.infile = cand
-                break
+        args.infile = pick_candles()
     src = Path(args.infile) if args.infile else None
     if src is None or not src.exists():
         print("no candle archive found - skipping (run candles_from_bhavcopy.py or candles_from_drive.py)")

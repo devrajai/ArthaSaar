@@ -51,6 +51,10 @@ run python scripts/analyze_youtube.py || true
 step "5. Candle archive from bhavcopy"
 run python scripts/candles_from_bhavcopy.py --from-local || true
 
+step "5b. Corporate actions + price adjustment (BEFORE any analysis)"
+run python scripts/corporate_actions.py --fetch || true
+run python scripts/corporate_actions.py --adjust || true
+
 step "6. Analytics (futures, breadth)"
 run python scripts/build_analytics.py || true
 
@@ -70,10 +74,6 @@ run python scripts/forecast.py --models naive,drift,mean,seasonal_naive,ets,arim
 
 step "7d. Crypto (Binance, Yahoo fallback)"
 run python scripts/fetch_crypto.py || true
-
-step "7e. Corporate actions + price adjustment"
-run python scripts/corporate_actions.py --fetch || true
-run python scripts/corporate_actions.py --adjust || true
 
 step "7f. Data quality check"
 run python scripts/validate_data.py || true

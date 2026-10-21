@@ -40,6 +40,11 @@ try:
 except Exception:
     pass
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from _archive import pick_candles  # noqa: E402
+
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Data-quality checks on the candle archive.")
@@ -53,10 +58,7 @@ def main() -> int:
 
     src = args.infile
     if not src:
-        for cand in ("data/candles/daily.parquet", "data/candles/cm_daily.parquet"):
-            if Path(cand).exists():
-                src = cand
-                break
+        src = pick_candles()
     if not src or not Path(src).exists():
         print("no candle archive found - skipping")
         return 0

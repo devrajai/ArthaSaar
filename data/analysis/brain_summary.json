@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-21T06:29:06Z",
+  "generated_at": "2026-10-21T06:43:29Z",
   "channels": 10,
-  "videos": 163,
+  "videos": 175,
   "window_start": "2026-06-25",
-  "window_end": "2026-10-19",
-  "total_views": 10069902,
+  "window_end": "2026-10-21",
+  "total_views": 10288873,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 40,
+      "mentions": 42,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 19,
+      "mentions": 20,
       "channels": 4
     },
     {
@@ -23,7 +23,7 @@
     },
     {
       "symbol": "RELIANCE",
-      "mentions": 5,
+      "mentions": 9,
       "channels": 4
     },
     {
@@ -60,28 +60,28 @@
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 43
+      "videos": 44
     },
     {
       "theme": "Beginner/Education",
+      "videos": 36
+    },
+    {
+      "theme": "Budget/Policy",
       "videos": 31
+    },
+    {
+      "theme": "Earnings/Results",
+      "videos": 28
     },
     {
       "theme": "Gold/Commodity",
       "videos": 28
     },
     {
-      "theme": "Earnings/Results",
-      "videos": 27
-    },
-    {
-      "theme": "Budget/Policy",
-      "videos": 27
-    },
-    {
-      "theme": "Intraday",
-      "videos": 24
+      "theme": "IPO",
+      "videos": 28
     }
   ],
-  "net_sentiment": 28
+  "net_sentiment": 29
 }

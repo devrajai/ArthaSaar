@@ -97,6 +97,9 @@ jobs:
       - name: "7k. News headlines (RSS)"
         run: python scripts/fetch_news.py || true
 
+      - name: "7l. Build the website data (docs/data.json)"
+        run: python scripts/build_site_data.py
+
       - name: "8. Google Drive candle archive (optional)"
         if: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
         env:

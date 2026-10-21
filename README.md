@@ -515,6 +515,26 @@ against a benchmark - a stock up 5% while the index is up 12% is *weak*, not str
 `fetch_amfi.py` and `fetch_news.py` are blocked behind some proxies (including this
 sandbox) and skip cleanly with exit 0 - they work from normal CI runners.
 
+## The website (GitHub Pages)
+
+A static dashboard lives in `docs/` and is served by GitHub Pages — no build step, no
+server, no dependencies. It reads one file, `docs/data.json`.
+
+Why one file: most outputs (indicators, screens, forecasts, quality) are git-ignored,
+so the site cannot fetch them from the repo. `build_site_data.py` runs inside the
+pipeline, where those files exist, and folds the useful parts into that single JSON.
+
+```bash
+python scripts/build_site_data.py     # -> docs/data.json
+```
+
+To publish it: **Settings → Pages → Source: Deploy from a branch → main → /docs**.
+It then lives at `https://<user>.github.io/<repo>/` and refreshes every time the
+pipeline commits new data.
+
+The page is self-contained (inline CSS/JS, no CDN) so a blocked external domain can
+never break it. Sections appear only when their data exists.
+
 ## Limits & notes
 
 - Google Sheets: 10,000,000 cells per workbook — keep the Sheet a view, not the store.

@@ -326,6 +326,26 @@ def main() -> int:
     data = build()
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)
+
+    # MERGE, never blindly overwrite.
+    # Some runs happen on a checkout that only has part of the data - the TimesFM
+    # workflow, for instance, checks out the repo fresh where data/yahoo, data/crypto
+    # and data/news do not exist. Overwriting there wiped the Global/Crypto/News
+    # sections that the main pipeline had produced. Keeping any section we did not
+    # regenerate means a partial run can no longer destroy the site.
+    if dest.exists():
+        try:
+            old = json.loads(dest.read_text())
+            kept = []
+            for k, v in old.items():
+                if k not in data and v is not None:
+                    data[k] = v
+                    kept.append(k)
+            if kept:
+                print(f"  kept from previous run: {', '.join(sorted(kept))}")
+        except Exception as e:
+            print(f"  [warn] could not read previous {dest}: {e}")
+
     dest.write_text(json.dumps(data, indent=2, default=str))
 
     sections = [k for k in data if k not in ("generated_utc", "daily")]

@@ -41,6 +41,8 @@ if [ "${SKIP_YAHOO:-0}" = "1" ]; then skip "yahoo"; else
   # global indices, commodities and FX for the Global tab
   run python scripts/fetch_yahoo.py --group global --period 2y || true
   run python scripts/fetch_yahoo.py --group fx --period 2y || true
+  # the NSE stock universe - powers the per-stock pages
+  run python scripts/fetch_yahoo.py --group nse_stocks --period 2y || true
 fi
 
 # ---------------------------------------------------------------- 2. youtube
@@ -102,7 +104,10 @@ run python scripts/fetch_news.py || true
 step "7l. Spike detection (OI + volume)"
 run python scripts/build_spikes.py || true
 
-step "7m. Website data (docs/data.json)"
+step "7m. Stock pages (fundamentals + technicals)"
+run python scripts/build_stock_pages.py || true
+
+step "7n. Website data (docs/data.json)"
 run python scripts/build_site_data.py || true
 
 step "8. Google Drive archive (if configured)"

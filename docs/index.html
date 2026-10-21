@@ -10,6 +10,24 @@
 <script>(function(){try{var t=localStorage.getItem('as-theme');
   if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
   document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script>
+/* Evict the previous site's service worker.
+   The old ArthaSaar build registered sw.js at this scope and served a cached app
+   shell, so this page could not load. docs/sw.js self-destructs; this is the
+   belt-and-braces pass for any worker still hanging around. Silent on failure. */
+(function(){
+  try{
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.getRegistrations().then(function(rs){
+        rs.forEach(function(r){ r.unregister(); });
+      }).catch(function(){});
+    }
+    if(window.caches && caches.keys){
+      caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }).catch(function(){});
+    }
+  }catch(e){}
+})();
+</script>
 <style>
 /* ===================== tokens ===================== */
 :root{

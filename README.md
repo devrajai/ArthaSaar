@@ -388,7 +388,7 @@ baseline instead of assuming it.
 | naive / drift / mean / seasonal_naive | baselines - no dependencies |
 | ets | statsmodels Holt-Winters |
 | arima | statsmodels ARIMA(1,1,1) |
-| timesfm | Google TimesFM 3.0 (only if `timesfm` is installed - heavy) |
+| timesfm | Google TimesFM (2.5-200M via the `timesfm` package - heavy) |
 | chronos | Amazon Chronos (only if `chronos` is installed) |
 
 ```bash
@@ -405,6 +405,30 @@ split - that leaks the future and makes every model look good. Output lands in
 forward) is genuinely hard to beat - if a model cannot beat it, it is not earning its
 complexity. `timesfm`/`chronos` are optional: they need a large download and a lot of
 RAM, so the job skips them cleanly when they are not installed rather than failing.
+
+### TimesFM status: API fixed, inference still unproven
+
+The bundled `timesfm_forecast.py` imported `from timesfm3 import ...`, which **does not
+exist** in the package it needs - so it had never actually been run. It has been
+rewritten against the real API (verified by inspecting the installed `timesfm` 3.0.2):
+
+```python
+TimesFM_2p5_200M_torch.from_pretrained("google/timesfm-2.5-200m-pytorch")
+model.compile(ForecastConfig(max_context=512, max_horizon=63, per_core_batch_size=1))
+points, quantiles = model.forecast(horizon=63, inputs=[series, ...])
+```
+
+What that proved: the checkpoint **downloads**, the API is correct, and a load failure
+is now handled gracefully instead of crashing.
+
+What it did **not** prove: inference. The 200M checkpoint plus torch needs roughly
+3-4 GB of RAM, and the build environment had 2 GB, so it aborted with a memory error.
+That is a container limit, not a code fault - but it means **nobody has seen this model
+produce a forecast yet**.
+
+It is therefore gated **off by default** (`RUN_TIMESFM` repo variable). Do not turn it
+on and trust the output until you have watched it run on a machine with the memory.
+Until then, the baselines in `forecast.py` are the honest reference.
 
 ## Crypto
 

@@ -1,45 +1,45 @@
 {
-  "generated_at": "2026-10-21T06:43:29Z",
+  "generated_at": "2026-10-21T10:56:41Z",
   "channels": 10,
-  "videos": 175,
+  "videos": 187,
   "window_start": "2026-06-25",
   "window_end": "2026-10-21",
-  "total_views": 10288873,
+  "total_views": 10552286,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 42,
+      "mentions": 44,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 20,
+      "mentions": 22,
       "channels": 4
     },
     {
       "symbol": "SENSEX",
-      "mentions": 18,
+      "mentions": 19,
       "channels": 3
     },
     {
       "symbol": "RELIANCE",
-      "mentions": 9,
+      "mentions": 10,
       "channels": 4
+    },
+    {
+      "symbol": "YESBANK",
+      "mentions": 4,
+      "channels": 3
+    },
+    {
+      "symbol": "ITC",
+      "mentions": 3,
+      "channels": 3
     },
     {
       "symbol": "WIPRO",
       "mentions": 3,
       "channels": 3
-    },
-    {
-      "symbol": "YESBANK",
-      "mentions": 3,
-      "channels": 2
-    },
-    {
-      "symbol": "ITC",
-      "mentions": 2,
-      "channels": 2
     },
     {
       "symbol": "INFY",
@@ -60,28 +60,28 @@
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 44
+      "videos": 46
     },
     {
       "theme": "Beginner/Education",
-      "videos": 36
-    },
-    {
-      "theme": "Budget/Policy",
-      "videos": 31
+      "videos": 37
     },
     {
       "theme": "Earnings/Results",
-      "videos": 28
+      "videos": 32
+    },
+    {
+      "theme": "Budget/Policy",
+      "videos": 32
     },
     {
       "theme": "Gold/Commodity",
-      "videos": 28
+      "videos": 29
     },
     {
       "theme": "IPO",
-      "videos": 28
+      "videos": 29
     }
   ],
-  "net_sentiment": 29
+  "net_sentiment": 42
 }

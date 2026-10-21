@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-21T18:05:07Z",
+  "generated_utc": "2026-10-21T19:12:05Z",
   "fno": {
     "date": "2026-10-21",
     "pcr": {
@@ -470,299 +470,6 @@
       ],
       "total": 1
     }
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "XRP-USD",
-        1.3873,
-        3.96,
-        "2026-10-21"
-      ],
-      [
-        "LINK-USD",
-        12.673,
-        2.86,
-        "2026-10-21"
-      ],
-      [
-        "ETH-USD",
-        2513.3899,
-        2.72,
-        "2026-10-21"
-      ],
-      [
-        "BTC-USD",
-        84623.8672,
-        2.03,
-        "2026-10-21"
-      ],
-      [
-        "SOL-USD",
-        108.53,
-        1.98,
-        "2026-10-21"
-      ],
-      [
-        "ADA-USD",
-        0.2282,
-        1.98,
-        "2026-10-21"
-      ],
-      [
-        "AVAX-USD",
-        9.928,
-        1.9,
-        "2026-10-21"
-      ],
-      [
-        "DOGE-USD",
-        0.0833,
-        1.76,
-        "2026-10-21"
-      ],
-      [
-        "BNB-USD",
-        750.64,
-        1.33,
-        "2026-10-21"
-      ],
-      [
-        "TRX-USD",
-        0.3328,
-        0.54,
-        "2026-10-21"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "Persistent Systems launches Rs 4,265-cr QIP; floor price set at Rs 5,550/share",
-        "https://economictimes.indiatimes.com/markets/stocks/news/persistent-systems-launches-rs-4265-cr-qip-floor-price-set-at-rs-5550/share/articleshow/135097602.cms",
-        "Wed, 21 Oct 2026 23:01:22 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Stocks, gold or crypto? The last 3 years\u2019 returns have a surprising answer",
-        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/stocks-gold-or-crypto-the-last-3-years-returns-have-a-surprising-answer/articleshow/135096080.cms",
-        "Wed, 21 Oct 2026 21:35:58 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Ahead of Market: 10 things that will decide stock market action on Thursday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-thursday/articleshow/135096044.cms",
-        "Wed, 21 Oct 2026 21:27:41 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Market Trading Guide: Wipro among 5 stock recommendations for Thursday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-trading-guide-wipro-among-5-stock-recommendations-for-thursday/slideshow/135095527.cms",
-        "Wed, 21 Oct 2026 20:39:13 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Netflix shares slide 4% as slowing sales growth raises fresh concerns",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/netflix-shares-slide-4-as-slowing-sales-growth-raises-fresh-concerns/articleshow/135094744.cms",
-        "Wed, 21 Oct 2026 20:10:40 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Mahindra Finance Q2 net profit surges 55% to Rs 882 crore on volumes, lower credit cost",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/mahindra-finance-q2-net-profit-surges-55-to-rs-882-crore-on-volumes-lower-credit-cost/articleshow/135094556.cms",
-        "Wed, 21 Oct 2026 19:58:03 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Jio IPO strengthens Reliance\u2019s financial flexibility; capex funding remains key: Moody\u2019s",
-        "https://economictimes.indiatimes.com/markets/ipos/fpos/jio-ipo-strengthens-reliances-financial-flexibility-capex-funding-remains-key-moodys/articleshow/135094225.cms",
-        "Wed, 21 Oct 2026 19:32:53 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "PC Jewellers Q2 Results: Net profit shoots up 58% to Rs 331 crore; company says it is now debt-free",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/pc-jewellers-q2-results-net-profit-shoots-up-58-to-rs-331-crore-company-says-it-is-now-debt-free/articleshow/135094111.cms",
-        "Wed, 21 Oct 2026 19:29:06 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "IHCL Q2 Results: Tata Group-owned hotel chain's net profit jumps 19% to Rs 379 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/ihcl-q2-results-tata-group-owned-hotel-chains-net-profit-jumps-19-to-rs-379-crore/articleshow/135094055.cms",
-        "Wed, 21 Oct 2026 19:27:18 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks today: US stocks rise as SpaceX, Super Micro revive appetite for AI stocks",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-higher-as-spacex-super-micro-results-lift-ai-stocks/articleshow/135093777.cms",
-        "Wed, 21 Oct 2026 19:07:35 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Can Jio IPO unlock hidden value in Reliance Industries shares?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/can-jio-ipo-unlock-hidden-value-in-reliance-industries-shares/videoshow/135093782.cms",
-        "Wed, 21 Oct 2026 19:05:50 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Sky Gold and Diamonds among 5 stocks that hit 52-week highs and rallied up to 45% in a month",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sky-gold-and-diamonds-among-5-stocks-that-hit-52-week-highs-and-rallied-up-to-45-in-a-month/slideshow/135093530.cms",
-        "Wed, 21 Oct 2026 18:50:01 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "IGI Q2 Results: Consolidated PAT surges 43% to Rs 185 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/igi-q2-results-consolidated-pat-surges-43-to-rs-185-crore/articleshow/135093213.cms",
-        "Wed, 21 Oct 2026 18:35:12 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "AI data center projects boost US warehouse demand and rents, real estate company JLL says",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ai-data-center-projects-boost-us-warehouse-demand-and-rents-real-estate-company-jll-says/articleshow/135093158.cms",
-        "Wed, 21 Oct 2026 18:32:00 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "UK annual house prices rise at weakest pace since March, ONS says",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/uk-annual-house-prices-rise-at-weakest-pace-since-march-ons-says/articleshow/135093001.cms",
-        "Wed, 21 Oct 2026 18:30:20 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "TVS ILP leases 80k sq ft at Visakhapatnam park in Andhra to Yokohoma group",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/tvs-ilp-leases-80k-sq-ft-at-visakhapatnam-park-in-andhra-to-yokohoma-group/articleshow/135092976.cms",
-        "Wed, 21 Oct 2026 18:20:40 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Rupee rises 46 paise to 94.45 on India-US trade deal hopes; oil prices cap gains",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-46-paise-to-94-45-on-india-us-trade-deal-hopes-oil-prices-cap-gains/articleshow/135092741.cms",
-        "Wed, 21 Oct 2026 18:07:12 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Aye Finance Q2 Results: Net profit more than doubles to Rs 87 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/aye-finance-q2-results-net-profit-more-than-doubles-to-rs-87-crore/articleshow/135092689.cms",
-        "Wed, 21 Oct 2026 18:05:05 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Dow Jones| Nasdaq | S&amp;P 500 | US Stock Market Today |Live Updates: Nasdaq surges 1% as SpaceX, AI stocks rise while Netflix slips",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-stock-market-live-updates-nasdaq-sp-500-us-iran-israel-war-hormuz-deal-brent-crude-oil-earnings-forecast-nvidia-ai-stocks-spacex-super-micro-tesla-netflix-fed-rate-hike-treasury-yields-stock-price-news-21st-september-2026/liveblog/135092299.cms",
-        "Wed, 21 Oct 2026 17:40:08 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Bitcoin rebounds above $83,000 as strong US earnings and falling oil prices lift risk appetite",
-        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/bitcoin-rebounds-above-83000-as-strong-us-earnings-and-falling-oil-prices-lift-risk-appetite/articleshow/135091348.cms",
-        "Wed, 21 Oct 2026 17:09:14 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Market wrap: Infosys, HCL Tech, Bajaj Finance, BSE top gainers and losers on Nifty and Sensex on Wednesday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-infosys-hcl-tech-bajaj-finance-bse-top-gainers-and-losers-on-nifty-and-sensex-on-wednesday/articleshow/135090920.cms",
-        "Wed, 21 Oct 2026 16:59:52 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Want exposure to India's biggest banks? Zerodha launches new ETF",
-        "https://economictimes.indiatimes.com/markets/stocks/news/want-exposure-to-indias-biggest-banks-zerodha-launches-new-etf/articleshow/135090790.cms",
-        "Wed, 21 Oct 2026 16:54:00 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: Eurozone bond yields rise as French unrest fuels fiscal concerns",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-eurozone-bond-yields-rise-as-french-unrest-fuels-fiscal-concerns/articleshow/135090708.cms",
-        "Wed, 21 Oct 2026 16:49:53 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: BOJ's Himino says Japan inflation near 2% target, signals further rate hikes",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-bojs-himino-says-japan-inflation-near-2-target-signals-further-rate-hikes/articleshow/135090643.cms",
-        "Wed, 21 Oct 2026 16:46:44 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "CAS swings: Nifty\u2019s indicative price jumps 500 points in seconds, closes higher than pre-CAS level",
-        "https://economictimes.indiatimes.com/markets/stocks/news/cas-swings-niftys-indicative-price-jumps-500-points-in-seconds-closes-higher-than-pre-cas-level/articleshow/135089898.cms",
-        "Wed, 21 Oct 2026 16:23:01 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Jio Platforms' IPO-linked inflows boost rupee; elevated oil prices spur caution",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/jio-platforms-ipo-linked-inflows-boost-rupee-elevated-oil-prices-spur-caution/articleshow/135089592.cms",
-        "Wed, 21 Oct 2026 16:07:48 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "MFs raise stakes in 10 stocks in Q2; shares rally up to 130% in FY27, including 3 multibaggers",
-        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-raise-stakes-in-10-stocks-in-q2-shares-rally-up-to-130-in-fy27-including-3-multibaggers/slideshow/135089578.cms",
-        "Wed, 21 Oct 2026 16:01:44 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Eternal Q2 Results: Profit soars 92% YoY to Rs 125 crore; revenue zooms 78%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/eternal-q2-results-profit-soars-92-yoy-to-rs-125-crore-revenue-surges-78/articleshow/135088651.cms",
-        "Wed, 21 Oct 2026 15:36:28 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: European shares struggle for direction as France unrest weighs on sentiment",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-shares-struggle-for-direction-as-france-unrest-weighs-on-sentiment/articleshow/135088232.cms",
-        "Wed, 21 Oct 2026 15:11:14 +0530",
-        "2026-10-21T18:00:06Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: ECB sees Euro liquidity support boosting global currency role",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-ecb-sees-euro-liquidity-support-boosting-global-currency-role/articleshow/135088196.cms",
-        "Wed, 21 Oct 2026 15:09:58 +0530",
-        "2026-10-21T18:00:06Z"
-      ]
-    ],
-    "total": 164
   },
   "archive": {
     "files": 9,
@@ -1272,16 +979,16 @@
   },
   "fm3": {
     "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-10-21T12:46:59Z",
+    "updated": "2026-10-21T19:12:04Z",
     "horizon_days": 21,
     "nifty": {
       "symbol": "^NSEI",
       "name": "Nifty 50",
-      "last": 22811.35,
-      "median_chg_pct": 2.19,
-      "low10_chg_pct": -2.46,
-      "high90_chg_pct": 7.75,
-      "confidence": 59,
+      "last": 22888.95,
+      "median_chg_pct": 1.93,
+      "low10_chg_pct": -2.97,
+      "high90_chg_pct": 7.49,
+      "confidence": 58,
       "direction": "up"
     },
     "columns": [
@@ -1296,57 +1003,48 @@
     "rows": [
       [
         "^NSEI",
-        22811.35,
-        2.19,
-        -2.46,
-        7.75,
+        22888.95,
+        1.93,
+        -2.97,
+        7.49,
         "up",
-        59
+        58
       ],
       [
         "^N225",
-        64621.24,
-        1.55,
-        -7.71,
-        11.06,
+        64075.42,
+        1.59,
+        -8.99,
+        12.08,
         "up",
-        25
+        16
       ],
       [
         "^FTSE",
-        10745.47,
-        1.07,
-        -1.79,
-        3.63,
+        10752.88,
+        1.04,
+        -1.81,
+        3.59,
         "up",
         78
       ],
       [
         "^IXIC",
-        26424.82,
-        0.85,
-        -4.99,
-        5.99,
+        26612.3,
+        0.59,
+        -4.82,
+        5.56,
         "up",
-        56
-      ],
-      [
-        "^GSPC",
-        7712.57,
-        0.51,
-        -2.93,
-        3.54,
-        "up",
-        74
+        58
       ],
       [
         "^DJI",
-        52495.88,
-        0.48,
-        -3.3,
-        3.94,
+        52601.56,
+        0.52,
+        -3.15,
+        3.77,
         "up",
-        71
+        72
       ],
       [
         "INR=X",
@@ -1359,60 +1057,372 @@
       ],
       [
         "^NSEBANK",
-        54976.9,
-        0.39,
-        -4.9,
-        5.16,
+        55488.1,
+        0.34,
+        -4.83,
+        4.8,
         "up",
-        60
+        61
+      ],
+      [
+        "^GSPC",
+        7734.54,
+        0.32,
+        -2.89,
+        3.19,
+        "up",
+        76
       ],
       [
         "^HSI",
-        23651.87,
-        0.09,
+        23867.74,
+        0.1,
         -6.82,
-        6.43,
+        6.3,
         "flat",
         47
       ],
       [
         "BTC-USD",
-        83451.52,
-        0.01,
-        -9.47,
-        9.52,
+        84209.48,
+        -0.15,
+        -9.86,
+        9.64,
         "flat",
-        24
+        22
       ],
       [
         "GC=F",
-        4145.8,
-        -0.65,
-        -7.78,
-        7.99,
+        4133.0,
+        -0.76,
+        -7.84,
+        7.83,
         "down",
         37
       ],
       [
-        "CL=F",
-        97.76,
-        -4.24,
-        -21.49,
-        13.53,
+        "^INDIAVIX",
+        14.77,
+        -4.14,
+        -24.63,
+        36.36,
         "down",
         0
       ],
       [
-        "^INDIAVIX",
-        15.68,
-        -5.11,
-        -27.45,
-        33.81,
+        "CL=F",
+        98.35,
+        -4.19,
+        -21.47,
+        13.35,
         "down",
         0
       ]
     ],
     "total": 13
+  },
+  "daily": {
+    "as_of": "2026-10-21T19:12:05Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-21 (9 files, 6 days)",
+      "Nifty PCR 0.78 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 11 dividends, 2 splits",
+      "195 videos across 10 channels"
+    ]
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "XRP-USD",
+        1.3873,
+        3.96,
+        "2026-10-21"
+      ],
+      [
+        "LINK-USD",
+        12.673,
+        2.86,
+        "2026-10-21"
+      ],
+      [
+        "ETH-USD",
+        2513.3899,
+        2.72,
+        "2026-10-21"
+      ],
+      [
+        "BTC-USD",
+        84623.8672,
+        2.03,
+        "2026-10-21"
+      ],
+      [
+        "SOL-USD",
+        108.53,
+        1.98,
+        "2026-10-21"
+      ],
+      [
+        "ADA-USD",
+        0.2282,
+        1.98,
+        "2026-10-21"
+      ],
+      [
+        "AVAX-USD",
+        9.928,
+        1.9,
+        "2026-10-21"
+      ],
+      [
+        "DOGE-USD",
+        0.0833,
+        1.76,
+        "2026-10-21"
+      ],
+      [
+        "BNB-USD",
+        750.64,
+        1.33,
+        "2026-10-21"
+      ],
+      [
+        "TRX-USD",
+        0.3328,
+        0.54,
+        "2026-10-21"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "Persistent Systems launches Rs 4,265-cr QIP; floor price set at Rs 5,550/share",
+        "https://economictimes.indiatimes.com/markets/stocks/news/persistent-systems-launches-rs-4265-cr-qip-floor-price-set-at-rs-5550/share/articleshow/135097602.cms",
+        "Wed, 21 Oct 2026 23:01:22 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Stocks, gold or crypto? The last 3 years\u2019 returns have a surprising answer",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/stocks-gold-or-crypto-the-last-3-years-returns-have-a-surprising-answer/articleshow/135096080.cms",
+        "Wed, 21 Oct 2026 21:35:58 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Ahead of Market: 10 things that will decide stock market action on Thursday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-thursday/articleshow/135096044.cms",
+        "Wed, 21 Oct 2026 21:27:41 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Market Trading Guide: Wipro among 5 stock recommendations for Thursday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-trading-guide-wipro-among-5-stock-recommendations-for-thursday/slideshow/135095527.cms",
+        "Wed, 21 Oct 2026 20:39:13 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Netflix shares slide 4% as slowing sales growth raises fresh concerns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/netflix-shares-slide-4-as-slowing-sales-growth-raises-fresh-concerns/articleshow/135094744.cms",
+        "Wed, 21 Oct 2026 20:10:40 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Mahindra Finance Q2 net profit surges 55% to Rs 882 crore on volumes, lower credit cost",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/mahindra-finance-q2-net-profit-surges-55-to-rs-882-crore-on-volumes-lower-credit-cost/articleshow/135094556.cms",
+        "Wed, 21 Oct 2026 19:58:03 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Jio IPO strengthens Reliance\u2019s financial flexibility; capex funding remains key: Moody\u2019s",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/jio-ipo-strengthens-reliances-financial-flexibility-capex-funding-remains-key-moodys/articleshow/135094225.cms",
+        "Wed, 21 Oct 2026 19:32:53 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "PC Jewellers Q2 Results: Net profit shoots up 58% to Rs 331 crore; company says it is now debt-free",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/pc-jewellers-q2-results-net-profit-shoots-up-58-to-rs-331-crore-company-says-it-is-now-debt-free/articleshow/135094111.cms",
+        "Wed, 21 Oct 2026 19:29:06 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "IHCL Q2 Results: Tata Group-owned hotel chain's net profit jumps 19% to Rs 379 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/ihcl-q2-results-tata-group-owned-hotel-chains-net-profit-jumps-19-to-rs-379-crore/articleshow/135094055.cms",
+        "Wed, 21 Oct 2026 19:27:18 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks today: US stocks rise as SpaceX, Super Micro revive appetite for AI stocks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-higher-as-spacex-super-micro-results-lift-ai-stocks/articleshow/135093777.cms",
+        "Wed, 21 Oct 2026 19:07:35 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Can Jio IPO unlock hidden value in Reliance Industries shares?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/can-jio-ipo-unlock-hidden-value-in-reliance-industries-shares/videoshow/135093782.cms",
+        "Wed, 21 Oct 2026 19:05:50 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Sky Gold and Diamonds among 5 stocks that hit 52-week highs and rallied up to 45% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sky-gold-and-diamonds-among-5-stocks-that-hit-52-week-highs-and-rallied-up-to-45-in-a-month/slideshow/135093530.cms",
+        "Wed, 21 Oct 2026 18:50:01 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "IGI Q2 Results: Consolidated PAT surges 43% to Rs 185 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/igi-q2-results-consolidated-pat-surges-43-to-rs-185-crore/articleshow/135093213.cms",
+        "Wed, 21 Oct 2026 18:35:12 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "AI data center projects boost US warehouse demand and rents, real estate company JLL says",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ai-data-center-projects-boost-us-warehouse-demand-and-rents-real-estate-company-jll-says/articleshow/135093158.cms",
+        "Wed, 21 Oct 2026 18:32:00 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "UK annual house prices rise at weakest pace since March, ONS says",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/uk-annual-house-prices-rise-at-weakest-pace-since-march-ons-says/articleshow/135093001.cms",
+        "Wed, 21 Oct 2026 18:30:20 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "TVS ILP leases 80k sq ft at Visakhapatnam park in Andhra to Yokohoma group",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/tvs-ilp-leases-80k-sq-ft-at-visakhapatnam-park-in-andhra-to-yokohoma-group/articleshow/135092976.cms",
+        "Wed, 21 Oct 2026 18:20:40 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee rises 46 paise to 94.45 on India-US trade deal hopes; oil prices cap gains",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-46-paise-to-94-45-on-india-us-trade-deal-hopes-oil-prices-cap-gains/articleshow/135092741.cms",
+        "Wed, 21 Oct 2026 18:07:12 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Aye Finance Q2 Results: Net profit more than doubles to Rs 87 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/aye-finance-q2-results-net-profit-more-than-doubles-to-rs-87-crore/articleshow/135092689.cms",
+        "Wed, 21 Oct 2026 18:05:05 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Dow Jones| Nasdaq | S&amp;P 500 | US Stock Market Today |Live Updates: Nasdaq surges 1% as SpaceX, AI stocks rise while Netflix slips",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-stock-market-live-updates-nasdaq-sp-500-us-iran-israel-war-hormuz-deal-brent-crude-oil-earnings-forecast-nvidia-ai-stocks-spacex-super-micro-tesla-netflix-fed-rate-hike-treasury-yields-stock-price-news-21st-september-2026/liveblog/135092299.cms",
+        "Wed, 21 Oct 2026 17:40:08 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Bitcoin rebounds above $83,000 as strong US earnings and falling oil prices lift risk appetite",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/bitcoin-rebounds-above-83000-as-strong-us-earnings-and-falling-oil-prices-lift-risk-appetite/articleshow/135091348.cms",
+        "Wed, 21 Oct 2026 17:09:14 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Market wrap: Infosys, HCL Tech, Bajaj Finance, BSE top gainers and losers on Nifty and Sensex on Wednesday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-infosys-hcl-tech-bajaj-finance-bse-top-gainers-and-losers-on-nifty-and-sensex-on-wednesday/articleshow/135090920.cms",
+        "Wed, 21 Oct 2026 16:59:52 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Want exposure to India's biggest banks? Zerodha launches new ETF",
+        "https://economictimes.indiatimes.com/markets/stocks/news/want-exposure-to-indias-biggest-banks-zerodha-launches-new-etf/articleshow/135090790.cms",
+        "Wed, 21 Oct 2026 16:54:00 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: Eurozone bond yields rise as French unrest fuels fiscal concerns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-eurozone-bond-yields-rise-as-french-unrest-fuels-fiscal-concerns/articleshow/135090708.cms",
+        "Wed, 21 Oct 2026 16:49:53 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: BOJ's Himino says Japan inflation near 2% target, signals further rate hikes",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-bojs-himino-says-japan-inflation-near-2-target-signals-further-rate-hikes/articleshow/135090643.cms",
+        "Wed, 21 Oct 2026 16:46:44 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "CAS swings: Nifty\u2019s indicative price jumps 500 points in seconds, closes higher than pre-CAS level",
+        "https://economictimes.indiatimes.com/markets/stocks/news/cas-swings-niftys-indicative-price-jumps-500-points-in-seconds-closes-higher-than-pre-cas-level/articleshow/135089898.cms",
+        "Wed, 21 Oct 2026 16:23:01 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Jio Platforms' IPO-linked inflows boost rupee; elevated oil prices spur caution",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/jio-platforms-ipo-linked-inflows-boost-rupee-elevated-oil-prices-spur-caution/articleshow/135089592.cms",
+        "Wed, 21 Oct 2026 16:07:48 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "MFs raise stakes in 10 stocks in Q2; shares rally up to 130% in FY27, including 3 multibaggers",
+        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-raise-stakes-in-10-stocks-in-q2-shares-rally-up-to-130-in-fy27-including-3-multibaggers/slideshow/135089578.cms",
+        "Wed, 21 Oct 2026 16:01:44 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Eternal Q2 Results: Profit soars 92% YoY to Rs 125 crore; revenue zooms 78%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/eternal-q2-results-profit-soars-92-yoy-to-rs-125-crore-revenue-surges-78/articleshow/135088651.cms",
+        "Wed, 21 Oct 2026 15:36:28 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: European shares struggle for direction as France unrest weighs on sentiment",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-shares-struggle-for-direction-as-france-unrest-weighs-on-sentiment/articleshow/135088232.cms",
+        "Wed, 21 Oct 2026 15:11:14 +0530",
+        "2026-10-21T18:00:06Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: ECB sees Euro liquidity support boosting global currency role",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-ecb-sees-euro-liquidity-support-boosting-global-currency-role/articleshow/135088196.cms",
+        "Wed, 21 Oct 2026 15:09:58 +0530",
+        "2026-10-21T18:00:06Z"
+      ]
+    ],
+    "total": 164
   },
   "quality": {
     "rows": 20175,
@@ -1459,17 +1469,6 @@
     "niftybank": 14,
     "niftyit": 10,
     "niftynext50": 50
-  },
-  "daily": {
-    "as_of": "2026-10-21T18:05:07Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-21 (9 files, 6 days)",
-      "Nifty PCR 0.78 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "Corporate actions: 11 dividends, 2 splits",
-      "195 videos across 10 channels",
-      "164 news headlines"
-    ]
   },
   "markets": {
     "columns": [

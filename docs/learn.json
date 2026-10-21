@@ -1,0 +1,366 @@
+{
+  "_comment": "Course material. Written for someone who has never opened a demat account, but with the detail a working trader needs. Plain English, Indian market context.",
+  "updated": "2026-10-21",
+  "sections": [
+    {
+      "id": "basics",
+      "title": "1. How the market works",
+      "level": "Beginner",
+      "lessons": [
+        {
+          "q": "What is a share?",
+          "a": "A share is a small piece of ownership in a company. If a company is divided into 1 crore pieces and you own 100, you own one-millionth of it. That gives you a claim on its profits (through dividends) and a vote at meetings. The price moves because people disagree about what that slice is worth."
+        },
+        {
+          "q": "What is an index, and why does Nifty matter?",
+          "a": "An index tracks a basket of shares, so one number tells you how the market is doing. Nifty 50 tracks 50 large companies; Sensex tracks 30. When people say 'the market went up', they mean the index. An index cannot be bought directly - you buy an index fund or a futures contract that tracks it."
+        },
+        {
+          "q": "Equity, commodity, currency - what's the difference?",
+          "a": "Equity is part-ownership of a company. Commodity is a physical thing (gold, crude, copper) traded in lots. Currency is one money against another (USD/INR). They behave differently: equity likes growth, gold likes fear, and the rupee falls when foreign money leaves."
+        },
+        {
+          "q": "Who are FII and DII?",
+          "a": "FII is foreign institutional investor - big overseas funds. DII is domestic institutional investor - Indian mutual funds, insurers, banks. When FIIs sell heavily, the market usually falls because they are large. The FII/DII numbers on this site are the daily cash-market net buying and selling."
+        },
+        {
+          "q": "What is India VIX?",
+          "a": "It measures how much the market expects Nifty to move in the next 30 days, based on option prices. Low VIX (under 13) means calm and often complacent. High VIX (above 20) means fear. It is called the fear index because it spikes when people rush to buy protection."
+        }
+      ]
+    },
+    {
+      "id": "candles",
+      "title": "2. Reading a candlestick",
+      "level": "Beginner",
+      "lessons": [
+        {
+          "q": "What does one candle show?",
+          "a": "Four prices for one period: open, high, low, close. The thick body runs from open to close. The thin lines (wicks or shadows) reach to the high and the low. Green or hollow means the close was above the open; red or filled means it closed lower."
+        },
+        {
+          "q": "Why do wicks matter?",
+          "a": "A long lower wick means sellers pushed the price down but buyers pulled it back up before the close - someone wanted it at that level. A long upper wick is the opposite: buyers tried and failed. Wicks show rejection."
+        },
+        {
+          "q": "Which patterns actually mean something?",
+          "a": "A few are worth knowing: hammer (long lower wick after a fall), shooting star (long upper wick after a rise), engulfing (today's body completely covers yesterday's, in the opposite direction), doji (open and close nearly equal - indecision), and marubozu (almost no wicks - one side was in total control). The rest are variations on these."
+        },
+        {
+          "q": "What is a timeframe, and does it matter?",
+          "a": "The same candle can be 1 minute, 1 day or 1 week. Patterns mean more on higher timeframes: a daily hammer is stronger evidence than a 1-minute one. Intraday noise disappears on daily charts, which is why long-term investors only look at daily and weekly."
+        },
+        {
+          "q": "Volume - why look at it?",
+          "a": "Volume is how many shares changed hands. A price move on high volume is real participation; on low volume it is often drift. That is why this site shows volume against the stock's own 20-day average - 3x its normal volume is a genuine signal, whereas 3x on a stock that barely trades is not."
+        }
+      ]
+    },
+    {
+      "id": "patterns",
+      "title": "3. Chart patterns",
+      "level": "Intermediate",
+      "lessons": [
+        {
+          "q": "Support and resistance",
+          "a": "Support is a price where buyers have repeatedly stepped in; resistance is where sellers have repeatedly appeared. They are zones, not exact lines. When a level breaks on heavy volume, it often becomes the opposite: old resistance turns into support."
+        },
+        {
+          "q": "Head and shoulders (reversal)",
+          "a": "Three peaks, the middle one highest. The line joining the two troughs is the neckline. A close below the neckline suggests the uptrend is over. The usual target is the height of the pattern projected down from the neckline."
+        },
+        {
+          "q": "Double top and double bottom",
+          "a": "Price hits a level twice and fails - an 'M' shape is a double top (bearish), a 'W' is a double bottom (bullish). Two failures at the same price tells you that price is a wall."
+        },
+        {
+          "q": "Triangles, flags and wedges (continuation)",
+          "a": "A flag is a short pause after a sharp move, and usually resolves in the same direction. A symmetrical triangle is compression - the range narrows until it breaks. An ascending triangle with a flat top and rising lows usually breaks upward. A wedge slants against the trend and often marks exhaustion."
+        },
+        {
+          "q": "Cup and handle",
+          "a": "A rounded fall and recovery (the cup), then a small dip (the handle), then a breakout above the cup's rim. It is a long base being built - William O'Neil's favourite, and the base of his CANSLIM method."
+        },
+        {
+          "q": "Honest warning",
+          "a": "Most patterns fail. This site calls them 'candidates', not signals, because that is what they are: shapes worth a look. Always combine a pattern with volume and a defined stop, and never risk more than a small fixed fraction of capital on one idea."
+        }
+      ]
+    },
+    {
+      "id": "indicators",
+      "title": "4. Technical indicators",
+      "level": "Intermediate",
+      "lessons": [
+        {
+          "q": "Moving averages (SMA 50, SMA 200)",
+          "a": "The average closing price over the last N days. Price above a rising 200-day average is the simplest definition of a long-term uptrend. The 50-day crossing above the 200-day is called a golden cross; the reverse is a death cross."
+        },
+        {
+          "q": "RSI (Relative Strength Index)",
+          "a": "A 0-100 measure of how much of the recent movement was upward. Above 70 is called overbought, below 30 oversold. In a strong trend RSI can stay above 70 for weeks, so treat it as a description of momentum, not a sell signal."
+        },
+        {
+          "q": "MACD",
+          "a": "The gap between a fast and a slow moving average, plus a signal line. When MACD crosses above its signal line, momentum is turning up. The histogram is that gap - positive means improving. It lags, so it confirms rather than predicts."
+        },
+        {
+          "q": "ADX (trend strength)",
+          "a": "Measures how strong a trend is, not its direction. Under 20 means no trend (choppy, ranges). Above 25 means a real trend is in place. Pair it with direction: ADX 30 with price above the averages is a strong uptrend."
+        },
+        {
+          "q": "ATR (volatility)",
+          "a": "The average size of a day's range. Shown here as a percentage of price. It answers 'how much does this thing normally move?' - which is exactly what you need to set a stop that won't be hit by ordinary noise. A 1% ATR stock and a 5% ATR stock need different stops."
+        },
+        {
+          "q": "Bollinger Bands",
+          "a": "A moving average with bands two standard deviations above and below. Price touching the upper band is not automatically a sell - in a strong trend it rides the band. %B tells you where price sits inside the band: 0 is the lower, 1 is the upper."
+        }
+      ]
+    },
+    {
+      "id": "fno",
+      "title": "5. Futures and options (F&O)",
+      "level": "Advanced",
+      "lessons": [
+        {
+          "q": "Futures vs options",
+          "a": "A futures contract is an obligation to buy or sell at a set price on a set date - both sides are bound. An option is a right, not an obligation: the buyer pays a premium and can walk away. Options cost less but can lose 100% of the premium."
+        },
+        {
+          "q": "Open interest (OI)",
+          "a": "The number of contracts currently open. Rising OI means new positions being created; falling OI means positions being closed. Rising OI with rising price is often read as fresh longs; rising OI with falling price as fresh shorts."
+        },
+        {
+          "q": "PCR (put-call ratio)",
+          "a": "Put open interest divided by call open interest. Above 1 means more puts than calls, often read as bearish or hedged positioning. Below 1 is the opposite. It is a sentiment gauge, not a forecast - and very high readings can mark panic bottoms."
+        },
+        {
+          "q": "Max pain",
+          "a": "The strike where the largest number of option buyers would lose the most money at expiry. Prices often drift toward it into expiry. Useful context, not a rule."
+        },
+        {
+          "q": "Why most F&O traders lose",
+          "a": "Leverage cuts both ways, time decay works against option buyers every single day, and costs add up. SEBI's own studies show the majority of individual F&O traders lose money over the year. Treat the F&O tab as information about positioning, not an invitation to trade."
+        }
+      ]
+    },
+    {
+      "id": "fundamentals",
+      "title": "6. Company fundamentals",
+      "level": "Beginner",
+      "lessons": [
+        {
+          "q": "P/E ratio",
+          "a": "Price divided by earnings per share - how many rupees you pay for one rupee of yearly profit. High can mean expensive, or can mean the market expects fast growth. It is only meaningful against the company's own history and its industry."
+        },
+        {
+          "q": "P/B ratio",
+          "a": "Price compared to book value (assets minus liabilities). A low P/B can mean cheap, or can mean the assets are worth less than the books say. Banks are usually judged on P/B rather than P/E."
+        },
+        {
+          "q": "ROE (Return on Equity)",
+          "a": "Profit as a percentage of shareholders' money. Consistently above 15% suggests a genuinely good business. It is the single most useful quality measure, and Warren Buffett's core screen."
+        },
+        {
+          "q": "Dividend and dividend yield",
+          "a": "A share of profit paid to shareholders. Yield is the dividend as a percentage of price. A 5% yield is attractive unless the price is falling because the business is in trouble - a falling price raises the yield mechanically."
+        },
+        {
+          "q": "Market cap",
+          "a": "Share price times the number of shares - what the market thinks the whole company is worth. Large cap is above roughly ₹20,000 crore, mid cap in between, small cap below. Smaller means less liquid and more volatile."
+        },
+        {
+          "q": "What to actually check, in order",
+          "a": "Sales and profit growing for several years. Debt not ballooning. ROE above 15%. Promoter holding steady, not falling. Cash flow positive, not just accounting profit. Read the annual report once a year - it is the only document the company is legally bound to tell the truth in."
+        }
+      ]
+    },
+    {
+      "id": "news",
+      "title": "7. News and sector impact",
+      "level": "Intermediate",
+      "lessons": [
+        {
+          "q": "Why a headline moves a whole sector",
+          "a": "Companies in a sector share customers, inputs and lenders. If the largest IT company reports strong results, the market assumes similar demand for the others and bids them up too - which is exactly the HDFC-and-IT effect you described. The leader's numbers are read as an industry signal."
+        },
+        {
+          "q": "Crude oil - who it hits",
+          "a": "Crude up hurts: airlines (fuel is their largest cost), paints (crude derivatives), tyres, chemicals, logistics and transport. Crude up helps: oil producers like ONGC and Oil India. So one headline moves two lists in opposite directions."
+        },
+        {
+          "q": "Interest rates - who it hits",
+          "a": "Rate cuts help borrowers and rate-sensitive sectors: banks, real estate, autos (car loans), NBFCs. Rate hikes help savers and hurt all of the above. Banks also gain when rates rise if they lend at floating rates."
+        },
+        {
+          "q": "Currency - who it hits",
+          "a": "A weak rupee helps exporters who earn in dollars (IT services, pharma, textiles) because their revenue converts to more rupees. It hurts importers: oil marketing companies, electronics, and anyone with foreign-currency debt."
+        },
+        {
+          "q": "How to read a headline properly",
+          "a": "Ask three questions: which companies are directly named, which companies share their inputs or customers, and is this a one-quarter event or a permanent change? A single bad quarter is noise; a change in regulation or a new competitor is not."
+        }
+      ]
+    },
+    {
+      "id": "risk",
+      "title": "8. Risk, and staying in the game",
+      "level": "Essential",
+      "lessons": [
+        {
+          "q": "The only rule that really matters",
+          "a": "Never risk more than a small fixed fraction of your capital on one idea - most professionals use 0.5% to 2%. If you risk 2% and lose ten times in a row, you are down about 18%, not wiped out. Survival is the whole game."
+        },
+        {
+          "q": "Position sizing",
+          "a": "Decide the stop first, then the size. If a stock is at ₹100 and your stop is ₹95, you are risking ₹5 per share. To risk ₹2,000 you buy 400 shares. Volatile stocks get smaller positions automatically, because their stops are further away."
+        },
+        {
+          "q": "What is a crash, and can it be seen coming?",
+          "a": "A crash is a fast, correlated fall - everything sells at once. Nobody reliably predicts the date. What you can do is recognise the conditions: extreme valuations, heavy leverage, and a trigger. This site flags a drawdown regime when an index falls more than 10% from its high, 20% for a bear market, because behaviour changes in those regimes."
+        },
+        {
+          "q": "Delivery vs intraday",
+          "a": "Delivery means you take the shares into your demat account and pay the full amount - no leverage, no daily settlement. Intraday means squaring off the same day with leverage, and if you do not square off, the broker does it for you. Intraday magnifies both gains and losses."
+        },
+        {
+          "q": "Order types you must know",
+          "a": "Market order: buy now at whatever price. Limit order: only at your price or better. Stop-loss: becomes a market order once a trigger price is hit. A stop-loss is not optional - it is the difference between a bad day and a ruined account."
+        },
+        {
+          "q": "Costs nobody counts",
+          "a": "Brokerage, GST, stamp duty, SEBI charges, exchange fees, and STT on every trade - plus the bid-ask spread. A strategy that trades daily can lose a third of its gross profit to costs. This site's backtests charge 5 basis points per side for exactly that reason."
+        }
+      ]
+    },
+    {
+      "id": "investing",
+      "title": "9. Mutual funds, SIP and long-term",
+      "level": "Beginner",
+      "lessons": [
+        {
+          "q": "Why mutual funds exist",
+          "a": "You give money to a fund; a manager buys a basket of shares; you own units of the basket. It gives instant diversification for a few hundred rupees a month, which you cannot get buying single shares."
+        },
+        {
+          "q": "Index vs active funds",
+          "a": "An index fund simply copies an index - low cost, no manager judgement. An active fund tries to beat it and charges more. Over long periods most active funds in India fail to beat their benchmark after fees, which is why index funds are the default sensible choice."
+        },
+        {
+          "q": "SIP - why monthly beats timing",
+          "a": "A systematic investment plan buys a fixed amount every month. When prices fall you buy more units, when they rise fewer. It removes the impossible job of guessing the bottom and turns volatility into an advantage."
+        },
+        {
+          "q": "Expense ratio and exit load",
+          "a": "Expense ratio is the annual fee, taken silently from your money - 0.1% for an index fund, up to 2% for an active one. Exit load is a penalty for leaving early. Over 20 years, a 1.5% difference in fees is a large part of your final corpus."
+        },
+        {
+          "q": "How to choose",
+          "a": "Match the fund to the goal and the years available: equity for 7+ years, debt or hybrid for 1-3. Check the expense ratio, the benchmark, and whether it has actually tracked it. Ignore last year's top performer - that is mostly luck."
+        }
+      ]
+    },
+    {
+      "id": "reading",
+      "title": "10. How the best investors think",
+      "level": "Advanced",
+      "lessons": [
+        {
+          "q": "Warren Buffett - the core ideas",
+          "a": "Buy a business, not a ticker. Demand a margin of safety: pay clearly less than it is worth. Stay inside your circle of competence. Look for a durable competitive advantage - a moat. And be willing to do nothing for years, because patience is the scarcest edge."
+        },
+        {
+          "q": "Charlie Munger - inversion",
+          "a": "Instead of asking how to succeed, ask what would guarantee failure - too much leverage, no margin of safety, acting on tips - and then avoid those. Avoiding stupidity is easier and more reliable than seeking brilliance."
+        },
+        {
+          "q": "Rakesh Jhunjhunwala - the Indian approach",
+          "a": "Back the country's growth and hold concentrated positions in businesses you understand deeply. He was famously patient through drawdowns and said the trend is your friend but only if you can survive the volatility. Concentration demands conviction and a strong stomach."
+        },
+        {
+          "q": "Chandrakant Sampat - the value purist",
+          "a": "A Mumbai investor who applied Ben Graham strictly: buy well below intrinsic value, insist on honest managements, and let compounding do the work over decades. His point was that time in the market, not timing, creates wealth."
+        },
+        {
+          "q": "The one habit they share",
+          "a": "They all wrote down why they bought, before they bought, so they could tell later whether the reason had changed or the price had simply moved. Do that. It is the single cheapest improvement you can make to your own process."
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    [
+      "Ask",
+      "The lowest price a seller will accept right now."
+    ],
+    [
+      "Bid",
+      "The highest price a buyer will pay right now."
+    ],
+    [
+      "Bhavcopy",
+      "The exchange's own end-of-day file listing every trade's prices and volume. The most reliable free Indian data there is."
+    ],
+    [
+      "Circuit",
+      "A price band that halts trading for the day when hit, to stop panic moves."
+    ],
+    [
+      "Delivery %",
+      "The share of traded quantity actually taken into demat accounts. High delivery means real buying, not day trading."
+    ],
+    [
+      "Demat",
+      "The account that holds your shares electronically."
+    ],
+    [
+      "Expiry",
+      "The day a derivatives contract ends."
+    ],
+    [
+      "Liquidity",
+      "How easily you can buy or sell without moving the price."
+    ],
+    [
+      "Lot size",
+      "The minimum quantity traded in derivatives or some commodities."
+    ],
+    [
+      "Margin",
+      "Money a broker blocks as security for a position."
+    ],
+    [
+      "Naked",
+      "A position with no hedge and no stop - the thing that ends accounts."
+    ],
+    [
+      "Open interest",
+      "Contracts currently outstanding."
+    ],
+    [
+      "Premium",
+      "The price paid for an option."
+    ],
+    [
+      "Slippage",
+      "The gap between the price you expected and the price you got."
+    ],
+    [
+      "Spread",
+      "The difference between bid and ask - a hidden cost on every trade."
+    ],
+    [
+      "Stop-loss",
+      "A pre-set exit that limits how much one idea can cost you."
+    ],
+    [
+      "Volume",
+      "Number of shares traded in the period."
+    ],
+    [
+      "Yield",
+      "Income as a percentage of price, usually for dividends or bonds."
+    ]
+  ]
+}

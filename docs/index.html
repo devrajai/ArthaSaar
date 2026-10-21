@@ -51,7 +51,7 @@
   /* Navigation is a GRID, not a scrolling strip - every section is visible at once,
      so nothing is ever hidden off the side of a phone screen. */
   nav.tabs{background:var(--card);border-bottom:1px solid var(--line)}
-  .tabsrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:10px 0}
+  .tabsrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:6px;padding:10px 0}
   .tabsrow button{padding:11px 4px;font-size:13.5px;border-radius:9px;white-space:nowrap;
     overflow:hidden;text-overflow:ellipsis}
   @media(max-width:680px){.tabsrow{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
@@ -65,6 +65,45 @@
   .chart .lbl{fill:var(--muted);font-size:10px;font-family:inherit}
   .rowbtn{cursor:pointer}
   .rowbtn:hover td{background:var(--head)}
+
+  /* ---- Google-style search ---- */
+  .searchwrap{flex:1 1 320px;max-width:520px;position:relative;margin:0 6px}
+  .searchwrap input{width:100%;font:inherit;font-size:15px;padding:12px 16px 12px 42px;
+    border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .searchwrap input:focus{outline:none;border-color:var(--accent);box-shadow:0 2px 10px rgba(29,78,216,.18)}
+  .searchwrap .mag{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
+  .palette{position:fixed;left:0;right:0;top:0;bottom:0;z-index:100;display:none;
+    background:rgba(8,12,20,.45);padding:8vh 16px 16px}
+  .palette.on{display:block}
+  .pbox{max-width:680px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden;max-height:80vh;display:flex;flex-direction:column}
+  .pbox input{width:100%;font:inherit;font-size:17px;padding:18px 20px;border:0;border-bottom:1px solid var(--line);
+    background:var(--card);color:var(--text);outline:none}
+  .plist{overflow:auto}
+  .pitem{display:flex;gap:12px;align-items:center;padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--line)}
+  .pitem:hover,.pitem.sel{background:var(--head)}
+  .pitem .kind{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);
+    min-width:52px}
+  .pitem .tt{font-weight:650}
+  .pitem .st{color:var(--muted);font-size:12.5px}
+  .pempty{padding:20px;color:var(--muted)}
+
+  /* ---- screener presets ---- */
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 6px}
+  .presets button{font-size:13px;padding:9px 13px;border-radius:999px}
+
+  /* ---- learn ---- */
+  .lesson{border:1px solid var(--line);border-radius:9px;margin-top:9px;overflow:hidden}
+  .lesson>button{width:100%;text-align:left;border:0;border-radius:0;background:var(--card);
+    font-size:15px;font-weight:650;padding:13px 15px}
+  .lesson>button:hover{background:var(--head)}
+  .lesson .a{display:none;padding:2px 15px 15px;color:var(--muted);font-size:14.5px;line-height:1.65}
+  .lesson.on .a{display:block}
+  .lvl{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);
+    border:1px solid var(--line);border-radius:999px;padding:2px 8px;margin-left:8px}
+  .sector{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;
+    border:1px solid var(--line);background:var(--head);color:var(--muted);margin:2px 4px 2px 0}
   .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:12px}
   .kv div{font-size:14px}
   .kv b{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
@@ -114,6 +153,11 @@
     <div>
       <h1>ArthaSaar</h1>
       <div class="tag" id="stamp">Loading…</div>
+    </div>
+    <div class="searchwrap">
+      <span class="mag">⌕</span>
+      <input id="search" type="search" placeholder="Search stocks, global, coins, news…  (press /)"
+             autocomplete="off" aria-label="Search everything">
     </div>
     <div class="right">
       <button id="themeBtn" class="small">Dark mode</button>
@@ -264,6 +308,7 @@ function kv(pairs){
 var SECTIONS=[
   {id:"overview",  label:"Overview"},
   {id:"stocks",    label:"Stocks"},
+  {id:"screener",  label:"Screener"},
   {id:"market",    label:"Market"},
   {id:"fno",       label:"F&O"},
   {id:"global",    label:"Global"},
@@ -271,6 +316,7 @@ var SECTIONS=[
   {id:"news",      label:"News"},
   {id:"corporate", label:"Corporate"},
   {id:"youtube",   label:"YouTube"},
+  {id:"learn",     label:"Learn"},
   {id:"data",      label:"Data"}
 ];
 var FEEDS=["archive","fno","spikes","corporate","markets","commodities","fx","crypto","news",
@@ -604,6 +650,51 @@ function build(d){
   /* ---------- NEWS ---------- */
   (function(){
     var v=sec("news");
+    // News -> which sectors a headline touches. Crude up helps producers and hurts
+    // airlines, paints and chemicals; that mapping is the useful part of a headline.
+    var SECTORS=[
+      ["Oil & gas", /crude|oil|opec|refin|petrol|diesel|fuel|gas price/i],
+      ["Aviation", /airline|aviation|indigo|spicejet|air india|jet fuel/i],
+      ["Paints & chemicals", /paint|chemical|pigment|resin|solvent/i],
+      ["IT services", /infosys|tcs|wipro|hcl|tech mahindra|it sector|software export|nasscom/i],
+      ["Banking & NBFC", /bank|rbi|repo rate|nbfc|hdfc|icici|sbi|axis|kotak|lending|npa/i],
+      ["Auto", /auto|car|vehicle|maruti|tata motors|ev |electric vehicle|two-wheeler/i],
+      ["Pharma & healthcare", /pharma|drug|usfda|api |hospital|healthcare|cipla|sun pharma/i],
+      ["Realty", /real estate|realty|housing|property|dlf|godrej propert/i],
+      ["Metals & mining", /steel|iron ore|metal|aluminium|copper|zinc|mining|tata steel|hindalco/i],
+      ["Power & energy", /power|electricity|ntpc|renewable|solar|wind energy|discom/i],
+      ["FMCG", /fmcg|consumer goods|hul|itc|nestle|britannia|dabur|retail inflation/i],
+      ["Cement & infra", /cement|infrastructure|construction|ultratech|ambuja|highway|road project/i],
+      ["Telecom", /telecom|airtel|jio|vodafone|5g|spectrum|tariff hike/i],
+      ["Textiles", /textile|apparel|garment|cotton|spinning|export order/i],
+      ["Rupee & rates", /rupee|dollar|forex|usd\/inr|bond yield|g-sec|fii|inflation|fed |rate cut|rate hike/i]
+    ];
+    function tagSectors(text){
+      var out=[];
+      for(var i=0;i<SECTORS.length;i++){ if(SECTORS[i][1].test(text)) out.push(SECTORS[i][0]); }
+      return out;
+    }
+    if(d.news){
+      var ncols=d.news.columns||[], nrows=d.news.rows||[];
+      var ci=0;
+      for(var z=0;z<ncols.length;z++){ if(/title|head/i.test(ncols[z])){ ci=z; break; } }
+      var shown=nrows.slice(0,40);
+      var impact=el("div");
+      impact.appendChild(el("p","sub","Sectors each headline touches (keyword match, not analysis)"));
+      shown.forEach(function(row){
+        var title=String(row[ci]||"");
+        var tags=tagSectors(title);
+        if(!tags.length) return;
+        impact.appendChild(el("div","",
+          '<div style="font-size:14px;margin-top:9px">'+esc(title.slice(0,150))+'</div>'+
+          '<div>'+tags.map(function(t){ return '<span class="sector">'+esc(t)+'</span>'; }).join("")+'</div>'));
+      });
+      v.appendChild(card("Which sectors a headline touches", "mapped from "+shown.length+" recent headlines",
+        [impact],
+        {what:"Each headline matched against a keyword map of sectors - the same logic a trader applies by hand: who shares these inputs, customers or lenders.",
+         source:"Publisher RSS headlines + a hand-written keyword map.", updated:when,
+         note:"This is a keyword match, not analysis. It tells you where to look, not what will happen."}));
+    }
     if(d.news)v.appendChild(card("Market headlines", d.news.total+" stories",[ tbl(d.news) ],
       {what:"Headlines from publisher RSS feeds.",source:"Economic Times, Moneycontrol, Business Standard, LiveMint RSS.",updated:when,
        note:"RSS only - headlines, no article text, and nothing is interpreted."}));
@@ -704,14 +795,203 @@ function build(d){
     ], {what:"Where all of this comes from.",source:"Free and public sources only.",updated:when}));
   })();
 
+  /* ---------- SCREENER ---------- */
+  (function(){
+    var v=sec("screener");
+    if(!SCREENER || !SCREENER.rows || !SCREENER.rows.length){
+      v.appendChild(card("Screener","",
+        [para("Nothing to screen yet. The screener needs price history, so it fills in as the hub deepens stocks in the universe.")],
+        {what:"Filter stocks by how far and how long they have fallen, RSI, volume spikes and trend.",
+         source:"Built from the per-stock price series.", updated:when}));
+      return;
+    }
+    // Presets are real functions, not strings that get eval'd - so nothing in a data
+    // file can ever execute as code in this page.
+    var PRED={
+      falling:      function(r){ return r.down_streak>=3 && r.chg_5d!=null && r.chg_5d<=-3; },
+      falling5:     function(r){ return r.down_streak>=5; },
+      drop2:        function(r){ return r.chg_1d!=null && r.chg_1d<=-2; },
+      drop5:        function(r){ return r.chg_5d!=null && r.chg_5d<=-5; },
+      rising:       function(r){ return r.up_streak>=3; },
+      nearlow:      function(r){ return r.above_52w_low!=null && r.above_52w_low<=5; },
+      nearhigh:     function(r){ return r.from_52w_high!=null && r.from_52w_high>=-5; },
+      oversold:     function(r){ return r.rsi!=null && r.rsi<30; },
+      overbought:   function(r){ return r.rsi!=null && r.rsi>70; },
+      volspike:     function(r){ return r.vol_x!=null && r.vol_x>=2; },
+      macdbull:     function(r){ return r.macd_hist!=null && r.macd_hist>0; },
+      strongup:     function(r){ return r.trend==="up" && r.adx!=null && r.adx>25; },
+      strongdown:   function(r){ return r.trend==="down" && r.adx!=null && r.adx>25; }
+    };
+    var holder=el("div");
+    function showList(active){
+      holder.innerHTML="";
+      var pre=el("div","presets");
+      var all=el("button","small"+(!active?" primary":""),"All stocks");
+      all.addEventListener("click",function(){ showList(""); });
+      pre.appendChild(all);
+      (SCREENER.presets||[]).forEach(function(p){
+        var b=el("button","small"+(active===p.id?" primary":""),esc(p.label));
+        b.title=p.note||"";
+        b.addEventListener("click",function(){ showList(p.id); });
+        pre.appendChild(b);
+      });
+      var rows=SCREENER.rows;
+      var note="";
+      if(active && PRED[active]){
+        rows=rows.filter(PRED[active]);
+        var pdef=(SCREENER.presets||[]).filter(function(p){return p.id===active;})[0];
+        note=(pdef&&pdef.note)?pdef.note:"";
+      }
+      var cols=["symbol","name","close","chg_1d","chg_5d","down_streak","from_52w_high","above_52w_low","rsi","vol_x","trend"];
+      var tr=rows.map(function(r){ return [r.symbol,r.name,r.close,r.chg_1d,r.chg_5d,r.down_streak,
+        r.from_52w_high,r.above_52w_low,r.rsi,r.vol_x,r.trend]; });
+      holder.appendChild(card("Screener", rows.length+" of "+SCREENER.count+" stocks"+(note?" · "+note:""),
+        [pre, table(cols, tr, ["close","chg_1d","chg_5d","down_streak","from_52w_high","above_52w_low","rsi","vol_x"], 0)],
+        {what:"Filters built from the price series: consecutive falls, the move over 1/2/3/5/20 sessions, distance from the 52-week high and low, RSI, MACD, volume versus its own average, and trend.",
+         source:"Yahoo daily candles, via the per-stock pages.",
+         updated:SCREENER.updated?ago(SCREENER.updated):when,
+         note:"Only stocks with history appear here - a 5-day fall cannot be computed without it. Coverage grows with every run. Click any column header to sort."}));
+    }
+    showList("");
+    v.appendChild(holder);
+  })();
+
+  /* ---------- LEARN (course material) ---------- */
+  (function(){
+    var v=sec("learn");
+    if(!LEARN || !LEARN.sections){
+      v.appendChild(card("Learn","",[para("Course material not loaded.")],
+        {what:"Lessons on candles, patterns, indicators, F&O, fundamentals, risk and investing.",
+         source:"Written for this terminal.", updated:when}));
+      return;
+    }
+    v.appendChild(card("Course material",
+      "Written for someone who has never opened a demat account, with the detail a working trader needs",
+      [para("Everything here is plain English and Indian market context. Tap a question to open the answer. Nothing in this course is a recommendation to buy or sell anything.")],
+      {what:"A short, practical course across ten topics.", source:"Written for this terminal.",
+       updated:LEARN.updated||when}));
+
+    (LEARN.sections||[]).forEach(function(secn){
+      var kids=[];
+      (secn.lessons||[]).forEach(function(l){
+        var box=el("div","lesson");
+        var b=el("button","",esc(l.q)+'<span class="lvl">'+esc(secn.level||"")+'</span>');
+        b.addEventListener("click",function(){ box.className=(box.className.indexOf("on")>=0?"lesson":"lesson on"); });
+        box.appendChild(b);
+        box.appendChild(el("div","a",esc(l.a)));
+        kids.push(box);
+      });
+      v.appendChild(card(secn.title, secn.level||"", kids,
+        {what:"One topic of the course.", source:"Written for this terminal.", updated:LEARN.updated||when}));
+    });
+
+    if(LEARN.glossary && LEARN.glossary.length){
+      v.appendChild(card("Glossary", LEARN.glossary.length+" terms",
+        [table(["term","meaning"], LEARN.glossary.map(function(g){ return [g[0],g[1]]; }))],
+        {what:"The words that get used without explanation.", source:"Written for this terminal.",
+         updated:LEARN.updated||when}));
+    }
+  })();
+
   renderTabs();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
 }
 
+/* ---------- Google-style search ---------- */
+function buildPalette(){
+  var wrap=el("div","palette");
+  var box=el("div","pbox");
+  var input=el("input");
+  input.type="text"; input.placeholder="Search stocks, global companies, coins, news…";
+  var list=el("div","plist");
+  box.appendChild(input); box.appendChild(list); wrap.appendChild(box);
+  document.body.appendChild(wrap);
+
+  var results=[], sel=0;
+  var KIND={stock:"Stock",global:"Global",coin:"Coin",news:"News",learn:"Go to"};
+
+  function paint(){
+    list.innerHTML="";
+    if(!results.length){ list.appendChild(el("div","pempty","No matches. Try a symbol, a company name, a sector, or a word from a headline.")); return; }
+    results.forEach(function(r,i){
+      var it=el("div","pitem"+(i===sel?" sel":""),
+        '<span class="kind">'+esc(KIND[r.k]||r.k)+'</span>'+
+        '<span><span class="tt">'+esc(r.t)+'</span><br><span class="st">'+esc(r.s||"")+'</span></span>');
+      it.addEventListener("click",function(){ go(r); });
+      list.appendChild(it);
+    });
+  }
+  function search(q){
+    q=(q||"").trim().toLowerCase();
+    if(!q){ results=(SEARCH.items||[]).filter(function(i){return i.k==="learn";}).slice(0,10); sel=0; paint(); return; }
+    var items=SEARCH.items||[], out=[];
+    // starts-with first, then contains - the way a search box should feel
+    for(var pass=0; pass<2 && out.length<40; pass++){
+      for(var i=0;i<items.length && out.length<40;i++){
+        var it=items[i], t=(it.t||"").toLowerCase(), s=(it.s||"").toLowerCase();
+        var hit = pass===0 ? (t.indexOf(q)===0) : (t.indexOf(q)>=0 || s.indexOf(q)>=0);
+        if(hit && out.indexOf(it)<0) out.push(it);
+      }
+    }
+    results=out; sel=0; paint();
+  }
+  function go(r){
+    closePalette();
+    if(r.k==="learn"){ show(r.h); return; }
+    // land on the right tab and open that item's page where we have one
+    if(r.k==="stock"){
+      show("stocks");
+      var rec=(STOCKS&&STOCKS.stocks)?Object.keys(STOCKS.stocks).map(function(k){return STOCKS.stocks[k];})
+              .filter(function(x){return x.symbol===r.t;})[0]:null;
+      if(rec){ var h=$$("#sec-stocks .card"); }
+    } else if(r.k==="global"){ show("global"); }
+    else if(r.k==="coin"){ show("crypto"); }
+    else if(r.k==="news"){ show("news"); }
+  }
+  input.addEventListener("input",function(){ search(input.value); });
+  input.addEventListener("keydown",function(e){
+    if(e.key==="ArrowDown"){ sel=Math.min(sel+1,results.length-1); paint(); e.preventDefault(); }
+    else if(e.key==="ArrowUp"){ sel=Math.max(sel-1,0); paint(); e.preventDefault(); }
+    else if(e.key==="Enter"){ if(results[sel]) go(results[sel]); }
+    else if(e.key==="Escape"){ closePalette(); }
+  });
+  wrap.addEventListener("click",function(e){ if(e.target===wrap) closePalette(); });
+  return { wrap:wrap, input:input, search:search };
+}
+var PALETTE=null;
+function openPalette(){
+  if(!SEARCH){ return; }
+  if(!PALETTE) PALETTE=buildPalette();
+  PALETTE.wrap.className="palette on";
+  PALETTE.input.value="";
+  PALETTE.search("");
+  PALETTE.input.focus();
+}
+function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
+
+/* ---------- search bar + keyboard ---------- */
+(function(){
+  var box=$("#search");
+  if(box){
+    // the header field is a doorway: focusing it opens the full palette, so there is
+    // only ever one search box to think about
+    box.addEventListener("focus",function(e){ e.target.blur(); openPalette(); });
+    box.addEventListener("click",function(e){ e.target.blur(); openPalette(); });
+  }
+  document.addEventListener("keydown",function(e){
+    var tag=(e.target&&e.target.tagName)||"";
+    if(/input|textarea|select/i.test(tag)) return;   // let the palette handle its own keys
+    if(e.key==="/" || ((e.metaKey||e.ctrlKey) && String(e.key).toLowerCase()==="k")){
+      e.preventDefault(); openPalette(); return;
+    }
+    if(e.key==="Escape") closePalette();
+  });
+})();
+
 /* ---------- load ---------- */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null;
+var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null;
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}  // site works without these
 Promise.all([
@@ -719,9 +999,13 @@ Promise.all([
   optional(BASE+"stocks.json"),
   optional(BASE+"universe.json"),
   optional(BASE+"crypto.json"),
-  optional(BASE+"global.json")
+  optional(BASE+"global.json"),
+  optional(BASE+"screener.json"),
+  optional(BASE+"search.json"),
+  optional(BASE+"learn.json")
 ])
   .then(function(res){var d=res[0];STOCKS=res[1];UNIVERSE=res[2];CRYPTO=res[3];GLOBAL=res[4];
+    SCREENER=res[5];SEARCH=res[6];LEARN=res[7];
     build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
     $("#stamp").textContent="No data";

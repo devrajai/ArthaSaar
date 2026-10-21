@@ -123,6 +123,12 @@ jobs:
       - name: "7m4. Global pages (stocks by country)"
         run: python scripts/build_global_pages.py || true
 
+      - name: "7n1. Screener metrics"
+        run: python scripts/build_screener.py || true
+
+      - name: "7n2. Search index"
+        run: python scripts/build_search_index.py || true
+
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 

@@ -331,80 +331,122 @@ function build(d){
          note:"Mentions are not recommendations, and the analysis reads titles/descriptions only."}));
   })();
 
-  /* ---------- STOCKS ---------- */
-  (function(){
-    var v=sec("stocks");
-    if(!STOCKS || !STOCKS.screener || !STOCKS.screener.length){
-      v.appendChild(card("Stocks","",[para("No stock pages yet. They are built from the Yahoo price history in the daily pipeline, so they appear after the first run.")],
-        {what:"One page per stock: price chart, fundamentals and technicals.",
-         source:"Yahoo Finance prices + yfinance fundamentals; indicators from the hub's verified library.",updated:when}));
-      return;
-    }
-    var holder=el("div");
+  /* ---------- shared detail page (stock, global stock, coin) ---------- */
+  function techPairs(t){
+    return [["RSI (14)", t.rsi_14], ["SMA 20", num(t.sma_20)], ["SMA 50", num(t.sma_50)],
+            ["SMA 200", num(t.sma_200)], ["ADX", t.adx], ["ATR %", t.atr_pct],
+            ["MACD hist", t.macd_hist], ["Bollinger %B", t.bb_pctb],
+            ["Volume vs 20d avg", t.vol_x?t.vol_x+"x":null],
+            ["52w high", num(t.high_52w)], ["52w low", num(t.low_52w)]];
+  }
+  function renderDetail(holder, rec, backLabel, backFn, opts){
+    opts = opts || {};
+    holder.innerHTML = "";
+    var back = el("button","small back","← "+backLabel);
+    back.addEventListener("click", backFn);
+    holder.appendChild(back);
 
-    function showList(){
-      holder.innerHTML="";
-      var q=el("input"); q.type="search"; q.placeholder="Filter by symbol, name or sector…";
-      var field=el("div","field"); field.appendChild(q);
-      var cols=["symbol","name","sector","close","chg_pct","rsi_14","trend","pe","div_yield"];
-      var rows=STOCKS.screener.map(function(s){ return [s.symbol,s.name,s.sector,s.close,s.chg_pct,s.rsi_14,s.trend,s.pe,s.div_yield]; });
-      var t=table(cols, rows, ["close","chg_pct","rsi_14","pe","div_yield"], 0, function(r){
-        var key=null;
-        for(var k in STOCKS.stocks){ if(STOCKS.stocks[k].symbol===r[0]){ key=k; break; } }
-        if(key) showStock(STOCKS.stocks[key]);
-      });
-      holder.appendChild(card("Stock screener", STOCKS.count+" stocks · tap a row for the full page",
-        [field, t],
-        {what:"Every stock with a page. Tap a row to open its chart, fundamentals and technicals.",
-         source:"Yahoo Finance prices; fundamentals from Yahoo's company data.",updated:STOCKS.updated?ago(STOCKS.updated):when,
-         note:"Fundamentals are Yahoo's figures and can lag a quarter. Not a recommendation."}));
-      q.addEventListener("input", function(){
-        var s=(q.value||"").trim().toLowerCase();
-        $$("tbody tr", t).forEach(function(tr){
-          tr.style.display=(!s||tr.textContent.toLowerCase().indexOf(s)>=0)?"":"none";
-        });
-      });
-    }
+    var head = el("div","");
+    head.innerHTML='<div style="font-size:19px;font-weight:700">'+esc(rec.name||rec.symbol)+
+      ' <span style="color:var(--muted);font-weight:400;font-size:15px">'+esc(rec.symbol)+
+      (rec.sector?' · '+esc(rec.sector):'')+(opts.tag?' · '+esc(opts.tag):'')+'</span></div>'+
+      '<div style="margin-top:6px"><b style="font-size:26px">'+num(rec.close)+'</b> '+
+      '<span class="'+(rec.chg_pct>=0?'up':'down')+'" style="font-weight:700">'+sgn(rec.chg_pct)+'%</span></div>';
+    holder.appendChild(card("Price", "last "+(rec.series||[]).length+" sessions",
+      [head, sparkline(rec.series, 600, 190)],
+      {what:"Closing price over the recent sessions.", source:opts.priceSource||"Daily candles.",
+       updated:opts.updated||when}));
 
-    function showStock(r){
-      holder.innerHTML="";
-      var back=el("button","small back","← All stocks");
-      back.addEventListener("click", showList);
-      holder.appendChild(back);
+    var t = rec.tech || {};
+    holder.appendChild(card("Technicals", t.trend?("trend: "+t.trend):"",
+      [kv(techPairs(t)),
+       para("Trend is read from the moving averages: up when price > SMA50 > SMA200, down when the reverse. ADX measures how strong a trend is, not its direction. RSI above 70 is often called overbought, below 30 oversold - descriptions, not signals.")],
+      {what:"Standard technical indicators computed on adjusted prices.",
+       source:"The hub's indicator library, independently tested for correctness and look-ahead.",
+       updated:opts.updated||when}));
 
-      var head=el("div","");
-      head.innerHTML='<div style="font-size:19px;font-weight:700">'+esc(r.name)+
-        ' <span style="color:var(--muted);font-weight:400;font-size:15px">'+esc(r.symbol)+
-        (r.sector?' · '+esc(r.sector):'')+'</span></div>'+
-        '<div style="margin-top:6px"><b style="font-size:26px">'+num(r.close)+'</b> '+
-        '<span class="'+(r.chg_pct>=0?'up':'down')+'" style="font-weight:700">'+sgn(r.chg_pct)+'%</span></div>';
-      holder.appendChild(card("Price", "last "+(r.series||[]).length+" sessions",
-        [head, sparkline(r.series, 600, 190)],
-        {what:"Closing price, back-adjusted for splits and bonuses.",
-         source:"Yahoo Finance daily candles.", updated:STOCKS.updated?ago(STOCKS.updated):when}));
-
-      var t=r.tech||{};
-      holder.appendChild(card("Technicals", t.trend?("trend: "+t.trend):"",
-        [kv([["RSI (14)", t.rsi_14], ["SMA 20", num(t.sma_20)], ["SMA 50", num(t.sma_50)],
-             ["SMA 200", num(t.sma_200)], ["ADX", t.adx], ["ATR %", t.atr_pct],
-             ["MACD hist", t.macd_hist], ["Bollinger %B", t.bb_pctb], ["Volume vs 20d avg", t.vol_x?t.vol_x+"x":null],
-             ["52w high", num(t.high_52w)], ["52w low", num(t.low_52w)]]),
-         para("Trend is read from the moving averages: up when price > SMA50 > SMA200, down when the reverse. ADX measures how strong a trend is, not its direction. RSI above 70 is often called overbought, below 30 oversold - both are descriptions, not signals.")],
-        {what:"Standard technical indicators computed on adjusted prices.",
-         source:"The hub's indicator library, independently tested for correctness and look-ahead.",
-         updated:STOCKS.updated?ago(STOCKS.updated):when}));
-
-      var f=r.fund||{};
+    if(opts.market){
+      var m = rec.market || {};
+      holder.appendChild(card(opts.market.title, opts.market.sub||"",
+        [kv([[opts.market.title+" (24h)", m.quote_volume?big(m.quote_volume):null],
+             ["Units traded (24h)", m.volume?big(m.volume):null],
+             ["Trades (24h)", m.trades?num(m.trades):null],
+             ["24h high", num(m.high_24h)], ["24h low", num(m.low_24h)]]),
+         para(opts.market.note)],
+        {what:"Traded volume and range for the last 24 hours.", source:"Binance public API.", updated:opts.updated||when}));
+    } else {
+      var f = rec.fund || {};
       holder.appendChild(card("Fundamentals","",
         [kv([["Market cap", f.mcap?big(f.mcap):null], ["P/E", f.pe], ["P/B", f.pb],
              ["EPS", f.eps], ["Dividend yield %", f.div_yield], ["Beta", f.beta],
              ["52w high", num(f.high_52w)], ["52w low", num(f.low_52w)]]),
          para("P/E is price divided by earnings - high can mean expensive or fast-growing. P/B compares price to book value. Beta measures how much the stock moves relative to the market.")],
-        {what:"Company-level valuation and risk figures.",
-         source:"Yahoo Finance company data.", updated:STOCKS.updated?ago(STOCKS.updated):when,
+        {what:"Company-level valuation and risk figures.", source:"Yahoo Finance company data.",
+         updated:opts.updated||when,
          note:"Yahoo's numbers, refreshed daily, and they can lag a quarter. Verify against the company's own filings before acting on them."}));
     }
+  }
 
+  /* ---------- STOCKS (full NSE list, deep pages as they arrive) ---------- */
+  (function(){
+    var v=sec("stocks");
+    var uni = UNIVERSE, deep = (STOCKS && STOCKS.stocks) || {};
+    if(!uni || !uni.rows || !uni.rows.length){
+      v.appendChild(card("Stocks","",[para("No universe yet. It is built from NSE's own symbol master in the daily pipeline.")],
+        {what:"Every NSE-listed stock, plus a page for each one that has been deepened.",
+         source:"NSE EQUITY_L.csv symbol master + NSE bhavcopy.",updated:when}));
+      return;
+    }
+    var holder=el("div");
+    var bySymbol={};
+    for(var k in deep){ bySymbol[deep[k].symbol]=deep[k]; }
+
+    function showList(){
+      holder.innerHTML="";
+      var q=el("input"); q.type="search"; q.placeholder="Filter by symbol, name or ISIN…";
+      var only=el("button","small","Show only stocks with a full page");
+      var onlyDeep=false;
+      var field=el("div","field"); field.appendChild(q); field.appendChild(only);
+      var cols=["symbol","name","series","close","chg_pct","volume","page"];
+      var rows=uni.rows.map(function(r){
+        return [r.symbol, r.name, r.series, r.close, r.chg_pct, r.volume, r.deep?"full":"—"];
+      });
+      var notice=el("div","");
+      var t=table(cols, rows, ["close","chg_pct","volume"], 0, function(row){
+        var rec=bySymbol[row[0]];
+        if(rec){
+          renderDetail(holder, rec, "All listed stocks", showList,
+            {updated:STOCKS.updated?ago(STOCKS.updated):when, priceSource:"Yahoo Finance daily candles."});
+        } else {
+          // no alert(): a plain inline note reads better and never blocks the page
+          notice.innerHTML = '<div class="card" style="border-color:var(--line)">'+
+            '<b>'+esc(row[0])+'</b> has no full page yet. The hub deepens a slice of the '+
+            'universe on every run, so its chart, technicals and fundamentals will appear '+
+            'over the coming days.</div>';
+          notice.scrollIntoView && notice.scrollIntoView({block:"center"});
+        }
+      });
+      holder.appendChild(notice);
+      holder.appendChild(card("All listed stocks",
+        uni.count+" NSE symbols · "+uni.with_price+" priced · "+(STOCKS?STOCKS.count:0)+" with a full page",
+        [field, t],
+        {what:"Every stock listed on NSE, with the day's close and volume. Rows marked 'full' also have a chart, technicals and fundamentals.",
+         source:"NSE symbol master (EQUITY_L.csv) and the NSE cash bhavcopy.",
+         updated:uni.updated?ago(uni.updated):when,
+         note:"Deep pages are built a slice at a time because fetching years of history for 2,600 symbols at once gets rate-limited. Coverage grows every run."}));
+      function filt(){
+        var s=(q.value||"").trim().toLowerCase();
+        $$("tbody tr", t).forEach(function(tr){
+          var okText=!s||tr.textContent.toLowerCase().indexOf(s)>=0;
+          var okDeep=!onlyDeep||tr.textContent.indexOf("full")>=0;
+          tr.style.display=(okText&&okDeep)?"":"none";
+        });
+      }
+      q.addEventListener("input", filt);
+      only.addEventListener("click", function(){
+        onlyDeep=!onlyDeep; only.className="small"+(onlyDeep?" primary":""); filt();
+      });
+    }
     showList();
     v.appendChild(holder);
   })();
@@ -463,26 +505,98 @@ function build(d){
     if(!v.children.length)v.appendChild(card("F&O","",[para("No derivatives data yet.")]));
   })();
 
-  /* ---------- GLOBAL ---------- */
+  /* ---------- GLOBAL (by country) ---------- */
   (function(){
     var v=sec("global");
-    if(d.markets)v.appendChild(card("Global indices","",[ tbl(d.markets,["close","chg_pct"]) ],
-      {what:"Major world equity indices, last close and one-day change.",source:"Yahoo Finance (unofficial).",updated:when}));
-    if(d.commodities)v.appendChild(card("Commodities","",[ tbl(d.commodities,["close","chg_pct"]) ],
-      {what:"Gold, crude and other commodity futures.",source:"Yahoo Finance (unofficial).",updated:when}));
-    if(d.fx)v.appendChild(card("Currency","",[ tbl(d.fx,["close","chg_pct"]) ],
-      {what:"Currency pairs, including the rupee crosses.",source:"Yahoo Finance (unofficial).",updated:when}));
-    if(!v.children.length)v.appendChild(card("Global","",[para("No global data yet - the Yahoo fetch runs in the daily pipeline.")],
-      {what:"Global markets, commodities and currencies.",source:"Yahoo Finance.",updated:when}));
+    if(GLOBAL && GLOBAL.rows && GLOBAL.rows.length){
+      var holder=el("div");
+      var bySym={}; for(var k in (GLOBAL.pages||{})) bySym[GLOBAL.pages[k].symbol]=GLOBAL.pages[k];
+      var countries=["All countries"].concat(GLOBAL.countries||[]);
+      function showList(sel){
+        holder.innerHTML="";
+        var pick=el("select");
+        pick.style.cssText="font:inherit;font-size:14px;padding:11px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text)";
+        countries.forEach(function(c){ var o=el("option","",esc(c)); o.value=c; if(c===(sel||"All countries")) o.selected=true; pick.appendChild(o); });
+        var q=el("input"); q.type="search"; q.placeholder="Filter stocks…";
+        var field=el("div","field"); field.appendChild(pick); field.appendChild(q);
+        var cols=["country","symbol","name","close","chg_pct","rsi_14","trend","pe","mcap"];
+        var rows=GLOBAL.rows.map(function(r){ return [r.country,r.symbol,r.name,r.close,r.chg_pct,r.rsi_14,r.trend,r.pe,r.mcap]; });
+        var t=table(cols, rows, ["close","chg_pct","rsi_14","pe","mcap"], 1, function(row){
+          var rec=bySym[row[1]];
+          if(rec) renderDetail(holder, rec, "All global stocks", function(){ showList(pick.value); },
+            {tag:row[0], updated:GLOBAL.updated?ago(GLOBAL.updated):when,
+             priceSource:"Yahoo Finance daily candles, in local currency."});
+        });
+        var kids=[];
+        if(GLOBAL.index && GLOBAL.index.length){
+          kids.push(el("div","sub","Country benchmarks"));
+          kids.push(tbl({columns:["country","symbol","close","chg_pct","trend"],
+                         rows:GLOBAL.index.map(function(i){ return [i.country,i.symbol,i.close,i.chg_pct,i.trend]; })},
+                        ["close","chg_pct"], 0));
+        }
+        kids.push(field); kids.push(t);
+        holder.appendChild(card("Global stocks",
+          GLOBAL.stocks+" stocks across "+(GLOBAL.countries||[]).length+" countries", kids,
+          {what:"Large-cap stocks grouped by country, each with the same technical read as the NSE pages.",
+           source:"Yahoo Finance prices and company data.", updated:GLOBAL.updated?ago(GLOBAL.updated):when,
+           note:"Prices are in each stock's own currency. A stock is best judged against its own country's index, which is why the benchmarks are shown above."}));
+        function filt(){
+          var s=(q.value||"").trim().toLowerCase(), c=pick.value;
+          $$("tbody tr", t).forEach(function(tr){
+            var okC=(c==="All countries")||tr.textContent.indexOf(c)>=0;
+            var okQ=!s||tr.textContent.toLowerCase().indexOf(s)>=0;
+            tr.style.display=(okC&&okQ)?"":"none";
+          });
+        }
+        pick.addEventListener("change", filt);
+        q.addEventListener("input", filt);
+      }
+      showList(); v.appendChild(holder);
+    } else {
+      if(d.markets)v.appendChild(card("Global indices","",[ tbl(d.markets,["close","chg_pct"]) ],
+        {what:"Major world equity indices, last close and one-day change.",source:"Yahoo Finance (unofficial).",updated:when}));
+      if(d.commodities)v.appendChild(card("Commodities","",[ tbl(d.commodities,["close","chg_pct"]) ],
+        {what:"Gold, crude and other commodity futures.",source:"Yahoo Finance (unofficial).",updated:when}));
+      if(d.fx)v.appendChild(card("Currency","",[ tbl(d.fx,["close","chg_pct"]) ],
+        {what:"Currency pairs, including the rupee crosses.",source:"Yahoo Finance (unofficial).",updated:when}));
+      if(!v.children.length)v.appendChild(card("Global","",[para("No global data yet - the Yahoo fetch runs in the daily pipeline.")],
+        {what:"Global markets, commodities and currencies.",source:"Yahoo Finance.",updated:when}));
+    }
   })();
 
   /* ---------- CRYPTO ---------- */
   (function(){
     var v=sec("crypto");
-    if(d.crypto)v.appendChild(card("Crypto","",[ tbl(d.crypto,["close","chg_pct"]) ],
-      {what:"Crypto pairs, last price and one-day change.",source:"Binance public API, with Yahoo as fallback.",updated:when,
-       note:"Crypto trades 24/7, so the date shown is the latest daily candle."}));
-    else v.appendChild(card("Crypto","",[para("No crypto data yet.")]));
+    if(CRYPTO && CRYPTO.rows && CRYPTO.rows.length){
+      var holder=el("div");
+      var byCoin={}; for(var k in (CRYPTO.coins||{})) byCoin[CRYPTO.coins[k].symbol]=CRYPTO.coins[k];
+      function showList(){
+        holder.innerHTML="";
+        var q=el("input"); q.type="search"; q.placeholder="Filter coins…";
+        var field=el("div","field"); field.appendChild(q);
+        var cols=["symbol","base","close","chg_pct","quote_volume","trades","rsi_14","trend"];
+        var rows=CRYPTO.rows.map(function(r){ return [r.symbol,r.base,r.close,r.chg_pct,r.quote_volume,r.trades,r.rsi_14,r.trend]; });
+        var t=table(cols, rows, ["close","chg_pct","quote_volume","trades","rsi_14"], 1, function(row){
+          var rec=byCoin[row[0]];
+          if(rec) renderDetail(holder, rec, "All coins", showList, {
+            updated:CRYPTO.updated?ago(CRYPTO.updated):when,
+            priceSource:"Binance daily candles.",
+            market:{title:"Market", note:"A coin has no earnings, so there is no P/E or ROE to show. What matters is how much is actually traded - that is what these figures are."}});
+        });
+        holder.appendChild(card("Crypto", CRYPTO.count+" coins · tap a row for the full page", [field, t],
+          {what:"Coins ranked by traded volume, with the same technical read as the stock pages.",
+           source:"Binance public API (no key).", updated:CRYPTO.updated?ago(CRYPTO.updated):when,
+           note:"Crypto trades 24/7, so these are rolling 24-hour figures, not a closing session."}));
+        q.addEventListener("input", function(){
+          var s=(q.value||"").trim().toLowerCase();
+          $$("tbody tr", t).forEach(function(tr){ tr.style.display=(!s||tr.textContent.toLowerCase().indexOf(s)>=0)?"":"none"; });
+        });
+      }
+      showList(); v.appendChild(holder);
+    } else if(d.crypto){
+      v.appendChild(card("Crypto","",[ tbl(d.crypto,["close","chg_pct"]) ],
+        {what:"Crypto pairs, last price and one-day change.",source:"Binance public API, with Yahoo as fallback.",updated:when}));
+    } else v.appendChild(card("Crypto","",[para("No crypto data yet.")]));
   })();
 
   /* ---------- NEWS ---------- */
@@ -595,13 +709,18 @@ function build(d){
 
 /* ---------- load ---------- */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-var STOCKS=null;
+var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null;
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
+function optional(url){return getJson(url).catch(function(){return null;});}  // site works without these
 Promise.all([
   getJson(BASE+"data.json"),
-  getJson(BASE+"stocks.json").catch(function(){return null;})   // optional: the site works without it
+  optional(BASE+"stocks.json"),
+  optional(BASE+"universe.json"),
+  optional(BASE+"crypto.json"),
+  optional(BASE+"global.json")
 ])
-  .then(function(res){var d=res[0];STOCKS=res[1];build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
+  .then(function(res){var d=res[0];STOCKS=res[1];UNIVERSE=res[2];CRYPTO=res[3];GLOBAL=res[4];
+    build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
     $("#stamp").textContent="No data";
     $("#app").innerHTML='<div class="card err"><h2>Could not load data.json</h2><p>'+esc(e.message)+

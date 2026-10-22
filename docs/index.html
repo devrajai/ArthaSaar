@@ -1469,13 +1469,26 @@ function buildPalette(){
   return { wrap:wrap, input:input, search:search };
 }
 var PALETTE=null;
-function openPalette(){
-  if(!SEARCH){ return; }
+function showPalette(){
   if(!PALETTE) PALETTE=buildPalette();
   PALETTE.wrap.className="palette on";
   PALETTE.input.value="";
   PALETTE.search("");
   PALETTE.input.focus();
+}
+function openPalette(){
+  if(SEARCH){ showPalette(); return; }
+  // the search index is ~240 KB - fetch it on first use, not on page load
+  if(!PALETTE) PALETTE=buildPalette();
+  PALETTE.wrap.className="palette on";
+  PALETTE.input.placeholder="loading the index…";
+  optional(BASE+"search.json").then(function(s){
+    SEARCH=s||{items:[]};
+    PALETTE.input.placeholder="Search stocks, global companies, coins, news…";
+    PALETTE.input.value="";
+    PALETTE.search("");
+    PALETTE.input.focus();
+  });
 }
 function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 
@@ -1498,33 +1511,68 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
   });
 })();
 
-/* ---------- load ---------- */
+/* ---------- load ----------
+   The page used to wait for every file before showing anything. Those files add up to
+   about 2.3 MB, which on a phone is a long stare at "Loading data". Now it renders from
+   the small core first, then fills the rest in behind you, and only fetches the search
+   index when you actually open the search box. */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null, CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null;
+var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null,
+    CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null;
+
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
-function optional(url){return getJson(url).catch(function(){return null;});}  // site works without these
-Promise.all([
-  getJson(BASE+"data.json"),
-  optional(BASE+"stocks.json"),
-  optional(BASE+"universe.json"),
-  optional(BASE+"crypto.json"),
-  optional(BASE+"global.json"),
-  optional(BASE+"screener.json"),
-  optional(BASE+"search.json"),
-  optional(BASE+"learn.json"),
-  optional(BASE+"config.json"),
-  optional(BASE+"indices.json"),
-  optional(BASE+"sectors.json"),
-  optional(BASE+"charges.json"),
-  optional(BASE+"mf.json"),
-  optional(BASE+"etf.json")
-])
-  .then(function(res){var d=res[0];STOCKS=res[1];UNIVERSE=res[2];CRYPTO=res[3];GLOBAL=res[4];
-    SCREENER=res[5];SEARCH=res[6];LEARN=res[7];CONFIG=res[8]||{};
-    INDICES=res[9];SECTORS=res[10];CHARGES=res[11];MF=res[12];ETF=res[13];
-    build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
+function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
+
+function assign(name, v){
+  switch(name){
+    case "data.json": DATA=v; break;
+    case "stocks.json": STOCKS=v; break;
+    case "universe.json": UNIVERSE=v; break;
+    case "screener.json": SCREENER=v; break;
+    case "crypto.json": CRYPTO=v; break;
+    case "global.json": GLOBAL=v; break;
+    case "learn.json": LEARN=v; break;
+    case "config.json": CONFIG=v||{}; break;
+    case "indices.json": INDICES=v; break;
+    case "sectors.json": SECTORS=v; break;
+    case "charges.json": CHARGES=v; break;
+    case "mf.json": MF=v; break;
+    case "etf.json": ETF=v; break;
+    case "search.json": SEARCH=v; break;
+  }
+}
+
+function setStamp(state, text){
+  var el2=$("#stamp"); if(!el2) return;
+  el2.textContent = text;
+  el2.title = (state==="loading" ? "Still loading the heavier files" : "");
+}
+
+// small files: everything the first screen and the nav need (~130 KB total)
+var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
+// heavier files: needed by the big tabs. Fetched after the first paint, not before it.
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json"];
+
+function renderAll(){
+  if(!DATA) return;
+  build(DATA);
+}
+
+Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : optional(BASE+f); }))
+  .then(function(res){
+    CORE.forEach(function(f,i){ assign(f,res[i]); });
+    if(!DATA) throw new Error("data.json did not load");
+    renderAll();
+    setStamp("loading", "Updated "+(DATA.generated_utc||"—")+" · loading the rest…");
+    return Promise.all(HEAVY.map(function(f){ return optional(BASE+f); }));
+  })
+  .then(function(res){
+    HEAVY.forEach(function(f,i){ assign(f,res[i]); });
+    renderAll();
+    setStamp("ready", "Updated "+(DATA.generated_utc||"—")+" · "+ago(DATA.generated_utc));
+  })
   .catch(function(e){
-    $("#stamp").textContent="No data";
+    setStamp("bad", "No data");
     $("#app").innerHTML='<div class="card err"><h2>Could not load data.json</h2><p>'+esc(e.message)+
       '</p><p>It is written by scripts/build_site_data.py during the pipeline run.</p></div>';
   });

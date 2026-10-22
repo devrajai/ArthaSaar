@@ -245,6 +245,48 @@ function tableToCsv(tbl){
   }
   return out.join("\n");
 }
+function downloadPng(tbl, name){
+  // Draw the table onto a canvas by hand - no library, and nothing leaves the browser.
+  var trs=tbl.querySelectorAll("tr");
+  if(!trs.length) return;
+  var rowH=26, pad=14, fs=13;
+  var cv=document.createElement("canvas"), ctx=cv.getContext("2d");
+  ctx.font=fs+"px system-ui, sans-serif";
+  var colW=[], nCols=0;
+  for(var i=0;i<trs.length;i++){
+    var cells=trs[i].querySelectorAll("th,td");
+    if(cells.length>nCols) nCols=cells.length;
+    for(var j=0;j<cells.length;j++){
+      var w=ctx.measureText((cells[j].textContent||"").trim()).width+28;
+      if(!colW[j]||w>colW[j]) colW[j]=w;
+    }
+  }
+  var W=pad*2, H=pad*2+trs.length*rowH;
+  for(var j=0;j<nCols;j++) W+=(colW[j]||60);
+  cv.width=W; cv.height=H;
+  ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,W,H);
+  ctx.textBaseline="middle";
+  for(var r=0;r<trs.length;r++){
+    var cells=trs[r].querySelectorAll("th,td"), x=pad, y=pad+r*rowH+rowH/2;
+    if(r===0){ ctx.fillStyle="#f1f3f6"; ctx.fillRect(0,pad+r*rowH,W,rowH); }
+    ctx.fillStyle=r===0?"#111827":"#374151";
+    ctx.font=(r===0?"bold ":"")+fs+"px system-ui, sans-serif";
+    for(var c=0;c<cells.length;c++){
+      var txt=(cells[c].textContent||"").replace(/\s+/g," ").trim().slice(0,44);
+      ctx.fillText(txt, x+10, y);
+      x+=(colW[c]||60);
+    }
+  }
+  ctx.fillStyle="#9ca3af"; ctx.font="11px system-ui, sans-serif";
+  ctx.fillText("ArthaSaar", pad, H-7);
+  var done=function(blob){
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download=(name||"table")+".png";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();},0);
+  };
+  if(cv.toBlob) cv.toBlob(done); else done(cv.toDataURL("image/png"));
+}
 function downloadCsv(tbl, name){
   var blob=new Blob([tableToCsv(tbl)],{type:"text/csv;charset=utf-8"});
   var a=document.createElement("a");
@@ -252,6 +294,18 @@ function downloadCsv(tbl, name){
   a.download=(name||"arthasaar")+".csv";
   document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
+/* ---------- watchlist store (Task 15) ---------- */
+var WKEY="as-watchlist";
+function wlGet(){ try{ var a=JSON.parse(localStorage.getItem(WKEY)||"[]"); return (a&&a.length)?a:[]; }catch(e){ return []; } }
+function wlSet(a){ try{ localStorage.setItem(WKEY, JSON.stringify(a)); }catch(e){} }
+function wlHas(sym){ return wlGet().indexOf(sym)>=0; }
+function wlToggle(sym){
+  var a=wlGet(), i=a.indexOf(sym);
+  if(i<0) a.push(sym); else a.splice(i,1);
+  wlSet(a);
+  return i<0;
 }
 
 function card(title, sub, kids, info){
@@ -271,12 +325,15 @@ function card(title, sub, kids, info){
   // children so the lookup can see them.
   var tblInCard=c.querySelector("table");
   if(tblInCard){
+    var nm=String(title||"table").replace(/[^a-z0-9]+/gi,"_").toLowerCase();
     var csvb=el("button","ibtn","CSV");
     csvb.title="Download this table as CSV";
-    csvb.addEventListener("click",function(){
-      downloadCsv(tblInCard, String(title||"table").replace(/[^a-z0-9]+/gi,"_").toLowerCase());
-    });
+    csvb.addEventListener("click",function(){ downloadCsv(tblInCard, nm); });
     head.appendChild(csvb);
+    var pngb=el("button","ibtn","PNG");
+    pngb.title="Download this table as an image";
+    pngb.addEventListener("click",function(){ downloadPng(tblInCard, nm); });
+    head.appendChild(pngb);
   }
   if(info){
     var rows=[["What",""],["Source",""],["Updated",""]];
@@ -491,6 +548,11 @@ var SECTIONS=[
   {id:"corporate", label:"Corporate"},
   {id:"youtube",   label:"YouTube"},
   {id:"tools",     label:"Tools"},
+  {id:"backtest",  label:"Backtester"},
+  {id:"watchlist", label:"Watchlist"},
+  {id:"ipo",       label:"IPOs"},
+  {id:"regulator", label:"Regulator"},
+  {id:"promoter",  label:"Promoter"},
   {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
   {id:"data",      label:"Data"}
@@ -1601,6 +1663,216 @@ function build(d){
     })();
   })();
 
+
+  /* ---------- BACKTESTER (Task 14) ---------- */
+  (function(){
+    var v=sec("backtest");
+    var deep=(STOCKS&&STOCKS.stocks)||{};
+    var syms=Object.keys(deep).sort();
+    if(!syms.length){
+      v.appendChild(card("Backtester","",[para("No price history yet. It builds once the pipeline has stored daily closes.")],
+        {what:"A moving-average crossover test on stored daily closes.",source:"docs/stocks.json",updated:when}));
+      return;
+    }
+    var sel=el("select"), fast=el("input"), slow=el("input");
+    syms.forEach(function(k){ var o=el("option"); o.value=k; o.textContent=deep[k].symbol||k; sel.appendChild(o); });
+    sel.value=syms[0];   // deterministic default - do not rely on the browser picking option 0
+    fast.type="number"; fast.value="20";
+    slow.type="number"; slow.value="50";
+    [sel,fast,slow].forEach(function(i){
+      i.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
+      i.addEventListener("change",run); i.addEventListener("input",run);
+    });
+    var chart=el("div","cwrap"), stats=el("div","kv"), note=el("div","cnote");
+
+    function sma(a,p,i){
+      if(i<p-1) return null;
+      var s=0; for(var k=i-p+1;k<=i;k++) s+=a[k];
+      return s/p;
+    }
+    function run(){
+      var st=deep[sel.value]; if(!st||!st.series){ note.textContent="No series for this symbol."; chart.innerHTML=""; stats.innerHTML=""; return; }
+      var ser=st.series, F=Math.max(2,+fast.value||20), S=Math.max(3,+slow.value||50);
+      if(F>=S){ note.innerHTML='<span style="color:var(--warn)">The fast average must be shorter than the slow one.</span>'; chart.innerHTML=""; stats.innerHTML=""; return; }
+      if(ser.length < S+3){
+        chart.innerHTML=""; stats.innerHTML="";
+        note.textContent="Only "+ser.length+" closes stored, which is not enough for a "+S+"-day average. Pick shorter periods.";
+        return;
+      }
+      var pos=0, cash=100, entry=0, trades=0, wins=0, eq=[], peak=100, maxDD=0;
+      for(var i=0;i<ser.length;i++){
+        var fa=sma(ser,F,i), sa=sma(ser,S,i);
+        if(fa!==null&&sa!==null){
+          var above=fa>sa;
+          if(above&&!pos){ pos=1; entry=ser[i]; }
+          else if(!above&&pos){ pos=0; trades++; if(ser[i]>entry) wins++; cash=cash*(ser[i]/entry); }
+        }
+        var val=pos&&entry?cash*(ser[i]/entry):cash;
+        eq.push(val);
+        if(val>peak) peak=val;
+        var dd=(peak-val)/peak*100; if(dd>maxDD) maxDD=dd;
+      }
+      if(pos){ cash=cash*(ser[ser.length-1]/entry); trades++; if(ser[ser.length-1]>entry) wins++; eq[eq.length-1]=cash; }
+      var total=cash-100;
+      // equity curve
+      var W=600,H=210,pad=6, lo=Math.min.apply(null,eq), hi=Math.max.apply(null,eq);
+      if(hi-lo<1e-9){ hi=lo+1; }
+      function X(i){ return pad+(i/(eq.length-1||1))*(W-2*pad); }
+      function Y(val){ return H-pad-((val-lo)/(hi-lo))*(H-2*pad); }
+      var pts=eq.map(function(val,i){ return X(i).toFixed(1)+","+Y(val).toFixed(1); }).join(" ");
+      chart.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="height:210px">'+
+        '<line class="axis" x1="0" y1="'+Y(100).toFixed(1)+'" x2="'+W+'" y2="'+Y(100).toFixed(1)+'"/>'+
+        '<polyline class="line" vector-effect="non-scaling-stroke" points="'+pts+'"/>'+
+        '<text class="lbl" x="4" y="12">'+num(Math.round(hi))+'</text>'+
+        '<text class="lbl" x="4" y="'+(H-3)+'">'+num(Math.round(lo))+'</text></svg>';
+      stats.innerHTML="";
+      [["Total return", (total>=0?"+":"")+total.toFixed(1)+"%"],
+       ["Max drawdown", "-"+maxDD.toFixed(1)+"%"],
+       ["Trades", num(trades)],
+       ["Winners", trades?Math.round(wins/trades*100)+"%":"—"],
+       ["Closes used", num(ser.length)]].forEach(function(r){
+        stats.appendChild(el("div","",'<b>'+esc(r[0])+'</b>'+esc(r[1])));
+      });
+      note.textContent="Buy when the "+F+"-day average crosses above the "+S+"-day, sell when it crosses back. No costs are modelled.";
+    }
+    var g=el("div","field");
+    [["Stock",sel],["Fast average (days)",fast],["Slow average (days)",slow]].forEach(function(f){
+      var w=el("div",""); w.appendChild(el("div","sub",esc(f[0]))); w.appendChild(f[1]); g.appendChild(w);
+    });
+    run();
+    v.appendChild(card("Backtester","A moving-average crossover on the stored history",
+      [para("This tests one simple idea on one stock, in your browser. It is a ruler, not a strategy: if a crossover made money reliably, the result would be obvious here and nowhere near this easy."),
+       g, chart, stats, note],
+      {what:"Total return, maximum drawdown, trade count and hit rate for a moving-average crossover on stored daily closes.",
+       source:"docs/stocks.json price series, computed in your browser.", updated:when,
+       note:"At most 120 daily closes, and no brokerage, STT, slippage or tax. A good-looking result on one stock is not evidence of an edge - most crossover systems lose money once costs are included."}));
+  })();
+
+  /* ---------- WATCHLIST (Task 15) ---------- */
+  (function(){
+    var v=sec("watchlist");
+    var deep=(STOCKS&&STOCKS.stocks)||{};
+    var syms=Object.keys(deep).sort();
+    var picker=el("select");
+    var none=el("option"); none.value=""; none.textContent="Choose a stock…"; picker.appendChild(none);
+    syms.forEach(function(k){ var o=el("option"); o.value=k; o.textContent=(deep[k].symbol||k); picker.appendChild(o); });
+    picker.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
+    var add=el("button","small primary","Add to watchlist");
+    var holder=el("div");
+    function paint(){
+      var list=wlGet();
+      holder.innerHTML="";
+      if(!list.length){
+        holder.appendChild(el("p","msg","Your watchlist is empty. Pick a stock above and add it. The list is stored in this browser only."));
+        return;
+      }
+      var byLabel={};
+      var rows=list.map(function(sym){
+        var st=deep[sym]||{};
+        var lbl=st.symbol||sym;
+        byLabel[lbl]=sym;
+        return [lbl, st.name||"—", st.close!=null?st.close:"", st.chg_pct!=null?st.chg_pct:""];
+      });
+      holder.appendChild(table(["Symbol","Name","Close","Day %"], rows, ["close","day %"], 0, function(r){
+        var key=byLabel[r[0]];
+        if(key){ wlToggle(key); paint(); }
+      }));
+      var clr=el("button","small","Clear all");
+      clr.addEventListener("click",function(){ wlSet([]); paint(); });
+      holder.appendChild(clr);
+    }
+    add.addEventListener("click",function(){
+      if(!picker.value) return;
+      if(!wlHas(picker.value)) wlToggle(picker.value);
+      picker.value=""; paint();
+    });
+    var g=el("div","field"); g.appendChild(picker); g.appendChild(add);
+    paint();
+    v.appendChild(card("Watchlist","Your own list, kept in this browser",
+      [para("Star the stocks you follow and they collect here. Nothing is sent anywhere - the list lives in this browser's storage, so it is private and it follows this device, not an account."),
+       g, holder],
+      {what:"A personal list of symbols with price and day change.",
+       source:"docs/stocks.json, filtered by a list stored in your browser.", updated:when,
+       note:"Click any row to remove it. The list is stored under as-watchlist in local storage; clearing your browser data clears it too."}));
+  })();
+
+
+  /* ---------- REGULATOR: SEBI orders and circulars (Task 17) ---------- */
+  (function(){
+    var v=sec("regulator");
+    if(!SEBI||!SEBI.count){
+      v.appendChild(card("Regulator","SEBI orders and circulars",
+        [para(SEBI&&SEBI.note?SEBI.note:"SEBI's feed has not been fetched yet. It is pulled by the daily pipeline.")],
+        {what:"SEBI's own orders and circulars feed.", source:"sebi.gov.in RSS", updated:when}));
+      return;
+    }
+    var rows=(SEBI.orders||[]).map(function(r){ return [r[0], r[1], r[2]]; });
+    v.appendChild(card("Regulator","What SEBI published, newest first",
+      [para("SEBI's own announcements. Most are procedural, but a company-specific order often explains a move that the price alone cannot."),
+       table(["Date","Title","Link"], rows, [], 1, null)],
+      {what:"SEBI's published orders and circulars, last 90 days.", source:"sebi.gov.in RSS feed", updated:when,
+       note: SEBI.note || "This is a feed of what SEBI published. It is not advice, and most circulars are routine."}));
+  })();
+
+  /* ---------- IPO tracker (Task 19) ---------- */
+  (function(){
+    var v=sec("ipo");
+    if(!IPO||!IPO.count){
+      v.appendChild(card("IPOs","Mainboard and SME",
+        [para(IPO&&IPO.note?IPO.note:"No IPO data yet. It is pulled by the daily pipeline.")],
+        {what:"Upcoming, open, closed and listed issues.", source:"NSE IPO endpoints", updated:when}));
+      return;
+    }
+    function group(title, rows, cols, numCols){
+      if(!rows||!rows.length) return null;
+      var body=rows.map(function(r){
+        return cols.map(function(c){ return r[c.k]; });
+      });
+      return card(title,"", [table(cols.map(function(c){return c.h;}), body, numCols, 0, null)],
+        {what:title+" issues.", source:"NSE IPO endpoints", updated:when,
+         note:"A first-day gain says nothing about the long-run return. Most SME issues are thinly traded, and the first day is not a market."});
+    }
+    var up=[].concat(IPO.upcoming||[], IPO.open||[], IPO.closed||[]);
+    var c1=group("Upcoming and current issues", up,
+      [{h:"Name",k:"name"},{h:"Symbol",k:"symbol"},{h:"Opens",k:"open"},{h:"Closes",k:"close"},{h:"Price band",k:"band"},{h:"Status",k:"status"}], []);
+    if(c1) v.appendChild(c1);
+    var c2=group("Listed issues", IPO.listed||[],
+      [{h:"Name",k:"name"},{h:"Symbol",k:"symbol"},{h:"Issue price",k:"issue_price"},{h:"Listing price",k:"listing_price"},{h:"Listing gain %",k:"listing_gain_pct"}], ["issue price","listing price","listing gain %"]);
+    if(c2) v.appendChild(c2);
+    var sme=(IPO.sme||[]);
+    if(sme.length){
+      var body=sme.map(function(r){ return [r.name, r.symbol, r.band, r.status]; });
+      v.appendChild(card("SME issues","NSE Emerge, kept separate from the mainboard",
+        [table(["Name","Symbol","Price band","Status"], body, [], 0, null)],
+        {what:"SME issues on NSE Emerge.", source:"NSE IPO endpoints", updated:when,
+         note:"SME issues are kept apart from the mainboard on purpose: they are far less liquid and far more volatile."}));
+    }
+    if(!c1&&!c2&&!sme.length){
+      v.appendChild(card("IPOs","Mainboard and SME",[para(IPO.note||"No issues were returned this run.")],
+        {what:"Upcoming, open, closed and listed issues.", source:"NSE IPO endpoints", updated:when}));
+    }
+  })();
+
+  /* ---------- Promoter pledge and shareholding (Task 18) ---------- */
+  (function(){
+    var v=sec("promoter");
+    if(!SHAREHOLD||!SHAREHOLD.count){
+      v.appendChild(card("Promoter","Pledge and holding by quarter",
+        [para(SHAREHOLD&&SHAREHOLD.note?SHAREHOLD.note:"No shareholding data yet. It is pulled by the daily pipeline.")],
+        {what:"Promoter holding and pledge, quarter by quarter.", source:"NSE shareholding pattern", updated:when}));
+      return;
+    }
+    var body=SHAREHOLD.rows.map(function(r){
+      return [r.symbol, r.q, r.promoter, r.pledge];
+    });
+    v.appendChild(card("Promoter","Pledge and holding, quarter by quarter",
+      [para("How much of the company promoters hold, and how much of that is pledged as collateral. A rising pledge next to a falling price is the pattern worth noticing."),
+       table(["Symbol","Quarter","Promoter %","Pledged %"], body, ["promoter %","pledged %"], 0, null)],
+      {what:"Promoter holding and pledged percentage by quarter.",
+       source:"NSE shareholding-pattern filings", updated:when,
+       note:"A pledge is not automatically bad - promoters pledge for many reasons, including personal and business loans. It is a RISING pledge alongside a falling price that deserves attention."}));
+  })();
+
   renderTabs();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
@@ -1725,7 +1997,8 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
    index when you actually open the search box. */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
 var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null,
-    CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null;
+    CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null,
+    SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null;
 
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
@@ -1746,6 +2019,10 @@ function assign(name, v){
     case "mf.json": MF=v; break;
     case "etf.json": ETF=v; break;
     case "search.json": SEARCH=v; break;
+    case "sebi.json": SEBI=v; break;
+    case "ipo.json": IPO=v; break;
+    case "shareholding.json": SHAREHOLD=v; break;
+    case "etf_premium.json": ETFPR=v; break;
   }
 }
 
@@ -1758,7 +2035,7 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json"];
 
 function renderAll(){
   if(!DATA) return;

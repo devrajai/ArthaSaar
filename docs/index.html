@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ArthaSaar — market data</title>
+<link rel="alternate" type="application/rss+xml" title="ArthaSaar daily brief" href="feed.xml">
 <meta name="description" content="NSE archive, F&O, global markets, crypto, news, corporate actions, YouTube analysis. Educational data, not investment advice.">
 <script>
   /* Evict the previous site's service worker (it served a cached app shell). */
@@ -152,6 +153,33 @@
   .section.on{display:block}
 
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:16px}
+  /* market session chip (Task 5) */
+  #mkt{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.4px;border:1px solid var(--line)}
+  #mkt.on{background:#dcfce7;color:#15803d;border-color:#86efac}
+  #mkt.off{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}
+  #mkt.pre{background:#fef3c7;color:#b45309;border-color:#fcd34d}
+  /* correlation grid (Task 3) */
+  table.corr{border-collapse:collapse;font-size:11px}
+  table.corr th{padding:3px 5px;font-weight:700}
+  table.corr th.rot{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;max-height:90px}
+  table.corr td.cell{padding:5px 6px;text-align:center;font-variant-numeric:tabular-nums;border:1px solid var(--line)}
+  /* calendar (Task 9) */
+  .calday{margin:0 0 14px}
+  .caldate{font-weight:800;font-size:13px;margin-bottom:6px}
+  .calrow{display:flex;gap:10px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--line)}
+  .calsym{font-weight:700;min-width:96px}
+  .caldet{color:var(--muted);font-size:13px}
+  .chip{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:999px;min-width:64px;text-align:center}
+  .chip-div{background:#dcfce7;color:#15803d}
+  .chip-split{background:#dbeafe;color:#1d4ed8}
+  .chip-res{background:#fef3c7;color:#b45309}
+  .chip-oth{background:#f1f5f9;color:#475569}
+  /* glossary tooltips (Task 10) */
+  .gloss{border-bottom:1px dotted var(--accent);cursor:help;font-weight:600}
+  #glossPop{position:absolute;z-index:99;max-width:280px;background:var(--card);border:1px solid var(--line);
+            border-radius:8px;padding:9px 11px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:none}
+  /* language toggle (Task 13) */
+  #langBtn{margin-left:8px}
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
   .kpi .k{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
   .kpi .v{font-size:26px;font-weight:800;margin-top:6px}
@@ -178,7 +206,7 @@
     <div class="logo">AS</div>
     <div>
       <h1>ArthaSaar</h1>
-      <div class="tag" id="stamp">Loading…</div>
+      <div class="tag" id="stamp">Loading…</div><span id="mkt" title=""></span>
     </div>
     <div class="searchwrap">
       <span class="mag">⌕</span>
@@ -186,6 +214,7 @@
              autocomplete="off" aria-label="Search everything">
     </div>
     <div class="right">
+      <button id="langBtn" class="small" title="Switch language">हिं</button>
       <button id="themeBtn" class="small">Dark mode</button>
     </div>
   </div>
@@ -193,6 +222,7 @@
 
 <nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
+<div id="glossPop"></div>
 <main class="wrap" id="app"><div class="card"><p class="msg">Loading data…</p></div></main>
 
 <footer class="wrap">
@@ -553,6 +583,13 @@ var SECTIONS=[
   {id:"ipo",       label:"IPOs"},
   {id:"regulator", label:"Regulator"},
   {id:"promoter",  label:"Promoter"},
+  {id:"rs",          label:"Rel. strength"},
+  {id:"seasonality", label:"Seasonality"},
+  {id:"correlation", label:"Correlation"},
+  {id:"calendar",    label:"Calendar"},
+  {id:"watchlists",  label:"Surveillance"},
+  {id:"deals",       label:"Deals"},
+  {id:"insider",     label:"Insider"},
   {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
   {id:"data",      label:"Data"}
@@ -561,10 +598,125 @@ var FEEDS=["archive","fno","spikes","corporate","markets","commodities","fx","cr
            "brain","channels","videos","indicators","screens","relative_strength","patterns",
            "forecast","fm3","quality","fii_dii","index_constituents"];
 
+/* ---------- market session chip (Task 5) ---------- */
+function pad2(n){ return (n<10?"0":"")+n; }
+function mktUpdate(){
+  var box=document.getElementById("mkt");
+  if(!box) return;
+  if(!MSTAT){ box.textContent=""; box.className=""; return; }
+  // IST, whatever the device's own timezone is
+  var now=new Date();
+  var ist=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Kolkata"}));
+  var day=ist.getDay();
+  var mins=ist.getHours()*60+ist.getMinutes();
+  var iso=ist.getFullYear()+"-"+pad2(ist.getMonth()+1)+"-"+pad2(ist.getDate());
+  var toMin=function(t){ var p=String(t||"").split(":"); return (parseInt(p[0],10)||0)*60+(parseInt(p[1],10)||0); };
+  var pre=toMin(MSTAT.preopen||"09:00"), op=toMin(MSTAT.open||"09:15"), cl=toMin(MSTAT.close||"15:30");
+  var holidays=MSTAT.holidays||[];
+  var isHol=holidays.some(function(h){ return h && h[0]===iso; });
+  var cls, txt;
+  if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
+  else if(mins>=pre && mins<op){ cls="pre"; txt="Pre-open"; }
+  else if(mins>=op && mins<cl){ cls="on"; txt="Open"; }
+  else { cls="off"; txt="Closed"; }
+  box.className=cls; box.textContent=txt;
+  var upcoming=holidays.filter(function(h){ return h && h[0]>=iso; });
+  box.title = isHol ? "Market holiday today"
+            : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead");
+}
+setInterval(mktUpdate, 60000);
+
+/* ---------- glossary tooltips (Task 10) ---------- */
+function glossPass(){
+  if(!LEARN || !LEARN.glossary || !LEARN.glossary.length) return;
+  var map={};
+  LEARN.glossary.forEach(function(g){ if(g && g[0]) map[String(g[0]).toLowerCase()]=g[1]; });
+  var terms=Object.keys(map).filter(function(t){ return t.length>=3; })
+                         .sort(function(a,b){ return b.length-a.length; });
+  if(!terms.length) return;
+  var app=document.getElementById("app");
+  var ps=app.querySelectorAll("p");
+  for(var i=0;i<ps.length;i++){
+    var p=ps[i];
+    if(p.getAttribute("data-gl")) continue;
+    p.setAttribute("data-gl","1");
+    var html=p.innerHTML;
+    if(html.indexOf("<span")>=0) continue;   // leave already-marked prose alone
+    for(var t=0;t<terms.length;t++){
+      var term=terms[t];
+      var re=new RegExp("\\b("+term.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")\\b","i");
+      if(re.test(html)){
+        // first occurrence only, in this paragraph
+        html=html.replace(re,'<span class="gloss" data-g="'+term+'">$1</span>');
+      }
+    }
+    if(html!==p.innerHTML) p.innerHTML=html;
+  }
+  app.querySelectorAll(".gloss").forEach(function(sp){
+    if(sp.getAttribute("data-bound")) return;
+    sp.setAttribute("data-bound","1");
+    sp.addEventListener("click",function(ev){
+      ev.stopPropagation();
+      var pop=document.getElementById("glossPop");
+      pop.textContent=map[sp.getAttribute("data-g")]||"";
+      var r=sp.getBoundingClientRect();
+      pop.style.left=Math.max(8,Math.min(window.scrollX+r.left, window.scrollX+window.innerWidth-300))+"px";
+      pop.style.top=(window.scrollY+r.bottom+6)+"px";
+      pop.style.display="block";
+    });
+  });
+}
+document.addEventListener("click",function(){
+  var pop=document.getElementById("glossPop");
+  if(pop) pop.style.display="none";
+});
+
+/* ---------- language toggle (Task 13) ----------
+   Interface chrome only: tab labels and the header controls. Data values, symbols and
+   company names are never translated - a translated ticker would be worse than useless. */
+var LANG = (function(){ try{ return localStorage.getItem("as-lang")||"en"; }catch(e){ return "en"; } })();
+var STR = {
+  en: {overview:"Overview", markets:"Markets", stocks:"Stocks", screener:"Screener",
+       crypto:"Crypto", global:"Global", learn:"Learn", indices:"Indices", sectors:"Sectors",
+       etf:"ETFs", mf:"Mutual Funds", tools:"Tools", backtest:"Backtester", watchlist:"Watchlist",
+       ipo:"IPOs", regulator:"Regulator", promoter:"Promoter", rs:"Rel. strength",
+       seasonality:"Seasonality", correlation:"Correlation", calendar:"Calendar",
+       watchlists:"Surveillance", deals:"Deals", insider:"Insider", charges:"Charges",
+       searchPh:"Search stocks, global, coins, news…  (press /)", dark:"Dark mode", light:"Light mode"},
+  hi: {overview:"अवलोकन", markets:"बाज़ार", stocks:"शेयर", screener:"स्क्रीनर",
+       crypto:"क्रिप्टो", global:"वैश्विक", learn:"सीखें", indices:"सूचकांक", sectors:"क्षेत्र",
+       etf:"ईटीएफ", mf:"म्यूचुअल फंड", tools:"औज़ार", backtest:"बैकटेस्ट", watchlist:"वॉचलिस्ट",
+       ipo:"आईपीओ", regulator:"नियामक", promoter:"प्रोमोटर", rs:"सापेक्ष बल",
+       seasonality:"मौसमी", correlation:"सहसंबंध", calendar:"कैलेंडर",
+       watchlists:"निगरानी", deals:"सौदे", insider:"इनसाइडर", charges:"खर्च",
+       searchPh:"शेयर, वैश्विक, कॉइन, समाचार खोजें…  ( / दबाएँ)", dark:"डार्क मोड", light:"लाइट मोड"}
+};
+function L(key){ var m=STR[LANG]||STR.en; return (m[key]!=null?m[key]:STR.en[key])||key; }
+function applyLang(){
+  document.documentElement.lang = (LANG==="hi" ? "hi" : "en");
+  var b=document.getElementById("langBtn");
+  if(b) b.textContent = (LANG==="hi" ? "EN" : "हिं");
+  var q=document.getElementById("search");
+  if(q) q.setAttribute("placeholder", L("searchPh"));
+  var tb=document.getElementById("themeBtn");
+  if(tb) tb.textContent = (document.body.classList.contains("dark") ? L("light") : L("dark"));
+  if(typeof renderTabs==="function") renderTabs();
+}
+(function bindLang(){
+  var b=document.getElementById("langBtn");
+  if(!b) return;
+  b.addEventListener("click",function(){
+    LANG = (LANG==="hi" ? "en" : "hi");
+    try{ localStorage.setItem("as-lang", LANG); }catch(e){}
+    applyLang();
+  });
+})();
+
 function renderTabs(){
   var nav=$("#tabs");nav.innerHTML="";
   SECTIONS.forEach(function(s){
-    var b=el("button","",esc(s.label));b.setAttribute("data-go",s.id);
+    var lbl = (LANG==="hi" && STR.hi[s.id]) ? STR.hi[s.id] : s.label;
+    var b=el("button","",esc(lbl));b.setAttribute("data-go",s.id);
     b.addEventListener("click",function(){show(s.id);});
     nav.appendChild(b);
   });
@@ -583,6 +735,15 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    if(BRIEF && (BRIEF.headline || (BRIEF.bullets||[]).length)){
+      var bk=[];
+      if(BRIEF.headline) bk.push(el("p","big",esc(BRIEF.headline)));
+      (BRIEF.bullets||[]).forEach(function(b){ bk.push(el("p","",esc(b))); });
+      v.appendChild(card("Today in one look","", bk,
+        {what:"A plain-English summary of what moved today, built only from this hub's own numbers.",
+         source:"docs/sectors.json, indices.json, data.json", updated:when,
+         note:BRIEF.note||"This describes what moved, not why. Anything not in the data is left out rather than guessed."}));
+    }
     v.appendChild(card("Daily market update", "Generated " + (d.generated_utc||"—") + " · " + when,
       [ d.daily && d.daily.items && d.daily.items.length ? list(d.daily.items) : para("No summary yet."),
         para("Market information for education, not investment advice. Values may be delayed; check each source timestamp.") ],
@@ -1873,6 +2034,181 @@ function build(d){
        note:"A pledge is not automatically bad - promoters pledge for many reasons, including personal and business loans. It is a RISING pledge alongside a falling price that deserves attention."}));
   })();
 
+
+  /* ---------- RELATIVE STRENGTH (Task 1) ---------- */
+  (function(){
+    var v=sec("rs");
+    if(!RS||!RS.count){
+      v.appendChild(card("Relative strength","Each stock measured against Nifty",
+        [para(RS&&RS.note?RS.note:"Not computed yet. It is built by the daily pipeline.")],
+        {what:"Each stock's return minus Nifty's over the same window.", source:"docs/stocks.json + Nifty history", updated:when}));
+      return;
+    }
+    var br=RS.benchmark_returns||{};
+    var kbox=el("div","kpis");
+    [["1m",br["1m"]],["3m",br["3m"]],["6m",br["6m"]]].forEach(function(p){
+      if(p[1]==null) return;
+      kbox.appendChild(kpi("Nifty "+p[0], sgn(p[1])+"%", "benchmark return"));
+    });
+    var rows=RS.rows.map(function(r){ return [r.symbol, r.r3m, r.rs3m, r.pct]; });
+    v.appendChild(card("Relative strength","Each stock measured against Nifty, not in isolation",
+      [para("A stock up 5% while Nifty is up 8% is lagging. This is the gap between the two, over the same window - so it separates a stock that is rising from one that is only being carried."),
+       kbox,
+       table(["Symbol","3m return %","vs Nifty %","Percentile"], rows, ["3m return %","vs nifty %","percentile"], 0, null)],
+      {what:"Each stock's return minus Nifty's over 1, 3 and 6 months, ranked by the 3-month gap.",
+       source:"docs/stocks.json price series against Nifty's own history", updated:when,
+       note:RS.note||""}));
+  })();
+
+  /* ---------- SEASONALITY (Task 2) ---------- */
+  (function(){
+    var v=sec("seasonality");
+    if(!SEASON||!SEASON.count){
+      v.appendChild(card("Seasonality","Which months a stock has historically been strong in",
+        [para(SEASON&&SEASON.note?SEASON.note:"Not computed yet. It needs several years of monthly closes.")],
+        {what:"Average monthly return by calendar month.", source:"the stored candle archive", updated:when,
+         note:"A seasonal pattern from two years is noise, so nothing is shown until the archive is deep enough."}));
+      return;
+    }
+    var months=SEASON.months||[];
+    var rows=SEASON.rows.map(function(r){ return [r.symbol, r.years].concat(r.months); });
+    var cols=["Symbol","Years"].concat(months);
+    v.appendChild(card("Seasonality","Average return by calendar month",
+      [para("How this stock has behaved in each calendar month, averaged over the years available. It is context, not a reason to buy: seasonality is a weak and backward-looking effect."),
+       table(cols, rows, months, 0, null)],
+      {what:"Average monthly return by calendar month, per stock.", source:"the stored candle archive", updated:when,
+       note:SEASON.note||""}));
+  })();
+
+  /* ---------- CORRELATION (Task 3) ---------- */
+  (function(){
+    var v=sec("correlation");
+    if(!CORR||!CORR.count){
+      v.appendChild(card("Correlation","Which stocks move together",
+        [para(CORR&&CORR.note?CORR.note:"Not computed yet.")],
+        {what:"Daily-return correlation between stocks.", source:"docs/stocks.json", updated:when}));
+      return;
+    }
+    var syms=CORR.symbols, m=CORR.matrix;
+    var wrap=el("div","tablewrap");
+    var t=el("table","corr");
+    var hr=el("tr"); hr.appendChild(el("th","",""));
+    syms.forEach(function(s){ hr.appendChild(el("th","rot",esc(s))); });
+    t.appendChild(hr);
+    m.forEach(function(row,i){
+      var tr=el("tr"); tr.appendChild(el("th","",esc(syms[i])));
+      row.forEach(function(val,j){
+        var td=el("td","cell", i===j?"":(val==null?"":val.toFixed(2)));
+        if(val!=null){
+          var a=Math.min(1,Math.abs(val));
+          td.style.background = val>=0
+            ? "rgba(21,128,61,"+(a*0.75).toFixed(2)+")"
+            : "rgba(185,28,28,"+(a*0.75).toFixed(2)+")";
+          if(a>0.55) td.style.color="#fff";
+        }
+        td.title = syms[i]+" / "+syms[j]+" : "+(val==null?"no overlap":val);
+        tr.appendChild(td);
+      });
+      t.appendChild(tr);
+    });
+    wrap.appendChild(t);
+    v.appendChild(card("Correlation","Which stocks move together",
+      [para("Five stocks that all move as one are one bet, not five. Green means they move together, red means they move against each other. This is what tells you whether a portfolio is actually diversified."),
+       wrap],
+      {what:"Daily-return correlation over the last "+(CORR.window||120)+" sessions for the "+(CORR.count||0)+" stocks with the longest history.",
+       source:"docs/stocks.json price series", updated:when,
+       note:CORR.note||""}));
+  })();
+
+  /* ---------- SURVEILLANCE LISTS (Task 6) ---------- */
+  (function(){
+    var v=sec("watchlists");
+    var total=(WATCH&&WATCH.count)||0;
+    if(!WATCH||!total){
+      v.appendChild(card("Surveillance","F&O ban, ASM and GSM",
+        [para(WATCH&&WATCH.note?WATCH.note:"Not fetched yet.")],
+        {what:"Stocks under exchange surveillance.", source:"NSE surveillance endpoints", updated:when}));
+      return;
+    }
+    var blocks=[["F&O ban","Stocks in the F&O ban period - no fresh positions may be taken",WATCH.ban],
+                ["ASM","Additional Surveillance Measure - unusual price behaviour",WATCH.asm],
+                ["GSM","Graded Surveillance Measure - disclosure or price concerns",WATCH.gsm]];
+    blocks.forEach(function(b){
+      var rows=b[2]||[];
+      if(!rows.length) return;
+      v.appendChild(card(b[0], b[1],
+        [table(["Symbol","Reason"], rows, [], 0, null)],
+        {what:b[1], source:"NSE surveillance endpoints", updated:when,
+         note:"A listing is a flag, not a verdict. Many ASM stocks are there for mechanical reasons such as a price band change."}));
+    });
+  })();
+
+  /* ---------- BULK AND BLOCK DEALS (Task 7) ---------- */
+  (function(){
+    var v=sec("deals");
+    if(!DEALS||!DEALS.count){
+      v.appendChild(card("Deals","Bulk and block deals",
+        [para(DEALS&&DEALS.note?DEALS.note:"Not fetched yet.")],
+        {what:"Large disclosed trades.", source:"NSE deal archives", updated:when}));
+      return;
+    }
+    [["Bulk deals",DEALS.bulk],["Block deals",DEALS.block]].forEach(function(g){
+      if(!(g[1]||[]).length) return;
+      v.appendChild(card(g[0],"", [table(DEALS.columns||["Date","Symbol","Client","Buy/Sell","Quantity","Price"], g[1], [], 1, null)],
+        {what:g[0], source:"NSE deal archives", updated:when, note:DEALS.note||""}));
+    });
+  })();
+
+  /* ---------- INSIDER AND PROMOTER TRADES (Task 8) ---------- */
+  (function(){
+    var v=sec("insider");
+    if(!INSIDER||!INSIDER.count){
+      v.appendChild(card("Insider","Promoter and insider disclosures",
+        [para(INSIDER&&INSIDER.note?INSIDER.note:"Not fetched yet.")],
+        {what:"Promoter and insider buy/sell disclosures.", source:"NSE PIT and SAST filings", updated:when}));
+      return;
+    }
+    v.appendChild(card("Insider","Promoter and insider disclosures, newest first",
+      [para("What promoters and insiders have disclosed buying and selling."),
+       table(INSIDER.columns||["Date","Symbol","Person","Category","Buy/Sell","Value"], INSIDER.rows, [], 1, null)],
+      {what:"Insider and promoter transactions from NSE filings.",
+       source:"NSE PIT and SAST filings", updated:when, note:INSIDER.note||""}));
+  })();
+
+  /* ---------- CORPORATE ACTIONS CALENDAR (Task 9) ---------- */
+  (function(){
+    var v=sec("calendar");
+    if(!CAL||(!CAL.count&&!(CAL.recent||[]).length)){
+      v.appendChild(card("Calendar","Corporate actions and results",
+        [para(CAL&&CAL.note?CAL.note:"Not built yet.")],
+        {what:"Dividends, splits and board meetings by date.", source:"NSE corporate actions and event calendar", updated:when}));
+      return;
+    }
+    var CHIP={dividend:"chip-div",split:"chip-split",results:"chip-res",other:"chip-oth"};
+    function days(list,title,sub){
+      if(!list.length) return null;
+      var kids=[];
+      list.forEach(function(d){
+        var box=el("div","calday");
+        box.appendChild(el("div","caldate",esc(d.date)));
+        d.events.forEach(function(e){
+          var row=el("div","calrow");
+          row.appendChild(el("span","chip "+(CHIP[e.type]||"chip-oth"),esc(e.type)));
+          row.appendChild(el("span","calsym",esc(e.symbol)));
+          row.appendChild(el("span","caldet",esc(e.detail)));
+          box.appendChild(row);
+        });
+        kids.push(box);
+      });
+      return card(title,sub,kids,{what:title,source:"NSE corporate actions and event calendar",updated:when,
+        note:"An ex-date is the first day the stock trades without the dividend or split."});
+    }
+    var c1=days(CAL.days||[],"Calendar","What is coming, from today forward");
+    if(c1) v.appendChild(c1);
+    var c2=days(CAL.recent||[],"Recent","The last 30 days, kept separate so the calendar stays forward-looking");
+    if(c2) v.appendChild(c2);
+  })();
+
   renderTabs();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
@@ -1998,7 +2334,8 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
 var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null,
     CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null,
-    SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null;
+    SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null,
+    RS=null, SEASON=null, CORR=null, WATCH=null, DEALS=null, INSIDER=null, CAL=null, BRIEF=null, MSTAT=null;
 
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
@@ -2023,6 +2360,15 @@ function assign(name, v){
     case "ipo.json": IPO=v; break;
     case "shareholding.json": SHAREHOLD=v; break;
     case "etf_premium.json": ETFPR=v; break;
+    case "rs.json": RS=v; break;
+    case "seasonality.json": SEASON=v; break;
+    case "correlation.json": CORR=v; break;
+    case "watchlists.json": WATCH=v; break;
+    case "deals.json": DEALS=v; break;
+    case "insider.json": INSIDER=v; break;
+    case "calendar.json": CAL=v; break;
+    case "brief.json": BRIEF=v; break;
+    case "market_status.json": MSTAT=v; break;
   }
 }
 
@@ -2035,7 +2381,7 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -2047,12 +2393,14 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
     CORE.forEach(function(f,i){ assign(f,res[i]); });
     if(!DATA) throw new Error("data.json did not load");
     renderAll();
+    mktUpdate(); glossPass(); applyLang();
     setStamp("loading", "Updated "+(DATA.generated_utc||"—")+" · loading the rest…");
     return Promise.all(HEAVY.map(function(f){ return optional(BASE+f); }));
   })
   .then(function(res){
     HEAVY.forEach(function(f,i){ assign(f,res[i]); });
     renderAll();
+    mktUpdate(); glossPass(); applyLang();
     setStamp("ready", "Updated "+(DATA.generated_utc||"—")+" · "+ago(DATA.generated_utc));
   })
   .catch(function(e){

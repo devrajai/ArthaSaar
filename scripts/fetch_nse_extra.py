@@ -44,11 +44,36 @@ WARM = ["https://www.nseindia.com/",
         "https://www.nseindia.com/companies-listing/corporate-filings-announcements"]
 
 INDICES = {
-    "nifty50": "https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv",
-    "nifty500": "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv",
-    "niftybank": "https://nsearchives.nseindia.com/content/indices/ind_niftybanklist.csv",
-    "niftyit": "https://nsearchives.nseindia.com/content/indices/ind_niftyitlist.csv",
-    "niftynext50": "https://nsearchives.nseindia.com/content/indices/ind_niftynext50list.csv",
+    # broad market
+    "nifty50":          "ind_nifty50list",
+    "niftynext50":      "ind_niftynext50list",
+    "nifty100":         "ind_nifty100list",
+    "nifty200":         "ind_nifty200list",
+    "nifty500":         "ind_nifty500list",
+    "niftymidcap50":    "ind_niftymidcap50list",
+    "niftymidcap150":   "ind_niftymidcap150list",
+    "niftysmallcap50":  "ind_niftysmallcap50list",
+    "niftysmallcap250": "ind_niftysmallcap250list",
+    "niftymidsmallcap400": "ind_niftymidsmallcap400list",
+    # sector indices
+    "niftybank":        "ind_niftybanklist",
+    "niftyit":          "ind_niftyitlist",
+    "niftyauto":        "ind_niftyautolist",
+    "niftyfmcg":        "ind_niftyfmcglist",
+    "niftypharma":      "ind_niftypharmalist",
+    "niftymetal":       "ind_niftymetallist",
+    "niftyrealty":      "ind_niftyrealtylist",
+    "niftyenergy":      "ind_niftyenergylist",
+    "niftyinfra":       "ind_niftyinfralist",
+    "niftymedia":       "ind_niftymedialist",
+    "niftyfinancelist": "ind_niftyfinancelist",
+    "niftypsubank":     "ind_niftypsubanklist",
+    "niftyconsumerdur": "ind_niftyconsumerdurableslist",
+    "niftyhealthcare":  "ind_niftyhealthcarelist",
+    "niftyoilgas":      "ind_niftyoilgaslist",
+    "niftychemicals":   "ind_niftychemicalslist",
+    "niftycement":      "ind_niftycementlist",
+    "niftytelecom":     "ind_niftytelecomlist",
 }
 SYMBOL_MASTER = "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv"
 FII_DII = "https://www.nseindia.com/api/fiidiiTradeReact"
@@ -121,8 +146,9 @@ def main() -> int:
             print(f"  symbol_master: FAILED {type(e).__name__}: {str(e)[:60]}"); fail += 1
 
     if "indices" in want:
-        for name, url in INDICES.items():
+        for name, stem in INDICES.items():
             try:
+                url = f"https://nsearchives.nseindia.com/content/indices/{stem}.csv"
                 df = get_csv(s, url)
                 df.to_csv(out / f"index_{name}.csv", index=False)
                 print(f"  index_{name}: {len(df)} constituents")

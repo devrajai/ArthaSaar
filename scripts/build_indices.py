@@ -29,15 +29,42 @@ from pathlib import Path
 
 import pandas as pd
 
-# index id -> (display name, Yahoo ticker for the level)
+# index id -> (display name, Yahoo ticker for the level, category)
+# The ticker is only used for the official level. Yahoo's coverage of NSE sector
+# indices is partial, so where there is none we fall back to the equal-weighted
+# average of the members - which is always computable from the bhavcopy.
 META = {
-    "nifty50":     ("Nifty 50", "^NSEI"),
-    "niftynext50": ("Nifty Next 50", None),
-    "niftybank":   ("Nifty Bank", "^NSEBANK"),
-    "niftyit":     ("Nifty IT", "^CNXIT"),
-    "nifty500":    ("Nifty 500", None),
+    # broad market
+    "nifty50":            ("Nifty 50", "^NSEI", "Broad"),
+    "niftynext50":        ("Nifty Next 50", None, "Broad"),
+    "nifty100":           ("Nifty 100", None, "Broad"),
+    "nifty200":           ("Nifty 200", None, "Broad"),
+    "nifty500":           ("Nifty 500", None, "Broad"),
+    "niftymidcap50":      ("Nifty Midcap 50", None, "Broad"),
+    "niftymidcap150":     ("Nifty Midcap 150", None, "Broad"),
+    "niftysmallcap50":    ("Nifty Smallcap 50", None, "Broad"),
+    "niftysmallcap250":   ("Nifty Smallcap 250", None, "Broad"),
+    "niftymidsmallcap400":("Nifty MidSmallcap 400", None, "Broad"),
+    # sectors
+    "niftybank":          ("Nifty Bank", "^NSEBANK", "Sector"),
+    "niftyit":            ("Nifty IT", "^CNXIT", "Sector"),
+    "niftyauto":          ("Nifty Auto", "^CNXAUTO", "Sector"),
+    "niftyfmcg":          ("Nifty FMCG", "^CNXFMCG", "Sector"),
+    "niftypharma":        ("Nifty Pharma", "^CNXPHARMA", "Sector"),
+    "niftymetal":         ("Nifty Metal", "^CNXMETAL", "Sector"),
+    "niftyrealty":        ("Nifty Realty", "^CNXREALTY", "Sector"),
+    "niftyenergy":        ("Nifty Energy", "^CNXENERGY", "Sector"),
+    "niftyinfra":         ("Nifty Infrastructure", "^CNXINFRA", "Sector"),
+    "niftymedia":         ("Nifty Media", "^CNXMEDIA", "Sector"),
+    "niftyfinancelist":   ("Nifty Financial Services", None, "Sector"),
+    "niftypsubank":       ("Nifty PSU Bank", None, "Sector"),
+    "niftyconsumerdur":   ("Nifty Consumer Durables", None, "Sector"),
+    "niftyhealthcare":    ("Nifty Healthcare", None, "Sector"),
+    "niftyoilgas":        ("Nifty Oil & Gas", None, "Sector"),
+    # BSE - constituents are blocked (BSE returns 403 to non-browser clients), so the
+    # Sensex is represented through the overlap of its members with Nifty 50.
+    "sensex_proxy":       ("Sensex members (via NSE overlap)", "^BSESN", "BSE"),
 }
-
 
 def load(p: str):
     try:
@@ -70,7 +97,7 @@ def main() -> int:
     out = []
     for f in sorted(glob.glob(f"{args.nse_dir}/index_*.csv")):
         iid = Path(f).stem.replace("index_", "")
-        name, ysym = META.get(iid, (iid.replace("_", " ").title(), None))
+        name, ysym, cat = META.get(iid, (iid.replace("_", " ").title(), None, "Other"))
         try:
             df = pd.read_csv(f, dtype=str)
         except Exception:
@@ -115,7 +142,7 @@ def main() -> int:
         members.sort(key=lambda m: -(m["chg_pct"] if m["chg_pct"] is not None else -999))
 
         out.append({
-            "id": iid, "name": name, "yahoo": ysym,
+            "id": iid, "name": name, "yahoo": ysym, "category": cat,
             "level": lv["close"] if lv else None,
             "chg_pct": lv["chg_pct"] if lv else None,
             "points": (round(lv["close"] - lv["close"] / (1 + lv["chg_pct"] / 100.0), 2)
@@ -125,8 +152,16 @@ def main() -> int:
             "constituents": members,
         })
 
+    # heat map: every index's move, biggest riser first, so the site can colour tiles
+    heat = sorted(
+        [{"id": i["id"], "name": i["name"], "category": i["category"],
+          "chg_pct": i["chg_pct"] if i["chg_pct"] is not None else i["avg_chg_pct"],
+          "points": i["points"], "level": i["level"], "count": i["count"],
+          "advances": i["advances"], "declines": i["declines"]} for i in out],
+        key=lambda x: -(x["chg_pct"] if x["chg_pct"] is not None else -999))
     payload = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-               "count": len(out), "indices": out}
+               "count": len(out), "categories": sorted({i["category"] for i in out}),
+               "heat": heat, "indices": out}
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(payload, separators=(",", ":")))

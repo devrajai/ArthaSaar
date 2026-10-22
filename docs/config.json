@@ -1,0 +1,5 @@
+{
+  "_comment": "Deploy the free Cloudflare Worker in worker/ and paste its URL below to switch on live intraday charts. Leave it empty and the site still works - stock pages just use the stored daily series.",
+  "proxy": "",
+  "token": ""
+}

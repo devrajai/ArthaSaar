@@ -104,6 +104,23 @@
     border:1px solid var(--line);border-radius:999px;padding:2px 8px;margin-left:8px}
   .sector{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;
     border:1px solid var(--line);background:var(--head);color:var(--muted);margin:2px 4px 2px 0}
+
+  /* ---- live candlestick chart ---- */
+  .tf{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 4px}
+  .tf button{font-size:12.5px;padding:6px 12px;border-radius:999px}
+  .tf button.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+  .tf .live{margin-left:auto;font-size:12px;color:var(--muted)}
+  .tf .live b{color:var(--up)}
+  .tf .live.stale b{color:var(--warn)}
+  .cwrap{position:relative}
+  .cwrap svg{width:100%;display:block}
+  .cwrap .up{fill:var(--up);stroke:var(--up)}
+  .cwrap .down{fill:var(--down);stroke:var(--down)}
+  .cwrap .wick{stroke-width:1}
+  .cwrap .axis{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+  .cwrap .lbl{fill:var(--muted);font-size:10px}
+  .cwrap .vbar{opacity:.45}
+  .cnote{color:var(--muted);font-size:12.5px;margin-top:6px}
   .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:12px}
   .kv div{font-size:14px}
   .kv b{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
@@ -295,6 +312,117 @@ function sparkline(series, w, h){
     '</svg>';
   var box=el("div",""); box.innerHTML=svg; return box;
 }
+/* ---------- live candlestick chart ----------
+   Candles come from the Cloudflare Worker proxy (docs/config.json -> proxy), because
+   Yahoo sends no CORS header and a browser cannot read it directly. Measured lag on
+   NSE during market hours: ~3 seconds, with 1m limited to 7 days of history. */
+function fmtTime(ts, intraday){
+  var d=new Date(ts*1000);
+  function p(n){return (n<10?"0":"")+n;}
+  return intraday ? p(d.getHours())+":"+p(d.getMinutes())
+                  : d.getDate()+"/"+(d.getMonth()+1);
+}
+function drawCandles(host, candles, intraday){
+  host.innerHTML="";
+  var n=candles.length;
+  if(!n){ host.appendChild(el("p","msg","No bars returned.")); return; }
+  var W=600, PH=210, VH=44, GAP=10, pad=6, PADL=44;
+  var lo=Infinity, hi=-Infinity, vmax=0;
+  candles.forEach(function(c){
+    if(c.l<lo)lo=c.l; if(c.h>hi)hi=c.h;
+    if(c.v!=null && c.v>vmax)vmax=c.v;
+  });
+  if(hi===lo) hi=lo+1;
+  var span=hi-lo, hi2=hi+span*0.04, lo2=lo-span*0.04;
+  function X(i){ return PADL + (i+0.5)*((W-PADL-pad)/n); }
+  function Y(v){ return pad + (hi2-v)/(hi2-lo2)*(PH-2*pad); }
+  var bw=Math.max(1, Math.min(9, (W-PADL-pad)/n*0.68));
+  var s=[], i, c;
+  // price gridlines at 4 levels
+  for(i=0;i<=4;i++){
+    var v=lo2+(hi2-lo2)*i/4, y=Y(v);
+    s.push('<line class="axis" x1="'+PADL+'" y1="'+y.toFixed(1)+'" x2="'+(W-pad)+'" y2="'+y.toFixed(1)+'"/>');
+    s.push('<text class="lbl" x="2" y="'+(y+3).toFixed(1)+'">'+v.toFixed(2)+'</text>');
+  }
+  for(i=0;i<n;i++){
+    c=candles[i];
+    var up=c.c>=c.o, x=X(i), cls=up?"up":"down";
+    var yh=Y(c.h), yl=Y(c.l), yo=Y(c.o), yc=Y(c.c);
+    s.push('<line class="wick '+cls+'" x1="'+x.toFixed(1)+'" y1="'+yh.toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+yl.toFixed(1)+'"/>');
+    var top=Math.min(yo,yc), hgt=Math.max(1, Math.abs(yc-yo));
+    s.push('<rect class="'+cls+'" x="'+(x-bw/2).toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+hgt.toFixed(1)+'"/>');
+    if(c.v!=null && vmax>0){
+      var vh=(c.v/vmax)*(VH-4), vy=PH+GAP+(VH-vh);
+      s.push('<rect class="vbar '+cls+'" x="'+(x-bw/2).toFixed(1)+'" y="'+vy.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+vh.toFixed(1)+'"/>');
+    }
+  }
+  // first and last time labels
+  s.push('<text class="lbl" x="'+PADL+'" y="'+(PH+GAP+VH+11)+'">'+fmtTime(candles[0].t,intraday)+'</text>');
+  s.push('<text class="lbl" x="'+(W-pad-52)+'" y="'+(PH+GAP+VH+11)+'">'+fmtTime(candles[n-1].t,intraday)+'</text>');
+  var svg='<svg viewBox="0 0 '+W+' '+(PH+GAP+VH+16)+'" preserveAspectRatio="none" style="height:280px">'+s.join("")+'</svg>';
+  var box=el("div","cwrap"); box.innerHTML=svg; host.appendChild(box);
+}
+function liveChart(host, sym){
+  var TF=[["1m","1d"],["5m","5d"],["15m","5d"],["60m","1mo"],["1d","1y"]];
+  var cur=0, timer=null;
+  var bar=el("div","tf");
+  var chartHost=el("div");
+  var status=el("span","live","loading…");
+  var note=el("div","cnote");
+  host.appendChild(bar); host.appendChild(chartHost); host.appendChild(note);
+
+  var btns=TF.map(function(tf,i){
+    var b=el("button","small",tf[0]);
+    b.addEventListener("click",function(){ cur=i; paintBtns(); load(); });
+    bar.appendChild(b); return b;
+  });
+  bar.appendChild(status);
+  function paintBtns(){ btns.forEach(function(b,i){ b.className="small"+(i===cur?" on":""); }); }
+  paintBtns();
+
+  function load(){
+    var iv=TF[cur][0], rng=TF[cur][1];
+    status.className="live"; status.innerHTML="loading…";
+    var base=CONFIG.proxy.replace(/\/+$/,"");
+    var u=base+"/?symbol="+encodeURIComponent(sym)+"&interval="+iv+"&range="+rng;
+    if(CONFIG.token) u+="&token="+encodeURIComponent(CONFIG.token);
+    fetch(u,{cache:"no-store"}).then(function(r){ return r.json(); }).then(function(j){
+      if(j.error) throw new Error(j.error);
+      var res=j.chart.result[0], q=res.indicators.quote[0], ts=res.timestamp||[];
+      var out=[];
+      for(var i=0;i<ts.length;i++){
+        if(q.open[i]==null||q.close[i]==null||q.high[i]==null||q.low[i]==null) continue;
+        out.push({t:ts[i],o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],v:(q.volume?q.volume[i]:null)});
+      }
+      drawCandles(chartHost, out, iv!=="1d");
+      var last=out.length?out[out.length-1].t:null;
+      var lag=last?Math.round((Date.now()/1000-last)):null;
+      var mkt=(res.meta&&res.meta.marketState)||"";
+      status.className="live"+(lag!=null&&lag>300?" stale":"");
+      status.innerHTML = out.length
+        ? ("<b>"+out.length+" bars</b> · last "+(last?fmtTime(last, iv!=="1d"):"—")+
+           (lag!=null?" · "+lag+"s ago":""))
+        : "no bars";
+      note.textContent = "Source: Yahoo Finance via the proxy. Yahoo caches intraday data for "+
+        "10 seconds, so that is the floor on freshness. 1-minute history is limited to 7 days.";
+    }).catch(function(e){
+      status.className="live stale"; status.textContent="proxy error";
+      chartHost.innerHTML="";
+      chartHost.appendChild(el("p","msg","Could not reach the proxy: "+e.message));
+      note.textContent = "Check that docs/config.json has the right proxy URL, and that the "+
+        "worker is deployed (see worker/README.md).";
+    });
+  }
+  load();
+  // refresh intraday views while the tab is visible
+  timer=setInterval(function(){
+    if(document.hidden) return;
+    if(TF[cur][0]==="1d") return;
+    load();
+  }, 30000);
+  return function(){ if(timer) clearInterval(timer); };
+}
+
 function kv(pairs){
   var g=el("div","kv");
   pairs.forEach(function(p){
@@ -402,6 +530,27 @@ function build(d){
       [head, sparkline(rec.series, 600, 190)],
       {what:"Closing price over the recent sessions.", source:opts.priceSource||"Daily candles.",
        updated:opts.updated||when}));
+
+    // live intraday candles, when a proxy is configured
+    var ysym = rec.yahoo || rec.symbol;
+    if(ysym){
+      var lhost = el("div");
+      if(CONFIG && CONFIG.proxy){
+        holder.appendChild(card("Live chart", ysym, [lhost],
+          {what:"Real candlesticks (open, high, low, close) for the selected timeframe, with volume underneath.",
+           source:"Yahoo Finance, proxied by your Cloudflare Worker so the browser is allowed to read it.",
+           updated:"live",
+           note:"Yahoo caches intraday data for 10 seconds, so that is the floor on freshness. 1-minute history is limited to 7 days. Nothing here is a recommendation."}));
+        liveChart(lhost, ysym);
+      } else {
+        holder.appendChild(card("Live chart", "not switched on yet",
+          [para("To draw live 1-minute candles here, deploy the free Cloudflare Worker and put its URL in docs/config.json. It takes about ten minutes - see worker/README.md."),
+           para("The same setup is what gives this site a real login, because a password written into a static page is readable by anyone who opens the page source.")],
+          {what:"Live intraday candlesticks.", source:"Yahoo Finance via a Cloudflare Worker proxy.",
+           updated:when,
+           note:"Verified while the market was open: Yahoo's NSE 1-minute data arrived about 3 seconds behind, so this is effectively live."}));
+      }
+    }
 
     var t = rec.tech || {};
     holder.appendChild(card("Technicals", t.trend?("trend: "+t.trend):"",
@@ -991,7 +1140,7 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 
 /* ---------- load ---------- */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null;
+var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null, CONFIG=null;
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}  // site works without these
 Promise.all([
@@ -1002,10 +1151,11 @@ Promise.all([
   optional(BASE+"global.json"),
   optional(BASE+"screener.json"),
   optional(BASE+"search.json"),
-  optional(BASE+"learn.json")
+  optional(BASE+"learn.json"),
+  optional(BASE+"config.json")
 ])
   .then(function(res){var d=res[0];STOCKS=res[1];UNIVERSE=res[2];CRYPTO=res[3];GLOBAL=res[4];
-    SCREENER=res[5];SEARCH=res[6];LEARN=res[7];
+    SCREENER=res[5];SEARCH=res[6];LEARN=res[7];CONFIG=res[8]||{};
     build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
     $("#stamp").textContent="No data";

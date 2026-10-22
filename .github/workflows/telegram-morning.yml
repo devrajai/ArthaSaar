@@ -38,6 +38,12 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python3 scripts/morning_unified.py
 
+      # The daily brief from this repo's own data. morning_unified.py reads the OLD
+      # ArthaSaar layout (mood.json, smart-brain.json, ...) and nine of those ten files
+      # no longer exist, so it would have sent a near-empty message with no error.
+      - name: Send the daily brief (docs/brief.json)
+        run: python3 scripts/telegram_brief.py
+
       - name: Commit fii history
         run: |
           git config user.name "data-bot"

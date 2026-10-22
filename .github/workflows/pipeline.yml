@@ -135,6 +135,27 @@ jobs:
       - name: "7k2. SEBI orders and circulars (RSS)"
         run: python scripts/fetch_sebi.py || true
 
+      - name: "7g2. Relative strength vs Nifty"
+        run: python scripts/build_relative_strength.py || true
+
+      - name: "7g3. Seasonality (refuses under 3 years of history)"
+        run: python scripts/build_seasonality.py || true
+
+      - name: "7g4. Correlation matrix"
+        run: python scripts/build_correlation.py || true
+
+      - name: "7i8. Surveillance lists (F&O ban, ASM, GSM)"
+        run: python scripts/fetch_watchlists.py || true
+
+      - name: "7i9. Bulk and block deals"
+        run: python scripts/fetch_deals.py || true
+
+      - name: "7i10. Insider and promoter trades (PIT, SAST)"
+        run: python scripts/fetch_insider.py || true
+
+      - name: "7i11. Market session times and holidays"
+        run: python scripts/build_market_status.py || true
+
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 
@@ -158,6 +179,18 @@ jobs:
 
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
+
+      - name: "7o2. Daily brief (what moved, not why)"
+        run: python scripts/build_daily_brief.py || true
+
+      - name: "7o3. Corporate actions and results calendar"
+        run: python scripts/build_calendar.py || true
+
+      - name: "7o4. RSS feed of the daily brief"
+        run: python scripts/build_feed.py || true
+
+      - name: "7o5. Per-stock SEO pages, sitemap and robots"
+        run: python scripts/build_seo_pages.py || true
 
       - name: "8. Google Drive candle archive (optional)"
         if: env.HAS_DRIVE == 'true'

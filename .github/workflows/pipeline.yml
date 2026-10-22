@@ -181,6 +181,11 @@ jobs:
           # docs/ matters as much as data/: it holds the website's data.json,
           # stocks.json and the rest. Staging only data/ meant the site never updated.
           git add data/ docs/
+          # docs/index.html and the other hand-maintained files are NOT written by this
+          # pipeline. Staging all of docs/ meant the runner committed its own stale copy
+          # over any concurrent edit - which silently reverted a merged pull request.
+          # Unstage them so the commit only ever contains what this pipeline generated.
+          git reset -q -- docs/index.html docs/sw.js docs/config.json docs/charges.json docs/learn.json 2>/dev/null || true
           git commit -m "pipeline: $(date -u +%FT%TZ)" || echo "no changes to commit"
 
           # A concurrent push (a manual commit, another workflow) makes this fail with

@@ -152,6 +152,8 @@ def main() -> int:
     ap.add_argument("--yahoo-dir", default="data/yahoo")
     ap.add_argument("--equity-only", action="store_true")
     ap.add_argument("--sleep", type=float, default=0.25)
+    ap.add_argument("--max-stale-days", type=int, default=45,
+                    help="skip schemes whose latest NAV is older than this (closed funds)")
     args = ap.parse_args()
 
     cache = Path(args.cache)
@@ -178,15 +180,17 @@ def main() -> int:
 
     rows, hist_dir = [], cache / "nav"
     hist_dir.mkdir(parents=True, exist_ok=True)
-    taken = 0
+    taken, seen, stale_skipped = 0, set(), 0
+    today = datetime.now(timezone.utc).date()
 
     for s in schemes:
         if taken >= args.limit:
             break
         code = s.get("schemeCode")
         name = str(s.get("schemeName") or "")
-        if not code:
-            continue
+        if not code or code in seen:
+            continue          # the scheme list carries duplicates; each code once
+        seen.add(code)
         if args.equity_only and not any(k in name.lower() for k in
                                         ("equity", "elss", "index", "bluechip", "large cap",
                                          "mid cap", "small cap", "flexi", "multi cap", "focused")):
@@ -208,6 +212,16 @@ def main() -> int:
         meta = payload.get("meta") or {}
         series = parse_nav(payload.get("data"))
         if len(series) < 60:
+            continue
+        # A scheme whose newest NAV is years old is closed or merged. Its "5-year
+        # return" would be a historical figure from that era, shown as if it were
+        # current - so it is excluded rather than published misleadingly.
+        try:
+            newest = datetime.strptime(series[-1][0], "%Y-%m-%d").date()
+        except Exception:
+            continue
+        if (today - newest).days > args.max_stale_days:
+            stale_skipped += 1
             continue
         taken += 1
 
@@ -240,12 +254,17 @@ def main() -> int:
     payload = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                "count": len(rows), "benchmarks": bm,
                "note": ("Fund manager and CEO names are not available from a free structured "
-                        "source, so they are not shown rather than guessed."),
+                        "source, so they are not shown rather than guessed. Closed schemes "
+                        "(latest NAV older than " + str(args.max_stale_days) + " days) are "
+                        "excluded, because their returns are historical, not current."),
                "rows": rows}
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(payload, separators=(",", ":")))
     print(f"Wrote {dest}  ({dest.stat().st_size / 1e3:.0f} KB)  |  {len(rows)} schemes")
+    if stale_skipped:
+        print(f"  skipped {stale_skipped} closed schemes (latest NAV older than "
+              f"{args.max_stale_days} days)")
     if rows:
         beat = sum(1 for r in rows if r.get("beats_nifty_5y"))
         print(f"  beat Nifty over 5 years: {beat} of {len(rows)}")

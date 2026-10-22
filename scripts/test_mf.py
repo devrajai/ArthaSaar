@@ -131,6 +131,26 @@ def main() -> int:
         check("young fund: 10y comparison is None",
               young.get("beats_nifty_10y") is None, str(young.get("beats_nifty_10y")))
 
+    # a closed scheme must be excluded: its "5-year return" would be from years ago
+    def closed_series(years=12, annual=0.10, ends_years_ago=3):
+        rows = monthly_series(years, annual)
+        # shift every date back so the newest NAV is `ends_years_ago` years old
+        out = []
+        for r in rows:
+            d = datetime.strptime(r["date"], "%d-%m-%Y") - timedelta(days=int(ends_years_ago * 365.25))
+            out.append({"date": d.strftime("%d-%m-%Y"), "nav": r["nav"]})
+        return out
+    rc4, d4 = run([{"schemeCode": 77, "schemeName": "Closed Fund - Growth"}],
+                  {"77": {"meta": {"scheme_name": "Closed Fund - Growth", "fund_house": "Test AMC"},
+                          "data": closed_series()}}, benchmarks)
+    check("closed scheme (stale NAV) is excluded", d4.get("count") == 0, str(d4.get("count")))
+
+    # duplicate scheme codes in the source list must not produce duplicate rows
+    dup = [{"schemeCode": 1, "schemeName": "Steady Equity Fund - Growth"},
+           {"schemeCode": 1, "schemeName": "Steady Equity Fund - Growth"}]
+    rc5, d5 = run(dup, {"1": histories["1"]}, benchmarks)
+    check("duplicate scheme codes collapse to one row", d5.get("count") == 1, str(d5.get("count")))
+
     # and a fund with too little history must be skipped, not reported with junk
     rc3, d3 = run([{"schemeCode": 9, "schemeName": "Tiny Fund"}],
                   {"9": {"meta": {"scheme_name": "Tiny Fund", "fund_house": "Test AMC"},

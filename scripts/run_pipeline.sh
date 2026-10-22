@@ -135,6 +135,10 @@ step "7n2. Search index"
 run python scripts/build_search_index.py || true
 
 step "7n. Website data (docs/data.json)"
+run python scripts/fetch_shareholding.py || true
+run python scripts/fetch_ipo.py || true
+run python scripts/fetch_sebi.py || true
+run python scripts/build_etf_premium.py || true
 run python scripts/build_site_data.py || true
 
 step "8. Google Drive archive (if configured)"

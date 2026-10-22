@@ -43,7 +43,10 @@ def yahoo(sym):
         return None, None, None, None
 
 def esc(s):
-    return str(s).replace("&", "&").replace("<", "<").replace(">", ">")
+    # These were HTML entities that had been decoded, so each replace() was a no-op:
+    # "&" -> "&", "<" -> "<". Any symbol or headline containing <, > or & therefore broke
+    # Telegram's HTML parse mode and the alert was dropped with no error anywhere.
+    return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 def pct(p, pc):
     if p and pc:
         return (p / pc - 1) * 100.0

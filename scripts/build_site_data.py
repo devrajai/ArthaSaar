@@ -355,4 +355,12 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    _rc = main()
+    # pyarrow's thread pool aborts during interpreter teardown on the CI runner:
+    #   terminate called without an active exception -> SIGABRT -> exit code 134
+    # It fires AFTER main() has finished, so the work is already done - but because it
+    # was the last step before the commit, it turned the whole pipeline red and the
+    # data was never published. Flush and hard-exit instead of unwinding the runtime.
+    import os as _os, sys as _sys
+    _sys.stdout.flush(); _sys.stderr.flush()
+    _os._exit(_rc)

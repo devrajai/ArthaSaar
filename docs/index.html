@@ -105,6 +105,15 @@
   .sector{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;
     border:1px solid var(--line);background:var(--head);color:var(--muted);margin:2px 4px 2px 0}
 
+  /* ---- sector heat map ---- */
+  .heat{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 4px}
+  .tile{flex:1 1 150px;min-height:86px;border-radius:10px;padding:11px 12px;cursor:pointer;
+    border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;transition:transform .14s}
+  .tile:hover{transform:translateY(-2px)}
+  .tile .tn{font-size:12.5px;font-weight:700;line-height:1.25}
+  .tile .tv{font-size:19px;font-weight:800;margin-top:3px}
+  .tile .tc{font-size:10.5px;color:var(--muted);margin-top:3px}
+
   /* ---- live candlestick chart ---- */
   .tf{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 4px}
   .tf button{font-size:12.5px;padding:6px 12px;border-radius:999px}
@@ -435,8 +444,9 @@ function kv(pairs){
 /* ---------- sections ---------- */
 var SECTIONS=[
   {id:"overview",  label:"Overview"},
-  {id:"stocks",    label:"Stocks"},
-  {id:"screener",  label:"Screener"},
+  {id:"stocks",    label:"Stocks & Screener"},
+  {id:"indices",   label:"Indices"},
+  {id:"sectors",   label:"Sectors"},
   {id:"market",    label:"Market"},
   {id:"fno",       label:"F&O"},
   {id:"global",    label:"Global"},
@@ -444,6 +454,7 @@ var SECTIONS=[
   {id:"news",      label:"News"},
   {id:"corporate", label:"Corporate"},
   {id:"youtube",   label:"YouTube"},
+  {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
   {id:"data",      label:"Data"}
 ];
@@ -584,67 +595,111 @@ function build(d){
     }
   }
 
-  /* ---------- STOCKS (full NSE list, deep pages as they arrive) ---------- */
+  /* ---------- STOCKS: the full NSE list and the screener, merged ---------- */
   (function(){
     var v=sec("stocks");
-    var uni = UNIVERSE, deep = (STOCKS && STOCKS.stocks) || {};
-    if(!uni || !uni.rows || !uni.rows.length){
+    var uni=UNIVERSE, deep=(STOCKS&&STOCKS.stocks)||{};
+    if(!uni||!uni.rows||!uni.rows.length){
       v.appendChild(card("Stocks","",[para("No universe yet. It is built from NSE's own symbol master in the daily pipeline.")],
         {what:"Every NSE-listed stock, plus a page for each one that has been deepened.",
          source:"NSE EQUITY_L.csv symbol master + NSE bhavcopy.",updated:when}));
       return;
     }
-    var holder=el("div");
-    var bySymbol={};
-    for(var k in deep){ bySymbol[deep[k].symbol]=deep[k]; }
+    // screener metrics, keyed by symbol, so one table can carry both views
+    var met={};
+    if(SCREENER&&SCREENER.rows) SCREENER.rows.forEach(function(r){ met[r.symbol]=r; });
+    var bySymbol={}; for(var k in deep){ bySymbol[deep[k].symbol]=deep[k]; }
 
-    function showList(){
+    // real functions, never eval'd strings from a data file
+    var PRED={
+      falling:    function(r){ return r.down_streak>=3 && r.chg_5d!=null && r.chg_5d<=-3; },
+      falling5:   function(r){ return r.down_streak>=5; },
+      drop2:      function(r){ return r.chg_1d!=null && r.chg_1d<=-2; },
+      drop5:      function(r){ return r.chg_5d!=null && r.chg_5d<=-5; },
+      rising:     function(r){ return r.up_streak>=3; },
+      nearlow:    function(r){ return r.above_52w_low!=null && r.above_52w_low<=5; },
+      nearhigh:   function(r){ return r.from_52w_high!=null && r.from_52w_high>=-5; },
+      oversold:   function(r){ return r.rsi!=null && r.rsi<30; },
+      overbought: function(r){ return r.rsi!=null && r.rsi>70; },
+      volspike:   function(r){ return r.vol_x!=null && r.vol_x>=2; },
+      macdbull:   function(r){ return r.macd_hist!=null && r.macd_hist>0; },
+      strongup:   function(r){ return r.trend==="up" && r.adx!=null && r.adx>25; },
+      strongdown: function(r){ return r.trend==="down" && r.adx!=null && r.adx>25; }
+    };
+    var state={ preset:"", q:"", onlyDeep:false, scanned:false };
+    var holder=el("div");
+
+    function paint(){
       holder.innerHTML="";
+      // ---- controls ----
       var q=el("input"); q.type="search"; q.placeholder="Filter by symbol, name or ISIN…";
-      var only=el("button","small","Show only stocks with a full page");
-      var onlyDeep=false;
-      var field=el("div","field"); field.appendChild(q); field.appendChild(only);
-      var cols=["symbol","name","series","close","chg_pct","volume","page"];
-      var rows=uni.rows.map(function(r){
-        return [r.symbol, r.name, r.series, r.close, r.chg_pct, r.volume, r.deep?"full":"—"];
+      q.value=state.q;
+      var only=el("button","small"+(state.onlyDeep?" primary":""),"Only with a full page");
+      var scanned=el("button","small"+(state.scanned?" primary":""),"Only screened");
+      var field=el("div","field"); field.appendChild(q); field.appendChild(only); field.appendChild(scanned);
+
+      var pre=el("div","presets");
+      var all=el("button","small"+(!state.preset?" primary":""),"All");
+      all.addEventListener("click",function(){ state.preset=""; paint(); });
+      pre.appendChild(all);
+      (SCREENER&&SCREENER.presets?SCREENER.presets:[]).forEach(function(pd){
+        var b=el("button","small"+(state.preset===pd.id?" primary":""),esc(pd.label));
+        b.title=pd.note||"";
+        b.addEventListener("click",function(){ state.preset=pd.id; paint(); });
+        pre.appendChild(b);
       });
-      var notice=el("div","");
-      var t=table(cols, rows, ["close","chg_pct","volume"], 0, function(row){
+
+      // ---- filter ----
+      var ql=state.q.trim().toLowerCase();
+      var rows=uni.rows.filter(function(r){
+        if(state.onlyDeep && !r.deep) return false;
+        var m=met[r.symbol];
+        if(state.scanned && !m) return false;
+        if(state.preset && PRED[state.preset]){ if(!m || !PRED[state.preset](m)) return false; }
+        if(ql){
+          var hay=(r.symbol+" "+(r.name||"")+" "+(r.isin||"")).toLowerCase();
+          if(hay.indexOf(ql)<0) return false;
+        }
+        return true;
+      });
+
+      var cols=["symbol","name","close","chg_pct","chg_5d","down_streak","rsi","vol_x","trend","page"];
+      var tr=rows.map(function(r){
+        var m=met[r.symbol]||{};
+        return [r.symbol,r.name,r.close,r.chg_pct,m.chg_5d,m.down_streak,m.rsi,m.vol_x,m.trend,r.deep?"full":"—"];
+      });
+      var t=table(cols,tr,["close","chg_pct","chg_5d","down_streak","rsi","vol_x"],0,function(row){
         var rec=bySymbol[row[0]];
         if(rec){
-          renderDetail(holder, rec, "All listed stocks", showList,
+          renderDetail(holder, rec, "All listed stocks", paint,
             {updated:STOCKS.updated?ago(STOCKS.updated):when, priceSource:"Yahoo Finance daily candles."});
         } else {
-          // no alert(): a plain inline note reads better and never blocks the page
-          notice.innerHTML = '<div class="card" style="border-color:var(--line)">'+
-            '<b>'+esc(row[0])+'</b> has no full page yet. The hub deepens a slice of the '+
-            'universe on every run, so its chart, technicals and fundamentals will appear '+
-            'over the coming days.</div>';
-          notice.scrollIntoView && notice.scrollIntoView({block:"center"});
+          notice.innerHTML='<div class="card"><b>'+esc(row[0])+'</b> has no full page yet. The hub '+
+            'deepens a slice of the universe every run, so its chart, technicals and fundamentals '+
+            'will appear over the coming days. Its price, change and volume above come from the '+
+            'NSE bhavcopy and are current.</div>';
         }
       });
+      var notice=el("div");
       holder.appendChild(notice);
-      holder.appendChild(card("All listed stocks",
-        uni.count+" NSE symbols · "+uni.with_price+" priced · "+(STOCKS?STOCKS.count:0)+" with a full page",
-        [field, t],
-        {what:"Every stock listed on NSE, with the day's close and volume. Rows marked 'full' also have a chart, technicals and fundamentals.",
-         source:"NSE symbol master (EQUITY_L.csv) and the NSE cash bhavcopy.",
+
+      var note = state.preset && PRED[state.preset]
+        ? ((SCREENER.presets||[]).filter(function(x){return x.id===state.preset;})[0]||{}).note
+        : "";
+      holder.appendChild(card("Stocks & screener",
+        rows.length+" of "+uni.count+" symbols"+(note?" · "+note:"")+
+        " · "+(STOCKS?STOCKS.count:0)+" with a full page",
+        [field, pre, t],
+        {what:"Every NSE-listed stock with today's close, change and volume, plus screener columns (5-day move, consecutive falls, RSI, volume versus its own average, trend) wherever history exists. Preset buttons filter; any column sorts.",
+         source:"NSE symbol master and cash bhavcopy; screener columns from Yahoo daily candles.",
          updated:uni.updated?ago(uni.updated):when,
-         note:"Deep pages are built a slice at a time because fetching years of history for 2,600 symbols at once gets rate-limited. Coverage grows every run."}));
-      function filt(){
-        var s=(q.value||"").trim().toLowerCase();
-        $$("tbody tr", t).forEach(function(tr){
-          var okText=!s||tr.textContent.toLowerCase().indexOf(s)>=0;
-          var okDeep=!onlyDeep||tr.textContent.indexOf("full")>=0;
-          tr.style.display=(okText&&okDeep)?"":"none";
-        });
-      }
-      q.addEventListener("input", filt);
-      only.addEventListener("click", function(){
-        onlyDeep=!onlyDeep; only.className="small"+(onlyDeep?" primary":""); filt();
-      });
+         note:"Only deepened stocks have the screener columns and a full page - a 5-day fall cannot be computed without history. Coverage grows every run."}));
+
+      q.addEventListener("input",function(){ state.q=q.value; paint(); q.focus(); });
+      only.addEventListener("click",function(){ state.onlyDeep=!state.onlyDeep; paint(); });
+      scanned.addEventListener("click",function(){ state.scanned=!state.scanned; paint(); });
     }
-    showList();
+    paint();
     v.appendChild(holder);
   })();
 
@@ -944,67 +999,6 @@ function build(d){
     ], {what:"Where all of this comes from.",source:"Free and public sources only.",updated:when}));
   })();
 
-  /* ---------- SCREENER ---------- */
-  (function(){
-    var v=sec("screener");
-    if(!SCREENER || !SCREENER.rows || !SCREENER.rows.length){
-      v.appendChild(card("Screener","",
-        [para("Nothing to screen yet. The screener needs price history, so it fills in as the hub deepens stocks in the universe.")],
-        {what:"Filter stocks by how far and how long they have fallen, RSI, volume spikes and trend.",
-         source:"Built from the per-stock price series.", updated:when}));
-      return;
-    }
-    // Presets are real functions, not strings that get eval'd - so nothing in a data
-    // file can ever execute as code in this page.
-    var PRED={
-      falling:      function(r){ return r.down_streak>=3 && r.chg_5d!=null && r.chg_5d<=-3; },
-      falling5:     function(r){ return r.down_streak>=5; },
-      drop2:        function(r){ return r.chg_1d!=null && r.chg_1d<=-2; },
-      drop5:        function(r){ return r.chg_5d!=null && r.chg_5d<=-5; },
-      rising:       function(r){ return r.up_streak>=3; },
-      nearlow:      function(r){ return r.above_52w_low!=null && r.above_52w_low<=5; },
-      nearhigh:     function(r){ return r.from_52w_high!=null && r.from_52w_high>=-5; },
-      oversold:     function(r){ return r.rsi!=null && r.rsi<30; },
-      overbought:   function(r){ return r.rsi!=null && r.rsi>70; },
-      volspike:     function(r){ return r.vol_x!=null && r.vol_x>=2; },
-      macdbull:     function(r){ return r.macd_hist!=null && r.macd_hist>0; },
-      strongup:     function(r){ return r.trend==="up" && r.adx!=null && r.adx>25; },
-      strongdown:   function(r){ return r.trend==="down" && r.adx!=null && r.adx>25; }
-    };
-    var holder=el("div");
-    function showList(active){
-      holder.innerHTML="";
-      var pre=el("div","presets");
-      var all=el("button","small"+(!active?" primary":""),"All stocks");
-      all.addEventListener("click",function(){ showList(""); });
-      pre.appendChild(all);
-      (SCREENER.presets||[]).forEach(function(p){
-        var b=el("button","small"+(active===p.id?" primary":""),esc(p.label));
-        b.title=p.note||"";
-        b.addEventListener("click",function(){ showList(p.id); });
-        pre.appendChild(b);
-      });
-      var rows=SCREENER.rows;
-      var note="";
-      if(active && PRED[active]){
-        rows=rows.filter(PRED[active]);
-        var pdef=(SCREENER.presets||[]).filter(function(p){return p.id===active;})[0];
-        note=(pdef&&pdef.note)?pdef.note:"";
-      }
-      var cols=["symbol","name","close","chg_1d","chg_5d","down_streak","from_52w_high","above_52w_low","rsi","vol_x","trend"];
-      var tr=rows.map(function(r){ return [r.symbol,r.name,r.close,r.chg_1d,r.chg_5d,r.down_streak,
-        r.from_52w_high,r.above_52w_low,r.rsi,r.vol_x,r.trend]; });
-      holder.appendChild(card("Screener", rows.length+" of "+SCREENER.count+" stocks"+(note?" · "+note:""),
-        [pre, table(cols, tr, ["close","chg_1d","chg_5d","down_streak","from_52w_high","above_52w_low","rsi","vol_x"], 0)],
-        {what:"Filters built from the price series: consecutive falls, the move over 1/2/3/5/20 sessions, distance from the 52-week high and low, RSI, MACD, volume versus its own average, and trend.",
-         source:"Yahoo daily candles, via the per-stock pages.",
-         updated:SCREENER.updated?ago(SCREENER.updated):when,
-         note:"Only stocks with history appear here - a 5-day fall cannot be computed without it. Coverage grows with every run. Click any column header to sort."}));
-    }
-    showList("");
-    v.appendChild(holder);
-  })();
-
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
@@ -1040,6 +1034,191 @@ function build(d){
         {what:"The words that get used without explanation.", source:"Written for this terminal.",
          updated:LEARN.updated||when}));
     }
+  })();
+
+
+  /* ---------- INDICES (with constituents and points) ---------- */
+  (function(){
+    var v=sec("indices");
+    if(!INDICES || !INDICES.indices || !INDICES.indices.length){
+      v.appendChild(card("Indices","",[para("No index data yet.")],
+        {what:"Index levels, the move in points, and which members are driving it.",source:"NSE constituent lists + Yahoo levels.",updated:when}));
+      return;
+    }
+    var holder=el("div");
+    var bySymbol={};
+    var deepStocks=(STOCKS&&STOCKS.stocks)||{};
+    for(var k in deepStocks){ bySymbol[deepStocks[k].symbol]=deepStocks[k]; }
+
+    function list(){
+      holder.innerHTML="";
+      var cols=["index","level","chg_pct","points","advances","declines","members"];
+      var rows=INDICES.indices.map(function(i){
+        return [i.name, i.level, i.chg_pct, i.points, i.advances, i.declines, i.count];
+      });
+      var t=table(cols, rows, ["level","chg_pct","points","advances","declines","members"], 0, function(row){
+        var ix=INDICES.indices.filter(function(x){ return x.name===row[0]; })[0];
+        if(ix) detail(ix);
+      });
+      holder.appendChild(card("Indices", INDICES.indices.length+" indices · tap one for its members",
+        [t],
+        {what:"Index level, the move in percent and in points, and how many members are up versus down.",
+         source:"Levels from Yahoo Finance; constituents from NSE's own index lists.",
+         updated:INDICES.updated?ago(INDICES.updated):when,
+         note:"A points move is the level change: Nifty falling 199 points from 22,689 is a 0.87% fall. Points tell you the size of the move, percent tells you how much it matters."}));
+    }
+
+    function detail(ix){
+      holder.innerHTML="";
+      var back=el("button","small back","← All indices");
+      back.addEventListener("click", list);
+      holder.appendChild(back);
+
+      var head=el("div","");
+      head.innerHTML='<div style="font-size:19px;font-weight:700">'+esc(ix.name)+
+        ' <span style="color:var(--muted);font-weight:400;font-size:15px">'+ix.count+' members</span></div>'+
+        '<div style="margin-top:6px">'+(ix.level!=null?'<b style="font-size:26px">'+num(ix.level)+'</b> ':'')+
+        (ix.chg_pct!=null?'<span class="'+(ix.chg_pct>=0?"up":"down")+'" style="font-weight:700">'+sgn(ix.chg_pct)+'%'+
+          (ix.points!=null?' · '+sgn(ix.points)+' pts':'')+'</span>':'')+'</div>';
+      holder.appendChild(card("Level", ix.avg_chg_pct!=null?("equal-weighted members: "+sgn(ix.avg_chg_pct)+"%"):"",
+        [head, kv([["Advances", ix.advances], ["Declines", ix.declines], ["Unchanged", ix.unchanged],
+                   ["Members", ix.count]])],
+        {what:"The index level and its move, plus the advance/decline split of its members.",
+         source:"Yahoo Finance level; NSE constituent list; NSE bhavcopy for member prices.",
+         updated:INDICES.updated?ago(INDICES.updated):when}));
+
+      var cols=["symbol","name","industry","close","chg_pct","points","page"];
+      var rows=ix.constituents.map(function(m){
+        return [m.symbol, m.name, m.industry, m.close, m.chg_pct, m.points, m.deep?"full":"—"];
+      });
+      var t=table(cols, rows, ["close","chg_pct","points"], 0, function(row){
+        var rec=bySymbol[row[0]];
+        if(rec) renderDetail(holder, rec, ix.name+" members", function(){ detail(ix); },
+          {tag:ix.name, updated:STOCKS&&STOCKS.updated?ago(STOCKS.updated):when, priceSource:"Yahoo Finance daily candles."});
+        else notice.innerHTML='<div class="card"><b>'+esc(row[0])+'</b> has no full page yet, so there is no chart or technicals to show. Its price and move above come from the NSE bhavcopy.</div>';
+      });
+      var notice=el("div");
+      holder.appendChild(notice);
+      holder.appendChild(card(ix.name+" members","sorted by move, biggest gainer first",[t],
+        {what:"Every member of the index with its move in percent and in points. Tap one for its full page.",
+         source:"NSE constituent list; prices from the NSE bhavcopy.",updated:INDICES.updated?ago(INDICES.updated):when,
+         note:"'full' means the stock has a chart, technicals and fundamentals."}));
+    }
+    list(); v.appendChild(holder);
+  })();
+
+  /* ---------- SECTORS (heat map) ---------- */
+  (function(){
+    var v=sec("sectors");
+    if(!SECTORS || !SECTORS.sectors || !SECTORS.sectors.length){
+      v.appendChild(card("Sectors","",[para("No sector data yet.")],
+        {what:"Which sectors are moving, and which stocks inside them.",source:"NSE industry classification + bhavcopy prices.",updated:when}));
+      return;
+    }
+    function heatColour(p){
+      // green for up, red for down, deeper for bigger moves; capped so one outlier
+      // does not wash out the whole map
+      var c=Math.max(-3, Math.min(3, p||0))/3;
+      var a=0.12+Math.abs(c)*0.55;
+      return (c>=0?"rgba(10,125,67,":"rgba(192,43,43,")+a.toFixed(2)+")";
+    }
+    var holder=el("div");
+    var deepStocks=(STOCKS&&STOCKS.stocks)||{};
+    var bySymbol={}; for(var k in deepStocks){ bySymbol[deepStocks[k].symbol]=deepStocks[k]; }
+
+    function list(){
+      holder.innerHTML="";
+      var map=el("div","heat");
+      SECTORS.sectors.forEach(function(s){
+        var tile=el("div","tile");
+        tile.style.background=heatColour(s.avg_chg);
+        tile.style.flexGrow=String(Math.max(1, Math.min(6, s.count/8)));
+        tile.innerHTML='<div class="tn">'+esc(s.name)+'</div>'+
+          '<div class="tv">'+sgn(s.avg_chg)+'%</div>'+
+          '<div class="tc">'+s.count+' stocks · up '+s.advances+' / down '+s.declines+'</div>';
+        tile.addEventListener("click", function(){ detail(s); });
+        map.appendChild(tile);
+      });
+      holder.appendChild(card("Sector heat map", SECTORS.count+" sectors · tap a tile for the stocks",
+        [map, para("Colour is the average move of the sector's members today; the deeper the shade, the bigger the move. Bigger tiles hold more stocks.")],
+        {what:"Sector performance, averaged across the stocks in each sector.",
+         source:"NSE industry classification, prices from the NSE bhavcopy.",
+         updated:SECTORS.updated?ago(SECTORS.updated):when,
+         note:"Sectors are NSE's own industry labels. This is the fastest way to see where money moved today - and where it left."}));
+
+      var cols=["sector","avg_chg","stocks","advances","declines","best","worst"];
+      var rows=SECTORS.sectors.map(function(s){ return [s.name,s.avg_chg,s.count,s.advances,s.declines,s.best,s.worst]; });
+      holder.appendChild(card("Sectors as a table","",[table(cols,rows,["avg_chg","stocks","advances","declines"],0,function(row){
+        var sx=SECTORS.sectors.filter(function(x){ return x.name===row[0]; })[0];
+        if(sx) detail(sx);
+      })],
+        {what:"The same numbers, sortable.",source:"NSE industry classification.",updated:SECTORS.updated?ago(SECTORS.updated):when}));
+    }
+
+    function detail(s){
+      holder.innerHTML="";
+      var back=el("button","small back","← All sectors");
+      back.addEventListener("click", list);
+      holder.appendChild(back);
+      var head=el("div","");
+      head.innerHTML='<div style="font-size:19px;font-weight:700">'+esc(s.name)+'</div>'+
+        '<div style="margin-top:6px"><b style="font-size:26px" class="'+(s.avg_chg>=0?"up":"down")+'">'+
+        sgn(s.avg_chg)+'%</b> <span style="color:var(--muted)">average of '+s.count+' stocks · up '+s.advances+' / down '+s.declines+'</span></div>';
+      holder.appendChild(card("Sector", "", [head], 
+        {what:"The average move across the sector's members.", source:"NSE bhavcopy prices.", updated:SECTORS.updated?ago(SECTORS.updated):when}));
+      var cols=["symbol","name","close","chg_pct","points","page"];
+      var rows=s.stocks.map(function(m){ return [m.symbol,m.name,m.close,m.chg_pct,m.points,m.deep?"full":"—"]; });
+      var t=table(cols,rows,["close","chg_pct","points"],0,function(row){
+        var rec=bySymbol[row[0]];
+        if(rec) renderDetail(holder, rec, s.name, function(){ detail(s); },
+          {tag:s.name, updated:STOCKS&&STOCKS.updated?ago(STOCKS.updated):when, priceSource:"Yahoo Finance daily candles."});
+        else notice.innerHTML='<div class="card"><b>'+esc(row[0])+'</b> has no full page yet.</div>';
+      });
+      var notice=el("div");
+      holder.appendChild(notice);
+      holder.appendChild(card(s.name+" stocks","biggest gainer first",[t],
+        {what:"Every stock in the sector with its move in percent and points.",source:"NSE bhavcopy.",updated:SECTORS.updated?ago(SECTORS.updated):when}));
+    }
+    list(); v.appendChild(holder);
+  })();
+
+  /* ---------- CHARGES ---------- */
+  (function(){
+    var v=sec("charges");
+    if(!CHARGES || !CHARGES.statutory){
+      v.appendChild(card("Charges","",[para("Charge data not loaded.")],{what:"Trading costs.",source:"Reference.",updated:when}));
+      return;
+    }
+    v.appendChild(card("What a trade costs in India",
+      "as of "+CHARGES.as_of,
+      [para(CHARGES.verify_note, true),
+       para("These are the statutory charges every Indian broker must collect. They are not optional and not negotiable - which is why 'zero brokerage' never means zero cost.")],
+      {what:"STT, exchange charges, GST, SEBI fee, stamp duty and DP charges.", source:"Indian statutory rates.", updated:CHARGES.as_of,
+       note:CHARGES.verify_note}));
+
+    CHARGES.statutory.forEach(function(s){
+      v.appendChild(card(s.name, s.who+" · "+s.when,
+        [table(["segment","rate","applies to"], s.rates), para(s.note)],
+        {what:s.name, source:s.who, updated:CHARGES.as_of}));
+    });
+
+    v.appendChild(card("Broker comparison", CHARGES.brokers.length+" brokers",
+      [table(["broker","type","delivery","intraday","futures","options"],
+             CHARGES.brokers.map(function(b){ return [b.name,b.type,b.delivery,b.intraday,b.futures,b.options]; })),
+       para("Brokerage is what the broker charges; the statutory charges above apply on top of it, at every broker. Rates change - check the current rate card before choosing.")],
+      {what:"Indicative brokerage for the main Indian brokers.", source:"Broker rate cards.", updated:CHARGES.as_of,
+       note:"Typical figures, not a quote. Discount brokers are flat-fee; full-service brokers charge a percentage of trade value."}));
+
+    var we=CHARGES.worked_example;
+    v.appendChild(card(we.title, we.setup,
+      [table(["item","cost","why"], we.lines),
+       kv([["Gross profit", we.gross_profit],["Total cost", we.total_cost],["Net profit", we.net_profit]]),
+       para(we.lesson, true)],
+      {what:"A worked delivery trade, cost line by line.", source:"Computed from the statutory rates above.", updated:CHARGES.as_of}));
+
+    v.appendChild(card("What the costs teach you","",
+      [table(["point","why it matters"], CHARGES.lessons)],
+      {what:"The practical lessons from the cost structure.", source:"Derived from the rates above.", updated:CHARGES.as_of}));
   })();
 
   renderTabs();
@@ -1140,7 +1319,7 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 
 /* ---------- load ---------- */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null, CONFIG=null;
+var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null, CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null;
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}  // site works without these
 Promise.all([
@@ -1152,10 +1331,14 @@ Promise.all([
   optional(BASE+"screener.json"),
   optional(BASE+"search.json"),
   optional(BASE+"learn.json"),
-  optional(BASE+"config.json")
+  optional(BASE+"config.json"),
+  optional(BASE+"indices.json"),
+  optional(BASE+"sectors.json"),
+  optional(BASE+"charges.json")
 ])
   .then(function(res){var d=res[0];STOCKS=res[1];UNIVERSE=res[2];CRYPTO=res[3];GLOBAL=res[4];
     SCREENER=res[5];SEARCH=res[6];LEARN=res[7];CONFIG=res[8]||{};
+    INDICES=res[9];SECTORS=res[10];CHARGES=res[11];
     build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
     $("#stamp").textContent="No data";

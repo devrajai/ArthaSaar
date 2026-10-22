@@ -1,0 +1,318 @@
+{
+  "_comment": "Indian trading costs. Statutory charges are set by the government, the exchanges and SEBI; brokerage is set by each broker and changes often. RATES CHANGE - treat this as the structure of what you pay, and confirm the numbers with your broker before relying on them. Edit this file freely; the site reads it directly.",
+  "as_of": "2026-10-22",
+  "currency": "INR",
+  "verify_note": "Statutory rates are revised in most Union Budgets and by the exchanges. Brokerage is revised whenever a broker chooses. Always check the current rate card.",
+  "statutory": [
+    {
+      "name": "STT (Securities Transaction Tax)",
+      "who": "Government of India",
+      "when": "On every trade, deducted automatically",
+      "rates": [
+        [
+          "Equity delivery",
+          "0.1%",
+          "on both buy and sell"
+        ],
+        [
+          "Equity intraday",
+          "0.025%",
+          "on sell only"
+        ],
+        [
+          "Futures",
+          "0.02%",
+          "on sell only"
+        ],
+        [
+          "Options",
+          "0.1% of premium",
+          "on sell only"
+        ],
+        [
+          "Options exercised",
+          "0.125% of intrinsic",
+          "on exercise"
+        ]
+      ],
+      "note": "The single biggest statutory cost on delivery trades. It is charged on the traded value, not on your profit."
+    },
+    {
+      "name": "Exchange transaction charges",
+      "who": "NSE / BSE",
+      "when": "On every trade",
+      "rates": [
+        [
+          "Equity delivery & intraday",
+          "~0.00297%",
+          "NSE; BSE is slightly different"
+        ],
+        [
+          "Futures",
+          "~0.00173%",
+          "NSE"
+        ],
+        [
+          "Options",
+          "~0.03503% of premium",
+          "NSE"
+        ]
+      ],
+      "note": "Small, but it applies to the full turnover, so it matters to anyone trading frequently."
+    },
+    {
+      "name": "GST",
+      "who": "Government of India",
+      "when": "On every trade",
+      "rates": [
+        [
+          "All segments",
+          "18%",
+          "on brokerage + exchange charges + SEBI fee + DP charges"
+        ]
+      ],
+      "note": "GST is charged on the costs, not on the trade value. It is why a 'free delivery' broker still costs you something."
+    },
+    {
+      "name": "SEBI turnover fee",
+      "who": "SEBI",
+      "when": "On every trade",
+      "rates": [
+        [
+          "All segments",
+          "₹10 per crore",
+          "= 0.0001% of turnover"
+        ]
+      ],
+      "note": "Trivial per trade, but it exists, and it is the regulator's funding."
+    },
+    {
+      "name": "Stamp duty",
+      "who": "State governments",
+      "when": "On the buy side only",
+      "rates": [
+        [
+          "Equity delivery",
+          "0.015%",
+          "on buy"
+        ],
+        [
+          "Equity intraday",
+          "0.003%",
+          "on buy"
+        ],
+        [
+          "Futures",
+          "0.002%",
+          "on buy"
+        ],
+        [
+          "Options",
+          "0.003%",
+          "on buy"
+        ]
+      ],
+      "note": "Charged only when you buy, not when you sell. Introduced in 2020, replacing the old securities transaction tax on the buy side."
+    },
+    {
+      "name": "DP charges",
+      "who": "Depository (via your broker)",
+      "when": "When you sell from your demat",
+      "rates": [
+        [
+          "Per scrip, per day",
+          "₹8 to ₹20 + GST",
+          "varies by broker; commonly about ₹13.5 + GST"
+        ]
+      ],
+      "note": "Only on delivery sells. If you sell 10 different shares in one day, that is 10 separate DP charges - which is why small holdings are expensive to exit."
+    },
+    {
+      "name": "AMC / account charges",
+      "who": "Broker",
+      "when": "Yearly or quarterly",
+      "rates": [
+        [
+          "Demat AMC",
+          "₹0 to ₹300 per year",
+          "most discount brokers now charge nothing"
+        ]
+      ],
+      "note": "Ask whether it is waived, and what happens if your holding value falls below a threshold."
+    }
+  ],
+  "brokers": [
+    {
+      "name": "Zerodha",
+      "type": "Discount",
+      "delivery": "Nil",
+      "intraday": "0.03% or ₹20, whichever is lower",
+      "futures": "0.03% or ₹20, whichever is lower",
+      "options": "₹20 per order (flat)",
+      "note": "The largest discount broker in India. Delivery is genuinely free of brokerage."
+    },
+    {
+      "name": "Groww",
+      "type": "Discount",
+      "delivery": "Nil on most stocks",
+      "intraday": "0.05% or ₹20, whichever is lower",
+      "futures": "0.05% or ₹20, whichever is lower",
+      "options": "₹20 per order",
+      "note": "Simple app-first interface; a small number of stocks still carry a delivery charge."
+    },
+    {
+      "name": "Upstox",
+      "type": "Discount",
+      "delivery": "Nil",
+      "intraday": "0.05% or ₹20, whichever is lower",
+      "futures": "0.05% or ₹20, whichever is lower",
+      "options": "₹20 per order",
+      "note": "Similar structure to the others in this group."
+    },
+    {
+      "name": "Angel One",
+      "type": "Discount",
+      "delivery": "Nil (some stocks excluded)",
+      "intraday": "₹20 per order",
+      "futures": "₹20 per order",
+      "options": "₹20 per order",
+      "note": "Flat-fee model across segments."
+    },
+    {
+      "name": "Dhan",
+      "type": "Discount",
+      "delivery": "Nil",
+      "intraday": "₹20 per order",
+      "futures": "₹20 per order",
+      "options": "₹20 per order",
+      "note": "Flat ₹20; popular with active traders."
+    },
+    {
+      "name": "Fyers",
+      "type": "Discount",
+      "delivery": "Nil",
+      "intraday": "0.03% or ₹20, whichever is lower",
+      "futures": "0.03% or ₹20, whichever is lower",
+      "options": "₹20 per order",
+      "note": "TradingView-style charting included."
+    },
+    {
+      "name": "5paisa",
+      "type": "Discount",
+      "delivery": "₹20 per order",
+      "intraday": "₹20 per order",
+      "futures": "₹20 per order",
+      "options": "₹20 per order",
+      "note": "Flat fee even on delivery, unlike most discount brokers."
+    },
+    {
+      "name": "ICICI Direct",
+      "type": "Full service",
+      "delivery": "0.2% to 0.5% of trade value",
+      "intraday": "0.03% to 0.05%",
+      "futures": "0.03% to 0.05%",
+      "options": "₹20 to ₹95 per lot",
+      "note": "Full-service pricing. You pay for research, relationship management and branch support."
+    },
+    {
+      "name": "HDFC Securities",
+      "type": "Full service",
+      "delivery": "0.2% to 0.5% of trade value",
+      "intraday": "0.03% to 0.05%",
+      "futures": "0.03% to 0.05%",
+      "options": "₹20 to ₹100 per lot",
+      "note": "Full-service pricing."
+    },
+    {
+      "name": "Kotak Securities",
+      "type": "Full service",
+      "delivery": "0.2% to 0.5% of trade value",
+      "intraday": "0.03% to 0.05%",
+      "futures": "0.03% to 0.05%",
+      "options": "₹20 to ₹95 per lot",
+      "note": "Full-service pricing, with a discount plan available on request."
+    }
+  ],
+  "worked_example": {
+    "title": "What a delivery trade actually costs",
+    "setup": "Buy 100 shares at ₹1,000 and sell them at ₹1,050. Turnover ₹1,00,000 on the buy, ₹1,05,000 on the sell.",
+    "assumption": "Discount broker with nil delivery brokerage, DP charge ₹13.5 + GST.",
+    "lines": [
+      [
+        "Brokerage (buy)",
+        "₹0",
+        "nil delivery brokerage"
+      ],
+      [
+        "Brokerage (sell)",
+        "₹0",
+        "nil delivery brokerage"
+      ],
+      [
+        "STT (buy)",
+        "₹100",
+        "0.1% of ₹1,00,000"
+      ],
+      [
+        "STT (sell)",
+        "₹105",
+        "0.1% of ₹1,05,000"
+      ],
+      [
+        "Exchange charges",
+        "₹6",
+        "about 0.00297% on both legs"
+      ],
+      [
+        "SEBI fee",
+        "₹0.21",
+        "₹10 per crore"
+      ],
+      [
+        "Stamp duty (buy)",
+        "₹15",
+        "0.015% of ₹1,00,000"
+      ],
+      [
+        "DP charge (sell)",
+        "₹15.93",
+        "₹13.5 + 18% GST"
+      ],
+      [
+        "GST",
+        "₹3.96",
+        "18% on brokerage + exchange + SEBI + DP"
+      ]
+    ],
+    "gross_profit": "₹5,000",
+    "total_cost": "about ₹251",
+    "net_profit": "about ₹4,749",
+    "lesson": "Costs took roughly 5% of the gross profit here. On a 1% move instead of 5%, the same trade would be barely profitable after STT and stamp duty - which is the real reason overtrading destroys returns. This hub's own backtests charge 5 basis points per side for exactly this reason."
+  },
+  "lessons": [
+    [
+      "STT is on turnover, not profit",
+      "A trade that makes no money still pays STT. Two trades that cancel each other out still cost you twice."
+    ],
+    [
+      "Stamp duty only on buying",
+      "Which means the buy side is slightly more expensive than the sell side on delivery."
+    ],
+    [
+      "DP charges punish small holdings",
+      "They are per scrip, per day. Ten small positions cost ten times as much to exit as one large one."
+    ],
+    [
+      "GST applies to the costs",
+      "So 'zero brokerage' still carries GST on exchange charges and DP fees."
+    ],
+    [
+      "Full service costs 10x discount",
+      "On a ₹1,00,000 delivery buy, 0.5% brokerage is ₹500 versus ₹0. Over a year of trading that difference usually dwarfs any research benefit."
+    ],
+    [
+      "Options buyers pay STT on premium",
+      "Plus the spread and time decay. It is why most option buyers lose even when they are right on direction."
+    ]
+  ]
+}

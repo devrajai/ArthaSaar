@@ -36,5 +36,8 @@ jobs:
       - name: TimesFM forecast maths (stub model, no 4 GB download)
         run: python scripts/test_timesfm.py
 
+      - name: Mutual fund maths (stub NAV history, no network)
+        run: python scripts/test_mf.py
+
       - name: Every script compiles
         run: python -m compileall -q scripts

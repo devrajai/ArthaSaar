@@ -123,6 +123,12 @@ jobs:
       - name: "7m2. Stock pages - deepen a slice of the universe"
         run: python scripts/build_stock_pages.py --rotate 300 || true
 
+      - name: "7m2b. ETF pages (all NSE-listed ETFs)"
+        run: python scripts/build_etf_pages.py || true
+
+      - name: "7m2c. Mutual funds (NAV record + benchmark comparison)"
+        run: python scripts/fetch_mutual_funds.py --limit 400 || true
+
       - name: "7m3. Crypto pages (list + per-coin technicals)"
         run: python scripts/build_crypto_pages.py --top 120 || true
 

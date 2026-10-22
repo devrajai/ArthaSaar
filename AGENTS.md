@@ -59,13 +59,20 @@ The page used to fetch ~2.3 MB before showing anything, which looked like a hang
 
 ```js
 var CORE  = ["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
-var HEAVY = ["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json"];
+var HEAVY = ["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json"];
 // CORE renders the first paint. HEAVY loads behind it and re-renders.
 // search.json (~240 KB) is fetched only when the search box is opened.
 ```
 
 If you add a data file, decide which group it belongs to and register it in **both** the
 loader and the `assign()` switch. A new heavy file must not go in `CORE`.
+
+**A file that is generated but never fetched fails silently.** The page shows an empty
+card, not an error. This has already happened once: `mf.json` was written by the pipeline
+and committed, but it was in neither `CORE` nor `HEAVY`, so the Mutual Funds tab read
+"No fund data yet" while the data sat there perfectly correct. Before you finish any task
+that adds a JSON file, grep for it and confirm it appears in the loader list **and** in the
+`assign()` switch. Two matches, not one.
 
 ## How a section is added
 

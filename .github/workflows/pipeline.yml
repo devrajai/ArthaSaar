@@ -175,12 +175,28 @@ jobs:
         run: |
           git config user.name "data-bot"
           git config user.email "data-bot@users.noreply.github.com"
-          # docs/ matters as much as data/: it holds the website's data.json and
-          # stocks.json. Staging only data/ meant the site never actually updated.
+          # docs/ matters as much as data/: it holds the website's data.json,
+          # stocks.json and the rest. Staging only data/ meant the site never updated.
           git add data/ docs/
           git commit -m "pipeline: $(date -u +%FT%TZ)" || echo "no changes to commit"
-          git pull --rebase --autostash || true
-          git push
+
+          # A concurrent push (a manual commit, another workflow) makes this fail with
+          # exit 128 - and because that failure came last, the whole run was marked red
+          # and NOTHING was published, even though every step before it had succeeded.
+          # Retry around it, and abort any half-finished rebase instead of leaving the
+          # repo stuck in one.
+          pushed=0
+          for i in 1 2 3 4; do
+            git rebase --abort 2>/dev/null || true
+            git pull --rebase --autostash || true
+            if git push; then pushed=1; break; fi
+            echo "push attempt $i failed; retrying in 5s"; sleep 5
+          done
+          if [ "$pushed" != "1" ]; then
+            echo "::error::could not push after 4 attempts - data was built but not published"
+            exit 1
+          fi
+          echo "published"
 
   # ------------------------------------------------------------------ forecast
   # TimesFM lives in its own workflow (.github/workflows/timesfm.yml): loading the

@@ -37,7 +37,7 @@ run python scripts/fetch_bhavcopy.py --latest || true
 
 step "2. Yahoo Finance (indices, global)"
 if [ "${SKIP_YAHOO:-0}" = "1" ]; then skip "yahoo"; else
-  run python scripts/fetch_yahoo.py --group indices --period 5y || true
+  run python scripts/fetch_yahoo.py --group indices --period 10y || true
   # global indices, commodities and FX for the Global tab
   run python scripts/fetch_yahoo.py --group global --period 2y || true
   run python scripts/fetch_yahoo.py --group fx --period 2y || true

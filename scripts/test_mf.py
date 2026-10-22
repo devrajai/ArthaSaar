@@ -56,6 +56,19 @@ def monthly_series(years: float, annual: float, start_nav: float = 100.0, drop_a
     return rows
 
 
+def dense_series(years: float, annual: float, points: int):
+    """`points` NAVs spread over `years`, newest-first - dense enough to clear the
+    60-point floor while still covering less than the window being asked for."""
+    start = datetime(2026, 10, 1)
+    step = years * 365.25 / points
+    rows = []
+    for i in range(points):
+        d = start - timedelta(days=i * step)
+        yrs_elapsed = (points - 1 - i) * step / 365.25
+        rows.append({"date": d.strftime("%d-%m-%Y"), "nav": f"{100.0 * ((1 + annual) ** yrs_elapsed):.4f}"})
+    return rows
+
+
 def load_script():
     path = Path(__file__).with_name("fetch_mutual_funds.py")
     spec = importlib.util.spec_from_file_location("mf_fetch", path)
@@ -130,6 +143,24 @@ def main() -> int:
         check("young fund: 10y is None, not wrong", young.get("r10y") is None, str(young.get("r10y")))
         check("young fund: 10y comparison is None",
               young.get("beats_nifty_10y") is None, str(young.get("beats_nifty_10y")))
+
+    # boundary: the window is accepted when the history covers it, and refused when it
+    # genuinely does not. A 60-point monthly series only spans 4.92 years, so asking it
+    # for a 5-year return must give None - that is the honest answer.
+    rc6, d6 = run([{"schemeCode": 55, "schemeName": "Covered Fund - Growth"},
+                   {"schemeCode": 56, "schemeName": "Short Fund - Growth"}],
+                  {"55": {"meta": {"scheme_name": "Covered Fund - Growth", "fund_house": "Test AMC"},
+                          "data": monthly_series(6, 0.11)},
+                   "56": {"meta": {"scheme_name": "Short Fund - Growth", "fund_house": "Test AMC"},
+                          "data": dense_series(4.0, 0.11, 70)}}, benchmarks)
+    r6 = {r["code"]: r for r in (d6.get("rows") or [])}
+    cov, shr = r6.get(55), r6.get(56)
+    check("6-year series gives a 5y return", cov is not None and cov.get("r5y") is not None,
+          str(cov and cov.get("r5y")))
+    if cov and cov.get("r5y") is not None:
+        check("...and it is about 11%", abs(cov["r5y"] - 11.0) < 0.8, str(cov["r5y"]))
+    check("4-year series gives None for 5y, not a wrong number",
+          shr is not None and shr.get("r5y") is None, str(shr and shr.get("r5y")))
 
     # a closed scheme must be excluded: its "5-year return" would be from years ago
     def closed_series(years=12, annual=0.10, ends_years_ago=3):

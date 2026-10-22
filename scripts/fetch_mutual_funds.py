@@ -86,6 +86,20 @@ def cagr(series: list[tuple[str, float]], years: float):
             past = (d, nav)
         else:
             break
+    if past is None:
+        # Boundary case: a series that is almost exactly `years` long has no point on or
+        # before the target, so an N-year return came back None even though the history
+        # is there. Fall back to the earliest point when it is within a few days of the
+        # window - the CAGR is then computed over that point's real span, so it stays
+        # honest rather than being labelled with a window it does not quite cover.
+        first_d, first_nav = series[0]
+        # gap_days is negative when the series starts AFTER the target, i.e. the history
+        # is a little shorter than the window. Within three weeks we accept it and the
+        # CAGR is computed over the point's real span - so the window is accurate to
+        # about three weeks rather than being reported as unknown.
+        gap_days = (target - datetime.strptime(first_d, "%Y-%m-%d").timestamp()) / 86400.0
+        if -21.0 <= gap_days < 0:
+            past = (first_d, first_nav)
     if not past or past[1] <= 0:
         return None
     # Use the real gap between the two NAV points, not the nominal window: the matched

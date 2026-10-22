@@ -451,6 +451,8 @@ var SECTIONS=[
   {id:"fno",       label:"F&O"},
   {id:"global",    label:"Global"},
   {id:"crypto",    label:"Crypto"},
+  {id:"etf",       label:"ETFs"},
+  {id:"mf",        label:"Mutual Funds"},
   {id:"news",      label:"News"},
   {id:"corporate", label:"Corporate"},
   {id:"youtube",   label:"YouTube"},
@@ -582,6 +584,11 @@ function build(d){
          para(opts.market.note),
          el("p","", "Volume and 24h figures come from "+esc(m.volume_source||"Yahoo")+".")],
         {what:"Supply, market cap and traded volume.", source:"Yahoo Finance; Binance or CoinGecko for volume where reachable.", updated:opts.updated||when}));
+    } else if(opts.extra && opts.extra.pairs){
+      holder.appendChild(card(opts.extra.title||"Details", opts.extra.sub||"",
+        [kv(opts.extra.pairs), opts.extra.note?para(opts.extra.note):null],
+        {what:opts.extra.what||"Reference detail.", source:opts.extra.source||"Exchange file.",
+         updated:opts.updated||when}));
     } else {
       var f = rec.fund || {};
       holder.appendChild(card("Fundamentals","",
@@ -1050,8 +1057,37 @@ function build(d){
     var deepStocks=(STOCKS&&STOCKS.stocks)||{};
     for(var k in deepStocks){ bySymbol[deepStocks[k].symbol]=deepStocks[k]; }
 
-    function list(){
+    function list(cat){
       holder.innerHTML="";
+      // heat map of every index, coloured by the move - the fastest read of the day
+      if(INDICES.heat && INDICES.heat.length){
+        var cats=["All"].concat(INDICES.categories||[]);
+        var pick=el("select");
+        pick.style.cssText="font:inherit;font-size:14px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text)";
+        cats.forEach(function(c){ var o=el("option","",esc(c)); o.value=c; if(c===(cat||"All")) o.selected=true; pick.appendChild(o); });
+        var bar=el("div","field"); bar.appendChild(pick);
+        var map=el("div","heat");
+        INDICES.heat.filter(function(h){ return !cat||cat==="All"||h.category===cat; }).forEach(function(h){
+          var tile=el("div","tile");
+          tile.style.background=heatColour(h.chg_pct);
+          tile.innerHTML='<div class="tn">'+esc(h.name)+'</div>'+
+            '<div class="tv">'+sgn(h.chg_pct)+'%</div>'+
+            '<div class="tc">'+(h.points!=null?sgn(h.points)+' pts · ':'')+h.count+' stocks</div>'+
+            '<div class="tc">up '+h.advances+' / down '+h.declines+'</div>';
+          tile.addEventListener("click",function(){
+            var ix=INDICES.indices.filter(function(x){return x.id===h.id;})[0];
+            if(ix) detail(ix);
+          });
+          map.appendChild(tile);
+        });
+        pick.addEventListener("change",function(){ list(pick.value); });
+        holder.appendChild(card("Index heat map", INDICES.count+" indices · tap a tile for its members",
+          [bar, map, para("Colour is the index's move today; the deeper the shade, the bigger the move. Where Yahoo has no ticker for an index, the move shown is the equal-weighted average of its members.")],
+          {what:"Every NSE index we can build, with its move in percent and points.",
+           source:"NSE constituent lists; levels from Yahoo; moves from the NSE bhavcopy.",
+           updated:INDICES.updated?ago(INDICES.updated):when,
+           note:"BSE index constituents are not reachable - BSE returns 403 to non-browser clients. Indian market coverage comes from NSE, whose membership overlaps the Sensex almost entirely."}));
+      }
       var cols=["index","level","chg_pct","points","advances","declines","members"];
       var rows=INDICES.indices.map(function(i){
         return [i.name, i.level, i.chg_pct, i.points, i.advances, i.declines, i.count];
@@ -1060,7 +1096,7 @@ function build(d){
         var ix=INDICES.indices.filter(function(x){ return x.name===row[0]; })[0];
         if(ix) detail(ix);
       });
-      holder.appendChild(card("Indices", INDICES.indices.length+" indices · tap one for its members",
+      holder.appendChild(card("Indices as a table", INDICES.indices.length+" indices · tap one for its members",
         [t],
         {what:"Index level, the move in percent and in points, and how many members are up versus down.",
          source:"Levels from Yahoo Finance; constituents from NSE's own index lists.",
@@ -1104,7 +1140,7 @@ function build(d){
          source:"NSE constituent list; prices from the NSE bhavcopy.",updated:INDICES.updated?ago(INDICES.updated):when,
          note:"'full' means the stock has a chart, technicals and fundamentals."}));
     }
-    list(); v.appendChild(holder);
+    list("All"); v.appendChild(holder);
   })();
 
   /* ---------- SECTORS (heat map) ---------- */
@@ -1114,13 +1150,6 @@ function build(d){
       v.appendChild(card("Sectors","",[para("No sector data yet.")],
         {what:"Which sectors are moving, and which stocks inside them.",source:"NSE industry classification + bhavcopy prices.",updated:when}));
       return;
-    }
-    function heatColour(p){
-      // green for up, red for down, deeper for bigger moves; capped so one outlier
-      // does not wash out the whole map
-      var c=Math.max(-3, Math.min(3, p||0))/3;
-      var a=0.12+Math.abs(c)*0.55;
-      return (c>=0?"rgba(10,125,67,":"rgba(192,43,43,")+a.toFixed(2)+")";
     }
     var holder=el("div");
     var deepStocks=(STOCKS&&STOCKS.stocks)||{};
@@ -1166,9 +1195,12 @@ function build(d){
         sgn(s.avg_chg)+'%</b> <span style="color:var(--muted)">average of '+s.count+' stocks · up '+s.advances+' / down '+s.declines+'</span></div>';
       holder.appendChild(card("Sector", "", [head], 
         {what:"The average move across the sector's members.", source:"NSE bhavcopy prices.", updated:SECTORS.updated?ago(SECTORS.updated):when}));
-      var cols=["symbol","name","close","chg_pct","points","page"];
-      var rows=s.stocks.map(function(m){ return [m.symbol,m.name,m.close,m.chg_pct,m.points,m.deep?"full":"—"]; });
-      var t=table(cols,rows,["close","chg_pct","points"],0,function(row){
+      var cols=["symbol","name","close","chg_pct","points","rsi","trend","pe","mcap","page"];
+      var rows=s.stocks.map(function(m){
+        var rec=bySymbol[m.symbol]||{}, t2=rec.tech||{}, f2=rec.fund||{};
+        return [m.symbol,m.name,m.close,m.chg_pct,m.points,t2.rsi_14,t2.trend,f2.pe,f2.mcap,m.deep?"full":"—"];
+      });
+      var t=table(cols,rows,["close","chg_pct","points","rsi","pe","mcap"],0,function(row){
         var rec=bySymbol[row[0]];
         if(rec) renderDetail(holder, rec, s.name, function(){ detail(s); },
           {tag:s.name, updated:STOCKS&&STOCKS.updated?ago(STOCKS.updated):when, priceSource:"Yahoo Finance daily candles."});
@@ -1176,8 +1208,11 @@ function build(d){
       });
       var notice=el("div");
       holder.appendChild(notice);
-      holder.appendChild(card(s.name+" stocks","biggest gainer first",[t],
-        {what:"Every stock in the sector with its move in percent and points.",source:"NSE bhavcopy.",updated:SECTORS.updated?ago(SECTORS.updated):when}));
+      holder.appendChild(card(s.name+" stocks","biggest gainer first · RSI, trend, P/E and market cap where the stock has a full page",[t],
+        {what:"Every stock in the sector with its move in percent and points, plus technicals and fundamentals for those with a full page.",
+         source:"NSE bhavcopy prices; technicals from Yahoo candles; fundamentals from Yahoo company data.",
+         updated:SECTORS.updated?ago(SECTORS.updated):when,
+         note:"Blank technical columns mean that stock has not been deepened yet - the hub covers a slice of the universe each run."}));
     }
     list(); v.appendChild(holder);
   })();
@@ -1221,9 +1256,155 @@ function build(d){
       {what:"The practical lessons from the cost structure.", source:"Derived from the rates above.", updated:CHARGES.as_of}));
   })();
 
+
+  /* ---------- ETFs ---------- */
+  (function(){
+    var v=sec("etf");
+    if(!ETF || !ETF.rows || !ETF.rows.length){
+      v.appendChild(card("ETFs","",[para("No ETF data yet. The list comes from NSE's own ETF file and is built in the daily pipeline.")],
+        {what:"Every ETF listed on NSE, with technicals.",source:"NSE ETF list + Yahoo prices.",updated:when}));
+      return;
+    }
+    var holder=el("div"), pages=ETF.pages||{};
+    function list(){
+      holder.innerHTML="";
+      var q=el("input"); q.type="search"; q.placeholder="Filter by symbol or underlying…";
+      var field=el("div","field"); field.appendChild(q);
+      var cols=["symbol","name","underlying","close","chg_pct","rsi_14","trend","vol_x"];
+      var rows=ETF.rows.map(function(r){ return [r.symbol,r.name,r.underlying,r.close,r.chg_pct,r.rsi_14,r.trend,r.vol_x]; });
+      var t=table(cols,rows,["close","chg_pct","rsi_14","vol_x"],0,function(row){
+        var rec=pages[row[0]];
+        if(rec) renderDetail(holder, rec, "All ETFs", list, {
+          updated:ETF.updated?ago(ETF.updated):when, priceSource:"Yahoo Finance daily candles.",
+          extra:{title:"ETF", sub:"From the exchange's own list",
+                 pairs:[["Symbol", rec.symbol],["Name", rec.name],["Tracks", rec.underlying]],
+                 what:"What this ETF is and what it tracks.",
+                 source:"NSE ETF list (eq_etfseclist.csv).",
+                 note:"An ETF has no earnings, so there is no P/E or ROE. The comparison that matters is against the thing it tracks - that is why the underlying is shown."}});
+      });
+      holder.appendChild(card("ETFs listed on NSE", ETF.count+" of "+ETF.listed+" with prices and technicals", [field, t],
+        {what:"Every ETF listed on NSE, with the same technical read as a stock.",
+         source:"NSE ETF list (the exchange's own file) + Yahoo Finance prices.",
+         updated:ETF.updated?ago(ETF.updated):when,
+         note:"Technical columns are blank for ETFs whose price history Yahoo does not carry."}));
+      q.addEventListener("input",function(){
+        var v2=(q.value||"").trim().toLowerCase();
+        $$("tbody tr", t).forEach(function(tr){ tr.style.display=(!v2||tr.textContent.toLowerCase().indexOf(v2)>=0)?"":"none"; });
+      });
+    }
+    list(); v.appendChild(holder);
+  })();
+
+  /* ---------- MUTUAL FUNDS ---------- */
+  (function(){
+    var v=sec("mf");
+    if(!MF || !MF.rows || !MF.rows.length){
+      v.appendChild(card("Mutual funds","",
+        [para("No fund data yet. The pipeline pulls NAV history from mfapi.in (which republishes AMFI's own record) and computes the returns; that source is not reachable from every network, so this fills in on the runner."),
+         para(MF&&MF.note?MF.note:"")],
+        {what:"Every scheme's record, and whether it beats the index.",
+         source:"mfapi.in (AMFI NAV history).",updated:when}));
+      return;
+    }
+    var holder=el("div");
+    var bm=MF.benchmarks||{};
+    var state={bench:"", cat:"", house:"", q:""};
+
+    function list(){
+      holder.innerHTML="";
+      var bmText=Object.keys(bm).map(function(k){ return k+" 5y "+(bm[k]["5y"]!=null?sgn(bm[k]["5y"])+"%":"n/a"); }).join(" · ");
+      var bar=el("div","presets");
+      [["","All funds"],["beats_nifty_5y","Beat Nifty over 5y"],["beats_nifty_10y","Beat Nifty over 10y"],
+       ["beats_sensex_5y","Beat Sensex over 5y"],["beats_gold_5y","Beat gold over 5y"]].forEach(function(b){
+        var btn=el("button","small"+(state.bench===b[0]?" primary":""),b[1]);
+        btn.addEventListener("click",function(){ state.bench=b[0]; list(); });
+        bar.appendChild(btn);
+      });
+      var cats=[""].concat(Array.from(new Set(MF.rows.map(function(r){return r.category;}).filter(Boolean))).sort());
+      var sel=el("select");
+      sel.style.cssText="font:inherit;font-size:13.5px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text)";
+      cats.forEach(function(c){ var o=el("option","",esc(c||"All categories")); o.value=c; if(c===state.cat) o.selected=true; sel.appendChild(o); });
+      var q=el("input"); q.type="search"; q.placeholder="Filter by name or fund house…"; q.value=state.q;
+      var field=el("div","field"); field.appendChild(sel); field.appendChild(q);
+
+      var ql=state.q.trim().toLowerCase();
+      var rows=MF.rows.filter(function(r){
+        if(state.bench && r[state.bench]!==true) return false;
+        if(state.cat && r.category!==state.cat) return false;
+        if(ql){ var h=(r.name+" "+(r.fund_house||"")).toLowerCase(); if(h.indexOf(ql)<0) return false; }
+        return true;
+      });
+      var cols=["name","fund_house","category","nav","r1y","r3y","r5y","r10y","max_dd","vol","beats_nifty_5y"];
+      var tr=rows.map(function(r){ return [r.name,r.fund_house,r.category,r.nav,r.r1y,r.r3y,r.r5y,r.r10y,r.max_dd,r.vol,r.beats_nifty_5y===true?"yes":(r.beats_nifty_5y===false?"no":"—")]; });
+      var t=table(cols,tr,["nav","r1y","r3y","r5y","r10y","max_dd","vol"],0,function(row){
+        var rec=MF.rows.filter(function(x){ return x.name===row[0]; })[0];
+        if(rec) detail(rec);
+      });
+      holder.appendChild(card("Mutual funds",
+        rows.length+" of "+MF.count+" schemes"+(bmText?(" · benchmarks: "+bmText):""),
+        [bar, field, t,
+         para("Returns are annualised (CAGR) from NAV history. Max drawdown is the deepest fall from a peak. 'Beats Nifty' compares the same window against the index, before the fund's own expense ratio is deducted - so treat it as a starting point, not a verdict.")],
+        {what:"Every scheme's NAV record, its returns over 1/3/5/10 years, its worst drawdown, and whether it beat Nifty, Sensex or gold over the same window.",
+         source:"mfapi.in, which republishes AMFI's NAV history; benchmarks from Yahoo Finance.",
+         updated:MF.updated?ago(MF.updated):when,
+         note:MF.note||""}));
+      sel.addEventListener("change",function(){ state.cat=sel.value; list(); });
+      q.addEventListener("input",function(){ state.q=q.value; list(); q.focus(); });
+    }
+
+    function detail(r){
+      holder.innerHTML="";
+      var back=el("button","small back","← All funds");
+      back.addEventListener("click", list);
+      holder.appendChild(back);
+      var head=el("div","");
+      head.innerHTML='<div style="font-size:18px;font-weight:700">'+esc(r.name)+'</div>'+
+        '<div style="color:var(--muted);font-size:14px;margin-top:3px">'+esc(r.fund_house||"")+
+        (r.category?' · '+esc(r.category):'')+'</div>'+
+        '<div style="margin-top:6px"><b style="font-size:24px">'+num(r.nav)+'</b> <span style="color:var(--muted)">NAV on '+esc(r.nav_date)+'</span></div>';
+      holder.appendChild(card("Scheme","",[head,
+        kv([["Fund house", r.fund_house],["Category", r.category],["Type", r.type],
+            ["NAV", r.nav],["NAV date", r.nav_date],["History since", r.first_nav_date],
+            ["Years of record", r.years]])],
+        {what:"Scheme identity and the latest NAV.", source:"mfapi.in (AMFI NAV history).", updated:MF.updated?ago(MF.updated):when}));
+
+      holder.appendChild(card("Record","annualised returns",[
+        table(["window","return %"], [["1 year",r.r1y],["3 years",r.r3y],["5 years",r.r5y],["10 years",r.r10y]], ["return %"]),
+        kv([["Max drawdown %", r.max_dd],["Volatility %", r.vol]])],
+        {what:"Annualised (CAGR) returns over each window, the worst fall from a peak, and annualised volatility.",
+         source:"Computed from the NAV history.", updated:MF.updated?ago(MF.updated):when,
+         note:"A blank window means the fund is younger than that period - we show nothing rather than a number that would be wrong."}));
+
+      var cmp=[];
+      Object.keys(bm).forEach(function(k){
+        var b=bm[k]||{};
+        cmp.push([k, b["5y"], r.r5y, (r["beats_"+k+"_5y"]===true?"yes":(r["beats_"+k+"_5y"]===false?"no":"—"))]);
+      });
+      holder.appendChild(card("Against the index","same window, 5 years",
+        [table(["benchmark","index 5y %","fund 5y %","fund beats?"], cmp, ["index 5y %","fund 5y %"]),
+         para("This compares gross returns. A fund's expense ratio is deducted from your money every year, so a fund that beats the index by 0.3% gross may still lag it net. Check the expense ratio before deciding.")],
+        {what:"The fund's 5-year return next to Nifty, Sensex and gold over the same period.",
+         source:"Fund returns computed from NAV history; benchmarks from Yahoo Finance.", updated:MF.updated?ago(MF.updated):when}));
+
+      holder.appendChild(card("Not shown, and why","",
+        [para("Fund manager names, CEO names and AMC ownership are not available from any free structured source. AMFI's feeds do not carry them and neither does mfapi.in. Getting them would mean scraping 40+ AMC websites, which breaks constantly and would leave you reading a field that is silently stale."),
+         para("So they are left out rather than guessed. If you want them, the honest routes are a paid data vendor or entering them by hand.")],
+        {what:"A deliberate omission.", source:"-", updated:MF.updated?ago(MF.updated):when}));
+    }
+    list(); v.appendChild(holder);
+  })();
+
   renderTabs();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
+}
+
+/* shared heat-map colour: green up, red down, deeper for bigger moves, capped so one
+   outlier does not wash out the whole map */
+function heatColour(p){
+  var c=Math.max(-3, Math.min(3, p||0))/3;
+  var a=0.12+Math.abs(c)*0.55;
+  return (c>=0?"rgba(10,125,67,":"rgba(192,43,43,")+a.toFixed(2)+")";
 }
 
 /* ---------- Google-style search ---------- */
@@ -1319,7 +1500,7 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 
 /* ---------- load ---------- */
 var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")p=p.replace(/[^/]*$/,"");return p;})();
-var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null, CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null;
+var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null, CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null;
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}  // site works without these
 Promise.all([
@@ -1334,11 +1515,13 @@ Promise.all([
   optional(BASE+"config.json"),
   optional(BASE+"indices.json"),
   optional(BASE+"sectors.json"),
-  optional(BASE+"charges.json")
+  optional(BASE+"charges.json"),
+  optional(BASE+"mf.json"),
+  optional(BASE+"etf.json")
 ])
   .then(function(res){var d=res[0];STOCKS=res[1];UNIVERSE=res[2];CRYPTO=res[3];GLOBAL=res[4];
     SCREENER=res[5];SEARCH=res[6];LEARN=res[7];CONFIG=res[8]||{};
-    INDICES=res[9];SECTORS=res[10];CHARGES=res[11];
+    INDICES=res[9];SECTORS=res[10];CHARGES=res[11];MF=res[12];ETF=res[13];
     build(d);$("#stamp").textContent="Updated "+(d.generated_utc||"—")+" · "+ago(d.generated_utc);})
   .catch(function(e){
     $("#stamp").textContent="No data";

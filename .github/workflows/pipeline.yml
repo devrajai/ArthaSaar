@@ -126,6 +126,9 @@ jobs:
       - name: "7m2b. ETF pages (all NSE-listed ETFs)"
         run: python scripts/build_etf_pages.py || true
 
+      - name: "7m2c0. Benchmark history for the fund comparison (10y)"
+        run: python scripts/fetch_yahoo.py --symbols "^NSEI" "^BSESN" "GC=F" --period 10y || true
+
       - name: "7m2c. Mutual funds (NAV record + benchmark comparison)"
         run: python scripts/fetch_mutual_funds.py --limit 400 || true
 

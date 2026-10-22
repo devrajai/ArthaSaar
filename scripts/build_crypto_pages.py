@@ -209,22 +209,42 @@ def main() -> int:
     ap.add_argument("--config", default="config/crypto_symbols.json")
     ap.add_argument("--yahoo-dir", default="data/crypto/yahoo")
     ap.add_argument("--out", default="docs/crypto.json")
-    ap.add_argument("--top", type=int, default=100)
+    ap.add_argument("--top", type=int, default=250, help="how many coins to build (0 = all CoinGecko returns)")
     ap.add_argument("--period", default="2y")
     ap.add_argument("--no-fetch", action="store_true")
     args = ap.parse_args()
 
-    coins = load_coins(args.config, args.top)
-    if not coins:
-        print(f"no coins in {args.config}")
-        return 0
+    coins = load_coins(args.config, 0) or []
+    cfg_names = {c["symbol"]: c.get("name") for c in coins}
     print(f"coins configured: {len(coins)}")
+
+    # CoinGecko ranks every listed coin by market cap, so use it as the universe when
+    # it is reachable - that is what makes this "all listed" rather than a hand list.
+    gecko_list = gecko_markets()
+    if gecko_list:
+        ranked = sorted(gecko_list.items(), key=lambda kv: (kv[1].get("rank") or 10 ** 9))
+        want = args.top if args.top else 250
+        from_list = []
+        for sym, info in ranked[:want]:
+            if not sym.isalnum():
+                continue
+            from_list.append({"symbol": sym, "name": info.get("name") or cfg_names.get(sym) or sym,
+                              "yahoo": sym + "-USD"})
+        if len(from_list) > len(coins):
+            print(f"  CoinGecko universe: {len(from_list)} coins (supersedes the config list)")
+            coins = from_list
+    if not coins:
+        print(f"no coins available (config empty and CoinGecko unreachable)")
+        return 0
+    if args.top:
+        coins = coins[:args.top]
+    print(f"coins to build: {len(coins)}")
 
     ydir = Path(args.yahoo_dir)
     if not args.no_fetch:
         fetch_history(coins, ydir, args.period)
 
-    gecko = gecko_markets()
+    gecko = gecko_list
     print(f"  CoinGecko enrichment: {len(gecko)} coins" if gecko else "  CoinGecko: unreachable (fine)")
     bnc = binance_24h()
     print(f"  Binance enrichment : {len(bnc)} pairs" if bnc else "  Binance: unreachable (fine)")

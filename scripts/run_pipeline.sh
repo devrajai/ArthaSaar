@@ -107,6 +107,12 @@ run python scripts/build_spikes.py || true
 step "7m1. Full listed universe (all NSE symbols)"
 run python scripts/build_universe.py || true
 
+step "7m1b. Indices (constituents + points)"
+run python scripts/build_indices.py || true
+
+step "7m1c. Sector heat map"
+run python scripts/build_sectors.py || true
+
 step "7m2. Stock pages - deepen a slice of the universe"
 run python scripts/build_stock_pages.py --rotate 300 || true
 

@@ -139,7 +139,18 @@ run python scripts/fetch_shareholding.py || true
 run python scripts/fetch_ipo.py || true
 run python scripts/fetch_sebi.py || true
 run python scripts/build_etf_premium.py || true
+run python scripts/build_relative_strength.py || true
+run python scripts/build_seasonality.py || true
+run python scripts/build_correlation.py || true
+run python scripts/fetch_watchlists.py || true
+run python scripts/fetch_deals.py || true
+run python scripts/fetch_insider.py || true
+run python scripts/build_market_status.py || true
 run python scripts/build_site_data.py || true
+run python scripts/build_daily_brief.py || true
+run python scripts/build_calendar.py || true
+run python scripts/build_feed.py || true
+run python scripts/build_seo_pages.py || true
 
 step "8. Google Drive archive (if configured)"
 if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${ARTHASAAR_DRIVE_FOLDER:-}" ]; then

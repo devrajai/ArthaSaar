@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-22T19:07:28Z",
+  "generated_utc": "2026-10-22T20:51:07Z",
   "fno": {
     "date": "2026-10-22",
     "pcr": {
@@ -374,12 +374,6 @@
           "Artemis Electricals and Projects Limited"
         ],
         [
-          "ANGELONE",
-          "Interim Dividend - Rs 1.40 Per Share",
-          "2026-10-22",
-          "Angel One Limited"
-        ],
-        [
           "BEPL",
           "Interim Dividend - Re 1 Per Share",
           "2026-10-23",
@@ -432,15 +426,9 @@
           "Interim Dividend - Rs  15 Per Share",
           "2026-10-23",
           "Tech Mahindra Limited"
-        ],
-        [
-          "TIPSMUSIC",
-          "Interim Dividend - Rs 6.50 Per Share",
-          "2026-10-22",
-          "Tips Music Limited"
         ]
       ],
-      "total": 13
+      "total": 11
     },
     "split": {
       "columns": [
@@ -455,15 +443,9 @@
           "Face Value Split (Sub-Division) - From Rs 10/- Per Share To Rs 2/- Per Share",
           "2026-10-23",
           "Azad India Mobility Limited"
-        ],
-        [
-          "JSWDULUX",
-          "Face Value Split (Sub-Division) - From Rs 10/- Per Share To Re 1/- Per Share",
-          "2026-10-22",
-          "JSW Dulux Limited"
         ]
       ],
-      "total": 2
+      "total": 1
     },
     "other": {
       "columns": [
@@ -478,16 +460,343 @@
           "Interest Payment",
           "2026-10-23",
           "GOVERNMENT OF INDIA"
-        ],
-        [
-          "VRLLOG",
-          "Buy Back",
-          "2026-10-22",
-          "VRL Logistics Limited"
         ]
       ],
-      "total": 2
+      "total": 1
     }
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^NSEI",
+        22811.3496,
+        -0.34,
+        "2026-10-21"
+      ],
+      [
+        "^BSESN",
+        73709.6875,
+        -0.19,
+        "2026-10-21"
+      ]
+    ],
+    "total": 2
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        4037.2,
+        -2.72,
+        "2026-10-22"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "ADA-USD",
+        0.2106,
+        -6.37,
+        "2026-10-22"
+      ],
+      [
+        "AVAX-USD",
+        9.075,
+        -5.94,
+        "2026-10-22"
+      ],
+      [
+        "LINK-USD",
+        11.88,
+        -4.84,
+        "2026-10-22"
+      ],
+      [
+        "XRP-USD",
+        1.2978,
+        -4.83,
+        "2026-10-22"
+      ],
+      [
+        "DOGE-USD",
+        0.0783,
+        -4.41,
+        "2026-10-22"
+      ],
+      [
+        "ETH-USD",
+        2379.1899,
+        -3.71,
+        "2026-10-22"
+      ],
+      [
+        "SOL-USD",
+        103.05,
+        -3.51,
+        "2026-10-22"
+      ],
+      [
+        "BTC-USD",
+        81181.5391,
+        -3.37,
+        "2026-10-22"
+      ],
+      [
+        "BNB-USD",
+        729.0,
+        -2.26,
+        "2026-10-22"
+      ],
+      [
+        "TRX-USD",
+        0.3276,
+        -0.9,
+        "2026-10-22"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "US stocks today: Nasdaq slumps 2.5%, S&amp;P 1% as revived AI doubts ignite tech selloff",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-nasdaq-slumps-2-5-sp-1-as-revived-ai-doubts-ignite-tech-selloff/articleshow/135127224.cms",
+        "Fri, 23 Oct 2026 01:45:19 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Moderna stock crashes 25%, loses about $24 billion after cancer vaccine data leak",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/moderna-shares-plummet-25-loses-about-24-billion-after-cancer-vaccine-data-leak/articleshow/135127206.cms",
+        "Fri, 23 Oct 2026 01:41:53 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Treasuries see best day in over a year as AI selloff revives haven demand",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/treasuries-eye-best-day-in-over-a-year-as-ai-selloff-revives-haven-demand/articleshow/135126406.cms",
+        "Fri, 23 Oct 2026 00:33:07 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Neocloud short sellers rack up $6 billion as AI debt fears deepen",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/neocloud-short-sellers-rack-up-6-billion-as-ai-debt-fears-deepen/articleshow/135123634.cms",
+        "Thu, 22 Oct 2026 22:43:04 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Pershing's Ackman sees a $1 trillion Israeli company within a decade",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/pershings-ackman-sees-a-1-trillion-israeli-company-within-a-decade/articleshow/135123317.cms",
+        "Thu, 22 Oct 2026 22:26:49 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Average long-term US mortgage rate eases to 7.32% in first pullback since late August",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/average-long-term-us-mortgage-rate-eases-to-7-32-in-first-pullback-since-late-august/articleshow/135123287.cms",
+        "Thu, 22 Oct 2026 22:22:07 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Ahead of Market: 10 things that will decide stock market action on Friday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-friday/articleshow/135122517.cms",
+        "Thu, 22 Oct 2026 21:33:41 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Yes Bank unlikely to pay AT1 bond coupons despite bond holders demand, sources say",
+        "https://economictimes.indiatimes.com/markets/stocks/news/yes-bank-unlikely-to-pay-at1-bond-coupons-despite-bond-holders-demand-sources-say/articleshow/135122504.cms",
+        "Thu, 22 Oct 2026 21:31:43 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi warns investors against WhatsApp stock tips. Here's how you can avoid such traps",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-warns-investors-against-whatsapp-stock-tips-heres-how-you-can-avoid-such-traps/articleshow/135121957.cms",
+        "Thu, 22 Oct 2026 20:47:48 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic IPO stands alone as AI market jitters sideline others",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-ipo-stands-alone-as-ai-market-jitters-sideline-others/articleshow/135121938.cms",
+        "Thu, 22 Oct 2026 20:46:29 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "NCDEX launches NDEX and FINNDEX to expand into equity benchmarks",
+        "https://economictimes.indiatimes.com/markets/stocks/news/ncdex-launches-ndex-and-finndex-to-expand-into-equity-benchmarks/articleshow/135121233.cms",
+        "Thu, 22 Oct 2026 19:55:22 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "CreditAccess Grameen Q2 profit jumps fourfold to Rs 502 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/creditaccess-grameen-q2-profit-jumps-fourfold-to-rs-502-crore/articleshow/135121186.cms",
+        "Thu, 22 Oct 2026 19:52:46 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Tesla shares slip as capex cut clouds Musk\u2019s AI, robotics ambitions",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/tesla-shares-slip-after-capex-cut-raises-doubts-over-musks-ai-and-robotics-push/articleshow/135121152.cms",
+        "Thu, 22 Oct 2026 19:48:54 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Kolkata home registrations dip 12 per cent in Jan-Sep; larger flats gain share",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/kolkata-home-registrations-dip-12-per-cent-in-jan-sep-larger-flats-gain-share/articleshow/135121131.cms",
+        "Thu, 22 Oct 2026 19:47:16 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Hatsun Agro Product Q2 Results: Profit rises 5.6% on strong sales",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/hatsun-agro-product-q2-results-profit-rises-5-6-on-strong-sales/articleshow/135121117.cms",
+        "Thu, 22 Oct 2026 19:45:28 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks today: US stocks slide as AI spending jitters hit Nasdaq, oil prices rebound",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-lower-as-ai-jitters-return-oil-rises/articleshow/135120582.cms",
+        "Thu, 22 Oct 2026 19:09:36 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Record galore! Jio IPO claims crown for highest QIB demand among India\u2019s 5 largest issues, edges past NSE",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/record-galore-jio-ipo-claims-crown-for-highest-qib-demand-among-indias-5-largest-issues-edges-past-nse/articleshow/135120259.cms",
+        "Thu, 22 Oct 2026 18:51:18 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks 2026: Moderna, SanDisk lead top 10 gainers delivering up to 734% returns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-2026-moderna-sandisk-lead-top-10-gainers-delivering-up-to-734-returns/articleshow/135119576.cms",
+        "Thu, 22 Oct 2026 18:16:47 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "SoFi targets idle crypto cash with interest-bearing tokenized deposit",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/sofi-targets-idle-crypto-cash-with-interest-bearing-tokenized-deposit/articleshow/135119511.cms",
+        "Thu, 22 Oct 2026 18:15:03 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Colgate-Palmolive India Q2 Results: Profit rises 4.3% to Rs 341.6 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/colgate-palmolive-india-q2-results-profit-rises-4-3-to-rs-341-6-crore/articleshow/135119461.cms",
+        "Thu, 22 Oct 2026 18:12:38 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi allows margin relief against early pay-in of securities for subsequent trades",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-allows-margin-relief-against-early-pay-in-of-securities-for-subsequent-trades/articleshow/135119438.cms",
+        "Thu, 22 Oct 2026 18:11:10 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Meta falls as investors balance Muse growth with rising AI costs",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/meta-falls-as-investors-balance-muse-growth-with-rising-ai-costs/articleshow/135119388.cms",
+        "Thu, 22 Oct 2026 18:09:28 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Union Pacific's third-quarter profit rises on pricing strength",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/union-pacifics-third-quarter-profit-rises-on-pricing-strength/articleshow/135119313.cms",
+        "Thu, 22 Oct 2026 18:06:30 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "HPCL Q2 Results: Profit slips 6% YoY to Rs 3,625 crore, revenue jumps 26%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/hpcl-q2-results-profit-slips-6-yoy-to-rs-3625-crore-revenue-jumps-26/articleshow/135119002.cms",
+        "Thu, 22 Oct 2026 17:54:02 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Mahindra Lifespace Q2 profit down 66 pc to Rs 16 cr",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/mahindra-lifespace-q2-profit-down-66-pc-to-rs-16-cr/articleshow/135118930.cms",
+        "Thu, 22 Oct 2026 17:51:29 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Indian bonds tumble on oil surge, RBI rate hike fears",
+        "https://economictimes.indiatimes.com/markets/bonds/indian-bonds-tumble-on-oil-surge-rbi-rate-hike-fears/articleshow/135118875.cms",
+        "Thu, 22 Oct 2026 17:50:06 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "India's JSW Paints eyes 4, 5-year debt to refinance acquisition-led funding, bankers say",
+        "https://economictimes.indiatimes.com/markets/bonds/indias-jsw-paints-eyes-4-5-year-debt-to-refinance-acquisition-led-funding-bankers-say/articleshow/135118523.cms",
+        "Thu, 22 Oct 2026 17:48:22 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Dow Jones| Nasdaq | S&amp;P 500 | US Stock Market Today |Highlights: Nasdaq slumps 2.5%, S&amp;P 1% as revived AI doubts ignite tech selloff",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-stock-market-live-updates-nasdaq-sp-500-us-iran-israel-war-hormuz-deal-brent-crude-oil-earnings-forecast-ai-stocks-nvidia-tesla-meta-stock-price-news-22nd-october-2026/liveblog/135118971.cms",
+        "Thu, 22 Oct 2026 17:45:35 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Market wrap: Bajaj Finance, Cipla, Nestle India, Eternal top gainers and losers on Nifty and Sensex on Thursday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-bajaj-finance-cipla-nestle-india-eternal-top-gainers-and-losers-on-nifty-and-sensex-on-thursday/articleshow/135117923.cms",
+        "Thu, 22 Oct 2026 17:22:31 +0530",
+        "2026-10-22T20:44:41Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: Japanese banks see rising corporate loan demand ahead of BOJ meeting",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-japanese-banks-see-rising-corporate-loan-demand-ahead-of-boj-meeting/articleshow/135117826.cms",
+        "Thu, 22 Oct 2026 17:10:20 +0530",
+        "2026-10-22T20:44:41Z"
+      ]
+    ],
+    "total": 147
   },
   "archive": {
     "files": 11,
@@ -1157,349 +1466,6 @@
     ],
     "total": 13
   },
-  "daily": {
-    "as_of": "2026-10-22T19:07:28Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-22 (11 files, 7 days)",
-      "Nifty PCR 0.88 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "Corporate actions: 13 dividends, 2 splits",
-      "211 videos across 10 channels"
-    ]
-  },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^BSESN",
-        73249.3906,
-        -0.62,
-        "2026-10-22"
-      ],
-      [
-        "^NSEI",
-        22687.6504,
-        -0.54,
-        "2026-10-22"
-      ]
-    ],
-    "total": 2
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        4057.6001,
-        -2.23,
-        "2026-10-22"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "ADA-USD",
-        0.2114,
-        -6.05,
-        "2026-10-22"
-      ],
-      [
-        "AVAX-USD",
-        9.109,
-        -5.59,
-        "2026-10-22"
-      ],
-      [
-        "LINK-USD",
-        11.86,
-        -5.0,
-        "2026-10-22"
-      ],
-      [
-        "DOGE-USD",
-        0.0782,
-        -4.49,
-        "2026-10-22"
-      ],
-      [
-        "XRP-USD",
-        1.3038,
-        -4.39,
-        "2026-10-22"
-      ],
-      [
-        "ETH-USD",
-        2375.2,
-        -3.87,
-        "2026-10-22"
-      ],
-      [
-        "BTC-USD",
-        81016.6016,
-        -3.57,
-        "2026-10-22"
-      ],
-      [
-        "SOL-USD",
-        103.37,
-        -3.21,
-        "2026-10-22"
-      ],
-      [
-        "BNB-USD",
-        727.98,
-        -2.4,
-        "2026-10-22"
-      ],
-      [
-        "TRX-USD",
-        0.3279,
-        -0.8,
-        "2026-10-22"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "Pershing's Ackman sees a $1 trillion Israeli company within a decade",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/pershings-ackman-sees-a-1-trillion-israeli-company-within-a-decade/articleshow/135123317.cms",
-        "Thu, 22 Oct 2026 22:26:49 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Average long-term US mortgage rate eases to 7.32% in first pullback since late August",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/average-long-term-us-mortgage-rate-eases-to-7-32-in-first-pullback-since-late-august/articleshow/135123287.cms",
-        "Thu, 22 Oct 2026 22:22:07 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Ahead of Market: 10 things that will decide stock market action on Friday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-friday/articleshow/135122517.cms",
-        "Thu, 22 Oct 2026 21:33:41 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Yes Bank unlikely to pay AT1 bond coupons despite bond holders demand, sources say",
-        "https://economictimes.indiatimes.com/markets/stocks/news/yes-bank-unlikely-to-pay-at1-bond-coupons-despite-bond-holders-demand-sources-say/articleshow/135122504.cms",
-        "Thu, 22 Oct 2026 21:31:43 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Sebi warns investors against WhatsApp stock tips. Here's how you can avoid such traps",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-warns-investors-against-whatsapp-stock-tips-heres-how-you-can-avoid-such-traps/articleshow/135121957.cms",
-        "Thu, 22 Oct 2026 20:47:48 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic IPO stands alone as AI market jitters sideline others",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-ipo-stands-alone-as-ai-market-jitters-sideline-others/articleshow/135121938.cms",
-        "Thu, 22 Oct 2026 20:46:29 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "NCDEX launches NDEX and FINNDEX to expand into equity benchmarks",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ncdex-launches-ndex-and-finndex-to-expand-into-equity-benchmarks/articleshow/135121233.cms",
-        "Thu, 22 Oct 2026 19:55:22 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "CreditAccess Grameen Q2 profit jumps fourfold to Rs 502 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/creditaccess-grameen-q2-profit-jumps-fourfold-to-rs-502-crore/articleshow/135121186.cms",
-        "Thu, 22 Oct 2026 19:52:46 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Tesla shares slip as capex cut clouds Musk\u2019s AI, robotics ambitions",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/tesla-shares-slip-after-capex-cut-raises-doubts-over-musks-ai-and-robotics-push/articleshow/135121152.cms",
-        "Thu, 22 Oct 2026 19:48:54 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Kolkata home registrations dip 12 per cent in Jan-Sep; larger flats gain share",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/kolkata-home-registrations-dip-12-per-cent-in-jan-sep-larger-flats-gain-share/articleshow/135121131.cms",
-        "Thu, 22 Oct 2026 19:47:16 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Hatsun Agro Product Q2 Results: Profit rises 5.6% on strong sales",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/hatsun-agro-product-q2-results-profit-rises-5-6-on-strong-sales/articleshow/135121117.cms",
-        "Thu, 22 Oct 2026 19:45:28 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks today: US stocks slide as AI spending jitters hit Nasdaq, oil prices rebound",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-lower-as-ai-jitters-return-oil-rises/articleshow/135120582.cms",
-        "Thu, 22 Oct 2026 19:09:36 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Record galore! Jio IPO claims crown for highest QIB demand among India\u2019s 5 largest issues, edges past NSE",
-        "https://economictimes.indiatimes.com/markets/ipos/fpos/record-galore-jio-ipo-claims-crown-for-highest-qib-demand-among-indias-5-largest-issues-edges-past-nse/articleshow/135120259.cms",
-        "Thu, 22 Oct 2026 18:51:18 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks 2026: Moderna, SanDisk lead top 10 gainers delivering up to 734% returns",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-2026-moderna-sandisk-lead-top-10-gainers-delivering-up-to-734-returns/articleshow/135119576.cms",
-        "Thu, 22 Oct 2026 18:16:47 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "SoFi targets idle crypto cash with interest-bearing tokenized deposit",
-        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/sofi-targets-idle-crypto-cash-with-interest-bearing-tokenized-deposit/articleshow/135119511.cms",
-        "Thu, 22 Oct 2026 18:15:03 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Colgate-Palmolive India Q2 Results: Profit rises 4.3% to Rs 341.6 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/colgate-palmolive-india-q2-results-profit-rises-4-3-to-rs-341-6-crore/articleshow/135119461.cms",
-        "Thu, 22 Oct 2026 18:12:38 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Sebi allows margin relief against early pay-in of securities for subsequent trades",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-allows-margin-relief-against-early-pay-in-of-securities-for-subsequent-trades/articleshow/135119438.cms",
-        "Thu, 22 Oct 2026 18:11:10 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Meta falls as investors balance Muse growth with rising AI costs",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/meta-falls-as-investors-balance-muse-growth-with-rising-ai-costs/articleshow/135119388.cms",
-        "Thu, 22 Oct 2026 18:09:28 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Union Pacific's third-quarter profit rises on pricing strength",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/union-pacifics-third-quarter-profit-rises-on-pricing-strength/articleshow/135119313.cms",
-        "Thu, 22 Oct 2026 18:06:30 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "HPCL Q2 Results: Profit slips 6% YoY to Rs 3,625 crore, revenue jumps 26%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/hpcl-q2-results-profit-slips-6-yoy-to-rs-3625-crore-revenue-jumps-26/articleshow/135119002.cms",
-        "Thu, 22 Oct 2026 17:54:02 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Mahindra Lifespace Q2 profit down 66 pc to Rs 16 cr",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/mahindra-lifespace-q2-profit-down-66-pc-to-rs-16-cr/articleshow/135118930.cms",
-        "Thu, 22 Oct 2026 17:51:29 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Indian bonds tumble on oil surge, RBI rate hike fears",
-        "https://economictimes.indiatimes.com/markets/bonds/indian-bonds-tumble-on-oil-surge-rbi-rate-hike-fears/articleshow/135118875.cms",
-        "Thu, 22 Oct 2026 17:50:06 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "India's JSW Paints eyes 4, 5-year debt to refinance acquisition-led funding, bankers say",
-        "https://economictimes.indiatimes.com/markets/bonds/indias-jsw-paints-eyes-4-5-year-debt-to-refinance-acquisition-led-funding-bankers-say/articleshow/135118523.cms",
-        "Thu, 22 Oct 2026 17:48:22 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Dow Jones| Nasdaq | S&amp;P 500 | US Stock Market Today |Live Updates: Nasdaq crashes 2% as AI, oil risks drive flight to bonds",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-stock-market-live-updates-nasdaq-sp-500-us-iran-israel-war-hormuz-deal-brent-crude-oil-earnings-forecast-ai-stocks-nvidia-tesla-meta-stock-price-news-22nd-october-2026/liveblog/135118971.cms",
-        "Thu, 22 Oct 2026 17:45:35 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Market wrap: Bajaj Finance, Cipla, Nestle India, Eternal top gainers and losers on Nifty and Sensex on Thursday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-bajaj-finance-cipla-nestle-india-eternal-top-gainers-and-losers-on-nifty-and-sensex-on-thursday/articleshow/135117923.cms",
-        "Thu, 22 Oct 2026 17:22:31 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: Japanese banks see rising corporate loan demand ahead of BOJ meeting",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-japanese-banks-see-rising-corporate-loan-demand-ahead-of-boj-meeting/articleshow/135117826.cms",
-        "Thu, 22 Oct 2026 17:10:20 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "UBS acquires 4.8% stake in wealth manager 360 ONE WAM through warrant exercise",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ubs-acquires-4-8-stake-in-wealth-manager-360-one-wam-through-warrant-exercise/articleshow/135117719.cms",
-        "Thu, 22 Oct 2026 17:06:13 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: Why China could complicate Musk\u2019s Tesla-SpaceX merger plans",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-why-china-could-complicate-musks-tesla-spacex-merger-plans/articleshow/135117449.cms",
-        "Thu, 22 Oct 2026 16:54:12 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Adani Total Gas Q2 Results: Net profit rises 6% YoY to Rs 173 crore, revenue jumps 34%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-total-gas-q2-results-net-profit-rises-6-yoy-to-rs-173-crore-revenue-jumps-34/articleshow/135115540.cms",
-        "Thu, 22 Oct 2026 16:19:46 +0530",
-        "2026-10-22T18:09:42Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: China's Lingjun Investment attracts $300 million from overseas investors",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-chinas-lingjun-investment-attracts-300-million-from-overseas-investors/articleshow/135116219.cms",
-        "Thu, 22 Oct 2026 16:06:44 +0530",
-        "2026-10-22T18:09:42Z"
-      ]
-    ],
-    "total": 161
-  },
   "quality": {
     "rows": 23822,
     "symbols": 4477,
@@ -1565,6 +1531,17 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
+  },
+  "daily": {
+    "as_of": "2026-10-22T20:51:07Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-22 (11 files, 7 days)",
+      "Nifty PCR 0.88 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 11 dividends, 1 split",
+      "211 videos across 10 channels",
+      "147 news headlines"
+    ]
   },
   "fx": {
     "columns": [

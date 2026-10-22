@@ -231,6 +231,29 @@ $("#themeBtn").addEventListener("click",function(){
 });
 
 /* ---------- builders ---------- */
+/* Any card holding a table gets a Download CSV button - one place, so every table
+   in the site can be exported. */
+function tableToCsv(tbl){
+  var out=[], trs=tbl.querySelectorAll("tr");
+  for(var i=0;i<trs.length;i++){
+    var cells=trs[i].querySelectorAll("th,td"), row=[];
+    for(var j=0;j<cells.length;j++){
+      var t=(cells[j].textContent||"").replace(/\s+/g," ").trim().replace(/[\u2195\u2191\u2193]/g,"");
+      row.push('"'+t.replace(/"/g,'""')+'"');
+    }
+    out.push(row.join(","));
+  }
+  return out.join("\n");
+}
+function downloadCsv(tbl, name){
+  var blob=new Blob([tableToCsv(tbl)],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=(name||"arthasaar")+".csv";
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
 function card(title, sub, kids, info){
   var c=el("div","card");
   var head=el("div","cardhead");
@@ -244,6 +267,17 @@ function card(title, sub, kids, info){
   }
   c.appendChild(head);
   (kids||[]).forEach(function(k){if(k)c.appendChild(k);});
+  // Export button, only where there is actually a table to export. Added after the
+  // children so the lookup can see them.
+  var tblInCard=c.querySelector("table");
+  if(tblInCard){
+    var csvb=el("button","ibtn","CSV");
+    csvb.title="Download this table as CSV";
+    csvb.addEventListener("click",function(){
+      downloadCsv(tblInCard, String(title||"table").replace(/[^a-z0-9]+/gi,"_").toLowerCase());
+    });
+    head.appendChild(csvb);
+  }
   if(info){
     var rows=[["What",""],["Source",""],["Updated",""]];
     c.appendChild(el("div","info",
@@ -456,6 +490,7 @@ var SECTIONS=[
   {id:"news",      label:"News"},
   {id:"corporate", label:"Corporate"},
   {id:"youtube",   label:"YouTube"},
+  {id:"tools",     label:"Tools"},
   {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
   {id:"data",      label:"Data"}
@@ -1392,6 +1427,178 @@ function build(d){
         {what:"A deliberate omission.", source:"-", updated:MF.updated?ago(MF.updated):when}));
     }
     list(); v.appendChild(holder);
+  })();
+
+
+  /* ---------- TOOLS (calculators, all in the browser) ---------- */
+  (function(){
+    var v=sec("tools");
+
+    /* ---- 1. position size and risk/reward ---- */
+    (function(){
+      var cap=el("input"); cap.type="number"; cap.value="100000";
+      var risk=el("input"); risk.type="number"; risk.value="1";
+      var entry=el("input"); entry.type="number"; entry.value="1000";
+      var stop=el("input"); stop.type="number"; stop.value="950";
+      var target=el("input"); target.type="number"; target.value="1100";
+      var out=el("div","kv");
+      function calc(){
+        var C=+cap.value||0, R=(+risk.value||0)/100, E=+entry.value||0, S=+stop.value||0, T=+target.value||0;
+        var riskPerShare=Math.abs(E-S);
+        var riskAmt=C*R;
+        var qty=riskPerShare>0?Math.floor(riskAmt/riskPerShare):0;
+        var cost=qty*E;
+        var rr=(riskPerShare>0&&T)?(Math.abs(T-E)/riskPerShare):null;
+        var rows=[
+          ["Capital", num(C)],
+          ["Risk per trade", (R*100).toFixed(2)+"% = "+num(riskAmt)],
+          ["Risk per share", riskPerShare?num(riskPerShare):"set a stop"],
+          ["Quantity to buy", qty?num(qty):"0"],
+          ["Position value", num(cost)],
+          ["Capital used", C?(100*cost/C).toFixed(1)+"%":"-"],
+          ["Reward : risk", rr?rr.toFixed(2)+" : 1":"-"]
+        ];
+        out.innerHTML="";
+        rows.forEach(function(r){ out.appendChild(el("div","",'<b>'+esc(r[0])+'</b>'+r[1])); });
+        var warn="";
+        if(cost>C) warn="That position is larger than your capital - lower the risk % or widen the stop.";
+        else if(rr!==null && rr<1.5) warn="Reward-to-risk below 1.5:1. You would need a high win rate to make this work.";
+        note.innerHTML=warn?'<span style="color:var(--warn)">'+esc(warn)+"</span>":"";
+      }
+      [cap,risk,entry,stop,target].forEach(function(i){ i.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%"; i.addEventListener("input",calc); });
+      var note=el("div","cnote");
+      var g=el("div","field");
+      [["Capital (₹)",cap],["Risk per trade (%)",risk],["Entry (₹)",entry],["Stop loss (₹)",stop],["Target (₹)",target]].forEach(function(f){
+        var w=el("div",""); w.appendChild(el("div","sub",esc(f[0]))); w.appendChild(f[1]); g.appendChild(w);
+      });
+      calc();
+      v.appendChild(card("Position size and risk-reward","How much to buy, given what you are willing to lose",
+        [para("Decide the stop first, then the size. If a stock is at ₹100 and your stop is ₹95, you are risking ₹5 a share - so risking ₹2,000 means 400 shares. Volatile stocks get smaller positions automatically, because their stops sit further away."), g, out, note],
+        {what:"Position size from capital, risk percentage, entry and stop. Also shows the reward-to-risk ratio.",
+         source:"Computed in your browser. Nothing is sent anywhere.", updated:when,
+         note:"Most professionals risk 0.5% to 2% of capital per idea. Ten losses in a row at 2% leaves you down about 18% - survivable. At 10% it is ruin."}));
+    })();
+
+    /* ---- 2. capital gains ---- */
+    (function(){
+      var buy=el("input"), sell=el("input"), qty=el("input"), months=el("input"), rate=el("input");
+      buy.type=sell.type=qty.type=months.type=rate.type="number";
+      buy.value="1000"; sell.value="1500"; qty.value="100"; months.value="18"; rate.value="12.5";
+      var exempt=el("input"); exempt.type="number"; exempt.value="125000";
+      var out=el("div","kv"), note=el("div","cnote");
+      function calc(){
+        var B=+buy.value||0, S=+sell.value||0, Q=+qty.value||0, M=+months.value||0;
+        var gain=(S-B)*Q;
+        var long=M>12;
+        var r=(+rate.value||0)/100, ex=+exempt.value||0;
+        var taxable = long ? Math.max(0, gain-ex) : Math.max(0, gain);
+        var tax = taxable*r;
+        var rows=[
+          ["Holding period", M+" months - "+(long?"long term":"short term")],
+          ["Sale value", num(S*Q)],
+          ["Cost", num(B*Q)],
+          [gain>=0?"Capital gain":"Capital loss", num(gain)],
+          ["Exemption applied", long?num(Math.min(gain>0?gain:0, ex)):"not for short term"],
+          ["Taxable", num(taxable)],
+          ["Tax at "+(r*100).toFixed(2)+"%", num(tax)],
+          ["Net after tax", num(gain-tax)]
+        ];
+        out.innerHTML="";
+        rows.forEach(function(x){ out.appendChild(el("div","",'<b>'+esc(x[0])+'</b>'+x[1])); });
+        note.textContent = gain<0
+          ? "A loss can be set off against other capital gains - short-term losses against either, long-term only against long-term. Check the current set-off rules."
+          : "Equity is long term after 12 months. Rates are inputs, not fixed by this page - see the note.";
+      }
+      [buy,sell,qty,months,rate,exempt].forEach(function(i){ i.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%"; i.addEventListener("input",calc); });
+      var g=el("div","field");
+      [["Buy price (₹)",buy],["Sell price (₹)",sell],["Quantity",qty],["Months held",months],["Tax rate (%)",rate],["Exemption (₹)",exempt]].forEach(function(f){
+        var w=el("div",""); w.appendChild(el("div","sub",esc(f[0]))); w.appendChild(f[1]); g.appendChild(w);
+      });
+      calc();
+      v.appendChild(card("Capital gains","Short term against long term, with the rates as inputs",
+        [para("Equity held more than 12 months is long term; 12 months or less is short term. Both rates changed in 2024, and they change again with budgets - so the rate and the exemption are inputs you can set rather than numbers hard-coded here."), g, out, note],
+        {what:"Capital gains tax on an equity trade, with the holding-period test applied.",
+         source:"Computed in your browser.", updated:when,
+         note:"This is a calculator, not tax advice. Rates and exemptions differ by asset and change often - confirm the current rates, and speak to a professional for anything large."}));
+    })();
+
+    /* ---- 3. option payoff builder ---- */
+    (function(){
+      var spot=el("input"), lot=el("input");
+      spot.type=lot.type="number"; spot.value="23000"; lot.value="75";
+      var legs=[], out=el("div","cwrap"), stats=el("div","kv"), note=el("div","cnote");
+      var PRESETS={
+        "Long call": [["B","C",23000,150]], "Short call": [["S","C",23000,150]],
+        "Long put": [["B","P",23000,150]], "Short put": [["S","P",23000,150]],
+        "Bull call spread": [["B","C",23000,150],["S","C",23500,80]],
+        "Bear put spread": [["B","P",23000,150],["S","P",22500,80]],
+        "Long straddle": [["B","C",23000,150],["B","P",23000,150]],
+        "Short straddle": [["S","C",23000,150],["S","P",23000,150]],
+        "Iron condor": [["S","C",23200,70],["B","C",23500,30],["S","P",22800,70],["B","P",22500,30]]
+      };
+      function setLegs(name){
+        legs = (PRESETS[name]||[]).map(function(l){ return {side:l[0], kind:l[1], strike:l[2], prem:l[3]}; });
+        paint();
+      }
+      function payoffAt(px){
+        var pnl=0;
+        legs.forEach(function(l){
+          var intrinsic = l.kind==="C" ? Math.max(0, px-l.strike) : Math.max(0, l.strike-px);
+          var perUnit = (l.side==="B" ? (intrinsic-l.prem) : (l.prem-intrinsic));
+          pnl += perUnit * (+lot.value||1);
+        });
+        return pnl;
+      }
+      function paint(){
+        var L=+lot.value||1, S=+spot.value||23000;
+        var lo=S*0.85, hi=S*1.15, N=120, pts=[], maxP=-1e15, minP=1e15;
+        for(var i=0;i<=N;i++){
+          var px=lo+(hi-lo)*i/N, p=payoffAt(px);
+          pts.push([px,p]); if(p>maxP)maxP=p; if(p<minP)minP=p;
+        }
+        // breakevens: sign changes between consecutive points
+        var be=[];
+        for(var k=1;k<pts.length;k++){
+          if((pts[k-1][1]<0&&pts[k][1]>=0)||(pts[k-1][1]>0&&pts[k][1]<=0)){
+            var x0=pts[k-1][0],x1=pts[k][0],y0=pts[k-1][1],y1=pts[k][1];
+            be.push(Math.round(x0+(x1-x0)*(-y0/(y1-y0))));
+          }
+        }
+        var W=600,H=240,pad=8;
+        var ymax=Math.max(Math.abs(maxP),Math.abs(minP))||1;
+        function X(px){ return pad+((px-lo)/(hi-lo))*(W-2*pad); }
+        function Y(p){ return H/2-(p/ymax)*(H/2-pad); }
+        var line=pts.map(function(q){ return X(q[0]).toFixed(1)+","+Y(q[1]).toFixed(1); }).join(" ");
+        var svg='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="height:240px">'+
+          '<line class="axis" x1="0" y1="'+(H/2)+'" x2="'+W+'" y2="'+(H/2)+'"/>'+
+          '<polyline class="line" vector-effect="non-scaling-stroke" points="'+line+'"/>'+
+          '<text class="lbl" x="2" y="12">'+num(hi)+'</text>'+
+          '<text class="lbl" x="2" y="'+(H-3)+'">'+num(lo)+'</text>'+
+          '<text class="lbl" x="'+(W-90)+'" y="'+(H/2-4)+'">P/L at expiry</text></svg>';
+        out.innerHTML=svg;
+        stats.innerHTML="";
+        [["Max profit",maxP>=1e14?"unlimited":num(maxP)],
+         ["Max loss",minP<=-1e14?"unlimited":num(minP)],
+         ["Breakeven", be.length?be.join(" / "):"none in range"],
+         ["Lot size", num(L)]].forEach(function(r){
+          stats.appendChild(el("div","",'<b>'+esc(r[0])+'</b>'+r[1]));
+        });
+        note.textContent="Payoff at expiry, ignoring brokerage and STT. Time decay and volatility are not modelled - this shows what the structure does at expiry, not what it does tomorrow.";
+      }
+      [spot,lot].forEach(function(i){ i.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%"; i.addEventListener("input",paint); });
+      var bar=el("div","presets");
+      Object.keys(PRESETS).forEach(function(k){
+        var b=el("button","small",k); b.addEventListener("click",function(){ setLegs(k); }); bar.appendChild(b);
+      });
+      var g=el("div","field");
+      [["Spot (₹)",spot],["Lot size",lot]].forEach(function(f){ var w=el("div",""); w.appendChild(el("div","sub",esc(f[0]))); w.appendChild(f[1]); g.appendChild(w); });
+      setLegs("Bull call spread");
+      v.appendChild(card("Option payoff builder","Pick a structure and see the profit or loss at expiry",
+        [para("Every strategy is a combination of four things: buy or sell, call or put, a strike, and a premium. The chart shows the profit or loss at expiry across a range of prices around the spot."), bar, g, out, stats, note],
+        {what:"Profit or loss at expiry for a chosen option structure, with maximum profit, maximum loss and breakevens.",
+         source:"Computed in your browser from the strikes and premiums you enter.", updated:when,
+         note:"Premiums are examples, not live quotes - put in the real ones. This models expiry only: it ignores time decay, changes in volatility, and costs."}));
+    })();
   })();
 
   renderTabs();

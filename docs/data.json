@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-22T20:51:07Z",
+  "generated_utc": "2026-10-23T10:57:44Z",
   "fno": {
     "date": "2026-10-22",
     "pcr": {
@@ -374,6 +374,12 @@
           "Artemis Electricals and Projects Limited"
         ],
         [
+          "ANANTAM",
+          "Distribution - Rs 2.75 Per Unit Consist Of Re 0.60821 Per Unit As Interest/ Re 0.34940 Per Unit As Dividend/ Rs 1.78940 Per Unit As Capital Repayment/Re 0.00299 Per Unit As Other Income",
+          "2026-10-27",
+          "Anantam Highways Trust"
+        ],
+        [
           "BEPL",
           "Interim Dividend - Re 1 Per Share",
           "2026-10-23",
@@ -390,6 +396,12 @@
           "Interim Dividend - Rs 2 Per Share",
           "2026-10-23",
           "HDB Financial Services Limited"
+        ],
+        [
+          "HEXT",
+          "Interim Dividend - Rs 9.50 Per Share",
+          "2026-10-26",
+          "Hexaware Technologies Limited"
         ],
         [
           "ICICIGI",
@@ -410,10 +422,22 @@
           "LTM Limited"
         ],
         [
+          "LTTS",
+          "Interim Dividend - Rs 20 Per Share",
+          "2026-10-27",
+          "L&T Technology Services Limited"
+        ],
+        [
           "MODISONLTD",
           "Interim Dividend - Rs 4 Per Share",
           "2026-10-23",
           "MODISON LIMITED"
+        ],
+        [
+          "NAM-INDIA",
+          "Interim Dividend - Rs 9.50 Per Share",
+          "2026-10-28",
+          "Nippon Life India Asset Management Limited"
         ],
         [
           "OBEROIRLTY",
@@ -428,7 +452,7 @@
           "Tech Mahindra Limited"
         ]
       ],
-      "total": 11
+      "total": 15
     },
     "split": {
       "columns": [
@@ -456,13 +480,31 @@
       ],
       "rows": [
         [
+          "750GS2056",
+          "Interest Payment",
+          "2026-10-26",
+          "Government of India"
+        ],
+        [
           "772GS2055",
           "Interest Payment",
           "2026-10-23",
           "GOVERNMENT OF INDIA"
+        ],
+        [
+          "AIFL",
+          "Capital Reduction",
+          "2026-10-26",
+          "Ashapura Intimates Fashion Limited"
+        ],
+        [
+          "TALWALKARS",
+          "Capital Reduction",
+          "2026-10-26",
+          "Talwalkars Better Value Fitness Limited"
         ]
       ],
-      "total": 1
+      "total": 4
     }
   },
   "markets": {
@@ -475,15 +517,15 @@
     "rows": [
       [
         "^NSEI",
-        22811.3496,
-        -0.34,
-        "2026-10-21"
+        22600.0,
+        -0.39,
+        "2026-10-23"
       ],
       [
         "^BSESN",
-        73709.6875,
-        -0.19,
-        "2026-10-21"
+        73123.8281,
+        -0.17,
+        "2026-10-23"
       ]
     ],
     "total": 2
@@ -498,9 +540,9 @@
     "rows": [
       [
         "GC=F",
-        4037.2,
-        -2.72,
-        "2026-10-22"
+        4038.0,
+        -0.55,
+        "2026-10-23"
       ]
     ],
     "total": 1
@@ -514,64 +556,64 @@
     ],
     "rows": [
       [
+        "BNB-USD",
+        746.64,
+        2.21,
+        "2026-10-23"
+      ],
+      [
         "ADA-USD",
-        0.2106,
-        -6.37,
-        "2026-10-22"
-      ],
-      [
-        "AVAX-USD",
-        9.075,
-        -5.94,
-        "2026-10-22"
-      ],
-      [
-        "LINK-USD",
-        11.88,
-        -4.84,
-        "2026-10-22"
-      ],
-      [
-        "XRP-USD",
-        1.2978,
-        -4.83,
-        "2026-10-22"
+        0.2159,
+        1.82,
+        "2026-10-23"
       ],
       [
         "DOGE-USD",
-        0.0783,
-        -4.41,
-        "2026-10-22"
+        0.08,
+        1.73,
+        "2026-10-23"
       ],
       [
-        "ETH-USD",
-        2379.1899,
-        -3.71,
-        "2026-10-22"
+        "LINK-USD",
+        12.079,
+        1.14,
+        "2026-10-23"
       ],
       [
-        "SOL-USD",
-        103.05,
-        -3.51,
-        "2026-10-22"
+        "AVAX-USD",
+        9.205,
+        0.97,
+        "2026-10-23"
       ],
       [
-        "BTC-USD",
-        81181.5391,
-        -3.37,
-        "2026-10-22"
-      ],
-      [
-        "BNB-USD",
-        729.0,
-        -2.26,
-        "2026-10-22"
+        "XRP-USD",
+        1.3202,
+        0.96,
+        "2026-10-23"
       ],
       [
         "TRX-USD",
-        0.3276,
-        -0.9,
-        "2026-10-22"
+        0.3306,
+        0.74,
+        "2026-10-23"
+      ],
+      [
+        "SOL-USD",
+        104.09,
+        0.53,
+        "2026-10-23"
+      ],
+      [
+        "ETH-USD",
+        2397.25,
+        0.46,
+        "2026-10-23"
+      ],
+      [
+        "BTC-USD",
+        81634.4922,
+        0.4,
+        "2026-10-23"
       ]
     ],
     "total": 10
@@ -587,216 +629,216 @@
     "rows": [
       [
         "ET Markets",
-        "US stocks today: Nasdaq slumps 2.5%, S&amp;P 1% as revived AI doubts ignite tech selloff",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-nasdaq-slumps-2-5-sp-1-as-revived-ai-doubts-ignite-tech-selloff/articleshow/135127224.cms",
-        "Fri, 23 Oct 2026 01:45:19 +0530",
-        "2026-10-22T20:44:41Z"
+        "Rupee little changed this week as oil-fueled declines wipe out early gains",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-little-changed-this-week-as-oil-fueled-declines-wipe-out-early-gains/articleshow/135142602.cms",
+        "Fri, 23 Oct 2026 15:47:21 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Moderna stock crashes 25%, loses about $24 billion after cancer vaccine data leak",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/moderna-shares-plummet-25-loses-about-24-billion-after-cancer-vaccine-data-leak/articleshow/135127206.cms",
-        "Fri, 23 Oct 2026 01:41:53 +0530",
-        "2026-10-22T20:44:41Z"
+        "Global Market: Eurozone bond markets stabilise after volatile week",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-eurozone-bond-markets-stabilise-after-volatile-week/articleshow/135142036.cms",
+        "Fri, 23 Oct 2026 15:19:47 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Treasuries see best day in over a year as AI selloff revives haven demand",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/treasuries-eye-best-day-in-over-a-year-as-ai-selloff-revives-haven-demand/articleshow/135126406.cms",
-        "Fri, 23 Oct 2026 00:33:07 +0530",
-        "2026-10-22T20:44:41Z"
+        "JSW Steel Q2 Results: Net profit rockets 225% YoY to Rs 5,279 crore; revenue rises 21%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/jsw-steel-q2-results-net-profit-rockets-225-yoy-to-rs-5279-crore-revenue-rises-21/articleshow/135141641.cms",
+        "Fri, 23 Oct 2026 14:59:26 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Neocloud short sellers rack up $6 billion as AI debt fears deepen",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/neocloud-short-sellers-rack-up-6-billion-as-ai-debt-fears-deepen/articleshow/135123634.cms",
-        "Thu, 22 Oct 2026 22:43:04 +0530",
-        "2026-10-22T20:44:41Z"
+        "Adani Power Q2 Results: Profit zooms 134% YoY to Rs 6,919 crore; revenue jumps 45%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-power-q2-results-cons-profit-zooms-134-yoy-to-rs-6919-crore-revenue-jumps-45/articleshow/135141294.cms",
+        "Fri, 23 Oct 2026 14:45:36 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Pershing's Ackman sees a $1 trillion Israeli company within a decade",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/pershings-ackman-sees-a-1-trillion-israeli-company-within-a-decade/articleshow/135123317.cms",
-        "Thu, 22 Oct 2026 22:26:49 +0530",
-        "2026-10-22T20:44:41Z"
+        "Global Market: European stocks edge lower as Kering slumps, oil prices rise",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-stocks-edge-lower-as-kering-slumps-oil-prices-rise/articleshow/135141363.cms",
+        "Fri, 23 Oct 2026 14:42:02 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Average long-term US mortgage rate eases to 7.32% in first pullback since late August",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/average-long-term-us-mortgage-rate-eases-to-7-32-in-first-pullback-since-late-august/articleshow/135123287.cms",
-        "Thu, 22 Oct 2026 22:22:07 +0530",
-        "2026-10-22T20:44:41Z"
+        "Global Market: French bond selloff raises debt concerns across Europe amid social unrest",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-french-bond-selloff-raises-debt-concerns-across-europe-amid-social-unrest/articleshow/135141236.cms",
+        "Fri, 23 Oct 2026 14:40:17 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Ahead of Market: 10 things that will decide stock market action on Friday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-friday/articleshow/135122517.cms",
-        "Thu, 22 Oct 2026 21:33:41 +0530",
-        "2026-10-22T20:44:41Z"
+        "From mercury to gold? This San Francisco startup claims it can produce yellow metal at will",
+        "https://economictimes.indiatimes.com/markets/stocks/news/from-mercury-to-gold-this-san-francisco-startup-claims-it-can-produce-yellow-metal-at-will/articleshow/135140759.cms",
+        "Fri, 23 Oct 2026 14:35:13 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Yes Bank unlikely to pay AT1 bond coupons despite bond holders demand, sources say",
-        "https://economictimes.indiatimes.com/markets/stocks/news/yes-bank-unlikely-to-pay-at1-bond-coupons-despite-bond-holders-demand-sources-say/articleshow/135122504.cms",
-        "Thu, 22 Oct 2026 21:31:43 +0530",
-        "2026-10-22T20:44:41Z"
+        "Sterlite Technologies Q2 Results: Profit surges 12,817% YoY to Rs 517 crore, revenue jumps 145%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/sterlite-technologies-q2-results-profit-surges-12817-yoy-to-rs-517-crore-revenue-jumps-145/articleshow/135140910.cms",
+        "Fri, 23 Oct 2026 14:27:35 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Sebi warns investors against WhatsApp stock tips. Here's how you can avoid such traps",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-warns-investors-against-whatsapp-stock-tips-heres-how-you-can-avoid-such-traps/articleshow/135121957.cms",
-        "Thu, 22 Oct 2026 20:47:48 +0530",
-        "2026-10-22T20:44:41Z"
+        "D-Street bleeds! Market value of all BSE-listed firms falls below Rs 450 lakh crore for first time since April. More pain ahead?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/d-street-bleeds-market-value-of-all-bse-listed-firms-falls-below-rs-450-lakh-crore-for-first-time-since-april-more-pain-ahead/articleshow/135140291.cms",
+        "Fri, 23 Oct 2026 13:59:38 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Anthropic IPO stands alone as AI market jitters sideline others",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-ipo-stands-alone-as-ai-market-jitters-sideline-others/articleshow/135121938.cms",
-        "Thu, 22 Oct 2026 20:46:29 +0530",
-        "2026-10-22T20:44:41Z"
+        "Silver prices slide below Rs 2 lakh/kg, down nearly 55% from Jan peak. What\u2019s behind the rapid selloff?",
+        "https://economictimes.indiatimes.com/markets/commodities/news/silver-prices-slide-below-rs-2-lakh/kg-down-nearly-55-from-jan-peak-whats-behind-the-rapid-selloff/articleshow/135139949.cms",
+        "Fri, 23 Oct 2026 13:50:53 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "NCDEX launches NDEX and FINNDEX to expand into equity benchmarks",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ncdex-launches-ndex-and-finndex-to-expand-into-equity-benchmarks/articleshow/135121233.cms",
-        "Thu, 22 Oct 2026 19:55:22 +0530",
-        "2026-10-22T20:44:41Z"
+        "Global Market: Anthropic presses ahead with November IPO as AI listings face delays",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-anthropic-presses-ahead-with-november-ipo-as-ai-listings-face-delays/articleshow/135139929.cms",
+        "Fri, 23 Oct 2026 13:39:22 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "CreditAccess Grameen Q2 profit jumps fourfold to Rs 502 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/creditaccess-grameen-q2-profit-jumps-fourfold-to-rs-502-crore/articleshow/135121186.cms",
-        "Thu, 22 Oct 2026 19:52:46 +0530",
-        "2026-10-22T20:44:41Z"
+        "Global Market: Bank Indonesia defends policy mix after market confusion",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-bank-indonesia-defends-policy-mix-after-market-confusion/articleshow/135139934.cms",
+        "Fri, 23 Oct 2026 13:37:42 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Tesla shares slip as capex cut clouds Musk\u2019s AI, robotics ambitions",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/tesla-shares-slip-after-capex-cut-raises-doubts-over-musks-ai-and-robotics-push/articleshow/135121152.cms",
-        "Thu, 22 Oct 2026 19:48:54 +0530",
-        "2026-10-22T20:44:41Z"
+        "Jio Platforms IPO creates history: First issue globally to cross 1 crore applications",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/jio-platforms-ipo-creates-history-first-issue-globally-to-cross-1-crore-applications/articleshow/135139371.cms",
+        "Fri, 23 Oct 2026 13:18:47 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Kolkata home registrations dip 12 per cent in Jan-Sep; larger flats gain share",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/kolkata-home-registrations-dip-12-per-cent-in-jan-sep-larger-flats-gain-share/articleshow/135121131.cms",
-        "Thu, 22 Oct 2026 19:47:16 +0530",
-        "2026-10-22T20:44:41Z"
+        "Nasdaq CEO flags IPO slowdown amid market volatility",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/nasdaq-ceo-flags-ipo-slowdown-amid-market-volatility/articleshow/135139313.cms",
+        "Fri, 23 Oct 2026 13:12:25 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Hatsun Agro Product Q2 Results: Profit rises 5.6% on strong sales",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/hatsun-agro-product-q2-results-profit-rises-5-6-on-strong-sales/articleshow/135121117.cms",
-        "Thu, 22 Oct 2026 19:45:28 +0530",
-        "2026-10-22T20:44:41Z"
+        "This Tata Group stock plunged 10% a day after rallying 19% post Q2 results. Do you own?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/this-tata-group-stock-plunged-10-a-day-after-rallying-19-post-q2-results-do-you-own/articleshow/135138992.cms",
+        "Fri, 23 Oct 2026 12:56:07 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "US stocks today: US stocks slide as AI spending jitters hit Nasdaq, oil prices rebound",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-lower-as-ai-jitters-return-oil-rises/articleshow/135120582.cms",
-        "Thu, 22 Oct 2026 19:09:36 +0530",
-        "2026-10-22T20:44:41Z"
+        "Broader markets crash! Small, midcap indices tumble up to 4%. Why analysts are sounding the alarm",
+        "https://economictimes.indiatimes.com/markets/stocks/news/broader-markets-crash-small-midcap-indices-tumble-up-to-4-why-analysts-are-sounding-the-alarm/articleshow/135138924.cms",
+        "Fri, 23 Oct 2026 12:54:17 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Record galore! Jio IPO claims crown for highest QIB demand among India\u2019s 5 largest issues, edges past NSE",
-        "https://economictimes.indiatimes.com/markets/ipos/fpos/record-galore-jio-ipo-claims-crown-for-highest-qib-demand-among-indias-5-largest-issues-edges-past-nse/articleshow/135120259.cms",
-        "Thu, 22 Oct 2026 18:51:18 +0530",
-        "2026-10-22T20:44:41Z"
+        "Cyient shares rally 9% after Q2 revenue rises 25%; board declares Rs 12/sh interim dividend",
+        "https://economictimes.indiatimes.com/markets/stocks/news/cyient-shares-rally-9-after-q2-revenue-rises-25-board-declares-rs-12/sh-interim-dividend/articleshow/135137782.cms",
+        "Fri, 23 Oct 2026 12:15:08 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "US stocks 2026: Moderna, SanDisk lead top 10 gainers delivering up to 734% returns",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-2026-moderna-sandisk-lead-top-10-gainers-delivering-up-to-734-returns/articleshow/135119576.cms",
-        "Thu, 22 Oct 2026 18:16:47 +0530",
-        "2026-10-22T20:44:41Z"
+        "Nippon Silver ETF, other silver ETFs slide up to 4% as silver prices tumble. Here\u2019s why",
+        "https://economictimes.indiatimes.com/markets/stocks/news/nippon-silver-etf-other-silver-etfs-slide-up-to-4-as-silver-prices-tumble-heres-why/articleshow/135137769.cms",
+        "Fri, 23 Oct 2026 12:11:17 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "SoFi targets idle crypto cash with interest-bearing tokenized deposit",
-        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/sofi-targets-idle-crypto-cash-with-interest-bearing-tokenized-deposit/articleshow/135119511.cms",
-        "Thu, 22 Oct 2026 18:15:03 +0530",
-        "2026-10-22T20:44:41Z"
+        "Q2 Results Live Updates: Tata Motors Q2 profit rises to Rs 1,257 crore, revenue jumps 50% YoY",
+        "https://economictimes.indiatimes.com/markets/stocks/live-blog/q2-results-today-live-updates-infosys-tata-motors-quarter-2-fy27-earnings-result-dividend-share-price-updates-23-october-2026/liveblog/135137994.cms",
+        "Fri, 23 Oct 2026 12:04:58 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Colgate-Palmolive India Q2 Results: Profit rises 4.3% to Rs 341.6 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/colgate-palmolive-india-q2-results-profit-rises-4-3-to-rs-341-6-crore/articleshow/135119461.cms",
-        "Thu, 22 Oct 2026 18:12:38 +0530",
-        "2026-10-22T20:44:41Z"
+        "Safe-haven demand pushes Japan\u2019s 10-year yield to two-month low",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/safe-haven-demand-pushes-japans-10-year-yield-to-two-month-low/articleshow/135137115.cms",
+        "Fri, 23 Oct 2026 11:49:28 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Sebi allows margin relief against early pay-in of securities for subsequent trades",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-allows-margin-relief-against-early-pay-in-of-securities-for-subsequent-trades/articleshow/135119438.cms",
-        "Thu, 22 Oct 2026 18:11:10 +0530",
-        "2026-10-22T20:44:41Z"
+        "Infinx plans $300 million IPO in India, appoints three bankers",
+        "https://economictimes.indiatimes.com/markets/ipos/fpos/infinx-plans-300-million-ipo-in-india-appoints-three-bankers/articleshow/135137145.cms",
+        "Fri, 23 Oct 2026 11:43:19 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Meta falls as investors balance Muse growth with rising AI costs",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/meta-falls-as-investors-balance-muse-growth-with-rising-ai-costs/articleshow/135119388.cms",
-        "Thu, 22 Oct 2026 18:09:28 +0530",
-        "2026-10-22T20:44:41Z"
+        "Moderna Stock Selloff: Why positive cancer vaccine results failed to lift shares",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/moderna-stock-selloff-why-positive-cancer-vaccine-results-failed-to-lift-shares/slideshow/135137094.cms",
+        "Fri, 23 Oct 2026 11:31:07 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Union Pacific's third-quarter profit rises on pricing strength",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/union-pacifics-third-quarter-profit-rises-on-pricing-strength/articleshow/135119313.cms",
-        "Thu, 22 Oct 2026 18:06:30 +0530",
-        "2026-10-22T20:44:41Z"
+        "Christopher Wood swapped Nvidia for a Greek infrastructure stock. The bet is paying off",
+        "https://economictimes.indiatimes.com/markets/stocks/news/christopher-wood-swapped-nvidia-for-a-greek-infrastructure-stock-the-bet-is-paying-off/articleshow/135136490.cms",
+        "Fri, 23 Oct 2026 11:29:42 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "HPCL Q2 Results: Profit slips 6% YoY to Rs 3,625 crore, revenue jumps 26%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/hpcl-q2-results-profit-slips-6-yoy-to-rs-3625-crore-revenue-jumps-26/articleshow/135119002.cms",
-        "Thu, 22 Oct 2026 17:54:02 +0530",
-        "2026-10-22T20:44:41Z"
+        "China stocks extend losses as global tech selloff weighs on sentiment",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/china-stocks-extend-losses-as-global-tech-selloff-weighs-on-sentiment/articleshow/135136625.cms",
+        "Fri, 23 Oct 2026 11:28:14 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Mahindra Lifespace Q2 profit down 66 pc to Rs 16 cr",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/mahindra-lifespace-q2-profit-down-66-pc-to-rs-16-cr/articleshow/135118930.cms",
-        "Thu, 22 Oct 2026 17:51:29 +0530",
-        "2026-10-22T20:44:41Z"
+        "Rs 9,000 crore wiped out in a day: Why Swiggy investors are losing patience with Instamart",
+        "https://economictimes.indiatimes.com/markets/stocks/news/rs-9000-crore-wiped-out-in-a-day-why-swiggy-investors-are-losing-patience-with-instamart/articleshow/135136399.cms",
+        "Fri, 23 Oct 2026 11:19:34 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Indian bonds tumble on oil surge, RBI rate hike fears",
-        "https://economictimes.indiatimes.com/markets/bonds/indian-bonds-tumble-on-oil-surge-rbi-rate-hike-fears/articleshow/135118875.cms",
-        "Thu, 22 Oct 2026 17:50:06 +0530",
-        "2026-10-22T20:44:41Z"
+        "Why did market fall today? Sensex, Nifty end the week in deep red. 4 key factors behind sharp selloff",
+        "https://economictimes.indiatimes.com/markets/stocks/news/why-is-market-falling-today-sensex-drops-over-600-points-nifty-below-22450-4-key-factors-behind-rs-10-lakh-crore-wipeout/articleshow/135135895.cms",
+        "Fri, 23 Oct 2026 11:10:02 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "India's JSW Paints eyes 4, 5-year debt to refinance acquisition-led funding, bankers say",
-        "https://economictimes.indiatimes.com/markets/bonds/indias-jsw-paints-eyes-4-5-year-debt-to-refinance-acquisition-led-funding-bankers-say/articleshow/135118523.cms",
-        "Thu, 22 Oct 2026 17:48:22 +0530",
-        "2026-10-22T20:44:41Z"
+        "Gold price falls Rs 1,500/10g; silver plunges Rs 7,000/kg as soaring oil fuels rate hike bets. Time to sell?",
+        "https://economictimes.indiatimes.com/markets/commodities/news/gold-price-falls-rs-1500/10g-silver-plunges-rs-7000/kg-as-soaring-oil-fuels-rate-hike-bets-time-to-sell/articleshow/135135987.cms",
+        "Fri, 23 Oct 2026 11:09:32 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Dow Jones| Nasdaq | S&amp;P 500 | US Stock Market Today |Highlights: Nasdaq slumps 2.5%, S&amp;P 1% as revived AI doubts ignite tech selloff",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-stock-market-live-updates-nasdaq-sp-500-us-iran-israel-war-hormuz-deal-brent-crude-oil-earnings-forecast-ai-stocks-nvidia-tesla-meta-stock-price-news-22nd-october-2026/liveblog/135118971.cms",
-        "Thu, 22 Oct 2026 17:45:35 +0530",
-        "2026-10-22T20:44:41Z"
+        "Bansal Wire Industries Q2 net profit jumps 38% to Rs 53 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/bansal-wire-industries-q2-net-profit-jumps-38-to-rs-53-crore/articleshow/135135690.cms",
+        "Fri, 23 Oct 2026 10:56:44 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Market wrap: Bajaj Finance, Cipla, Nestle India, Eternal top gainers and losers on Nifty and Sensex on Thursday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-bajaj-finance-cipla-nestle-india-eternal-top-gainers-and-losers-on-nifty-and-sensex-on-thursday/articleshow/135117923.cms",
-        "Thu, 22 Oct 2026 17:22:31 +0530",
-        "2026-10-22T20:44:41Z"
+        "Hindustan Zinc shares drop 4% as India allows large silver imports despite weak demand",
+        "https://economictimes.indiatimes.com/markets/stocks/news/hindustan-zinc-shares-drop-4-as-india-allows-large-silver-imports-despite-weak-demand/articleshow/135135402.cms",
+        "Fri, 23 Oct 2026 10:53:20 +0530",
+        "2026-10-23T10:51:26Z"
       ],
       [
         "ET Markets",
-        "Global Market: Japanese banks see rising corporate loan demand ahead of BOJ meeting",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-japanese-banks-see-rising-corporate-loan-demand-ahead-of-boj-meeting/articleshow/135117826.cms",
-        "Thu, 22 Oct 2026 17:10:20 +0530",
-        "2026-10-22T20:44:41Z"
+        "Tesla stocks fall despite Q3 earnings beat: What spooked investors?",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/tesla-stocks-fall-despite-q3-earnings-beat-what-spooked-investors/slideshow/135136546.cms",
+        "Fri, 23 Oct 2026 10:50:32 +0530",
+        "2026-10-23T10:51:26Z"
       ]
     ],
-    "total": 147
+    "total": 159
   },
   "archive": {
     "files": 11,
@@ -908,12 +950,12 @@
   },
   "brain": {
     "channels": 10,
-    "videos": 211,
+    "videos": 216,
     "window": [
       "2026-06-25",
-      "2026-10-22"
+      "2026-10-23"
     ],
-    "total_views": 10936934,
+    "total_views": 10963443,
     "net_sentiment": 62,
     "top_symbols": [
       {
@@ -957,36 +999,36 @@
         "channels": 2
       },
       {
-        "symbol": "DMART",
-        "mentions": 1,
-        "channels": 1
+        "symbol": "BAJFINANCE",
+        "mentions": 2,
+        "channels": 2
       },
       {
-        "symbol": "KOTAKBANK",
-        "mentions": 1,
-        "channels": 1
+        "symbol": "TATAMOTORS",
+        "mentions": 2,
+        "channels": 2
       }
     ],
     "top_themes": [
       {
         "theme": "MF/SIP",
-        "videos": 56
+        "videos": 58
       },
       {
         "theme": "Beginner/Education",
-        "videos": 43
+        "videos": 45
       },
       {
         "theme": "IPO",
         "videos": 37
       },
       {
-        "theme": "Budget/Policy",
-        "videos": 35
+        "theme": "Earnings/Results",
+        "videos": 36
       },
       {
-        "theme": "Earnings/Results",
-        "videos": 34
+        "theme": "Budget/Policy",
+        "videos": 35
       },
       {
         "theme": "Options/F&O",
@@ -1078,31 +1120,31 @@
       ],
       [
         "Markets by Zerodha",
-        "20",
-        "2026-10-22",
+        "21",
+        "2026-10-23",
         "2026-10-05",
-        "26026",
-        "24968",
+        "25512",
+        "24794",
         "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
         "85869"
       ],
       [
         "Markets by Zerodha Hindi",
-        "18",
-        "2026-10-22",
+        "19",
+        "2026-10-23",
         "2026-09-30",
-        "24705",
-        "12244",
+        "23676",
+        "12234",
         "Can India Become a Global Semiconductor Hub? | Markets by Zerodha Hind",
         "177939"
       ],
       [
         "Upstox",
-        "36",
-        "2026-10-22",
+        "39",
+        "2026-10-23",
         "2026-10-15",
-        "1915",
-        "832",
+        "1925",
+        "667",
         "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
         "10837"
       ]
@@ -1320,7 +1362,7 @@
         "2026-10-17T09:34:40Z"
       ]
     ],
-    "total": 211
+    "total": 216
   },
   "fm3": {
     "model": "TimesFM 2.5 200M (zero-shot)",
@@ -1533,14 +1575,14 @@
     "niftysmallcap50": 50
   },
   "daily": {
-    "as_of": "2026-10-22T20:51:07Z",
+    "as_of": "2026-10-23T10:57:44Z",
     "items": [
       "Bhavcopy archive through 2026-10-22 (11 files, 7 days)",
       "Nifty PCR 0.88 \u00b7 max pain 23000.0",
       "25 OI spikes in stock futures",
-      "Corporate actions: 11 dividends, 1 split",
-      "211 videos across 10 channels",
-      "147 news headlines"
+      "Corporate actions: 15 dividends, 1 split",
+      "216 videos across 10 channels",
+      "159 news headlines"
     ]
   },
   "fx": {

@@ -21,6 +21,7 @@ Exit codes: 0 = fine (including "nothing to do" and "no key configured").
 A missing key is a configuration step, not a failure, so the workflow must not go red.
 """
 import json, os, sys, urllib.request, urllib.error
+from datetime import datetime, timezone
 
 API = "https://jules.googleapis.com/v1alpha"
 OWNER = os.environ.get("REPO_OWNER", "devrajai")
@@ -44,24 +45,60 @@ def call(path, payload=None, method="GET"):
 
 
 def quality_gate():
-    """Return (should_run, reason). Only wake Jules when something is actually wrong."""
+    """Return (should_run, reason).
+
+    There is no docs/quality.json. The pipeline writes its quality block INSIDE
+    docs/data.json as {"rows":..,"symbols":..,"errors":..,"warnings":..}, and the first
+    version of this looked for a file that does not exist - so the gate never found
+    anything and defaulted to RUN, which would have fired a task every day whether or not
+    anything was wrong. This reads what is actually there.
+
+    Only checks feeds that should ALWAYS carry data. Seasonality, deals and shareholding
+    are legitimately empty when their sources are unavailable, and flagging those would
+    fire a task every day forever.
+    """
+    problems = []
     try:
-        q = json.load(open("docs/quality.json"))
+        d = json.load(open("docs/data.json"))
     except Exception:
-        return True, "no quality report found, so running unconditionally"
-    rows = q.get("rows") or q.get("feeds") or []
-    bad = []
-    for r in rows:
-        if not isinstance(r, dict):
+        return True, "docs/data.json is missing - the pipeline may not be running at all"
+
+    # 1. is the pipeline itself fresh?
+    gen = str(d.get("generated_utc") or "")
+    if not gen:
+        problems.append("data.json has no timestamp")
+    else:
+        try:
+            t = datetime.strptime(gen, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            age_h = (datetime.now(timezone.utc) - t).total_seconds() / 3600.0
+            if age_h > 26:
+                problems.append("data.json is %.0f hours old" % age_h)
+        except Exception:
+            problems.append("data.json timestamp is unreadable")
+
+    # 2. the pipeline's own quality block
+    q = d.get("quality")
+    if isinstance(q, dict):
+        errs = q.get("errors") or 0
+        if errs:
+            problems.append("%d quality error(s)" % errs)
+
+    # 3. feeds that should always have rows
+    ALWAYS = [("docs/stocks.json", "count"), ("docs/indices.json", "count"),
+              ("docs/mf.json", "count"), ("docs/rs.json", "count"),
+              ("docs/correlation.json", "count"), ("docs/calendar.json", "count")]
+    for path, key in ALWAYS:
+        try:
+            j = json.load(open(path))
+        except Exception:
+            problems.append("%s is missing" % path.split("/")[-1])
             continue
-        status = str(r.get("status") or r.get("state") or "").lower()
-        if status in ("red", "amber", "fail", "failed", "stale"):
-            bad.append(str(r.get("feed") or r.get("name") or "?"))
-    if bad:
-        return True, "quality report flags: " + ", ".join(bad[:6])
-    if rows:
-        return False, "every feed in the quality report is green"
-    return True, "quality report carried no feed rows"
+        if (j.get(key) or 0) == 0:
+            problems.append("%s has 0 rows" % path.split("/")[-1])
+
+    if problems:
+        return True, "; ".join(problems[:6])
+    return False, "data.json is fresh, no quality errors, and every always-on feed has rows"
 
 
 PROMPT = """Read docs/quality.json and docs/quality.md, and the pipeline logs for the most

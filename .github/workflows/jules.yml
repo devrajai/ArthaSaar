@@ -4,7 +4,7 @@ name: Jules daily quality fix
 # -------------------
 # 1. Add the secret: Settings > Secrets and variables > Actions > New repository secret
 #    Name:  JULES_API_KEY
-#    Value: the key from https://jules.google.com/settings#api
+#    Value: the key from https://jules.google.com/settings
 #    (Never put the key in this file. This repo is public, and Google disables any Jules
 #    key it finds publicly exposed.)
 # 2. Install the Jules GitHub app on devrajai/ArthaSaar, or the API will reject the source.
@@ -21,9 +21,10 @@ on:
         description: "Run even if the quality report is all green"
         type: boolean
         default: false
-  # schedule:
-  #   # 06:30 UTC = 12:00 IST, well clear of the 11 PM pipeline so the two never race.
-  #   - cron: '30 6 * * *'
+  schedule:
+    # 06:30 UTC = 12:00 IST. Roughly 13 hours after the 11 PM IST pipeline, so the run is
+    # checked against a completed pipeline and the two never race over a push.
+    - cron: '30 6 * * *'
 
 permissions:
   contents: read

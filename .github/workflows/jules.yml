@@ -1,0 +1,49 @@
+name: Jules daily quality fix
+
+# HOW TO TURN THIS ON
+# -------------------
+# 1. Add the secret: Settings > Secrets and variables > Actions > New repository secret
+#    Name:  JULES_API_KEY
+#    Value: the key from https://jules.google.com/settings#api
+#    (Never put the key in this file. This repo is public, and Google disables any Jules
+#    key it finds publicly exposed.)
+# 2. Install the Jules GitHub app on devrajai/ArthaSaar, or the API will reject the source.
+# 3. Test it by hand: Actions > "Jules daily quality fix" > Run workflow.
+# 4. Only then uncomment the `schedule:` block below.
+#
+# It is left OFF on purpose. A task that runs every day whether or not anything is wrong
+# is just a daily pull request to review.
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Run even if the quality report is all green"
+        type: boolean
+        default: false
+  # schedule:
+  #   # 06:30 UTC = 12:00 IST, well clear of the 11 PM pipeline so the two never race.
+  #   - cron: '30 6 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # The secret is surfaced at JOB level. A step-level `if:` cannot read secrets - doing
+      # that silently broke six steps in the main pipeline once.
+      - name: Ask Jules to fix whatever the quality report flags
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          BASE_BRANCH: main
+        run: python3 scripts/jules_trigger.py

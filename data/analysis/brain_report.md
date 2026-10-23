@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-10-23T05:38:31Z  |  10 channels, 211 videos, window 2026-06-25 to 2026-10-22.
+Generated 2026-10-23T10:48:23Z  |  10 channels, 216 videos, window 2026-06-25 to 2026-10-23.
 
-**Total views across the window:** 10,936,934  |  **net bull-bear keyword score:** 62
+**Total views across the window:** 10,963,443  |  **net bull-bear keyword score:** 62
 
 ## Most-talked-about symbols
 
@@ -16,18 +16,18 @@ Generated 2026-10-23T05:38:31Z  |  10 channels, 211 videos, window 2026-06-25 to
 | ITC | 3 | 3 |
 | WIPRO | 3 | 3 |
 | INFY | 2 | 2 |
-| DMART | 1 | 1 |
-| KOTAKBANK | 1 | 1 |
+| BAJFINANCE | 2 | 2 |
+| TATAMOTORS | 2 | 2 |
 
 ## Dominant themes
 
 | Theme | Videos |
 |---|---|
-| MF/SIP | 56 |
-| Beginner/Education | 43 |
+| MF/SIP | 58 |
+| Beginner/Education | 45 |
 | IPO | 37 |
+| Earnings/Results | 36 |
 | Budget/Policy | 35 |
-| Earnings/Results | 34 |
 | Options/F&O | 31 |
 
 ## Channels by reach
@@ -41,8 +41,8 @@ Generated 2026-10-23T05:38:31Z  |  10 channels, 211 videos, window 2026-06-25 to
 | WAY2LAABH | 18 | 41,932 | 2026-10-22 |
 | Ghanshyam Tech | 18 | 39,460 | 2026-10-21 |
 | Groww | 23 | 30,357 | 2026-10-22 |
-| Markets by Zerodha | 20 | 26,026 | 2026-10-22 |
-| Markets by Zerodha Hindi | 18 | 24,705 | 2026-10-22 |
-| Upstox | 36 | 1,915 | 2026-10-22 |
+| Markets by Zerodha | 21 | 25,512 | 2026-10-23 |
+| Markets by Zerodha Hindi | 19 | 23,676 | 2026-10-23 |
+| Upstox | 39 | 1,925 | 2026-10-23 |
 
 _Keyword-based analysis. Not investment advice._

@@ -45,7 +45,7 @@ except Exception:
     pass
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _archive import pick_candles  # noqa: E402
+from _archive import pick_candles, read_candles, add_window_arg  # noqa: E402
 from indicators import rsi, sma, donchian, roc  # noqa: E402
 
 
@@ -171,6 +171,7 @@ def metrics(trades: list[dict], eq: pd.Series, years: float) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Walk-forward backtest of rule-based strategies.")
     ap.add_argument("--in", dest="infile", default="")
+    add_window_arg(ap, default=0)
     ap.add_argument("--strategy", default="sma_cross", choices=list(STRATS))
     ap.add_argument("--symbols", nargs="*", default=None)
     ap.add_argument("--cost-bps", type=float, default=5.0, help="per side")

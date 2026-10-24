@@ -34,3 +34,66 @@ def pick_candles(prefer_adjusted: bool = True) -> str:
 
 def is_adjusted(path: str) -> bool:
     return bool(path) and path.endswith("_adj.parquet")
+
+
+def archive_dates(src) -> list:
+    """Every distinct date in the archive, oldest first. Reads ONE column, so it is cheap."""
+    try:
+        import pyarrow.parquet as pq
+        vals = pq.read_table(src, columns=["date"]).column("date").to_pylist()
+    except Exception:
+        return []
+    seen, out = set(), []
+    for v in vals:
+        t = str(v)
+        if t not in seen:
+            seen.add(t)
+            out.append(t)
+    out.sort()
+    return out
+
+
+def read_candles(src, window: int | None = None):
+    """Read the archive, optionally only the most recent `window` trading days.
+
+    WHY: every analysis script used to do `pd.read_parquet(src)`, which materialises the
+    WHOLE archive. Fine for a few days of bhavcopy, fatal for a twenty-year one - the runner
+    has about 7 GB and a 20-year, 2,000-symbol parquet runs to several gigabytes, so it would
+    die before computing a single indicator. Trimming after loading does not help, the memory
+    is already spent. So this reads the date column first (one column, cheap), works out the
+    cutoff, then asks pyarrow to read only rows on or after it.
+
+    window=None or <=0 reads everything - what the deep-history readers want.
+    """
+    import pandas as pd
+    if not window or window <= 0:
+        return pd.read_parquet(src)
+
+    dates = archive_dates(src)
+    if not dates:
+        print("  (no date column to filter on - reading the whole archive)")
+        return pd.read_parquet(src)
+    if len(dates) <= window:
+        print("  archive holds %d dates, within the %d-day window - reading all" % (len(dates), window))
+        return pd.read_parquet(src)
+
+    cutoff = dates[-window]
+    try:
+        import pyarrow.parquet as pq
+        df = pq.read_table(src, filters=[("date", ">=", cutoff)]).to_pandas()
+        print("  window: last %d sessions (from %s) -> %s rows of %d dates"
+              % (window, cutoff, f"{len(df):,}", len(dates)))
+        return df
+    except Exception as e:
+        print("  filter read failed (%s) - full read then trim" % type(e).__name__)
+        df = pd.read_parquet(src)
+        if "date" in df.columns:
+            df = df[df["date"].astype(str) >= cutoff]
+        return df
+
+
+def add_window_arg(ap, default: int = 500):
+    """Register the standard --window flag. 500 sessions is about two years."""
+    ap.add_argument("--window", type=int, default=default,
+                    help="most recent N trading sessions (default %d); 0 reads everything" % default)
+    return ap

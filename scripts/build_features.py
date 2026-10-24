@@ -50,7 +50,7 @@ except Exception:
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parent))
-from _archive import pick_candles  # noqa: E402
+from _archive import pick_candles, read_candles, add_window_arg  # noqa: E402
 
 FEATURES = ["ret_1", "ret_5", "ret_20", "sma20_ratio", "sma50_ratio",
             "vol_20", "rsi_14", "range_pct", "vol_z"]
@@ -105,6 +105,7 @@ def main() -> int:
     ap.add_argument("--in", dest="infile", default="",
                     help="candles parquet (default: auto-detect daily.parquet or cm_daily.parquet)")
     ap.add_argument("--out", default="data/training/features.parquet")
+    add_window_arg(ap)
     ap.add_argument("--min-days", type=int, default=200,
                     help="skip if no symbol has this much history")
     args = ap.parse_args()

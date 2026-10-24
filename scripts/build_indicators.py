@@ -31,6 +31,7 @@ from pathlib import Path
 
 import pandas as pd
 
+
 try:
     import pyarrow as _pa
     _pa.set_cpu_count(1)
@@ -39,7 +40,7 @@ except Exception:
     pass
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _archive import pick_candles  # noqa: E402
+from _archive import pick_candles, read_candles, add_window_arg  # noqa: E402
 from indicators import add_all  # noqa: E402
 
 KEY_COLS = ["symbol", "date", "close", "rsi_14", "sma_20", "sma_50", "sma_200",
@@ -53,6 +54,7 @@ def main() -> int:
                     help="candles parquet (default: auto-detect)")
     ap.add_argument("--out", default="data/indicators")
     ap.add_argument("--history", action="store_true", help="also write per-symbol history")
+    add_window_arg(ap)
     args = ap.parse_args()
 
     if not args.infile:
@@ -62,7 +64,7 @@ def main() -> int:
         print("no candle archive found - skipping (run candles_from_bhavcopy.py or candles_from_drive.py)")
         return 0
 
-    df = pd.read_parquet(src)
+    df = read_candles(src, getattr(args, "window", 500))
     need = {"symbol", "high", "low", "close", "volume"}
     missing = need - set(df.columns)
     if missing:

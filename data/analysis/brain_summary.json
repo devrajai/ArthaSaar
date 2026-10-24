@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-24T06:45:15Z",
+  "generated_at": "2026-10-24T11:45:51Z",
   "channels": 10,
-  "videos": 221,
+  "videos": 226,
   "window_start": "2026-06-25",
-  "window_end": "2026-10-23",
-  "total_views": 10969748,
+  "window_end": "2026-10-24",
+  "total_views": 11007936,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 53,
+      "mentions": 54,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 25,
+      "mentions": 26,
       "channels": 4
     },
     {
       "symbol": "SENSEX",
-      "mentions": 22,
+      "mentions": 23,
       "channels": 4
     },
     {
@@ -42,6 +42,11 @@
       "channels": 3
     },
     {
+      "symbol": "ZOMATO",
+      "mentions": 3,
+      "channels": 2
+    },
+    {
       "symbol": "INFY",
       "mentions": 2,
       "channels": 2
@@ -50,21 +55,16 @@
       "symbol": "BAJFINANCE",
       "mentions": 2,
       "channels": 2
-    },
-    {
-      "symbol": "TATAMOTORS",
-      "mentions": 2,
-      "channels": 2
     }
   ],
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 58
+      "videos": 59
     },
     {
       "theme": "Beginner/Education",
-      "videos": 47
+      "videos": 48
     },
     {
       "theme": "IPO",
@@ -80,8 +80,8 @@
     },
     {
       "theme": "Options/F&O",
-      "videos": 31
+      "videos": 33
     }
   ],
-  "net_sentiment": 64
+  "net_sentiment": 63
 }

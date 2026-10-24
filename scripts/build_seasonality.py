@@ -19,9 +19,17 @@ def load_history():
 
     Returns {symbol: {year: {month: close}}}. Empty when there is no usable archive.
     """
-    path = "data/candles/cm_daily.parquet"
-    if not os.path.exists(path):
+    # daily.parquet is the 5-year archive restored from Drive; cm_daily.parquet is only the
+    # few days built from bhavcopy. This hardcoded cm_daily, so seasonality could never see
+    # enough history to publish - it was reading the shallow file the whole time.
+    path = None
+    for cand in ("data/candles/daily.parquet", "data/candles/cm_daily.parquet"):
+        if os.path.exists(cand):
+            path = cand
+            break
+    if not path:
         return {}
+    print("  reading %s" % path)
     try:
         import pandas as pd
         df = pd.read_parquet(path)
@@ -60,13 +68,18 @@ def main():
         if len(years) < MIN_YEARS:
             continue
         bymonth = defaultdict(list)
+        prev_dec = None
         for yr in sorted(years):
             months = years[yr]
             for m in range(1, 13):
-                prev = months.get(m - 1) or months.get(12 if m == 1 else m - 1)
+                # January's "previous month" is December of the PREVIOUS YEAR. The old code
+                # did months.get(12) on the same year, which is eleven months LATER - so
+                # every January figure measured the year backwards.
+                prev = prev_dec if m == 1 else months.get(m - 1)
                 cur = months.get(m)
                 if prev and cur:
                     bymonth[m].append((cur / prev - 1.0) * 100.0)
+            prev_dec = months.get(12)
         if len(bymonth) < 12:
             continue
         avgs = [round(sum(bymonth[m]) / len(bymonth[m]), 2) if bymonth[m] else None for m in range(1, 13)]

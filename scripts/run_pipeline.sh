@@ -55,6 +55,14 @@ run python scripts/analyze_youtube.py || true
 # ---------------------------------------------------------------- 3. derived data
 step "5. Candle archive from bhavcopy"
 run python scripts/candles_from_bhavcopy.py --from-local || true
+# 5a. Restore the deep archive BEFORE any analysis. This used to run as step 8, after
+# indicators, features, forecasts, patterns, backtest, relative strength and seasonality
+# had all already run on a few days of bhavcopy.
+if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${ARTHASAAR_DRIVE_FOLDER:-}" ]; then
+  run python scripts/candles_from_drive.py --kind daily || true
+else
+  skip "deep candle archive (no Drive credentials)"
+fi
 
 step "5b. Corporate actions + price adjustment (BEFORE any analysis)"
 run python scripts/corporate_actions.py --fetch || true
@@ -152,12 +160,7 @@ run python scripts/build_calendar.py || true
 run python scripts/build_feed.py || true
 run python scripts/build_seo_pages.py || true
 
-step "8. Google Drive archive (if configured)"
-if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${ARTHASAAR_DRIVE_FOLDER:-}" ]; then
-  run python scripts/candles_from_drive.py --kind daily || true
-else
-  skip "drive archive (no credentials/folder)"
-fi
+# (The Drive candle archive now runs as step 5a, before anything reads it.)
 
 step "9. Google Sheets (if configured)"
 if [ -n "${GOOGLE_SA_JSON:-}${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -n "${SHEET_SOURCE_ID:-}" ] && [ -n "${SHEET_SOURCE_RANGE:-}" ]; then

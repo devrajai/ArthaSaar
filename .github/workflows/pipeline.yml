@@ -61,6 +61,16 @@ jobs:
       - name: "5. Candle archive from bhavcopy"
         run: python scripts/candles_from_bhavcopy.py --from-local
 
+      - name: "5a. Restore the deep candle archive from Drive (BEFORE any analysis)"
+        # This used to run at step 8, AFTER indicators, features, forecasts, patterns,
+        # backtest, relative strength and seasonality had all already run - so every one of
+        # them analysed a few days of bhavcopy while five years of history sat unused in
+        # Drive. Moved here so the history exists before anything reads it.
+        if: env.HAS_DRIVE == 'true'
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+        run: python scripts/candles_from_drive.py --folder-id "${{ secrets.ARTHASAAR_DRIVE_FOLDER }}" --kind daily || true
+
       - name: "5b. Corporate actions + price adjustment (BEFORE any analysis)"
         run: |
           python scripts/corporate_actions.py --fetch
@@ -191,12 +201,6 @@ jobs:
 
       - name: "7o5. Per-stock SEO pages, sitemap and robots"
         run: python scripts/build_seo_pages.py || true
-
-      - name: "8. Google Drive candle archive (optional)"
-        if: env.HAS_DRIVE == 'true'
-        env:
-          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
-        run: python scripts/candles_from_drive.py --folder-id "${{ secrets.ARTHASAAR_DRIVE_FOLDER }}" --kind daily
 
       - name: "9. Google Sheets source (optional)"
         if: env.HAS_SHEETS == 'true'

@@ -223,7 +223,12 @@
    dark theme. Two safeguards: an @supports fallback, and glass only on cards / header /
    drawer - never on table rows, which would be hundreds of composited layers.
    ============================================================================ */
-:root{
+/* html:root, NOT :root. The site's dark palette sits on html[data-theme="dark"], which
+   scores (0,1,1) and BEAT a plain :root (0,1,0) - so its near-white --text won while my
+   light gradient painted the background, and the text was invisible on a light page.
+   html:root ties at (0,1,1) and, being later in the file, wins. The dark block below comes
+   after it, so dark mode still switches correctly. */
+html:root{
   --bg:#eaf4ff; --card:rgba(255,255,255,.55); --line:rgba(148,190,240,.38);
   --text:#0d2540; --muted:#5b7593;
   --accent:#2563eb; --accent-text:#fff;
@@ -235,26 +240,24 @@
   --blue:#2563eb; --blue-dk:#1d4ed8; --blue-soft:#eaf3ff; --blue-line:#c3ddff;
   --shadow:0 10px 34px rgba(37,99,235,.13), 0 2px 6px rgba(37,99,235,.07);
 }
-body{
+html:root{
   /* the blobs matter: glass is only visible when there is something behind it to blur */
-  background:
+  --bg-grad:
     radial-gradient(760px 520px at 8% -4%, #9fcdff 0%, rgba(159,205,255,0) 60%),
     radial-gradient(620px 480px at 98% 6%, #bcdcff 0%, rgba(188,220,255,0) 56%),
     radial-gradient(700px 620px at 46% 112%, #a9d4ff 0%, rgba(169,212,255,0) 58%),
     radial-gradient(420px 380px at 78% 46%, #d6ecff 0%, rgba(214,236,255,0) 60%),
     linear-gradient(180deg,#eaf4ff 0%,#dcecff 52%,#eef7ff 100%);
-  background-attachment:fixed;
-  color:var(--text);
 }
-body.dark{
+body{ background:var(--bg-grad); background-attachment:fixed; color:var(--text); }
+html[data-theme="dark"], body.dark{
   --bg:#0a1626; --card:rgba(20,35,58,.62); --line:rgba(120,170,235,.22);
   --text:#eaf3ff; --muted:#9db6d6; --head:rgba(24,40,66,.6);
   --glass:rgba(24,40,66,.55); --glass-line:rgba(120,170,235,.28); --glass-inner:rgba(255,255,255,.08);
-  background:
+  --bg-grad:
     radial-gradient(760px 520px at 8% -4%, #14304f 0%, rgba(20,48,79,0) 60%),
     radial-gradient(680px 520px at 96% 2%, #102942 0%, rgba(16,41,66,0) 58%),
     linear-gradient(180deg,#0a1626 0%,#0d1d31 60%,#0a1626 100%);
-  background-attachment:fixed;
 }
 
 /* ---- the glass itself ---- */
@@ -273,7 +276,7 @@ body.dark{
     linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.10) 44%,rgba(255,255,255,0) 70%),
     var(--glass);
 }
-body.dark .card,body.dark .kpi{
+html[data-theme="dark"] .card,html[data-theme="dark"] .kpi,body.dark .card,body.dark .kpi{
   background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,0) 60%),var(--glass);
 }
 
@@ -2112,7 +2115,7 @@ function build(d){
         function X(px){ return pad+((px-lo)/(hi-lo))*(W-2*pad); }
         function Y(p){ return H/2-(p/ymax)*(H/2-pad); }
         var line=pts.map(function(q){ return X(q[0]).toFixed(1)+","+Y(q[1]).toFixed(1); }).join(" ");
-        var svg='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="height:240px">'+
+        var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="height:240px">'+
           '<line class="axis" x1="0" y1="'+(H/2)+'" x2="'+W+'" y2="'+(H/2)+'"/>'+
           '<polyline class="line" vector-effect="non-scaling-stroke" points="'+line+'"/>'+
           '<text class="lbl" x="2" y="12">'+num(hi)+'</text>'+

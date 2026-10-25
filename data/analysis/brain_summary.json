@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-10-25T06:08:43Z",
+  "generated_at": "2026-10-25T07:58:46Z",
   "channels": 10,
-  "videos": 230,
+  "videos": 233,
   "window_start": "2026-06-25",
-  "window_end": "2026-10-24",
-  "total_views": 11014141,
+  "window_end": "2026-10-25",
+  "total_views": 11058783,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 54,
+      "mentions": 55,
       "channels": 5
     },
     {
@@ -18,7 +18,7 @@
     },
     {
       "symbol": "SENSEX",
-      "mentions": 23,
+      "mentions": 24,
       "channels": 4
     },
     {
@@ -67,21 +67,21 @@
       "videos": 50
     },
     {
+      "theme": "Earnings/Results",
+      "videos": 40
+    },
+    {
       "theme": "IPO",
       "videos": 39
     },
     {
-      "theme": "Earnings/Results",
+      "theme": "Budget/Policy",
       "videos": 38
     },
     {
-      "theme": "Budget/Policy",
-      "videos": 37
-    },
-    {
       "theme": "Options/F&O",
-      "videos": 33
+      "videos": 34
     }
   ],
-  "net_sentiment": 66
+  "net_sentiment": 67
 }

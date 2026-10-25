@@ -214,6 +214,145 @@
   .msg{color:var(--muted);padding:8px 0}
   .err{border-color:var(--down)}
   footer{color:var(--muted);font-size:13px;padding:8px 0 30px}
+
+/* ============================================================================
+   MOBILE REDESIGN - warm gold + purple.  Appended inside the existing <style> so it
+   loads with the page and there is no flash of the desktop layout.
+   Gold = the thing you DO.  Purple = everything you READ or TOUCH.
+   ============================================================================ */
+:root{
+  --gold:#c8a15a; --gold-dk:#8a6a2f; --gold-soft:#f7eedc; --gold-line:#e8d9bd;
+  --purple:#6d28d9; --purple-soft:#f3eeff; --purple-line:#ddd0fb;
+}
+.wrap{max-width:680px;padding:0 18px}
+
+/* ---- header: two rows on a phone ---- */
+header{position:sticky;top:0;z-index:30;background:var(--bg)}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 0 4px}
+.top > div:not(.logo):not(.searchwrap):not(.right){flex:1 1 auto;min-width:0}
+.top > div:not(.logo):not(.searchwrap):not(.right) .tag{
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:100%;
+}
+.logo{
+  width:42px;height:42px;flex:0 0 auto;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#e0c184);color:#fff;font-size:15px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(200,161,90,.35);
+}
+h1{font-size:19px;font-weight:800;letter-spacing:-.3px;margin:0}
+.tag{font-size:11.5px;color:var(--muted)}
+#mkt{font-size:10px;padding:2px 8px;margin-left:6px}
+
+#burger{
+  width:42px;height:42px;flex:0 0 auto;border:1px solid var(--gold-line);border-radius:13px;
+  background:var(--gold-soft);cursor:pointer;
+  display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 10px;
+}
+#burger i{display:block;height:2px;background:var(--gold-dk);border-radius:2px}
+#burger i:nth-child(2){width:68%}
+
+/* the four desktop controls move into the drawer on a phone */
+.right{display:none}
+
+.searchwrap{
+  order:5;flex:1 1 100%;max-width:none;margin:2px 0 14px;padding:11px 15px;
+  background:var(--card);border:1px solid var(--gold-line);border-radius:999px;
+  display:flex;align-items:center;gap:9px;position:static;
+}
+.searchwrap input{flex:1;min-width:0;border:0;background:transparent;font:inherit;
+  font-size:15px;color:var(--text);outline:none}
+.searchwrap .mag{color:var(--purple);font-size:17px;line-height:1}
+#micBtn{background:transparent;border:0;padding:0;cursor:pointer;color:var(--purple);
+  display:inline-flex;align-items:center}
+#micBtn.listening{color:var(--down)}
+#voiceHint{font-size:11px;color:var(--muted)}
+
+/* ---- drawer, as an accordion ---- */
+.tabs{position:fixed;inset:0;z-index:60;display:none}
+body.nav-open .tabs{display:block}
+body.nav-open{overflow:hidden}
+.tabsrow{
+  display:block;position:absolute;inset:0;overflow-y:auto;padding:62px 18px 40px;
+  background:var(--bg);max-width:none;
+}
+#navClose{
+  position:absolute;top:14px;right:16px;z-index:2;width:40px;height:40px;
+  border:1px solid var(--gold-line);border-radius:12px;background:var(--gold-soft);
+  font-size:22px;line-height:1;color:var(--gold-dk);cursor:pointer;
+}
+.grpw{border-bottom:1px solid var(--line)}
+.grpw:first-of-type{border-top:1px solid var(--line)}
+.grpb{
+  display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;
+  padding:17px 2px;border:0;background:transparent;color:var(--text);
+  font:inherit;font-size:16.5px;font-weight:800;letter-spacing:-.2px;
+}
+.grpw.open .grpb{color:var(--gold-dk)}
+.grpi{
+  margin-left:auto;width:9px;height:9px;border-right:2px solid var(--purple);
+  border-bottom:2px solid var(--purple);transform:rotate(45deg);transition:transform .18s;
+}
+.grpw.open .grpi{transform:rotate(-135deg)}
+.grpbody{display:none;padding:0 0 10px 12px}
+.grpw.open .grpbody{display:block}
+.grpbody button{
+  display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;
+  padding:13px 2px;border:0;border-bottom:1px solid #f7f2ea;background:transparent;
+  color:var(--text);font:inherit;font-size:15.5px;font-weight:600;
+}
+.grpbody button::after{content:"\203A";margin-left:auto;color:var(--purple);opacity:.5;font-size:18px}
+.grpbody button.active{color:var(--purple);font-weight:800}
+.grpbody button.active::after{opacity:1}
+#navClose::after{content:none}
+.drawer-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.drawer-controls .small{
+  padding:10px 16px;border-radius:999px;border:1px solid var(--gold-line);
+  background:var(--gold-soft);color:var(--gold-dk);font-weight:700;font-size:13.5px;
+}
+
+/* ---- content ---- */
+.card{border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.cardhead h2{font-size:17px;line-height:1.35}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{border-radius:14px;padding:13px 12px;background:var(--gold-soft);border-color:var(--gold-line)}
+.kpi .k{color:var(--gold-dk)}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
+table{min-width:460px}
+td{white-space:normal}
+td.num,th.num{white-space:nowrap}
+td:first-child,th:first-child{max-width:190px}
+td.sym{color:var(--purple);font-weight:800}
+.card p a{color:var(--purple);text-decoration:underline;text-underline-offset:2px}
+.gloss{color:var(--purple);border-bottom:1px dotted var(--purple);font-weight:700}
+button.small,.ibtn{border-radius:999px;border:1px solid var(--purple-line);
+  background:var(--purple-soft);color:var(--purple);font-weight:700;padding:7px 13px}
+button.small.primary,button.primary{background:var(--gold);border-color:var(--gold);color:#fff}
+.cardhead .ibtn{width:26px;height:26px;min-width:26px;padding:0;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;margin-left:auto;font-style:italic}
+.chips button.small,.presets button.small{background:var(--purple-soft);color:var(--purple)}
+.chips button.small.primary,.presets button.small.primary{background:var(--gold);color:#fff}
+.field{display:grid;grid-template-columns:1fr;gap:10px}
+.field .sub{color:var(--gold-dk);font-weight:800;text-transform:uppercase;font-size:10.5px;letter-spacing:.7px}
+.kv{display:block}
+.kv>div{display:block;padding:11px 0;border-bottom:1px solid #f7f2ea;font-size:16px;font-weight:700}
+.kv>div b{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.7px;color:var(--gold-dk);margin-bottom:2px}
+.info{border-left:3px solid var(--purple)}
+#glossPop{max-width:280px;border-radius:12px}
+.rsgrid,.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ---- loading skeleton, so the wait reads as deliberate ---- */
+.skel{padding:6px 0}
+.skel i{display:block;height:13px;border-radius:7px;background:linear-gradient(90deg,#eee7db,#f7f2ea,#eee7db);
+  background-size:200% 100%;animation:shimmer 1.3s linear infinite;margin-bottom:9px}
+.skel i:nth-child(1){width:46%;height:19px}
+.skel i:nth-child(2){width:78%}
+.skel i:nth-child(3){width:64%}
+.skel i:nth-child(4){width:88%}
+.skel i:nth-child(5){width:52%}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skel i{animation:none}}
+
 </style>
 </head>
 <body>
@@ -229,7 +368,7 @@
       <span class="mag">⌕</span>
       <input id="search" type="search" placeholder="Search stocks, global, coins, news…  (press /)"
              autocomplete="off" aria-label="Search everything">
-      <button id="micBtn" title="Search by voice (Hindi)">🎙</button>
+      <button id="micBtn" title="Search by voice (Hindi)" aria-label="Search by voice"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg></button>
       <span id="voiceHint"></span>
     </div>
     <div class="right">
@@ -244,7 +383,7 @@
 <nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
 <div id="glossPop"></div>
-<main class="wrap" id="app"><div class="card"><p class="msg">Loading data…</p></div></main>
+<main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div></main>
 
 <footer class="wrap">
   <p><strong>Educational data, not investment advice.</strong> Sources: NSE bhavcopy &amp; reference files,
@@ -725,7 +864,7 @@ function applyLang(){
   if(q) q.setAttribute("placeholder", L("searchPh"));
   var tb=document.getElementById("themeBtn");
   if(tb) tb.textContent = (document.body.classList.contains("dark") ? L("light") : L("dark"));
-  if(typeof renderTabs==="function") renderTabs();
+  if(typeof renderTabs==="function"){ renderTabs(); groupTabs(); }
 }
 (function bindLang(){
   var b=document.getElementById("langBtn");
@@ -2419,7 +2558,7 @@ function build(d){
   })();
 
 
-  renderTabs();
+  renderTabs(); groupTabs();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
 }
@@ -2623,6 +2762,84 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
     $("#app").innerHTML='<div class="card err"><h2>Could not load data.json</h2><p>'+esc(e.message)+
       '</p><p>It is written by scripts/build_site_data.py during the pipeline run.</p></div>';
   });
+
+/* ---- mobile shell: accordion drawer, hamburger, mic icon ---- */
+var GROUPS = [
+  ["Market",        ["overview","market","indices","sectors","fno","global","crypto","breadth"]],
+  ["Stocks",        ["stocks","rs","patterns","gaps","levels","correlation","seasonality"]],
+  ["Funds & issues",["mf","etf","ipo","charges"]],
+  ["Disclosures",   ["corporate","news","calendar","watchlists","deals","insider","promoter","regulator"]],
+  ["Tools",         ["tools","backtest","watchlist"]],
+  ["More",          ["youtube","learn","data"]]
+];
+
+function groupTabs(){
+  var nav=document.getElementById("tabs");
+  if(!nav) return;
+  var btns=[].slice.call(nav.querySelectorAll("button"));
+  if(!btns.length) return;
+  var byId={}; btns.forEach(function(b){ byId[b.getAttribute("data-go")]=b; });
+  var active=null;
+  btns.forEach(function(b){ if(String(b.className).indexOf("active")>=0) active=b.getAttribute("data-go"); });
+
+  nav.innerHTML="";
+  var close=document.createElement("button");
+  close.id="navClose"; close.type="button"; close.setAttribute("aria-label","Close menu");
+  close.innerHTML="&times;";
+  close.addEventListener("click",function(){ document.body.classList.remove("nav-open"); });
+  nav.appendChild(close);
+
+  var used={};
+  GROUPS.forEach(function(g,gi){
+    var live=g[1].filter(function(id){ return byId[id]; });
+    if(!live.length) return;
+    var open = active ? live.indexOf(active)>=0 : (gi===0);
+    var wrap=document.createElement("div"); wrap.className="grpw"+(open?" open":"");
+    var head=document.createElement("button");
+    head.type="button"; head.className="grpb";
+    head.innerHTML='<span>'+g[0]+'</span><i class="grpi"></i>';
+    head.setAttribute("aria-expanded", open?"true":"false");
+    head.addEventListener("click",function(){
+      var o=wrap.classList.toggle("open");
+      head.setAttribute("aria-expanded", o?"true":"false");
+    });
+    var body=document.createElement("div"); body.className="grpbody";
+    live.forEach(function(id){ body.appendChild(byId[id]); used[id]=1; });
+    wrap.appendChild(head); wrap.appendChild(body);
+    nav.appendChild(wrap);
+  });
+  btns.forEach(function(b){ if(!used[b.getAttribute("data-go")]) nav.appendChild(b); });
+
+  var src=document.querySelector(".right");
+  if(src && !document.getElementById("drawerCtl")){
+    var box=document.createElement("div"); box.className="drawer-controls"; box.id="drawerCtl";
+    [].slice.call(src.children).forEach(function(c){ box.appendChild(c); });
+    nav.appendChild(box);
+  }
+}
+
+(function(){
+  var top=document.querySelector(".top");
+  if(!top || document.getElementById("burger")) return;
+  var b=document.createElement("button");
+  b.id="burger"; b.type="button"; b.setAttribute("aria-label","Open menu");
+  b.innerHTML="<i></i><i></i><i></i>";
+  b.addEventListener("click",function(){ document.body.classList.add("nav-open"); });
+  top.insertBefore(b, top.firstChild);
+})();
+
+if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");
+
+var _show = show;
+show = function(id){
+  _show(id);
+  try{ document.body.classList.remove("nav-open"); }catch(e){}
+  // Guarded on purpose. This runs inside the load chain, and an unguarded call threw where
+  // scrollTo was missing - which rejected the chain, so the entire HEAVY data load never
+  // happened and every data-driven tab rendered empty with no visible error. Scrolling to
+  // the top is a nicety; it must never be able to take the page down.
+  try{ if(window.scrollTo) window.scrollTo(0,0); }catch(e){}
+};
 </script>
 </body>
 </html>

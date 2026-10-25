@@ -349,32 +349,33 @@ body.nav-open{overflow:hidden}
   font-size:21px;line-height:1;color:var(--blue);cursor:pointer;
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
 }
-.grpw{border-bottom:1px solid var(--line)}
-.grpw:first-of-type{border-top:1px solid var(--line)}
-.grpb{
+.tabsrow .grpw{border-bottom:1px solid var(--line)}
+.tabsrow .grpw:first-of-type{border-top:1px solid var(--line)}
+.tabsrow .grpb{
   display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;
-  padding:16px 2px;border:0;background:transparent;color:var(--text);
+  padding:16px 2px;border:0 !important;border-radius:0 !important;background:transparent !important;
+  box-shadow:none !important;color:var(--text);
   font:inherit;font-size:16px;font-weight:800;letter-spacing:-.2px;
 }
-.grpw.open .grpb{color:var(--blue-dk)}
-.grpi{
+.tabsrow .grpw.open .grpb{color:var(--blue-dk)}
+.tabsrow .grpi{
   margin-left:auto;width:9px;height:9px;border-right:2px solid var(--blue);
   border-bottom:2px solid var(--blue);transform:rotate(45deg);transition:transform .18s;
 }
-.grpw.open .grpi{transform:rotate(-135deg)}
-.grpbody{display:none;padding:0 0 8px 10px}
-.grpw.open .grpbody{display:block}
-.grpbody button{
+.tabsrow .grpw.open .grpi{transform:rotate(-135deg)}
+.tabsrow .grpbody{display:none;padding:0 0 8px 10px}
+.tabsrow .grpw.open .grpbody{display:block}
+.tabsrow .grpbody button{
   display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;
   padding:13px 2px;border:0;border-bottom:1px solid var(--line);background:transparent;
   color:var(--text);font:inherit;font-size:15px;font-weight:600;
 }
-.grpbody button::after{content:"\203A";margin-left:auto;color:var(--blue);opacity:.55;font-size:18px}
-.grpbody button.active{color:var(--blue-dk);font-weight:800}
-.grpbody button.active::after{opacity:1}
+.tabsrow .grpbody button::after{content:"\203A";margin-left:auto;color:var(--blue);opacity:.55;font-size:18px}
+.tabsrow .grpbody button.active{color:var(--blue-dk);font-weight:800}
+.tabsrow .grpbody button.active::after{opacity:1}
 #navClose::after{content:none}
-.drawer-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-.drawer-controls .small{
+.tabsrow .drawer-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.tabsrow .drawer-controls .small{
   padding:9px 15px;border-radius:999px;border:1px solid var(--glass-line);
   background:var(--glass);color:var(--blue-dk);font-weight:700;font-size:13px;
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);

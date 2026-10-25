@@ -1562,9 +1562,10 @@ function build(d){
         if(f.nifty) kids.push(para("Nifty "+(f.horizon_days||21)+"-day median: "+sgn(f.nifty.median_chg_pct)+"%  "+
           "(band "+sgn(f.nifty.low10_chg_pct)+"% to "+sgn(f.nifty.high90_chg_pct)+"%, confidence "+num(f.nifty.confidence)+")", true));
         kids.push(tbl(f, ["last","median_chg_pct","low10_chg_pct","high90_chg_pct","confidence"]));
-        v.appendChild(card("FM3 / TimesFM", (f.model||"TimesFM")+" · "+(f.horizon_days||21)+"d · "+num(f.total)+" series", kids,
+        v.appendChild(card("FM3 / TimesFM", "Experimental · "+(f.model||"TimesFM")+" · "+(f.horizon_days||21)+"d · "+num(f.total)+" series", kids,
           {what:"Zero-shot price forecasts per series, with a 10-90 band and a confidence score.",
            source:"Google TimesFM 2.5 (200M) via the timesfm package, run nightly on GitHub Actions.",
+           note:"EXPERIMENTAL. Zero-shot: the model was not trained or tuned on this data, so treat these numbers as a curiosity, not a forecast you would act on. A 21-day Nifty median of +2.7% at 58% confidence is barely different from saying \"probably up a bit\".",
            updated:f.updated?ago(f.updated):when,
            note:"Zero-shot means the model was never trained on your data. Confidence is how tight the band is, not a probability of being right. Nothing here is a recommendation."}));
       } else {

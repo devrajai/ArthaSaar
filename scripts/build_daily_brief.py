@@ -7,7 +7,7 @@ causes, and "Nifty fell because of US yields" is the kind of line that sounds li
 and is really a guess.
 """
 import json, os, sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 OUT = "docs/brief.json"
 
@@ -31,6 +31,25 @@ def main():
            "headline": "", "bullets": [], "note": ""}
     d, idx, sec = load("docs/data.json"), load("docs/indices.json"), load("docs/sectors.json")
     bullets = []
+
+    # WHICH SESSION THIS DESCRIBES.
+    # The pipeline runs every night, weekends included. With no check here, Saturday and
+    # Sunday regenerated Friday's brief word for word - the same headline three days running,
+    # presented as if it were fresh. So the brief is pinned to the most recent TRADING
+    # session, and says so when that is not today.
+    IST = timezone(timedelta(hours=5, minutes=30))
+    today_ist = datetime.now(IST).strftime("%Y-%m-%d")
+    market_date = ""
+    if d:
+        market_date = str((d.get("archive") or {}).get("last") or "")
+    if not market_date and idx:
+        market_date = str((idx.get("updated") or "")[:10])
+    out["market_date"] = market_date
+    out["as_of"] = market_date or today_ist
+    if market_date and market_date != today_ist:
+        out["stale"] = True
+        out["note"] = ("No trading session today. This describes the most recent one, %s."
+                       % market_date)
 
     # headline: the headline index and its move
     n50 = None

@@ -36,10 +36,17 @@ STOCK_FUT = {"STF", "FUTSTK"}
 
 
 def oi_spikes(oi_pct: float, min_oi: float, rows: int) -> pd.DataFrame:
-    csvs = sorted(glob.glob("data/csv/fo/fo_*.csv"))
-    if not csvs:
-        return pd.DataFrame()
-    df = pd.read_csv(csvs[-1], dtype=str)
+    # Parquet, not the csv. data/csv/fo/ is gitignored now - it is the intermediate step and
+    # runs about 3.5 MB per day. The csv branch remains for a local run without parquet yet.
+    pq = sorted(glob.glob("data/parquet/fo/fo_*.parquet"))
+    if pq:
+        df = pd.read_parquet(pq[-1])
+        df.columns = [str(c) for c in df.columns]
+    else:
+        csvs = sorted(glob.glob("data/csv/fo/fo_*.csv"))
+        if not csvs:
+            return pd.DataFrame()
+        df = pd.read_csv(csvs[-1], dtype=str)
     if not {"instrm_type", "symbol", "oi", "oi_change"}.issubset(df.columns):
         return pd.DataFrame()
     fut = df[df["instrm_type"].isin(STOCK_FUT)].copy()

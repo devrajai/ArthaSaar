@@ -50,12 +50,16 @@ OPT_INDEX = {"IDO", "OPTIDX"}
 
 
 def _latest_fo(csv_dir: Path, parquet_dir: Path) -> pd.DataFrame | None:
-    csvs = sorted(glob.glob(str(csv_dir / "fo_*.csv")))
-    if csvs:
-        return pd.read_csv(csvs[-1], dtype=str)
+    """Prefer the PARQUET. The csv was preferred before, but data/csv/fo/ is now gitignored -
+    it is the intermediate step, roughly 3.5 MB per day and about 900 MB a year, while the
+    parquet holds the same rows at a fraction of the size. The csv branch stays as a fallback
+    for a local run that has not produced parquet yet."""
     pq = sorted(glob.glob(str(parquet_dir / "fo_*.parquet")))
     if pq:
         return pd.read_parquet(pq[-1])
+    csvs = sorted(glob.glob(str(csv_dir / "fo_*.csv")))
+    if csvs:
+        return pd.read_csv(csvs[-1], dtype=str)
     return None
 
 

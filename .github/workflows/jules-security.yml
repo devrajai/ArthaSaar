@@ -1,0 +1,38 @@
+name: Jules security fix
+
+# Runs weekly, and ONLY starts a session when GitHub's own scanners have something open.
+# GitHub finds (deterministic, free on a public repo); Jules fixes (good at reasoning about
+# a specific flagged issue, unreliable as a scanner). A security task that fires every day
+# whether or not anything is open is just a daily PR to review.
+#
+# Needs the same JULES_API_KEY secret as the quality task.
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mondays 06:45 UTC = 12:15 IST, just after the daily quality task.
+    - cron: '45 6 * * 1'
+
+permissions:
+  contents: read
+  security-events: read
+  issues: read
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Ask Jules to fix any open security alerts
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          # GITHUB_TOKEN lets the script READ the repo's alerts. It is provided by Actions.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          BASE_BRANCH: main
+        run: python3 scripts/jules_security.py

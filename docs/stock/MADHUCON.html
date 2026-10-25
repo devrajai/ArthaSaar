@@ -22,12 +22,16 @@ table{border-collapse:collapse;width:100%;background:#fff;border:1px solid #e5e7
 td{padding:9px 12px;border-bottom:1px solid #eef0f3;font-size:14px}
 td:first-child{color:#6b7280;width:44%}
 .back{display:inline-block;margin-top:18px;font-size:14px}
+.share{margin:10px 0 4px;padding:8px 14px;border-radius:999px;border:1px solid #c3ddff;
+  background:#eef4ff;color:#1d4ed8;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.share.done{background:#e8f7ee;border-color:#a7d8b8;color:#0b7a52}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Madhucon Projects Limited</h1>
   <div class="sub">MADHUCON &middot; Industrials</div>
+  <button id="shareBtn" class="share" type="button">Copy link to this page</button>
   <table>
     <tr><td>Last close</td><td><b>3.88</b></td></tr>
     <tr><td>Day change</td><td>-0.51%</td></tr>
@@ -36,6 +40,17 @@ td:first-child{color:#6b7280;width:44%}
   <a class="back" href="../index.html#stocks">&larr; Back to ArthaSaar</a>
 </div>
 <script>
+// Share: copy this page's URL. No external request, nothing loaded from a third party -
+// navigator.clipboard is part of the browser. Falls back to a prompt on older browsers
+// where the async clipboard needs a secure context.
+document.getElementById("shareBtn").addEventListener("click", function(){
+  var btn=this, url=location.href.split("?")[0];
+  function ok(){ btn.textContent="Link copied"; btn.className="share done";
+    setTimeout(function(){ btn.textContent="Copy link to this page"; btn.className="share"; }, 1800); }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(ok, function(){ window.prompt("Copy this link:", url); });
+  } else { window.prompt("Copy this link:", url); }
+});
 // Progressive enhancement only: the table above already carries the facts for crawlers.
 fetch("../stocks.json").then(function(r){return r.json();}).then(function(d){
   var s=(d.stocks||{})["MADHUCON.NS"]; if(!s) return;

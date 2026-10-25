@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------
-   Self-destructing service worker.
+   Self-destructing service worker.   [rev 202610251003]
 
    WHY THIS FILE EXISTS
    The previous ArthaSaar site (a different codebase, now gone) registered a

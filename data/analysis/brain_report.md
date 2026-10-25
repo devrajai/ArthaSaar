@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-10-25T11:47:32Z  |  10 channels, 233 videos, window 2026-06-25 to 2026-10-25.
+Generated 2026-10-25T13:01:09Z  |  10 channels, 234 videos, window 2026-06-25 to 2026-10-25.
 
-**Total views across the window:** 11,058,783  |  **net bull-bear keyword score:** 67
+**Total views across the window:** 11,059,023  |  **net bull-bear keyword score:** 68
 
 ## Most-talked-about symbols
 
@@ -26,8 +26,8 @@ Generated 2026-10-25T11:47:32Z  |  10 channels, 233 videos, window 2026-06-25 to
 | MF/SIP | 59 |
 | Beginner/Education | 50 |
 | Earnings/Results | 40 |
-| IPO | 39 |
-| Budget/Policy | 38 |
+| IPO | 40 |
+| Budget/Policy | 39 |
 | Options/F&O | 34 |
 
 ## Channels by reach
@@ -37,8 +37,8 @@ Generated 2026-10-25T11:47:32Z  |  10 channels, 233 videos, window 2026-06-25 to
 | POWER OF STOCKS | 17 | 160,114 | 2026-10-25 |
 | Abhishek Kar | 19 | 134,692 | 2026-10-24 |
 | Moneytalks by Groww | 19 | 67,286 | 2026-10-24 |
-| Groww Edge | 30 | 40,668 | 2026-10-24 |
 | WAY2LAABH | 19 | 39,734 | 2026-10-23 |
+| Groww Edge | 31 | 39,363 | 2026-10-25 |
 | Ghanshyam Tech | 20 | 37,188 | 2026-10-25 |
 | Groww | 26 | 27,024 | 2026-10-24 |
 | Markets by Zerodha | 22 | 24,582 | 2026-10-24 |

@@ -20,6 +20,45 @@ ENDPOINTS = {
     "block": "https://www.nseindia.com/api/block-deal-archives",
 }
 
+# The API above is undocumented and frequently refuses non-browser clients - it returned
+# nothing at all on every recent run. NSE also publishes the same disclosures as plain CSV
+# on the archives host, which is the same host the bhavcopy already comes from, so it is
+# reachable from CI. Tried only when the API gives nothing.
+CSV_FALLBACK = {
+    "bulk": "https://nsearchives.nseindia.com/content/equities/bulk.csv",
+    "block": "https://nsearchives.nseindia.com/content/equities/block.csv",
+}
+
+
+def get_text(url):
+    """Fetch raw text. Used for the CSV fallback."""
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.read().decode("utf-8", "replace")
+    except Exception as e:
+        print("  %s -> %s" % (url.rsplit("/", 1)[-1], type(e).__name__))
+        return None
+
+
+def rows_from_csv(text, want):
+    """NSE's bulk/block CSV -> the same row shape as the API branch."""
+    import csv as _csv, io as _io
+    if not text or "<html" in text[:200].lower():
+        return []
+    out = []
+    for r in _csv.DictReader(_io.StringIO(text)):
+        low = {str(k).strip().lower(): v for k, v in r.items()}
+        def g(*names):
+            for n in names:
+                if n in low and low[n] not in (None, ""):
+                    return str(low[n]).strip()
+            return ""
+        out.append([g("date"), g("symbol"), g("client name", "client"),
+                    g("buy/sell", "buy / sell"), g("quantity traded", "quantity"),
+                    g("trade price / wght. avg. price", "trade price", "price")])
+    return out
+
 
 def get(url):
     try:
@@ -60,10 +99,14 @@ def main():
            "bulk": [], "block": [], "note": "", "failed": []}
     for key, url in ENDPOINTS.items():
         data = get(url)
-        if data is None:
+        rows = rows_of(data) if data is not None else []
+        if not rows and key in CSV_FALLBACK:
+            print("  %s: api empty, trying the archive csv" % key)
+            rows = rows_from_csv(get_text(CSV_FALLBACK[key]), key)
+        if not rows:
             out["failed"].append(key)
             continue
-        out[key] = rows_of(data)[:400]
+        out[key] = rows[:400]
         print("  %s: %d rows" % (key, len(out[key])))
     out["count"] = len(out["bulk"]) + len(out["block"])
     if not out["count"]:

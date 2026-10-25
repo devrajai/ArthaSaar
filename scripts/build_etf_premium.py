@@ -29,8 +29,25 @@ def norm(s):
     return re.sub(r"[^a-z0-9]+", " ", (s or "").lower()).strip()
 
 
+# NSE writes ETFs in shorthand that AMFI spells out. Expanding first is what lets
+# "NIFTYBEES" and "Nippon India ETF Nifty 50 BeES" agree.
+ABBREV = {
+    "n50": "nifty 50", "n100": "nifty 100", "n500": "nifty 500", "nn50": "nifty next 50",
+    "bnf": "bank nifty", "nbn": "bank nifty", "midcap150": "nifty midcap 150",
+    "smlcap250": "nifty smallcap 250", "nxt50": "nifty next 50",
+    "midsml": "midcap smallcap", "gtilt": "gsec gilt", "gs": "gsec",
+}
+
+
+def expand(s):
+    t = " " + norm(s) + " "
+    for k, v in ABBREV.items():
+        t = t.replace(" " + k + " ", " " + v + " ")
+    return t
+
+
 def tokens(s):
-    return [t for t in norm(s).split() if t and t not in STOP and len(t) > 1]
+    return [t for t in expand(s).split() if t and t not in STOP and len(t) > 1]
 
 
 def load_etf_list():
@@ -100,39 +117,53 @@ def build_index(schemes):
     return idx
 
 
+# Words too common to prove an identity on their own. Sharing ONLY these is not a match.
+GENERIC = {"nifty", "sensex", "gold", "bank", "silver", "india", "index", "liquid",
+           "gilt", "bond", "etf", "exchange", "traded", "fund"}
+
+
 def match(nse_name, nse_sym, idx):
     """Return (scheme_code, score) for a confident match, or (None, 0).
 
-    Rule: EVERY distinctive token in the NSE name must appear in the scheme name, and the
-    winner must be unique. Full containment is deliberately strict - it is what stops
-    "Nifty 50 BeES" matching "Nifty BeES", and a wrong premium is worse than none.
+    This used to require FULL containment - every distinctive token in the NSE name had to
+    appear in the scheme name - which matched 0 of 354. NSE and AMFI simply name the same
+    fund differently often enough that containment almost never holds.
+
+    Now it SCORES, but with three guards that keep a wrong premium out:
+      1. cover  >= 0.75  - most of the NSE name must appear in the scheme
+      2. at least one DISTINCTIVE token shared - never match on "gold"/"nifty"/"bank" alone,
+         which is exactly how "Nifty 50 BeES" would otherwise land on "Nifty BeES"
+      3. the winner must beat the runner-up - if two candidates look equally good it is
+         genuinely ambiguous and gets dropped rather than guessed
     """
-    # Only the NAME's tokens, never the symbol's: an NSE symbol like "NIFTYBEES" is a
-    # single glued token that can never appear in an AMFI scheme name, so including it
-    # made full containment impossible and nothing ever matched.
-    nt = set(tokens(nse_name))
-    if not nt:
-        nt = set(tokens(nse_sym))
+    nt = set(tokens(nse_name)) or set(tokens(nse_sym))
     if not nt:
         return None, 0
-    hits = []
+
+    scored = []
     for cand in idx:
-        if nt <= cand["tok"]:          # every NSE token present in the scheme
-            hits.append((len(cand["tok"]), cand["code"]))
-    # An exact token-set match beats every superset. Without this, "Nifty BeES" is dropped
-    # as ambiguous because "Nifty 50 BeES" also contains it - even though one is exact.
-    exact = [c for n, c in hits if n == len(nt)]
-    if len(exact) == 1:
-        return exact[0], len(nt)
-    if len(hits) == 1:
-        return hits[0][1], len(nt)
-    if len(hits) > 1:
-        # several schemes contain the name - usually plan/option variants of the same fund.
-        # Take it only if one is clearly the closest; otherwise drop it as ambiguous.
-        hits.sort()
-        if hits[0][0] < hits[1][0] - 1:
-            return hits[0][1], len(nt)
-    return None, 0
+        shared = nt & cand["tok"]
+        if not shared:
+            continue
+        cover = len(shared) / len(nt)                 # how much of the NSE name is present
+        precision = len(shared) / max(1, len(cand["tok"]))   # penalise enormous schemes
+        distinctive = len(shared - GENERIC)
+        exact = 1 if cand["tok"] == nt else 0
+        scored.append((exact, cover, precision, distinctive, len(cand["tok"]), cand["code"]))
+    if not scored:
+        return None, 0
+
+    scored.sort(key=lambda x: (-x[0], -x[1], -x[2], x[4]))
+    best = scored[0]
+    if best[1] < 0.75:                                # guard 1
+        return None, 0
+    if best[3] < 1:                                   # guard 2
+        return None, 0
+    if len(scored) > 1 and not best[0]:               # guard 3, unless one is an exact set
+        second = scored[1]
+        if abs(best[1] - second[1]) < 0.15 and abs(best[2] - second[2]) < 0.15:
+            return None, 0
+    return best[5], int(round(best[1] * 100))
 
 
 def main():

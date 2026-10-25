@@ -464,9 +464,19 @@ input,select,textarea{color:var(--text)}
 <main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div></main>
 
 <footer class="wrap"><p class="build" style="font-size:11px;opacity:.65">build 25 Oct 10:32 UTC</p>
-  <p><strong>Educational data, not investment advice.</strong> Sources: NSE bhavcopy &amp; reference files,
-  Yahoo Finance, Binance, YouTube feeds, AMFI, publisher RSS. NSE/BSE data is governed by their
-  Data Sharing &amp; Usage Policy — personal use is fine, public redistribution may need a licence.</p>
+  <p><strong>For education and research. Not investment advice.</strong> Nothing here is a
+  recommendation to buy or sell. Prices and fundamentals can be wrong, delayed, or missing —
+  check anything you intend to act on against the exchange or your broker.</p>
+
+  <p><strong>Where the data comes from.</strong> NSE end-of-day bhavcopy and reference files
+  (prices, open interest, indices, surveillance lists, ban list, corporate actions); Yahoo Finance
+  (India VIX, global indices, crypto); AMFI (mutual fund NAVs); publisher RSS feeds for news.
+  Each section names its own source.</p>
+
+  <p><strong>Licence.</strong> NSE and BSE data is governed by their Data Sharing &amp; Usage Policy.
+  Personal, non-commercial use is generally fine; redistributing exchange data publicly, or
+  building a product on it, may need a licence from the exchange. This site is a personal
+  project, not a licensed data vendor.</p>
 </footer>
 
 <script>
@@ -1323,12 +1333,29 @@ function build(d){
          source:"NSE F&O bhavcopy (UDiFF).", updated:d.fno.date||"",
          note:"PCR above 1 is often read as bearish positioning, below 1 as bullish - it is a sentiment gauge, not a signal."}));
       if(d.fno.top_oi)
-        v.appendChild(card("Top open interest","",[ tbl({columns:["symbol","oi","oi_chg","chg"],
-          rows:d.fno.top_oi.map(function(s){return [s.symbol,s.oi,s.oi_chg,s.chg];})},["oi","oi_chg","chg"]) ],
-          {what:"Stock futures ranked by open interest.",source:"NSE F&O bhavcopy.",updated:d.fno.date||""}));
+        v.appendChild(card("Top open interest","with long / short buildup",[ tbl({columns:["symbol","oi","oi_chg","chg","buildup"],
+          rows:d.fno.top_oi.map(function(s){return [s.symbol,s.oi,s.oi_chg,s.chg,s.buildup||"—"];})},["oi","oi_chg","chg"]) ],
+          {what:"Stock futures ranked by open interest, each tagged by how price and open interest moved together.",
+           source:"NSE F&O bhavcopy.",updated:d.fno.date||"",
+           note:"Long buildup = price up and OI up (fresh longs). Short buildup = price down and OI up (fresh shorts). Short covering = price up and OI down. Long unwinding = price down and OI down. Anything under a 0.5% price move or 1% OI move is left blank as noise."}));
       if(d.fno.index_futures&&d.fno.index_futures.length)
         v.appendChild(card("Index futures OI","",[ tbl({columns:["symbol","oi"],rows:d.fno.index_futures.map(function(i){return [i.symbol,i.oi];})},["oi"]) ],
           {what:"Open interest in index futures.",source:"NSE F&O bhavcopy.",updated:d.fno.date||""}));
+    }
+    if(VIX&&VIX.series&&VIX.series.length>2){
+      var lastv=VIX.series[VIX.series.length-1];
+      v.appendChild(card("India VIX",
+        "latest "+num(VIX.latest)+(VIX.percentile_2y!=null?" · "+VIX.percentile_2y+"th percentile of the 2-year range":""),
+        [ sparkline(VIX.series.map(function(q){return q[1];}), 320, 96),
+          para("Two-year range "+num(VIX.low_2y)+" to "+num(VIX.high_2y)+", over "+VIX.count+" sessions.", false) ],
+        {what:"India VIX is the NSE's 30-day implied volatility index, computed from Nifty option prices.",
+         source:"Yahoo Finance ^INDIAVIX.", updated:(lastv||[])[0], note:VIX.note}));
+    }
+    if(FOBAN&&FOBAN.symbols&&FOBAN.symbols.length){
+      v.appendChild(card("F&O ban list", FOBAN.count+" contracts · "+(FOBAN.date||""),
+        [ para(FOBAN.symbols.join("  ·  "), true) ],
+        {what:"Contracts that have hit their market-wide position limit, so fresh positions are banned until open interest falls.",
+         source:"NSE fo_secban.csv.", updated:FOBAN.date||"", note:FOBAN.note}));
     }
     if(d.spikes&&d.spikes.oi)
       v.appendChild(card("OI spikes", ">= 12% change in open interest",
@@ -2772,6 +2799,8 @@ function optional(url){return getJson(url).catch(function(){return null;});}   /
 function assign(name, v){
   switch(name){
     case "data.json": DATA=v; break;
+    case "vix.json": VIX=v; break;
+    case "fo_ban.json": FOBAN=v; break;
     case "stocks.json": STOCKS=v; break;
     case "universe.json": UNIVERSE=v; break;
     case "screener.json": SCREENER=v; break;
@@ -2814,7 +2843,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json"];
+var VIX=null, FOBAN=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json"];
 
 function renderAll(){
   if(!DATA) return;

@@ -79,8 +79,31 @@ def build_futures(fo: pd.DataFrame) -> dict:
         oic = g["oi_change"].sum()
         c, pc = g["close"].iloc[-1], g["prevclose"].iloc[-1]
         chg = round((c / pc - 1) * 100, 2) if pc and pd.notna(pc) and pd.notna(c) else None
+        # ---- long / short buildup ----------------------------------------------------
+        # This costs nothing extra: open interest and price are already stored. The classic
+        # four-way read of OI against price:
+        #   price up   + OI up   -> long buildup     (new longs, conviction)
+        #   price down + OI up   -> short buildup    (new shorts, conviction)
+        #   price up   + OI down -> short covering   (shorts closing, can fade)
+        #   price down + OI down -> long unwinding   (longs bailing out)
+        # Thresholds keep noise out: a 0.05% price tick with 0.1% OI drift is not a signal.
+        oi_prev = (oi - oic) if (pd.notna(oi) and pd.notna(oic)) else None
+        oi_pct = None
+        if oi_prev and oi_prev > 0:
+            oi_pct = round(float(oic) / float(oi_prev) * 100, 2)
+        buildup = None
+        if chg is not None and oi_pct is not None and abs(chg) >= 0.5 and abs(oi_pct) >= 1.0:
+            if chg > 0 and oi_pct > 0:
+                buildup = "Long buildup"
+            elif chg < 0 and oi_pct > 0:
+                buildup = "Short buildup"
+            elif chg > 0 and oi_pct < 0:
+                buildup = "Short covering"
+            else:
+                buildup = "Long unwinding"
         stocks.append({"symbol": sym, "oi": None if pd.isna(oi) else int(oi),
-                       "oi_chg": None if pd.isna(oic) else int(oic), "change_pct": chg})
+                       "oi_chg": None if pd.isna(oic) else int(oic), "change_pct": chg,
+                       "oi_pct": oi_pct, "buildup": buildup})
     stocks.sort(key=lambda s: -(s["oi"] or 0))
 
     index_futures = []

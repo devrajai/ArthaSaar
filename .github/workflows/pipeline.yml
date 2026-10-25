@@ -180,6 +180,12 @@ jobs:
       - name: "7i11. Market session times and holidays"
         run: python scripts/build_market_status.py || true
 
+      # India VIX history and the F&O ban list. Both sources were tested before being wired
+      # in: Yahoo ^INDIAVIX and nsearchives fo_secban.csv both respond; niftyindices, NSDL
+      # and the participant-wise OI files do not, so those are deliberately not here.
+      - name: "7i12. India VIX history and the F&O ban list"
+        run: python scripts/fetch_vix_ban.py || true
+
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 

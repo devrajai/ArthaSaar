@@ -463,7 +463,7 @@ input,select,textarea{color:var(--text)}
 <div id="glossPop"></div>
 <main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div></main>
 
-<footer class="wrap"><p class="build" style="font-size:11px;opacity:.65">build 25 Oct 10:03 UTC</p>
+<footer class="wrap"><p class="build" style="font-size:11px;opacity:.65">build 25 Oct 10:32 UTC</p>
   <p><strong>Educational data, not investment advice.</strong> Sources: NSE bhavcopy &amp; reference files,
   Yahoo Finance, Binance, YouTube feeds, AMFI, publisher RSS. NSE/BSE data is governed by their
   Data Sharing &amp; Usage Policy — personal use is fine, public redistribution may need a licence.</p>
@@ -2877,9 +2877,27 @@ function groupTabs(){
     head.type="button"; head.className="grpb";
     head.innerHTML='<span>'+g[0]+'</span><i class="grpi"></i>';
     head.setAttribute("aria-expanded", open?"true":"false");
+    // INLINE styles, on purpose. Every attempt to style this row through a stylesheet lost
+    // the cascade to the site's `.tabsrow button` rule one way or another. An inline style
+    // beats any rule that is not !important, so this row cannot be turned into a pill.
+    head.style.cssText =
+      "display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;" +
+      "padding:16px 2px;border:0;border-radius:0;background:transparent;box-shadow:none;" +
+      "color:var(--text);font:inherit;font-size:16px;font-weight:800;letter-spacing:-.2px;" +
+      "white-space:normal;overflow:visible;text-overflow:clip;min-width:0;";
+    var paintChev=function(){
+      var ic=head.querySelector(".grpi");
+      if(!ic) return;
+      ic.style.cssText="margin-left:auto;width:9px;height:9px;flex:0 0 auto;" +
+        "border-right:2px solid var(--blue);border-bottom:2px solid var(--blue);" +
+        "border-top:0;border-left:0;border-radius:0;background:transparent;" +
+        "transform:"+(wrap.classList.contains("open")?"rotate(-135deg)":"rotate(45deg)")+";";
+    };
+    setTimeout(paintChev,0);
     head.addEventListener("click",function(){
       var o=wrap.classList.toggle("open");
       head.setAttribute("aria-expanded", o?"true":"false");
+      paintChev();
     });
     var body=document.createElement("div"); body.className="grpbody";
     live.forEach(function(id){ body.appendChild(byId[id]); used[id]=1; });

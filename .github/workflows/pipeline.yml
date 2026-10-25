@@ -62,14 +62,25 @@ jobs:
         run: python scripts/candles_from_bhavcopy.py --from-local
 
       - name: "5a. Restore the deep candle archive from Drive (BEFORE any analysis)"
-        # This used to run at step 8, AFTER indicators, features, forecasts, patterns,
+        # This used to run as step 8, AFTER indicators, features, forecasts, patterns,
         # backtest, relative strength and seasonality had all already run - so every one of
-        # them analysed a few days of bhavcopy while five years of history sat unused in
-        # Drive. Moved here so the history exists before anything reads it.
-        if: env.HAS_DRIVE == 'true'
+        # them analysed a few days of bhavcopy while years of history sat unused in Drive.
+        #
+        # It no longer has an `if:` gate. That gate made the failure INVISIBLE: with a secret
+        # missing the step was skipped silently, the run stayed green, and every downstream
+        # tab quietly degraded to bhavcopy-only. Now it always runs and says out loud when it
+        # cannot, so a missing secret shows up as a warning on the run instead of as an
+        # empty Seasonality card nobody can explain.
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
-        run: python scripts/candles_from_drive.py --folder-id "${{ secrets.ARTHASAAR_DRIVE_FOLDER }}" --kind daily || true
+          ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
+        run: |
+          if [ -z "$GOOGLE_SA_JSON" ] || [ -z "$ARTHASAAR_DRIVE_FOLDER" ]; then
+            echo "::warning title=Deep history NOT restored::GOOGLE_SA_JSON or ARTHASAAR_DRIVE_FOLDER is missing, so the deep candle archive was not restored. Indicators, features, the backtest and seasonality are running on bhavcopy only. Seasonality will stay empty until this is fixed."
+            echo "SKIPPED: deep candle archive - missing secret (see the warning above)"
+            exit 0
+          fi
+          python scripts/candles_from_drive.py --folder-id "$ARTHASAAR_DRIVE_FOLDER" --kind daily
 
       - name: "5b. Corporate actions + price adjustment (BEFORE any analysis)"
         run: |

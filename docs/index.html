@@ -216,32 +216,26 @@
   footer{color:var(--muted);font-size:13px;padding:8px 0 30px}
 
 /* ============================================================================
-   LIGHT BLUE - LIQUID GLASS  (mobile-first)
-   Inside the existing <style>, so it loads with the page: no flash of the desktop layout.
+   ARTHASAAR - LIGHT BLUE LIQUID GLASS.  ONE THEME, ALWAYS.
+   Inside the existing <style>, so it loads with the page: no flash of the old layout.
 
-   NOTE ON backdrop-filter: the live site previously banned it because it broke an earlier
-   dark theme. Two safeguards: an @supports fallback, and glass only on cards / header /
-   drawer - never on table rows, which would be hundreds of composited layers.
+   The palette is pinned to html:root AND html[data-theme="dark"] AND body.dark, so no saved
+   theme can ever switch the text colour out from under a hardcoded light background.
    ============================================================================ */
-/* html:root, NOT :root. The site's dark palette sits on html[data-theme="dark"], which
-   scores (0,1,1) and BEAT a plain :root (0,1,0) - so its near-white --text won while my
-   light gradient painted the background, and the text was invisible on a light page.
-   html:root ties at (0,1,1) and, being later in the file, wins. The dark block below comes
-   after it, so dark mode still switches correctly. */
-html:root{
-  --bg:#eaf4ff; --card:rgba(255,255,255,.55); --line:rgba(148,190,240,.38);
-  --text:#0d2540; --muted:#5b7593;
-  --accent:#2563eb; --accent-text:#fff;
+html:root,
+html[data-theme="dark"],
+body.dark{
+  color-scheme:light;                     /* stop the browser darkening form controls */
+  --bg:#eaf4ff; --text:#0b2239; --muted:#5a7391;
+  --card:rgba(255,255,255,.62); --line:rgba(140,185,240,.40);
+  --accent:#1d4ed8; --accent-text:#fff;
   --up:#0b7a52; --down:#c02b2b;
-  --head:rgba(255,255,255,.6); --info:rgba(255,255,255,.72); --infoline:rgba(124,178,255,.5);
-  --glass:rgba(255,255,255,.55);
-  --glass-line:rgba(255,255,255,.78);
-  --glass-inner:rgba(255,255,255,.92);
-  --blue:#2563eb; --blue-dk:#1d4ed8; --blue-soft:#eaf3ff; --blue-line:#c3ddff;
-  --shadow:0 10px 34px rgba(37,99,235,.13), 0 2px 6px rgba(37,99,235,.07);
-}
-html:root{
-  /* the blobs matter: glass is only visible when there is something behind it to blur */
+  --head:rgba(255,255,255,.7); --info:rgba(255,255,255,.82); --infoline:rgba(124,178,255,.55);
+  --glass:rgba(255,255,255,.60);
+  --glass-line:rgba(255,255,255,.85);
+  --glass-inner:rgba(255,255,255,.95);
+  --blue:#1d4ed8; --blue-dk:#173fa8; --blue-soft:#eaf3ff; --blue-line:#c3ddff;
+  --shadow:0 8px 26px rgba(29,78,216,.12), 0 2px 5px rgba(29,78,216,.06);
   --bg-grad:
     radial-gradient(760px 520px at 8% -4%, #9fcdff 0%, rgba(159,205,255,0) 60%),
     radial-gradient(620px 480px at 98% 6%, #bcdcff 0%, rgba(188,220,255,0) 56%),
@@ -249,18 +243,13 @@ html:root{
     radial-gradient(420px 380px at 78% 46%, #d6ecff 0%, rgba(214,236,255,0) 60%),
     linear-gradient(180deg,#eaf4ff 0%,#dcecff 52%,#eef7ff 100%);
 }
-body{ background:var(--bg-grad); background-attachment:fixed; color:var(--text); }
-html[data-theme="dark"], body.dark{
-  --bg:#0a1626; --card:rgba(20,35,58,.62); --line:rgba(120,170,235,.22);
-  --text:#eaf3ff; --muted:#9db6d6; --head:rgba(24,40,66,.6);
-  --glass:rgba(24,40,66,.55); --glass-line:rgba(120,170,235,.28); --glass-inner:rgba(255,255,255,.08);
-  --bg-grad:
-    radial-gradient(760px 520px at 8% -4%, #14304f 0%, rgba(20,48,79,0) 60%),
-    radial-gradient(680px 520px at 96% 2%, #102942 0%, rgba(16,41,66,0) 58%),
-    linear-gradient(180deg,#0a1626 0%,#0d1d31 60%,#0a1626 100%);
+
+body{
+  background:var(--bg-grad); background-attachment:fixed;
+  color:var(--text); font-size:16px; line-height:1.6;
 }
 
-/* ---- the glass itself ---- */
+/* ---- the glass ---- */
 .card,.kpi,.searchwrap,.info,.chartbox,.cwrap,.tile{
   background:var(--glass);
   -webkit-backdrop-filter:blur(18px) saturate(180%);
@@ -268,93 +257,104 @@ html[data-theme="dark"], body.dark{
   border:1px solid var(--glass-line);
   box-shadow:var(--shadow), inset 0 1px 0 var(--glass-inner);
 }
-/* The sheen is a background LAYER, not a ::before overlay. An overlay needs
-   overflow:hidden on the card to stay inside the rounded corner - and that then CLIPS
-   wide tables instead of letting .tablewrap scroll them. */
+/* sheen as a background LAYER: an overlay would need overflow:hidden, which then CLIPS the
+   wide tables instead of letting .tablewrap scroll them */
 .card,.kpi{
   background:
-    linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.10) 44%,rgba(255,255,255,0) 70%),
+    linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.12) 44%,rgba(255,255,255,0) 70%),
     var(--glass);
 }
-html[data-theme="dark"] .card,html[data-theme="dark"] .kpi,body.dark .card,body.dark .kpi{
-  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,0) 60%),var(--glass);
-}
-
-/* ---- fallback: no backdrop-filter -> solid panels, not invisible ones ---- */
 @supports not ((backdrop-filter:blur(4px)) or (-webkit-backdrop-filter:blur(4px))){
   body{background:#eef6ff}
-  .card,.kpi,.searchwrap,.info,.chartbox,.cwrap,.tile{background:#fff;box-shadow:0 2px 10px rgba(37,99,235,.10)}
-  header{background:#f4f9ff}
-  .tabsrow{background:#f4f9ff}
+  .card,.kpi,.searchwrap,.info,.chartbox,.cwrap,.tile{background:#fff;box-shadow:0 2px 10px rgba(29,78,216,.10)}
+  header,.tabsrow{background:#f4f9ff}
 }
 
-/* ---- header: two rows on a phone ---- */
+/* ---- TEXT: set explicitly, never inherited through a variable that a theme could swap ---- */
+body,h1,h2,h3,p,td,th,li,label,span,div{color:var(--text)}
+.sub,.tag,.cnote,.kpi .n,.cardhead .sub,.msg,#voiceHint{color:var(--muted)}
+h3{color:var(--blue-dk)}
+.card p a{color:var(--blue-dk);text-decoration:underline;text-underline-offset:2px}
+.gloss{color:var(--blue-dk);border-bottom:1px dotted var(--blue);font-weight:700}
+td.sym{color:var(--blue-dk);font-weight:800}
+.kpi .k{color:var(--blue-dk)}
+.field .sub{color:var(--blue-dk);font-weight:800;text-transform:uppercase;font-size:10.5px;letter-spacing:.7px}
+.kv>div b{color:var(--blue-dk)}
+.caldate{color:var(--blue-dk)}
+th{color:var(--muted)}
+.up{color:var(--up)} .down{color:var(--down)}
+
+/* ---- header: two rows, and a NARROW search ---- */
 header{
-  position:sticky;top:0;z-index:30;background:var(--bg);
+  position:sticky;top:0;z-index:30;background:rgba(244,250,255,.86);
   -webkit-backdrop-filter:blur(20px) saturate(180%);
   backdrop-filter:blur(20px) saturate(180%);
   border-bottom:1px solid var(--line);
 }
-.wrap{max-width:680px;padding:0 18px}
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 0 4px}
+.wrap{max-width:680px;padding:0 16px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:11px 0 6px}
 .top > div:not(.logo):not(.searchwrap):not(.right){flex:1 1 auto;min-width:0}
 .top > div:not(.logo):not(.searchwrap):not(.right) .tag{
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:100%;
 }
 .logo{
-  width:42px;height:42px;flex:0 0 auto;border-radius:14px;
-  background:linear-gradient(145deg,#8cc2ff,#2563eb);color:#fff;font-size:15px;
+  width:40px;height:40px;flex:0 0 auto;border-radius:13px;
+  background:linear-gradient(145deg,#8cc2ff,#1d4ed8);color:#fff;font-size:14px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 18px rgba(37,99,235,.35), inset 0 1px 0 rgba(255,255,255,.6);
+  box-shadow:0 5px 15px rgba(29,78,216,.32), inset 0 1px 0 rgba(255,255,255,.6);
 }
-h1{font-size:19px;font-weight:800;letter-spacing:-.3px;margin:0}
-.tag{font-size:11.5px;color:var(--muted)}
+h1{font-size:18px;font-weight:800;letter-spacing:-.3px;margin:0}
+.tag{font-size:11px}
 #mkt{font-size:10px;padding:2px 8px;margin-left:6px}
-
 #burger{
-  width:42px;height:42px;flex:0 0 auto;border:1px solid var(--glass-line);border-radius:13px;
+  width:40px;height:40px;flex:0 0 auto;border:1px solid var(--glass-line);border-radius:12px;
   background:var(--glass);cursor:pointer;
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
   display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 10px;
 }
 #burger i{display:block;height:2px;background:var(--blue);border-radius:2px}
-#burger i:nth-child(2){width:68%}
+#burger i:nth-child(2){width:66%}
 .right{display:none}
 
+/* NARROW search: capped width, slimmer, sits under the header rather than filling the row */
 .searchwrap{
-  order:5;flex:1 1 100%;max-width:none;margin:2px 0 14px;padding:11px 15px;border-radius:999px;
-  display:flex;align-items:center;gap:9px;position:static;
+  order:5;flex:0 1 auto;width:100%;max-width:330px;
+  margin:0 0 12px;padding:9px 13px;border-radius:999px;
+  display:flex;align-items:center;gap:8px;position:static;
 }
 .searchwrap input{flex:1;min-width:0;border:0;background:transparent;font:inherit;
-  font-size:15px;color:var(--text);outline:none}
-.searchwrap .mag{color:var(--blue);font-size:17px;line-height:1}
+  font-size:14.5px;color:var(--text);outline:none}
+.searchwrap input::placeholder{color:var(--muted);font-size:14px}
+.searchwrap .mag{color:var(--blue);font-size:16px;line-height:1}
 #micBtn{background:transparent;border:0;padding:0;cursor:pointer;color:var(--blue);
   display:inline-flex;align-items:center}
 #micBtn.listening{color:var(--down)}
-#voiceHint{font-size:11px;color:var(--muted)}
 
-/* ---- drawer, as an accordion ---- */
+/* ---- drawer, accordion ---- */
 .tabs{position:fixed;inset:0;z-index:60;display:none}
 body.nav-open .tabs{display:block}
 body.nav-open{overflow:hidden}
 .tabsrow{
-  display:block;position:absolute;inset:0;overflow-y:auto;padding:62px 18px 40px;max-width:none;
-  background:rgba(246,251,255,.9);
+  display:block;position:absolute;inset:0;overflow-y:auto;padding:60px 16px 40px;max-width:none;
+  background:rgba(244,250,255,.94);          /* hardcoded light AND the text is pinned dark */
   -webkit-backdrop-filter:blur(28px) saturate(180%);
   backdrop-filter:blur(28px) saturate(180%);
 }
+@supports not ((backdrop-filter:blur(4px)) or (-webkit-backdrop-filter:blur(4px))){
+  .tabsrow{background:#f4f9ff}
+}
 #navClose{
-  position:absolute;top:14px;right:16px;z-index:2;width:40px;height:40px;
+  position:absolute;top:12px;right:14px;z-index:2;width:38px;height:38px;
   border:1px solid var(--glass-line);border-radius:12px;background:var(--glass);
-  font-size:22px;line-height:1;color:var(--blue);cursor:pointer;
+  font-size:21px;line-height:1;color:var(--blue);cursor:pointer;
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
 }
 .grpw{border-bottom:1px solid var(--line)}
 .grpw:first-of-type{border-top:1px solid var(--line)}
 .grpb{
   display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;
-  padding:17px 2px;border:0;background:transparent;color:var(--text);
-  font:inherit;font-size:16.5px;font-weight:800;letter-spacing:-.2px;
+  padding:16px 2px;border:0;background:transparent;color:var(--text);
+  font:inherit;font-size:16px;font-weight:800;letter-spacing:-.2px;
 }
 .grpw.open .grpb{color:var(--blue-dk)}
 .grpi{
@@ -362,65 +362,65 @@ body.nav-open{overflow:hidden}
   border-bottom:2px solid var(--blue);transform:rotate(45deg);transition:transform .18s;
 }
 .grpw.open .grpi{transform:rotate(-135deg)}
-.grpbody{display:none;padding:0 0 10px 12px}
+.grpbody{display:none;padding:0 0 8px 10px}
 .grpw.open .grpbody{display:block}
 .grpbody button{
   display:flex;align-items:center;width:100%;text-align:left;cursor:pointer;
   padding:13px 2px;border:0;border-bottom:1px solid var(--line);background:transparent;
-  color:var(--text);font:inherit;font-size:15.5px;font-weight:600;
+  color:var(--text);font:inherit;font-size:15px;font-weight:600;
 }
-.grpbody button::after{content:"\203A";margin-left:auto;color:var(--blue);opacity:.5;font-size:18px}
+.grpbody button::after{content:"\203A";margin-left:auto;color:var(--blue);opacity:.55;font-size:18px}
 .grpbody button.active{color:var(--blue-dk);font-weight:800}
 .grpbody button.active::after{opacity:1}
 #navClose::after{content:none}
-.drawer-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.drawer-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
 .drawer-controls .small{
-  padding:10px 16px;border-radius:999px;border:1px solid var(--glass-line);
-  background:var(--glass);color:var(--blue-dk);font-weight:700;font-size:13.5px;
+  padding:9px 15px;border-radius:999px;border:1px solid var(--glass-line);
+  background:var(--glass);color:var(--blue-dk);font-weight:700;font-size:13px;
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
+/* one theme, so there is nothing for this to do */
+#themeBtn{display:none !important}
 
 /* ---- content ---- */
-.card{border-radius:20px;padding:18px 16px;margin-bottom:14px}
-.cardhead h2{font-size:17px;line-height:1.35}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.kpi{border-radius:16px;padding:13px 12px}
-.kpi .k{color:var(--blue-dk)}
-.card p a{color:var(--blue-dk);text-decoration:underline;text-underline-offset:2px}
-.gloss{color:var(--blue-dk);border-bottom:1px dotted var(--blue);font-weight:700}
-td.sym{color:var(--blue-dk);font-weight:800}
-.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
-table{min-width:460px}
+.card{border-radius:18px;padding:16px 15px;margin-bottom:12px}
+.cardhead h2{font-size:16.5px;line-height:1.35}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.kpi{border-radius:15px;padding:12px 11px}
+.kpi .v{font-size:20px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -15px;padding:0 15px}
+table{min-width:440px}
 td{white-space:normal}
 td.num,th.num{white-space:nowrap}
-td:first-child,th:first-child{max-width:190px}
+td:first-child,th:first-child{max-width:180px}
 button.small,.ibtn{border-radius:999px;border:1px solid var(--glass-line);
   background:var(--glass);color:var(--blue-dk);font-weight:700;padding:7px 13px;
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 button.small.primary,button.primary{
-  background:linear-gradient(145deg,#5aa2ff,#2563eb);border-color:rgba(255,255,255,.5);color:#fff;
-  box-shadow:0 5px 16px rgba(37,99,235,.3), inset 0 1px 0 rgba(255,255,255,.45);
+  background:linear-gradient(145deg,#5aa2ff,#1d4ed8);border-color:rgba(255,255,255,.5);color:#fff;
+  box-shadow:0 4px 14px rgba(29,78,216,.28), inset 0 1px 0 rgba(255,255,255,.45);
 }
 .cardhead .ibtn{width:26px;height:26px;min-width:26px;padding:0;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;margin-left:auto;font-style:italic}
 .chips button.small,.presets button.small{background:var(--glass);color:var(--blue-dk)}
 .chips button.small.primary,.presets button.small.primary{
-  background:linear-gradient(145deg,#5aa2ff,#2563eb);color:#fff;border-color:rgba(255,255,255,.5)}
+  background:linear-gradient(145deg,#5aa2ff,#1d4ed8);color:#fff;border-color:rgba(255,255,255,.5)}
 .field{display:grid;grid-template-columns:1fr;gap:10px}
-.field .sub{color:var(--blue-dk);font-weight:800;text-transform:uppercase;font-size:10.5px;letter-spacing:.7px}
+.field input,.field select,.field textarea{color:var(--text);background:var(--glass)}
 .field input:focus,.field select:focus{outline:2px solid rgba(124,178,255,.55);border-color:var(--blue)}
 .kv{display:block}
 .kv>div{display:block;padding:11px 0;border-bottom:1px solid var(--line);font-size:16px;font-weight:700}
 .kv>div b{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;
-  letter-spacing:.7px;color:var(--blue-dk);margin-bottom:2px}
+  letter-spacing:.7px;margin-bottom:2px}
 .info{border-left:3px solid var(--blue)}
 #glossPop{max-width:280px;border-radius:14px}
 .rsgrid,.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select,textarea{color:var(--text)}
 
-/* ---- loading skeleton ---- */
+/* ---- skeleton ---- */
 .skel{padding:6px 0}
 .skel i{display:block;height:13px;border-radius:7px;
-  background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,255,255,.85),rgba(255,255,255,.5));
+  background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,255,255,.9),rgba(255,255,255,.5));
   background-size:200% 100%;animation:shimmer 1.3s linear infinite;margin-bottom:9px}
 .skel i:nth-child(1){width:46%;height:19px}
 .skel i:nth-child(2){width:78%}
@@ -443,9 +443,9 @@ button.small.primary,button.primary{
     </div>
     <div class="searchwrap">
       <span class="mag">⌕</span>
-      <input id="search" type="search" placeholder="Search stocks, global, coins, news…  (press /)"
+      <input id="search" type="search" placeholder="Search stocks, coins, news…"
              autocomplete="off" aria-label="Search everything">
-      <button id="micBtn" title="Search by voice (Hindi)" aria-label="Search by voice"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg></button>
+      <button id="micBtn" title="Search by voice (Hindi)" aria-label="Search by voice"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg></button>
       <span id="voiceHint"></span>
     </div>
     <div class="right">
@@ -486,7 +486,7 @@ function ago(iso){if(!iso)return "—";var s=(Date.now()-new Date(iso).getTime()
 
 /* theme: light by default */
 var saved=null;try{saved=localStorage.getItem("as-theme");}catch(e){}
-setTheme(saved==="dark"?"dark":"light");
+setTheme("light");   /* one theme only: light blue glass */
 function setTheme(t){
   if(t==="dark")document.documentElement.setAttribute("data-theme","dark");
   else document.documentElement.removeAttribute("data-theme");

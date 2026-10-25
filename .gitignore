@@ -21,6 +21,15 @@ data/*.json
 data/candles/
 data/training/
 
+# mfapi cache: 1,094 per-scheme NAV files + a 12 MB scheme list, re-downloaded every run.
+# It was never ignored and had grown to 169 MB - 77% of the repo - to produce a 198 KB
+# docs/mf.json. Same class of file as the caches below, so it belongs here too.
+data/mf/
+
+# F&O csv is the intermediate step; the parquet is what is read. ~3.5 MB per day adds up
+# to roughly 900 MB a year if it is all kept.
+data/csv/fo/
+
 # other free-source pulls (regenerate, don't commit)
 data/yahoo/
 data/sheets/

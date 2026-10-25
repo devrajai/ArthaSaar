@@ -1,8 +1,15 @@
 # Market Data Hub — NSE EOD archive
 
-A self-updating, no-website data hub. A scheduled GitHub Action downloads the NSE
-end-of-day bhavcopy after market close, normalises it, and commits it back into the
-repo. The repo **is** the archive — there is no landing page, no GitHub Pages, no site.
+A self-updating market data hub **with a live website**. A scheduled GitHub Action
+downloads the NSE end-of-day bhavcopy after market close, normalises it, derives the
+analysis, and commits everything back into the repo.
+
+**The site: https://devrajai.github.io/ArthaSaar/** — 33 sections over the collected data:
+stocks and screener, indices, sectors, F&O, breadth, relative strength, ETFs, mutual funds,
+IPOs, the corporate-actions calendar, SEBI orders, surveillance lists, a charges calculator,
+Learn, and the daily brief with its RSS feed. Mobile-first, light blue glass, one theme.
+
+The repo is also the archive: the raw and derived data live here as files.
 
 Pairs with the **Market Data Hub (Archive)** Google Sheet, which is the *view* layer
 (tabs: README, Config, Universe, Daily_Snapshot, Fundamentals, Technicals, F_and_O,

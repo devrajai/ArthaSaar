@@ -1,0 +1,56 @@
+Chart Patterns — reference (ArthaSaar)
+Last checked: 2026-10-17. Educational reference, not investment advice.
+A pattern is a shape in price that has historically leaned one way more often than not. It is a probability, not a promise — the same shape fails regularly. Use it to frame a trade (entry, stop, target), never as the whole reason for one.
+__________________________________________________
+1. Reversal patterns (trend is ending)
+Pattern	Shape	Bias	How to read it
+Head & Shoulders	Three peaks, middle highest	Bearish	Neckline = lows between the peaks. Break below it confirms. Target = peak height projected down.
+Inverse Head & Shoulders	Three troughs, middle lowest	Bullish	Mirror of the above; break above the neckline.
+Double Top	Two similar highs, trough between	Bearish	Confirms on a break of the trough. Volume often lighter on the 2nd peak.
+Double Bottom	Two similar lows, peak between	Bullish	Confirms on a break of the middle peak.
+Triple Top / Bottom	Three touches of a level	Reversal	More touches = more decisive, but also a slower break.
+Rounding Top / Bottom	Smooth saucer shape	Reversal	Gradual shift in momentum; slow to form, slow to confirm.
+Rising / Falling Wedge	Converging, sloped	Bearish / Bullish	Rising wedge in an uptrend warns of a stall; falling wedge in a downtrend of a bounce.
+2. Continuation patterns (trend pauses, then resumes)
+Pattern	Shape	Bias	How to read it
+Bull / Bear Flag	Sharp move, then tight counter-drift	Continue	The pole (sharp move) projects the target from the breakout.
+Pennant	Small symmetrical triangle after a move	Continue	Shorter than a flag; breakout in the trend direction.
+Ascending Triangle	Flat top, rising lows	Bullish	Buyers stepping up; break of the flat top.
+Descending Triangle	Flat bottom, falling highs	Bearish	Break of the flat bottom.
+Symmetrical Triangle	Both sides converging	Either	Wait for the break — direction is undecided until then.
+Cup & Handle	Rounded base + small dip	Bullish	Handle should be shallow; break of the handle high.
+Rectangle / Range	Flat top and bottom	Either	Trade the edges, or wait for the range break.
+3. Candlestick patterns (single / few bars)
+Pattern	Shape	Bias
+Doji	Open ≈ close, long wicks	Indecision
+Hammer	Small body, long lower wick	Bullish reversal
+Shooting Star	Small body, long upper wick	Bearish reversal
+Bullish Engulfing	Green body covers prior red	Bullish
+Bearish Engulfing	Red body covers prior green	Bearish
+Morning / Evening Star	Three-bar reversal	Bullish / Bearish
+Marubozu	Full body, no wicks	Strong conviction
+__________________________________________________
+4. Reading them from data (numeric checks)
+Patterns become useful when you can detect them on the archive rather than by eye. Rough starting rules, computed per symbol on data/candles/cm_daily.parquet:
+Pattern	Numeric hint
+Double Top	Two local highs within ~1% of each other, separated by a trough ≥ ~3%
+Head & Shoulders	Three local highs where the middle > both sides by ≥ ~2%, shoulders within ~2%
+Flag	Price move ≥ ~5% in ≤ 10 bars, then a counter-drift with range < ~half the pole
+Triangle	Highs falling and lows rising (converging) over ≥ 15 bars
+Cup & Handle	Drawdown ≥ ~15% then recovery to near the old high, then a ≤ ~5% dip
+Hammer	lower_wick ≥ 2 x body and upper_wick small
+Engulfing	today's body fully covers yesterday's body, opposite colour
+Local highs/lows: a bar whose high is the max of the surrounding N bars (and vice versa for lows). N ≈ 5 is a reasonable default.
+Always confirm with volume and the trend. A double top inside a strong uptrend is noise; the same shape after a long run is information.
+__________________________________________________
+5. Discipline (the part that actually decides the outcome)
+● Pattern is a setup, not a signal. Wait for the confirmation break; a pattern that never breaks is not a trade.
+● Define the stop before the entry — usually the other side of the pattern (neckline, flag low, handle low).
+● Position size from the stop distance, not from conviction.
+● Backtest the rule, not the story. Detect the pattern numerically, measure the hit rate on your own archive, and only then trust it.
+● Most patterns fail. The edge, if any, is in the risk management and the confirmation, not the shape.
+__________________________________________________
+6. Where this fits the hub
+● Candles: data/candles/cm_daily.parquet (from candles_from_bhavcopy.py / candles_from_drive.py)
+● Features for a model: build_features.py (returns, SMA ratios, RSI, volatility, volume z-score)
+● The same detection rules can be added as another feature column, then tested walk-forward — never on a random split.

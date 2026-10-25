@@ -2422,6 +2422,31 @@ function build(d){
   /* ---------- IPO tracker (Task 19) ---------- */
   (function(){
     var v=sec("ipo");
+    // From the IpoBodh Daily doc in Drive. NSE's IPO endpoints return nothing usable, which
+    // is why this tab used to read open 0 / closed 0 / listed 0. The doc carries the same
+    // facts in prose; build_ipo_from_doc.py reads it, conservatively.
+    if(IPODOC&&IPODOC.open&&IPODOC.open.length){
+      v.appendChild(card("Open now", IPODOC.open.length+" issues · as at "+IPODOC.as_of,
+        [ tbl({columns:["name","price band","subscribed","GMP"],
+               rows:IPODOC.open.map(function(r){return [r.name,
+                 (r.lo?("Rs "+r.lo+(r.hi&&r.hi!==r.lo?"-"+r.hi:"")):"—"),
+                 (r.subs!=null?r.subs+"x":"—"),
+                 (r.gmp!=null&&r.gmp!==""?("Rs "+r.gmp):"—")];})},[]) ],
+        {what:"Issues currently open for subscription, with how many times each is subscribed and its grey-market premium.",
+         source:"IpoBodh Daily doc (Google Drive).", updated:IPODOC.as_of, note:IPODOC.note}));
+    }
+    if(IPODOC&&IPODOC.upcoming&&IPODOC.upcoming.length)
+      v.appendChild(card("Upcoming", IPODOC.upcoming.length+" in the queue",
+        [ tbl({columns:["name","issue size"],
+               rows:IPODOC.upcoming.map(function(r){return [r.name, r.size_cr?("Rs "+num(r.size_cr)+" Cr"):"—"];})},[]) ],
+        {what:"Issues announced but not yet open.", source:"IpoBodh Daily doc (Google Drive).", updated:IPODOC.as_of}));
+    if(IPODOC&&IPODOC.movers&&IPODOC.movers.length)
+      v.appendChild(card("GMP movers and recent listings", "",
+        [ tbl({columns:["name","change","what"],
+               rows:IPODOC.movers.map(function(r){return [r.name,(r.pct>=0?"+":"")+r.pct+"%",r.kind||""];})},[]) ],
+        {what:"Closed issues by grey-market premium, and recently listed names by their move.",
+         source:"IpoBodh Daily doc (Google Drive).", updated:IPODOC.as_of,
+         note:"GMP is an unofficial dealer quote, not an exchange price. It can vanish on listing day."}));
     if(!IPO||!IPO.count){
       v.appendChild(card("IPOs","Mainboard and SME",
         [para(IPO&&IPO.note?IPO.note:"No IPO data yet. It is pulled by the daily pipeline.")],
@@ -2737,6 +2762,30 @@ function build(d){
   /* ---------- PATTERN SCANNER ---------- */
   (function(){
     var v=sec("patterns");
+    // The reference lives in a Google Doc and is parsed by build_patterns_reference.py.
+    // It is the "what does this shape mean" half; PATTERNS below is the "what was detected
+    // today" half. Keeping them apart stops a definition being mistaken for a signal.
+    if(PATREF&&PATREF.groups&&PATREF.groups.length){
+      var refKids=[para(PATREF.intro||"",false)];
+      PATREF.groups.forEach(function(g){
+        refKids.push(el("h3","",esc(g.title)));
+        refKids.push(tbl({columns:g.columns,rows:g.rows},[]));
+      });
+      if(PATREF.detection&&PATREF.detection.length){
+        refKids.push(el("h3","","How to detect them numerically"));
+        refKids.push(tbl({columns:["pattern","numeric hint"],
+          rows:PATREF.detection.map(function(d){return [d.pattern,d.hint];})},[]));
+      }
+      if(PATREF.discipline&&PATREF.discipline.length){
+        refKids.push(el("h3","","Discipline"));
+        refKids.push(para(PATREF.discipline.join(" "),false));
+      }
+      v.appendChild(card("Chart patterns - reference", PATREF.updated?("checked "+PATREF.updated):"",
+        refKids,
+        {what:"What each chart and candlestick pattern looks like, which way it leans, and how to detect it from data.",
+         source:PATREF.source||"Google Doc: Chart Patterns - reference.", updated:PATREF.updated||"",
+         note:"A pattern is a probability, not a promise. The same shape fails regularly - use it to frame a trade, never as the whole reason for one."}));
+    }
     if(!PATTERNS||!PATTERNS.count){
       v.appendChild(card("Patterns","Candlestick and chart patterns found today",
         [para(PATTERNS&&PATTERNS.note?PATTERNS.note:"Nothing detected in the most recent session.")],
@@ -2893,6 +2942,8 @@ function assign(name, v){
     case "data.json": DATA=v; break;
     case "vix.json": VIX=v; break;
     case "metals.json": METALS=v; break;
+    case "ipo_doc.json": IPODOC=v; break;
+    case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
     case "fo_ban.json": FOBAN=v; break;
     case "stocks.json": STOCKS=v; break;
@@ -2937,8 +2988,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json"];
 
 function renderAll(){
   if(!DATA) return;

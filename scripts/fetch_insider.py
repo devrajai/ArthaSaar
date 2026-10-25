@@ -12,8 +12,8 @@ UA = {
 }
 
 ENDPOINTS = {
-    "pit": "https://www.nseindia.com/api/corporates-pit?index=equities",
-    "sast": "https://www.nseindia.com/api/corporate-sast-reg29?index=equities",
+    "pit": "https://www.nseindia.com/api/corporates-pit",
+    "sast": "https://www.nseindia.com/api/corporate-sast-reg29",
 }
 
 
@@ -27,6 +27,22 @@ def get(url):
         return None
 
 
+def pick(low, *needles):
+    """First value whose KEY contains any needle, and that is not blank.
+
+    WHY THIS REPLACED A FIXED KEY LIST: the old version asked for exact names
+    (personname / intimdate / secval ...). NSE's payload uses none of them, so every row
+    came out as ['', 'TIKONA', '', 'sast', '', ''] - a symbol and nothing else. Matching on
+    what the key CONTAINS survives the source renaming or reshaping its fields.
+    """
+    for k, v in low.items():
+        if v in (None, "", "-", "--"):
+            continue
+        if any(n in k for n in needles):
+            return str(v).strip()
+    return ""
+
+
 def rows_of(data, kind):
     items = data.get("data") if isinstance(data, dict) else data
     out = []
@@ -34,17 +50,23 @@ def rows_of(data, kind):
         if not isinstance(it, dict):
             continue
         low = {str(k).lower(): v for k, v in it.items()}
-        sym = str(low.get("symbol") or low.get("scrip") or "").strip()
+        sym = pick(low, "symbol", "scrip")
         if not sym:
             continue
-        out.append([
-            str(low.get("date") or low.get("intimdate") or low.get("acqfromdate") or "")[:10],
+        row = [
+            pick(low, "date", "intim", "acqfrom")[:10],
             sym,
-            str(low.get("personname") or low.get("name") or low.get("acqname") or "").strip()[:40],
-            str(low.get("category") or low.get("persontype") or kind).strip()[:24],
-            str(low.get("buysell") or low.get("transactiontype") or "").strip().upper()[:8],
-            str(low.get("secval") or low.get("value") or low.get("totacqvalue") or ""),
-        ])
+            pick(low, "personname", "acqname", "person", "name")[:40],
+            pick(low, "category", "persontype", "type")[:24] or kind,
+            pick(low, "buysell", "transactiontype", "transaction", "buy").upper()[:8],
+            pick(low, "secval", "totacqvalue", "value", "val", "amount")[:16],
+        ]
+        # A row of blanks is worse than no row: it looks like data but says nothing. Keep it
+        # only if there is something beyond the symbol, and count what is dropped.
+        if row[0] or row[2] or row[5]:
+            out.append(row)
+        else:
+            out.append(None)
     return out
 
 

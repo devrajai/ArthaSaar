@@ -431,6 +431,12 @@ input,select,textarea{color:var(--text)}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){.skel i{animation:none}}
 
+/* last-updated badge, and the red stale one */
+.fresh{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;
+  padding:3px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;
+  background:var(--purple-soft,#eef2ff);color:var(--purple,#1d4ed8)}
+.fresh.stale{background:#fde8e8;color:#b91c1c}
+@media (max-width:680px){.fresh{font-size:9px;padding:2px 7px}}
 </style>
 </head>
 <body>
@@ -472,6 +478,10 @@ input,select,textarea{color:var(--text)}
   (prices, open interest, indices, surveillance lists, ban list, corporate actions); Yahoo Finance
   (India VIX, global indices, crypto); AMFI (mutual fund NAVs); publisher RSS feeds for news.
   Each section names its own source.</p>
+
+  <p><strong>Something missing or wrong?</strong>
+  <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM" target="_blank" rel="noopener">Tell me what to add or fix</a>
+  &mdash; a one-minute form. It goes to me, not to a third party.</p>
 
   <p><strong>Licence.</strong> NSE and BSE data is governed by their Data Sharing &amp; Usage Policy.
   Personal, non-commercial use is generally fine; redistributing exchange data publicly, or
@@ -586,10 +596,41 @@ function wlToggle(sym){
   return i<0;
 }
 
+// Feed timestamps arrive in several shapes: full ISO from our own scripts, and
+// "24-Oct-2026" or "2026-10-24" from NSE. Returns null rather than throwing on junk.
+function feedDate(s){
+  if(!s) return null;
+  var t=String(s).trim();
+  var d=new Date(t);
+  if(!isNaN(d.getTime())) return d;
+  var m=t.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+  if(m){
+    var mon={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    var mi=mon[m[2].toLowerCase()];
+    if(mi!=null) return new Date(Date.UTC(+m[3], mi, +m[1]));
+  }
+  return null;
+}
+
 function card(title, sub, kids, info){
   var c=el("div","card");
   var head=el("div","cardhead");
   head.appendChild(el("h2","",esc(title)+(sub?'<span class="sub">'+esc(sub)+'</span>':"")));
+  // "Last updated", and a red STALE label when the feed is more than two days old. The
+  // watchdog already checks freshness; this shows the same fact on the card itself, so
+  // nobody reads two-day-old numbers as if they were today's.
+  if(info && info.updated){
+    var dt=feedDate(info.updated);
+    if(dt){
+      var ageH=(Date.now()-dt.getTime())/3600000;
+      var badge=el("span", ageH>48 ? "fresh stale" : "fresh",
+                   ageH>48 ? "stale" : "updated");
+      badge.title = ageH>48
+        ? "This section is about "+Math.round(ageH/24)+" days old"
+        : "Updated "+ago(info.updated);
+      head.appendChild(badge);
+    }
+  }
   if(info){
     var b=el("button","ibtn","i"); b.title="What is this?";
     b.addEventListener("click",function(){
@@ -1198,6 +1239,31 @@ function build(d){
   (function(){
     var v=sec("stocks");
     var uni=UNIVERSE, deep=(STOCKS&&STOCKS.stocks)||{};
+    // 52-week extremes. The screener already carries from_52w_high and above_52w_low for
+    // every stock - this just surfaces them as their own section instead of leaving them
+    // buried in a filter.
+    if(SCREENER&&SCREENER.rows&&SCREENER.rows.length){
+      var nearHigh=SCREENER.rows.filter(function(r){return r.from_52w_high!=null&&r.from_52w_high>=-3;})
+        .sort(function(a,b){return b.from_52w_high-a.from_52w_high;}).slice(0,25);
+      var nearLow=SCREENER.rows.filter(function(r){return r.above_52w_low!=null&&r.above_52w_low<=3;})
+        .sort(function(a,b){return a.above_52w_low-b.above_52w_low;}).slice(0,25);
+      if(nearHigh.length)
+        v.appendChild(card("Near their 52-week high", nearHigh.length+" within 3% of the high",
+          [ tbl({columns:["symbol","close","from 52w high","chg 1d"],
+                 rows:nearHigh.map(function(r){return [r.symbol,r.close,r.from_52w_high,r.chg_1d];})},
+                ["close","from 52w high","chg 1d"]) ],
+          {what:"Stocks trading within 3% of their highest price in the past year.",
+           source:"NSE bhavcopy, one year of closes.", updated:(SCREENER.updated||""),
+           note:"A stock at its 52-week high is in an uptrend, but it is also where resistance and profit-taking tend to appear. Strength is not the same as a bargain."}));
+      if(nearLow.length)
+        v.appendChild(card("Near their 52-week low", nearLow.length+" within 3% of the low",
+          [ tbl({columns:["symbol","close","above 52w low","chg 1d"],
+                 rows:nearLow.map(function(r){return [r.symbol,r.close,r.above_52w_low,r.chg_1d];})},
+                ["close","above 52w low","chg 1d"]) ],
+          {what:"Stocks trading within 3% of their lowest price in the past year.",
+           source:"NSE bhavcopy, one year of closes.", updated:(SCREENER.updated||""),
+           note:"Cheap is not the same as good. A stock at its 52-week low may be oversold, or may be falling for a reason."}));
+    }
     if(!uni||!uni.rows||!uni.rows.length){
       v.appendChild(card("Stocks","",[para("No universe yet. It is built from NSE's own symbol master in the daily pipeline.")],
         {what:"Every NSE-listed stock, plus a page for each one that has been deepened.",
@@ -1305,6 +1371,20 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    if(METALS&&(METALS.gold&&METALS.gold.inr_10g||METALS.silver&&METALS.silver.inr_kg)){
+      var gg=METALS.gold||{}, ss=METALS.silver||{};
+      var mk=[];
+      if(gg.inr_10g) mk.push(["Gold (24k, converted)", "Rs "+num(gg.inr_10g)+" per 10 g",
+        gg.chg_pct!=null?(gg.chg_pct>0?"+":"")+gg.chg_pct+"% today":"", "USD "+num(gg.usd_oz)+"/oz"]);
+      if(ss.inr_kg) mk.push(["Silver (converted)", "Rs "+num(ss.inr_kg)+" per kg",
+        ss.chg_pct!=null?(ss.chg_pct>0?"+":"")+ss.chg_pct+"% today":"", "USD "+num(ss.usd_oz)+"/oz"]);
+      mk.push(["USD / INR", num(METALS.usdinr), "", ""]);
+      v.appendChild(card("Gold and silver, in rupees", "approximate - excludes duty and GST",
+        [ tbl({columns:["","rate","1 day","international"],rows:mk},[]) ],
+        {what:"The international metal price converted to rupees at the current USD/INR rate.",
+         source:"Yahoo Finance GC=F, SI=F and INR=X.", updated:METALS.updated,
+         note:METALS.note+" Conversion: "+(METALS.conversion||"")}));
+    }
     if(d.archive&&d.archive.recent)
       v.appendChild(card("Bhavcopy archive", d.archive.last?"Latest "+d.archive.last:"",
         [ tbl({columns:["date","segment","rows","symbols"],rows:d.archive.recent.map(function(r){return [r.date,r.segment,r.rows,r.symbols];})},["rows","symbols"]) ],
@@ -1526,6 +1606,18 @@ function build(d){
   (function(){
     var v=sec("corporate");
     var C=d.corporate||{};
+    if(LISTINGS&&LISTINGS.new&&LISTINGS.new.length)
+      v.appendChild(card("New listings", LISTINGS.count_new+" in the last 3 months",
+        [ tbl({columns:["symbol","company","listed","series"],rows:LISTINGS.new.slice(0,40)},[]) ],
+        {what:"Stocks that began trading recently, from the listing date in NSE's symbol master.",
+         source:"NSE EQUITY_L.csv.", updated:LISTINGS.updated,
+         note:"New listings often trade far more volatile than the market for weeks. There is no price history yet, so none of the technical screens apply to them."}));
+    if(LISTINGS&&LISTINGS.delisted&&LISTINGS.delisted.length)
+      v.appendChild(card("Delisted securities", "NSE file stops "+LISTINGS.delisted_as_of,
+        [ tbl({columns:["symbol","company","delisted","type"],rows:LISTINGS.delisted.slice(0,40)},[]) ],
+        {what:"Securities removed from NSE's listed universe.",
+         source:"NSE delisted.csv.", updated:LISTINGS.delisted_as_of,
+         note:LISTINGS.note}));
     function block(key,title,what){
       if(!C[key])return null;
       return card(title, C[key].total+" entries",[ tbl({columns:["symbol","subject","ex_date","company"],rows:C[key].rows},[],0) ],
@@ -2800,6 +2892,8 @@ function assign(name, v){
   switch(name){
     case "data.json": DATA=v; break;
     case "vix.json": VIX=v; break;
+    case "metals.json": METALS=v; break;
+    case "listings.json": LISTINGS=v; break;
     case "fo_ban.json": FOBAN=v; break;
     case "stocks.json": STOCKS=v; break;
     case "universe.json": UNIVERSE=v; break;
@@ -2843,8 +2937,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json"];
 
 function renderAll(){
   if(!DATA) return;

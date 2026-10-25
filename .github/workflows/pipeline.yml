@@ -186,6 +186,12 @@ jobs:
       - name: "7i12. India VIX history and the F&O ban list"
         run: python scripts/fetch_vix_ban.py || true
 
+      # Metals in rupees (Yahoo GC=F / SI=F / INR=X) and new listings (NSE EQUITY_L).
+      # Both sources were tested first. NSE's delisted.csv also responds but has not been
+      # updated since Nov 2020, so it is shown as history and labelled as such.
+      - name: "7i13. Gold and silver in rupees, new listings and delistings"
+        run: python scripts/fetch_metals_listings.py || true
+
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 

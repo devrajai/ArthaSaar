@@ -180,6 +180,23 @@
             border-radius:8px;padding:9px 11px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:none}
   /* language toggle (Task 13) */
   #langBtn{margin-left:8px}
+  /* colour-blind-safe palette: blue = up, orange = down. Deuteranopia-safe. */
+  body.cb{--up:#1565c0;--down:#e65100}
+  body.dark.cb{--up:#64b5f6;--down:#ffb74d}
+  body.cb .bfill.good{background:#1565c0}
+  body.cb .bfill.weak{background:#e65100}
+  /* breadth bars */
+  .bwrap{margin:10px 0}
+  .blab{font-size:13px;font-weight:700;margin-bottom:4px}
+  .btrack{background:var(--line);border-radius:999px;height:14px;overflow:hidden}
+  .bfill{height:100%;border-radius:999px}
+  .bfill.good{background:var(--up)}
+  .bfill.weak{background:var(--down)}
+  /* voice search */
+  #micBtn{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;line-height:1}
+  #micBtn.listening{background:#fee2e2;border-color:#fca5a5;animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.5}}
+  #voiceHint{font-size:12px;color:var(--muted);margin-left:8px}
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
   .kpi .k{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
   .kpi .v{font-size:26px;font-weight:800;margin-top:6px}
@@ -212,9 +229,13 @@
       <span class="mag">⌕</span>
       <input id="search" type="search" placeholder="Search stocks, global, coins, news…  (press /)"
              autocomplete="off" aria-label="Search everything">
+      <button id="micBtn" title="Search by voice (Hindi)">🎙</button>
+      <span id="voiceHint"></span>
     </div>
     <div class="right">
       <button id="langBtn" class="small" title="Switch language">हिं</button>
+      <button id="cbBtn" class="small">Colour-blind</button>
+      <button id="fzBtn" class="small">Text 100%</button>
       <button id="themeBtn" class="small">Dark mode</button>
     </div>
   </div>
@@ -590,6 +611,10 @@ var SECTIONS=[
   {id:"watchlists",  label:"Surveillance"},
   {id:"deals",       label:"Deals"},
   {id:"insider",     label:"Insider"},
+  {id:"breadth",     label:"Breadth"},
+  {id:"patterns",    label:"Patterns"},
+  {id:"gaps",        label:"Gaps"},
+  {id:"levels",      label:"Levels"},
   {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
   {id:"data",      label:"Data"}
@@ -710,6 +735,88 @@ function applyLang(){
     try{ localStorage.setItem("as-lang", LANG); }catch(e){}
     applyLang();
   });
+})();
+
+/* ---------- colour-blind-safe mode + font size (accessibility) ---------- */
+var CB = (function(){ try{ return localStorage.getItem("as-cb")==="1"; }catch(e){ return false; } })();
+var FZ = (function(){ try{ return parseFloat(localStorage.getItem("as-fz")||"1"); }catch(e){ return 1; } })();
+var FZ_STEPS = [1, 1.12, 1.25];
+
+function applyA11y(){
+  // Wrapped on purpose. This is a cosmetic preference: if it ever fails it must NOT take
+  // the page down with it. It runs inside the load chain, so an exception here rejected the
+  // chain and the entire HEAVY data load never happened - every data-driven tab rendered
+  // empty with no error. A preference toggle is not worth that.
+  try{
+  document.body.classList.toggle("cb", CB);
+  // The site uses px throughout, so a root font-size change would do nothing. zoom scales
+  // everything uniformly and is supported in Chrome, Safari and current Firefox.
+  if(document.body && document.body.style) document.body.style.zoom = FZ === 1 ? "" : String(FZ);
+  var cb=document.getElementById("cbBtn");
+  if(cb){ cb.textContent = CB ? "Standard colours" : "Colour-blind"; cb.title = CB ? "Switch back to red/green" : "Switch to blue/orange, easier with red-green colour blindness"; }
+  var fz=document.getElementById("fzBtn");
+  if(fz) fz.textContent = "Text " + Math.round(FZ*100) + "%";
+  }catch(e){ console.warn("accessibility prefs skipped:", e && e.message); }
+}
+(function bindA11y(){
+  var cb=document.getElementById("cbBtn");
+  if(cb) cb.addEventListener("click",function(){
+    CB=!CB; try{ localStorage.setItem("as-cb", CB?"1":"0"); }catch(e){}
+    applyA11y();
+  });
+  var fz=document.getElementById("fzBtn");
+  if(fz) fz.addEventListener("click",function(){
+    var i=FZ_STEPS.indexOf(FZ); if(i<0) i=0;
+    FZ = FZ_STEPS[(i+1)%FZ_STEPS.length];
+    try{ localStorage.setItem("as-fz", String(FZ)); }catch(e){}
+    applyA11y();
+  });
+})();
+
+/* ---------- voice search in Hindi ---------- */
+function voiceSearch(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var box = document.getElementById("search");
+  var btn = document.getElementById("micBtn");
+  if(!SR){
+    if(btn){ btn.title="This browser has no speech recognition - try Chrome on Android or desktop."; }
+    if(box){ box.placeholder = "Voice search needs Chrome - type instead"; }
+    return;
+  }
+  var rec = new SR();
+  // hi-IN understands Hinglish too: "Reliance ka bhav" works, and so does "रिलायंस".
+  rec.lang = "hi-IN";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  if(btn) btn.classList.add("listening");
+  rec.onresult = function(ev){
+    var said = (ev.results && ev.results[0] && ev.results[0][0]) ? ev.results[0][0].transcript : "";
+    said = said.trim();
+    if(!said) return;
+    // Strip the filler words people actually say out loud.
+    var q = said
+      .replace(/\b(ka|ki|ke|bhav|price|share|stock|kitna|kitne|hai|kya|show|dikhao|batao)\b/gi, " ")
+      .replace(/\s+/g, " ").trim();
+    if(box){
+      box.value = q || said;
+      box.dispatchEvent(new Event("input"));
+      box.focus();
+    }
+    var hint=document.getElementById("voiceHint");
+    if(hint) hint.textContent = "heard: \u201c" + said + "\u201d";
+  };
+  rec.onerror = function(ev){
+    var hint=document.getElementById("voiceHint");
+    if(hint) hint.textContent = ev.error === "not-allowed"
+      ? "Microphone blocked - allow it in your browser settings."
+      : "Could not hear that (" + ev.error + ").";
+  };
+  rec.onend = function(){ if(btn) btn.classList.remove("listening"); };
+  try{ rec.start(); }catch(e){ if(btn) btn.classList.remove("listening"); }
+}
+(function bindMic(){
+  var b=document.getElementById("micBtn");
+  if(b) b.addEventListener("click", voiceSearch);
 })();
 
 function renderTabs(){
@@ -2209,6 +2316,109 @@ function build(d){
     if(c2) v.appendChild(c2);
   })();
 
+
+  /* ---------- BREADTH (share above the 50/200-day average) ---------- */
+  (function(){
+    var v=sec("breadth");
+    if(!BREADTH||BREADTH.above_50==null){
+      v.appendChild(card("Market breadth","How much of the market is above its own trend",
+        [para(BREADTH&&BREADTH.note?BREADTH.note:"Not computed yet.")],
+        {what:"Share of stocks above their 50- and 200-day average.", source:"docs/screener.json", updated:when}));
+      return;
+    }
+    var box=el("div","kpis");
+    box.appendChild(kpi("Above 50-day", BREADTH.above_50+"%", BREADTH.total+" stocks"));
+    box.appendChild(kpi("Above 200-day", BREADTH.above_200+"%", "the longer trend"));
+    function bar(pct,label){
+      var w=el("div","bwrap");
+      w.appendChild(el("div","blab",esc(label)+" "+pct+"%"));
+      var track=el("div","btrack");
+      var fill=el("div","bfill "+(pct>=50?"good":"weak"));
+      fill.style.width=Math.max(1,Math.min(100,pct))+"%";
+      track.appendChild(fill); w.appendChild(track);
+      return w;
+    }
+    var read = BREADTH.above_50>=60 ? "Most stocks are in an uptrend."
+             : BREADTH.above_50>=40 ? "The market is split - roughly half the stocks are in an uptrend."
+             : "Most stocks are below their 50-day average, which is a weak broad market even if the index looks flat.";
+    v.appendChild(card("Market breadth","A broader signal than advances and declines",
+      [para("Advances and declines only ever describe ONE day. This asks a different question: how many stocks are trading above their own average? When the index rises but this falls, the rally is being carried by fewer and fewer names."),
+       box,
+       bar(BREADTH.above_50,"Above the 50-day average"),
+       bar(BREADTH.above_200,"Above the 200-day average"),
+       el("p","big",esc(read))],
+      {what:"Share of stocks closing above their own 50- and 200-day moving average.",
+       source:"docs/screener.json, which already carries sma_50 and sma_200 per stock", updated:when,
+       note:BREADTH.note||""}));
+  })();
+
+  /* ---------- GAPS ---------- */
+  (function(){
+    var v=sec("gaps");
+    if(!GAPS||(!GAPS.up.length&&!GAPS.down.length&&!GAPS.note)){
+      v.appendChild(card("Gaps","Opens away from yesterday's range",
+        [para(GAPS&&GAPS.note?GAPS.note:"Not computed yet.")],
+        {what:"Today's gap-ups and gap-downs.", source:"the candle archive", updated:when}));
+      return;
+    }
+    var s=GAPS.samples||{};
+    var box=el("div","kpis");
+    if(GAPS.fill_rate_up!=null) box.appendChild(kpi("Gap-ups filled", GAPS.fill_rate_up+"%", s.up+" past gaps"));
+    if(GAPS.fill_rate_down!=null) box.appendChild(kpi("Gap-downs filled", GAPS.fill_rate_down+"%", s.down+" past gaps"));
+    var kids=[para("A gap is an open outside yesterday's range - it means something changed overnight. The fill rate is how often price came back through the gap within "+(s.window||10)+" sessions.")];
+    if(box.children.length) kids.push(box);
+    if(GAPS.up.length) kids.push(el("h3","","Gapped up ("+GAPS.up.length+")"), table(["Symbol","Open","Prev high","Gap %","Date"], GAPS.up, ["open","prev high","gap %"], 0, null));
+    if(GAPS.down.length) kids.push(el("h3","","Gapped down ("+GAPS.down.length+")"), table(["Symbol","Open","Prev low","Gap %","Date"], GAPS.down, ["open","prev low","gap %"], 0, null));
+    if(!GAPS.up.length && !GAPS.down.length) kids.push(para("No stock gapped today."));
+    v.appendChild(card("Gaps","Opens away from yesterday's range", kids,
+      {what:"Today's gap-ups and gap-downs, with the historical fill rate.",
+       source:"the candle archive (adjusted prices)", updated:when,
+       note:GAPS.note||""}));
+  })();
+
+  /* ---------- LEVELS ---------- */
+  (function(){
+    var v=sec("levels");
+    if(!LEVELS||!LEVELS.count){
+      v.appendChild(card("Levels","Pivot, Camarilla and Fibonacci",
+        [para(LEVELS&&LEVELS.note?LEVELS.note:"Not computed yet.")],
+        {what:"Support and resistance levels per stock.", source:"the candle archive", updated:when}));
+      return;
+    }
+    var rows=LEVELS.rows.map(function(r){
+      var f=r.fib||{};
+      return [r.symbol, r.close, r.pivot, r.s1, r.r1, r.s2, r.r2, f["38.2"], f["61.8"]];
+    });
+    v.appendChild(card("Levels","Support and resistance, computed for every stock",
+      [para("Levels from the previous session's range and the 52-week swing. Traders watch these, which is part of why they sometimes matter - but price has no obligation to respect any of them."),
+       table(["Symbol","Close","Pivot","S1","R1","S2","R2","Fib 38.2","Fib 61.8"], rows,
+             ["close","pivot","s1","r1","s2","r2","fib 38.2","fib 61.8"], 0, null)],
+      {what:"Pivot, Camarilla and 52-week Fibonacci support/resistance per stock.",
+       source:"the candle archive (adjusted prices)", updated:when, note:LEVELS.note||""}));
+  })();
+
+  /* ---------- PATTERN SCANNER ---------- */
+  (function(){
+    var v=sec("patterns");
+    if(!PATTERNS||!PATTERNS.count){
+      v.appendChild(card("Patterns","Candlestick and chart patterns found today",
+        [para(PATTERNS&&PATTERNS.note?PATTERNS.note:"Nothing detected in the most recent session.")],
+        {what:"Candlestick and chart patterns detected across the universe.",
+         source:"scripts/patterns.py over the candle archive", updated:when}));
+      return;
+    }
+    var box=el("div","kpis");
+    var counts=PATTERNS.counts||{};
+    Object.keys(counts).slice(0,6).forEach(function(k){ box.appendChild(kpi(k.replace(/_/g," "), num(counts[k]), "stocks")); });
+    v.appendChild(card("Patterns","Candlestick and chart patterns found today",
+      [para("What price already did, described. A hammer is not a buy signal; it is a shape. Anything worth trading needs measuring with the backtester first."),
+       box,
+       table(PATTERNS.columns||["Symbol","Pattern","Bias","As of"], PATTERNS.rows, [], 0, null)],
+      {what:"Candlestick and chart patterns detected across the universe.",
+       source:"scripts/patterns.py over the candle archive", updated:when, note:PATTERNS.note||""}));
+  })();
+
+
   renderTabs();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
@@ -2335,7 +2545,8 @@ var BASE=(function(){var p=location.pathname||"/";if(p.charAt(p.length-1)!=="/")
 var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=null, LEARN=null,
     CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null,
     SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null,
-    RS=null, SEASON=null, CORR=null, WATCH=null, DEALS=null, INSIDER=null, CAL=null, BRIEF=null, MSTAT=null;
+    RS=null, SEASON=null, CORR=null, WATCH=null, DEALS=null, INSIDER=null, CAL=null, BRIEF=null, MSTAT=null,
+    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null;
 
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
@@ -2369,6 +2580,10 @@ function assign(name, v){
     case "calendar.json": CAL=v; break;
     case "brief.json": BRIEF=v; break;
     case "market_status.json": MSTAT=v; break;
+    case "breadth.json": BREADTH=v; break;
+    case "gaps.json": GAPS=v; break;
+    case "levels.json": LEVELS=v; break;
+    case "patterns.json": PATTERNS=v; break;
   }
 }
 
@@ -2381,7 +2596,7 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -2393,14 +2608,14 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
     CORE.forEach(function(f,i){ assign(f,res[i]); });
     if(!DATA) throw new Error("data.json did not load");
     renderAll();
-    mktUpdate(); glossPass(); applyLang();
+    mktUpdate(); glossPass(); applyLang(); applyA11y();
     setStamp("loading", "Updated "+(DATA.generated_utc||"—")+" · loading the rest…");
     return Promise.all(HEAVY.map(function(f){ return optional(BASE+f); }));
   })
   .then(function(res){
     HEAVY.forEach(function(f,i){ assign(f,res[i]); });
     renderAll();
-    mktUpdate(); glossPass(); applyLang();
+    mktUpdate(); glossPass(); applyLang(); applyA11y();
     setStamp("ready", "Updated "+(DATA.generated_utc||"—")+" · "+ago(DATA.generated_utc));
   })
   .catch(function(e){

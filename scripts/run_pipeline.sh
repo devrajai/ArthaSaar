@@ -149,6 +149,7 @@ run python scripts/fetch_sebi.py || true
 run python scripts/build_etf_premium.py || true
 run python scripts/build_relative_strength.py || true
 run python scripts/build_seasonality.py || true
+run python scripts/build_scan.py || true
 run python scripts/build_correlation.py || true
 run python scripts/fetch_watchlists.py || true
 run python scripts/fetch_deals.py || true

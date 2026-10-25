@@ -30,13 +30,12 @@ jobs:
       - name: Fetch ArthaSaar market data
         run: python3 scripts/fetch_arthasaar_data.py
 
-      - name: Send unified morning brief (8:30 AM)
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python3 scripts/morning_unified.py
+      # morning_unified.py was REMOVED from here. It reads the OLD ArthaSaar layout -
+      # data/mood.json, smart-brain.json, radar.json, gti.json, oi-gti.json,
+      # indices-all.json, breadth.json, preopen.json, events.json. Nine of those ten no
+      # longer exist, and fetch_arthasaar_data.py fails soft when it cannot find them, so it
+      # sent a near-empty brief with NO error anywhere. telegram_brief.py below replaces it
+      # and reads this repo's own data.
 
       # The daily brief from this repo's own data. morning_unified.py reads the OLD
       # ArthaSaar layout (mood.json, smart-brain.json, ...) and nine of those ten files

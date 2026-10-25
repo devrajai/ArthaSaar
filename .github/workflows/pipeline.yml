@@ -162,6 +162,9 @@ jobs:
       - name: "7g3. Seasonality (refuses under 3 years of history)"
         run: python scripts/build_seasonality.py || true
 
+      - name: "7g5. Breadth, gaps and support/resistance"
+        run: python scripts/build_scan.py || true
+
       - name: "7g4. Correlation matrix"
         run: python scripts/build_correlation.py || true
 

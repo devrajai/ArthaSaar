@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-10-25T13:03:13Z  |  10 channels, 234 videos, window 2026-06-25 to 2026-10-25.
+Generated 2026-10-25T17:20:23Z  |  10 channels, 236 videos, window 2026-06-25 to 2026-10-25.
 
-**Total views across the window:** 11,059,023  |  **net bull-bear keyword score:** 68
+**Total views across the window:** 11,079,446  |  **net bull-bear keyword score:** 70
 
 ## Most-talked-about symbols
 
@@ -12,23 +12,23 @@ Generated 2026-10-25T13:03:13Z  |  10 channels, 234 videos, window 2026-06-25 to
 | BANKNIFTY | 26 | 4 |
 | SENSEX | 24 | 4 |
 | RELIANCE | 11 | 4 |
+| WIPRO | 4 | 4 |
 | YESBANK | 4 | 3 |
 | ITC | 3 | 3 |
-| WIPRO | 3 | 3 |
+| INFY | 3 | 3 |
 | ZOMATO | 3 | 2 |
-| INFY | 2 | 2 |
-| BAJFINANCE | 2 | 2 |
+| TCS | 2 | 2 |
 
 ## Dominant themes
 
 | Theme | Videos |
 |---|---|
 | MF/SIP | 59 |
-| Beginner/Education | 50 |
+| Beginner/Education | 51 |
 | Earnings/Results | 40 |
+| Budget/Policy | 40 |
 | IPO | 40 |
-| Budget/Policy | 39 |
-| Options/F&O | 34 |
+| Options/F&O | 35 |
 
 ## Channels by reach
 
@@ -38,9 +38,9 @@ Generated 2026-10-25T13:03:13Z  |  10 channels, 234 videos, window 2026-06-25 to
 | Abhishek Kar | 19 | 134,692 | 2026-10-24 |
 | Moneytalks by Groww | 19 | 67,286 | 2026-10-24 |
 | WAY2LAABH | 19 | 39,734 | 2026-10-23 |
-| Groww Edge | 31 | 39,363 | 2026-10-25 |
+| Groww Edge | 32 | 38,557 | 2026-10-25 |
 | Ghanshyam Tech | 20 | 37,188 | 2026-10-25 |
-| Groww | 26 | 27,024 | 2026-10-24 |
+| Groww | 27 | 26,277 | 2026-10-25 |
 | Markets by Zerodha | 22 | 24,582 | 2026-10-24 |
 | Markets by Zerodha Hindi | 21 | 21,997 | 2026-10-25 |
 | Upstox | 40 | 1,877 | 2026-10-23 |

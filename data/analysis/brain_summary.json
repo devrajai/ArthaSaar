@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-25T13:03:13Z",
+  "generated_at": "2026-10-25T17:20:23Z",
   "channels": 10,
-  "videos": 234,
+  "videos": 236,
   "window_start": "2026-06-25",
   "window_end": "2026-10-25",
-  "total_views": 11059023,
+  "total_views": 11079446,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
@@ -27,6 +27,11 @@
       "channels": 4
     },
     {
+      "symbol": "WIPRO",
+      "mentions": 4,
+      "channels": 4
+    },
+    {
       "symbol": "YESBANK",
       "mentions": 4,
       "channels": 3
@@ -37,7 +42,7 @@
       "channels": 3
     },
     {
-      "symbol": "WIPRO",
+      "symbol": "INFY",
       "mentions": 3,
       "channels": 3
     },
@@ -47,12 +52,7 @@
       "channels": 2
     },
     {
-      "symbol": "INFY",
-      "mentions": 2,
-      "channels": 2
-    },
-    {
-      "symbol": "BAJFINANCE",
+      "symbol": "TCS",
       "mentions": 2,
       "channels": 2
     }
@@ -64,10 +64,14 @@
     },
     {
       "theme": "Beginner/Education",
-      "videos": 50
+      "videos": 51
     },
     {
       "theme": "Earnings/Results",
+      "videos": 40
+    },
+    {
+      "theme": "Budget/Policy",
       "videos": 40
     },
     {
@@ -75,13 +79,9 @@
       "videos": 40
     },
     {
-      "theme": "Budget/Policy",
-      "videos": 39
-    },
-    {
       "theme": "Options/F&O",
-      "videos": 34
+      "videos": 35
     }
   ],
-  "net_sentiment": 68
+  "net_sentiment": 70
 }

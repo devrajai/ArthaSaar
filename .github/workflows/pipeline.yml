@@ -192,6 +192,12 @@ jobs:
       - name: "7i13. Gold and silver in rupees, new listings and delistings"
         run: python scripts/fetch_metals_listings.py || true
 
+      # Deep-history analytics: report cards, drawdowns, volatility cone, day-of-week,
+      # streaks, SIP heatmap. Runs AFTER 5b (corporate actions) so prices are already
+      # split-adjusted - without that adjustment NIFTYBEES reads as -80% instead of +124%.
+      - name: "7i14. Deep-history analytics (report cards, drawdown, vol cone, SIP)"
+        run: python scripts/build_deep_history.py || true
+
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 

@@ -1239,6 +1239,19 @@ function build(d){
   (function(){
     var v=sec("stocks");
     var uni=UNIVERSE, deep=(STOCKS&&STOCKS.stocks)||{};
+    // Rank by consistency: how many of the last 7 calendar years were positive.
+    if(RCARDS&&RCARDS.cards&&RCARDS.cards.length){
+      var top=RCARDS.cards.slice(0,25);
+      v.appendChild(card("Most consistent", "rose in the most of the last 7 years",
+        [ tbl({columns:["symbol","years up","volatility","worst fall","beta"],
+               rows:top.map(function(r){return [r.symbol, r.years_up+"/"+r.years_total,
+                 (r.vol_pct!=null?r.vol_pct+"%":"—"),
+                 (r.max_drawdown_pct!=null?r.max_drawdown_pct+"%":"—"),
+                 (r.beta!=null?r.beta:"—")];})},["years up"]) ],
+        {what:"Stocks that finished more of the last seven calendar years up than down.",
+         source:"8 years of NSE bhavcopy, split-adjusted.", updated:RCARDS.updated,
+         note:(RCARDS.cautions&&RCARDS.cautions.survivorship)||""}));
+    }
     // 52-week extremes. The screener already carries from_52w_high and above_52w_low for
     // every stock - this just surfaces them as their own section instead of leaving them
     // buried in a filter.
@@ -1371,6 +1384,62 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    if(MSTATS&&MSTATS.drawdown){
+      var dd=MSTATS.drawdown;
+      var ep=(dd.episodes||[]).map(function(e){return [e.peak_on,e.trough_on,e.depth_pct,
+        (e.recovery_days!=null?e.recovery_days+" days":"still below")];});
+      v.appendChild(card("Drawdown tracker", "now "+num(dd.now_pct)+"% from the high",
+        [ para("Worst fall in the record: "+num(dd.worst_ever_pct)+"% . All-time high "+num(dd.all_time_high)+".", true),
+          tbl({columns:["peak","trough","fall pct","recovery"],rows:ep},["fall pct"]) ],
+        {what:"How far the index sits below its high, and how past falls compared.",
+         source:"Nifty 50 ETF (NIFTYBEES), split-adjusted.", updated:MSTATS.updated,
+         note:"A fall is not a loss until you sell, but the recovery time is what people underestimate."}));
+    }
+    if(MSTATS&&MSTATS.vol_cone){
+      var vc=MSTATS.vol_cone;
+      var vcr=Object.keys(vc).map(function(k){return [k, vc[k].now_pct+"%", vc[k].percentile+"th",
+        vc[k].p10+"%", vc[k].p50+"%", vc[k].p90+"%"];});
+      v.appendChild(card("Volatility cone", "is today calm or choppy?",
+        [ tbl({columns:["window","now","percentile","calm","typical","stressed"],rows:vcr},[]) ],
+        {what:"Today's realised volatility compared with its own history over the same window.",
+         source:"Nifty 50 ETF, annualised.", updated:MSTATS.updated,
+         note:"A low percentile means the market is quieter than usual - which can precede a spike."}));
+    }
+    if(MSTATS&&MSTATS.day_of_week&&Object.keys(MSTATS.day_of_week).length){
+      var dw=Object.keys(MSTATS.day_of_week).map(function(k){var x=MSTATS.day_of_week[k];
+        return [k, x.avg_pct, x.up_pct, x.n];});
+      v.appendChild(card("Day-of-week effect", "does the day matter?",
+        [ tbl({columns:["day","avg pct","up pct","sessions"],rows:dw},["avg pct","up pct","sessions"]) ],
+        {what:"Average move by weekday across the whole history.",
+         source:"Nifty 50 ETF.", updated:MSTATS.updated,
+         note:"Effects this small are usually noise. It is shown because people ask, not because it is tradeable."}));
+    }
+    if(MSTATS&&MSTATS.streaks){
+      var sk=MSTATS.streaks, srows=[];
+      Object.keys(sk).forEach(function(name){
+        Object.keys(sk[name]).forEach(function(h){
+          var x=sk[name][h];
+          srows.push([name.replace(/_/g," "), "+"+h+"d", x.avg_pct, x.up_pct, x.n]);
+        });
+      });
+      if(srows.length) v.appendChild(card("Streak stats", "what usually happens next",
+        [ tbl({columns:["after","horizon","avg pct","up pct","matches"],rows:srows},["avg pct","up pct","matches"]) ],
+        {what:"What the index did after a run of down days, or after a fresh 52-week high.",
+         source:"Nifty 50 ETF.", updated:MSTATS.updated,
+         note:"Buckets with fewer than 20 matches are hidden - a pattern seen 3 times is not a pattern."}));
+    }
+    if(MSTATS&&MSTATS.sip_heatmap&&Object.keys(MSTATS.sip_heatmap).length){
+      var sip=MSTATS.sip_heatmap, srows=[];
+      Object.keys(sip).forEach(function(k){var x=sip[k];
+        srows.push([k, x.invested, x.value,
+                    (x.xirr_pct!=null?x.xirr_pct:"—"),
+                    x.total_ret_pct]);});
+      v.appendChild(card("SIP heatmap", "Rs 1,000 a month, started in any month",
+        [ tbl({columns:["started","invested","worth","xirr pct","total ret pct"],rows:srows},["invested","worth","xirr pct","total ret pct"]) ],
+        {what:"What a monthly SIP of Rs 1,000 into the Nifty would be worth now, for every start month since 2019.",
+         source:"Nifty 50 ETF.", updated:MSTATS.updated,
+         note:"XIRR is the money-weighted return - the right measure for a SIP, where money goes in monthly rather than all at once. Starts under a year show total return only."}));
+    }
     if(METALS&&(METALS.gold&&METALS.gold.inr_10g||METALS.silver&&METALS.silver.inr_kg)){
       var gg=METALS.gold||{}, ss=METALS.silver||{};
       var mk=[];
@@ -2943,6 +3012,8 @@ function assign(name, v){
     case "vix.json": VIX=v; break;
     case "metals.json": METALS=v; break;
     case "ipo_doc.json": IPODOC=v; break;
+    case "market_stats.json": MSTATS=v; break;
+    case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
     case "fo_ban.json": FOBAN=v; break;
@@ -2988,8 +3059,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json"];
 
 function renderAll(){
   if(!DATA) return;

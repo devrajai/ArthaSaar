@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-26T20:23:46Z",
+  "generated_utc": "2026-10-26T22:13:30Z",
   "fno": {
     "date": "2026-10-26",
     "pcr": {
@@ -388,6 +388,339 @@
       ],
       "total": 4
     }
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^NSEI",
+        22600.0,
+        -0.39,
+        "2026-10-23"
+      ],
+      [
+        "^BSESN",
+        73123.8281,
+        -0.17,
+        "2026-10-23"
+      ]
+    ],
+    "total": 2
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        4031.0,
+        0.58,
+        "2026-10-26"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "ADA-USD",
+        0.2054,
+        0.71,
+        "2026-10-26"
+      ],
+      [
+        "ETH-USD",
+        2310.78,
+        -0.69,
+        "2026-10-26"
+      ],
+      [
+        "SOL-USD",
+        100.58,
+        -0.64,
+        "2026-10-26"
+      ],
+      [
+        "LINK-USD",
+        11.367,
+        -0.59,
+        "2026-10-26"
+      ],
+      [
+        "DOGE-USD",
+        0.0773,
+        0.56,
+        "2026-10-26"
+      ],
+      [
+        "BNB-USD",
+        741.75,
+        0.55,
+        "2026-10-26"
+      ],
+      [
+        "TRX-USD",
+        0.3295,
+        -0.16,
+        "2026-10-26"
+      ],
+      [
+        "XRP-USD",
+        1.2925,
+        -0.15,
+        "2026-10-26"
+      ],
+      [
+        "AVAX-USD",
+        8.906,
+        -0.09,
+        "2026-10-26"
+      ],
+      [
+        "BTC-USD",
+        80018.1797,
+        -0.01,
+        "2026-10-26"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "US Markets Today: S&amp;P, Nasdaq end higher as Anthropic IPO filing revives AI optimism; Tesla hits 3 month high",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-markets-today-us-stocks-end-higher-as-anthropic-ipo-filing-revives-ai-optimism-tesla-hits-3-month-high/articleshow/135219329.cms",
+        "Tue, 27 Oct 2026 01:47:48 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic halts AI training for over a month over security concerns as models breach testing systems ahead of IPO",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-ipo-halts-ai-training-for-over-a-month-over-security-concerns-as-models-breach-testing-systems/articleshow/135218073.cms",
+        "Tue, 27 Oct 2026 00:08:35 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Sunteck Realty H1FY27 net profit rises 20%, pre-sales up 19%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/sunteck-realty-h1fy27-net-profit-rises-20-pre-sales-up-19/articleshow/135217893.cms",
+        "Mon, 26 Oct 2026 23:58:06 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Dalmia Bharat posts Rs 205 crore Q2 loss on exceptional hit",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/dalmia-bharat-posts-rs-205-crore-q2-loss-on-exceptional-hit/articleshow/135217688.cms",
+        "Mon, 26 Oct 2026 23:49:52 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Ahead of Market: 10 things that will decide stock market action on Tuesday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-tuesday/articleshow/135215629.cms",
+        "Mon, 26 Oct 2026 22:08:34 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic vs OpenAI: How Claude maker\u2019s growth is challenging ChatGPT ahead of IPO",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-vs-openai-how-claude-makers-growth-is-challenging-chatgpt-ahead-of-ipo/articleshow/135215446.cms",
+        "Mon, 26 Oct 2026 21:57:14 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Paytm Q2 Results: Profit rockets 976% YoY to Rs 226 crore, revenue jumps 28%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/paytm-q2-results-profit-rockets-976-yoy-to-rs-226-crore-revenue-jumps-28/articleshow/135214973.cms",
+        "Mon, 26 Oct 2026 21:15:42 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Tamilnad Mercantile Bank Q2 Results: Net profit rises 42% to record Rs 451 crore on high net interest income",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/tamilnad-mercantile-bank-q2-results-net-profit-rises-42-to-record-rs-451-crore-on-high-net-interest-income/articleshow/135214844.cms",
+        "Mon, 26 Oct 2026 20:56:51 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Indian Overseas Bank to raise $500 million as Q2 profit jumps 56%",
+        "https://economictimes.indiatimes.com/markets/stocks/news/indian-overseas-bank-to-raise-500-million-as-q2-profit-jumps-56/articleshow/135214567.cms",
+        "Mon, 26 Oct 2026 20:44:37 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "MMT reports net profit of $1.8 million in Q2, revenues at $ 235.2 million",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/mmt-reports-net-profit-of-1-8-million-in-q2-revenues-at-235-2-million/articleshow/135214497.cms",
+        "Mon, 26 Oct 2026 20:36:23 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Bank of Maharashtra Q2 profit jumps 41.5% as bad loans decline",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/bank-of-maharashtra-q2-profit-jumps-41-5-as-bad-loans-decline/articleshow/135214440.cms",
+        "Mon, 26 Oct 2026 20:34:08 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "The Rs 1.5 lakh crore MTF problem: How shrinking leveraged positions are deepening India's smallcap sell-off",
+        "https://economictimes.indiatimes.com/markets/stocks/news/the-rs-1-5-lakh-crore-mtf-problem-how-shrinking-leveraged-positions-are-deepening-indias-smallcap-sell-off/articleshow/135214401.cms",
+        "Mon, 26 Oct 2026 20:31:48 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic IPO: 5 jaw-dropping numbers investors need to know about $1.5 trillion public offer",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-ipo-5-jaw-dropping-numbers-investors-need-to-know-about-1-5-trillion-public-offer/articleshow/135214380.cms",
+        "Mon, 26 Oct 2026 20:28:19 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic IPO puts AI spending under the spotlight as losses mount",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-ipo-rising-costs-risks-rapid-growth-market-ai-frontrunner/articleshow/135213738.cms",
+        "Mon, 26 Oct 2026 19:43:20 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic's top investors include Amazon, Google, Fidelity Management",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropics-top-investors-include-amazon-google-fidelity-management/articleshow/135213715.cms",
+        "Mon, 26 Oct 2026 19:41:06 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic's filing for blockbuster US IPO shows key executives and board",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropics-filing-for-blockbuster-us-ipo-shows-key-executives-and-board/articleshow/135213686.cms",
+        "Mon, 26 Oct 2026 19:38:53 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks today: US stocks rise as Anthropic IPO puts AI spending under scrutiny",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-higher-as-anthropics-ipo-filing-sharpens-ai-focus/articleshow/135213224.cms",
+        "Mon, 26 Oct 2026 19:11:32 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic files for US IPO amid AI boom, rising costs and safety concerns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-opens-books-on-ais-explosive-growth-and-staggering-costs/articleshow/135212999.cms",
+        "Mon, 26 Oct 2026 18:52:34 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Raymond Realty raises Rs 210 cr from ICICI Prudential Real Estate Development Fund",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/raymond-realty-raises-rs-210-cr-from-icici-prudential-real-estate-development-fund/articleshow/135212430.cms",
+        "Mon, 26 Oct 2026 18:22:41 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Yes Bank among 6 stocks to hit 52-week lows and fall up to 32% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/yes-bank-among-6-stocks-to-hit-52-week-lows-and-fall-up-to-32-in-a-month/slideshow/135212417.cms",
+        "Mon, 26 Oct 2026 18:13:29 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Tata Consumer Q2 Results: Net profit rises 16% YoY to Rs 470 crore, revenue up 14%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/tata-consumer-q2-results-net-profit-rises-16-yoy-to-rs-470-crore-revenue-up-14/articleshow/135211637.cms",
+        "Mon, 26 Oct 2026 17:42:43 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "US Stock Market Highlights: US stocks end higher as Anthropic IPO filing revives AI optimism; Tesla hits 3-month high",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-earnings-fed-rate-decision-treasury-yields-oil-prices-alphabet-microsoft-amazon-coreweave-nebius-news-26th-october-2026/liveblog/135211801.cms",
+        "Mon, 26 Oct 2026 17:40:42 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Brigade Enterprises signs Hyatt Hotels to manage two hotels in Bengaluru",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/brigade-enterprises-signs-hyatt-hotels-to-manage-two-hotels-in-bengaluru/articleshow/135211293.cms",
+        "Mon, 26 Oct 2026 17:23:07 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "India bonds give up gains as high oil prices weigh",
+        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-give-up-gains-as-high-oil-prices-weigh/articleshow/135211224.cms",
+        "Mon, 26 Oct 2026 17:21:01 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "China's central bank sets up non-bank financial institution bond market swap facility",
+        "https://economictimes.indiatimes.com/markets/bonds/chinas-central-bank-sets-up-non-bank-financial-institution-bond-market-swap-facility/articleshow/135210676.cms",
+        "Mon, 26 Oct 2026 17:00:48 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Bitcoin hovers near $80,000 and Ethereum tests $2,300 as macro and geopolitical risks weigh on crypto markets",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/bitcoin-hovers-near-80000-and-ethereum-tests-2300-as-macro-and-geopolitical-risks-weigh-on-crypto-markets/articleshow/135210501.cms",
+        "Mon, 26 Oct 2026 16:58:29 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "ITC Hotels reports revenues of Rs 1054 cr for Q2, PAT at Rs 203 cr",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/itc-hotels-reports-revenues-of-rs-1054-cr-for-q2-pat-at-rs-203-cr/articleshow/135210456.cms",
+        "Mon, 26 Oct 2026 16:50:39 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Market wrap: Dr Reddys, JSW Steel, Shriram Finance, Tata Consumer top gainers and losers on Nifty and Sensex on Monday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-dr-reddys-jsw-steel-shriram-finance-tata-consumer-top-gainers-and-losers-on-nifty-and-sensex-on-monday/articleshow/135209828.cms",
+        "Mon, 26 Oct 2026 16:30:17 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: European shares flat as investors assess earnings, France turmoil",
+        "https://economictimes.indiatimes.com/markets/stocks/news/global-market-european-shares-flat-as-investors-assess-earnings-france-turmoil/articleshow/135209743.cms",
+        "Mon, 26 Oct 2026 16:21:45 +0530",
+        "2026-10-26T21:48:22Z"
+      ],
+      [
+        "ET Markets",
+        "Asia-focused banks face bond market risks ahead of Q3 earnings",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/asia-focused-banks-face-bond-market-risks-ahead-of-q3-earnings/articleshow/135209404.cms",
+        "Mon, 26 Oct 2026 16:18:58 +0530",
+        "2026-10-26T21:48:22Z"
+      ]
+    ],
+    "total": 147
   },
   "archive": {
     "files": 15,
@@ -1066,349 +1399,6 @@
     ],
     "total": 13
   },
-  "daily": {
-    "as_of": "2026-10-26T20:23:46Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-26 (15 files, 9 days)",
-      "Nifty PCR 1.11 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "Corporate actions: 4 dividends",
-      "245 videos across 10 channels"
-    ]
-  },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^NSEI",
-        22600.0,
-        -0.39,
-        "2026-10-23"
-      ],
-      [
-        "^BSESN",
-        73123.8281,
-        -0.17,
-        "2026-10-23"
-      ]
-    ],
-    "total": 2
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        4032.3,
-        0.61,
-        "2026-10-26"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "ADA-USD",
-        0.2059,
-        0.98,
-        "2026-10-26"
-      ],
-      [
-        "BNB-USD",
-        744.12,
-        0.87,
-        "2026-10-26"
-      ],
-      [
-        "DOGE-USD",
-        0.0773,
-        0.65,
-        "2026-10-26"
-      ],
-      [
-        "XRP-USD",
-        1.3002,
-        0.45,
-        "2026-10-26"
-      ],
-      [
-        "AVAX-USD",
-        8.946,
-        0.36,
-        "2026-10-26"
-      ],
-      [
-        "SOL-USD",
-        100.93,
-        -0.29,
-        "2026-10-26"
-      ],
-      [
-        "BTC-USD",
-        80173.1484,
-        0.19,
-        "2026-10-26"
-      ],
-      [
-        "ETH-USD",
-        2323.4199,
-        -0.15,
-        "2026-10-26"
-      ],
-      [
-        "LINK-USD",
-        11.427,
-        -0.06,
-        "2026-10-26"
-      ],
-      [
-        "TRX-USD",
-        0.3302,
-        0.06,
-        "2026-10-26"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "Dalmia Bharat posts Rs 205 crore Q2 loss on exceptional hit",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/dalmia-bharat-posts-rs-205-crore-q2-loss-on-exceptional-hit/articleshow/135217688.cms",
-        "Mon, 26 Oct 2026 23:49:52 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Ahead of Market: 10 things that will decide stock market action on Tuesday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-tuesday/articleshow/135215629.cms",
-        "Mon, 26 Oct 2026 22:08:34 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic vs OpenAI: How Claude maker\u2019s growth is challenging ChatGPT ahead of IPO",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-vs-openai-how-claude-makers-growth-is-challenging-chatgpt-ahead-of-ipo/articleshow/135215446.cms",
-        "Mon, 26 Oct 2026 21:57:14 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Paytm Q2 Results: Profit rockets 976% YoY to Rs 226 crore, revenue jumps 28%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/paytm-q2-results-profit-rockets-976-yoy-to-rs-226-crore-revenue-jumps-28/articleshow/135214973.cms",
-        "Mon, 26 Oct 2026 21:15:42 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Tamilnad Mercantile Bank Q2 Results: Net profit rises 42% to record Rs 451 crore on high net interest income",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/tamilnad-mercantile-bank-q2-results-net-profit-rises-42-to-record-rs-451-crore-on-high-net-interest-income/articleshow/135214844.cms",
-        "Mon, 26 Oct 2026 20:56:51 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Indian Overseas Bank to raise $500 million as Q2 profit jumps 56%",
-        "https://economictimes.indiatimes.com/markets/stocks/news/indian-overseas-bank-to-raise-500-million-as-q2-profit-jumps-56/articleshow/135214567.cms",
-        "Mon, 26 Oct 2026 20:44:37 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "MMT reports net profit of $1.8 million in Q2, revenues at $ 235.2 million",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/mmt-reports-net-profit-of-1-8-million-in-q2-revenues-at-235-2-million/articleshow/135214497.cms",
-        "Mon, 26 Oct 2026 20:36:23 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Bank of Maharashtra Q2 profit jumps 41.5% as bad loans decline",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/bank-of-maharashtra-q2-profit-jumps-41-5-as-bad-loans-decline/articleshow/135214440.cms",
-        "Mon, 26 Oct 2026 20:34:08 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "The Rs 1.5 lakh crore MTF problem: How shrinking leveraged positions are deepening India's smallcap sell-off",
-        "https://economictimes.indiatimes.com/markets/stocks/news/the-rs-1-5-lakh-crore-mtf-problem-how-shrinking-leveraged-positions-are-deepening-indias-smallcap-sell-off/articleshow/135214401.cms",
-        "Mon, 26 Oct 2026 20:31:48 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic IPO: 5 jaw-dropping numbers investors need to know about $1.5 trillion public offer",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-ipo-5-jaw-dropping-numbers-investors-need-to-know-about-1-5-trillion-public-offer/articleshow/135214380.cms",
-        "Mon, 26 Oct 2026 20:28:19 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic IPO puts AI spending under the spotlight as losses mount",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-ipo-rising-costs-risks-rapid-growth-market-ai-frontrunner/articleshow/135213738.cms",
-        "Mon, 26 Oct 2026 19:43:20 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic's top investors include Amazon, Google, Fidelity Management",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropics-top-investors-include-amazon-google-fidelity-management/articleshow/135213715.cms",
-        "Mon, 26 Oct 2026 19:41:06 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic's filing for blockbuster US IPO shows key executives and board",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropics-filing-for-blockbuster-us-ipo-shows-key-executives-and-board/articleshow/135213686.cms",
-        "Mon, 26 Oct 2026 19:38:53 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks today: US stocks rise as Anthropic IPO puts AI spending under scrutiny",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-open-higher-as-anthropics-ipo-filing-sharpens-ai-focus/articleshow/135213224.cms",
-        "Mon, 26 Oct 2026 19:11:32 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic files for US IPO amid AI boom, rising costs and safety concerns",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropic-opens-books-on-ais-explosive-growth-and-staggering-costs/articleshow/135212999.cms",
-        "Mon, 26 Oct 2026 18:52:34 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Raymond Realty raises Rs 210 cr from ICICI Prudential Real Estate Development Fund",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/raymond-realty-raises-rs-210-cr-from-icici-prudential-real-estate-development-fund/articleshow/135212430.cms",
-        "Mon, 26 Oct 2026 18:22:41 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Yes Bank among 6 stocks to hit 52-week lows and fall up to 32% in a month",
-        "https://economictimes.indiatimes.com/markets/stocks/news/yes-bank-among-6-stocks-to-hit-52-week-lows-and-fall-up-to-32-in-a-month/slideshow/135212417.cms",
-        "Mon, 26 Oct 2026 18:13:29 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Tata Consumer Q2 Results: Net profit rises 16% YoY to Rs 470 crore, revenue up 14%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/tata-consumer-q2-results-net-profit-rises-16-yoy-to-rs-470-crore-revenue-up-14/articleshow/135211637.cms",
-        "Mon, 26 Oct 2026 17:42:43 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "US Stock Market Live Updates: US stocks rise as Anthropic's IPO filing sharpens focus on AI trade",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-earnings-fed-rate-decision-treasury-yields-oil-prices-alphabet-microsoft-amazon-coreweave-nebius-news-26th-october-2026/liveblog/135211801.cms",
-        "Mon, 26 Oct 2026 17:40:42 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Brigade Enterprises signs Hyatt Hotels to manage two hotels in Bengaluru",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/brigade-enterprises-signs-hyatt-hotels-to-manage-two-hotels-in-bengaluru/articleshow/135211293.cms",
-        "Mon, 26 Oct 2026 17:23:07 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "India bonds give up gains as high oil prices weigh",
-        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-give-up-gains-as-high-oil-prices-weigh/articleshow/135211224.cms",
-        "Mon, 26 Oct 2026 17:21:01 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "China's central bank sets up non-bank financial institution bond market swap facility",
-        "https://economictimes.indiatimes.com/markets/bonds/chinas-central-bank-sets-up-non-bank-financial-institution-bond-market-swap-facility/articleshow/135210676.cms",
-        "Mon, 26 Oct 2026 17:00:48 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Bitcoin hovers near $80,000 and Ethereum tests $2,300 as macro and geopolitical risks weigh on crypto markets",
-        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/bitcoin-hovers-near-80000-and-ethereum-tests-2300-as-macro-and-geopolitical-risks-weigh-on-crypto-markets/articleshow/135210501.cms",
-        "Mon, 26 Oct 2026 16:58:29 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "ITC Hotels reports revenues of Rs 1054 cr for Q2, PAT at Rs 203 cr",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/itc-hotels-reports-revenues-of-rs-1054-cr-for-q2-pat-at-rs-203-cr/articleshow/135210456.cms",
-        "Mon, 26 Oct 2026 16:50:39 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Market wrap: Dr Reddys, JSW Steel, Shriram Finance, Tata Consumer top gainers and losers on Nifty and Sensex on Monday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-dr-reddys-jsw-steel-shriram-finance-tata-consumer-top-gainers-and-losers-on-nifty-and-sensex-on-monday/articleshow/135209828.cms",
-        "Mon, 26 Oct 2026 16:30:17 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: European shares flat as investors assess earnings, France turmoil",
-        "https://economictimes.indiatimes.com/markets/stocks/news/global-market-european-shares-flat-as-investors-assess-earnings-france-turmoil/articleshow/135209743.cms",
-        "Mon, 26 Oct 2026 16:21:45 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Asia-focused banks face bond market risks ahead of Q3 earnings",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/asia-focused-banks-face-bond-market-risks-ahead-of-q3-earnings/articleshow/135209404.cms",
-        "Mon, 26 Oct 2026 16:18:58 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "Ather Energy shares skyrocket 19% after EV maker swings to Rs 1.26 crore profit in Q2",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ather-energy-shares-skyrocket-19-after-ev-maker-swings-to-rs-1-26-crore-profit-in-q2/articleshow/135209355.cms",
-        "Mon, 26 Oct 2026 16:06:42 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "SoftBank sells 1.21 crore Ola Electric rights entitlements as EV maker seeks to raise Rs 1,000 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/news/softbank-sells-1-21-crore-ola-electric-rights-entitlements-as-ev-maker-seeks-to-raise-rs-1000-crore/articleshow/135209308.cms",
-        "Mon, 26 Oct 2026 16:04:38 +0530",
-        "2026-10-26T18:35:55Z"
-      ],
-      [
-        "ET Markets",
-        "The war bump is a false victory for S&amp;P 500 profits",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/the-war-bump-is-a-false-victory-for-sp-500-profits/articleshow/135209183.cms",
-        "Mon, 26 Oct 2026 16:01:42 +0530",
-        "2026-10-26T18:35:55Z"
-      ]
-    ],
-    "total": 148
-  },
   "quality": {
     "rows": 31238,
     "symbols": 4554,
@@ -1474,6 +1464,17 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
+  },
+  "daily": {
+    "as_of": "2026-10-26T22:13:30Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-26 (15 files, 9 days)",
+      "Nifty PCR 1.11 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 4 dividends",
+      "245 videos across 10 channels",
+      "147 news headlines"
+    ]
   },
   "fx": {
     "columns": [

@@ -1,29 +1,29 @@
 {
-  "generated_at": "2026-10-26T09:49:20Z",
+  "generated_at": "2026-10-26T12:00:04Z",
   "channels": 10,
-  "videos": 239,
+  "videos": 243,
   "window_start": "2026-06-25",
   "window_end": "2026-10-26",
-  "total_views": 11104506,
+  "total_views": 11110644,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 55,
+      "mentions": 57,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 26,
+      "mentions": 27,
       "channels": 4
     },
     {
       "symbol": "SENSEX",
-      "mentions": 24,
+      "mentions": 25,
       "channels": 4
     },
     {
       "symbol": "RELIANCE",
-      "mentions": 11,
+      "mentions": 12,
       "channels": 4
     },
     {
@@ -64,7 +64,11 @@
     },
     {
       "theme": "Beginner/Education",
-      "videos": 51
+      "videos": 53
+    },
+    {
+      "theme": "IPO",
+      "videos": 41
     },
     {
       "theme": "Earnings/Results",
@@ -75,13 +79,9 @@
       "videos": 40
     },
     {
-      "theme": "IPO",
-      "videos": 40
-    },
-    {
       "theme": "Options/F&O",
-      "videos": 35
+      "videos": 36
     }
   ],
-  "net_sentiment": 65
+  "net_sentiment": 69
 }

@@ -198,6 +198,12 @@ jobs:
       - name: "7i14. Deep-history analytics (report cards, drawdown, vol cone, SIP)"
         run: python scripts/build_deep_history.py || true
 
+      # The 10-session recap. Built from Yahoo plus our own archive so every figure in it
+      # comes from one consistent set of sources - unlike the circulating PDF it replaces,
+      # which had a correct index ledger but an FII/DII sign reversed against NSE.
+      - name: "7i15. Ten-session market recap"
+        run: python scripts/build_recap.py || true
+
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 

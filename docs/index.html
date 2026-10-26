@@ -1384,6 +1384,43 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    if(RECAP&&RECAP.nifty){
+      var n=RECAP.nifty, sx=RECAP.sensex, vx=RECAP.vix||{};
+      var rk=[para("Nifty "+num(n.last)+"  ("+(n.change_10d_pct>0?"+":"")+n.change_10d_pct+"% over "+
+                   n.sessions+" sessions, "+n.high_10d+" high / "+n.low_10d+" low)", true)];
+      if(sx) rk.push(para("Sensex "+num(sx.last)+"  ("+(sx.change_10d_pct>0?"+":"")+sx.change_10d_pct+"%)", false));
+      if(vx.last) rk.push(para("India VIX "+num(vx.last)+"  ("+(vx.change_10d_pct>0?"+":"")+vx.change_10d_pct+
+                               "% over the same window)", false));
+      if(RECAP.breadth&&RECAP.breadth.total)
+        rk.push(para(num(RECAP.breadth.above_50)+"% of "+num(RECAP.breadth.total)+
+                     " stocks above their 50-day average, "+num(RECAP.breadth.above_200)+"% above the 200-day.", false));
+      var rows=[];
+      (n.rows||[]).forEach(function(r){rows.push(["Nifty", r[0], r[1], r[2], r[3], r[4], r[5]]);});
+      if(sx) (sx.rows||[]).forEach(function(r){rows.push(["Sensex", r[0], r[1], r[2], r[3], r[4], r[5]]);});
+      rk.push(tbl({columns:["index","date","open","high","low","close","chg pct"],rows:rows},
+                  ["open","high","low","close","chg pct"]));
+      v.appendChild(card("Last "+RECAP.sessions+" sessions", "every figure from one set of sources",
+        rk,
+        {what:"A short recap: the index ledger, volatility and breadth over the last ten trading sessions.",
+         source:"Yahoo ^NSEI / ^BSESN / ^INDIAVIX; breadth from our own bhavcopy archive.",
+         updated:RECAP.updated, note:RECAP.note}));
+    }
+    if(RECAP&&RECAP.sectors&&RECAP.sectors.length){
+      var sr=RECAP.sectors.map(function(s){return [s.name, s.ret_10d_pct, s.stocks];});
+      v.appendChild(card("Sectors, last "+RECAP.sessions+" sessions", "best and worst",
+        [ tbl({columns:["sector","ret 10d pct","stocks"],rows:sr},["ret 10d pct","stocks"]) ],
+        {what:"Average ten-session return of each sector's constituents.",
+         source:"Computed from our own NSE bhavcopy archive.", updated:RECAP.updated,
+         note:"Averaged over constituents that exist today, so it inherits the archive's survivorship bias."}));
+    }
+    if(RECAP&&RECAP.fii_dii&&RECAP.fii_dii.length){
+      var fr=RECAP.fii_dii.map(function(x){return [x.category, x.date, x.net_cr];});
+      v.appendChild(card("Institutional flows", "latest session",
+        [ tbl({columns:["category","date","net Rs Cr"],rows:fr},["net Rs Cr"]) ],
+        {what:"Net cash-market buying or selling by foreign and domestic institutions.",
+         source:"NSE FII/DII endpoint.", updated:(RECAP.fii_dii[0]||{}).date||"",
+         note:RECAP.fii_dii_note||""}));
+    }
     if(MSTATS&&MSTATS.drawdown){
       var dd=MSTATS.drawdown;
       var ep=(dd.episodes||[]).map(function(e){return [e.peak_on,e.trough_on,e.depth_pct,
@@ -3013,6 +3050,7 @@ function assign(name, v){
     case "metals.json": METALS=v; break;
     case "ipo_doc.json": IPODOC=v; break;
     case "market_stats.json": MSTATS=v; break;
+    case "recap.json": RECAP=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3059,8 +3097,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json"];
 
 function renderAll(){
   if(!DATA) return;

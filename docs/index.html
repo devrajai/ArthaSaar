@@ -497,6 +497,34 @@ h1{font-size:20px;font-weight:800;letter-spacing:-.4px;margin:0}
 /* 7. The disclaimer belongs on the landing page, not repeated under every tab. */
 footer.wrap{display:none}
 body.is-home footer.wrap{display:block}
+
+/* ============================================================================
+   Sticky header that SHRINKS as you scroll.
+   It was already sticky, but at full size it is ~150px tall - a fifth of a phone
+   screen, permanently. Now it collapses to a compact bar once you start reading and
+   expands back the moment you return to the top.
+   ============================================================================ */
+header{transition:box-shadow .22s ease}
+.top{transition:padding .22s ease,gap .22s ease}
+.logo,.searchwrap,.searchwrap .mag,h1{transition:all .22s ease}
+
+/* !important on purpose. Several earlier rules set .top / .searchwrap / .logo and, for
+   reasons that took longer to find than they were worth, the scrolled versions were losing
+   the cascade. This is a purely cosmetic override of our own styling - the correct tool
+   here is to state it unambiguously rather than keep raising specificity. */
+body.scrolled header{box-shadow:0 6px 20px rgba(29,78,216,.13) !important}
+body.scrolled .top{padding:6px 16px 5px !important;gap:8px !important}
+body.scrolled .logo{width:28px !important;height:28px !important;border-radius:9px !important;font-size:11px !important}
+body.scrolled h1{font-size:15px !important}
+body.scrolled .searchwrap{padding:6px 8px !important;margin:0 0 7px !important;gap:9px !important}
+body.scrolled .searchwrap .mag{width:28px !important;height:28px !important}
+body.scrolled .searchwrap .mag svg{width:14px !important;height:14px !important}
+body.scrolled .searchwrap input{font-size:14.5px !important;padding:0 4px !important}
+body.scrolled .searchwrap input::placeholder{font-size:14.5px !important}
+
+/* the burger shrinks with everything else, and stays on the brand row */
+body.scrolled #burger{top:9px;left:6px}
+body.scrolled #burger span{transform:scale(.86)}
 </style>
 </head>
 <body>
@@ -3316,6 +3344,25 @@ function groupTabs(){
         '<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>';
     }
   }catch(e){}
+})();
+
+// Compact the header once the reader starts scrolling, expand it at the top.
+// passive listener + a rAF guard, so this never fights the scroll on a phone.
+(function(){
+  var last=null;
+  function apply(){
+    var y=window.pageYOffset||document.documentElement.scrollTop||0;
+    var want=y>56;
+    if(want!==last){
+      document.body.classList.toggle("scrolled", want);
+      last=want;
+    }
+  }
+  // Straight handler, no rAF. The work is one read and a class toggle, and a passive
+  // listener cannot block the scroll - so there is nothing to debounce.
+  window.addEventListener("scroll", apply, {passive:true});
+  window.addEventListener("resize", apply, {passive:true});
+  apply();
 })();
 
 if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");

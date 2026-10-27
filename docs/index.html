@@ -1758,6 +1758,26 @@ function build(d){
   /* ---------- DATA ---------- */
   (function(){
     var v=sec("data");
+    // The page that would have caught the empty sections on its own: every published file
+    // with its age and row count, plus the biggest files - every kilobyte here is paid for
+    // twice, once by the service worker and once by a phone.
+    if(HEALTH&&HEALTH.rows){
+      var hr=HEALTH.rows.map(function(r){return [r.file, (r.count!=null?r.count:"—"),
+        r.kb+" KB", (r.age_days!=null?r.age_days+"d":"—"), r.state];});
+      v.appendChild(card("Data health", HEALTH.files+" files · "+HEALTH.total_kb+" KB total",
+        [ para((HEALTH.empty&&HEALTH.empty.length?("Empty and should not be: "+HEALTH.empty.join(", ")+". "):"No empty feeds. ")+
+               (HEALTH.stale&&HEALTH.stale.length?("Older than two days: "+HEALTH.stale.join(", ")+"."):"Nothing stale."), false),
+          tbl({columns:["file","rows","size","age","state"],rows:hr},["rows"]) ],
+        {what:"Every published file, its age and its row count. If a section looks blank, look here first.",
+         source:"Scanned from docs/ on the last pipeline run.", updated:HEALTH.updated,
+         note:HEALTH.note}));
+      if(HEALTH.biggest&&HEALTH.biggest.length)
+        v.appendChild(card("Biggest files", "what a phone downloads",
+          [ tbl({columns:["file","size"],rows:HEALTH.biggest.map(function(b){return [b.file,b.kb+" KB"];})},[]) ],
+          {what:"The largest published files, largest first.",
+           source:"docs/", updated:HEALTH.updated,
+           note:"stocks.json is the single biggest cost and it loads on every visit. Trimming or splitting it is the highest-value page-size fix."}));
+    }
     var rows=FEEDS.map(function(f){return [f, d[f]!=null?"OK":"missing"];});
     v.appendChild(card("Data status", have+"/"+FEEDS.length+" reporting",[ table(["feed","status"],rows) ],
       {what:"Which feeds produced data on the last run.",source:"This hub's own pipeline.",updated:when}));
@@ -3051,6 +3071,7 @@ function assign(name, v){
     case "ipo_doc.json": IPODOC=v; break;
     case "market_stats.json": MSTATS=v; break;
     case "recap.json": RECAP=v; break;
+    case "health.json": HEALTH=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3097,8 +3118,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json"];
 
 function renderAll(){
   if(!DATA) return;

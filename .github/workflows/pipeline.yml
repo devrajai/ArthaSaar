@@ -74,12 +74,10 @@ jobs:
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
-        # NO EARLY EXIT ANY MORE. The previous version did `exit 0` when the secret was
-        # missing, so the script was never called - and the release-asset fallback inside it
-        # was never reached. That single line is why the archive stayed at 9 dates while
-        # seasonality, levels and gaps all reported "not enough history".
-        # The script now tries Drive first and falls back to the public release asset, so
-        # it is always worth calling.
+        # NO EARLY EXIT ANY MORE. This block used to `exit 0` when the secret was absent, so
+        # the script was never called and the release-asset fallback inside it was never
+        # reached. That single line is why the archive stayed at 9 dates while seasonality,
+        # levels and gaps all reported "not enough history".
         run: |
           if [ -z "$ARTHASAAR_DRIVE_FOLDER" ]; then
             echo "::notice title=Drive folder not set::Reading the archive from the public release asset instead."
@@ -97,8 +95,7 @@ jobs:
               print(f"archive: {len(d):,} rows, {d['date'].nunique()} sessions, "
                     f"{d['date'].min()} -> {d['date'].max()}")
               if d["date"].nunique() < 100:
-                  print("::warning title=Candle archive still shallow::Only "
-                        f"{d['date'].nunique()} sessions - seasonality and levels will stay empty.")
+                  print(f"::warning title=Candle archive still shallow::Only {d['date'].nunique()} sessions - seasonality and levels will stay empty.")
           else:
               print("::warning title=No candle archive::data/candles/daily.parquet was not produced.")
           EOF
@@ -218,6 +215,18 @@ jobs:
       # split-adjusted - without that adjustment NIFTYBEES reads as -80% instead of +124%.
       - name: "7i14. Deep-history analytics (report cards, drawdown, vol cone, SIP)"
         run: python scripts/build_deep_history.py || true
+
+      # The 10-session recap. Built from Yahoo plus our own archive so every figure in it
+      # comes from one consistent set of sources - unlike the circulating PDF it replaces,
+      # which had a correct index ledger but an FII/DII sign reversed against NSE.
+      - name: "7i15. Ten-session market recap"
+        run: python scripts/build_recap.py || true
+
+      # Data health runs LAST, after every other file is written, so it describes the run
+      # that just finished. This is the page that would have caught the empty Seasonality
+      # card on its own: every file, its age and its row count.
+      - name: "7z. Data health (every file, its age and row count)"
+        run: python scripts/build_health.py || true
 
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true

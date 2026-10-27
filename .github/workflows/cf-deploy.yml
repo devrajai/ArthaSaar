@@ -1,0 +1,33 @@
+name: "Deploy the Cloudflare Worker (live intraday proxy)"
+# Deploys worker/ to Cloudflare's free plan, then tells you the URL to paste into
+# docs/config.json. Safe to re-run: wrangler updates the existing worker in place.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Deploy
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ARTHASAARCLOUDFARE }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::ARTHASAARCLOUDFARE is empty"; exit 1
+          fi
+          npm install --silent wrangler@3 >/dev/null 2>&1 || npm install wrangler@3
+          npx wrangler --version
+          echo "--- whoami ---"
+          npx wrangler whoami || echo "whoami failed (token may be account-scoped, continuing)"
+          echo "--- deploy ---"
+          npx wrangler deploy 2>&1 | tee /tmp/deploy.log
+          echo
+          echo "=== worker url(s) ==="
+          grep -oE 'https://[a-zA-Z0-9.-]+\.workers\.dev' /tmp/deploy.log | sort -u || true

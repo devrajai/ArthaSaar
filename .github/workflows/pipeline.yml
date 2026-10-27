@@ -74,13 +74,34 @@ jobs:
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
+        # NO EARLY EXIT ANY MORE. The previous version did `exit 0` when the secret was
+        # missing, so the script was never called - and the release-asset fallback inside it
+        # was never reached. That single line is why the archive stayed at 9 dates while
+        # seasonality, levels and gaps all reported "not enough history".
+        # The script now tries Drive first and falls back to the public release asset, so
+        # it is always worth calling.
         run: |
-          if [ -z "$GOOGLE_SA_JSON" ] || [ -z "$ARTHASAAR_DRIVE_FOLDER" ]; then
-            echo "::warning title=Deep history NOT restored::GOOGLE_SA_JSON or ARTHASAAR_DRIVE_FOLDER is missing, so the deep candle archive was not restored. Indicators, features, the backtest and seasonality are running on bhavcopy only. Seasonality will stay empty until this is fixed."
-            echo "SKIPPED: deep candle archive - missing secret (see the warning above)"
-            exit 0
+          if [ -z "$ARTHASAAR_DRIVE_FOLDER" ]; then
+            echo "::notice title=Drive folder not set::Reading the archive from the public release asset instead."
+            python scripts/candles_from_drive.py --kind daily
+          else
+            python scripts/candles_from_drive.py --folder-id "$ARTHASAAR_DRIVE_FOLDER" --kind daily
           fi
-          python scripts/candles_from_drive.py --folder-id "$ARTHASAAR_DRIVE_FOLDER" --kind daily
+          echo "--- candle archive produced ---"
+          ls -la data/candles/ 2>/dev/null || echo "no candle output"
+          python - <<'EOF'
+          import os, pandas as pd
+          p = "data/candles/daily.parquet"
+          if os.path.exists(p):
+              d = pd.read_parquet(p, columns=["date"])
+              print(f"archive: {len(d):,} rows, {d['date'].nunique()} sessions, "
+                    f"{d['date'].min()} -> {d['date'].max()}")
+              if d["date"].nunique() < 100:
+                  print("::warning title=Candle archive still shallow::Only "
+                        f"{d['date'].nunique()} sessions - seasonality and levels will stay empty.")
+          else:
+              print("::warning title=No candle archive::data/candles/daily.parquet was not produced.")
+          EOF
 
       - name: "5b. Corporate actions + price adjustment (BEFORE any analysis)"
         run: |
@@ -197,12 +218,6 @@ jobs:
       # split-adjusted - without that adjustment NIFTYBEES reads as -80% instead of +124%.
       - name: "7i14. Deep-history analytics (report cards, drawdown, vol cone, SIP)"
         run: python scripts/build_deep_history.py || true
-
-      # The 10-session recap. Built from Yahoo plus our own archive so every figure in it
-      # comes from one consistent set of sources - unlike the circulating PDF it replaces,
-      # which had a correct index ledger but an FII/DII sign reversed against NSE.
-      - name: "7i15. Ten-session market recap"
-        run: python scripts/build_recap.py || true
 
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true

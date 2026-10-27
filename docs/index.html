@@ -437,6 +437,56 @@ input,select,textarea{color:var(--text)}
   background:var(--purple-soft,#eef2ff);color:var(--purple,#1d4ed8)}
 .fresh.stale{background:#fde8e8;color:#b91c1c}
 @media (max-width:680px){.fresh{font-size:9px;padding:2px 7px}}
+
+/* ============================================================================
+   CLEAN-UP PASS - fewer things competing for attention
+   ============================================================================ */
+
+/* 1. The i / CSV / PNG buttons that sat on every card head. Gone everywhere. */
+.cardhead .ibtn{display:none !important}
+
+/* 2. The build stamp, and the "Updated ... 17h ago" line under the title. */
+.build{display:none !important}
+#stamp{display:none !important}
+
+/* 3. The red market-status chip (Closed / Open). */
+#mkt{display:none !important}
+
+/* 4. The mic in the search bar. */
+#micBtn{display:none !important}
+
+/* 5. Header: logo and name on ONE centred line. The burger floats to the left so it
+      cannot push the brand off-centre. */
+.top{display:flex;align-items:center;justify-content:center;gap:11px;
+  position:relative;padding:13px 16px 10px;flex-wrap:wrap}
+/* justify-content alone was defeated by leftover flex items, so the brand gets its own
+   group with margin:auto - that centres it regardless of what else is on the line. */
+.brandgrp{display:flex;align-items:center;gap:10px;margin:0 auto;min-width:0}
+.right{display:none !important}
+.top > div:not(.logo):not(.searchwrap):not(.right){flex:0 0 auto;min-width:0;text-align:left}
+#burger{position:absolute;left:0;top:50%;transform:translateY(-50%);margin:0}
+.logo{width:38px;height:38px;border-radius:12px;font-size:14px}
+h1{font-size:20px;font-weight:800;letter-spacing:-.4px;margin:0}
+
+/* 6. Search bar: one wide rounded pill with the magnifier on the left and no mic.
+      The shape follows the reference, but stays in the blue glass palette - the pink
+      in the example belongs to a different product. */
+.searchwrap{
+  order:5;flex:1 1 100%;max-width:none;width:100%;
+  margin:2px 0 14px;padding:13px 20px;border-radius:999px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 6px 22px rgba(29,78,216,.12), inset 0 1px 0 #fff;
+  display:flex;align-items:center;gap:12px;
+}
+.searchwrap .mag{font-size:20px;color:var(--blue,#1d4ed8);opacity:.8;line-height:1}
+.searchwrap input{flex:1;min-width:0;border:0;background:transparent;
+  font:inherit;font-size:16px;color:var(--text,#0b2239);outline:none}
+.searchwrap input::placeholder{color:var(--muted,#5a7391);font-size:15px;opacity:.9}
+
+/* 7. The disclaimer belongs on the landing page, not repeated under every tab. */
+footer.wrap{display:none}
+body.is-home footer.wrap{display:block}
 </style>
 </head>
 <body>
@@ -975,7 +1025,7 @@ var STR = {
        ipo:"IPOs", regulator:"Regulator", promoter:"Promoter", rs:"Rel. strength",
        seasonality:"Seasonality", correlation:"Correlation", calendar:"Calendar",
        watchlists:"Surveillance", deals:"Deals", insider:"Insider", charges:"Charges",
-       searchPh:"Search stocks, global, coins, news…  (press /)", dark:"Dark mode", light:"Light mode"},
+       searchPh:"Search stocks, coins, news…", dark:"Dark mode", light:"Light mode"},
   hi: {overview:"अवलोकन", markets:"बाज़ार", stocks:"शेयर", screener:"स्क्रीनर",
        crypto:"क्रिप्टो", global:"वैश्विक", learn:"सीखें", indices:"सूचकांक", sectors:"क्षेत्र",
        etf:"ईटीएफ", mf:"म्यूचुअल फंड", tools:"औज़ार", backtest:"बैकटेस्ट", watchlist:"वॉचलिस्ट",
@@ -1243,11 +1293,11 @@ function build(d){
     if(RCARDS&&RCARDS.cards&&RCARDS.cards.length){
       var top=RCARDS.cards.slice(0,25);
       v.appendChild(card("Most consistent", "rose in the most of the last 7 years",
-        [ tbl({columns:["symbol","years up","volatility","worst fall","beta"],
+        [ tbl({columns:["symbol","up / total","volatility","worst fall","beta"],
                rows:top.map(function(r){return [r.symbol, r.years_up+"/"+r.years_total,
                  (r.vol_pct!=null?r.vol_pct+"%":"—"),
                  (r.max_drawdown_pct!=null?r.max_drawdown_pct+"%":"—"),
-                 (r.beta!=null?r.beta:"—")];})},["years up"]) ],
+                 (r.beta!=null?r.beta:"—")];})},["beta"]) ],
         {what:"Stocks that finished more of the last seven calendar years up than down.",
          source:"8 years of NSE bhavcopy, split-adjusted.", updated:RCARDS.updated,
          note:(RCARDS.cautions&&RCARDS.cautions.survivorship)||""}));
@@ -2949,7 +2999,7 @@ function buildPalette(){
   var wrap=el("div","palette");
   var box=el("div","pbox");
   var input=el("input");
-  input.type="text"; input.placeholder="Search stocks, global companies, coins, news…";
+  input.type="text"; input.placeholder="Search stocks, coins, news…";
   var list=el("div","plist");
   box.appendChild(input); box.appendChild(list); wrap.appendChild(box);
   document.body.appendChild(wrap);
@@ -3021,7 +3071,7 @@ function openPalette(){
   PALETTE.input.placeholder="loading the index…";
   optional(BASE+"search.json").then(function(s){
     SEARCH=s||{items:[]};
-    PALETTE.input.placeholder="Search stocks, global companies, coins, news…";
+    PALETTE.input.placeholder="Search stocks, coins, news…";
     PALETTE.input.value="";
     PALETTE.search("");
     PALETTE.input.focus();
@@ -3230,6 +3280,21 @@ function groupTabs(){
   top.insertBefore(b, top.firstChild);
 })();
 
+// Put the logo and the name into one centred group. Done in JS rather than CSS because
+// they are siblings in the markup, and no combination of justify-content would centre
+// them while the burger and the (hidden) control strip were still flex items.
+(function(){
+  try{
+    var top=document.querySelector(".top"); if(!top) return;
+    var logo=top.querySelector(".logo"); if(!logo) return;
+    var brand=logo.nextElementSibling; if(!brand) return;
+    if(top.querySelector(".brandgrp")) return;
+    var g=document.createElement("div"); g.className="brandgrp";
+    top.insertBefore(g, logo);
+    g.appendChild(logo); g.appendChild(brand);
+  }catch(e){}
+})();
+
 if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");
 
 var _show = show;
@@ -3241,6 +3306,12 @@ show = function(id){
   // happened and every data-driven tab rendered empty with no visible error. Scrolling to
   // the top is a nicety; it must never be able to take the page down.
   try{ if(window.scrollTo) window.scrollTo(0,0); }catch(e){}
+  // The disclaimer shows on the landing page only. Guarded for the same reason as
+  // everything else in this wrapper: a cosmetic failure must never break the load chain.
+  try{
+    var on=document.querySelector(".section.on");
+    document.body.classList.toggle("is-home", !on || on.id==="sec-overview");
+  }catch(e){}
 };
 </script>
 </body>

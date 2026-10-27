@@ -1,0 +1,60 @@
+name: "Cloudflare token check (read-only)"
+# Verifies what ARTHASAARCLOUDFARE can actually do, WITHOUT deploying anything.
+# Prints only status codes and account names/ids - never the token itself.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify the token and list accounts
+        env:
+          CF: ${{ secrets.ARTHASAARCLOUDFARE }}
+        run: |
+          if [ -z "$CF" ]; then
+            echo "::error::ARTHASAARCLOUDFARE is missing or empty"
+            exit 1
+          fi
+          echo "secret present: ${#CF} characters"
+          case "$CF" in
+            *@*) echo "looks like it contains an @ - may be an email:key pair" ;;
+            *)   echo "no @ - treating it as a bearer token" ;;
+          esac
+          echo
+          echo "=== 1. bearer token verify ==="
+          code=$(curl -s -o /tmp/v.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CF" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          echo "HTTP $code"
+          python3 - <<'EOF'
+          import json
+          try:
+              d = json.load(open("/tmp/v.json"))
+              print("success:", d.get("success"))
+              print("messages:", str(d.get("messages"))[:200])
+              r = d.get("result") or {}
+              print("status:", r.get("status"))
+          except Exception as e:
+              print("could not parse:", type(e).__name__)
+              print(open("/tmp/v.json").read()[:300])
+          EOF
+          echo
+          echo "=== 2. accounts visible to this token ==="
+          code=$(curl -s -o /tmp/a.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CF" \
+            https://api.cloudflare.com/client/v4/accounts)
+          echo "HTTP $code"
+          python3 - <<'EOF'
+          import json
+          try:
+              d = json.load(open("/tmp/a.json"))
+              print("success:", d.get("success"))
+              for a in (d.get("result") or []):
+                  print("  account:", a.get("name"), "| id:", a.get("id"))
+              if not d.get("result"):
+                  print("  (no accounts listed - token may lack Account:Read)")
+          except Exception as e:
+              print("could not parse:", type(e).__name__)
+              print(open("/tmp/a.json").read()[:300])
+          EOF

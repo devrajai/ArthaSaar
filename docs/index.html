@@ -464,25 +464,35 @@ input,select,textarea{color:var(--text)}
 .brandgrp{display:flex;align-items:center;gap:10px;margin:0 auto;min-width:0}
 .right{display:none !important}
 .top > div:not(.logo):not(.searchwrap):not(.right){flex:0 0 auto;min-width:0;text-align:left}
-#burger{position:absolute;left:0;top:50%;transform:translateY(-50%);margin:0}
+#burger{position:absolute;left:6px;top:14px;transform:none;margin:0}
 .logo{width:38px;height:38px;border-radius:12px;font-size:14px}
 h1{font-size:20px;font-weight:800;letter-spacing:-.4px;margin:0}
 
 /* 6. Search bar: one wide rounded pill with the magnifier on the left and no mic.
       The shape follows the reference, but stays in the blue glass palette - the pink
       in the example belongs to a different product. */
+/* Option B: a faintly blue-tinted pill with the magnifier in its own filled circle, so
+   the eye lands on it first. Chosen from the three demos. */
 .searchwrap{
   order:5;flex:1 1 100%;max-width:none;width:100%;
-  margin:2px 0 14px;padding:13px 20px;border-radius:999px;
-  background:rgba(255,255,255,.72);
+  margin:2px 0 14px;padding:11px 12px;border-radius:999px;
+  background:rgba(226,240,255,.72);
   border:1px solid rgba(255,255,255,.95);
-  box-shadow:0 6px 22px rgba(29,78,216,.12), inset 0 1px 0 #fff;
-  display:flex;align-items:center;gap:12px;
+  box-shadow:0 8px 26px rgba(29,78,216,.15), inset 0 1px 0 #fff;
+  display:flex;align-items:center;gap:13px;
 }
-.searchwrap .mag{font-size:20px;color:var(--blue,#1d4ed8);opacity:.8;line-height:1}
+.searchwrap .mag{
+  position:static !important;transform:none !important;inset:auto !important;
+  flex:0 0 auto;width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(150deg,#4f8df7,#1d4ed8);
+  box-shadow:0 4px 12px rgba(29,78,216,.35);
+  color:#fff;font-size:0;line-height:1;   /* font-size:0 hides the old ⌕ glyph */
+}
+.searchwrap .mag svg{display:block}
 .searchwrap input{flex:1;min-width:0;border:0;background:transparent;
-  font:inherit;font-size:16px;color:var(--text,#0b2239);outline:none}
-.searchwrap input::placeholder{color:var(--muted,#5a7391);font-size:15px;opacity:.9}
+  font:inherit;font-size:16px;color:var(--text,#0b2239);outline:none;padding:0 6px}
+.searchwrap input::placeholder{color:#4a6a8e;font-size:16px;opacity:1}
 
 /* 7. The disclaimer belongs on the landing page, not repeated under every tab. */
 footer.wrap{display:none}
@@ -3292,6 +3302,19 @@ function groupTabs(){
     var g=document.createElement("div"); g.className="brandgrp";
     top.insertBefore(g, logo);
     g.appendChild(logo); g.appendChild(brand);
+  }catch(e){}
+})();
+
+// The search icon was a text glyph (⌕). Inside the filled badge it needs a real shape,
+// so it is replaced with an inline SVG - no external request, nothing to fail to load.
+(function(){
+  try{
+    var m=document.querySelector(".searchwrap .mag");
+    if(m && !m.querySelector("svg")){
+      m.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" '+
+        'stroke="currentColor" stroke-width="2.4" stroke-linecap="round">'+
+        '<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>';
+    }
   }catch(e){}
 })();
 

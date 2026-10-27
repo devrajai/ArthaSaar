@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-26T22:13:30Z",
+  "generated_utc": "2026-10-27T19:59:00Z",
   "fno": {
     "date": "2026-10-26",
     "pcr": {
@@ -389,6 +389,693 @@
       "total": 4
     }
   },
+  "archive": {
+    "files": 15,
+    "dates": 9,
+    "symbols_max": 3730,
+    "first": "2019-06-14",
+    "last": "2026-10-26",
+    "recent": [
+      {
+        "date": "2026-10-16",
+        "segment": "cm",
+        "rows": "3675",
+        "symbols": "3674",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-16.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-16.csv"
+      },
+      {
+        "date": "2026-10-16",
+        "segment": "fo",
+        "rows": "38162",
+        "symbols": "219",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-10-16.parquet",
+        "file_csv": "data/csv/fo/fo_2026-10-16.csv"
+      },
+      {
+        "date": "2026-10-19",
+        "segment": "cm",
+        "rows": "3668",
+        "symbols": "3668",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-19.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-19.csv"
+      },
+      {
+        "date": "2026-10-19",
+        "segment": "fo",
+        "rows": "38485",
+        "symbols": "219",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-10-19.parquet",
+        "file_csv": "data/csv/fo/fo_2026-10-19.csv"
+      },
+      {
+        "date": "2026-10-21",
+        "segment": "cm",
+        "rows": "3708",
+        "symbols": "3703",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-21.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-21.csv"
+      },
+      {
+        "date": "2026-10-21",
+        "segment": "fo",
+        "rows": "38777",
+        "symbols": "219",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-10-21.parquet",
+        "file_csv": "data/csv/fo/fo_2026-10-21.csv"
+      },
+      {
+        "date": "2026-10-22",
+        "segment": "cm",
+        "rows": "3649",
+        "symbols": "3647",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-22.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-22.csv"
+      },
+      {
+        "date": "2026-10-22",
+        "segment": "fo",
+        "rows": "39343",
+        "symbols": "219",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-10-22.parquet",
+        "file_csv": "data/csv/fo/fo_2026-10-22.csv"
+      },
+      {
+        "date": "2026-10-23",
+        "segment": "cm",
+        "rows": "3730",
+        "symbols": "3730",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-23.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-23.csv"
+      },
+      {
+        "date": "2026-10-23",
+        "segment": "fo",
+        "rows": "40212",
+        "symbols": "219",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-10-23.parquet",
+        "file_csv": "data/csv/fo/fo_2026-10-23.csv"
+      },
+      {
+        "date": "2026-10-26",
+        "segment": "cm",
+        "rows": "3686",
+        "symbols": "3686",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-10-26.parquet",
+        "file_csv": "data/csv/cm/cm_2026-10-26.csv"
+      },
+      {
+        "date": "2026-10-26",
+        "segment": "fo",
+        "rows": "40976",
+        "symbols": "219",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-10-26.parquet",
+        "file_csv": "data/csv/fo/fo_2026-10-26.csv"
+      }
+    ]
+  },
+  "brain": {
+    "channels": 10,
+    "videos": 256,
+    "window": [
+      "2026-06-25",
+      "2026-10-27"
+    ],
+    "total_views": 11177141,
+    "net_sentiment": 69,
+    "top_symbols": [
+      {
+        "symbol": "NIFTY50",
+        "mentions": 60,
+        "channels": 5
+      },
+      {
+        "symbol": "BANKNIFTY",
+        "mentions": 28,
+        "channels": 4
+      },
+      {
+        "symbol": "SENSEX",
+        "mentions": 26,
+        "channels": 4
+      },
+      {
+        "symbol": "RELIANCE",
+        "mentions": 13,
+        "channels": 4
+      },
+      {
+        "symbol": "WIPRO",
+        "mentions": 4,
+        "channels": 4
+      },
+      {
+        "symbol": "YESBANK",
+        "mentions": 4,
+        "channels": 3
+      },
+      {
+        "symbol": "ITC",
+        "mentions": 3,
+        "channels": 3
+      },
+      {
+        "symbol": "INFY",
+        "mentions": 3,
+        "channels": 3
+      },
+      {
+        "symbol": "ZOMATO",
+        "mentions": 3,
+        "channels": 2
+      },
+      {
+        "symbol": "TCS",
+        "mentions": 2,
+        "channels": 2
+      }
+    ],
+    "top_themes": [
+      {
+        "theme": "MF/SIP",
+        "videos": 64
+      },
+      {
+        "theme": "Beginner/Education",
+        "videos": 58
+      },
+      {
+        "theme": "Budget/Policy",
+        "videos": 45
+      },
+      {
+        "theme": "Earnings/Results",
+        "videos": 44
+      },
+      {
+        "theme": "IPO",
+        "videos": 44
+      },
+      {
+        "theme": "Gold/Commodity",
+        "videos": 37
+      }
+    ]
+  },
+  "channels": {
+    "columns": [
+      "channel_name",
+      "videos_in_feed",
+      "newest",
+      "oldest",
+      "avg_views",
+      "median_views",
+      "top_video",
+      "top_views"
+    ],
+    "rows": [
+      [
+        "POWER OF STOCKS",
+        "17",
+        "2026-10-25",
+        "2026-06-25",
+        "160114",
+        "152081",
+        "Market Analysis |  Price Action 27 - Sep",
+        "227337"
+      ],
+      [
+        "Abhishek Kar",
+        "20",
+        "2026-10-26",
+        "2026-09-29",
+        "127989",
+        "113849",
+        "Stock Market CRASH nifty sensex me kya kare?",
+        "474041"
+      ],
+      [
+        "Moneytalks by Groww",
+        "19",
+        "2026-10-24",
+        "2026-08-22",
+        "67286",
+        "23796",
+        "How I Built a \u20b935 Crore Portfolio & Retired at 29 | Small Cap Mastercl",
+        "483139"
+      ],
+      [
+        "WAY2LAABH",
+        "20",
+        "2026-10-27",
+        "2026-09-27",
+        "38219",
+        "35497",
+        "Volume Trading Strategy \ud83d\udd25 | \u092f\u0947 Secret \u0938\u092e\u091d \u0932\u093f\u092f\u093e \u0924\u094b Trading \u0906\u0938\u093e\u0928! #short",
+        "131929"
+      ],
+      [
+        "Groww Edge",
+        "35",
+        "2026-10-27",
+        "2026-10-09",
+        "35893",
+        "13573",
+        "Is the Oil in Your Samosa the Same Oil Planes Want?",
+        "255474"
+      ],
+      [
+        "Ghanshyam Tech",
+        "21",
+        "2026-10-26",
+        "2026-09-29",
+        "35552",
+        "42699",
+        "FAKE vs REAL BREAKOUT \u0915\u0948\u0938\u0947 \u092a\u0939\u091a\u093e\u0928\u0947\u0902? | 90% Traders \u092f\u0939\u0940\u0902 \u092b\u0902\u0938\u0924\u0947 \u0939\u0948\u0902!",
+        "65943"
+      ],
+      [
+        "Groww",
+        "29",
+        "2026-10-27",
+        "2026-10-06",
+        "25039",
+        "17654",
+        "How to Buy US Stocks from India? Complete Guide",
+        "165710"
+      ],
+      [
+        "Markets by Zerodha",
+        "24",
+        "2026-10-27",
+        "2026-10-05",
+        "23492",
+        "21195",
+        "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
+        "85869"
+      ],
+      [
+        "Markets by Zerodha Hindi",
+        "23",
+        "2026-10-27",
+        "2026-09-30",
+        "20486",
+        "10805",
+        "Can India Become a Global Semiconductor Hub? | Markets by Zerodha Hind",
+        "177939"
+      ],
+      [
+        "Upstox",
+        "48",
+        "2026-10-27",
+        "2026-10-15",
+        "1844",
+        "812",
+        "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
+        "10837"
+      ]
+    ],
+    "total": 10
+  },
+  "videos": {
+    "columns": [
+      "video_id",
+      "channel_name",
+      "channel_id",
+      "title",
+      "published",
+      "updated",
+      "url",
+      "thumbnail",
+      "views",
+      "description",
+      "first_seen"
+    ],
+    "rows": [
+      [
+        "IN3YdxVfC50",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Gold & Silver Tokenized! Delta Exchange \u092a\u0930 RWA Tokens \u0915\u093e \u0905\u0938\u0932\u0940 \u0938\u091a",
+        "2026-10-26T10:30:22+00:00",
+        "2026-10-26T10:30:23+00:00",
+        "https://www.youtube.com/watch?v=IN3YdxVfC50",
+        "https://i2.ytimg.com/vi/IN3YdxVfC50/hqdefault.jpg",
+        "642",
+        "Get discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nKya aapne kabhi socha hai ki physical gold, silver, aur real estate ko blockchain par trade kiya ja sakta hai? Is video mein hum baat karne wale hain Delta Exchange par RWA (Real World Assets) tokens ke baare mein, jahan aap tokenized gold, silver aur real-world assets ko easily access kar sakte hain.\n\nHum detail mein samjhenge ki RWA crypto toke",
+        "2026-10-26T12:00:01Z"
+      ],
+      [
+        "N2LQQwUwEik",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Mirzapur \u0938\u0947 \u20b92,000 Crore \u0915\u0940 Company \u0915\u0948\u0938\u0947 \u092c\u0928\u093e\u0908? | SBC Exports Founder Untold Story",
+        "2026-10-24T08:30:38+00:00",
+        "2026-10-24T08:30:39+00:00",
+        "https://www.youtube.com/watch?v=N2LQQwUwEik",
+        "https://i3.ytimg.com/vi/N2LQQwUwEik/hqdefault.jpg",
+        "3606",
+        "In this exclusive podcast episode, we sit down with Govind Ji Gupta, Founder & MD of SBC Exports Limited, to decode his incredible entrepreneurial journey\u2014from running a traditional carpet export family business in Mirzapur, UP, to building a multi-crore listed powerhouse across textiles, IT & government tech projects, and travel! \ud83d\ude80\n\nDiscover how SBC Exports navigated black swan events like the 2008 Lehman Brothers crisis and COVID-19 lockdowns through smart business diversification, migrated fr",
+        "2026-10-24T11:45:47Z"
+      ],
+      [
+        "0dSxk47adtM",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Traders' Villa Exposed? The Reality of Trading Mentorships | Abhishek Kar ft. Manish Ghosttrader",
+        "2026-10-20T10:32:25+00:00",
+        "2026-10-20T10:32:27+00:00",
+        "https://www.youtube.com/watch?v=0dSxk47adtM",
+        "https://i1.ytimg.com/vi/0dSxk47adtM/hqdefault.jpg",
+        "137768",
+        "In this exclusive walkthrough at Traders Villa, Abhishek Kar spends a day inside the intensive trading boot camp led by renowned mentor Manishji from Ghost traders. Discover what really separates profitable market operators from the 94% who lose money in intraday trading.\nFrom demystifying Elliot Wave Theory, identifying institutional trap trading, and spotting market manipulation, to mastering trading psychology and risk management, this session breaks down actionable setups used by real studen",
+        "2026-10-22T18:08:42Z"
+      ],
+      [
+        "eqCPkaKbD0E",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Ye Free Tool Ne Saare Paid Algos Fail Kar Diye!",
+        "2026-10-18T10:30:18+00:00",
+        "2026-10-18T15:54:10+00:00",
+        "https://www.youtube.com/watch?v=eqCPkaKbD0E",
+        "https://i2.ytimg.com/vi/eqCPkaKbD0E/hqdefault.jpg",
+        "40101",
+        "Try now :  https://zing.trade/extension?utm=AbhishekKar\u2060\nJoin private learning community now : https://ak-capital-classroom.vercel.app/\nTired of losing money in the Indian stock market due to late entries, emotional decisions, and missing out on profitable moves? What if you could access a powerful, 100% free automated tool that works directly with any broker chart?In this video, we reveal a game-changing free browser-based setup built for Indian traders that brings pre-built strategies, real-ti",
+        "2026-10-19T05:50:31Z"
+      ],
+      [
+        "Vc5Z-7Gcdk8",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Bitcoin & Ethereum 2027: Asli Bull Run Kab Aayega?",
+        "2026-10-17T10:30:32+00:00",
+        "2026-10-17T10:30:34+00:00",
+        "https://www.youtube.com/watch?v=Vc5Z-7Gcdk8",
+        "https://i3.ytimg.com/vi/Vc5Z-7Gcdk8/hqdefault.jpg",
+        "12095",
+        "Get discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nAre you ready for the 2027 crypto bull run, or will Indian investors get trapped by high taxes and market volatility? In this video, we break down the ultimate bull case for Bitcoin and Ethereum in 2027, looking at halving cycles, institutional ETF flows, and staking yields.   We also uncover the hard truth about India's 30% crypto tax, 1% TDS, a",
+        "2026-10-17T15:28:43Z"
+      ],
+      [
+        "hpzKMfcky1I",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Reliance Jio mein itna buzz kyun hai",
+        "2026-10-17T07:58:12+00:00",
+        "2026-10-17T07:58:44+00:00",
+        "https://www.youtube.com/shorts/hpzKMfcky1I",
+        "https://i1.ytimg.com/vi/hpzKMfcky1I/hqdefault.jpg",
+        "4632",
+        "",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "1svXxD4rVqs",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Market Crash \u0906\u0928\u0947 \u0935\u093e\u0932\u093e \u0939\u0948? FIIs \u0915\u0940 \u092c\u095c\u0940 \u091a\u093e\u0932!",
+        "2026-10-16T16:08:13+00:00",
+        "2026-10-16T20:33:12+00:00",
+        "https://www.youtube.com/watch?v=1svXxD4rVqs",
+        "https://i2.ytimg.com/vi/1svXxD4rVqs/hqdefault.jpg",
+        "92674",
+        "Are FIIs trapping retail investors while DIIs try to save the market? Today\u2019s shocking FII and DII data has left big institutional traders completely exposed.\n\nIn this video, we break down today's massive stock market move, analyze the hidden numbers behind FII selling and DII buying, and reveal what this means for your portfolio. Whether you are a swing trader, long-term investor, or a beginner in the Indian stock market, understanding this institutional data is crucial before you make your nex",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "FmTZdRiub1Y",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "India Bans Gold?Gold ERF Investing Crisis Explained!",
+        "2026-10-16T14:25:48+00:00",
+        "2026-10-16T14:26:44+00:00",
+        "https://www.youtube.com/shorts/FmTZdRiub1Y",
+        "https://i3.ytimg.com/vi/FmTZdRiub1Y/hqdefault.jpg",
+        "126142",
+        "",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "wHNvM4_ziS0",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "The Great Gold Trap of 2026: Why This Rebound is a Massive Warning!",
+        "2026-10-16T11:15:07+00:00",
+        "2026-10-16T12:33:40+00:00",
+        "https://www.youtube.com/watch?v=wHNvM4_ziS0",
+        "https://i4.ytimg.com/vi/wHNvM4_ziS0/hqdefault.jpg",
+        "101556",
+        "Silver vs Gold: Why Silver is Quietly Beating Gold Right Now!\nEk hafte mein \u20b939,800 wipe out hone ke baad aaj gold mein achanak rebound aaya hai \u2014 lekin kya yeh asli recovery hai ya ek dead cat bounce? Is video mein hum dive karte hain 2026 ke sabse bade economic battle mein jahan ek taraf US Federal Reserve ka hot PPI data aur rate hike ka threat hai, toh doosri taraf Diwali aur Dhanteras ki massive cultural demand hai.\n\nKya MCX par gold \u20b91,50,000 cross karega ya \u20b91,46,500 ka floor tootega? Aur",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "eaFiemRS9C8",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Nifty IT 5% Up: Kya IT Stocks Kharidne Ka Sahi Time Hai?",
+        "2026-10-13T12:52:39+00:00",
+        "2026-10-14T12:54:12+00:00",
+        "https://www.youtube.com/watch?v=eaFiemRS9C8",
+        "https://i2.ytimg.com/vi/eaFiemRS9C8/hqdefault.jpg",
+        "132741",
+        "IT Stocks Scam or Opportunity? Truth Revealed!\nhttps://lemonn.co.in/affiliate-deeplink?data=oumyfk\n\nOctober 13 ko Indian IT sector ne ek hi din mein $12 Billion ($1 LAKH CRORE+) ki market wealth create kar di! Sensex 1,109 points upar close hua aur Nifty IT index 5% se zyada chad gaya. HCLTech ke Q2 FY27 ke blockbuster results ne pooray IT market ko lift kar diya \u2014 EBIT margins expand hue aur AI revenue $219 Million tak pahunch gaya.\n\nLekin kya yeh IT rally genuine sector reversal hai, ya fir re",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "cC-zUCXP7BE",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Don't Leave Money In Saving Account!",
+        "2026-10-12T12:17:52+00:00",
+        "2026-10-13T10:34:00+00:00",
+        "https://www.youtube.com/watch?v=cC-zUCXP7BE",
+        "https://i4.ytimg.com/vi/cC-zUCXP7BE/hqdefault.jpg",
+        "261548",
+        "Explore Smallcase Park Your Cash: https://go.smallcase.com/gIQT/abhikpyc\nStop making this big financial mistake! When the stock market gets volatile, keeping idle cash or emergency funds in low-yield accounts bleeds money to inflation.\n\nIn this video, we break down the ultimate Cash Allocation Strategy using Debt Mutual Funds, Overnight Funds, Liquid Funds, and Smallcase's \"Park Your Cash\" feature. Learn how top investors like Warren Buffett manage idle cash, how to beat inflation with 6-7% retu",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "27VnAe8I-QE",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Market Crash: \u20b910.5 Lakh Cr GAYE! \ud83d\ude31 (Truth Revealed)",
+        "2026-10-08T12:53:36+00:00",
+        "2026-10-12T03:35:22+00:00",
+        "https://www.youtube.com/watch?v=27VnAe8I-QE",
+        "https://i3.ytimg.com/vi/27VnAe8I-QE/hqdefault.jpg",
+        "202525",
+        "Market Me Tabahi: 3 Reasons For Today's Crash!\nToday, \u20b910.51 Lakh Crore wiped out from the stock market in seconds! Why did Sensex and Nifty crash to fresh 52-week lows? Here is the complete honest breakdown\n\nDalal Street witnessed a severe bloodbath as a triple whammy hit Indian equities: a surprise RBI repo rate hike to 5.50% with a shift to calibrated tightening, Brent Crude surging past $104 due to Middle East tensions, and aggressive foreign institutional investor (FII) selling driven by 5.",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "7JyXJsHs_OI",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Contra funds investment kya hota hai?",
+        "2026-10-08T11:35:30+00:00",
+        "2026-10-12T03:36:15+00:00",
+        "https://www.youtube.com/shorts/7JyXJsHs_OI",
+        "https://i4.ytimg.com/vi/7JyXJsHs_OI/hqdefault.jpg",
+        "18097",
+        "",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "2m7C9nvYyUE",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Sensex & Nifty Crash: RBI Policy Exposed!",
+        "2026-10-07T11:36:58+00:00",
+        "2026-10-14T13:04:02+00:00",
+        "https://www.youtube.com/watch?v=2m7C9nvYyUE",
+        "https://i3.ytimg.com/vi/2m7C9nvYyUE/hqdefault.jpg",
+        "217812",
+        "Private Banks vs Home Buyers: Real Winner Who?\nRBI Governor Sanjay Malhotra announced a major monetary policy shock on October 7, 2026, increasing the repo rate by 25 basis points to 5.50%. This marks the first interest rate hike in 3.5 years, effectively reversing the 2025 rate cuts. The biggest shocker for the Indian stock market and 8 crore+ home loan borrowers isn't just the rate hike, but the shift in policy stance to 'Calibrated Tightening'.\n\nIn this detailed macro-economic analysis, Abhis",
+        "2026-10-17T09:34:40Z"
+      ],
+      [
+        "nW5ppe-2wDA",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "RBI MPC meeting: Repo rate hiked to 5.5%; rate cuts off the table in near term, What about EMI?",
+        "2026-10-07T08:09:10+00:00",
+        "2026-10-12T03:37:23+00:00",
+        "https://www.youtube.com/shorts/nW5ppe-2wDA",
+        "https://i3.ytimg.com/vi/nW5ppe-2wDA/hqdefault.jpg",
+        "191348",
+        "",
+        "2026-10-17T09:34:40Z"
+      ]
+    ],
+    "total": 256
+  },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-10-27T19:58:59Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 22753.2,
+      "median_chg_pct": 2.63,
+      "low10_chg_pct": -2.23,
+      "high90_chg_pct": 8.2,
+      "confidence": 58,
+      "direction": "up"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "^NSEI",
+        22753.2,
+        2.63,
+        -2.23,
+        8.2,
+        "up",
+        58
+      ],
+      [
+        "^N225",
+        62189.65,
+        2.36,
+        -7.88,
+        12.66,
+        "up",
+        18
+      ],
+      [
+        "^FTSE",
+        10686.54,
+        1.17,
+        -1.63,
+        3.61,
+        "up",
+        79
+      ],
+      [
+        "^IXIC",
+        26485.1,
+        0.78,
+        -4.58,
+        5.6,
+        "up",
+        59
+      ],
+      [
+        "^NSEBANK",
+        54366.7,
+        0.59,
+        -4.7,
+        5.54,
+        "up",
+        59
+      ],
+      [
+        "^DJI",
+        52399.75,
+        0.51,
+        -2.97,
+        3.54,
+        "up",
+        74
+      ],
+      [
+        "INR=X",
+        95.11,
+        0.37,
+        -1.65,
+        2.43,
+        "up",
+        84
+      ],
+      [
+        "^GSPC",
+        7725.52,
+        0.32,
+        -2.93,
+        3.15,
+        "up",
+        76
+      ],
+      [
+        "^HSI",
+        23211.81,
+        0.14,
+        -7.07,
+        7.4,
+        "flat",
+        42
+      ],
+      [
+        "BTC-USD",
+        80704.61,
+        -0.85,
+        -9.72,
+        8.12,
+        "down",
+        29
+      ],
+      [
+        "GC=F",
+        4076.1,
+        -1.28,
+        -8.64,
+        7.58,
+        "down",
+        35
+      ],
+      [
+        "^INDIAVIX",
+        17.16,
+        -1.49,
+        -28.28,
+        40.82,
+        "down",
+        0
+      ],
+      [
+        "CL=F",
+        99.82,
+        -5.04,
+        -23.03,
+        11.0,
+        "down",
+        0
+      ]
+    ],
+    "total": 13
+  },
+  "daily": {
+    "as_of": "2026-10-27T19:59:00Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-26 (15 files, 9 days)",
+      "Nifty PCR 1.11 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "Corporate actions: 4 dividends",
+      "256 videos across 10 channels"
+    ]
+  },
   "markets": {
     "columns": [
       "symbol",
@@ -722,683 +1409,6 @@
     ],
     "total": 147
   },
-  "archive": {
-    "files": 15,
-    "dates": 9,
-    "symbols_max": 3730,
-    "first": "2019-06-14",
-    "last": "2026-10-26",
-    "recent": [
-      {
-        "date": "2026-10-16",
-        "segment": "cm",
-        "rows": "3675",
-        "symbols": "3674",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-16.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-16.csv"
-      },
-      {
-        "date": "2026-10-16",
-        "segment": "fo",
-        "rows": "38162",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-16.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-16.csv"
-      },
-      {
-        "date": "2026-10-19",
-        "segment": "cm",
-        "rows": "3668",
-        "symbols": "3668",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-19.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-19.csv"
-      },
-      {
-        "date": "2026-10-19",
-        "segment": "fo",
-        "rows": "38485",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-19.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-19.csv"
-      },
-      {
-        "date": "2026-10-21",
-        "segment": "cm",
-        "rows": "3708",
-        "symbols": "3703",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-21.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-21.csv"
-      },
-      {
-        "date": "2026-10-21",
-        "segment": "fo",
-        "rows": "38777",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-21.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-21.csv"
-      },
-      {
-        "date": "2026-10-22",
-        "segment": "cm",
-        "rows": "3649",
-        "symbols": "3647",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-22.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-22.csv"
-      },
-      {
-        "date": "2026-10-22",
-        "segment": "fo",
-        "rows": "39343",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-22.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-22.csv"
-      },
-      {
-        "date": "2026-10-23",
-        "segment": "cm",
-        "rows": "3730",
-        "symbols": "3730",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-23.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-23.csv"
-      },
-      {
-        "date": "2026-10-23",
-        "segment": "fo",
-        "rows": "40212",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-23.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-23.csv"
-      },
-      {
-        "date": "2026-10-26",
-        "segment": "cm",
-        "rows": "3686",
-        "symbols": "3686",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-26.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-26.csv"
-      },
-      {
-        "date": "2026-10-26",
-        "segment": "fo",
-        "rows": "40976",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-26.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-26.csv"
-      }
-    ]
-  },
-  "brain": {
-    "channels": 10,
-    "videos": 245,
-    "window": [
-      "2026-06-25",
-      "2026-10-26"
-    ],
-    "total_views": 11122525,
-    "net_sentiment": 63,
-    "top_symbols": [
-      {
-        "symbol": "NIFTY50",
-        "mentions": 58,
-        "channels": 5
-      },
-      {
-        "symbol": "BANKNIFTY",
-        "mentions": 27,
-        "channels": 4
-      },
-      {
-        "symbol": "SENSEX",
-        "mentions": 26,
-        "channels": 4
-      },
-      {
-        "symbol": "RELIANCE",
-        "mentions": 12,
-        "channels": 4
-      },
-      {
-        "symbol": "WIPRO",
-        "mentions": 4,
-        "channels": 4
-      },
-      {
-        "symbol": "YESBANK",
-        "mentions": 4,
-        "channels": 3
-      },
-      {
-        "symbol": "ITC",
-        "mentions": 3,
-        "channels": 3
-      },
-      {
-        "symbol": "INFY",
-        "mentions": 3,
-        "channels": 3
-      },
-      {
-        "symbol": "ZOMATO",
-        "mentions": 3,
-        "channels": 2
-      },
-      {
-        "symbol": "TCS",
-        "mentions": 2,
-        "channels": 2
-      }
-    ],
-    "top_themes": [
-      {
-        "theme": "MF/SIP",
-        "videos": 61
-      },
-      {
-        "theme": "Beginner/Education",
-        "videos": 53
-      },
-      {
-        "theme": "IPO",
-        "videos": 42
-      },
-      {
-        "theme": "Earnings/Results",
-        "videos": 41
-      },
-      {
-        "theme": "Budget/Policy",
-        "videos": 41
-      },
-      {
-        "theme": "Options/F&O",
-        "videos": 37
-      }
-    ]
-  },
-  "channels": {
-    "columns": [
-      "channel_name",
-      "videos_in_feed",
-      "newest",
-      "oldest",
-      "avg_views",
-      "median_views",
-      "top_video",
-      "top_views"
-    ],
-    "rows": [
-      [
-        "POWER OF STOCKS",
-        "17",
-        "2026-10-25",
-        "2026-06-25",
-        "160114",
-        "152081",
-        "Market Analysis |  Price Action 27 - Sep",
-        "227337"
-      ],
-      [
-        "Abhishek Kar",
-        "20",
-        "2026-10-26",
-        "2026-09-29",
-        "127989",
-        "113849",
-        "Stock Market CRASH nifty sensex me kya kare?",
-        "474041"
-      ],
-      [
-        "Moneytalks by Groww",
-        "19",
-        "2026-10-24",
-        "2026-08-22",
-        "67286",
-        "23796",
-        "How I Built a \u20b935 Crore Portfolio & Retired at 29 | Small Cap Mastercl",
-        "483139"
-      ],
-      [
-        "WAY2LAABH",
-        "19",
-        "2026-10-23",
-        "2026-09-27",
-        "39734",
-        "35714",
-        "Volume Trading Strategy \ud83d\udd25 | \u092f\u0947 Secret \u0938\u092e\u091d \u0932\u093f\u092f\u093e \u0924\u094b Trading \u0906\u0938\u093e\u0928! #short",
-        "131929"
-      ],
-      [
-        "Groww Edge",
-        "33",
-        "2026-10-26",
-        "2026-10-09",
-        "37488",
-        "13573",
-        "Is the Oil in Your Samosa the Same Oil Planes Want?",
-        "255474"
-      ],
-      [
-        "Ghanshyam Tech",
-        "21",
-        "2026-10-26",
-        "2026-09-29",
-        "35552",
-        "42699",
-        "FAKE vs REAL BREAKOUT \u0915\u0948\u0938\u0947 \u092a\u0939\u091a\u093e\u0928\u0947\u0902? | 90% Traders \u092f\u0939\u0940\u0902 \u092b\u0902\u0938\u0924\u0947 \u0939\u0948\u0902!",
-        "65943"
-      ],
-      [
-        "Groww",
-        "28",
-        "2026-10-26",
-        "2026-10-06",
-        "25646",
-        "20800",
-        "How to Buy US Stocks from India? Complete Guide",
-        "165710"
-      ],
-      [
-        "Markets by Zerodha",
-        "23",
-        "2026-10-26",
-        "2026-10-05",
-        "24090",
-        "22250",
-        "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
-        "85869"
-      ],
-      [
-        "Markets by Zerodha Hindi",
-        "22",
-        "2026-10-26",
-        "2026-09-30",
-        "21295",
-        "11085",
-        "Can India Become a Global Semiconductor Hub? | Markets by Zerodha Hind",
-        "177939"
-      ],
-      [
-        "Upstox",
-        "43",
-        "2026-10-26",
-        "2026-10-15",
-        "1929",
-        "667",
-        "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
-        "10837"
-      ]
-    ],
-    "total": 10
-  },
-  "videos": {
-    "columns": [
-      "video_id",
-      "channel_name",
-      "channel_id",
-      "title",
-      "published",
-      "updated",
-      "url",
-      "thumbnail",
-      "views",
-      "description",
-      "first_seen"
-    ],
-    "rows": [
-      [
-        "IN3YdxVfC50",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Gold & Silver Tokenized! Delta Exchange \u092a\u0930 RWA Tokens \u0915\u093e \u0905\u0938\u0932\u0940 \u0938\u091a",
-        "2026-10-26T10:30:22+00:00",
-        "2026-10-26T10:30:23+00:00",
-        "https://www.youtube.com/watch?v=IN3YdxVfC50",
-        "https://i2.ytimg.com/vi/IN3YdxVfC50/hqdefault.jpg",
-        "642",
-        "Get discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nKya aapne kabhi socha hai ki physical gold, silver, aur real estate ko blockchain par trade kiya ja sakta hai? Is video mein hum baat karne wale hain Delta Exchange par RWA (Real World Assets) tokens ke baare mein, jahan aap tokenized gold, silver aur real-world assets ko easily access kar sakte hain.\n\nHum detail mein samjhenge ki RWA crypto toke",
-        "2026-10-26T12:00:01Z"
-      ],
-      [
-        "N2LQQwUwEik",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Mirzapur \u0938\u0947 \u20b92,000 Crore \u0915\u0940 Company \u0915\u0948\u0938\u0947 \u092c\u0928\u093e\u0908? | SBC Exports Founder Untold Story",
-        "2026-10-24T08:30:38+00:00",
-        "2026-10-24T08:30:39+00:00",
-        "https://www.youtube.com/watch?v=N2LQQwUwEik",
-        "https://i3.ytimg.com/vi/N2LQQwUwEik/hqdefault.jpg",
-        "3606",
-        "In this exclusive podcast episode, we sit down with Govind Ji Gupta, Founder & MD of SBC Exports Limited, to decode his incredible entrepreneurial journey\u2014from running a traditional carpet export family business in Mirzapur, UP, to building a multi-crore listed powerhouse across textiles, IT & government tech projects, and travel! \ud83d\ude80\n\nDiscover how SBC Exports navigated black swan events like the 2008 Lehman Brothers crisis and COVID-19 lockdowns through smart business diversification, migrated fr",
-        "2026-10-24T11:45:47Z"
-      ],
-      [
-        "0dSxk47adtM",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Traders' Villa Exposed? The Reality of Trading Mentorships | Abhishek Kar ft. Manish Ghosttrader",
-        "2026-10-20T10:32:25+00:00",
-        "2026-10-20T10:32:27+00:00",
-        "https://www.youtube.com/watch?v=0dSxk47adtM",
-        "https://i1.ytimg.com/vi/0dSxk47adtM/hqdefault.jpg",
-        "137768",
-        "In this exclusive walkthrough at Traders Villa, Abhishek Kar spends a day inside the intensive trading boot camp led by renowned mentor Manishji from Ghost traders. Discover what really separates profitable market operators from the 94% who lose money in intraday trading.\nFrom demystifying Elliot Wave Theory, identifying institutional trap trading, and spotting market manipulation, to mastering trading psychology and risk management, this session breaks down actionable setups used by real studen",
-        "2026-10-22T18:08:42Z"
-      ],
-      [
-        "eqCPkaKbD0E",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Ye Free Tool Ne Saare Paid Algos Fail Kar Diye!",
-        "2026-10-18T10:30:18+00:00",
-        "2026-10-18T15:54:10+00:00",
-        "https://www.youtube.com/watch?v=eqCPkaKbD0E",
-        "https://i2.ytimg.com/vi/eqCPkaKbD0E/hqdefault.jpg",
-        "40101",
-        "Try now :  https://zing.trade/extension?utm=AbhishekKar\u2060\nJoin private learning community now : https://ak-capital-classroom.vercel.app/\nTired of losing money in the Indian stock market due to late entries, emotional decisions, and missing out on profitable moves? What if you could access a powerful, 100% free automated tool that works directly with any broker chart?In this video, we reveal a game-changing free browser-based setup built for Indian traders that brings pre-built strategies, real-ti",
-        "2026-10-19T05:50:31Z"
-      ],
-      [
-        "Vc5Z-7Gcdk8",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Bitcoin & Ethereum 2027: Asli Bull Run Kab Aayega?",
-        "2026-10-17T10:30:32+00:00",
-        "2026-10-17T10:30:34+00:00",
-        "https://www.youtube.com/watch?v=Vc5Z-7Gcdk8",
-        "https://i3.ytimg.com/vi/Vc5Z-7Gcdk8/hqdefault.jpg",
-        "12095",
-        "Get discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nAre you ready for the 2027 crypto bull run, or will Indian investors get trapped by high taxes and market volatility? In this video, we break down the ultimate bull case for Bitcoin and Ethereum in 2027, looking at halving cycles, institutional ETF flows, and staking yields.   We also uncover the hard truth about India's 30% crypto tax, 1% TDS, a",
-        "2026-10-17T15:28:43Z"
-      ],
-      [
-        "hpzKMfcky1I",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Reliance Jio mein itna buzz kyun hai",
-        "2026-10-17T07:58:12+00:00",
-        "2026-10-17T07:58:44+00:00",
-        "https://www.youtube.com/shorts/hpzKMfcky1I",
-        "https://i1.ytimg.com/vi/hpzKMfcky1I/hqdefault.jpg",
-        "4632",
-        "",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "1svXxD4rVqs",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Market Crash \u0906\u0928\u0947 \u0935\u093e\u0932\u093e \u0939\u0948? FIIs \u0915\u0940 \u092c\u095c\u0940 \u091a\u093e\u0932!",
-        "2026-10-16T16:08:13+00:00",
-        "2026-10-16T20:33:12+00:00",
-        "https://www.youtube.com/watch?v=1svXxD4rVqs",
-        "https://i2.ytimg.com/vi/1svXxD4rVqs/hqdefault.jpg",
-        "92674",
-        "Are FIIs trapping retail investors while DIIs try to save the market? Today\u2019s shocking FII and DII data has left big institutional traders completely exposed.\n\nIn this video, we break down today's massive stock market move, analyze the hidden numbers behind FII selling and DII buying, and reveal what this means for your portfolio. Whether you are a swing trader, long-term investor, or a beginner in the Indian stock market, understanding this institutional data is crucial before you make your nex",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "FmTZdRiub1Y",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "India Bans Gold?Gold ERF Investing Crisis Explained!",
-        "2026-10-16T14:25:48+00:00",
-        "2026-10-16T14:26:44+00:00",
-        "https://www.youtube.com/shorts/FmTZdRiub1Y",
-        "https://i3.ytimg.com/vi/FmTZdRiub1Y/hqdefault.jpg",
-        "126142",
-        "",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "wHNvM4_ziS0",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "The Great Gold Trap of 2026: Why This Rebound is a Massive Warning!",
-        "2026-10-16T11:15:07+00:00",
-        "2026-10-16T12:33:40+00:00",
-        "https://www.youtube.com/watch?v=wHNvM4_ziS0",
-        "https://i4.ytimg.com/vi/wHNvM4_ziS0/hqdefault.jpg",
-        "101556",
-        "Silver vs Gold: Why Silver is Quietly Beating Gold Right Now!\nEk hafte mein \u20b939,800 wipe out hone ke baad aaj gold mein achanak rebound aaya hai \u2014 lekin kya yeh asli recovery hai ya ek dead cat bounce? Is video mein hum dive karte hain 2026 ke sabse bade economic battle mein jahan ek taraf US Federal Reserve ka hot PPI data aur rate hike ka threat hai, toh doosri taraf Diwali aur Dhanteras ki massive cultural demand hai.\n\nKya MCX par gold \u20b91,50,000 cross karega ya \u20b91,46,500 ka floor tootega? Aur",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "eaFiemRS9C8",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Nifty IT 5% Up: Kya IT Stocks Kharidne Ka Sahi Time Hai?",
-        "2026-10-13T12:52:39+00:00",
-        "2026-10-14T12:54:12+00:00",
-        "https://www.youtube.com/watch?v=eaFiemRS9C8",
-        "https://i2.ytimg.com/vi/eaFiemRS9C8/hqdefault.jpg",
-        "132741",
-        "IT Stocks Scam or Opportunity? Truth Revealed!\nhttps://lemonn.co.in/affiliate-deeplink?data=oumyfk\n\nOctober 13 ko Indian IT sector ne ek hi din mein $12 Billion ($1 LAKH CRORE+) ki market wealth create kar di! Sensex 1,109 points upar close hua aur Nifty IT index 5% se zyada chad gaya. HCLTech ke Q2 FY27 ke blockbuster results ne pooray IT market ko lift kar diya \u2014 EBIT margins expand hue aur AI revenue $219 Million tak pahunch gaya.\n\nLekin kya yeh IT rally genuine sector reversal hai, ya fir re",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "cC-zUCXP7BE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Don't Leave Money In Saving Account!",
-        "2026-10-12T12:17:52+00:00",
-        "2026-10-13T10:34:00+00:00",
-        "https://www.youtube.com/watch?v=cC-zUCXP7BE",
-        "https://i4.ytimg.com/vi/cC-zUCXP7BE/hqdefault.jpg",
-        "261548",
-        "Explore Smallcase Park Your Cash: https://go.smallcase.com/gIQT/abhikpyc\nStop making this big financial mistake! When the stock market gets volatile, keeping idle cash or emergency funds in low-yield accounts bleeds money to inflation.\n\nIn this video, we break down the ultimate Cash Allocation Strategy using Debt Mutual Funds, Overnight Funds, Liquid Funds, and Smallcase's \"Park Your Cash\" feature. Learn how top investors like Warren Buffett manage idle cash, how to beat inflation with 6-7% retu",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "27VnAe8I-QE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Market Crash: \u20b910.5 Lakh Cr GAYE! \ud83d\ude31 (Truth Revealed)",
-        "2026-10-08T12:53:36+00:00",
-        "2026-10-12T03:35:22+00:00",
-        "https://www.youtube.com/watch?v=27VnAe8I-QE",
-        "https://i3.ytimg.com/vi/27VnAe8I-QE/hqdefault.jpg",
-        "202525",
-        "Market Me Tabahi: 3 Reasons For Today's Crash!\nToday, \u20b910.51 Lakh Crore wiped out from the stock market in seconds! Why did Sensex and Nifty crash to fresh 52-week lows? Here is the complete honest breakdown\n\nDalal Street witnessed a severe bloodbath as a triple whammy hit Indian equities: a surprise RBI repo rate hike to 5.50% with a shift to calibrated tightening, Brent Crude surging past $104 due to Middle East tensions, and aggressive foreign institutional investor (FII) selling driven by 5.",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "7JyXJsHs_OI",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Contra funds investment kya hota hai?",
-        "2026-10-08T11:35:30+00:00",
-        "2026-10-12T03:36:15+00:00",
-        "https://www.youtube.com/shorts/7JyXJsHs_OI",
-        "https://i4.ytimg.com/vi/7JyXJsHs_OI/hqdefault.jpg",
-        "18097",
-        "",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "2m7C9nvYyUE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Sensex & Nifty Crash: RBI Policy Exposed!",
-        "2026-10-07T11:36:58+00:00",
-        "2026-10-14T13:04:02+00:00",
-        "https://www.youtube.com/watch?v=2m7C9nvYyUE",
-        "https://i3.ytimg.com/vi/2m7C9nvYyUE/hqdefault.jpg",
-        "217812",
-        "Private Banks vs Home Buyers: Real Winner Who?\nRBI Governor Sanjay Malhotra announced a major monetary policy shock on October 7, 2026, increasing the repo rate by 25 basis points to 5.50%. This marks the first interest rate hike in 3.5 years, effectively reversing the 2025 rate cuts. The biggest shocker for the Indian stock market and 8 crore+ home loan borrowers isn't just the rate hike, but the shift in policy stance to 'Calibrated Tightening'.\n\nIn this detailed macro-economic analysis, Abhis",
-        "2026-10-17T09:34:40Z"
-      ],
-      [
-        "nW5ppe-2wDA",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "RBI MPC meeting: Repo rate hiked to 5.5%; rate cuts off the table in near term, What about EMI?",
-        "2026-10-07T08:09:10+00:00",
-        "2026-10-12T03:37:23+00:00",
-        "https://www.youtube.com/shorts/nW5ppe-2wDA",
-        "https://i3.ytimg.com/vi/nW5ppe-2wDA/hqdefault.jpg",
-        "191348",
-        "",
-        "2026-10-17T09:34:40Z"
-      ]
-    ],
-    "total": 245
-  },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-10-26T20:23:45Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 22600.0,
-      "median_chg_pct": 2.73,
-      "low10_chg_pct": -1.92,
-      "high90_chg_pct": 8.67,
-      "confidence": 58,
-      "direction": "up"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "^NSEI",
-        22600.0,
-        2.73,
-        -1.92,
-        8.67,
-        "up",
-        58
-      ],
-      [
-        "^N225",
-        62693.16,
-        2.48,
-        -7.93,
-        12.87,
-        "up",
-        17
-      ],
-      [
-        "^IXIC",
-        26169.38,
-        0.96,
-        -4.98,
-        6.21,
-        "up",
-        55
-      ],
-      [
-        "^FTSE",
-        10767.33,
-        0.96,
-        -1.68,
-        3.34,
-        "up",
-        80
-      ],
-      [
-        "^NSEBANK",
-        54287.35,
-        0.67,
-        -4.76,
-        5.65,
-        "up",
-        58
-      ],
-      [
-        "^GSPC",
-        7676.77,
-        0.51,
-        -3.02,
-        3.48,
-        "up",
-        74
-      ],
-      [
-        "^DJI",
-        52361.58,
-        0.5,
-        -3.16,
-        3.65,
-        "up",
-        73
-      ],
-      [
-        "^HSI",
-        23093.37,
-        0.33,
-        -7.81,
-        8.03,
-        "up",
-        37
-      ],
-      [
-        "BTC-USD",
-        79746.02,
-        0.28,
-        -9.3,
-        9.88,
-        "up",
-        23
-      ],
-      [
-        "INR=X",
-        95.18,
-        0.28,
-        -1.77,
-        2.34,
-        "up",
-        84
-      ],
-      [
-        "GC=F",
-        4026.5,
-        -1.11,
-        -8.31,
-        7.93,
-        "down",
-        35
-      ],
-      [
-        "^INDIAVIX",
-        16.86,
-        -2.51,
-        -28.54,
-        38.33,
-        "down",
-        0
-      ],
-      [
-        "CL=F",
-        101.57,
-        -4.48,
-        -22.89,
-        13.0,
-        "down",
-        0
-      ]
-    ],
-    "total": 13
-  },
   "quality": {
     "rows": 31238,
     "symbols": 4554,
@@ -1464,17 +1474,6 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
-  },
-  "daily": {
-    "as_of": "2026-10-26T22:13:30Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-26 (15 files, 9 days)",
-      "Nifty PCR 1.11 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "Corporate actions: 4 dividends",
-      "245 videos across 10 channels",
-      "147 news headlines"
-    ]
   },
   "fx": {
     "columns": [

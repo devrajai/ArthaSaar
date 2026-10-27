@@ -1,5 +1,5 @@
 {
-  "_comment": "Deploy the free Cloudflare Worker in worker/ and paste its URL below to switch on live intraday charts. Leave it empty and the site still works - stock pages just use the stored daily series.",
-  "proxy": "",
+  "_comment": "The Cloudflare Worker proxy. Yahoo sends no CORS header, so a browser cannot read its chart API directly - this worker fetches it server-side and adds the header, which is what lets the terminal draw live intraday candles. Leave proxy empty and the site still works: stock pages fall back to the stored daily series.",
+  "proxy": "https://arthasaar-proxy.devraj-resume.workers.dev",
   "token": ""
 }

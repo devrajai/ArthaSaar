@@ -7,6 +7,12 @@
 # terminal needs. No credit card is required.
 
 name = "arthasaar-proxy"
+
+# Pinned explicitly. An ACCOUNT-scoped API token cannot call /memberships, which is how
+# wrangler normally discovers the account - without this it fails with
+# "Authentication failed (status: 400) [code: 9106]" before it ever uploads.
+# Not a secret: the account id appears in the Cloudflare dashboard URL.
+account_id = "ce9a82b5557a832163c9528a55a08b20"
 main = "worker.js"
 compatibility_date = "2026-01-01"
 

@@ -34,3 +34,48 @@ jobs:
           echo
           echo "=== worker url(s) ==="
           grep -oE 'https://[a-zA-Z0-9.-]+\.workers\.dev' /tmp/deploy.log | sort -u || true
+
+      - name: Verify the deployed worker actually serves candles
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ARTHASAARCLOUDFARE }}
+        run: |
+          URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.workers\.dev' /tmp/deploy.log | head -1)
+          if [ -z "$URL" ]; then echo "::error::no worker url in the deploy log"; exit 1; fi
+          echo "worker: $URL"
+          echo
+          echo "=== 1. daily candles ==="
+          code=$(curl -s -o /tmp/r1.json -w '%{http_code}' -D /tmp/h1.txt \
+            "$URL/?symbol=RELIANCE.NS&interval=1d&range=5d")
+          echo "HTTP $code"
+          grep -i "access-control-allow-origin" /tmp/h1.txt || echo "NO CORS HEADER - this is the whole point"
+          python3 - <<'EOF'
+          import json
+          try:
+              d = json.load(open("/tmp/r1.json"))
+              r = d["chart"]["result"][0]
+              cl = [c for c in r["indicators"]["quote"][0]["close"] if c]
+              print("symbol:", r["meta"].get("symbol"), "| closes:", [round(c, 2) for c in cl])
+          except Exception as e:
+              print("parse failed:", type(e).__name__, open("/tmp/r1.json").read()[:200])
+          EOF
+          echo
+          echo "=== 2. intraday 1m (the actual feature) ==="
+          code=$(curl -s -o /tmp/r2.json -w '%{http_code}' \
+            "$URL/?symbol=RELIANCE.NS&interval=1m&range=1d")
+          echo "HTTP $code"
+          python3 - <<'EOF'
+          import json
+          try:
+              d = json.load(open("/tmp/r2.json"))
+              r = d["chart"]["result"][0]
+              cl = [c for c in r["indicators"]["quote"][0]["close"] if c]
+              print("1-minute bars:", len(cl), "| last:", round(cl[-1], 2) if cl else None)
+          except Exception as e:
+              print("parse failed:", type(e).__name__, open("/tmp/r2.json").read()[:200])
+          EOF
+          echo
+          echo "=== 3. the whitelist actually rejects junk ==="
+          for bad in "interval=99z" "symbol=<script>"; do
+            c=$(curl -s -o /dev/null -w '%{http_code}' "$URL/?$bad")
+            echo "  $bad -> HTTP $c (want 400)"
+          done

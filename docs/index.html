@@ -1849,6 +1849,54 @@ function build(d){
   /* ---------- F&O ---------- */
   (function(){
     var v=sec("fno");
+    // ---- PCR history, 2019 to today ---------------------------------------------------
+    // The live chain above shows one day. This shows where that day sits against 1,930 of
+    // them - which is the question a single number cannot answer. A PCR of 1.07 is not
+    // "high" or "low" in the abstract; its percentile against its own history says whether
+    // it is unusual at all.
+    if(OIHIST&&OIHIST.series&&OIHIST.series.length){
+      var rows=OIHIST.series;
+      function line(code,label,colour){
+        var pts=rows.filter(function(r){return r.i===code&&r.p!=null;});
+        if(pts.length<10) return null;
+        // downsample to ~300 points: 1,930 is more than a phone can draw usefully
+        var step=Math.max(1,Math.floor(pts.length/300));
+        var sub=pts.filter(function(_,i){return i%step===0;});
+        var W=360,H=110,pad=6;
+        var ps=sub.map(function(r){return r.p;});
+        var lo=Math.min.apply(null,ps), hi=Math.max.apply(null,ps);
+        var span=(hi-lo)||1;
+        var path=sub.map(function(r,i){
+          var x=pad+(i/(sub.length-1||1))*(W-2*pad);
+          var y=H-pad-((r.p-lo)/span)*(H-2*pad);
+          return (i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+        }).join(' ');
+        var st=OIHIST.stats&&OIHIST.stats[label];
+        var medY=st?H-pad-((st.pcr_median-lo)/span)*(H-2*pad):null;
+        var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">';
+        if(medY!=null) svg+='<line x1="'+pad+'" y1="'+medY.toFixed(1)+'" x2="'+(W-pad)+'" y2="'+medY.toFixed(1)+'" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 3"/>';
+        svg+='<path d="'+path+'" fill="none" stroke="'+colour+'" stroke-width="1.6" stroke-linejoin="round"/>';
+        svg+='</svg>';
+        return {svg:svg,st:st,label:label};
+      }
+
+      var n=line("N","NIFTY","#1d4ed8"), b=line("B","BANKNIFTY","#7c3aed");
+      var body=[];
+      [n,b].forEach(function(L){
+        if(!L) return;
+        var st=L.st;
+        body.push(para(L.label+(st?(" - "+num(st.days)+" sessions, median PCR "+st.pcr_median+
+          ", latest "+st.latest_pcr+" = "+st.latest_percentile+"th percentile"):""), false));
+        var box=el("div"); box.innerHTML=L.svg; body.push(box);
+      });
+      if(body.length){
+        v.appendChild(card("PCR history", "2019 to today", body,
+          {what:"The put-call ratio day by day, with the median as a dashed line. The percentile says whether today is unusual or ordinary.",
+           source:"NSE F&O bhavcopy, open interest summed across all expiries.", updated:OIHIST.updated,
+           note:OIHIST.note}));
+      }
+    }
+
     // ---- strike-wise open interest ---------------------------------------------------
     // Max pain and PCR are single numbers. The SHAPE is what traders read: a big call wall
     // above spot is where sellers expect resistance, a big put wall below where they expect
@@ -3553,6 +3601,7 @@ function assign(name, v){
     case "gti.json": GTI=v; break;
     case "forecast.json": FORECAST=v; break;
     case "telegram_pcr.json": TGPCR=v; break;
+    case "oi_history.json": OIHIST=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3599,8 +3648,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json"];
 
 function renderAll(){
   if(!DATA) return;

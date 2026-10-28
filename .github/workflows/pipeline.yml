@@ -258,12 +258,19 @@ jobs:
       - name: "7m2h. Strike-wise OI (call/put walls for Nifty and Bank Nifty)"
         run: python scripts/build_oi_strikes.py || true
 
+      # PCR / max pain / walls back to 2019, from the Colab-aggregated F&O history.
+      # Also corrects `spot`: the Colab step fell back to the max-OI strike where the
+      # bhavcopy had no underlying price, and that is not a price - on 2020-03-23 it read
+      # 10,000 when the Nifty closed at 7,610.
+      - name: "7m2j. Option-chain history (PCR and walls since 2019)"
+        run: python scripts/build_oi_history.py || true
+
       # Volume structure: POC, value area, supply/demand zones, accumulation, candle tags.
       - name: "7m2i. Volume structure (POC, value area, zones, accumulation)"
         run: python scripts/build_gti.py || true
 
       - name: "7m2c0. Benchmark history for the fund comparison (10y)"
-        run: python scripts/fetch_yahoo.py --symbols "^NSEI" "^BSESN" "GC=F" --period 10y || true
+        run: python scripts/fetch_yahoo.py --symbols "^NSEI" "^NSEBANK" "^BSESN" "GC=F" --period 10y || true
 
       - name: "7m2c. Mutual funds (NAV record + benchmark comparison)"
         run: python scripts/fetch_mutual_funds.py --limit 400 || true

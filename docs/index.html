@@ -1340,6 +1340,86 @@ function build(d){
   (function(){
     var v=sec("stocks");
     var uni=UNIVERSE, deep=(STOCKS&&STOCKS.stocks)||{};
+
+    // ---- report card lookup + compare ------------------------------------------------
+    // The deep-history numbers for 2,100+ stocks were already published but there was no
+    // way to look up a single one. These two cards make that data reachable.
+    if(RCARDS&&RCARDS.cards&&RCARDS.cards.length){
+      var bySym={};
+      RCARDS.cards.forEach(function(r){bySym[r.symbol]=r;});
+      var allSym=RCARDS.cards.map(function(r){return r.symbol;});
+
+      function cardTable(syms){
+        var rows=[];
+        function row(label, fn){
+          rows.push([label].concat(syms.map(function(s){
+            var r=bySym[s]; if(!r) return "—";
+            var val=fn(r); return (val==null?"—":val);
+          })));
+        }
+        row("years up",      function(r){return r.years_up+"/"+r.years_total;});
+        row("volatility",    function(r){return r.vol_pct!=null?r.vol_pct+"%":null;});
+        row("worst fall",    function(r){return r.max_drawdown_pct!=null?r.max_drawdown_pct+"%":null;});
+        row("worst day",     function(r){return r.worst_day_pct!=null?r.worst_day_pct+"%":null;});
+        row("beta vs Nifty", function(r){return r.beta;});
+        row("best month",    function(r){return r.best_month?(r.best_month.month+" "+(r.best_month.ret_pct>0?"+":"")+r.best_month.ret_pct+"%"):null;});
+        row("worst month",   function(r){return r.worst_month?(r.worst_month.month+" "+r.worst_month.ret_pct+"%"):null;});
+        row("2025 return",   function(r){return r.yearly&&r.yearly["2025"]!=null?((r.yearly["2025"]*100).toFixed(1)+"%"):null;});
+        row("2024 return",   function(r){return r.yearly&&r.yearly["2024"]!=null?((r.yearly["2024"]*100).toFixed(1)+"%"):null;});
+        return tbl({columns:["measure"].concat(syms), rows:rows});
+      }
+
+      var dl=el("datalist"); dl.id="symList";
+      allSym.forEach(function(s){var o=el("option"); o.value=s; dl.appendChild(o);});
+
+      var one=el("input"); one.type="text"; one.placeholder="Type a symbol, e.g. RELIANCE";
+      one.setAttribute("list","symList");
+      one.style.cssText="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line);font:inherit;margin-bottom:10px;background:#fff";
+      var oneOut=el("div");
+      function paintOne(){
+        var s=(one.value||"").trim().toUpperCase();
+        oneOut.innerHTML="";
+        if(!s) return;
+        if(!bySym[s]){
+          oneOut.appendChild(para("No report card for \""+s+"\". Only stocks with at least 250 sessions and 85% data coverage get one.", false));
+          return;
+        }
+        oneOut.appendChild(cardTable([s]));
+      }
+      one.addEventListener("input", paintOne);
+      v.appendChild(card("Stock report card", "one stock, in detail",
+        [dl, one, oneOut],
+        {what:"Yearly returns, worst fall, volatility, best and worst month, and beta against the Nifty.",
+         source:"8 years of NSE bhavcopy, split-adjusted.", updated:RCARDS.updated,
+         note:(RCARDS.cautions&&RCARDS.cautions.survivorship)||""}));
+
+      // ---- compare ------------------------------------------------------------------
+      var boxes=[];
+      for(var i=0;i<3;i++){
+        var b=el("input"); b.type="text"; b.setAttribute("list","symList");
+        b.placeholder=(i===0?"Symbol 1 (required)":"Symbol "+(i+1)+" (optional)");
+        b.style.cssText="flex:1 1 30%;min-width:120px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);font:inherit;background:#fff";
+        boxes.push(b);
+      }
+      var rowEl=el("div"); rowEl.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px";
+      boxes.forEach(function(b){rowEl.appendChild(b);});
+      var cmpOut=el("div");
+      function paintCmp(){
+        var syms=boxes.map(function(b){return (b.value||"").trim().toUpperCase();})
+                      .filter(function(s){return s && bySym[s];});
+        cmpOut.innerHTML="";
+        if(!syms.length){ cmpOut.appendChild(para("Pick at least one symbol that has a report card.", false)); return; }
+        cmpOut.appendChild(cardTable(syms));
+      }
+      boxes.forEach(function(b){b.addEventListener("input", paintCmp);});
+      v.appendChild(card("Compare", "two or three, side by side",
+        [rowEl, cmpOut],
+        {what:"The same measures for several stocks, so they can be read against each other.",
+         source:"8 years of NSE bhavcopy, split-adjusted.", updated:RCARDS.updated,
+         note:"Comparing volatility and beta across stocks is the quickest way to see which one is doing the risk."}));
+      paintCmp();
+    }
+
     // Rank by consistency: how many of the last 7 calendar years were positive.
     if(RCARDS&&RCARDS.cards&&RCARDS.cards.length){
       var top=RCARDS.cards.slice(0,25);

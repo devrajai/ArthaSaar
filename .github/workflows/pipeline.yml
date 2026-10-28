@@ -132,6 +132,11 @@ jobs:
       - name: "7c2. Publish the 21-day forecast and its accuracy"
         run: python scripts/build_forecast_page.py || true
 
+      # TimesFM does NOT run here. It has its own workflow (timesfm.yml) because loading the
+      # 2.5-200M checkpoint needs 3-4 GB of RAM and a ~1 GB download - that would push this
+      # already 2-hour job over its limit for no benefit. Adding it here would have
+      # duplicated working infrastructure, which is what I nearly did.
+
       # TELEGRAM - PARKED, not broken.
       # @LIVEOPTIONDATA exists and is public, but its web preview is switched off, so
       # t.me/s/LIVEOPTIONDATA redirects to the ordinary page and returns zero messages.

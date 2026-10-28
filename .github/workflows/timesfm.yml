@@ -50,6 +50,33 @@ jobs:
           ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
         run: python scripts/timesfm_drive.py --pull || true
 
+      # THE MISSING PIECE. This workflow checked out the repo and went straight to the model,
+      # but data/candles/ is gitignored - so the archive was empty and only the 13 Yahoo
+      # index series had anything to forecast. That is why FM3 showed 13 series and no
+      # stocks. The daily pipeline restores the archive in its step 5a; this does the same.
+      - name: Restore the price archive (otherwise there is nothing to forecast)
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
+        run: |
+          if [ -z "$ARTHASAAR_DRIVE_FOLDER" ]; then
+            echo "::notice title=Reading the archive from the release asset::Drive folder not set"
+            python scripts/candles_from_drive.py --kind daily || true
+          else
+            python scripts/candles_from_drive.py --folder-id "$ARTHASAAR_DRIVE_FOLDER" --kind daily || true
+          fi
+          python - <<'EOF'
+          import os, pandas as pd
+          p = "data/candles/daily.parquet"
+          if os.path.exists(p):
+              d = pd.read_parquet(p, columns=["date"])
+              print(f"archive: {len(d):,} rows, {d['date'].nunique()} sessions")
+              if d["date"].nunique() < 100:
+                  print("::warning title=Archive still shallow::TimesFM will only see indices")
+          else:
+              print("::warning title=No archive::TimesFM will only see the Yahoo indices")
+          EOF
+
       - name: Run TimesFM forecasts
         env:
           OMP_NUM_THREADS: '2'

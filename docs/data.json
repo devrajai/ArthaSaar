@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-28T12:20:09Z",
+  "generated_utc": "2026-10-28T16:21:16Z",
   "fno": {
     "date": "2026-10-27",
     "pcr": {
@@ -690,339 +690,6 @@
       "total": 2
     }
   },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^BSESN",
-        73246.0312,
-        -0.48,
-        "2026-10-28"
-      ],
-      [
-        "^NSEI",
-        22698.8496,
-        -0.22,
-        "2026-10-28"
-      ]
-    ],
-    "total": 2
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        4057.8999,
-        -0.41,
-        "2026-10-28"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "LINK-USD",
-        11.797,
-        1.99,
-        "2026-10-28"
-      ],
-      [
-        "BNB-USD",
-        757.0,
-        1.73,
-        "2026-10-28"
-      ],
-      [
-        "DOGE-USD",
-        0.0802,
-        1.48,
-        "2026-10-28"
-      ],
-      [
-        "SOL-USD",
-        102.7,
-        1.43,
-        "2026-10-28"
-      ],
-      [
-        "ADA-USD",
-        0.2072,
-        0.72,
-        "2026-10-28"
-      ],
-      [
-        "ETH-USD",
-        2363.5901,
-        0.68,
-        "2026-10-28"
-      ],
-      [
-        "BTC-USD",
-        81347.5391,
-        0.67,
-        "2026-10-28"
-      ],
-      [
-        "AVAX-USD",
-        9.004,
-        0.57,
-        "2026-10-28"
-      ],
-      [
-        "XRP-USD",
-        1.3259,
-        -0.28,
-        "2026-10-28"
-      ],
-      [
-        "TRX-USD",
-        0.3319,
-        0.24,
-        "2026-10-28"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "MFs raise stake for 3 straight quarters in 5 mid-cap stocks; shares gain up to 75% YTD",
-        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-raise-stake-for-3-straight-quarters-in-5-mid-cap-stocks-shares-gain-up-to-75-ytd/slideshow/135262516.cms",
-        "Wed, 28 Oct 2026 16:12:47 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Info Edge Q2 Results: Net profit plunges 93% YoY to Rs 334 crore, revenue rises 13%; co declares Rs 3/share interim dividend",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/info-edge-naukri-net-profit-plunges-93-yoy-to-rs-334-crore-revenue-rises-13-co-declares-rs-3/share-interim-dividend/articleshow/135261958.cms",
-        "Wed, 28 Oct 2026 16:11:11 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: Nomura Holdings Q2 profit rises 13% on wealth management growth",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-nomura-holdings-q2-profit-rises-13-on-wealth-management-growth/articleshow/135261885.cms",
-        "Wed, 28 Oct 2026 16:08:46 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: European shares waver as earnings, rising oil weigh on sentiment",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-shares-waver-as-earnings-rising-oil-weigh-on-sentiment/articleshow/135261639.cms",
-        "Wed, 28 Oct 2026 16:02:11 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Elevated oil prices keep up heat on rupee, traders await cues from Fed",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/elevated-oil-prices-keep-up-heat-on-rupee-traders-await-cues-from-fed/articleshow/135261558.cms",
-        "Wed, 28 Oct 2026 15:59:45 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "US Market: Rising Treasury yields put US banks under pressure over bond losses",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-rising-treasury-yields-put-us-banks-under-pressure-over-bond-losses/articleshow/135260352.cms",
-        "Wed, 28 Oct 2026 15:25:28 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Diwali 2026: Sensex plunged 10,000 points, Nifty dropped 12% since last Diwali. Will Samvat 2083 bring some relief?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/diwali-2026-sensex-plunged-10000-points-nifty-dropped-12-since-last-diwali-will-samvat-2083-bring-some-relief/articleshow/135259845.cms",
-        "Wed, 28 Oct 2026 15:09:34 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Hyundai Motor India Q2 Results: Standalone profit falls 24% YoY to Rs 1,189 crore, but revenue rises 18%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/hyundai-motor-india-q2-results-standalone-profit-falls-24-to-rs-1189-crore-but-revenue-gains-18-yoy/articleshow/135259321.cms",
-        "Wed, 28 Oct 2026 14:49:48 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "From Dhirubhai Ambani\u2019s Rs 10 crore IPO to Akash Ambani\u2019s Rs 12.5 lakh crore Jio debut: Reliance\u2019s biggest wealth story",
-        "https://economictimes.indiatimes.com/markets/stocks/news/from-dhirubhai-ambanis-rs-10-crore-ipo-to-akash-ambanis-rs-12-5-lakh-crore-jio-debut-reliances-biggest-wealth-story/articleshow/135258986.cms",
-        "Wed, 28 Oct 2026 14:38:29 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Vedanta Q2 Results: Profit zooms 78% YoY to Rs 6,202 crore; revenue surges 57%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/vedanta-q2-results-profit-zooms-78-yoy-to-rs-6202-crore-revenue-surges-57/articleshow/135258623.cms",
-        "Wed, 28 Oct 2026 14:21:53 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Ambani bluechip bet gets bigger: Investors mark 82% of traded Jio shares for holding beyond listing",
-        "https://economictimes.indiatimes.com/markets/stocks/news/ambani-blue-chip-bet-gets-bigger-investors-mark-82-of-traded-shares-for-holding-beyond-listing/articleshow/135258717.cms",
-        "Wed, 28 Oct 2026 14:21:52 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Adani Enterprises Q2 Results: Revenue spikes 75% YoY to Rs 37,216 crore,  profit at Rs 1,492 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-enterprises-q2-results-revenue-spikes-75-yoy-to-rs-37216-crore-profit-at-rs-1492-crore/articleshow/135257734.cms",
-        "Wed, 28 Oct 2026 13:53:13 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Jio effect! Reliance beats Tata to become India's most valued conglomerate",
-        "https://economictimes.indiatimes.com/markets/stocks/news/jio-effect-reliance-beats-tata-to-become-indias-most-valued-conglomerate/articleshow/135257354.cms",
-        "Wed, 28 Oct 2026 13:26:18 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Hyundai Motor Q2 Results Live Updates: Standalone profit at Rs 1189 cr vs Rs 1570 cr, down 24% YoY",
-        "https://economictimes.indiatimes.com/markets/stocks/live-blog/q2-results-today-live-updates-hyundai-vedanta-adani-enterprises-quarter-2-fy27-earnings-result-dividend-share-price-updates/liveblog/135257115.cms",
-        "Wed, 28 Oct 2026 13:11:09 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: UBS Q3 profit rises 8% to $2.69 billion, accelerates buyback plan",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-ubs-q3-profit-rises-8-to-2-69-billion-accelerates-buyback-plan/articleshow/135256901.cms",
-        "Wed, 28 Oct 2026 13:09:23 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "US Market: AI boom could weaken dollar\u2019s safe-haven appeal as foreign flows rise",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-ai-boom-could-weaken-dollars-safe-haven-appeal-as-foreign-flows-rise/articleshow/135256789.cms",
-        "Wed, 28 Oct 2026 13:07:31 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Adani Ports Q2 Results: Net profit jumps 17% YoY to Rs 3,622 crore; revenue up 24%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-ports-q2-results-net-profit-jumps-17-yoy-to-rs-3622-crore-revenue-up-24/articleshow/135256370.cms",
-        "Wed, 28 Oct 2026 12:53:19 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Jio Platforms delivers biggest listing gain among India\u2019s 5 largest IPOs, jumps 21% on debut",
-        "https://economictimes.indiatimes.com/markets/stocks/news/jio-platforms-delivers-biggest-listing-gain-among-indias-5-largest-ipos-jumps-21-on-debut/articleshow/135256268.cms",
-        "Wed, 28 Oct 2026 12:48:18 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "US Market: Treasury yields face pressure despite expected Fed rate pause",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-treasury-yields-face-pressure-despite-expected-fed-rate-pause/articleshow/135256143.cms",
-        "Wed, 28 Oct 2026 12:41:20 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Adani Green\u2019s debt maths: Why leverage may fall below 4x as capex cycle matures",
-        "https://economictimes.indiatimes.com/markets/stocks/news/adani-greens-debt-maths-why-leverage-may-fall-below-4x-as-capex-cycle-matures/articleshow/135256023.cms",
-        "Wed, 28 Oct 2026 12:37:13 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "BNP Paribas Q3 profit rises 14% to beat estimates; announces \u20ac1.3 billion buyback",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/bnp-paribas-q3-profit-rises-14-to-beat-estimates-announces-1-3-billion-buyback/articleshow/135255907.cms",
-        "Wed, 28 Oct 2026 12:34:36 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: China's yuan holds near four-year high as markets await Fed decision",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-chinas-yuan-holds-near-four-year-high-as-markets-await-fed-decision/articleshow/135255461.cms",
-        "Wed, 28 Oct 2026 12:27:48 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "US Market: Fed expected to hold rates as Iran war fuels inflation concerns",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-fed-expected-to-hold-rates-as-iran-war-fuels-inflation-concerns/articleshow/135255367.cms",
-        "Wed, 28 Oct 2026 12:21:20 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Infosys, TechM, TCS, other IT stocks plunge up to 5%, extend losses as global AI trade rebounds. What lies ahead?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/infosys-techm-tcs-other-it-stocks-plunge-up-to-5-extend-losses-as-global-ai-trade-rebounds-what-lies-ahead/articleshow/135255322.cms",
-        "Wed, 28 Oct 2026 12:16:27 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Can the AI boom sustain SK Hynix's record earnings?",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/can-the-ai-boom-sustain-sk-hynixs-record-earnings/slideshow/135255297.cms",
-        "Wed, 28 Oct 2026 12:03:34 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Weak domestic returns fuel India's overseas retail investing boom",
-        "https://economictimes.indiatimes.com/markets/stocks/news/weak-domestic-returns-fuel-indias-overseas-retail-investing-boom/articleshow/135254832.cms",
-        "Wed, 28 Oct 2026 11:57:22 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market: Japan bond yields rise as investors eye BOJ policy meeting",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-japan-bond-yields-rise-as-investors-eye-boj-policy-meeting/articleshow/135254632.cms",
-        "Wed, 28 Oct 2026 11:55:18 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Maruti Suzuki shares see target price cuts by Jefferies, Nomura, other brokerages after Q2 net profit drops 26% YoY. What\u2019s ahead?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/maruti-suzuki-shares-see-target-price-cuts-by-jefferies-nomura-other-brokerages-after-q2-net-profit-drops-26-yoy-whats-ahead/articleshow/135254335.cms",
-        "Wed, 28 Oct 2026 11:47:12 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "TCS, Vedanta among 10 companies offering dividend yield of up to 7%. Do you own any?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/tcs-vedanta-among-10-companies-offering-dividend-yield-of-up-to-7-do-you-own-any/slideshow/135254303.cms",
-        "Wed, 28 Oct 2026 11:30:28 +0530",
-        "2026-10-28T11:08:22Z"
-      ],
-      [
-        "ET Markets",
-        "Subros shares surge 10% after securing Rs 1,225 crore HVAC supply order from Maruti Suzuki",
-        "https://economictimes.indiatimes.com/markets/stocks/news/subros-shares-surge-10-after-securing-rs-1225-crore-hvac-supply-order-from-maruti-suzuki/articleshow/135253915.cms",
-        "Wed, 28 Oct 2026 11:28:49 +0530",
-        "2026-10-28T11:08:22Z"
-      ]
-    ],
-    "total": 157
-  },
   "archive": {
     "files": 17,
     "dates": 10,
@@ -1555,6 +1222,494 @@
       ]
     ],
     "total": 261
+  },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-10-28T16:21:15Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 22698.85,
+      "median_chg_pct": 2.57,
+      "low10_chg_pct": -2.04,
+      "high90_chg_pct": 7.98,
+      "confidence": 60,
+      "direction": "up"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "^NSEI",
+        22698.85,
+        2.57,
+        -2.04,
+        7.98,
+        "up",
+        60
+      ],
+      [
+        "^N225",
+        63268.37,
+        1.43,
+        -8.4,
+        11.69,
+        "up",
+        20
+      ],
+      [
+        "^FTSE",
+        10692.29,
+        1.09,
+        -1.71,
+        3.52,
+        "up",
+        79
+      ],
+      [
+        "^IXIC",
+        26457.56,
+        0.89,
+        -4.78,
+        5.86,
+        "up",
+        57
+      ],
+      [
+        "^DJI",
+        52508.22,
+        0.63,
+        -2.69,
+        3.6,
+        "up",
+        75
+      ],
+      [
+        "^NSEBANK",
+        54267.4,
+        0.51,
+        -4.7,
+        5.88,
+        "up",
+        58
+      ],
+      [
+        "^GSPC",
+        7736.07,
+        0.37,
+        -2.91,
+        3.25,
+        "up",
+        75
+      ],
+      [
+        "INR=X",
+        95.21,
+        0.35,
+        -1.62,
+        2.41,
+        "up",
+        84
+      ],
+      [
+        "^HSI",
+        23041.32,
+        -0.18,
+        -7.77,
+        7.55,
+        "flat",
+        39
+      ],
+      [
+        "GC=F",
+        4051.8,
+        -1.17,
+        -8.22,
+        7.01,
+        "down",
+        39
+      ],
+      [
+        "BTC-USD",
+        80392.0,
+        -2.02,
+        -11.05,
+        7.33,
+        "down",
+        26
+      ],
+      [
+        "^INDIAVIX",
+        16.25,
+        -3.17,
+        -27.02,
+        35.27,
+        "down",
+        0
+      ],
+      [
+        "CL=F",
+        103.44,
+        -4.52,
+        -22.86,
+        10.81,
+        "down",
+        0
+      ]
+    ],
+    "total": 13
+  },
+  "daily": {
+    "as_of": "2026-10-28T16:21:16Z",
+    "items": [
+      "Bhavcopy archive through 2026-10-27 (17 files, 10 days)",
+      "Nifty PCR 1.05 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "25 volume spikes vs their own average",
+      "Corporate actions: 18 dividends",
+      "261 videos across 10 channels"
+    ]
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^BSESN",
+        73246.0312,
+        -0.48,
+        "2026-10-28"
+      ],
+      [
+        "^NSEI",
+        22698.8496,
+        -0.22,
+        "2026-10-28"
+      ]
+    ],
+    "total": 2
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        4057.8999,
+        -0.41,
+        "2026-10-28"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "LINK-USD",
+        11.797,
+        1.99,
+        "2026-10-28"
+      ],
+      [
+        "BNB-USD",
+        757.0,
+        1.73,
+        "2026-10-28"
+      ],
+      [
+        "DOGE-USD",
+        0.0802,
+        1.48,
+        "2026-10-28"
+      ],
+      [
+        "SOL-USD",
+        102.7,
+        1.43,
+        "2026-10-28"
+      ],
+      [
+        "ADA-USD",
+        0.2072,
+        0.72,
+        "2026-10-28"
+      ],
+      [
+        "ETH-USD",
+        2363.5901,
+        0.68,
+        "2026-10-28"
+      ],
+      [
+        "BTC-USD",
+        81347.5391,
+        0.67,
+        "2026-10-28"
+      ],
+      [
+        "AVAX-USD",
+        9.004,
+        0.57,
+        "2026-10-28"
+      ],
+      [
+        "XRP-USD",
+        1.3259,
+        -0.28,
+        "2026-10-28"
+      ],
+      [
+        "TRX-USD",
+        0.3319,
+        0.24,
+        "2026-10-28"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "MFs raise stake for 3 straight quarters in 5 mid-cap stocks; shares gain up to 75% YTD",
+        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-raise-stake-for-3-straight-quarters-in-5-mid-cap-stocks-shares-gain-up-to-75-ytd/slideshow/135262516.cms",
+        "Wed, 28 Oct 2026 16:12:47 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Info Edge Q2 Results: Net profit plunges 93% YoY to Rs 334 crore, revenue rises 13%; co declares Rs 3/share interim dividend",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/info-edge-naukri-net-profit-plunges-93-yoy-to-rs-334-crore-revenue-rises-13-co-declares-rs-3/share-interim-dividend/articleshow/135261958.cms",
+        "Wed, 28 Oct 2026 16:11:11 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: Nomura Holdings Q2 profit rises 13% on wealth management growth",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-nomura-holdings-q2-profit-rises-13-on-wealth-management-growth/articleshow/135261885.cms",
+        "Wed, 28 Oct 2026 16:08:46 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: European shares waver as earnings, rising oil weigh on sentiment",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-shares-waver-as-earnings-rising-oil-weigh-on-sentiment/articleshow/135261639.cms",
+        "Wed, 28 Oct 2026 16:02:11 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Elevated oil prices keep up heat on rupee, traders await cues from Fed",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/elevated-oil-prices-keep-up-heat-on-rupee-traders-await-cues-from-fed/articleshow/135261558.cms",
+        "Wed, 28 Oct 2026 15:59:45 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "US Market: Rising Treasury yields put US banks under pressure over bond losses",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-rising-treasury-yields-put-us-banks-under-pressure-over-bond-losses/articleshow/135260352.cms",
+        "Wed, 28 Oct 2026 15:25:28 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Diwali 2026: Sensex plunged 10,000 points, Nifty dropped 12% since last Diwali. Will Samvat 2083 bring some relief?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/diwali-2026-sensex-plunged-10000-points-nifty-dropped-12-since-last-diwali-will-samvat-2083-bring-some-relief/articleshow/135259845.cms",
+        "Wed, 28 Oct 2026 15:09:34 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Hyundai Motor India Q2 Results: Standalone profit falls 24% YoY to Rs 1,189 crore, but revenue rises 18%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/hyundai-motor-india-q2-results-standalone-profit-falls-24-to-rs-1189-crore-but-revenue-gains-18-yoy/articleshow/135259321.cms",
+        "Wed, 28 Oct 2026 14:49:48 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "From Dhirubhai Ambani\u2019s Rs 10 crore IPO to Akash Ambani\u2019s Rs 12.5 lakh crore Jio debut: Reliance\u2019s biggest wealth story",
+        "https://economictimes.indiatimes.com/markets/stocks/news/from-dhirubhai-ambanis-rs-10-crore-ipo-to-akash-ambanis-rs-12-5-lakh-crore-jio-debut-reliances-biggest-wealth-story/articleshow/135258986.cms",
+        "Wed, 28 Oct 2026 14:38:29 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Vedanta Q2 Results: Profit zooms 78% YoY to Rs 6,202 crore; revenue surges 57%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/vedanta-q2-results-profit-zooms-78-yoy-to-rs-6202-crore-revenue-surges-57/articleshow/135258623.cms",
+        "Wed, 28 Oct 2026 14:21:53 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Ambani bluechip bet gets bigger: Investors mark 82% of traded Jio shares for holding beyond listing",
+        "https://economictimes.indiatimes.com/markets/stocks/news/ambani-blue-chip-bet-gets-bigger-investors-mark-82-of-traded-shares-for-holding-beyond-listing/articleshow/135258717.cms",
+        "Wed, 28 Oct 2026 14:21:52 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Adani Enterprises Q2 Results: Revenue spikes 75% YoY to Rs 37,216 crore,  profit at Rs 1,492 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-enterprises-q2-results-revenue-spikes-75-yoy-to-rs-37216-crore-profit-at-rs-1492-crore/articleshow/135257734.cms",
+        "Wed, 28 Oct 2026 13:53:13 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Jio effect! Reliance beats Tata to become India's most valued conglomerate",
+        "https://economictimes.indiatimes.com/markets/stocks/news/jio-effect-reliance-beats-tata-to-become-indias-most-valued-conglomerate/articleshow/135257354.cms",
+        "Wed, 28 Oct 2026 13:26:18 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Hyundai Motor Q2 Results Live Updates: Standalone profit at Rs 1189 cr vs Rs 1570 cr, down 24% YoY",
+        "https://economictimes.indiatimes.com/markets/stocks/live-blog/q2-results-today-live-updates-hyundai-vedanta-adani-enterprises-quarter-2-fy27-earnings-result-dividend-share-price-updates/liveblog/135257115.cms",
+        "Wed, 28 Oct 2026 13:11:09 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: UBS Q3 profit rises 8% to $2.69 billion, accelerates buyback plan",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/global-market-ubs-q3-profit-rises-8-to-2-69-billion-accelerates-buyback-plan/articleshow/135256901.cms",
+        "Wed, 28 Oct 2026 13:09:23 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "US Market: AI boom could weaken dollar\u2019s safe-haven appeal as foreign flows rise",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-ai-boom-could-weaken-dollars-safe-haven-appeal-as-foreign-flows-rise/articleshow/135256789.cms",
+        "Wed, 28 Oct 2026 13:07:31 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Adani Ports Q2 Results: Net profit jumps 17% YoY to Rs 3,622 crore; revenue up 24%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/adani-ports-q2-results-net-profit-jumps-17-yoy-to-rs-3622-crore-revenue-up-24/articleshow/135256370.cms",
+        "Wed, 28 Oct 2026 12:53:19 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Jio Platforms delivers biggest listing gain among India\u2019s 5 largest IPOs, jumps 21% on debut",
+        "https://economictimes.indiatimes.com/markets/stocks/news/jio-platforms-delivers-biggest-listing-gain-among-indias-5-largest-ipos-jumps-21-on-debut/articleshow/135256268.cms",
+        "Wed, 28 Oct 2026 12:48:18 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "US Market: Treasury yields face pressure despite expected Fed rate pause",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-treasury-yields-face-pressure-despite-expected-fed-rate-pause/articleshow/135256143.cms",
+        "Wed, 28 Oct 2026 12:41:20 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Adani Green\u2019s debt maths: Why leverage may fall below 4x as capex cycle matures",
+        "https://economictimes.indiatimes.com/markets/stocks/news/adani-greens-debt-maths-why-leverage-may-fall-below-4x-as-capex-cycle-matures/articleshow/135256023.cms",
+        "Wed, 28 Oct 2026 12:37:13 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "BNP Paribas Q3 profit rises 14% to beat estimates; announces \u20ac1.3 billion buyback",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/bnp-paribas-q3-profit-rises-14-to-beat-estimates-announces-1-3-billion-buyback/articleshow/135255907.cms",
+        "Wed, 28 Oct 2026 12:34:36 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: China's yuan holds near four-year high as markets await Fed decision",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-chinas-yuan-holds-near-four-year-high-as-markets-await-fed-decision/articleshow/135255461.cms",
+        "Wed, 28 Oct 2026 12:27:48 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "US Market: Fed expected to hold rates as Iran war fuels inflation concerns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-fed-expected-to-hold-rates-as-iran-war-fuels-inflation-concerns/articleshow/135255367.cms",
+        "Wed, 28 Oct 2026 12:21:20 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Infosys, TechM, TCS, other IT stocks plunge up to 5%, extend losses as global AI trade rebounds. What lies ahead?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/infosys-techm-tcs-other-it-stocks-plunge-up-to-5-extend-losses-as-global-ai-trade-rebounds-what-lies-ahead/articleshow/135255322.cms",
+        "Wed, 28 Oct 2026 12:16:27 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Can the AI boom sustain SK Hynix's record earnings?",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/can-the-ai-boom-sustain-sk-hynixs-record-earnings/slideshow/135255297.cms",
+        "Wed, 28 Oct 2026 12:03:34 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Weak domestic returns fuel India's overseas retail investing boom",
+        "https://economictimes.indiatimes.com/markets/stocks/news/weak-domestic-returns-fuel-indias-overseas-retail-investing-boom/articleshow/135254832.cms",
+        "Wed, 28 Oct 2026 11:57:22 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Global Market: Japan bond yields rise as investors eye BOJ policy meeting",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-japan-bond-yields-rise-as-investors-eye-boj-policy-meeting/articleshow/135254632.cms",
+        "Wed, 28 Oct 2026 11:55:18 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Maruti Suzuki shares see target price cuts by Jefferies, Nomura, other brokerages after Q2 net profit drops 26% YoY. What\u2019s ahead?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/maruti-suzuki-shares-see-target-price-cuts-by-jefferies-nomura-other-brokerages-after-q2-net-profit-drops-26-yoy-whats-ahead/articleshow/135254335.cms",
+        "Wed, 28 Oct 2026 11:47:12 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "TCS, Vedanta among 10 companies offering dividend yield of up to 7%. Do you own any?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/tcs-vedanta-among-10-companies-offering-dividend-yield-of-up-to-7-do-you-own-any/slideshow/135254303.cms",
+        "Wed, 28 Oct 2026 11:30:28 +0530",
+        "2026-10-28T11:08:22Z"
+      ],
+      [
+        "ET Markets",
+        "Subros shares surge 10% after securing Rs 1,225 crore HVAC supply order from Maruti Suzuki",
+        "https://economictimes.indiatimes.com/markets/stocks/news/subros-shares-surge-10-after-securing-rs-1225-crore-hvac-supply-order-from-maruti-suzuki/articleshow/135253915.cms",
+        "Wed, 28 Oct 2026 11:28:49 +0530",
+        "2026-10-28T11:08:22Z"
+      ]
+    ],
+    "total": 157
   },
   "indicators": {
     "columns": [
@@ -3354,150 +3509,6 @@
     ],
     "rows": 18522
   },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-10-27T19:58:59Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 22753.2,
-      "median_chg_pct": 2.63,
-      "low10_chg_pct": -2.23,
-      "high90_chg_pct": 8.2,
-      "confidence": 58,
-      "direction": "up"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "^NSEI",
-        22753.2,
-        2.63,
-        -2.23,
-        8.2,
-        "up",
-        58
-      ],
-      [
-        "^N225",
-        62189.65,
-        2.36,
-        -7.88,
-        12.66,
-        "up",
-        18
-      ],
-      [
-        "^FTSE",
-        10686.54,
-        1.17,
-        -1.63,
-        3.61,
-        "up",
-        79
-      ],
-      [
-        "^IXIC",
-        26485.1,
-        0.78,
-        -4.58,
-        5.6,
-        "up",
-        59
-      ],
-      [
-        "^NSEBANK",
-        54366.7,
-        0.59,
-        -4.7,
-        5.54,
-        "up",
-        59
-      ],
-      [
-        "^DJI",
-        52399.75,
-        0.51,
-        -2.97,
-        3.54,
-        "up",
-        74
-      ],
-      [
-        "INR=X",
-        95.11,
-        0.37,
-        -1.65,
-        2.43,
-        "up",
-        84
-      ],
-      [
-        "^GSPC",
-        7725.52,
-        0.32,
-        -2.93,
-        3.15,
-        "up",
-        76
-      ],
-      [
-        "^HSI",
-        23211.81,
-        0.14,
-        -7.07,
-        7.4,
-        "flat",
-        42
-      ],
-      [
-        "BTC-USD",
-        80704.61,
-        -0.85,
-        -9.72,
-        8.12,
-        "down",
-        29
-      ],
-      [
-        "GC=F",
-        4076.1,
-        -1.28,
-        -8.64,
-        7.58,
-        "down",
-        35
-      ],
-      [
-        "^INDIAVIX",
-        17.16,
-        -1.49,
-        -28.28,
-        40.82,
-        "down",
-        0
-      ],
-      [
-        "CL=F",
-        99.82,
-        -5.04,
-        -23.03,
-        11.0,
-        "down",
-        0
-      ]
-    ],
-    "total": 13
-  },
   "quality": {
     "rows": 3502926,
     "symbols": 3510,
@@ -3563,18 +3574,6 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
-  },
-  "daily": {
-    "as_of": "2026-10-28T12:20:09Z",
-    "items": [
-      "Bhavcopy archive through 2026-10-27 (17 files, 10 days)",
-      "Nifty PCR 1.05 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "25 volume spikes vs their own average",
-      "Corporate actions: 18 dividends",
-      "261 videos across 10 channels",
-      "157 news headlines"
-    ]
   },
   "fx": {
     "columns": [

@@ -1211,6 +1211,97 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- what changed since your last visit ------------------------------------------
+    // No login, no server: the previous visit is remembered in this browser. On the first
+    // visit there is nothing to compare against, so the card says so rather than pretending.
+    // Everything shown here is dated, so "changed" means "happened after you last looked".
+    if(CAL||IPO){
+      try{
+        var KEY="arthasaar_last_visit";
+        var prev=null;
+        try{ prev=parseInt(localStorage.getItem(KEY)||"0",10)||null; }catch(e){}
+
+        // accept both "2026-10-27" and "27-Oct-2026"
+        var MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+        function toTime(s){
+          if(!s) return null;
+          s=String(s).trim();
+          var m=s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+          if(m) return new Date(+m[3], MON[m[2].toLowerCase()], +m[1]).getTime();
+          var m2=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          if(m2) return new Date(+m2[1], +m2[2]-1, +m2[3]).getTime();
+          var t=Date.parse(s); return isNaN(t)?null:t;
+        }
+
+        var since=prev;
+        var exDates=[], ipoMoves=[];
+        if(since){
+          ((CAL&&CAL.days)||[]).forEach(function(day){
+            (day.events||[]).forEach(function(ev){
+              var t=toTime(ev.date||day.date);
+              if(t&&t>since) exDates.push(ev);
+            });
+          });
+          ["open","upcoming","closed","listed"].forEach(function(bucket){
+            ((IPO&&IPO[bucket])||[]).forEach(function(ip){
+              var t=toTime(ip.open)||toTime(ip.close);
+              if(t&&t>since) ipoMoves.push({ip:ip,bucket:bucket});
+            });
+          });
+        }
+
+        var body=[];
+        if(!since){
+          body.push(para("This is your first visit from this browser. Come back and this card will show what moved in between - corporate actions, IPOs opening and closing - without needing a login.", false));
+        } else {
+          var days=Math.max(1,Math.round((Date.now()-since)/86400000));
+          body.push(para("Last time you were here: "+new Date(since).toLocaleDateString()+" ("+days+" day"+(days===1?"":"s")+" ago).", false));
+          if(!exDates.length&&!ipoMoves.length){
+            body.push(para("Nothing new on the corporate-action or IPO calendar since then.", false));
+          }
+          if(exDates.length){
+            // Grouped by type. A flat count said "747 corporate actions" and was useless -
+            // almost all of it is every company's results date. What actually changes a
+            // holding is a dividend, split, bonus or rights issue, so those are listed and
+            // results are only counted.
+            var byType={};
+            exDates.forEach(function(ev){
+              var t=(ev.type||"other").toLowerCase();
+              byType[t]=(byType[t]||0)+1;
+            });
+            var typeLine=Object.keys(byType).sort(function(a,b){return byType[b]-byType[a];})
+              .map(function(t){return num(byType[t])+" "+t;}).join(" · ");
+            body.push(para("Since then: "+typeLine+".", false));
+            var material=exDates.filter(function(ev){
+              var t=(ev.type||"").toLowerCase();
+              return t && t!=="results";
+            });
+            if(material.length){
+              body.push(para("Actions that change a holding ("+num(material.length)+"):", false));
+              body.push(tbl({columns:["date","symbol","type"],
+                rows:material.slice(0,15).map(function(ev){
+                  return [ev.date, ev.symbol, ev.type];})},[]));
+            } else {
+              body.push(para("No dividends, splits or bonus issues since then - only results dates.", false));
+            }
+          }
+          if(ipoMoves.length){
+            body.push(para(num(ipoMoves.length)+" IPO update"+(ipoMoves.length===1?"":"s")+" since then", false));
+            body.push(tbl({columns:["name","opens","closes","status"],
+              rows:ipoMoves.slice(0,10).map(function(x){
+                return [x.ip.name, x.ip.open||"—", x.ip.close||"—", x.bucket];})},[]));
+          }
+        }
+        v.appendChild(card("Since your last visit", since?"what moved":"first visit",
+          body,
+          {what:"What changed since you last opened this site, from this browser only.",
+           source:"Corporate actions and the IPO calendar.", updated:when,
+           note:"Stored in this browser. Nothing is sent anywhere, and clearing site data resets it."}));
+
+        try{ localStorage.setItem(KEY, String(Date.now())); }catch(e){}
+      }catch(e){}
+    }
+
     if(BRIEF && (BRIEF.headline || (BRIEF.bullets||[]).length)){
       var bk=[];
       if(BRIEF.headline) bk.push(el("p","big",esc(BRIEF.headline)));

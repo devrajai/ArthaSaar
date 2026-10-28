@@ -522,11 +522,17 @@ body.scrolled .searchwrap{padding:11px 12px !important;margin:2px 0 14px !import
 body.scrolled .searchwrap .mag{width:38px !important;height:38px !important}
 body.scrolled #burger{top:14px !important;left:6px !important}
 
-/* The burger had a white glass card behind it. Removed: the three lines read fine straight
-   on the header, and the white square was competing with the logo. The 40x40 hit area is
-   kept, so the tap target is unchanged - only the paint is gone. */
+/* ============================================================================
+   Burger: no card behind it.
+   The menu button carried background:var(--glass), a 1px border and a 14px blur - a white
+   rounded square competing with the logo right beside it. Removed. The 40x40 hit area is
+   untouched, so the tap target is exactly the same; only the paint is gone.
+   Placed in the LAST <style> block on purpose: this page has three of them, and an earlier
+   attempt put the override in the first one and lost.
+   ============================================================================ */
 #burger{
   background:transparent !important;
+  background-color:transparent !important;
   border:0 !important;
   box-shadow:none !important;
   -webkit-backdrop-filter:none !important;

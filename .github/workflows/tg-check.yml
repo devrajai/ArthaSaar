@@ -1,4 +1,4 @@
-name: "Telegram reachability check"
+name: "Telegram PCR check (@LIVEOPTIONDATA)"
 on:
   workflow_dispatch: {}
 jobs:
@@ -6,17 +6,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Can a runner reach t.me?
+      - name: Fetch the real channel and parse PCR
+        env:
+          TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
         run: |
-          echo "=== 1. plain fetch of a public preview ==="
-          for ch in telegram durov; do
-            code=$(curl -s -o /tmp/t.html -w '%{http_code}' -A "Mozilla/5.0" "https://t.me/s/$ch")
-            echo "  t.me/s/$ch -> HTTP $code, $(wc -c < /tmp/t.html) bytes"
-            grep -o 'tgme_widget_message_text' /tmp/t.html | head -1 && echo "    preview markup present"
-          done
-          echo
-          echo "=== 2. run the actual script against a public channel ==="
-          TELEGRAM_CHANNELS="telegram" python scripts/fetch_telegram_pcr.py || echo "script failed"
-          echo
-          echo "=== 3. what it produced ==="
-          head -c 400 docs/telegram_pcr.json 2>/dev/null || echo "no output file"
+          curl -s -o /tmp/t.html -w 't.me/s/LIVEOPTIONDATA -> HTTP %{http_code}, %{size_download} bytes\n' \
+            -A "Mozilla/5.0" https://t.me/s/LIVEOPTIONDATA
+          echo "--- how many message bodies ---"
+          grep -o 'tgme_widget_message_text' /tmp/t.html | wc -l
+          echo "--- run the parser ---"
+          python scripts/fetch_telegram_pcr.py || echo "script failed"
+          echo "--- result ---"
+          python3 - <<'EOF'
+          import json
+          try:
+              d = json.load(open("docs/telegram_pcr.json"))
+              print("updated:", d.get("updated"))
+              for ch, c in (d.get("channels") or {}).items():
+                  print(f"@{ch}: {c.get('messages_seen')} messages, latest PCR = {c.get('latest')}")
+                  if c.get("latest_text"):
+                      print("   text:", c["latest_text"][:200])
+                  for r in (c.get("readings") or [])[:5]:
+                      print(f"   - {r['pcr']}: {r['text'][:90]}")
+          except Exception as e:
+              print("could not read output:", e)
+          EOF

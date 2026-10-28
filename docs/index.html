@@ -521,6 +521,17 @@ body.scrolled h1{font-size:20px !important}
 body.scrolled .searchwrap{padding:11px 12px !important;margin:2px 0 14px !important;gap:13px !important}
 body.scrolled .searchwrap .mag{width:38px !important;height:38px !important}
 body.scrolled #burger{top:14px !important;left:6px !important}
+
+/* The burger had a white glass card behind it. Removed: the three lines read fine straight
+   on the header, and the white square was competing with the logo. The 40x40 hit area is
+   kept, so the tap target is unchanged - only the paint is gone. */
+#burger{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
 </style>
 </head>
 <body>

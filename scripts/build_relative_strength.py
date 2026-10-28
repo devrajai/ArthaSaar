@@ -53,6 +53,21 @@ def main():
         json.dump(out, open(OUT, "w"), ensure_ascii=False)
         return 0
 
+    # The price series moved out of stocks.json into series.json, so that the first paint
+    # carries ~500 KB instead of 3.1 MB. Without this the script found no `series` on any
+    # stock and published count=0 with "No stock had the full 120 closes needed" - which was
+    # true, but only because it was looking in the wrong file.
+    try:
+        ser = json.load(open("docs/series.json")).get("series") or {}
+        merged = 0
+        for sym, s in ser.items():
+            if sym in stocks and s:
+                stocks[sym]["series"] = s
+                merged += 1
+        print("  series merged from series.json:", merged)
+    except Exception:
+        print("  series.json not available - falling back to any series in stocks.json")
+
     nif = nifty_series()
     if not nif:
         out["note"] = ("Nifty's own series was unavailable, so relative strength cannot be "

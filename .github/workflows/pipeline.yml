@@ -132,12 +132,17 @@ jobs:
       - name: "7c2. Publish the 21-day forecast and its accuracy"
         run: python scripts/build_forecast_page.py || true
 
-      # PCR as posted by a public Telegram channel, read from Telegram's own web preview.
-      # Third-party and unverified - kept separate from the PCR computed from NSE bhavcopy.
-      - name: "7c3. Telegram channel PCR (public preview, no credentials)"
-        run: python scripts/fetch_telegram_pcr.py || true
-        env:
-          TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
+      # TELEGRAM - PARKED, not broken.
+      # @LIVEOPTIONDATA exists and is public, but its web preview is switched off, so
+      # t.me/s/LIVEOPTIONDATA redirects to the ordinary page and returns zero messages.
+      # No credential can work around that from outside.
+      # To switch it on: channel Settings -> "Show a preview of posts on the web".
+      # Then uncomment the step below and it starts working with no API key.
+      #
+      # - name: "7c3. Telegram channel PCR (public preview, no credentials)"
+      #   run: python scripts/fetch_telegram_pcr.py || true
+      #   env:
+      #     TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
 
       - name: "7d. Crypto"
         run: python scripts/fetch_crypto.py

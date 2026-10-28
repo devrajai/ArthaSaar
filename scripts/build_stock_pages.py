@@ -238,15 +238,37 @@ def main() -> int:
         })
     screener.sort(key=lambda r: -(r.get("mcap") or 0))
 
+    # SPLIT THE SERIES OUT.
+    # stocks.json was ~3.1 MB and is loaded on every visit, yet ~1,000 of each stock's ~1,450
+    # bytes is the price series, which only the sparkline on the Stocks tab needs. Splitting
+    # it means the first paint carries ~500 KB instead of 3.1 MB, and the series arrives only
+    # when that tab is opened. Same data, far less paid for by everyone who does not open it.
+    series = {}
+    lean = {}
+    for sym, st in stocks.items():
+        ser = st.get("series")
+        if ser:
+            series[sym] = ser
+        st2 = dict(st)
+        st2.pop("series", None)
+        lean[sym] = st2
+
     payload = {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "count": len(stocks), "series_len": SERIES_LEN,
-        "screener": screener, "stocks": stocks,
+        "series_file": "series.json",
+        "screener": screener, "stocks": lean,
     }
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(payload, separators=(",", ":")))
     print(f"Wrote {dest}  ({dest.stat().st_size / 1e3:.0f} KB)  |  {len(stocks)} stocks total")
+
+    series_dest = dest.parent / "series.json"
+    series_dest.write_text(json.dumps(
+        {"updated": payload["updated"], "series": series}, separators=(",", ":")))
+    print(f"Wrote {series_dest}  ({series_dest.stat().st_size / 1e3:.0f} KB)  |  "
+          f"{len(series)} price series (loaded on the Stocks tab only)")
     return 0
 
 

@@ -2859,6 +2859,39 @@ function build(d){
   /* ---------- CORRELATION (Task 3) ---------- */
   (function(){
     var v=sec("correlation");
+    // The rewritten correlation publishes 1-year and 3-year windows, the most correlated
+    // PAIRS across the whole 500 (not just the 60 in the matrix), and a sector matrix.
+    // Correlation is unstable, so both windows are shown rather than one.
+    if(d.correlation&&d.correlation.windows){
+      var W=d.correlation.windows, wl=Object.keys(W), body=[];
+      wl.forEach(function(w){
+        var b=W[w]; if(!b||!b.pairs) return;
+        body.push(para(w.toUpperCase()+" - "+num(b.universe)+" stocks over "+
+          num(b.sessions)+" sessions", false));
+        body.push(tbl({columns:["pair","corr"],rows:b.pairs.map(function(x){
+          return [x.a+" / "+x.b, x.corr];})},["corr"]));
+      });
+      if(body.length) v.appendChild(card("Most correlated pairs", "across the whole 500",
+        body,
+        {what:"The pairs that move together most closely. Same-sector pairs topping this list is the check that the numbers are right.",
+         source:"8 years of NSE bhavcopy, split-adjusted.", updated:d.correlation.updated,
+         note:(d.correlation.cautions&&d.correlation.cautions.unstable)||""}));
+      var s1=W["1y"]&&W["1y"].sectors;
+      if(s1&&s1.symbols&&s1.matrix&&s1.symbols.length>1){
+        var head=[""];
+        s1.symbols.forEach(function(s){head.push(s.slice(0,7));});
+        var rows=s1.matrix.map(function(row,i){
+          return [s1.symbols[i].slice(0,10)].concat(row.map(function(val){
+            return val==null?"-":val.toFixed(2);}));
+        });
+        v.appendChild(card("Sector correlation", "which sectors move together",
+          [ tbl({columns:head,rows:rows},[]) ],
+          {what:"Daily-return correlation between sector averages over the last year.",
+           source:"NSE sector membership, 1-year window.", updated:d.correlation.updated,
+           note:"Two sectors above about 0.7 are close to being one bet."}));
+      }
+    }
+
     if(!CORR||!CORR.count){
       v.appendChild(card("Correlation","Which stocks move together",
         [para(CORR&&CORR.note?CORR.note:"Not computed yet.")],
@@ -3487,6 +3520,25 @@ show = function(id){
   try{
     var on=document.querySelector(".section.on");
     document.body.classList.toggle("is-home", !on || on.id==="sec-overview");
+  }catch(e){}
+  // Price series live in their own file now (see build_stock_pages.py). They are only
+  // needed for the sparklines on the Stocks tab, so they are fetched on first open rather
+  // than on every visit - that is 2.6 MB most readers never ask for. Guarded like
+  // everything else here: a failure just means no sparkline, never a broken page.
+  try{
+    if(id==="stocks" && !window.__SERIES_LOADED && window.fetch){
+      window.__SERIES_LOADED = true;
+      fetch("series.json").then(function(r){return r.json();}).then(function(s){
+        var ser=(s&&s.series)||{};
+        var n=0;
+        if(window.STOCKS&&STOCKS.stocks){
+          Object.keys(ser).forEach(function(k){
+            if(STOCKS.stocks[k]){ STOCKS.stocks[k].series=ser[k]; n++; }
+          });
+        }
+        if(n) show("stocks");     // repaint now that the sparklines can draw
+      }).catch(function(){});
+    }
   }catch(e){}
 };
 </script>

@@ -125,7 +125,19 @@ jobs:
         run: python scripts/build_indicators.py
 
       - name: "7c. Forecasts (free models, walk-forward accuracy)"
-        run: python scripts/forecast.py --models naive,drift,mean,seasonal_naive,ets,arima
+        run: python scripts/forecast.py --models naive,drift,mean,seasonal_naive,ets,arima --horizon 21
+
+      # The accuracy was being computed every run and never published, so the site showed
+      # nothing while ~3,000 symbols of validated 21-day error sat on disk.
+      - name: "7c2. Publish the 21-day forecast and its accuracy"
+        run: python scripts/build_forecast_page.py || true
+
+      # PCR as posted by a public Telegram channel, read from Telegram's own web preview.
+      # Third-party and unverified - kept separate from the PCR computed from NSE bhavcopy.
+      - name: "7c3. Telegram channel PCR (public preview, no credentials)"
+        run: python scripts/fetch_telegram_pcr.py || true
+        env:
+          TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
 
       - name: "7d. Crypto"
         run: python scripts/fetch_crypto.py

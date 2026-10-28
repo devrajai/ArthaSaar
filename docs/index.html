@@ -2777,6 +2777,71 @@ function build(d){
   /* ---------- BACKTESTER (Task 14) ---------- */
   (function(){
     var v=sec("backtest");
+    // ---- 21-session forecast, and how accurate it has actually been ---------------------
+    // The accuracy is the point. A forecast without a measured error is an opinion; this one
+    // is scored walk-forward - the last 21 sessions are hidden, forecast from earlier data,
+    // and the miss recorded. That includes the 2020 crash, where naive models fail hardest.
+    if(FORECAST&&FORECAST.models&&FORECAST.models.length){
+      var mrows=FORECAST.models.map(function(m){
+        return [m.model, m.mape+"%", (m.vs_naive!=null?(m.vs_naive>0?"+":"")+m.vs_naive+"%":"—"), m.symbols];
+      });
+      v.appendChild(card("21-session forecast accuracy", "measured, not claimed",
+        [ para("Each model is scored by hiding the last 21 sessions and forecasting them from the earlier data. The number is the median miss it has actually produced.", false),
+          tbl({columns:["model","median error","vs naive","symbols"],rows:mrows},["median error","vs naive","symbols"]) ],
+        {what:"Walk-forward accuracy at a 21-session horizon, across every stock with enough history.",
+         source:"Computed from the 8-year split-adjusted archive.", updated:FORECAST.updated,
+         note:FORECAST.note}));
+
+      var fsym=Object.keys(FORECAST.symbols||{}).sort();
+      if(fsym.length){
+        var fdl=el("datalist"); fdl.id="fcList";
+        fsym.forEach(function(s){var o=el("option"); o.value=s; fdl.appendChild(o);});
+        var fi=el("input"); fi.type="text"; fi.setAttribute("list","fcList");
+        fi.placeholder="Type a symbol to see its 21-day path";
+        fi.style.cssText="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line);font:inherit;margin-bottom:10px;background:#fff";
+        var fOut=el("div");
+        function paintF(){
+          var s=(fi.value||"").trim().toUpperCase(); fOut.innerHTML="";
+          var r=(FORECAST.symbols||{})[s];
+          if(!s) return;
+          if(!r){ fOut.appendChild(para("No published path for \""+s+"\". Only the largest 40 are shown.", false)); return; }
+          fOut.appendChild(para("Best model for this stock: "+r.best_model+" (median error "+r.best_mape+"%).", false));
+          fOut.appendChild(tbl({columns:["date","forecast"],
+            rows:(r.path||[]).map(function(pt){return [pt.date, pt.yhat];})},["forecast"]));
+        }
+        fi.addEventListener("input", paintF);
+        v.appendChild(card("Forecast path", "next 21 sessions",
+          [fdl, fi, fOut],
+          {what:"The projected path, and which model has been least wrong for that stock.",
+           source:"Walk-forward validated, 21-session horizon.", updated:FORECAST.updated,
+           note:(FORECAST.cautions&&FORECAST.cautions.direction)||""}));
+      }
+    }
+
+    // ---- Telegram channel PCR -----------------------------------------------------------
+    // Kept visually separate from our own PCR. A channel post is somebody's claim, not an
+    // exchange figure, and the two are never mixed.
+    if(TGPCR&&TGPCR.channels){
+      var tch=Object.keys(TGPCR.channels);
+      var body=[];
+      tch.forEach(function(ch){
+        var c=TGPCR.channels[ch];
+        if(c.latest==null){ body.push(para("@"+ch+": no PCR found in the last "+c.messages_seen+" messages.", false)); return; }
+        body.push(para("@"+ch+" - latest PCR "+c.latest, false));
+        if(c.latest_text) body.push(para(c.latest_text, false));
+        if(c.readings&&c.readings.length>1){
+          body.push(tbl({columns:["pcr","post"],
+            rows:c.readings.slice(0,8).map(function(r){return [r.pcr, (r.text||"").slice(0,70)];})},["pcr"]));
+        }
+      });
+      if(body.length){
+        v.appendChild(card("Telegram PCR", "third party, unverified", body,
+          {what:"PCR as posted by a public Telegram channel, read from Telegram's own web preview.",
+           source:"Public channel preview. Not an exchange feed.", updated:TGPCR.updated,
+           note:TGPCR.note}));
+      }
+    }
+
     var deep=(STOCKS&&STOCKS.stocks)||{};
     var syms=Object.keys(deep).sort();
     if(!syms.length){
@@ -3486,6 +3551,8 @@ function assign(name, v){
     case "health.json": HEALTH=v; break;
     case "oi_strikes.json": OISTRIKES=v; break;
     case "gti.json": GTI=v; break;
+    case "forecast.json": FORECAST=v; break;
+    case "telegram_pcr.json": TGPCR=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3532,8 +3599,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json"];
 
 function renderAll(){
   if(!DATA) return;

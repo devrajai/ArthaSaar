@@ -63,13 +63,19 @@ def main():
         return 0
     print("  source:", path, len(df), "rows")
 
+    # BOTH NSE formats. It renamed every column in 2020:
+    #   legacy 2019: INSTRUMENT SYMBOL EXPIRY_DT STRIKE_PR OPTION_TYP OPEN_INT CHG_IN_OI
+    #   modern 2020+: FinInstrmTp TckrSymb XpryDt StrkPric OptnTp OpnIntrst ChngInOpnIntrst
+    # pick() normalises case and underscores, so "Symbol" already caught "SYMBOL" - but
+    # "OptnTp" never caught "OPTION_TYP" and "OpnIntrst" never caught "OPEN_INT". That is
+    # why this step reported "does not carry option type, open interest" and skipped.
     c_sym = pick(df, "TckrSymb", "Symbol")
     c_typ = pick(df, "FinInstrmTp", "Instrument")
-    c_str = pick(df, "StrkPric", "StrikePrice", "Strike")
-    c_opt = pick(df, "OptnTp", "OptionType")
-    c_oi = pick(df, "OpnIntrst", "OpenInterest")
-    c_chg = pick(df, "ChngInOpnIntrst", "ChangeinOpenInterest")
-    c_exp = pick(df, "XpryDt", "ExpiryDate", "Expiry")
+    c_str = pick(df, "StrkPric", "StrikePrice", "Strike", "STRIKE_PR")
+    c_opt = pick(df, "OptnTp", "OptionType", "OPTION_TYP")
+    c_oi = pick(df, "OpnIntrst", "OpenInterest", "OPEN_INT")
+    c_chg = pick(df, "ChngInOpnIntrst", "ChangeinOpenInterest", "CHG_IN_OI")
+    c_exp = pick(df, "XpryDt", "ExpiryDate", "Expiry", "EXPIRY_DT")
     c_px = pick(df, "UndrlygPric", "UnderlyingPrice", "ClsPric", "ClosePrice")
 
     missing = [n for n, c in (("symbol", c_sym), ("strike", c_str), ("option type", c_opt),

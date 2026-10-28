@@ -1430,6 +1430,73 @@ function build(d){
   /* ---------- STOCKS: the full NSE list and the screener, merged ---------- */
   (function(){
     var v=sec("stocks");
+    // ---- volume structure: POC, value area, zones, accumulation ------------------------
+    // These are levels where trading actually happened, computed from volume - not lines
+    // drawn by hand. The POC is the price with the most traded volume in the window, and the
+    // value area is the band holding 70% of it.
+    if(GTI&&GTI.stocks){
+      var gs=GTI.stocks, gsym=Object.keys(gs).sort();
+      var gdl=el("datalist"); gdl.id="gtiList";
+      gsym.forEach(function(s){var o=el("option"); o.value=s; gdl.appendChild(o);});
+
+      var gi=el("input"); gi.type="text"; gi.setAttribute("list","gtiList");
+      gi.placeholder="Type a symbol, e.g. RELIANCE";
+      gi.style.cssText="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line);font:inherit;margin-bottom:10px;background:#fff";
+      var gOut=el("div");
+      function paintG(){
+        var s=(gi.value||"").trim().toUpperCase();
+        gOut.innerHTML="";
+        if(!s) return;
+        var r=gs[s];
+        if(!r){ gOut.appendChild(para("No volume structure for \""+s+"\". Only the 250 most-traded stocks are covered.", false)); return; }
+        var rows=[
+          ["close",            r.close],
+          ["daily POC",        r.poc_daily],
+          ["weekly POC",       r.poc_weekly!=null?r.poc_weekly:"—"],
+          ["value area",       (r.val!=null&&r.vah!=null)?(r.val+" – "+r.vah):"—"],
+          ["accumulation",     r.ad_state||"—"],
+          ["20-day return",    r.ret20!=null?r.ret20+"%":"—"],
+          ["20-day volatility",r.vol20!=null?r.vol20+"%":"—"],
+          ["strength",         r.strength!=null?r.strength:"—"],
+          ["blue candles (20d)", r.candles.blue],
+          ["black candles (20d)",r.candles.black],
+          ["yellow candles (20d)",r.candles.yellow],
+        ];
+        gOut.appendChild(tbl({columns:["measure","value"],rows:rows},[]));
+        if(r.supply&&r.supply.length){
+          gOut.appendChild(para("Supply above (heavy-volume prices):", false));
+          gOut.appendChild(tbl({columns:["price","volume"],rows:r.supply.map(function(z){
+            return [z.price, z.volume];})},[]));
+        }
+        if(r.demand&&r.demand.length){
+          gOut.appendChild(para("Demand below (heavy-volume prices):", false));
+          gOut.appendChild(tbl({columns:["price","volume"],rows:r.demand.map(function(z){
+            return [z.price, z.volume];})},[]));
+        }
+      }
+      gi.addEventListener("input", paintG);
+      v.appendChild(card("Volume structure", "POC, value area, zones",
+        [gdl, gi, gOut],
+        {what:"Where trading actually happened. The POC is the price with the most volume; the value area holds 70% of it; supply and demand are the heaviest prices above and below.",
+         source:"8 years of NSE bhavcopy, split-adjusted.", updated:GTI.updated,
+         note:GTI.note}));
+
+      // strongest and weakest by risk-adjusted momentum
+      var ranked=gsym.filter(function(s){return gs[s].strength!=null;})
+                     .sort(function(a,b){return gs[b].strength-gs[a].strength;});
+      if(ranked.length>10){
+        var pick=ranked.slice(0,8).concat(ranked.slice(-8).reverse());
+        v.appendChild(card("Momentum and strength", "risk-adjusted, 20 sessions",
+          [ tbl({columns:["symbol","20d","vol","strength"],rows:pick.map(function(s){
+              var r=gs[s];
+              return [s, r.ret20+"%", r.vol20+"%", r.strength];})},
+             ["20d","vol","strength"]) ],
+          {what:"20-session return divided by realised volatility. Highest and lowest of the 250 most-traded stocks.",
+           source:"8 years of NSE bhavcopy, split-adjusted.", updated:GTI.updated,
+           note:"This is plain momentum and strength, not a copy of any commercial 'Gamma Ray' indicator."}));
+      }
+    }
+
     var uni=UNIVERSE, deep=(STOCKS&&STOCKS.stocks)||{};
 
     // ---- report card lookup + compare ------------------------------------------------
@@ -3418,6 +3485,7 @@ function assign(name, v){
     case "recap.json": RECAP=v; break;
     case "health.json": HEALTH=v; break;
     case "oi_strikes.json": OISTRIKES=v; break;
+    case "gti.json": GTI=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3464,8 +3532,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json"];
 
 function renderAll(){
   if(!DATA) return;

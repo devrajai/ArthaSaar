@@ -246,6 +246,10 @@ jobs:
       - name: "7m2h. Strike-wise OI (call/put walls for Nifty and Bank Nifty)"
         run: python scripts/build_oi_strikes.py || true
 
+      # Volume structure: POC, value area, supply/demand zones, accumulation, candle tags.
+      - name: "7m2i. Volume structure (POC, value area, zones, accumulation)"
+        run: python scripts/build_gti.py || true
+
       - name: "7m2c0. Benchmark history for the fund comparison (10y)"
         run: python scripts/fetch_yahoo.py --symbols "^NSEI" "^BSESN" "GC=F" --period 10y || true
 

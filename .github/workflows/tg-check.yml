@@ -1,0 +1,22 @@
+name: "Telegram reachability check"
+on:
+  workflow_dispatch: {}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Can a runner reach t.me?
+        run: |
+          echo "=== 1. plain fetch of a public preview ==="
+          for ch in telegram durov; do
+            code=$(curl -s -o /tmp/t.html -w '%{http_code}' -A "Mozilla/5.0" "https://t.me/s/$ch")
+            echo "  t.me/s/$ch -> HTTP $code, $(wc -c < /tmp/t.html) bytes"
+            grep -o 'tgme_widget_message_text' /tmp/t.html | head -1 && echo "    preview markup present"
+          done
+          echo
+          echo "=== 2. run the actual script against a public channel ==="
+          TELEGRAM_CHANNELS="telegram" python scripts/fetch_telegram_pcr.py || echo "script failed"
+          echo
+          echo "=== 3. what it produced ==="
+          head -c 400 docs/telegram_pcr.json 2>/dev/null || echo "no output file"

@@ -1,4 +1,4 @@
-name: "Telegram PCR check (@LIVEOPTIONDATA)"
+name: "Telegram channel diagnostic"
 on:
   workflow_dispatch: {}
 jobs:
@@ -6,28 +6,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch the real channel and parse PCR
-        env:
-          TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
+      - name: Where does it redirect, and is there any preview at all?
         run: |
-          curl -s -o /tmp/t.html -w 't.me/s/LIVEOPTIONDATA -> HTTP %{http_code}, %{size_download} bytes\n' \
-            -A "Mozilla/5.0" https://t.me/s/LIVEOPTIONDATA
-          echo "--- how many message bodies ---"
-          grep -o 'tgme_widget_message_text' /tmp/t.html | wc -l
-          echo "--- run the parser ---"
-          python scripts/fetch_telegram_pcr.py || echo "script failed"
-          echo "--- result ---"
-          python3 - <<'EOF'
-          import json
-          try:
-              d = json.load(open("docs/telegram_pcr.json"))
-              print("updated:", d.get("updated"))
-              for ch, c in (d.get("channels") or {}).items():
-                  print(f"@{ch}: {c.get('messages_seen')} messages, latest PCR = {c.get('latest')}")
-                  if c.get("latest_text"):
-                      print("   text:", c["latest_text"][:200])
-                  for r in (c.get("readings") or [])[:5]:
-                      print(f"   - {r['pcr']}: {r['text'][:90]}")
-          except Exception as e:
-              print("could not read output:", e)
-          EOF
+          for path in "s/LIVEOPTIONDATA" "s/liveoptiondata" "LIVEOPTIONDATA"; do
+            echo "=== t.me/$path ==="
+            curl -s -L -o /tmp/t.html -w '  final HTTP %{http_code} | %{size_download} bytes | url=%{url_effective}\n' \
+              -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0" "https://t.me/$path"
+            echo -n "  message bodies: "; grep -o 'tgme_widget_message_text' /tmp/t.html | wc -l
+            echo -n "  channel title: "; grep -o '<meta property="og:title" content="[^"]*"' /tmp/t.html | head -1
+            echo -n "  is it a private-channel page: "; grep -c 'tgme_page_extra' /tmp/t.html || true
+            echo -n "  mentions subscriber count: "; grep -o 'subscribers' /tmp/t.html | head -1 || echo none
+          done
+          echo
+          echo "=== also try the widget endpoint ==="
+          curl -s -o /tmp/w.html -w 'widget HTTP %{http_code} | %{size_download} bytes\n' \
+            -A "Mozilla/5.0" "https://t.me/s/LIVEOPTIONDATA"
+          grep -o 'tgme_widget_message_text' /tmp/w.html | wc -l

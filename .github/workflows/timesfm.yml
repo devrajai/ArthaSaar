@@ -4,9 +4,12 @@ name: TimesFM forecasts (FM3)
 # That fits a GitHub runner but not a small container, so this does not run inside the
 # daily pipeline. It runs on its own schedule and commits one JSON the site reads.
 #
-# The model cache (~1 GB) is stored on Google Drive so it is not re-downloaded from
-# HuggingFace every night. First run downloads from HF and saves it to Drive; every
-# later run restores it from Drive.
+# The checkpoint is ~1 GB. It is cached with actions/cache, which needs no credentials and
+# is scoped to this repo - so it downloads once and is restored on every later run.
+#
+# Google Drive is also supported, but only when GOOGLE_SA_JSON and ARTHASAAR_DRIVE_FOLDER
+# are set as repository secrets. Neither is set today, so the Drive mirror is skipped and
+# the run says so out loud instead of failing quietly.
 
 on:
   schedule:
@@ -43,12 +46,40 @@ jobs:
           pip install "timesfm" yfinance pandas pyarrow
           pip install google-api-python-client google-auth
 
-      - name: Restore the model cache from Google Drive
+      # THE CHECKPOINT IS ~1 GB. Without a cache it downloads from HuggingFace on every
+      # single run - run 17's log says "unauthenticated requests to the HF Hub" and then
+      # spends minutes pulling it again.
+      #
+      # Two caches, in order of preference:
+      #   1. actions/cache - works TODAY with no credentials, free, 10 GB per repo.
+      #   2. Google Drive   - only when GOOGLE_SA_JSON is set. Currently it is not, which is
+      #                       why this step has been skipping silently.
+      # actions/cache is the one that actually runs, and it is the better tool here: it is
+      # scoped to this repo and this key, so it cannot pick up a stale copy.
+      - name: Restore the TimesFM checkpoint (actions cache)
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.hf
+          key: timesfm-2.5-200m-pytorch-v1
+          restore-keys: |
+            timesfm-2.5-200m-pytorch-
+
+      - name: Restore the model cache from Google Drive (only if configured)
         if: env.HAS_DRIVE == 'true'
         env:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           ARTHASAAR_DRIVE_FOLDER: ${{ secrets.ARTHASAAR_DRIVE_FOLDER }}
         run: python scripts/timesfm_drive.py --pull || true
+
+      - name: Say plainly whether Drive is wired up
+        env:
+          HAS_DRIVE: ${{ secrets.GOOGLE_SA_JSON != '' && secrets.ARTHASAAR_DRIVE_FOLDER != '' }}
+        run: |
+          if [ "$HAS_DRIVE" = "true" ]; then
+            echo "Google Drive: configured - the checkpoint and forecasts are mirrored there."
+          else
+            echo "::notice title=Google Drive not configured::GOOGLE_SA_JSON is unset, so the Drive mirror is skipped. The actions cache above still prevents re-downloading the 1 GB checkpoint every run."
+          fi
 
       # THE MISSING PIECE. This workflow checked out the repo and went straight to the model,
       # but data/candles/ is gitignored - so the archive was empty and only the 13 Yahoo

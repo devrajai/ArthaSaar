@@ -242,6 +242,10 @@ jobs:
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 
+      # Strike-wise open interest: the shape of the option chain, not just max pain.
+      - name: "7m2h. Strike-wise OI (call/put walls for Nifty and Bank Nifty)"
+        run: python scripts/build_oi_strikes.py || true
+
       - name: "7m2c0. Benchmark history for the fund comparison (10y)"
         run: python scripts/fetch_yahoo.py --symbols "^NSEI" "^BSESN" "GC=F" --period 10y || true
 

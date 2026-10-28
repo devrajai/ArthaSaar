@@ -1782,6 +1782,46 @@ function build(d){
   /* ---------- F&O ---------- */
   (function(){
     var v=sec("fno");
+    // ---- strike-wise open interest ---------------------------------------------------
+    // Max pain and PCR are single numbers. The SHAPE is what traders read: a big call wall
+    // above spot is where sellers expect resistance, a big put wall below where they expect
+    // support. Drawn as two mirrored bars per strike.
+    if(OISTRIKES&&OISTRIKES.indices){
+      Object.keys(OISTRIKES.indices).forEach(function(sym){
+        var b=OISTRIKES.indices[sym]; if(!b||!b.strikes||!b.strikes.length) return;
+        var rows=b.strikes, maxOI=0;
+        rows.forEach(function(r){ maxOI=Math.max(maxOI, r.ce_oi||0, r.pe_oi||0); });
+        if(!maxOI) return;
+        // Square-root scale. On a linear scale one dominant strike flattened every other bar
+        // into a sliver, which defeats the point of showing the shape.
+        function w(v){ return Math.sqrt(Math.max(0,v)/maxOI); }
+
+        var W=360, RH=13, H=rows.length*RH+8;
+        var mid=W/2, svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">';
+        rows.forEach(function(r,i){
+          var y=i*RH+4;
+          var cw=w(r.ce_oi)*(mid-30), pw=w(r.pe_oi)*(mid-30);
+          svg+='<rect x="'+(mid-cw)+'" y="'+y+'" width="'+cw+'" height="'+(RH-3)+'" fill="#ef4444" opacity=".75" rx="2"/>';
+          svg+='<rect x="'+mid+'" y="'+y+'" width="'+pw+'" height="'+(RH-3)+'" fill="#16a34a" opacity=".75" rx="2"/>';
+          svg+='<text x="'+(mid-4)+'" y="'+(y+RH-5)+'" text-anchor="end" font-size="8" fill="#5a7391">'+(r.strike%1000===0?r.strike:r.strike)+'</text>';
+        });
+        svg+='</svg>';
+
+        // Build the container and fill it BEFORE appending. Hunting for it afterwards with
+        // querySelector("div:last-child") matched nothing, so the card appeared with its
+        // text and no chart.
+        var box=el("div");
+        box.innerHTML=svg;
+        v.appendChild(card(sym+" option chain", "expiry "+b.expiry+" · PCR "+b.pcr,
+          [ para("Spot "+num(b.spot)+" · call wall "+num(b.call_wall)+" · put wall "+num(b.put_wall)+
+                 " · calls "+num(b.total_ce_oi)+" vs puts "+num(b.total_pe_oi), false),
+            box ],
+          {what:"Call open interest (red, left) and put open interest (green, right) at every strike near the money. The longest bar on each side is the wall.",
+           source:"NSE F&O bhavcopy, nearest expiry.", updated:OISTRIKES.updated,
+           note:OISTRIKES.note}));
+      });
+    }
+
     if(d.fno){
       v.appendChild(card("F&O overview", d.fno.date||"",
         [ para("Stock futures: "+num(d.fno.stock_futures)+
@@ -3377,6 +3417,7 @@ function assign(name, v){
     case "market_stats.json": MSTATS=v; break;
     case "recap.json": RECAP=v; break;
     case "health.json": HEALTH=v; break;
+    case "oi_strikes.json": OISTRIKES=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3423,8 +3464,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json"];
 
 function renderAll(){
   if(!DATA) return;

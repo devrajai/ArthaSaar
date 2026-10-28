@@ -228,6 +228,12 @@ jobs:
       - name: "7z. Data health (every file, its age and row count)"
         run: python scripts/build_health.py || true
 
+      # AMFI's NAV file, kept for its ISINs. Both NSE's ETF list and AMFI carry an ISIN,
+      # which is an exact key - so the ETF premium stops guessing at names (that matched
+      # 2 of 356). Must run BEFORE the premium build.
+      - name: "7m2f. AMFI ISIN map (exact ETF -> scheme matching)"
+        run: python scripts/fetch_amfi_isin.py || true
+
       - name: "7m2g. ETF premium / discount to NAV"
         run: python scripts/build_etf_premium.py || true
 

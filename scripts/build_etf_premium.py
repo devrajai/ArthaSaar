@@ -59,14 +59,42 @@ def load_etf_list():
         with open(path, newline="", encoding="utf-8", errors="replace") as fh:
             for row in csv.DictReader(fh):
                 sym = (row.get("SYMBOL") or row.get("Symbol") or "").strip()
+                # NSE writes "SecurityName" with no space - without this the name comes back
+                # blank and every card shows an empty label even though the match worked.
                 nm = (row.get("NAME OF COMPANY") or row.get("Underlying")
-                      or row.get("Security Name") or row.get("NAME") or "").strip()
+                      or row.get("SecurityName") or row.get("Security Name")
+                      or row.get("NAME") or "").strip()
+                # NSE's ETF file carries ISINNumber. That is an exact key into AMFI, and it
+                # removes the need to guess whether two differently-worded names are the
+                # same fund - which only ever matched 2 of 356.
+                isin = (row.get("ISINNumber") or row.get("ISIN Number")
+                        or row.get("ISIN") or "").strip().upper() or None
                 if sym:
-                    out.append((sym, nm))
+                    out.append((sym, nm, isin))
         if out:
             print("  etf list: %d from %s" % (len(out), path))
             return out
     return []
+
+
+def load_amfi_isin():
+    """{ISIN: scheme_code} from AMFI's NAV file, written by fetch_amfi_isin.py."""
+    path = "data/amfi/navall.parquet"
+    if not os.path.exists(path):
+        return {}
+    try:
+        import pandas as pd
+        df = pd.read_parquet(path)
+    except Exception as e:
+        print("  amfi isin map unreadable (%s)" % type(e).__name__)
+        return {}
+    out = {}
+    for code, g, d in zip(df["code"], df["isin_growth"], df["isin_div"]):
+        for isin in (g, d):
+            if isinstance(isin, str) and isin.strip():
+                out[isin.strip().upper()] = str(code)
+    print("  amfi isin map: %d ISINs" % len(out))
+    return out
 
 
 def load_closes():
@@ -190,29 +218,39 @@ def main():
         return 0
 
     idx = build_index(schemes)
-    matched = dropped = no_price = 0
-    for sym, name in etfs:
+    isin_map = load_amfi_isin()
+    matched = dropped = no_price = by_isin = 0
+    for sym, name, isin in etfs:
         px = closes.get(sym)
         if px is None:
             no_price += 1
             continue
-        code, score = match(name, sym, idx)
+        # ISIN first: an exact join, no interpretation. Name scoring only runs when the
+        # ETF has no ISIN or AMFI has no scheme carrying it.
+        code, score = None, 0
+        if isin and isin in isin_map:
+            code, score = isin_map[isin], "isin"
+        if not code:
+            code, score = match(name, sym, idx)
         if not code:
             dropped += 1
             continue
         matched += 1
+        if score == "isin":
+            by_isin += 1
         out["rows"].append({"symbol": sym, "name": name, "close": round(px, 2),
                             "scheme_code": code, "match_tokens": score})
 
     out["count"] = len(out["rows"])
     out["matched"], out["dropped"], out["no_price"] = matched, dropped, no_price
+    out["matched_by_isin"] = by_isin
     if not out["count"]:
         out["note"] = ("No ETF could be matched to a published NAV with confidence "
                        "(%d dropped as ambiguous). A wrong premium is worse than none." % dropped)
     else:
-        out["note"] = ("%d ETFs matched to a published NAV. %d were dropped as ambiguous and "
-                       "%d had no close price. Only confident matches are shown."
-                       % (matched, dropped, no_price))
+        out["note"] = ("%d ETFs matched to a published NAV (%d by exact ISIN, %d by name). "
+                       "%d dropped as ambiguous, %d had no close price."
+                       % (matched, by_isin, matched - by_isin, dropped, no_price))
     os.makedirs("docs", exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False)

@@ -108,6 +108,25 @@ jobs:
               print("::warning title=No archive::TimesFM will only see the Yahoo indices")
           EOF
 
+      # THE SECOND MISSING PIECE, and run 18 proved it.
+      # After restoring the archive, run 18 still forecast only 13 series. Because
+      # timesfm_forecast.py reads data/candles/daily_adj.parquet - the SPLIT-ADJUSTED file -
+      # and restoring the archive only produces the raw daily.parquet. The adjusted file is
+      # written by corporate_actions.py, which the daily pipeline runs and this workflow
+      # never did.
+      #
+      # Adjustment is not optional for forecasting: an unadjusted 1:10 split reads as a 90%
+      # crash and would poison every prediction.
+      - name: Fetch and apply corporate actions (splits, bonuses)
+        run: |
+          python scripts/corporate_actions.py --fetch || echo "no corporate actions fetched"
+          python scripts/corporate_actions.py --adjust || echo "nothing to adjust"
+          python - <<'EOF'
+          import os
+          for p in ("data/candles/daily_adj.parquet", "data/candles/cm_daily_adj.parquet"):
+              print(f"{p}: {'%.0f MB' % (os.path.getsize(p)/1e6) if os.path.exists(p) else 'MISSING'}")
+          EOF
+
       - name: Run TimesFM forecasts
         env:
           OMP_NUM_THREADS: '2'

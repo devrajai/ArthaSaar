@@ -287,6 +287,11 @@ jobs:
       - name: "7m2l. Option-chain statistics (PCR extremes, max pain drift)"
         run: python scripts/build_oi_stats.py || true
 
+      # Option-writing walls at the previous close, plus whether their movement precedes
+      # anything. Daily only - the live intraday version needs a paid OI feed.
+      - name: "7m2m. Option-writing walls (daily) + shift test"
+        run: python scripts/build_oi_walls.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

@@ -1904,6 +1904,43 @@ function build(d){
   /* ---------- F&O ---------- */
   (function(){
     var v=sec("fno");
+    // ---- option-writing walls: daily, and tested ------------------------------------
+    // The guide this comes from is an INTRADAY indicator on 1-3 minute charts. That cannot
+    // be built free: our F&O source is the end-of-day bhavcopy, Yahoo serves intraday price
+    // but no option chain, and NSE's live chain is blocked outside India. So this is the
+    // daily version, and the card says so rather than implying otherwise.
+    (function(){
+     try{
+      if(!OIWALLS||!OIWALLS.wall_shifts) return;
+      var kids=[];
+      var ws=OIWALLS.wall_shifts;
+      Object.keys(ws).forEach(function(idx){
+        var s=ws[idx];
+        function cell(b,hz){
+          var v=s[b]&&s[b][hz];
+          if(!v||v[0]===null) return "too few";
+          return (v[0]>0?"+":"")+v[0]+"%";
+        }
+        kids.push(para(idx+" - "+s.days+" sessions", false));
+        kids.push(tbl({columns:["wall move","1 day","5 days","20 days"],rows:[
+          ["every day (baseline)", cell("baseline","1"), cell("baseline","5"), cell("baseline","20")],
+          ["call wall DOWN", cell("call_wall_down","1"), cell("call_wall_down","5"), cell("call_wall_down","20")],
+          ["call wall UP",   cell("call_wall_up","1"),   cell("call_wall_up","5"),   cell("call_wall_up","20")],
+          ["put wall UP",    cell("put_wall_up","1"),    cell("put_wall_up","5"),    cell("put_wall_up","20")],
+          ["put wall DOWN",  cell("put_wall_down","1"),  cell("put_wall_down","5"),  cell("put_wall_down","20")]
+        ]}));
+      });
+      kids.push(para("Put walls stepping up behaving bullishly matches the usual reading. "+
+        "Call walls stepping down also came out bullish here, which is the opposite of the "+
+        "guide's \"distribution\" reading - so treat that half of it as unconfirmed on our data.", false));
+      v.appendChild(card("Option-writing walls, tested", "daily, end of day", kids,
+        {what:"Where the largest call and put open interest sat at each close, and what the index did after the wall moved.",
+         source:"Our F&O history, 2019 onward, open interest summed across expiries.",
+         updated:OIWALLS.updated,
+         note:"END OF DAY ONLY. This is not the live intraday indicator from the original guide - that needs a paid strike-level OI feed. A historical tendency is not a prediction or a recommendation, and buckets under 20 cases are withheld."}));
+     }catch(e){}
+    })();
+
     // ---- PCR history, 2019 to today ---------------------------------------------------
     // The live chain above shows one day. This shows where that day sits against 1,930 of
     // them - which is the question a single number cannot answer. A PCR of 1.07 is not
@@ -3881,6 +3918,7 @@ function assign(name, v){
     case "telegram_pcr.json": TGPCR=v; break;
     case "oi_history.json": OIHIST=v; break;
     case "oi_stats.json": OISTATS=v; break;
+    case "oi_walls.json": OIWALLS=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -3927,8 +3965,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json"];
 
 function renderAll(){
   if(!DATA) return;

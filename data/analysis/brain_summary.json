@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-29T08:29:13Z",
+  "generated_at": "2026-10-29T14:51:53Z",
   "channels": 10,
-  "videos": 272,
+  "videos": 287,
   "window_start": "2026-06-25",
   "window_end": "2026-10-29",
-  "total_views": 11253472,
+  "total_views": 11323340,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 62,
+      "mentions": 66,
       "channels": 5
     },
     {
-      "symbol": "BANKNIFTY",
+      "symbol": "SENSEX",
       "mentions": 29,
       "channels": 4
     },
     {
-      "symbol": "SENSEX",
-      "mentions": 28,
+      "symbol": "BANKNIFTY",
+      "mentions": 29,
       "channels": 4
     },
     {
@@ -60,28 +60,28 @@
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 70
+      "videos": 75
     },
     {
       "theme": "Beginner/Education",
-      "videos": 60
-    },
-    {
-      "theme": "Earnings/Results",
-      "videos": 51
+      "videos": 65
     },
     {
       "theme": "IPO",
-      "videos": 51
+      "videos": 57
+    },
+    {
+      "theme": "Earnings/Results",
+      "videos": 52
     },
     {
       "theme": "Budget/Policy",
-      "videos": 47
+      "videos": 49
     },
     {
       "theme": "Options/F&O",
-      "videos": 43
+      "videos": 49
     }
   ],
-  "net_sentiment": 78
+  "net_sentiment": 102
 }

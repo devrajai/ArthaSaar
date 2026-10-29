@@ -883,7 +883,31 @@ function drawCandles(host, candles, intraday){
   var box=el("div","cwrap"); box.innerHTML=svg; host.appendChild(box);
 }
 function liveChart(host, sym){
-  var TF=[["1m","1d"],["5m","5d"],["15m","5d"],["60m","1mo"],["1d","1y"]];
+  // Every timeframe you asked for. Not all are native to Yahoo, so some are RESAMPLED from
+  // the nearest interval it does serve - that is what `agg` means: combine N source bars
+  // into one. 3m is 3x1m, 40m is 8x5m, 4h and 6h are 4x and 6x 60m, 1W is 5x1d, 1M is 21x1d.
+  //
+  // THE HONEST LIMITS, shown in the note under the chart:
+  //   1m  -> Yahoo keeps only 7 days of it
+  //   5m/15m/30m -> 60 days
+  //   1h  -> 730 days
+  //   1d and above -> full history
+  // So "1 minute chart of 2019" does not exist anywhere free. Intraday is recent-only; the
+  // multi-year view is daily and monthly, which the archive has back to 2019.
+  var TF=[
+    {l:"1m",  iv:"1m",  rng:"1d",  agg:1},
+    {l:"3m",  iv:"1m",  rng:"5d",  agg:3},
+    {l:"5m",  iv:"5m",  rng:"5d",  agg:1},
+    {l:"15m", iv:"15m", rng:"5d",  agg:1},
+    {l:"30m", iv:"30m", rng:"1mo", agg:1},
+    {l:"40m", iv:"5m",  rng:"1mo", agg:8},
+    {l:"1h",  iv:"60m", rng:"1mo", agg:1},
+    {l:"4h",  iv:"60m", rng:"3mo", agg:4},
+    {l:"6h",  iv:"60m", rng:"6mo", agg:6},
+    {l:"1D",  iv:"1d",  rng:"5y",  agg:1},
+    {l:"1W",  iv:"1d",  rng:"5y",  agg:5},
+    {l:"1M",  iv:"1d",  rng:"10y", agg:21}
+  ];
   var cur=0, timer=null;
   var bar=el("div","tf");
   var chartHost=el("div");
@@ -892,7 +916,7 @@ function liveChart(host, sym){
   host.appendChild(bar); host.appendChild(chartHost); host.appendChild(note);
 
   var btns=TF.map(function(tf,i){
-    var b=el("button","small",tf[0]);
+    var b=el("button","small",tf.l);
     b.addEventListener("click",function(){ cur=i; paintBtns(); load(); });
     bar.appendChild(b); return b;
   });
@@ -901,7 +925,7 @@ function liveChart(host, sym){
   paintBtns();
 
   function load(){
-    var iv=TF[cur][0], rng=TF[cur][1];
+    var iv=TF[cur].iv, rng=TF[cur].rng;
     status.className="live"; status.innerHTML="loading…";
     var base=CONFIG.proxy.replace(/\/+$/,"");
     var u=base+"/?symbol="+encodeURIComponent(sym)+"&interval="+iv+"&range="+rng;
@@ -914,6 +938,19 @@ function liveChart(host, sym){
         if(q.open[i]==null||q.close[i]==null||q.high[i]==null||q.low[i]==null) continue;
         out.push({t:ts[i],o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],v:(q.volume?q.volume[i]:null)});
       }
+      // combine N source bars into one, when the timeframe is not native
+      if(TF[cur].agg>1 && out.length){
+        var k=TF[cur].agg, merged=[];
+        for(var s=0;s<out.length;s+=k){
+          var grp=out.slice(s,s+k);
+          if(!grp.length) continue;
+          var hi=grp[0].h, lo=grp[0].l, vol=0;
+          grp.forEach(function(b){ hi=Math.max(hi,b.h); lo=Math.min(lo,b.l); vol+=(b.v||0); });
+          merged.push({t:grp[0].t, o:grp[0].o, h:hi, l:lo,
+                       c:grp[grp.length-1].c, v:vol});
+        }
+        out=merged;
+      }
       drawCandles(chartHost, out, iv!=="1d");
       var last=out.length?out[out.length-1].t:null;
       var lag=last?Math.round((Date.now()/1000-last)):null;
@@ -923,8 +960,14 @@ function liveChart(host, sym){
         ? ("<b>"+out.length+" bars</b> · last "+(last?fmtTime(last, iv!=="1d"):"—")+
            (lag!=null?" · "+lag+"s ago":""))
         : "no bars";
-      note.textContent = "Source: Yahoo Finance via the proxy. Yahoo caches intraday data for "+
-        "10 seconds, so that is the floor on freshness. 1-minute history is limited to 7 days.";
+      var limit={ "1m":"7 days of history", "1d":"full history", "5d":"60 days",
+                  "1mo":"60 days", "3mo":"730 days", "6mo":"730 days", "5y":"full history",
+                  "10y":"full history" }[rng] || rng;
+      var aggNote = TF[cur].agg>1 ? (" Built from "+TF[cur].agg+"x"+iv+" bars.") : "";
+      note.textContent = "Source: Yahoo Finance via the proxy. Yahoo keeps "+limit+
+        " at this interval, so this view starts where its data does - not at 2019."+aggNote+
+        " Intraday history is not available for free anywhere; the multi-year view is the "+
+        "1D / 1W / 1M buttons, which come from our own archive.";
     }).catch(function(e){
       status.className="live stale"; status.textContent="proxy error";
       chartHost.innerHTML="";

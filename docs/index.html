@@ -2721,6 +2721,38 @@ function build(d){
   (function(){
     var v=sec("tools");
 
+    // ---- one line of tool buttons, above the cards -------------------------------
+    // The three calculators were three stacked cards, so reaching the payoff builder meant
+    // scrolling past the other two. This row jumps straight to one, and stays a single line
+    // on a phone by scrolling sideways rather than wrapping.
+    (function(){
+      var row=el("div");
+      row.style.cssText="display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;"
+        +"padding:2px 0 10px;scrollbar-width:none";
+      var items=[["Position size","posSize","Position size and risk-reward"],
+                 ["Capital gains","capGains","Capital gains"],
+                 ["Option payoff","payoff","Option payoff builder"],
+                 ["Backtest","backtest","Backtest"]];
+      items.forEach(function(it){
+        var b=el("button","small",it[0]);
+        b.style.cssText="white-space:nowrap;flex:0 0 auto";
+        b.addEventListener("click",function(){
+          if(it[1]==="backtest"){ show("backtest"); return; }
+          // find the card by its heading text. No ids to add to the card() calls, so this
+          // cannot break their appendChild the way my first attempt did.
+          var all=v.querySelectorAll("*"), hit=null;
+          for(var i=0;i<all.length;i++){
+            var tx=(all[i].textContent||"").trim();
+            if(tx.indexOf(it[2])===0 && all[i].children.length===0){ hit=all[i]; break; }
+          }
+          while(hit && hit!==v && hit.parentNode && hit.parentNode!==v) hit=hit.parentNode;
+          if(hit && hit.scrollIntoView) hit.scrollIntoView({behavior:"smooth",block:"start"});
+        });
+        row.appendChild(b);
+      });
+      v.appendChild(row);
+    })();
+
     /* ---- 1. position size and risk/reward ---- */
     (function(){
       var cap=el("input"); cap.type="number"; cap.value="100000";

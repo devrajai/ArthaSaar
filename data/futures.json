@@ -1,1740 +1,1780 @@
 {
-  "date": "2026-10-27",
+  "date": "2026-10-28",
   "source": "nse-bhavcopy-fo",
   "stocks": [
     {
       "symbol": "IDEA",
-      "oi": 6456694125,
-      "oi_chg": 64256025,
-      "change_pct": 1.42,
-      "oi_pct": 1.01,
-      "buildup": "Long buildup"
+      "oi": 6263186025,
+      "oi_chg": -12318975,
+      "change_pct": -1.71,
+      "oi_pct": -0.2,
+      "buildup": null
     },
     {
       "symbol": "YESBANK",
-      "oi": 1445341400,
-      "oi_chg": 6033400,
-      "change_pct": -1.07,
-      "oi_pct": 0.42,
-      "buildup": null
-    },
-    {
-      "symbol": "SUZLON",
-      "oi": 475907100,
-      "oi_chg": 23418800,
-      "change_pct": -0.77,
-      "oi_pct": 5.18,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "IDFCFIRSTB",
-      "oi": 443345000,
-      "oi_chg": 2884525,
-      "change_pct": 0.27,
-      "oi_pct": 0.65,
-      "buildup": null
-    },
-    {
-      "symbol": "HDFCBANK",
-      "oi": 406337750,
-      "oi_chg": 2346500,
-      "change_pct": -1.12,
-      "oi_pct": 0.58,
-      "buildup": null
-    },
-    {
-      "symbol": "NMDC",
-      "oi": 376771500,
-      "oi_chg": 1910250,
-      "change_pct": 1.51,
-      "oi_pct": 0.51,
-      "buildup": null
-    },
-    {
-      "symbol": "TATASTEEL",
-      "oi": 349981500,
-      "oi_chg": 11695750,
-      "change_pct": 0.92,
-      "oi_pct": 3.46,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "CANBK",
-      "oi": 345546000,
-      "oi_chg": -5838750,
-      "change_pct": 0.44,
-      "oi_pct": -1.66,
-      "buildup": null
-    },
-    {
-      "symbol": "PNB",
-      "oi": 309696000,
-      "oi_chg": 22064000,
-      "change_pct": 0.06,
-      "oi_pct": 7.67,
-      "buildup": null
-    },
-    {
-      "symbol": "ADANIPOWER",
-      "oi": 246693050,
-      "oi_chg": -450850,
-      "change_pct": 0.69,
-      "oi_pct": -0.18,
-      "buildup": null
-    },
-    {
-      "symbol": "JIOFIN",
-      "oi": 232652350,
-      "oi_chg": -900050,
-      "change_pct": 1.06,
-      "oi_pct": -0.39,
-      "buildup": null
-    },
-    {
-      "symbol": "ITC",
-      "oi": 222966600,
-      "oi_chg": 455400,
-      "change_pct": -1.59,
-      "oi_pct": 0.2,
-      "buildup": null
-    },
-    {
-      "symbol": "WIPRO",
-      "oi": 192111000,
-      "oi_chg": 720000,
-      "change_pct": -0.99,
-      "oi_pct": 0.38,
-      "buildup": null
-    },
-    {
-      "symbol": "SAIL",
-      "oi": 188150400,
-      "oi_chg": -3910400,
-      "change_pct": 3.06,
-      "oi_pct": -2.04,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "KOTAKBANK",
-      "oi": 181994000,
-      "oi_chg": 15706000,
-      "change_pct": 0.13,
-      "oi_pct": 9.45,
-      "buildup": null
-    },
-    {
-      "symbol": "RELIANCE",
-      "oi": 163715500,
-      "oi_chg": 968000,
-      "change_pct": 0.07,
-      "oi_pct": 0.59,
-      "buildup": null
-    },
-    {
-      "symbol": "MOTHERSON",
-      "oi": 150281400,
-      "oi_chg": 264450,
-      "change_pct": 2.16,
-      "oi_pct": 0.18,
-      "buildup": null
-    },
-    {
-      "symbol": "BANKBARODA",
-      "oi": 150064200,
-      "oi_chg": 1564875,
-      "change_pct": 0.26,
-      "oi_pct": 1.05,
-      "buildup": null
-    },
-    {
-      "symbol": "ETERNAL",
-      "oi": 137667250,
-      "oi_chg": -1847850,
-      "change_pct": 1.54,
-      "oi_pct": -1.32,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "GMRAIRPORT",
-      "oi": 137177325,
-      "oi_chg": -383625,
-      "change_pct": 0.54,
-      "oi_pct": -0.28,
-      "buildup": null
-    },
-    {
-      "symbol": "IOC",
-      "oi": 133721250,
-      "oi_chg": 112125,
-      "change_pct": 0.11,
-      "oi_pct": 0.08,
-      "buildup": null
-    },
-    {
-      "symbol": "NHPC",
-      "oi": 132091700,
-      "oi_chg": -8687500,
-      "change_pct": 3.31,
-      "oi_pct": -6.17,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "ICICIBANK",
-      "oi": 130021500,
-      "oi_chg": 5196800,
-      "change_pct": -1.15,
-      "oi_pct": 4.16,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "BANDHANBNK",
-      "oi": 129826800,
-      "oi_chg": 3074400,
-      "change_pct": 1.13,
-      "oi_pct": 2.43,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "ASHOKLEY",
-      "oi": 123390000,
-      "oi_chg": 165000,
-      "change_pct": -0.34,
-      "oi_pct": 0.13,
-      "buildup": null
-    },
-    {
-      "symbol": "INOXWIND",
-      "oi": 122419200,
-      "oi_chg": 1382400,
-      "change_pct": -0.48,
-      "oi_pct": 1.14,
-      "buildup": null
-    },
-    {
-      "symbol": "PFC",
-      "oi": 120498300,
-      "oi_chg": 1739400,
-      "change_pct": -1.68,
-      "oi_pct": 1.46,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "SBIN",
-      "oi": 116871750,
-      "oi_chg": 3393750,
-      "change_pct": -0.82,
-      "oi_pct": 2.99,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "UNIONBANK",
-      "oi": 115377450,
-      "oi_chg": -1433700,
-      "change_pct": 0.65,
-      "oi_pct": -1.23,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "TMPV",
-      "oi": 109617600,
-      "oi_chg": 1920000,
-      "change_pct": -0.55,
-      "oi_pct": 1.78,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "FEDERALBNK",
-      "oi": 104577500,
-      "oi_chg": -135000,
-      "change_pct": 0.36,
-      "oi_pct": -0.13,
-      "buildup": null
-    },
-    {
-      "symbol": "AXISBANK",
-      "oi": 103953125,
-      "oi_chg": 660625,
-      "change_pct": -0.87,
-      "oi_pct": 0.64,
-      "buildup": null
-    },
-    {
-      "symbol": "IRFC",
-      "oi": 102499950,
-      "oi_chg": -8934975,
-      "change_pct": -1.19,
-      "oi_pct": -8.02,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "BEL",
-      "oi": 101640975,
-      "oi_chg": 1447800,
-      "change_pct": 0.76,
-      "oi_pct": 1.45,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "BHEL",
-      "oi": 95649750,
-      "oi_chg": -404250,
-      "change_pct": 0.24,
-      "oi_pct": -0.42,
-      "buildup": null
-    },
-    {
-      "symbol": "GAIL",
-      "oi": 90929700,
-      "oi_chg": 461500,
-      "change_pct": -0.69,
-      "oi_pct": 0.51,
-      "buildup": null
-    },
-    {
-      "symbol": "NTPC",
-      "oi": 90700500,
-      "oi_chg": -763500,
-      "change_pct": 1.16,
-      "oi_pct": -0.83,
-      "buildup": null
-    },
-    {
-      "symbol": "INDUSTOWER",
-      "oi": 89272100,
-      "oi_chg": -282200,
-      "change_pct": 0.75,
-      "oi_pct": -0.32,
-      "buildup": null
-    },
-    {
-      "symbol": "SAGILITY",
-      "oi": 87936000,
-      "oi_chg": -7236000,
-      "change_pct": 3.12,
-      "oi_pct": -7.6,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "NBCC",
-      "oi": 86151000,
-      "oi_chg": 409500,
-      "change_pct": 2.01,
-      "oi_pct": 0.48,
-      "buildup": null
-    },
-    {
-      "symbol": "COALINDIA",
-      "oi": 84709800,
-      "oi_chg": -348300,
-      "change_pct": -1.16,
-      "oi_pct": -0.41,
-      "buildup": null
-    },
-    {
-      "symbol": "INFY",
-      "oi": 82667600,
-      "oi_chg": 2159600,
-      "change_pct": -1.0,
-      "oi_pct": 2.68,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "AMBUJACEM",
-      "oi": 81667200,
-      "oi_chg": -6075600,
-      "change_pct": -6.45,
-      "oi_pct": -6.92,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "IREDA",
-      "oi": 77793800,
-      "oi_chg": -7896125,
-      "change_pct": -2.41,
-      "oi_pct": -9.21,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "CROMPTON",
-      "oi": 75527350,
-      "oi_chg": -1296450,
-      "change_pct": 1.62,
-      "oi_pct": -1.69,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "ONGC",
-      "oi": 75105000,
-      "oi_chg": 6405750,
-      "change_pct": -0.19,
-      "oi_pct": 9.32,
-      "buildup": null
-    },
-    {
-      "symbol": "SWIGGY",
-      "oi": 74308525,
-      "oi_chg": -3452900,
-      "change_pct": 2.15,
-      "oi_pct": -4.44,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "MANAPPURAM",
-      "oi": 73884000,
-      "oi_chg": 1890000,
-      "change_pct": -0.28,
-      "oi_pct": 2.63,
-      "buildup": null
-    },
-    {
-      "symbol": "VMM",
-      "oi": 73467800,
-      "oi_chg": 1057300,
-      "change_pct": 0.56,
-      "oi_pct": 1.46,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "BAJFINANCE",
-      "oi": 72921000,
-      "oi_chg": -99750,
-      "change_pct": -1.26,
-      "oi_pct": -0.14,
-      "buildup": null
-    },
-    {
-      "symbol": "VBL",
-      "oi": 72278475,
-      "oi_chg": 1357875,
-      "change_pct": 0.18,
-      "oi_pct": 1.91,
-      "buildup": null
-    },
-    {
-      "symbol": "TATAPOWER",
-      "oi": 68337050,
-      "oi_chg": -501700,
-      "change_pct": 0.38,
-      "oi_pct": -0.73,
-      "buildup": null
-    },
-    {
-      "symbol": "BHARTIARTL",
-      "oi": 68269850,
-      "oi_chg": 5683850,
-      "change_pct": 3.24,
-      "oi_pct": 9.08,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "BANKINDIA",
-      "oi": 66029600,
-      "oi_chg": -603200,
-      "change_pct": 3.56,
-      "oi_pct": -0.91,
-      "buildup": null
-    },
-    {
-      "symbol": "LTF",
-      "oi": 64710000,
-      "oi_chg": -4464000,
-      "change_pct": 0.06,
-      "oi_pct": -6.45,
-      "buildup": null
-    },
-    {
-      "symbol": "POWERGRID",
-      "oi": 63993900,
-      "oi_chg": -3393400,
-      "change_pct": 1.7,
-      "oi_pct": -5.04,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "IEX",
-      "oi": 63592650,
-      "oi_chg": -2553450,
-      "change_pct": -0.71,
-      "oi_pct": -3.86,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "HINDALCO",
-      "oi": 63072800,
-      "oi_chg": 2070600,
-      "change_pct": 0.01,
-      "oi_pct": 3.39,
-      "buildup": null
-    },
-    {
-      "symbol": "VEDL",
-      "oi": 61223700,
-      "oi_chg": 701500,
-      "change_pct": 0.35,
-      "oi_pct": 1.16,
-      "buildup": null
-    },
-    {
-      "symbol": "BIOCON",
-      "oi": 58422500,
-      "oi_chg": 1195000,
-      "change_pct": 1.45,
-      "oi_pct": 2.09,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "UJJIVANSFB",
-      "oi": 53528000,
-      "oi_chg": 1144000,
-      "change_pct": -0.2,
-      "oi_pct": 2.18,
-      "buildup": null
-    },
-    {
-      "symbol": "RBLBANK",
-      "oi": 52930425,
-      "oi_chg": -1730375,
-      "change_pct": 0.56,
-      "oi_pct": -3.17,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "LICI",
-      "oi": 52778600,
-      "oi_chg": -456400,
-      "change_pct": 0.48,
-      "oi_pct": -0.86,
-      "buildup": null
-    },
-    {
-      "symbol": "INDUSINDBK",
-      "oi": 51538900,
-      "oi_chg": 3948700,
-      "change_pct": -0.36,
-      "oi_pct": 8.3,
-      "buildup": null
-    },
-    {
-      "symbol": "ANGELONE",
-      "oi": 47520000,
-      "oi_chg": 502500,
-      "change_pct": 2.07,
-      "oi_pct": 1.07,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "BPCL",
-      "oi": 47184725,
-      "oi_chg": -507575,
-      "change_pct": 1.27,
-      "oi_pct": -1.06,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "RECLTD",
-      "oi": 46191600,
-      "oi_chg": -177975,
-      "change_pct": -3.55,
-      "oi_pct": -0.38,
-      "buildup": null
-    },
-    {
-      "symbol": "NATIONALUM",
-      "oi": 45463125,
-      "oi_chg": 2880000,
-      "change_pct": 0.24,
-      "oi_pct": 6.76,
-      "buildup": null
-    },
-    {
-      "symbol": "JSWSTEEL",
-      "oi": 43882425,
-      "oi_chg": 1244700,
-      "change_pct": 0.87,
-      "oi_pct": 2.92,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "HINDPETRO",
-      "oi": 42375150,
-      "oi_chg": 218700,
-      "change_pct": 2.04,
-      "oi_pct": 0.52,
-      "buildup": null
-    },
-    {
-      "symbol": "HDFCLIFE",
-      "oi": 41797800,
-      "oi_chg": 344300,
-      "change_pct": -0.95,
-      "oi_pct": 0.83,
-      "buildup": null
-    },
-    {
-      "symbol": "NYKAA",
-      "oi": 38665625,
-      "oi_chg": -681250,
-      "change_pct": 2.13,
-      "oi_pct": -1.73,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "LICHSGFIN",
-      "oi": 38431000,
-      "oi_chg": -509000,
-      "change_pct": 2.58,
-      "oi_pct": -1.31,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "PATANJALI",
-      "oi": 38264625,
-      "oi_chg": 235425,
-      "change_pct": -1.11,
-      "oi_pct": 0.62,
-      "buildup": null
-    },
-    {
-      "symbol": "ABCAPITAL",
-      "oi": 38061800,
-      "oi_chg": -409200,
-      "change_pct": -0.08,
-      "oi_pct": -1.06,
-      "buildup": null
-    },
-    {
-      "symbol": "MAHABANK",
-      "oi": 37583000,
-      "oi_chg": -1677000,
-      "change_pct": 4.26,
-      "oi_pct": -4.27,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "DLF",
-      "oi": 37037650,
-      "oi_chg": -654550,
-      "change_pct": 1.12,
-      "oi_pct": -1.74,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "RVNL",
-      "oi": 34986875,
-      "oi_chg": -2966425,
-      "change_pct": -0.14,
-      "oi_pct": -7.82,
-      "buildup": null
-    },
-    {
-      "symbol": "UPL",
-      "oi": 34519980,
-      "oi_chg": 1750660,
-      "change_pct": 2.16,
-      "oi_pct": 5.34,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "DELHIVERY",
-      "oi": 32604475,
-      "oi_chg": 504225,
-      "change_pct": 1.57,
-      "oi_pct": 1.57,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "JSWENERGY",
-      "oi": 31725400,
-      "oi_chg": -932025,
-      "change_pct": 4.29,
-      "oi_pct": -2.85,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "SHRIRAMFIN",
-      "oi": 30876450,
-      "oi_chg": 636075,
-      "change_pct": -0.54,
-      "oi_pct": 2.1,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "PETRONET",
-      "oi": 29453800,
-      "oi_chg": -74100,
-      "change_pct": 0.67,
-      "oi_pct": -0.25,
-      "buildup": null
-    },
-    {
-      "symbol": "AUBANK",
-      "oi": 28522000,
-      "oi_chg": 1002000,
-      "change_pct": -1.42,
-      "oi_pct": 3.64,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "DABUR",
-      "oi": 27790000,
-      "oi_chg": 1736250,
-      "change_pct": 0.82,
-      "oi_pct": 6.66,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "HINDZINC",
-      "oi": 27433875,
-      "oi_chg": 956725,
-      "change_pct": -0.39,
-      "oi_pct": 3.61,
-      "buildup": null
-    },
-    {
-      "symbol": "CONCOR",
-      "oi": 26058750,
-      "oi_chg": 453750,
-      "change_pct": 1.49,
-      "oi_pct": 1.77,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "TCS",
-      "oi": 24570675,
-      "oi_chg": 882675,
-      "change_pct": -1.5,
-      "oi_pct": 3.73,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "ADANIGREEN",
-      "oi": 23670600,
-      "oi_chg": 135600,
-      "change_pct": 3.13,
-      "oi_pct": 0.58,
-      "buildup": null
-    },
-    {
-      "symbol": "ADANIENSOL",
-      "oi": 23394825,
-      "oi_chg": 89775,
-      "change_pct": 4.1,
-      "oi_pct": 0.39,
-      "buildup": null
-    },
-    {
-      "symbol": "CGPOWER",
-      "oi": 23360550,
-      "oi_chg": -126650,
-      "change_pct": -0.04,
-      "oi_pct": -0.54,
-      "buildup": null
-    },
-    {
-      "symbol": "KALYANKJIL",
-      "oi": 22993200,
-      "oi_chg": 788400,
-      "change_pct": -0.81,
-      "oi_pct": 3.55,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "INDHOTEL",
-      "oi": 22649000,
-      "oi_chg": -3019000,
-      "change_pct": 2.19,
-      "oi_pct": -11.76,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "HCLTECH",
-      "oi": 21678000,
-      "oi_chg": -338800,
-      "change_pct": -0.79,
-      "oi_pct": -1.54,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "HINDUNILVR",
-      "oi": 21113700,
-      "oi_chg": 1614300,
-      "change_pct": 0.21,
-      "oi_pct": 8.28,
-      "buildup": null
-    },
-    {
-      "symbol": "ICICILIFE",
-      "oi": 20658025,
-      "oi_chg": -1383800,
-      "change_pct": -2.3,
-      "oi_pct": -6.28,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "LAURUSLABS",
-      "oi": 20546200,
-      "oi_chg": 243950,
-      "change_pct": 3.62,
-      "oi_pct": 1.2,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "JUBLFOOD",
-      "oi": 20245000,
-      "oi_chg": -2073750,
-      "change_pct": 1.22,
-      "oi_pct": -9.29,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "TECHM",
-      "oi": 19917600,
-      "oi_chg": 780600,
-      "change_pct": -0.14,
-      "oi_pct": 4.08,
-      "buildup": null
-    },
-    {
-      "symbol": "ADANIENT",
-      "oi": 19225362,
-      "oi_chg": 1209426,
-      "change_pct": -1.46,
-      "oi_pct": 6.71,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "SBICARD",
-      "oi": 19179200,
-      "oi_chg": 228800,
-      "change_pct": -1.43,
-      "oi_pct": 1.21,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "DRREDDY",
-      "oi": 18838750,
-      "oi_chg": -31875,
-      "change_pct": -0.57,
-      "oi_pct": -0.17,
-      "buildup": null
-    },
-    {
-      "symbol": "SUNPHARMA",
-      "oi": 17900400,
-      "oi_chg": -264250,
-      "change_pct": 0.76,
-      "oi_pct": -1.45,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "APLAPOLLO",
-      "oi": 17742900,
-      "oi_chg": -695450,
-      "change_pct": 5.95,
-      "oi_pct": -3.77,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "PAYTM",
-      "oi": 17585600,
-      "oi_chg": 1666775,
-      "change_pct": -3.39,
-      "oi_pct": 10.47,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "POLICYBZR",
-      "oi": 17484600,
-      "oi_chg": 98350,
-      "change_pct": -2.17,
-      "oi_pct": 0.57,
-      "buildup": null
-    },
-    {
-      "symbol": "JINDALSTEL",
-      "oi": 16751250,
-      "oi_chg": -167500,
-      "change_pct": 1.6,
-      "oi_pct": -0.99,
-      "buildup": null
-    },
-    {
-      "symbol": "TATACONSUM",
-      "oi": 16640800,
-      "oi_chg": -943250,
-      "change_pct": 6.39,
-      "oi_pct": -5.36,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "ADANIPORTS",
-      "oi": 15603750,
-      "oi_chg": 259825,
-      "change_pct": 0.38,
-      "oi_pct": 1.69,
-      "buildup": null
-    },
-    {
-      "symbol": "M&M",
-      "oi": 15506400,
-      "oi_chg": -178400,
-      "change_pct": -0.31,
-      "oi_pct": -1.14,
-      "buildup": null
-    },
-    {
-      "symbol": "MARICO",
-      "oi": 15452400,
-      "oi_chg": -656400,
-      "change_pct": 0.65,
-      "oi_pct": -4.07,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "LT",
-      "oi": 15291675,
-      "oi_chg": 198800,
-      "change_pct": 0.06,
-      "oi_pct": 1.32,
-      "buildup": null
-    },
-    {
-      "symbol": "SONACOMS",
-      "oi": 15012375,
-      "oi_chg": -3777900,
-      "change_pct": 8.23,
-      "oi_pct": -20.11,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "PREMIERENE",
-      "oi": 14779700,
-      "oi_chg": -664950,
-      "change_pct": 0.62,
-      "oi_pct": -4.31,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "NAUKRI",
-      "oi": 14589850,
-      "oi_chg": 149050,
-      "change_pct": 1.16,
-      "oi_pct": 1.03,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "AUROPHARMA",
-      "oi": 14520000,
-      "oi_chg": 47300,
-      "change_pct": 1.93,
-      "oi_pct": 0.33,
-      "buildup": null
-    },
-    {
-      "symbol": "OIL",
-      "oi": 14084000,
-      "oi_chg": -54600,
-      "change_pct": -0.41,
-      "oi_pct": -0.39,
-      "buildup": null
-    },
-    {
-      "symbol": "CHOLAFIN",
-      "oi": 14079375,
-      "oi_chg": -18750,
-      "change_pct": 1.52,
-      "oi_pct": -0.13,
-      "buildup": null
-    },
-    {
-      "symbol": "MAXHEALTH",
-      "oi": 14067900,
-      "oi_chg": 212625,
-      "change_pct": -0.12,
-      "oi_pct": 1.53,
-      "buildup": null
-    },
-    {
-      "symbol": "VOLTAS",
-      "oi": 13776750,
-      "oi_chg": 1929750,
-      "change_pct": -0.19,
-      "oi_pct": 16.29,
-      "buildup": null
-    },
-    {
-      "symbol": "PGEL",
-      "oi": 13754100,
-      "oi_chg": 531050,
-      "change_pct": 5.56,
-      "oi_pct": 4.02,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "NESTLEIND",
-      "oi": 13333500,
-      "oi_chg": -69500,
-      "change_pct": 0.29,
-      "oi_pct": -0.52,
-      "buildup": null
-    },
-    {
-      "symbol": "FORTIS",
-      "oi": 12920800,
-      "oi_chg": 60450,
-      "change_pct": -0.1,
+      "oi": 1343177900,
+      "oi_chg": 6344400,
+      "change_pct": -1.61,
       "oi_pct": 0.47,
       "buildup": null
     },
     {
-      "symbol": "BSE",
-      "oi": 12569200,
-      "oi_chg": -195400,
-      "change_pct": 2.27,
-      "oi_pct": -1.53,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "KPITTECH",
-      "oi": 11823400,
-      "oi_chg": 757175,
-      "change_pct": -0.77,
-      "oi_pct": 6.84,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "CDSL",
-      "oi": 11710650,
-      "oi_chg": 502550,
-      "change_pct": 1.61,
-      "oi_pct": 4.48,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "COFORGE",
-      "oi": 11377200,
-      "oi_chg": -730075,
-      "change_pct": -1.32,
-      "oi_pct": -6.03,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "HAVELLS",
-      "oi": 11282000,
-      "oi_chg": -370000,
-      "change_pct": -0.36,
-      "oi_pct": -3.18,
+      "symbol": "SUZLON",
+      "oi": 462013300,
+      "oi_chg": 3441700,
+      "change_pct": 1.23,
+      "oi_pct": 0.75,
       "buildup": null
     },
     {
-      "symbol": "GLENMARK",
-      "oi": 11170125,
-      "oi_chg": 66750,
-      "change_pct": 2.16,
-      "oi_pct": 0.6,
+      "symbol": "IDFCFIRSTB",
+      "oi": 429413950,
+      "oi_chg": -231875,
+      "change_pct": 2.04,
+      "oi_pct": -0.05,
       "buildup": null
     },
     {
-      "symbol": "CIPLA",
-      "oi": 11093775,
-      "oi_chg": -203575,
-      "change_pct": -1.16,
-      "oi_pct": -1.8,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "ZYDUSLIFE",
-      "oi": 10297800,
-      "oi_chg": -407700,
-      "change_pct": 0.8,
-      "oi_pct": -3.81,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "GODREJCP",
-      "oi": 10297000,
-      "oi_chg": 557500,
-      "change_pct": -0.22,
-      "oi_pct": 5.72,
+      "symbol": "HDFCBANK",
+      "oi": 384715650,
+      "oi_chg": 2106800,
+      "change_pct": 0.69,
+      "oi_pct": 0.55,
       "buildup": null
     },
     {
-      "symbol": "CAMS",
-      "oi": 10213500,
-      "oi_chg": 174900,
-      "change_pct": 2.51,
-      "oi_pct": 1.74,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "GODREJPROP",
-      "oi": 10069800,
-      "oi_chg": -73125,
-      "change_pct": 3.44,
-      "oi_pct": -0.72,
+      "symbol": "NMDC",
+      "oi": 361509750,
+      "oi_chg": 614250,
+      "change_pct": -0.35,
+      "oi_pct": 0.17,
       "buildup": null
     },
     {
-      "symbol": "INDIANB",
-      "oi": 9984000,
-      "oi_chg": 113000,
-      "change_pct": 0.96,
-      "oi_pct": 1.14,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "PNBHOUSING",
-      "oi": 9576450,
-      "oi_chg": -1300,
-      "change_pct": -0.65,
-      "oi_pct": -0.01,
-      "buildup": null
-    },
-    {
-      "symbol": "BAJAJFINSV",
-      "oi": 8981100,
-      "oi_chg": -127800,
-      "change_pct": 0.2,
-      "oi_pct": -1.4,
-      "buildup": null
-    },
-    {
-      "symbol": "TRENT",
-      "oi": 8795250,
-      "oi_chg": -33750,
-      "change_pct": 2.06,
-      "oi_pct": -0.38,
-      "buildup": null
-    },
-    {
-      "symbol": "MFSL",
-      "oi": 8485600,
-      "oi_chg": 352400,
-      "change_pct": -0.04,
-      "oi_pct": 4.33,
-      "buildup": null
-    },
-    {
-      "symbol": "BHARATFORG",
-      "oi": 8370500,
-      "oi_chg": -217000,
-      "change_pct": 1.82,
-      "oi_pct": -2.53,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "MUTHOOTFIN",
-      "oi": 8334975,
-      "oi_chg": 296725,
-      "change_pct": 0.31,
-      "oi_pct": 3.69,
-      "buildup": null
-    },
-    {
-      "symbol": "UNITDSPR",
-      "oi": 8303600,
-      "oi_chg": 918400,
-      "change_pct": 2.26,
-      "oi_pct": 12.44,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "TVSMOTOR",
-      "oi": 8218175,
-      "oi_chg": 628075,
-      "change_pct": 1.73,
-      "oi_pct": 8.27,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "HDFCAMC",
-      "oi": 8214300,
-      "oi_chg": 290700,
-      "change_pct": 0.47,
-      "oi_pct": 3.67,
-      "buildup": null
-    },
-    {
-      "symbol": "WAAREEENER",
-      "oi": 8129800,
-      "oi_chg": 401975,
-      "change_pct": -2.51,
-      "oi_pct": 5.2,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "SBILIFE",
-      "oi": 8055375,
-      "oi_chg": -183000,
-      "change_pct": -0.05,
-      "oi_pct": -2.22,
-      "buildup": null
-    },
-    {
-      "symbol": "ANANDRATHI",
-      "oi": 7723500,
-      "oi_chg": 108250,
-      "change_pct": 1.3,
-      "oi_pct": 1.42,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "MCX",
-      "oi": 7596000,
-      "oi_chg": -272025,
-      "change_pct": 1.34,
-      "oi_pct": -3.46,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "LUPIN",
-      "oi": 7594750,
-      "oi_chg": 7650,
-      "change_pct": -0.03,
+      "symbol": "CANBK",
+      "oi": 331074000,
+      "oi_chg": 330750,
+      "change_pct": -0.23,
       "oi_pct": 0.1,
       "buildup": null
     },
     {
-      "symbol": "ICICIGI",
-      "oi": 7470125,
-      "oi_chg": 85150,
-      "change_pct": 0.02,
-      "oi_pct": 1.15,
+      "symbol": "TATASTEEL",
+      "oi": 328682750,
+      "oi_chg": 2439250,
+      "change_pct": -1.53,
+      "oi_pct": 0.75,
       "buildup": null
     },
     {
-      "symbol": "BDL",
-      "oi": 7307875,
-      "oi_chg": 553775,
-      "change_pct": -3.36,
-      "oi_pct": 8.2,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "COLPAL",
-      "oi": 7183550,
-      "oi_chg": 280775,
-      "change_pct": -1.07,
-      "oi_pct": 4.07,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "LODHA",
-      "oi": 7168125,
-      "oi_chg": -58750,
-      "change_pct": 2.88,
-      "oi_pct": -0.81,
+      "symbol": "PNB",
+      "oi": 272960000,
+      "oi_chg": 88000,
+      "change_pct": 0.11,
+      "oi_pct": 0.03,
       "buildup": null
     },
     {
-      "symbol": "GRASIM",
-      "oi": 7155750,
-      "oi_chg": 56250,
-      "change_pct": -0.89,
+      "symbol": "ADANIPOWER",
+      "oi": 226845000,
+      "oi_chg": 1775000,
+      "change_pct": -2.12,
       "oi_pct": 0.79,
       "buildup": null
     },
     {
-      "symbol": "ASIANPAINT",
-      "oi": 7129250,
-      "oi_chg": -16750,
-      "change_pct": -1.6,
-      "oi_pct": -0.23,
+      "symbol": "JIOFIN",
+      "oi": 221917550,
+      "oi_chg": 1830650,
+      "change_pct": -0.87,
+      "oi_pct": 0.83,
       "buildup": null
     },
     {
-      "symbol": "BLUESTARCO",
-      "oi": 6656000,
-      "oi_chg": -600925,
-      "change_pct": 2.21,
-      "oi_pct": -8.28,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "INDIGO",
-      "oi": 6627150,
-      "oi_chg": 57600,
-      "change_pct": 0.08,
-      "oi_pct": 0.88,
+      "symbol": "ITC",
+      "oi": 202615925,
+      "oi_chg": 1962200,
+      "change_pct": -0.36,
+      "oi_pct": 0.98,
       "buildup": null
     },
     {
-      "symbol": "MAZDOCK",
-      "oi": 6575625,
-      "oi_chg": 417150,
-      "change_pct": -6.81,
-      "oi_pct": 6.77,
+      "symbol": "SAIL",
+      "oi": 185236400,
+      "oi_chg": -155100,
+      "change_pct": -1.65,
+      "oi_pct": -0.08,
+      "buildup": null
+    },
+    {
+      "symbol": "WIPRO",
+      "oi": 169761000,
+      "oi_chg": 2427000,
+      "change_pct": -2.17,
+      "oi_pct": 1.45,
       "buildup": "Short buildup"
     },
     {
-      "symbol": "COCHINSHIP",
-      "oi": 6476800,
-      "oi_chg": 159200,
-      "change_pct": -1.61,
-      "oi_pct": 2.52,
+      "symbol": "RELIANCE",
+      "oi": 163530500,
+      "oi_chg": 7705000,
+      "change_pct": -3.54,
+      "oi_pct": 4.94,
       "buildup": "Short buildup"
     },
     {
-      "symbol": "CUMMINSIND",
-      "oi": 6316000,
-      "oi_chg": -102200,
-      "change_pct": 3.05,
-      "oi_pct": -1.59,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "MOTILALOFS",
-      "oi": 6302300,
-      "oi_chg": 363475,
-      "change_pct": 4.11,
-      "oi_pct": 6.12,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "360ONE",
-      "oi": 6185000,
-      "oi_chg": 161500,
-      "change_pct": -0.98,
-      "oi_pct": 2.68,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "TITAN",
-      "oi": 6115900,
-      "oi_chg": -42175,
-      "change_pct": 0.59,
-      "oi_pct": -0.68,
+      "symbol": "KOTAKBANK",
+      "oi": 152930000,
+      "oi_chg": 362000,
+      "change_pct": -0.55,
+      "oi_pct": 0.24,
       "buildup": null
     },
     {
-      "symbol": "PRESTIGE",
-      "oi": 6011100,
-      "oi_chg": 450,
-      "change_pct": 0.93,
-      "oi_pct": 0.01,
-      "buildup": null
-    },
-    {
-      "symbol": "ATHERENERG",
-      "oi": 5941125,
-      "oi_chg": -801750,
-      "change_pct": 6.01,
-      "oi_pct": -11.89,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "DMART",
-      "oi": 5788200,
-      "oi_chg": -95700,
+      "symbol": "MOTHERSON",
+      "oi": 144383550,
+      "oi_chg": 135300,
       "change_pct": 1.22,
-      "oi_pct": -1.63,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "HYUNDAI",
-      "oi": 5540975,
-      "oi_chg": -133650,
-      "change_pct": -0.57,
-      "oi_pct": -2.36,
-      "buildup": "Long unwinding"
-    },
-    {
-      "symbol": "NAM-INDIA",
-      "oi": 5515625,
-      "oi_chg": 189375,
-      "change_pct": 2.34,
-      "oi_pct": 3.56,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "DIVISLAB",
-      "oi": 5439700,
-      "oi_chg": -16700,
-      "change_pct": 4.2,
-      "oi_pct": -0.31,
+      "oi_pct": 0.09,
       "buildup": null
     },
     {
-      "symbol": "ASTRAL",
-      "oi": 5431075,
-      "oi_chg": 42075,
-      "change_pct": 0.35,
-      "oi_pct": 0.78,
+      "symbol": "BANKBARODA",
+      "oi": 140791950,
+      "oi_chg": 833625,
+      "change_pct": 0.11,
+      "oi_pct": 0.6,
       "buildup": null
     },
     {
-      "symbol": "HAL",
-      "oi": 5421900,
-      "oi_chg": 250500,
-      "change_pct": 0.56,
-      "oi_pct": 4.84,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "UNOMINDA",
-      "oi": 5359750,
-      "oi_chg": 4400,
-      "change_pct": 1.14,
-      "oi_pct": 0.08,
-      "buildup": null
-    },
-    {
-      "symbol": "PIDILITIND",
-      "oi": 5318000,
-      "oi_chg": 101500,
-      "change_pct": -1.31,
-      "oi_pct": 1.95,
-      "buildup": "Short buildup"
-    },
-    {
-      "symbol": "OBEROIRLTY",
-      "oi": 4642750,
-      "oi_chg": 24500,
-      "change_pct": 1.56,
-      "oi_pct": 0.53,
-      "buildup": null
-    },
-    {
-      "symbol": "KFINTECH",
-      "oi": 4508575,
-      "oi_chg": -945875,
-      "change_pct": 4.15,
-      "oi_pct": -17.34,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "MPHASIS",
-      "oi": 4494875,
-      "oi_chg": -66275,
-      "change_pct": -0.26,
-      "oi_pct": -1.45,
-      "buildup": null
-    },
-    {
-      "symbol": "SRF",
-      "oi": 4492200,
-      "oi_chg": 56000,
-      "change_pct": -0.11,
-      "oi_pct": 1.26,
-      "buildup": null
-    },
-    {
-      "symbol": "PIIND",
-      "oi": 4391800,
-      "oi_chg": -182000,
-      "change_pct": 3.24,
-      "oi_pct": -3.98,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "LTM",
-      "oi": 4188900,
-      "oi_chg": -222750,
-      "change_pct": -0.25,
-      "oi_pct": -5.05,
-      "buildup": null
-    },
-    {
-      "symbol": "PERSISTENT",
-      "oi": 4176000,
-      "oi_chg": 158500,
-      "change_pct": -0.43,
-      "oi_pct": 3.95,
-      "buildup": null
-    },
-    {
-      "symbol": "TIINDIA",
-      "oi": 4111000,
-      "oi_chg": 25800,
-      "change_pct": 1.27,
-      "oi_pct": 0.63,
-      "buildup": null
-    },
-    {
-      "symbol": "TORNTPHARM",
-      "oi": 4030875,
-      "oi_chg": 91750,
-      "change_pct": 1.17,
-      "oi_pct": 2.33,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "PHOENIXLTD",
-      "oi": 3717700,
-      "oi_chg": -11550,
-      "change_pct": -0.04,
-      "oi_pct": -0.31,
-      "buildup": null
-    },
-    {
-      "symbol": "HEROMOTOCO",
-      "oi": 3654150,
-      "oi_chg": -500250,
-      "change_pct": 0.56,
-      "oi_pct": -12.04,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "MANKIND",
-      "oi": 3613500,
-      "oi_chg": -233750,
-      "change_pct": 8.69,
-      "oi_pct": -6.08,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "SIEMENS",
-      "oi": 3567550,
-      "oi_chg": -160125,
-      "change_pct": 1.78,
-      "oi_pct": -4.3,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "KAYNES",
-      "oi": 3547050,
-      "oi_chg": -403800,
-      "change_pct": 2.51,
-      "oi_pct": -10.22,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "GVT&D",
-      "oi": 3380250,
-      "oi_chg": -8375,
-      "change_pct": 5.27,
-      "oi_pct": -0.25,
-      "buildup": null
-    },
-    {
-      "symbol": "MARUTI",
-      "oi": 3192800,
-      "oi_chg": -48600,
-      "change_pct": 0.68,
-      "oi_pct": -1.5,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "EICHERMOT",
-      "oi": 3147700,
-      "oi_chg": -27800,
-      "change_pct": 0.96,
-      "oi_pct": -0.88,
-      "buildup": null
-    },
-    {
-      "symbol": "DIXON",
-      "oi": 2721500,
-      "oi_chg": -37450,
-      "change_pct": 0.04,
-      "oi_pct": -1.36,
-      "buildup": null
-    },
-    {
-      "symbol": "BRITANNIA",
-      "oi": 2601750,
-      "oi_chg": 6500,
-      "change_pct": -0.08,
+      "symbol": "GMRAIRPORT",
+      "oi": 129930300,
+      "oi_chg": 327825,
+      "change_pct": 1.2,
       "oi_pct": 0.25,
       "buildup": null
     },
     {
-      "symbol": "SUPREMEIND",
-      "oi": 2573900,
-      "oi_chg": 84000,
-      "change_pct": -0.15,
-      "oi_pct": 3.37,
-      "buildup": null
-    },
-    {
-      "symbol": "KEI",
-      "oi": 2488325,
-      "oi_chg": -11025,
-      "change_pct": -0.02,
-      "oi_pct": -0.44,
-      "buildup": null
-    },
-    {
-      "symbol": "BAJAJ-AUTO",
-      "oi": 2274150,
-      "oi_chg": 355425,
-      "change_pct": 2.71,
-      "oi_pct": 18.52,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "POLYCAB",
-      "oi": 2221125,
-      "oi_chg": -27125,
-      "change_pct": -1.02,
-      "oi_pct": -1.21,
+      "symbol": "ETERNAL",
+      "oi": 127077275,
+      "oi_chg": -1365275,
+      "change_pct": -1.37,
+      "oi_pct": -1.06,
       "buildup": "Long unwinding"
     },
     {
-      "symbol": "ULTRACEMCO",
-      "oi": 2191500,
-      "oi_chg": 83750,
-      "change_pct": 0.2,
-      "oi_pct": 3.97,
+      "symbol": "NHPC",
+      "oi": 126323200,
+      "oi_chg": 62550,
+      "change_pct": 1.39,
+      "oi_pct": 0.05,
       "buildup": null
     },
     {
-      "symbol": "ABB",
-      "oi": 2147250,
-      "oi_chg": -83875,
-      "change_pct": 2.21,
-      "oi_pct": -3.76,
+      "symbol": "BANDHANBNK",
+      "oi": 124988400,
+      "oi_chg": 2149200,
+      "change_pct": 1.46,
+      "oi_pct": 1.75,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "IOC",
+      "oi": 124960875,
+      "oi_chg": -14625,
+      "change_pct": -0.75,
+      "oi_pct": -0.01,
+      "buildup": null
+    },
+    {
+      "symbol": "ICICIBANK",
+      "oi": 119510300,
+      "oi_chg": -1321600,
+      "change_pct": -0.78,
+      "oi_pct": -1.09,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "INOXWIND",
+      "oi": 118515200,
+      "oi_chg": 1792000,
+      "change_pct": 0.73,
+      "oi_pct": 1.54,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "UNIONBANK",
+      "oi": 111138300,
+      "oi_chg": -296475,
+      "change_pct": 0.11,
+      "oi_pct": -0.27,
+      "buildup": null
+    },
+    {
+      "symbol": "ASHOKLEY",
+      "oi": 110340000,
+      "oi_chg": -315000,
+      "change_pct": 1.64,
+      "oi_pct": -0.28,
+      "buildup": null
+    },
+    {
+      "symbol": "SBIN",
+      "oi": 109401750,
+      "oi_chg": -211500,
+      "change_pct": 1.36,
+      "oi_pct": -0.19,
+      "buildup": null
+    },
+    {
+      "symbol": "PFC",
+      "oi": 107741650,
+      "oi_chg": 1831950,
+      "change_pct": -0.48,
+      "oi_pct": 1.73,
+      "buildup": null
+    },
+    {
+      "symbol": "TMPV",
+      "oi": 99793550,
+      "oi_chg": 1662350,
+      "change_pct": 0.65,
+      "oi_pct": 1.69,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "AXISBANK",
+      "oi": 98826250,
+      "oi_chg": -190625,
+      "change_pct": 0.13,
+      "oi_pct": -0.19,
+      "buildup": null
+    },
+    {
+      "symbol": "BEL",
+      "oi": 96684825,
+      "oi_chg": 639825,
+      "change_pct": -0.78,
+      "oi_pct": 0.67,
+      "buildup": null
+    },
+    {
+      "symbol": "IRFC",
+      "oi": 94448600,
+      "oi_chg": -120000,
+      "change_pct": -1.44,
+      "oi_pct": -0.13,
+      "buildup": null
+    },
+    {
+      "symbol": "FEDERALBNK",
+      "oi": 92007500,
+      "oi_chg": 210000,
+      "change_pct": 0.27,
+      "oi_pct": 0.23,
+      "buildup": null
+    },
+    {
+      "symbol": "BHEL",
+      "oi": 84338250,
+      "oi_chg": 75750,
+      "change_pct": 1.58,
+      "oi_pct": 0.09,
+      "buildup": null
+    },
+    {
+      "symbol": "NBCC",
+      "oi": 82010500,
+      "oi_chg": -169000,
+      "change_pct": -0.34,
+      "oi_pct": -0.21,
+      "buildup": null
+    },
+    {
+      "symbol": "NTPC",
+      "oi": 81772800,
+      "oi_chg": 303300,
+      "change_pct": -0.38,
+      "oi_pct": 0.37,
+      "buildup": null
+    },
+    {
+      "symbol": "INDUSTOWER",
+      "oi": 80291000,
+      "oi_chg": 567800,
+      "change_pct": 0.0,
+      "oi_pct": 0.71,
+      "buildup": null
+    },
+    {
+      "symbol": "SAGILITY",
+      "oi": 80196000,
+      "oi_chg": -168000,
+      "change_pct": -0.79,
+      "oi_pct": -0.21,
+      "buildup": null
+    },
+    {
+      "symbol": "COALINDIA",
+      "oi": 79216650,
+      "oi_chg": -656100,
+      "change_pct": -1.74,
+      "oi_pct": -0.82,
+      "buildup": null
+    },
+    {
+      "symbol": "AMBUJACEM",
+      "oi": 76949100,
+      "oi_chg": 5217900,
+      "change_pct": 0.62,
+      "oi_pct": 7.27,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "INFY",
+      "oi": 76440300,
+      "oi_chg": 1262300,
+      "change_pct": -2.84,
+      "oi_pct": 1.68,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "GAIL",
+      "oi": 75952250,
+      "oi_chg": -447300,
+      "change_pct": 0.0,
+      "oi_pct": -0.59,
+      "buildup": null
+    },
+    {
+      "symbol": "MANAPPURAM",
+      "oi": 72417000,
+      "oi_chg": 603000,
+      "change_pct": 0.0,
+      "oi_pct": 0.84,
+      "buildup": null
+    },
+    {
+      "symbol": "CROMPTON",
+      "oi": 72251100,
+      "oi_chg": -378050,
+      "change_pct": 3.11,
+      "oi_pct": -0.52,
+      "buildup": null
+    },
+    {
+      "symbol": "IREDA",
+      "oi": 71169200,
+      "oi_chg": -1647100,
+      "change_pct": 1.23,
+      "oi_pct": -2.26,
       "buildup": "Short covering"
     },
     {
-      "symbol": "APOLLOHOSP",
-      "oi": 2083375,
-      "oi_chg": -7875,
-      "change_pct": -0.92,
+      "symbol": "VBL",
+      "oi": 69736125,
+      "oi_chg": 1166625,
+      "change_pct": -2.52,
+      "oi_pct": 1.7,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "VMM",
+      "oi": 69238600,
+      "oi_chg": -572300,
+      "change_pct": 0.0,
+      "oi_pct": -0.82,
+      "buildup": null
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "oi": 68927250,
+      "oi_chg": 562500,
+      "change_pct": 0.88,
+      "oi_pct": 0.82,
+      "buildup": null
+    },
+    {
+      "symbol": "SWIGGY",
+      "oi": 65921575,
+      "oi_chg": 486200,
+      "change_pct": -3.18,
+      "oi_pct": 0.74,
+      "buildup": null
+    },
+    {
+      "symbol": "TATAPOWER",
+      "oi": 64836750,
+      "oi_chg": 5800,
+      "change_pct": -1.51,
+      "oi_pct": 0.01,
+      "buildup": null
+    },
+    {
+      "symbol": "ONGC",
+      "oi": 62437500,
+      "oi_chg": -580500,
+      "change_pct": -1.84,
+      "oi_pct": -0.92,
+      "buildup": null
+    },
+    {
+      "symbol": "BANKINDIA",
+      "oi": 61765600,
+      "oi_chg": 161200,
+      "change_pct": 0.86,
+      "oi_pct": 0.26,
+      "buildup": null
+    },
+    {
+      "symbol": "HINDALCO",
+      "oi": 59927000,
+      "oi_chg": 130900,
+      "change_pct": -0.46,
+      "oi_pct": 0.22,
+      "buildup": null
+    },
+    {
+      "symbol": "IEX",
+      "oi": 58485750,
+      "oi_chg": -291450,
+      "change_pct": -0.54,
+      "oi_pct": -0.5,
+      "buildup": null
+    },
+    {
+      "symbol": "LTF",
+      "oi": 57296250,
+      "oi_chg": -2081250,
+      "change_pct": -0.18,
+      "oi_pct": -3.51,
+      "buildup": null
+    },
+    {
+      "symbol": "POWERGRID",
+      "oi": 56483200,
+      "oi_chg": -659300,
+      "change_pct": -0.46,
+      "oi_pct": -1.15,
+      "buildup": null
+    },
+    {
+      "symbol": "BHARTIARTL",
+      "oi": 56232400,
+      "oi_chg": -657875,
+      "change_pct": -1.32,
+      "oi_pct": -1.16,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "VEDL",
+      "oi": 55775025,
+      "oi_chg": -215025,
+      "change_pct": 3.29,
       "oi_pct": -0.38,
       "buildup": null
     },
     {
-      "symbol": "TATAELXSI",
-      "oi": 1977125,
-      "oi_chg": 36500,
-      "change_pct": 0.13,
-      "oi_pct": 1.88,
+      "symbol": "UJJIVANSFB",
+      "oi": 53112000,
+      "oi_chg": 2760000,
+      "change_pct": -2.22,
+      "oi_pct": 5.48,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "BIOCON",
+      "oi": 51587500,
+      "oi_chg": 485000,
+      "change_pct": 4.61,
+      "oi_pct": 0.95,
       "buildup": null
     },
     {
-      "symbol": "RADICO",
-      "oi": 1771500,
-      "oi_chg": 201000,
-      "change_pct": 1.4,
-      "oi_pct": 12.8,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "ALKEM",
-      "oi": 1647750,
-      "oi_chg": 39750,
-      "change_pct": 0.85,
-      "oi_pct": 2.47,
-      "buildup": "Long buildup"
-    },
-    {
-      "symbol": "GODFRYPHLP",
-      "oi": 1522950,
-      "oi_chg": -71775,
-      "change_pct": 2.59,
-      "oi_pct": -4.5,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "OFSS",
-      "oi": 1149200,
-      "oi_chg": -25100,
-      "change_pct": 0.08,
-      "oi_pct": -2.14,
+      "symbol": "RBLBANK",
+      "oi": 49060100,
+      "oi_chg": 263525,
+      "change_pct": -0.04,
+      "oi_pct": 0.54,
       "buildup": null
     },
     {
-      "symbol": "AMBER",
-      "oi": 1145300,
-      "oi_chg": -43400,
-      "change_pct": 2.14,
-      "oi_pct": -3.65,
+      "symbol": "LICI",
+      "oi": 47217800,
+      "oi_chg": -642600,
+      "change_pct": 1.2,
+      "oi_pct": -1.34,
       "buildup": "Short covering"
     },
     {
-      "symbol": "SOLARINDS",
-      "oi": 878850,
-      "oi_chg": -29850,
-      "change_pct": 3.23,
-      "oi_pct": -3.28,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "ENRIN",
-      "oi": 851725,
-      "oi_chg": -49350,
-      "change_pct": 2.78,
-      "oi_pct": -5.48,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "POWERINDIA",
-      "oi": 591425,
-      "oi_chg": -18150,
-      "change_pct": 4.18,
-      "oi_pct": -2.98,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "SHREECEM",
-      "oi": 353250,
-      "oi_chg": -7800,
-      "change_pct": -0.32,
-      "oi_pct": -2.16,
+      "symbol": "INDUSINDBK",
+      "oi": 46036200,
+      "oi_chg": 230300,
+      "change_pct": 0.0,
+      "oi_pct": 0.5,
       "buildup": null
     },
     {
-      "symbol": "FORCEMOT",
-      "oi": 336400,
-      "oi_chg": -39800,
-      "change_pct": 4.6,
-      "oi_pct": -10.58,
-      "buildup": "Short covering"
-    },
-    {
-      "symbol": "PAGEIND",
-      "oi": 225340,
-      "oi_chg": -680,
-      "change_pct": -0.38,
-      "oi_pct": -0.3,
+      "symbol": "RECLTD",
+      "oi": 43622875,
+      "oi_chg": 426925,
+      "change_pct": 1.37,
+      "oi_pct": 0.99,
       "buildup": null
     },
     {
-      "symbol": "BOSCHLTD",
-      "oi": 193325,
-      "oi_chg": -1075,
-      "change_pct": 2.16,
+      "symbol": "BPCL",
+      "oi": 43562575,
+      "oi_chg": 545100,
+      "change_pct": -1.78,
+      "oi_pct": 1.27,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "ANGELONE",
+      "oi": 42877500,
+      "oi_chg": -390000,
+      "change_pct": 1.07,
+      "oi_pct": -0.9,
+      "buildup": null
+    },
+    {
+      "symbol": "JSWSTEEL",
+      "oi": 42157800,
+      "oi_chg": -231525,
+      "change_pct": -0.14,
       "oi_pct": -0.55,
       "buildup": null
     },
     {
-      "symbol": "BAJAJHLDNG",
-      "oi": 119550,
-      "oi_chg": -11850,
-      "change_pct": -2.89,
-      "oi_pct": -9.02,
+      "symbol": "HDFCLIFE",
+      "oi": 40759400,
+      "oi_chg": 177100,
+      "change_pct": 0.68,
+      "oi_pct": 0.44,
+      "buildup": null
+    },
+    {
+      "symbol": "HINDPETRO",
+      "oi": 39444975,
+      "oi_chg": -8100,
+      "change_pct": -0.03,
+      "oi_pct": -0.02,
+      "buildup": null
+    },
+    {
+      "symbol": "LICHSGFIN",
+      "oi": 37094000,
+      "oi_chg": 27000,
+      "change_pct": -0.21,
+      "oi_pct": 0.07,
+      "buildup": null
+    },
+    {
+      "symbol": "ABCAPITAL",
+      "oi": 36531950,
+      "oi_chg": -156550,
+      "change_pct": 1.47,
+      "oi_pct": -0.43,
+      "buildup": null
+    },
+    {
+      "symbol": "NATIONALUM",
+      "oi": 36356250,
+      "oi_chg": 105000,
+      "change_pct": 3.08,
+      "oi_pct": 0.29,
+      "buildup": null
+    },
+    {
+      "symbol": "UPL",
+      "oi": 35973895,
+      "oi_chg": 3173410,
+      "change_pct": 4.94,
+      "oi_pct": 9.67,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "NYKAA",
+      "oi": 35812500,
+      "oi_chg": 915625,
+      "change_pct": 1.6,
+      "oi_pct": 2.62,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "DLF",
+      "oi": 34279800,
+      "oi_chg": 124450,
+      "change_pct": -0.46,
+      "oi_pct": 0.36,
+      "buildup": null
+    },
+    {
+      "symbol": "PATANJALI",
+      "oi": 33336825,
+      "oi_chg": -1692050,
+      "change_pct": 6.34,
+      "oi_pct": -4.83,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "RVNL",
+      "oi": 32800775,
+      "oi_chg": 297150,
+      "change_pct": 0.95,
+      "oi_pct": 0.91,
+      "buildup": null
+    },
+    {
+      "symbol": "MAHABANK",
+      "oi": 32461000,
+      "oi_chg": -793000,
+      "change_pct": 1.56,
+      "oi_pct": -2.38,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "SHRIRAMFIN",
+      "oi": 30312150,
+      "oi_chg": 887700,
+      "change_pct": 0.95,
+      "oi_pct": 3.02,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "DELHIVERY",
+      "oi": 30149750,
+      "oi_chg": 402550,
+      "change_pct": 1.08,
+      "oi_pct": 1.35,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "JSWENERGY",
+      "oi": 27885500,
+      "oi_chg": 107500,
+      "change_pct": 1.62,
+      "oi_pct": 0.39,
+      "buildup": null
+    },
+    {
+      "symbol": "PETRONET",
+      "oi": 27675400,
+      "oi_chg": -121600,
+      "change_pct": -1.73,
+      "oi_pct": -0.44,
+      "buildup": null
+    },
+    {
+      "symbol": "AUBANK",
+      "oi": 26582000,
+      "oi_chg": -535000,
+      "change_pct": 3.75,
+      "oi_pct": -1.97,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "DABUR",
+      "oi": 25086000,
+      "oi_chg": -19000,
+      "change_pct": 0.29,
+      "oi_pct": -0.08,
+      "buildup": null
+    },
+    {
+      "symbol": "CONCOR",
+      "oi": 24730000,
+      "oi_chg": 328750,
+      "change_pct": -0.16,
+      "oi_pct": 1.35,
+      "buildup": null
+    },
+    {
+      "symbol": "HINDZINC",
+      "oi": 23635150,
+      "oi_chg": -1145375,
+      "change_pct": 2.37,
+      "oi_pct": -4.62,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "ADANIGREEN",
+      "oi": 22908600,
+      "oi_chg": 35400,
+      "change_pct": 0.0,
+      "oi_pct": 0.15,
+      "buildup": null
+    },
+    {
+      "symbol": "ADANIENSOL",
+      "oi": 22330350,
+      "oi_chg": -18900,
+      "change_pct": -1.22,
+      "oi_pct": -0.08,
+      "buildup": null
+    },
+    {
+      "symbol": "CGPOWER",
+      "oi": 21975050,
+      "oi_chg": -203150,
+      "change_pct": 0.44,
+      "oi_pct": -0.92,
+      "buildup": null
+    },
+    {
+      "symbol": "KALYANKJIL",
+      "oi": 20193300,
+      "oi_chg": 121500,
+      "change_pct": 1.78,
+      "oi_pct": 0.61,
+      "buildup": null
+    },
+    {
+      "symbol": "TCS",
+      "oi": 20084400,
+      "oi_chg": 265500,
+      "change_pct": -1.83,
+      "oi_pct": 1.34,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "INDHOTEL",
+      "oi": 20065000,
+      "oi_chg": -538000,
+      "change_pct": 0.15,
+      "oi_pct": -2.61,
+      "buildup": null
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "oi": 19820100,
+      "oi_chg": 260700,
+      "change_pct": -1.48,
+      "oi_pct": 1.33,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "HCLTECH",
+      "oi": 19815600,
+      "oi_chg": -62800,
+      "change_pct": -1.25,
+      "oi_pct": -0.32,
+      "buildup": null
+    },
+    {
+      "symbol": "ICICILIFE",
+      "oi": 19008425,
+      "oi_chg": 143050,
+      "change_pct": 1.17,
+      "oi_pct": 0.76,
+      "buildup": null
+    },
+    {
+      "symbol": "LAURUSLABS",
+      "oi": 18863625,
+      "oi_chg": -74375,
+      "change_pct": 1.93,
+      "oi_pct": -0.39,
+      "buildup": null
+    },
+    {
+      "symbol": "JUBLFOOD",
+      "oi": 18335000,
+      "oi_chg": 22500,
+      "change_pct": -0.98,
+      "oi_pct": 0.12,
+      "buildup": null
+    },
+    {
+      "symbol": "SBICARD",
+      "oi": 17741600,
+      "oi_chg": 312800,
+      "change_pct": -0.24,
+      "oi_pct": 1.79,
+      "buildup": null
+    },
+    {
+      "symbol": "ADANIENT",
+      "oi": 17503614,
+      "oi_chg": -49749,
+      "change_pct": -0.02,
+      "oi_pct": -0.28,
+      "buildup": null
+    },
+    {
+      "symbol": "DRREDDY",
+      "oi": 17458125,
+      "oi_chg": 280625,
+      "change_pct": 1.7,
+      "oi_pct": 1.63,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "APLAPOLLO",
+      "oi": 17101000,
+      "oi_chg": -311500,
+      "change_pct": -1.81,
+      "oi_pct": -1.79,
       "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "oi": 16701650,
+      "oi_chg": -116550,
+      "change_pct": -0.05,
+      "oi_pct": -0.69,
+      "buildup": null
+    },
+    {
+      "symbol": "TECHM",
+      "oi": 16662600,
+      "oi_chg": -253200,
+      "change_pct": 0.0,
+      "oi_pct": -1.5,
+      "buildup": null
+    },
+    {
+      "symbol": "POLICYBZR",
+      "oi": 16128700,
+      "oi_chg": -126700,
+      "change_pct": -1.63,
+      "oi_pct": -0.78,
+      "buildup": null
+    },
+    {
+      "symbol": "JINDALSTEL",
+      "oi": 15625000,
+      "oi_chg": 72500,
+      "change_pct": 0.0,
+      "oi_pct": 0.47,
+      "buildup": null
+    },
+    {
+      "symbol": "TATACONSUM",
+      "oi": 15415400,
+      "oi_chg": -553300,
+      "change_pct": 0.57,
+      "oi_pct": -3.46,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "PREMIERENE",
+      "oi": 14811550,
+      "oi_chg": 865800,
+      "change_pct": 1.6,
+      "oi_pct": 6.21,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "ADANIPORTS",
+      "oi": 14761575,
+      "oi_chg": -162925,
+      "change_pct": -0.06,
+      "oi_pct": -1.09,
+      "buildup": null
+    },
+    {
+      "symbol": "PGEL",
+      "oi": 14163550,
+      "oi_chg": 1067800,
+      "change_pct": 7.54,
+      "oi_pct": 8.15,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "M&M",
+      "oi": 14116800,
+      "oi_chg": -463600,
+      "change_pct": 0.83,
+      "oi_pct": -3.18,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "LT",
+      "oi": 13916175,
+      "oi_chg": 266700,
+      "change_pct": 3.75,
+      "oi_pct": 1.95,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "AUROPHARMA",
+      "oi": 13855050,
+      "oi_chg": 153450,
+      "change_pct": 1.25,
+      "oi_pct": 1.12,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "NAUKRI",
+      "oi": 13794550,
+      "oi_chg": -204050,
+      "change_pct": -2.93,
+      "oi_pct": -1.46,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "SONACOMS",
+      "oi": 13568100,
+      "oi_chg": -269500,
+      "change_pct": 2.67,
+      "oi_pct": -1.95,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "MAXHEALTH",
+      "oi": 13482525,
+      "oi_chg": 559125,
+      "change_pct": 2.08,
+      "oi_pct": 4.33,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "MARICO",
+      "oi": 13407600,
+      "oi_chg": -235200,
+      "change_pct": -0.15,
+      "oi_pct": -1.72,
+      "buildup": null
+    },
+    {
+      "symbol": "PAYTM",
+      "oi": 12993000,
+      "oi_chg": -510850,
+      "change_pct": 1.54,
+      "oi_pct": -3.78,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "NESTLEIND",
+      "oi": 12518500,
+      "oi_chg": 44500,
+      "change_pct": -0.32,
+      "oi_pct": 0.36,
+      "buildup": null
+    },
+    {
+      "symbol": "CHOLAFIN",
+      "oi": 12202450,
+      "oi_chg": -735050,
+      "change_pct": 5.71,
+      "oi_pct": -5.68,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "KPITTECH",
+      "oi": 11964850,
+      "oi_chg": 1512425,
+      "change_pct": 4.36,
+      "oi_pct": 14.47,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "BSE",
+      "oi": 11595800,
+      "oi_chg": 369800,
+      "change_pct": 1.32,
+      "oi_pct": 3.29,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "FORTIS",
+      "oi": 11555250,
+      "oi_chg": -343325,
+      "change_pct": -0.75,
+      "oi_pct": -2.89,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "VOLTAS",
+      "oi": 11475875,
+      "oi_chg": 78500,
+      "change_pct": 7.23,
+      "oi_pct": 0.69,
+      "buildup": null
+    },
+    {
+      "symbol": "CDSL",
+      "oi": 10784875,
+      "oi_chg": -44650,
+      "change_pct": 1.01,
+      "oi_pct": -0.41,
+      "buildup": null
+    },
+    {
+      "symbol": "CIPLA",
+      "oi": 10460525,
+      "oi_chg": -6375,
+      "change_pct": 2.34,
+      "oi_pct": -0.06,
+      "buildup": null
+    },
+    {
+      "symbol": "GLENMARK",
+      "oi": 10346250,
+      "oi_chg": -114000,
+      "change_pct": 0.0,
+      "oi_pct": -1.09,
+      "buildup": null
+    },
+    {
+      "symbol": "HAVELLS",
+      "oi": 10324500,
+      "oi_chg": -151500,
+      "change_pct": 1.82,
+      "oi_pct": -1.45,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "GODREJCP",
+      "oi": 10280600,
+      "oi_chg": 670600,
+      "change_pct": -1.5,
+      "oi_pct": 6.98,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "COFORGE",
+      "oi": 10106575,
+      "oi_chg": -370975,
+      "change_pct": -1.2,
+      "oi_pct": -3.54,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "OIL",
+      "oi": 9942800,
+      "oi_chg": -85400,
+      "change_pct": 0.0,
+      "oi_pct": -0.85,
+      "buildup": null
+    },
+    {
+      "symbol": "ZYDUSLIFE",
+      "oi": 9862650,
+      "oi_chg": -50850,
+      "change_pct": 0.35,
+      "oi_pct": -0.51,
+      "buildup": null
+    },
+    {
+      "symbol": "GODREJPROP",
+      "oi": 9761375,
+      "oi_chg": 103350,
+      "change_pct": 0.56,
+      "oi_pct": 1.07,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "CAMS",
+      "oi": 9728400,
+      "oi_chg": 44550,
+      "change_pct": -0.96,
+      "oi_pct": 0.46,
+      "buildup": null
+    },
+    {
+      "symbol": "PNBHOUSING",
+      "oi": 9421100,
+      "oi_chg": 317850,
+      "change_pct": 3.52,
+      "oi_pct": 3.49,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "INDIANB",
+      "oi": 8820000,
+      "oi_chg": 68000,
+      "change_pct": -0.05,
+      "oi_pct": 0.78,
+      "buildup": null
+    },
+    {
+      "symbol": "BAJAJFINSV",
+      "oi": 8250300,
+      "oi_chg": 107400,
+      "change_pct": -1.43,
+      "oi_pct": 1.32,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "MFSL",
+      "oi": 8156000,
+      "oi_chg": 156000,
+      "change_pct": -0.56,
+      "oi_pct": 1.95,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "BHARATFORG",
+      "oi": 8080000,
+      "oi_chg": 384500,
+      "change_pct": 0.23,
+      "oi_pct": 5.0,
+      "buildup": null
+    },
+    {
+      "symbol": "UNITDSPR",
+      "oi": 8032000,
+      "oi_chg": 486400,
+      "change_pct": -3.48,
+      "oi_pct": 6.45,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "TRENT",
+      "oi": 7852950,
+      "oi_chg": 70425,
+      "change_pct": 2.6,
+      "oi_pct": 0.9,
+      "buildup": null
+    },
+    {
+      "symbol": "WAAREEENER",
+      "oi": 7765400,
+      "oi_chg": 26725,
+      "change_pct": 0.47,
+      "oi_pct": 0.35,
+      "buildup": null
+    },
+    {
+      "symbol": "MUTHOOTFIN",
+      "oi": 7714300,
+      "oi_chg": 142725,
+      "change_pct": 0.0,
+      "oi_pct": 1.89,
+      "buildup": null
+    },
+    {
+      "symbol": "HDFCAMC",
+      "oi": 7586100,
+      "oi_chg": 21900,
+      "change_pct": 0.0,
+      "oi_pct": 0.29,
+      "buildup": null
+    },
+    {
+      "symbol": "TVSMOTOR",
+      "oi": 7572250,
+      "oi_chg": 243775,
+      "change_pct": 3.04,
+      "oi_pct": 3.33,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "SBILIFE",
+      "oi": 7402875,
+      "oi_chg": -333000,
+      "change_pct": 2.3,
+      "oi_pct": -4.3,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "ANANDRATHI",
+      "oi": 7344750,
+      "oi_chg": 63750,
+      "change_pct": 0.64,
+      "oi_pct": 0.88,
+      "buildup": null
+    },
+    {
+      "symbol": "LUPIN",
+      "oi": 7111525,
+      "oi_chg": 95200,
+      "change_pct": 1.22,
+      "oi_pct": 1.36,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "GRASIM",
+      "oi": 6983500,
+      "oi_chg": 14250,
+      "change_pct": 0.0,
+      "oi_pct": 0.2,
+      "buildup": null
+    },
+    {
+      "symbol": "LODHA",
+      "oi": 6807500,
+      "oi_chg": 86250,
+      "change_pct": 0.0,
+      "oi_pct": 1.28,
+      "buildup": null
+    },
+    {
+      "symbol": "COLPAL",
+      "oi": 6779575,
+      "oi_chg": 142450,
+      "change_pct": 0.08,
+      "oi_pct": 2.15,
+      "buildup": null
+    },
+    {
+      "symbol": "MCX",
+      "oi": 6778125,
+      "oi_chg": -58500,
+      "change_pct": 0.46,
+      "oi_pct": -0.86,
+      "buildup": null
+    },
+    {
+      "symbol": "ASIANPAINT",
+      "oi": 6773750,
+      "oi_chg": 44500,
+      "change_pct": -0.14,
+      "oi_pct": 0.66,
+      "buildup": null
+    },
+    {
+      "symbol": "BDL",
+      "oi": 6583675,
+      "oi_chg": 85850,
+      "change_pct": -3.05,
+      "oi_pct": 1.32,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "ICICIGI",
+      "oi": 6500975,
+      "oi_chg": 8125,
+      "change_pct": -0.6,
+      "oi_pct": 0.13,
+      "buildup": null
+    },
+    {
+      "symbol": "INDIGO",
+      "oi": 6118500,
+      "oi_chg": -105600,
+      "change_pct": 1.6,
+      "oi_pct": -1.7,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "MOTILALOFS",
+      "oi": 5980675,
+      "oi_chg": -27125,
+      "change_pct": 0.26,
+      "oi_pct": -0.45,
+      "buildup": null
+    },
+    {
+      "symbol": "BLUESTARCO",
+      "oi": 5955950,
+      "oi_chg": -263575,
+      "change_pct": 5.32,
+      "oi_pct": -4.24,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "CUMMINSIND",
+      "oi": 5843800,
+      "oi_chg": -114400,
+      "change_pct": 1.63,
+      "oi_pct": -1.92,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "MAZDOCK",
+      "oi": 5789250,
+      "oi_chg": -227025,
+      "change_pct": -2.99,
+      "oi_pct": -3.77,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "COCHINSHIP",
+      "oi": 5736800,
+      "oi_chg": -61200,
+      "change_pct": -1.41,
+      "oi_pct": -1.06,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "PRESTIGE",
+      "oi": 5596200,
+      "oi_chg": -17100,
+      "change_pct": 0.0,
+      "oi_pct": -0.3,
+      "buildup": null
+    },
+    {
+      "symbol": "TITAN",
+      "oi": 5490100,
+      "oi_chg": -46375,
+      "change_pct": 0.03,
+      "oi_pct": -0.84,
+      "buildup": null
+    },
+    {
+      "symbol": "DMART",
+      "oi": 5485950,
+      "oi_chg": 286800,
+      "change_pct": -2.38,
+      "oi_pct": 5.52,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "PIDILITIND",
+      "oi": 5278000,
+      "oi_chg": 172000,
+      "change_pct": -4.27,
+      "oi_pct": 3.37,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "UNOMINDA",
+      "oi": 5239850,
+      "oi_chg": 113300,
+      "change_pct": 0.0,
+      "oi_pct": 2.21,
+      "buildup": null
+    },
+    {
+      "symbol": "ASTRAL",
+      "oi": 5236425,
+      "oi_chg": 74800,
+      "change_pct": 0.78,
+      "oi_pct": 1.45,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "DIVISLAB",
+      "oi": 5205700,
+      "oi_chg": -5200,
+      "change_pct": 1.58,
+      "oi_pct": -0.1,
+      "buildup": null
+    },
+    {
+      "symbol": "NAM-INDIA",
+      "oi": 5122500,
+      "oi_chg": -73750,
+      "change_pct": 0.19,
+      "oi_pct": -1.42,
+      "buildup": null
+    },
+    {
+      "symbol": "360ONE",
+      "oi": 5116000,
+      "oi_chg": -158500,
+      "change_pct": 0.0,
+      "oi_pct": -3.01,
+      "buildup": null
+    },
+    {
+      "symbol": "HAL",
+      "oi": 4970850,
+      "oi_chg": -300,
+      "change_pct": 0.02,
+      "oi_pct": -0.01,
+      "buildup": null
+    },
+    {
+      "symbol": "ATHERENERG",
+      "oi": 4911000,
+      "oi_chg": -256125,
+      "change_pct": -1.25,
+      "oi_pct": -4.96,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "HYUNDAI",
+      "oi": 4662350,
+      "oi_chg": -147675,
+      "change_pct": -4.46,
+      "oi_pct": -3.07,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "KAYNES",
+      "oi": 4638600,
+      "oi_chg": 1473300,
+      "change_pct": -9.0,
+      "oi_pct": 46.55,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "OBEROIRLTY",
+      "oi": 4425400,
+      "oi_chg": -5250,
+      "change_pct": 0.0,
+      "oi_pct": -0.12,
+      "buildup": null
+    },
+    {
+      "symbol": "PIIND",
+      "oi": 4234225,
+      "oi_chg": 123125,
+      "change_pct": -3.35,
+      "oi_pct": 2.99,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "MPHASIS",
+      "oi": 4192925,
+      "oi_chg": -33275,
+      "change_pct": 0.0,
+      "oi_pct": -0.79,
+      "buildup": null
+    },
+    {
+      "symbol": "KFINTECH",
+      "oi": 4168750,
+      "oi_chg": -69575,
+      "change_pct": -2.3,
+      "oi_pct": -1.64,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "SRF",
+      "oi": 4111600,
+      "oi_chg": -4200,
+      "change_pct": 0.31,
+      "oi_pct": -0.1,
+      "buildup": null
+    },
+    {
+      "symbol": "TIINDIA",
+      "oi": 3857800,
+      "oi_chg": -1200,
+      "change_pct": 1.22,
+      "oi_pct": -0.03,
+      "buildup": null
+    },
+    {
+      "symbol": "PERSISTENT",
+      "oi": 3609000,
+      "oi_chg": -7875,
+      "change_pct": -1.38,
+      "oi_pct": -0.22,
+      "buildup": null
+    },
+    {
+      "symbol": "PHOENIXLTD",
+      "oi": 3602900,
+      "oi_chg": -19600,
+      "change_pct": 0.7,
+      "oi_pct": -0.54,
+      "buildup": null
+    },
+    {
+      "symbol": "TORNTPHARM",
+      "oi": 3562375,
+      "oi_chg": 21375,
+      "change_pct": -0.28,
+      "oi_pct": 0.6,
+      "buildup": null
+    },
+    {
+      "symbol": "MANKIND",
+      "oi": 3331750,
+      "oi_chg": -14500,
+      "change_pct": -1.1,
+      "oi_pct": -0.43,
+      "buildup": null
+    },
+    {
+      "symbol": "SIEMENS",
+      "oi": 3312400,
+      "oi_chg": -84000,
+      "change_pct": 1.18,
+      "oi_pct": -2.47,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "LTM",
+      "oi": 3310950,
+      "oi_chg": -152250,
+      "change_pct": 0.68,
+      "oi_pct": -4.4,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "HEROMOTOCO",
+      "oi": 2985150,
+      "oi_chg": 9600,
+      "change_pct": 2.56,
+      "oi_pct": 0.32,
+      "buildup": null
+    },
+    {
+      "symbol": "GVT&D",
+      "oi": 2865375,
+      "oi_chg": -125250,
+      "change_pct": 3.3,
+      "oi_pct": -4.19,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "EICHERMOT",
+      "oi": 2727200,
+      "oi_chg": -125700,
+      "change_pct": 1.61,
+      "oi_pct": -4.41,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "BRITANNIA",
+      "oi": 2482875,
+      "oi_chg": -5250,
+      "change_pct": 0.39,
+      "oi_pct": -0.21,
+      "buildup": null
+    },
+    {
+      "symbol": "DIXON",
+      "oi": 2440850,
+      "oi_chg": 13950,
+      "change_pct": 0.1,
+      "oi_pct": 0.57,
+      "buildup": null
+    },
+    {
+      "symbol": "MARUTI",
+      "oi": 2425200,
+      "oi_chg": -159650,
+      "change_pct": 0.95,
+      "oi_pct": -6.18,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "SUPREMEIND",
+      "oi": 2200625,
+      "oi_chg": 8750,
+      "change_pct": 0.4,
+      "oi_pct": 0.4,
+      "buildup": null
+    },
+    {
+      "symbol": "KEI",
+      "oi": 2173325,
+      "oi_chg": 7700,
+      "change_pct": -0.32,
+      "oi_pct": 0.36,
+      "buildup": null
+    },
+    {
+      "symbol": "ULTRACEMCO",
+      "oi": 2058300,
+      "oi_chg": 12450,
+      "change_pct": -0.26,
+      "oi_pct": 0.61,
+      "buildup": null
+    },
+    {
+      "symbol": "POLYCAB",
+      "oi": 1992750,
+      "oi_chg": 43625,
+      "change_pct": 1.27,
+      "oi_pct": 2.24,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "ABB",
+      "oi": 1982875,
+      "oi_chg": -37375,
+      "change_pct": -0.94,
+      "oi_pct": -1.85,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "BAJAJ-AUTO",
+      "oi": 1954500,
+      "oi_chg": 138675,
+      "change_pct": 0.98,
+      "oi_pct": 7.64,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "TATAELXSI",
+      "oi": 1826000,
+      "oi_chg": 68000,
+      "change_pct": -0.67,
+      "oi_pct": 3.87,
+      "buildup": "Short buildup"
+    },
+    {
+      "symbol": "APOLLOHOSP",
+      "oi": 1734800,
+      "oi_chg": -62950,
+      "change_pct": 4.11,
+      "oi_pct": -3.5,
+      "buildup": "Short covering"
+    },
+    {
+      "symbol": "ALKEM",
+      "oi": 1604500,
+      "oi_chg": 17250,
+      "change_pct": 0.25,
+      "oi_pct": 1.09,
+      "buildup": null
+    },
+    {
+      "symbol": "RADICO",
+      "oi": 1386000,
+      "oi_chg": -131550,
+      "change_pct": -2.81,
+      "oi_pct": -8.67,
+      "buildup": "Long unwinding"
+    },
+    {
+      "symbol": "GODFRYPHLP",
+      "oi": 1361250,
+      "oi_chg": 825,
+      "change_pct": 1.07,
+      "oi_pct": 0.06,
+      "buildup": null
+    },
+    {
+      "symbol": "CUB",
+      "oi": 1169475,
+      "oi_chg": 1169475,
+      "change_pct": 1.09,
+      "oi_pct": null,
+      "buildup": null
+    },
+    {
+      "symbol": "AMBER",
+      "oi": 974100,
+      "oi_chg": 13600,
+      "change_pct": 0.42,
+      "oi_pct": 1.42,
+      "buildup": null
+    },
+    {
+      "symbol": "OFSS",
+      "oi": 951550,
+      "oi_chg": -7050,
+      "change_pct": 1.0,
+      "oi_pct": -0.74,
+      "buildup": null
+    },
+    {
+      "symbol": "SOLARINDS",
+      "oi": 821525,
+      "oi_chg": 2775,
+      "change_pct": 0.63,
+      "oi_pct": 0.34,
+      "buildup": null
+    },
+    {
+      "symbol": "ENRIN",
+      "oi": 775600,
+      "oi_chg": 28875,
+      "change_pct": 0.61,
+      "oi_pct": 3.87,
+      "buildup": "Long buildup"
+    },
+    {
+      "symbol": "POWERINDIA",
+      "oi": 559125,
+      "oi_chg": 13250,
+      "change_pct": 0.28,
+      "oi_pct": 2.43,
+      "buildup": null
+    },
+    {
+      "symbol": "FORCEMOT",
+      "oi": 334475,
+      "oi_chg": 13450,
+      "change_pct": 0.0,
+      "oi_pct": 4.19,
+      "buildup": null
+    },
+    {
+      "symbol": "SYRMA",
+      "oi": 271700,
+      "oi_chg": 271700,
+      "change_pct": 0.0,
+      "oi_pct": null,
+      "buildup": null
+    },
+    {
+      "symbol": "SHREECEM",
+      "oi": 257525,
+      "oi_chg": 200,
+      "change_pct": -0.71,
+      "oi_pct": 0.08,
+      "buildup": null
+    },
+    {
+      "symbol": "PAGEIND",
+      "oi": 188220,
+      "oi_chg": -2620,
+      "change_pct": 0.3,
+      "oi_pct": -1.37,
+      "buildup": null
+    },
+    {
+      "symbol": "BOSCHLTD",
+      "oi": 184820,
+      "oi_chg": 995,
+      "change_pct": 2.79,
+      "oi_pct": 0.54,
+      "buildup": null
+    },
+    {
+      "symbol": "KARURVYSYA",
+      "oi": 167400,
+      "oi_chg": 167400,
+      "change_pct": 0.24,
+      "oi_pct": null,
+      "buildup": null
+    },
+    {
+      "symbol": "NAVINFLUOR",
+      "oi": 84900,
+      "oi_chg": 84900,
+      "change_pct": 0.0,
+      "oi_pct": null,
+      "buildup": null
+    },
+    {
+      "symbol": "DATAPATTNS",
+      "oi": 43875,
+      "oi_chg": 43875,
+      "change_pct": 0.0,
+      "oi_pct": null,
+      "buildup": null
+    },
+    {
+      "symbol": "COROMANDEL",
+      "oi": 15000,
+      "oi_chg": 15000,
+      "change_pct": 0.0,
+      "oi_pct": null,
+      "buildup": null
     }
   ],
   "index_futures": [
     {
       "symbol": "BANKNIFTY",
-      "oi": 2898360
+      "oi": 2484390
     },
     {
       "symbol": "FINNIFTY",
-      "oi": 25680
+      "oi": 24240
     },
     {
       "symbol": "MIDCPNIFTY",
-      "oi": 2634000
+      "oi": 2216520
     },
     {
       "symbol": "NIFTY",
-      "oi": 23141560
+      "oi": 17365465
     },
     {
       "symbol": "NIFTYFPI",
-      "oi": 18700
+      "oi": 1100
     },
     {
       "symbol": "NIFTYNXT50",
-      "oi": 16950
+      "oi": 14950
     }
   ],
   "pcr": {
-    "nifty_pcr_oi": 1.05,
+    "nifty_pcr_oi": 1.07,
     "nifty_max_pain": 23000.0
   }
 }

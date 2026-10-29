@@ -69,13 +69,19 @@ def main():
     # pick() normalises case and underscores, so "Symbol" already caught "SYMBOL" - but
     # "OptnTp" never caught "OPTION_TYP" and "OpnIntrst" never caught "OPEN_INT". That is
     # why this step reported "does not carry option type, open interest" and skipped.
-    c_sym = pick(df, "TckrSymb", "Symbol")
-    c_typ = pick(df, "FinInstrmTp", "Instrument")
-    c_str = pick(df, "StrkPric", "StrikePrice", "Strike", "STRIKE_PR")
-    c_opt = pick(df, "OptnTp", "OptionType", "OPTION_TYP")
-    c_oi = pick(df, "OpnIntrst", "OpenInterest", "OPEN_INT")
-    c_chg = pick(df, "ChngInOpnIntrst", "ChangeinOpenInterest", "CHG_IN_OI")
-    c_exp = pick(df, "XpryDt", "ExpiryDate", "Expiry", "EXPIRY_DT")
+    # THREE naming conventions, not two. The pipeline's own parquet uses normalised
+    # snake_case - symbol / strike / opt_type / oi - which is neither NSE's legacy names
+    # (SYMBOL/STRIKE_PR/OPTION_TYP/OPEN_INT) nor its modern ones (TckrSymb/StrkPric/
+    # OptnTp/OpnIntrst). None of the old candidates matched the file this step actually
+    # reads, so it skipped on every run. The diagnostic now prints the columns it found,
+    # which is how this was finally identified instead of guessed at again.
+    c_sym = pick(df, "TckrSymb", "Symbol", "symbol")
+    c_typ = pick(df, "FinInstrmTp", "Instrument", "instrm_type")
+    c_str = pick(df, "StrkPric", "StrikePrice", "Strike", "STRIKE_PR", "strike")
+    c_opt = pick(df, "OptnTp", "OptionType", "OPTION_TYP", "opt_type")
+    c_oi = pick(df, "OpnIntrst", "OpenInterest", "OPEN_INT", "oi")
+    c_chg = pick(df, "ChngInOpnIntrst", "ChangeinOpenInterest", "CHG_IN_OI", "oi_change")
+    c_exp = pick(df, "XpryDt", "ExpiryDate", "Expiry", "EXPIRY_DT", "expiry")
     c_px = pick(df, "UndrlygPric", "UnderlyingPrice", "ClsPric", "ClosePrice")
 
     missing = [n for n, c in (("symbol", c_sym), ("strike", c_str), ("option type", c_opt),

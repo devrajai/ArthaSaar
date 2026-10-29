@@ -131,6 +131,27 @@ def main() -> int:
                 if c in df.columns:
                     df[c] = pd.to_numeric(df[c], errors="coerce")
             df.to_csv(out / "fii_dii.csv", index=False)
+
+            # NSE's fiidiiTradeReact returns ONLY the latest session, and this used to
+            # overwrite the file each run - so the figure was replaced daily and no history
+            # ever accumulated. Append instead, de-duplicated on (date, category), so the
+            # series builds up over time. That is what makes "FII net over the last month"
+            # possible later.
+            try:
+                hist_path = out / "fii_dii_history.csv"
+                if hist_path.exists():
+                    old_hist = pd.read_csv(hist_path)
+                    merged = pd.concat([old_hist, df], ignore_index=True)
+                else:
+                    merged = df.copy()
+                keys = [c for c in ("date", "category") if c in merged.columns]
+                if keys:
+                    merged = merged.drop_duplicates(subset=keys, keep="last")
+                merged.to_csv(hist_path, index=False)
+                print(f"  fii_dii history: {len(merged)} row(s)")
+            except Exception as e:
+                print(f"  fii_dii history: not written ({type(e).__name__})")
+
             print(f"  fii_dii: {len(df)} row(s)  {df[['category','netValue']].to_dict('records') if len(df) else ''}")
             ok += 1
         except Exception as e:

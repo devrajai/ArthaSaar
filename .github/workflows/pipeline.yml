@@ -170,6 +170,11 @@ jobs:
       - name: "7i. NSE reference data (FII/DII, symbol master, indices)"
         run: python scripts/fetch_nse_extra.py
 
+      # FII/DII was fetched to data/nse/fii_dii.csv and never published - the site's
+      # section read d.fii_dii, which no script produced. This is the missing link.
+      - name: "7i2. Publish FII/DII cash flows"
+        run: python scripts/build_fii_dii.py || true
+
       - name: "7j. Mutual fund NAVs (AMFI)"
         run: python scripts/fetch_amfi.py || true
 

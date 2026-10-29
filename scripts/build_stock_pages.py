@@ -253,6 +253,51 @@ def main() -> int:
         st2.pop("series", None)
         lean[sym] = st2
 
+    # THE BUG THIS FIXES.
+    # This script only builds `--rotate` NEW stocks per run and carries the rest over from
+    # the previous stocks.json. Once the series were stripped out of that file, every carried
+    # -over stock arrived with no series - so series.json only ever held the handful built
+    # that day. It published 9 series for 2,198 stocks, which starved the sparkline and left
+    # relative strength ranking 9 names.
+    #
+    # So fill the gaps from the archive itself, in one query, for every stock still missing
+    # one. The archive has all of them; there was never a reason to depend on the carry-over.
+    missing = [k for k in stocks if k not in series]
+    if missing:
+        arch = next((q for q in ("data/candles/daily_adj.parquet",
+                                 "data/candles/daily.parquet") if Path(q).exists()), None)
+        if arch:
+            try:
+                import duckdb
+                con = duckdb.connect()
+                con.execute("SET threads=1")
+                con.execute("SET memory_limit='1200MB'")
+                want = [m.replace(".NS", "").replace(".BO", "") for m in missing]
+                rows = con.execute("""
+                  WITH r AS (
+                    SELECT symbol, close,
+                           row_number() OVER (PARTITION BY symbol ORDER BY date DESC) AS rn
+                    FROM read_parquet(?)
+                    WHERE close > 0 AND symbol IN (SELECT * FROM unnest(?))
+                  )
+                  SELECT symbol, close FROM r WHERE rn <= ? ORDER BY symbol, rn DESC
+                """, [arch, want, SERIES_LEN]).fetchall()
+                con.close()
+                by_sym = {}
+                for sym, close in rows:
+                    by_sym.setdefault(sym, []).append(round(float(close), 2))
+                filled = 0
+                for m in missing:
+                    key = m.replace(".NS", "").replace(".BO", "")
+                    if by_sym.get(key):
+                        series[m] = by_sym[key]
+                        filled += 1
+                print(f"  series filled from the archive: {filled} of {len(missing)} missing")
+            except Exception as e:
+                print(f"  series backfill failed ({type(e).__name__}): {str(e)[:90]}")
+        else:
+            print("  series backfill skipped - no archive on disk")
+
     payload = {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "count": len(stocks), "series_len": SERIES_LEN,

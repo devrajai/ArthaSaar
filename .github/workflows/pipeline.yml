@@ -387,6 +387,17 @@ jobs:
           fi
           echo "published"
 
+      # THE GATE - last step, deliberately.
+      # It runs AFTER the commit, so a failure here does not lose the run's work; it turns
+      # the run RED so someone is told. Three real breakages recently all ran green:
+      #   * oi_strikes published 0 rows for days - the step "succeeded", it found no data
+      #   * forecast.json was written and never committed, so the page 404'd it
+      #   * series.json held 9 price series for 2,198 stocks, which looks like a file that
+      #     worked
+      # Listing empties in health.json was not enough - nobody reads a green run.
+      - name: "13. Site check - fail the run if a published file is empty or missing"
+        run: python scripts/check_site.py
+
   # ------------------------------------------------------------------ forecast
   # TimesFM lives in its own workflow (.github/workflows/timesfm.yml): loading the
   # 200M checkpoint needs 3-4 GB of RAM, so it runs on a separate schedule with the

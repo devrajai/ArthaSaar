@@ -282,6 +282,11 @@ jobs:
       - name: "7m2j. Option-chain history (PCR and walls since 2019)"
         run: python scripts/build_oi_history.py || true
 
+      # Do PCR extremes and max-pain distance predict anything? Forward-looking only, with
+      # the index's own average move as the baseline. Small samples are suppressed.
+      - name: "7m2l. Option-chain statistics (PCR extremes, max pain drift)"
+        run: python scripts/build_oi_stats.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

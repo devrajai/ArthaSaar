@@ -28,8 +28,10 @@ jobs:
     # then running indicators, features, forecasts, patterns, screens, the backtest and
     # ~40 other steps over 3.5M rows takes longer than that - every run for a day was
     # killed at 45 minutes and threw all the work away, which is why nothing published.
-    # GitHub allows up to 360 for a job; 120 leaves real headroom.
-    timeout-minutes: 120
+    # 120 was not enough. Run 153 succeeded at 125 minutes; runs 154 and 156 were both
+    # cancelled at exactly 120, which is why forecast, relative strength and the OI chain
+    # never reached a commit. GitHub allows up to 360. 240 gives real headroom.
+    timeout-minutes: 240
     # Flags are computed here because the `secrets` context is NOT available inside a
     # step-level `if:` - using it there makes the whole workflow fail to parse.
     env:

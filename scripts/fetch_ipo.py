@@ -49,6 +49,19 @@ def is_sme(row):
     return ("sme" in blob) or ("emerge" in blob)
 
 
+def parse_dt(s):
+    """NSE sends dates as 29-Oct-2026. Accept a few shapes and return None otherwise."""
+    s = (s or "").strip()
+    if not s:
+        return None
+    for fmt in ("%d-%b-%Y", "%d-%m-%Y", "%Y-%m-%d", "%d/%m/%Y", "%d %b %Y"):
+        try:
+            return datetime.strptime(s, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
 def norm_upcoming(d):
     rows = []
     items = d.get("data") if isinstance(d, dict) else d
@@ -109,14 +122,34 @@ def main():
     if up is not None:
         got = True
         rows = norm_upcoming(up)
+
+        # BUCKET BY DATE, NOT BY NSE'S STATUS WORDING.
+        # NSE reports a currently-open issue as "Active" - a word containing neither
+        # "open" nor "close". The old string matching therefore dropped every live IPO into
+        # "upcoming", so the site showed 0 open while four were accepting bids, and the
+        # section looked stale even though the dates were right.
+        today = datetime.now(timezone.utc).date()
         for r in rows:
-            s = (r.get("status") or "").lower()
-            if "open" in s and "close" not in s.replace("closes", ""):
-                out["open"].append(r)
-            elif "close" in s or "closed" in s:
-                out["closed"].append(r)
+            o = parse_dt(r.get("open"))
+            c = parse_dt(r.get("close"))
+            st = (r.get("status") or "").lower()
+            if o and c:
+                if today < o:
+                    bucket = "upcoming"
+                elif o <= today <= c:
+                    bucket = "open"
+                else:
+                    bucket = "closed"
+            elif "active" in st or "open" in st:
+                bucket = "open"
+            elif "forthcoming" in st or "upcoming" in st:
+                bucket = "upcoming"
+            elif "close" in st:
+                bucket = "closed"
             else:
-                out["upcoming"].append(r)
+                bucket = "upcoming"
+            r["bucket"] = bucket
+            out[bucket].append(r)
         out["mainboard"] = [r for r in rows if not r["sme"]]
         out["sme"] = [r for r in rows if r["sme"]]
         print("  upcoming: %d rows (%d mainboard, %d SME)" % (len(rows), len(out["mainboard"]), len(out["sme"])))
@@ -126,6 +159,16 @@ def main():
         got = True
         out["listed"] = norm_past(past)[:200]
         print("  listed: %d rows" % len(out["listed"]))
+
+    # If the past-issues endpoint gave nothing, do not leave the tab empty - fall back to
+    # issues that have closed and already carry a listing price. Better a shorter honest
+    # list than a blank tab while listings plainly exist.
+    if not out["listed"]:
+        derived = [r for r in out["closed"] if r.get("listing_gain_pct") is not None]
+        if derived:
+            out["listed"] = derived[:200]
+            print("  listed: %d rows (derived from closed issues with a listing price)"
+                  % len(out["listed"]))
 
     out["count"] = len(out["upcoming"]) + len(out["open"]) + len(out["closed"]) + len(out["listed"])
     if not got:

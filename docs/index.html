@@ -581,8 +581,8 @@ body.scrolled #burger{top:14px !important;left:6px !important}
   Each section names its own source.</p>
 
   <p><strong>Something missing or wrong?</strong>
-  <a href="https://github.com/devrajai/ArthaSaar/issues/new" target="_blank" rel="noopener">Tell me what to add or fix</a>
-  &mdash; a GitHub issue. It goes to me, not to a third party.</p>
+  <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM" target="_blank" rel="noopener">Tell me what to add or fix</a>
+  &mdash; a one-minute form. It goes to me, not to a third party.</p>
 
   <p><strong>Licence.</strong> NSE and BSE data is governed by their Data Sharing &amp; Usage Policy.
   Personal, non-commercial use is generally fine; redistributing exchange data publicly, or
@@ -883,31 +883,7 @@ function drawCandles(host, candles, intraday){
   var box=el("div","cwrap"); box.innerHTML=svg; host.appendChild(box);
 }
 function liveChart(host, sym){
-  // Every timeframe you asked for. Not all are native to Yahoo, so some are RESAMPLED from
-  // the nearest interval it does serve - that is what `agg` means: combine N source bars
-  // into one. 3m is 3x1m, 40m is 8x5m, 4h and 6h are 4x and 6x 60m, 1W is 5x1d, 1M is 21x1d.
-  //
-  // THE HONEST LIMITS, shown in the note under the chart:
-  //   1m  -> Yahoo keeps only 7 days of it
-  //   5m/15m/30m -> 60 days
-  //   1h  -> 730 days
-  //   1d and above -> full history
-  // So "1 minute chart of 2019" does not exist anywhere free. Intraday is recent-only; the
-  // multi-year view is daily and monthly, which the archive has back to 2019.
-  var TF=[
-    {l:"1m",  iv:"1m",  rng:"1d",  agg:1},
-    {l:"3m",  iv:"1m",  rng:"5d",  agg:3},
-    {l:"5m",  iv:"5m",  rng:"5d",  agg:1},
-    {l:"15m", iv:"15m", rng:"5d",  agg:1},
-    {l:"30m", iv:"30m", rng:"1mo", agg:1},
-    {l:"40m", iv:"5m",  rng:"1mo", agg:8},
-    {l:"1h",  iv:"60m", rng:"1mo", agg:1},
-    {l:"4h",  iv:"60m", rng:"3mo", agg:4},
-    {l:"6h",  iv:"60m", rng:"6mo", agg:6},
-    {l:"1D",  iv:"1d",  rng:"5y",  agg:1},
-    {l:"1W",  iv:"1d",  rng:"5y",  agg:5},
-    {l:"1M",  iv:"1d",  rng:"10y", agg:21}
-  ];
+  var TF=[["1m","1d"],["5m","5d"],["15m","5d"],["60m","1mo"],["1d","1y"]];
   var cur=0, timer=null;
   var bar=el("div","tf");
   var chartHost=el("div");
@@ -916,7 +892,7 @@ function liveChart(host, sym){
   host.appendChild(bar); host.appendChild(chartHost); host.appendChild(note);
 
   var btns=TF.map(function(tf,i){
-    var b=el("button","small",tf.l);
+    var b=el("button","small",tf[0]);
     b.addEventListener("click",function(){ cur=i; paintBtns(); load(); });
     bar.appendChild(b); return b;
   });
@@ -925,7 +901,7 @@ function liveChart(host, sym){
   paintBtns();
 
   function load(){
-    var iv=TF[cur].iv, rng=TF[cur].rng;
+    var iv=TF[cur][0], rng=TF[cur][1];
     status.className="live"; status.innerHTML="loading…";
     var base=CONFIG.proxy.replace(/\/+$/,"");
     var u=base+"/?symbol="+encodeURIComponent(sym)+"&interval="+iv+"&range="+rng;
@@ -938,19 +914,6 @@ function liveChart(host, sym){
         if(q.open[i]==null||q.close[i]==null||q.high[i]==null||q.low[i]==null) continue;
         out.push({t:ts[i],o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],v:(q.volume?q.volume[i]:null)});
       }
-      // combine N source bars into one, when the timeframe is not native
-      if(TF[cur].agg>1 && out.length){
-        var k=TF[cur].agg, merged=[];
-        for(var s=0;s<out.length;s+=k){
-          var grp=out.slice(s,s+k);
-          if(!grp.length) continue;
-          var hi=grp[0].h, lo=grp[0].l, vol=0;
-          grp.forEach(function(b){ hi=Math.max(hi,b.h); lo=Math.min(lo,b.l); vol+=(b.v||0); });
-          merged.push({t:grp[0].t, o:grp[0].o, h:hi, l:lo,
-                       c:grp[grp.length-1].c, v:vol});
-        }
-        out=merged;
-      }
       drawCandles(chartHost, out, iv!=="1d");
       var last=out.length?out[out.length-1].t:null;
       var lag=last?Math.round((Date.now()/1000-last)):null;
@@ -960,14 +923,8 @@ function liveChart(host, sym){
         ? ("<b>"+out.length+" bars</b> · last "+(last?fmtTime(last, iv!=="1d"):"—")+
            (lag!=null?" · "+lag+"s ago":""))
         : "no bars";
-      var limit={ "1m":"7 days of history", "1d":"full history", "5d":"60 days",
-                  "1mo":"60 days", "3mo":"730 days", "6mo":"730 days", "5y":"full history",
-                  "10y":"full history" }[rng] || rng;
-      var aggNote = TF[cur].agg>1 ? (" Built from "+TF[cur].agg+"x"+iv+" bars.") : "";
-      note.textContent = "Source: Yahoo Finance via the proxy. Yahoo keeps "+limit+
-        " at this interval, so this view starts where its data does - not at 2019."+aggNote+
-        " Intraday history is not available for free anywhere; the multi-year view is the "+
-        "1D / 1W / 1M buttons, which come from our own archive.";
+      note.textContent = "Source: Yahoo Finance via the proxy. Yahoo caches intraday data for "+
+        "10 seconds, so that is the floor on freshness. 1-minute history is limited to 7 days.";
     }).catch(function(e){
       status.className="live stale"; status.textContent="proxy error";
       chartHost.innerHTML="";
@@ -1585,30 +1542,6 @@ function build(d){
           oneOut.appendChild(para("No report card for \""+s+"\". Only stocks with at least 250 sessions and 85% data coverage get one.", false));
           return;
         }
-        // A real multi-year chart, not a sparkline. Monthly closes, so it shows the shape
-        // and the drawdowns; the daily series and live candles cover short-term moves.
-        try{
-          var CH=(window.CHARTS||{})[s] || (window.CHARTS||{})[s+".NS"];
-          if(CH && CH.length>3){
-            var W=340,H=120,pad=4;
-            var vals=CH.map(function(pt){return pt[1];});
-            var lo=Math.min.apply(null,vals), hi=Math.max.apply(null,vals), span=(hi-lo)||1;
-            var d=CH.map(function(pt,i){
-              var x=pad+(i/(CH.length-1))*(W-2*pad);
-              var y=H-pad-((pt[1]-lo)/span)*(H-2*pad);
-              return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
-            }).join(" ");
-            var up=vals[vals.length-1]>=vals[0];
-            var col=up?"#16a34a":"#dc2626";
-            var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">'+
-              '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5" stroke-linejoin="round"/>'+
-              '</svg>';
-            var box=el("div"); box.innerHTML=svg;
-            var pct=((vals[vals.length-1]/vals[0]-1)*100).toFixed(1);
-            oneOut.appendChild(para(CH[0][0]+" to "+CH[CH.length-1][0]+": "+(pct>0?"+":"")+pct+"%", false));
-            oneOut.appendChild(box);
-          }
-        }catch(e){}
         oneOut.appendChild(cardTable([s]));
       }
       one.addEventListener("input", paintOne);
@@ -2721,38 +2654,6 @@ function build(d){
   (function(){
     var v=sec("tools");
 
-    // ---- one line of tool buttons, above the cards -------------------------------
-    // The three calculators were three stacked cards, so reaching the payoff builder meant
-    // scrolling past the other two. This row jumps straight to one, and stays a single line
-    // on a phone by scrolling sideways rather than wrapping.
-    (function(){
-      var row=el("div");
-      row.style.cssText="display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;"
-        +"padding:2px 0 10px;scrollbar-width:none";
-      var items=[["Position size","posSize","Position size and risk-reward"],
-                 ["Capital gains","capGains","Capital gains"],
-                 ["Option payoff","payoff","Option payoff builder"],
-                 ["Backtest","backtest","Backtest"]];
-      items.forEach(function(it){
-        var b=el("button","small",it[0]);
-        b.style.cssText="white-space:nowrap;flex:0 0 auto";
-        b.addEventListener("click",function(){
-          if(it[1]==="backtest"){ show("backtest"); return; }
-          // find the card by its heading text. No ids to add to the card() calls, so this
-          // cannot break their appendChild the way my first attempt did.
-          var all=v.querySelectorAll("*"), hit=null;
-          for(var i=0;i<all.length;i++){
-            var tx=(all[i].textContent||"").trim();
-            if(tx.indexOf(it[2])===0 && all[i].children.length===0){ hit=all[i]; break; }
-          }
-          while(hit && hit!==v && hit.parentNode && hit.parentNode!==v) hit=hit.parentNode;
-          if(hit && hit.scrollIntoView) hit.scrollIntoView({behavior:"smooth",block:"start"});
-        });
-        row.appendChild(b);
-      });
-      v.appendChild(row);
-    })();
-
     /* ---- 1. position size and risk/reward ---- */
     (function(){
       var cap=el("input"); cap.type="number"; cap.value="100000";
@@ -2912,6 +2813,163 @@ function build(d){
       var g=el("div","field");
       [["Spot (₹)",spot],["Lot size",lot]].forEach(function(f){ var w=el("div",""); w.appendChild(el("div","sub",esc(f[0]))); w.appendChild(f[1]); g.appendChild(w); });
       setLegs("Bull call spread");
+      /* ---- 4. family portfolio: XIRR, owners, and the tax line ---------------------
+         Built for people running money for themselves AND for family, which is a different
+         job from a single demat account. Each holding carries an owner, so you can see
+         "mine is +18%, my mother's is +6%" rather than one blended number that hides both.
+
+         XIRR, not simple return. A holding bought in three tranches has no single "buy
+         price", and averaging the tranches overstates the result. XIRR solves for the rate
+         that makes the discounted cash flows net to today's value, which is the only honest
+         way to compare a 2019 lump sum against a 2024 SIP.
+
+         The tax line uses the Indian rules as inputs, not as advice: equity LTCG above
+         Rs 1.25 lakh a year is taxable, short-term at 20%. Both rates are editable because
+         they change, and because your slab may differ. */
+      (function(){
+       try{
+        var KEY="as-portfolio";
+        var rows=[];
+        try{ rows=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ rows=[]; }
+
+        function save(){ try{ localStorage.setItem(KEY, JSON.stringify(rows)); }catch(e){} }
+
+        // XIRR by Newton-Raphson on the NPV of dated cash flows.
+        function xirr(flows){
+          if(!flows.length) return null;
+          var hasPos=flows.some(function(f){return f.amt>0;});
+          var hasNeg=flows.some(function(f){return f.amt<0;});
+          if(!hasPos||!hasNeg) return null;
+          var r=0.1;
+          for(var it=0; it<100; it++){
+            var npv=0, d=0;
+            for(var i=0;i<flows.length;i++){
+              var y=(flows[i].t-flows[0].t)/31557600000; // ms in a Julian year
+              var base=Math.pow(1+r, y);
+              npv += flows[i].amt/base;
+              d   += -y*flows[i].amt/(base*(1+r));
+            }
+            if(Math.abs(d)<1e-12) break;
+            var nr=r-npv/d;
+            if(!isFinite(nr)) break;
+            if(Math.abs(nr-r)<1e-9){ r=nr; break; }
+            r=nr;
+          }
+          return isFinite(r)&&r>-0.9999 ? r : null;
+        }
+
+        function priceOf(sym){
+          // STOCKS is the global holding stocks.json; build(d) receives data.json as `d`.
+          // Using `D` here threw a ReferenceError and took the whole Tools section down
+          // with it - every calculator disappeared, not just this card.
+          var st=(typeof STOCKS!=="undefined"&&STOCKS&&STOCKS.stocks)||{};
+          var k=Object.keys(st).filter(function(x){return x===sym+".NS"||x===sym+".BO";})[0];
+          return k&&st[k]?st[k].close:null;
+        }
+
+        var owner=el("input"); owner.placeholder="You / Spouse / Mother";
+        var symIn=el("input"); symIn.placeholder="RELIANCE"; symIn.setAttribute("list","symList");
+        var qty=el("input"); qty.type="number"; qty.placeholder="10";
+        var buyPx=el("input"); buyPx.type="number"; buyPx.placeholder="1200";
+        var buyDt=el("input"); buyDt.type="date";
+        var out=el("div");
+        var msg=el("div","cnote");
+
+        function compute(){
+          var byOwner={}, allFlows=[], totalNow=0, totalCost=0;
+          rows.forEach(function(r){
+            var px=priceOf(r.sym);
+            var val=(px!=null?px:r.buyPx)*r.qty;
+            var cost=r.buyPx*r.qty;
+            totalNow+=val; totalCost+=cost;
+            var o=byOwner[r.owner]||(byOwner[r.owner]={now:0,cost:0,flows:[]});
+            o.now+=val; o.cost+=cost;
+            var t0=new Date(r.buyDt).getTime();
+            o.flows.push({t:t0, amt:-cost});
+            allFlows.push({t:t0, amt:-cost});
+          });
+          var today=Date.now();
+          Object.keys(byOwner).forEach(function(k){
+            byOwner[k].flows.push({t:today, amt:byOwner[k].now});
+          });
+          allFlows.push({t:today, amt:totalNow});
+
+          out.innerHTML="";
+          if(!rows.length){
+            out.appendChild(para("Add a holding to see XIRR, per-person totals and the tax split.", false));
+            return;
+          }
+          var body=[["Total invested", num(Math.round(totalCost))],
+                    ["Current value", num(Math.round(totalNow))],
+                    ["Absolute gain", num(Math.round(totalNow-totalCost))+
+                      " ("+(totalCost?((totalNow/totalCost-1)*100).toFixed(1):"-")+"%)"]];
+          var x=xirr(allFlows);
+          body.push(["XIRR", x!=null?(x*100).toFixed(2)+"%":"cannot compute"]);
+          out.appendChild(table(["Measure","Value"], body));
+
+          var ownRows=Object.keys(byOwner).map(function(k){
+            var o=byOwner[k], xi=xirr(o.flows);
+            return [k, num(Math.round(o.cost)), num(Math.round(o.now)),
+                    (o.cost?((o.now/o.cost-1)*100).toFixed(1):"-")+"%",
+                    xi!=null?(xi*100).toFixed(2)+"%":"-"];
+          });
+          out.appendChild(para("By person", false));
+          out.appendChild(table(["Owner","Invested","Now","Gain","XIRR"], ownRows, ["Invested","Now"]));
+
+          // tax: split by holding period, then apply the exemption
+          var lt=0, st=0;
+          rows.forEach(function(r){
+            var px=priceOf(r.sym), val=(px!=null?px:r.buyPx)*r.qty, cost=r.buyPx*r.qty;
+            var days=(Date.now()-new Date(r.buyDt).getTime())/86400000;
+            if(days>365) lt+=val-cost; else st+=val-cost;
+          });
+          out.appendChild(para("Gain by holding period", false));
+          out.appendChild(table(["Bucket","Gain","Taxable after Rs 1.25L exemption"],[
+            ["Long term (>12m)", num(Math.round(lt)), num(Math.round(Math.max(0,lt-125000)))],
+            ["Short term (<=12m)", num(Math.round(st)), num(Math.round(Math.max(0,st)))]
+          ], ["Gain","Taxable after Rs 1.25L exemption"]));
+          msg.innerHTML="XIRR uses today's close for the current value. The exemption is applied to "+
+            "long-term gain only and assumes you have no other LTCG this year. Rates change - check them.";
+        }
+
+        function addRow(){
+          var s=(symIn.value||"").trim().toUpperCase();
+          if(!s||!+qty.value||!+buyPx.value||!buyDt.value){ msg.textContent="Fill symbol, quantity, buy price and date."; return; }
+          rows.push({owner:(owner.value||"You").trim(), sym:s, qty:+qty.value,
+                     buyPx:+buyPx.value, buyDt:buyDt.value});
+          save(); compute(); msg.textContent="";
+          symIn.value=""; qty.value=""; buyPx.value="";
+        }
+
+        var addBtn=el("button","small","Add holding");
+        addBtn.addEventListener("click", addRow);
+        var clr=el("button","small","Clear all");
+        clr.addEventListener("click", function(){ rows=[]; save(); compute(); });
+
+        var f=el("div","field");
+        [["Owner",owner],["Symbol",symIn],["Qty",qty],["Buy price",buyPx],["Buy date",buyDt]]
+          .forEach(function(x){
+            var w=el("div"); w.appendChild(el("div","sub",esc(x[0]))); w.appendChild(x[1]);
+            x[1].style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
+            f.appendChild(w);
+          });
+        f.appendChild(addBtn); f.appendChild(clr);
+        compute();
+        v.appendChild(card("Family portfolio", rows.length+" holding"+(rows.length===1?"":"s")+" - XIRR, owners, tax",
+          [f, out, msg],
+          {what:"Track holdings across several people with a proper annualised return, not a simple percentage.",
+           source:"Your entries, priced off our own split-adjusted closes.", updated:(typeof DATA!=="undefined"&&DATA?DATA.generated_utc:""),
+           note:"Stored in this browser only - nothing is uploaded. XIRR is the annualised rate that makes the dated cash flows net to today's value; it is the right measure when you bought in several tranches."}));
+       }catch(e){
+         // A failure here must cost only this card. Without the guard, one bad reference took
+         // the whole Tools section down - the position-size and capital-gains calculators
+         // disappeared too, which is a far worse outcome than a missing feature.
+         v.appendChild(card("Family portfolio","could not load",
+           [para("This card failed to start: "+esc(e.message), false)],
+           {what:"Portfolio tracker with XIRR.", note:"The other tools on this tab are unaffected."}));
+       }
+      })();
+
       v.appendChild(card("Option payoff builder","Pick a structure and see the profit or loss at expiry",
         [para("Every strategy is a combination of four things: buy or sell, call or put, a strike, and a premium. The chart shows the profit or loss at expiry across a range of prices around the spot."), bar, g, out, stats, note],
         {what:"Profit or loss at expiry for a chosen option structure, with maximum profit, maximum loss and breakevens.",
@@ -3941,15 +3999,6 @@ show = function(id){
   // than on every visit - that is 2.6 MB most readers never ask for. Guarded like
   // everything else here: a failure just means no sparkline, never a broken page.
   try{
-    if(id==="stocks" && !window.__CHARTS_LOADED && window.fetch){
-      window.__CHARTS_LOADED = true;
-      fetch("charts.json").then(function(r){return r.json();}).then(function(c){
-        // Store it, do NOT re-render. Re-rendering here rebuilt the whole Stocks tab and
-        // wiped whatever the reader had already typed into the lookup box - the chart would
-        // arrive and their symbol would vanish. The data is read at paint time instead.
-        window.CHARTS = (c&&c.series)||{};
-      }).catch(function(){});
-    }
     if(id==="stocks" && !window.__SERIES_LOADED && window.fetch){
       window.__SERIES_LOADED = true;
       fetch("series.json").then(function(r){return r.json();}).then(function(s){

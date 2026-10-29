@@ -81,8 +81,13 @@ def main():
     missing = [n for n, c in (("symbol", c_sym), ("strike", c_str), ("option type", c_opt),
                               ("open interest", c_oi)) if not c]
     if missing:
-        out["note"] = ("The F&O file does not carry %s - NSE may have changed the format."
-                       % ", ".join(missing))
+        # Say WHAT was in the file. This step has skipped several runs with only a vague
+        # message, and each time we guessed at the cause instead of reading it.
+        print("  columns in %s:" % os.path.basename(path))
+        for c in list(df.columns)[:40]:
+            print("    -", c)
+        out["note"] = ("The F&O file does not carry %s. Columns present: %s"
+                       % (", ".join(missing), ", ".join(map(str, list(df.columns)[:20]))))
         json.dump(out, open(OUT, "w"), ensure_ascii=False)
         print("oi strikes: skipped (%s)" % out["note"])
         return 0

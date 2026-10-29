@@ -60,11 +60,18 @@ def main():
     try:
         ser = json.load(open("docs/series.json")).get("series") or {}
         merged = 0
+        # series.json is keyed by the YAHOO symbol ("RELIANCE.NS") while stocks.json is keyed
+        # by the clean one ("RELIANCE"). A plain `if sym in stocks` matched 8 of 2,189 -
+        # which is why rs.json published only 8 ranked stocks. Try the stripped key too.
         for sym, s in ser.items():
-            if sym in stocks and s:
-                stocks[sym]["series"] = s
-                merged += 1
-        print("  series merged from series.json:", merged)
+            if not s:
+                continue
+            for key in (sym, sym.replace(".NS", ""), sym.replace(".BO", "")):
+                if key in stocks:
+                    stocks[key]["series"] = s
+                    merged += 1
+                    break
+        print("  series merged from series.json:", merged, "of", len(ser))
     except Exception:
         print("  series.json not available - falling back to any series in stocks.json")
 

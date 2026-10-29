@@ -1542,6 +1542,30 @@ function build(d){
           oneOut.appendChild(para("No report card for \""+s+"\". Only stocks with at least 250 sessions and 85% data coverage get one.", false));
           return;
         }
+        // A real multi-year chart, not a sparkline. Monthly closes, so it shows the shape
+        // and the drawdowns; the daily series and live candles cover short-term moves.
+        try{
+          var CH=(window.CHARTS||{})[s] || (window.CHARTS||{})[s+".NS"];
+          if(CH && CH.length>3){
+            var W=340,H=120,pad=4;
+            var vals=CH.map(function(pt){return pt[1];});
+            var lo=Math.min.apply(null,vals), hi=Math.max.apply(null,vals), span=(hi-lo)||1;
+            var d=CH.map(function(pt,i){
+              var x=pad+(i/(CH.length-1))*(W-2*pad);
+              var y=H-pad-((pt[1]-lo)/span)*(H-2*pad);
+              return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+            }).join(" ");
+            var up=vals[vals.length-1]>=vals[0];
+            var col=up?"#16a34a":"#dc2626";
+            var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">'+
+              '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5" stroke-linejoin="round"/>'+
+              '</svg>';
+            var box=el("div"); box.innerHTML=svg;
+            var pct=((vals[vals.length-1]/vals[0]-1)*100).toFixed(1);
+            oneOut.appendChild(para(CH[0][0]+" to "+CH[CH.length-1][0]+": "+(pct>0?"+":"")+pct+"%", false));
+            oneOut.appendChild(box);
+          }
+        }catch(e){}
         oneOut.appendChild(cardTable([s]));
       }
       one.addEventListener("input", paintOne);
@@ -3842,6 +3866,15 @@ show = function(id){
   // than on every visit - that is 2.6 MB most readers never ask for. Guarded like
   // everything else here: a failure just means no sparkline, never a broken page.
   try{
+    if(id==="stocks" && !window.__CHARTS_LOADED && window.fetch){
+      window.__CHARTS_LOADED = true;
+      fetch("charts.json").then(function(r){return r.json();}).then(function(c){
+        // Store it, do NOT re-render. Re-rendering here rebuilt the whole Stocks tab and
+        // wiped whatever the reader had already typed into the lookup box - the chart would
+        // arrive and their symbol would vanish. The data is read at paint time instead.
+        window.CHARTS = (c&&c.series)||{};
+      }).catch(function(){});
+    }
     if(id==="stocks" && !window.__SERIES_LOADED && window.fetch){
       window.__SERIES_LOADED = true;
       fetch("series.json").then(function(r){return r.json();}).then(function(s){

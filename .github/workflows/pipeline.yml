@@ -154,6 +154,15 @@ jobs:
       - name: "7d. Crypto"
         run: python scripts/fetch_crypto.py
 
+      # Yahoo daily history for the coins, so the chart has a past rather than only today.
+      # fetch_yahoo sanitises symbols: BTC-USD becomes BTC_USD.parquet, which is what
+      # build_crypto_history.py looks for.
+      - name: "7d2. Crypto price history from Yahoo (5y)"
+        run: python scripts/fetch_yahoo.py --group crypto --period 5y || true
+
+      - name: "7d3. Crypto month-end history for the site"
+        run: python scripts/build_crypto_history.py || true
+
       - name: "7f. Data quality check"
         run: python scripts/validate_data.py
 

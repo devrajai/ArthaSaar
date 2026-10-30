@@ -2140,6 +2140,46 @@ function build(d){
   /* ---------- CRYPTO ---------- */
   (function(){
     var v=sec("crypto");
+    // ---- crypto price history --------------------------------------------------------
+    // crypto.json only ever held today's snapshot, so the section could show a coin's price
+    // but never its past. These are month-end closes from the Yahoo daily files the pipeline
+    // already fetches. No Colab: the source works on the runner.
+    (function(){
+     try{
+      if(!CRYPTHIST||!CRYPTHIST.series) return;
+      var ser=CRYPTHIST.series, keys=Object.keys(ser);
+      if(!keys.length) return;
+      var kids=[];
+      kids.push(para(CRYPTHIST.count+" coins with history, "+CRYPTHIST.from+" to "+CRYPTHIST.to+
+        ". Crypto trades 24/7, so a month here is a calendar month - not comparable to a "+
+        "stock's 21-session month.", false));
+      keys.slice(0,6).forEach(function(sym){
+        var pts=ser[sym];
+        if(!pts||pts.length<3) return;
+        var W=340,H=80,pad=4;
+        var vals=pts.map(function(x){return x[1];});
+        var lo=Math.min.apply(null,vals), hi=Math.max.apply(null,vals), span=(hi-lo)||1;
+        var d=pts.map(function(x,i){
+          var px=pad+(i/(pts.length-1))*(W-2*pad);
+          var py=H-pad-((x[1]-lo)/span)*(H-2*pad);
+          return (i?"L":"M")+px.toFixed(1)+" "+py.toFixed(1);
+        }).join(" ");
+        var up=vals[vals.length-1]>=vals[0];
+        var box=el("div");
+        box.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">'
+          +'<path d="'+d+'" fill="none" stroke="'+(up?"#16a34a":"#dc2626")+'" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+        var pct=((vals[vals.length-1]/vals[0]-1)*100).toFixed(0);
+        kids.push(para(sym+"  "+pts[0][0]+" to "+pts[pts.length-1][0]+": "+(pct>0?"+":"")+pct+"%", false));
+        kids.push(box);
+      });
+      v.appendChild(card("Crypto history", CRYPTHIST.count+" coins since "+CRYPTHIST.from, kids,
+        {what:"Month-end closes for the coins we hold Yahoo history for.",
+         source:"Yahoo daily prices, month-end taken from the series.", updated:CRYPTHIST.updated,
+         note:"Coverage is the coins with a Yahoo history file, not all 82 listed. Crypto trades 24/7, so these monthly bars are calendar months and not directly comparable to equity bars."}));
+     }catch(e){}
+    })();
+
+
     if(CRYPTO && CRYPTO.rows && CRYPTO.rows.length){
       var holder=el("div");
       var byCoin={}; for(var k in (CRYPTO.coins||{})) byCoin[CRYPTO.coins[k].symbol]=CRYPTO.coins[k];
@@ -3964,6 +4004,7 @@ function assign(name, v){
     case "oi_history.json": OIHIST=v; break;
     case "oi_stats.json": OISTATS=v; break;
     case "oi_walls.json": OIWALLS=v; break;
+    case "crypto_history.json": CRYPTHIST=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4010,8 +4051,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json"];
 
 function renderAll(){
   if(!DATA) return;

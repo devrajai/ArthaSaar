@@ -340,6 +340,19 @@ jobs:
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
         run: python scripts/fetch_from_sheets.py --spreadsheet-id "${{ secrets.SHEET_SOURCE_ID }}" --range "${{ secrets.SHEET_SOURCE_RANGE }}"
 
+      # Mirror every published dataset into one Google Sheet, one tab per dataset.
+      # Skips quietly unless ARTHASAAR_SHEET_ID and GOOGLE_SA_JSON are both set.
+      # The site keeps reading JSON - a sheet is for sorting, pivots and sharing with
+      # people who will not open a repo, not a replacement for the page.
+      - name: "9b. Mirror all data into Google Sheets (optional)"
+        if: env.HAS_SHEETS == 'true'
+        env:
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          ARTHASAAR_SHEET_ID: ${{ secrets.ARTHASAAR_SHEET_ID }}
+        run: |
+          pip install --quiet gspread google-auth || true
+          python scripts/export_to_sheets.py || true
+
       - name: "10. Notion source (optional)"
         if: env.HAS_NOTION == 'true'
         env:

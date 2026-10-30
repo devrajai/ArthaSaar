@@ -2607,6 +2607,51 @@ function build(d){
   /* ---------- ETFs ---------- */
   (function(){
     var v=sec("etf");
+
+    // ---- ETF price history, from our own archive -------------------------------------
+    // 190 of the 341 listed ETFs already carry 94 months of split-adjusted closes in
+    // charts.json, built from the same candle archive the stock charts use. No extra data
+    // was needed for this - it was already collected and simply not shown.
+    // The other 151 are mostly recently listed or trade too thinly to appear in the
+    // bhavcopy, so they have no history rather than a wrong one.
+    (function(){
+     try{
+      var CH=window.CHARTS||{};
+      var rows=(ETF&&ETF.rows)||[];
+      if(!rows.length||!Object.keys(CH).length) return;
+      var withHist=rows.filter(function(r){return CH[r.symbol]||CH[r.symbol+".NS"];});
+      if(!withHist.length) return;
+      var kids=[];
+      kids.push(para(withHist.length+" of "+rows.length+" ETFs have price history back to "+
+        (CH[withHist[0].symbol]?CH[withHist[0].symbol][0][0]:"2019")+
+        ". The rest are recently listed or too thinly traded to appear in the daily bhavcopy.", false));
+      // a few of the largest, so the shape is visible without opening each one
+      ["NIFTYBEES","BANKBEES","GOLDBEES","JUNIORBEES"].forEach(function(sym){
+        var s=CH[sym]||CH[sym+".NS"];
+        if(!s||s.length<3) return;
+        var W=340,H=90,pad=4;
+        var vals=s.map(function(pt){return pt[1];});
+        var lo=Math.min.apply(null,vals), hi=Math.max.apply(null,vals), span=(hi-lo)||1;
+        var d=s.map(function(pt,i){
+          var x=pad+(i/(s.length-1))*(W-2*pad);
+          var y=H-pad-((pt[1]-lo)/span)*(H-2*pad);
+          return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+        }).join(" ");
+        var up=vals[vals.length-1]>=vals[0];
+        var box=el("div");
+        box.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">'
+          +'<path d="'+d+'" fill="none" stroke="'+(up?"#16a34a":"#dc2626")+'" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+        var pct=((vals[vals.length-1]/vals[0]-1)*100).toFixed(1);
+        kids.push(para(sym+"  "+s[0][0]+" to "+s[s.length-1][0]+": "+(pct>0?"+":"")+pct+"%", false));
+        kids.push(box);
+      });
+      v.appendChild(card("ETF history", withHist.length+" ETFs since 2019", kids,
+        {what:"Month-end closes for the larger ETFs, from our own archive.",
+         source:"NSE bhavcopy, split and bonus adjusted.", updated:when,
+         note:"Monthly bars show the trend, not daily noise. An ETF trading far from its NAV is a separate question - see the premium column in the table below."}));
+     }catch(e){}
+    })();
+
     if(!ETF || !ETF.rows || !ETF.rows.length){
       v.appendChild(card("ETFs","",[para("No ETF data yet. The list comes from NSE's own ETF file and is built in the daily pipeline.")],
         {what:"Every ETF listed on NSE, with technicals.",source:"NSE ETF list + Yahoo prices.",updated:when}));

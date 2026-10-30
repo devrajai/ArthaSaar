@@ -1,0 +1,94 @@
+name: MF NAV history (one-off backfill)
+
+# WHY A WORKFLOW AND NOT COLAB
+# Two Colab attempts failed on the network: the AMFI month-by-month version made ~7,100
+# requests and was stopped by hand, and the mfapi.in version produced no output at all -
+# its diagnostic cell hung on the first request. Colab appears to block or throttle these
+# hosts.
+#
+# This runner does not. The daily pipeline already pulls AMFI's NAVAll.txt here and reports
+# 14,414 schemes, so it is a network where the source is known to work.
+#
+# It runs on demand, not on a schedule: history only needs backfilling once. After that the
+# daily pipeline appends one day at a time from the NAVAll.txt it already fetches.
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_schemes:
+        description: 'Limit to N schemes (0 = all 400)'
+        required: false
+        default: '0'
+      source:
+        description: 'mfapi, amfi, or auto'
+        required: false
+        default: 'auto'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mf-nav
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow requests
+
+      # Run a small batch first. If the network blocks us, this fails in a minute rather
+      # than after an hour of silent retries.
+      - name: Smoke test - one scheme
+        run: python scripts/fetch_mf_nav.py --max 3 --source "${{ github.event.inputs.source || 'auto' }}"
+
+      - name: Backfill the rest
+        run: |
+          python scripts/fetch_mf_nav.py \
+            --max "${{ github.event.inputs.max_schemes || '0' }}" \
+            --source "${{ github.event.inputs.source || 'auto' }}"
+
+      - name: Show what we got
+        run: |
+          python - <<'EOF'
+          import os, pandas as pd
+          p = "data/mf/nav_history.parquet"
+          if not os.path.exists(p):
+              print("::error title=Nothing produced::nav_history.parquet was not written")
+              raise SystemExit(1)
+          d = pd.read_parquet(p)
+          print(f"{len(d):,} rows | {d['code'].nunique()} schemes | "
+                f"{d['date'].min().date()} -> {d['date'].max().date()}")
+          print(f"{os.path.getsize(p)/1e6:.1f} MB")
+          print()
+          print(d.groupby(d["date"].dt.year).size().to_string())
+          EOF
+
+      - name: Commit
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add data/mf/nav_history.parquet
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "data: mutual fund NAV history ($(date -u +%FT%TZ))"
+            for i in 1 2 3 4; do
+              git rebase --abort 2>/dev/null || true
+              git pull --rebase --autostash || true
+              if git push; then echo "pushed"; exit 0; fi
+              sleep 10
+            done
+            echo "::error::could not push after 4 attempts"
+            exit 1
+          fi

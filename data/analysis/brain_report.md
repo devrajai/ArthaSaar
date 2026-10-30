@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-10-30T16:56:56Z  |  10 channels, 300 videos, window 2026-06-25 to 2026-10-30.
+Generated 2026-10-30T21:17:20Z  |  10 channels, 301 videos, window 2026-06-25 to 2026-10-30.
 
-**Total views across the window:** 11,376,799  |  **net bull-bear keyword score:** 118
+**Total views across the window:** 11,389,604  |  **net bull-bear keyword score:** 118
 
 ## Most-talked-about symbols
 
@@ -35,7 +35,7 @@ Generated 2026-10-30T16:56:56Z  |  10 channels, 300 videos, window 2026-06-25 to
 | Channel | Videos | Avg views | Newest |
 |---|---|---|---|
 | POWER OF STOCKS | 17 | 160,114 | 2026-10-25 |
-| Abhishek Kar | 23 | 114,482 | 2026-10-29 |
+| Abhishek Kar | 24 | 110,245 | 2026-10-30 |
 | Moneytalks by Groww | 20 | 63,987 | 2026-10-29 |
 | WAY2LAABH | 21 | 36,810 | 2026-10-29 |
 | Ghanshyam Tech | 23 | 32,993 | 2026-10-29 |

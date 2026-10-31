@@ -802,6 +802,53 @@ header{
   color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
   font-size:19px !important; letter-spacing:-.3px !important;
 }
+
+/* ====================================================================================
+   SEARCH BAR - design B, the soft filled pill.
+   No border, no shadow, no outline: a light grey-blue fill at full round. Chosen from the
+   four rendered options. It reads as a control without drawing the eye before the content,
+   which the outlined version did.
+   ==================================================================================== */
+.searchwrap{
+  background:#e2ecfa !important;
+  background-image:none !important;
+  border:0 !important;
+  border-radius:999px !important;
+  box-shadow:none !important;
+  padding:14px 20px !important;
+  gap:12px !important;
+  transition:background .18s ease;
+}
+.searchwrap:focus-within{
+  background:#d3e4fb !important;
+}
+.searchwrap .mag{
+  background:none !important;
+  background-image:none !important;
+  box-shadow:none !important;
+  color:var(--accent,#1d4ed8) !important;
+  width:20px !important; height:20px !important; min-width:20px !important;
+  display:flex; align-items:center; justify-content:center;
+}
+.searchwrap .mag svg{width:19px !important;height:19px !important;display:block}
+.searchwrap input{
+  background:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  font-size:16px !important;
+  color:var(--text,#0b2239) !important;
+}
+.searchwrap input::placeholder{color:#5b7590 !important;opacity:1}
+
+/* the mark stays letters, no tile */
+.logo{
+  background:none !important; background-image:none !important;
+  border:0 !important; box-shadow:none !important; border-radius:0 !important;
+  width:auto !important; height:auto !important; min-width:0 !important; padding:0 !important;
+  color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
+  font-size:19px !important; letter-spacing:-.3px !important;
+}
 </style>
 </head>
 <body>

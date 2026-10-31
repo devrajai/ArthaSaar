@@ -1067,7 +1067,6 @@ var SECTIONS=[
   {id:"mf",        label:"Mutual Funds"},
   {id:"news",      label:"News"},
   {id:"corporate", label:"Corporate"},
-  {id:"youtube",   label:"YouTube"},
   {id:"tools",     label:"Tools"},
   {id:"backtest",  label:"Backtester"},
   {id:"watchlist", label:"Watchlist"},
@@ -1087,7 +1086,6 @@ var SECTIONS=[
   {id:"levels",      label:"Levels"},
   {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
-  {id:"data",      label:"Data"}
 ];
 var FEEDS=["archive","fno","spikes","corporate","markets","commodities","fx","crypto","news",
            "brain","channels","videos","indicators","screens","relative_strength","patterns",
@@ -2426,6 +2424,8 @@ function build(d){
 
   /* ---------- YOUTUBE ---------- */
   (function(){
+    // Not in the nav any more (removed by request). The section still builds but has
+    // no tab, so it is unreachable. docs/health.json is likewise still published.
     var v=sec("youtube");
     if(d.brain&&d.brain.top_symbols)
       v.appendChild(card("Symbols mentioned", num(d.brain.videos)+" videos",[ tbl({columns:["symbol","mentions","channels"],
@@ -4396,7 +4396,7 @@ var GROUPS = [
   ["Funds & issues",["mf","etf","ipo","charges"]],
   ["Disclosures",   ["corporate","news","calendar","watchlists","deals","insider","promoter","regulator"]],
   ["Tools",         ["tools","backtest","watchlist"]],
-  ["More",          ["youtube","learn","data"]]
+  ["More",          ["learn"]]
 ];
 
 function wireSimple(){

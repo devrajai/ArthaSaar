@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#eef6ff">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ArthaSaar — market data</title>
 <link rel="alternate" type="application/rss+xml" title="ArthaSaar daily brief" href="feed.xml">
 <meta name="description" content="NSE archive, F&O, global markets, crypto, news, corporate actions, YouTube analysis. Educational data, not investment advice.">
@@ -682,6 +684,24 @@ body.nav-hidden header{background:transparent !important; box-shadow:none !impor
 .searchwrap input{
   background:none !important;
   padding:0 2px !important;
+}
+
+/* ------------------------------------------------------------------------------------
+   The header NEVER paints a background. Not at the top, not when scrolled, not when
+   hidden. body.scrolled could be set on load (a restored scroll position is enough), and
+   its .72 white was the last thing that could reappear as a band behind the logo and the
+   search bar.
+   ------------------------------------------------------------------------------------ */
+header,
+body.scrolled header,
+body.nav-open header,
+body.nav-hidden header{
+  background:transparent !important;
+  background-image:none !important;
+  border-bottom:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
 }
 </style>
 </head>

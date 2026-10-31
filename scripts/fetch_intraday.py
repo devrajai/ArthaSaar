@@ -110,13 +110,14 @@ def main():
 
     import pandas as pd
 
-    day = args.date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    dest_dir = os.path.join(OUT_DIR, day[:4])
-    os.makedirs(dest_dir, exist_ok=True)
-    dest = os.path.join(dest_dir, day.replace("-", "") + ".parquet")
-
-    if os.path.exists(dest):
-        print("already captured: %s" % dest)
+    # The FILE is named by the SESSION date, not the run date. Running on a Saturday
+    # captured Friday's bars and filed them as Saturday's - a silent mislabel that would
+    # corrupt every later study. The real date comes from the bars themselves, once we
+    # have them; the run date is only a first guess for the resume check.
+    guess = args.date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    guess_dest = os.path.join(OUT_DIR, guess[:4], guess.replace("-", "") + ".parquet")
+    if os.path.exists(guess_dest) and args.date:
+        print("already captured: %s" % guess_dest)
         return 0
 
     targets = list(INDICES.items())
@@ -144,6 +145,19 @@ def main():
 
     df = pd.DataFrame(rows)
     df["datetime"] = pd.to_datetime(df["ts"], unit="s", utc=True)
+
+    # IST session date, because an NSE session is defined in IST. Converting to IST first
+    # avoids a late-evening UTC bar landing on the wrong calendar day.
+    ist = df["datetime"].dt.tz_convert("Asia/Kolkata")
+    day = str(ist.dt.strftime("%Y-%m-%d").mode().iloc[0])
+
+    dest_dir = os.path.join(OUT_DIR, day[:4])
+    os.makedirs(dest_dir, exist_ok=True)
+    dest = os.path.join(dest_dir, day.replace("-", "") + ".parquet")
+    if os.path.exists(dest) and not args.date:
+        print("already captured: %s" % dest)
+        return 0
+
     df["date"] = day
     df = df[["date", "symbol", "datetime", "open", "high", "low", "close", "volume"]]
     df = df.sort_values(["symbol", "datetime"]).reset_index(drop=True)

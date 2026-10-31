@@ -114,6 +114,33 @@ def main():
     else:
         hard.append("docs/index.html is missing")
 
+    # 2b. relative strength must actually rank a meaningful number of stocks.
+    # It published 9 rows for weeks while every run stayed green, because rs.json only had
+    # 8 series to work with. A count of 1 is the same failure in a different disguise.
+    rs_path = os.path.join(DOCS, "rs.json")
+    if os.path.exists(rs_path):
+        try:
+            rs = json.load(open(rs_path))
+            ranked = count_of(rs, "count")
+            if ranked is not None and ranked < 1000:
+                hard.append("rs.json ranked only %d stocks - relative strength is effectively "
+                            "empty (expected ~2,200; check that series.json is populated)"
+                            % ranked)
+        except Exception:
+            pass
+
+    # 2c. series.json is what feeds both the sparkline and relative strength. A handful of
+    # entries means the archive backfill is not reaching it.
+    sp = os.path.join(DOCS, "series.json")
+    if os.path.exists(sp):
+        try:
+            n = len((json.load(open(sp)).get("series") or {}))
+            if n < 500:
+                hard.append("series.json holds only %d price series (expected ~2,200) - "
+                            "sparklines and relative strength will both be broken" % n)
+        except Exception:
+            pass
+
     # 3. files that exist but nothing references - not an error, just noise to know about
     present = {f for f in os.listdir(DOCS) if f.endswith(".json")}
     if os.path.exists(INDEX):

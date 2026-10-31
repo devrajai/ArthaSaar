@@ -704,33 +704,33 @@ body.nav-hidden header{
   backdrop-filter:none !important;
 }
 
-/* ------------------------------------------------------------------------------------
-   THE HEADER PAINTS THE PAGE'S OWN BACKGROUND.
-   Making it transparent let content scroll visibly underneath - in the last screenshot
-   the text "What moved" showed THROUGH the search bar, which is the real mess.
-   The page uses --bg-grad with background-attachment:fixed, so painting the SAME gradient
-   with the SAME fixed attachment lines the header up pixel-for-pixel with the page behind
-   it: fully opaque (nothing bleeds through) and invisible as a shape (no band, no square).
-   ------------------------------------------------------------------------------------ */
-header,
-body.scrolled header,
-body.nav-open header,
-body.nav-hidden header{
-  background:var(--bg-grad,#eef6ff) !important;
-  background-attachment:fixed !important;
-  background-color:#eef6ff !important;
+/* ====================================================================================
+   ROOT CAUSE: the header was position:sticky.
+   That is why content scrolled UNDER it and showed through - in the screenshots the text
+   "Last time you were here" was visible inside the search bar and the card was cut off
+   behind it. No amount of colouring or blurring fixes an overlap; the overlap itself has
+   to go.
+   The header is now part of the normal page flow. Nothing can scroll beneath it, so there
+   is nothing to bleed through, and it needs no background at all.
+   The burger button still opens the full nav, so nothing is lost.
+   ==================================================================================== */
+header{
+  position:static !important;
+  top:auto !important;
+  background:transparent !important;
+  background-image:none !important;
   border-bottom:0 !important;
   box-shadow:none !important;
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
+  transform:none !important;
 }
 
-/* The search is a plain line of text with a magnifier - no fill, no pill, no box. */
+/* the search: a line of text with a magnifier, no fill and no box */
 .searchwrap{
   background:none !important;
   background-image:none !important;
   border:0 !important;
-  border-bottom:0 !important;
   border-radius:0 !important;
   box-shadow:none !important;
   padding:10px 2px !important;

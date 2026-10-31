@@ -1597,6 +1597,18 @@ function build(d){
             oneOut.appendChild(box);
           }
         }catch(e){}
+        // LOSS PREVIEW. A rupee figure lands harder than a warning label: "this fell 64%
+        // between Jul 2024 and Oct 2026" is abstract, "Rs 1,00,000 became Rs 36,200" is not.
+        try{
+          var wi=WHATIF&&WHATIF.drawdowns&&WHATIF.drawdowns[s];
+          if(wi){
+            var amt=100000, after=Math.round(amt*(1+wi.pct/100));
+            oneOut.appendChild(para("If this stock repeats its worst fall, "+num(amt)+
+              " becomes "+num(after)+".", true));
+            oneOut.appendChild(para("It fell "+Math.abs(wi.pct)+"% from "+wi.from+" to "+wi.to+
+              " ("+wi.peak_date+" to "+wi.trough_date+"). Past drawdowns do not predict future ones.", false));
+          }
+        }catch(e){}
         oneOut.appendChild(cardTable([s]));
       }
       one.addEventListener("input", paintOne);
@@ -2396,6 +2408,38 @@ function build(d){
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
+    // ---- missing the best days ---------------------------------------------------------
+    // The most useful single lesson for someone who panic-sells, and it needs no model -
+    // just the index's own daily returns since 2019 with the best few days removed.
+    (function(){
+     try{
+      var n=WHATIF&&WHATIF.nifty;
+      if(!n||!n.missing_best) return;
+      var kids=[];
+      kids.push(para("Rs 1,00,000 in the Nifty on "+n.from+" became Rs "+
+        num(Math.round(100000*(1+n.total_return_pct/100)))+" by "+n.to+" ("+
+        (n.total_return_pct>0?"+":"")+n.total_return_pct+"%).", true));
+      var rows=[["every day (what you got)", n.total_return_pct+"%",
+                 num(Math.round(100000*(1+n.total_return_pct/100)))]];
+      [5,10,20,30].forEach(function(k){
+        var v=n.missing_best[String(k)];
+        if(v===undefined||v===null) return;
+        rows.push(["missed the "+k+" best days", v+"%",
+                   num(Math.round(100000*(1+v/100)))]);
+      });
+      kids.push(tbl({columns:["scenario","total return","Rs 1,00,000 becomes"],rows:rows}));
+      if(n.best_days&&n.best_days.length){
+        kids.push(para("The days that did the work: "+n.best_days.slice(0,5).map(function(b){
+          return b.date+" ("+(b.pct>0?"+":"")+b.pct+"%)";}).join(", "), false));
+      }
+      v.appendChild(card("Missing the best days", n.sessions+" sessions since "+n.from, kids,
+        {what:"What the index returned if you held throughout, and what it returned if you missed its best few days.",
+         source:"Nifty daily closes since 2019.", updated:WHATIF.updated,
+         note:"This shows how concentrated returns are, not a timing strategy - nobody knows which days will be the best ones. It is the case against selling in a panic, not a reason to trade more."}));
+     }catch(e){}
+    })();
+
+
     if(!LEARN || !LEARN.sections){
       v.appendChild(card("Learn","",[para("Course material not loaded.")],
         {what:"Lessons on candles, patterns, indicators, F&O, fundamentals, risk and investing.",
@@ -4005,6 +4049,7 @@ function assign(name, v){
     case "oi_stats.json": OISTATS=v; break;
     case "oi_walls.json": OIWALLS=v; break;
     case "crypto_history.json": CRYPTHIST=v; break;
+    case "whatif.json": WHATIF=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4051,8 +4096,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json"];
 
 function renderAll(){
   if(!DATA) return;

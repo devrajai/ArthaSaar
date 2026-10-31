@@ -301,6 +301,11 @@ jobs:
       - name: "7m2m. Option-writing walls (daily) + shift test"
         run: python scripts/build_oi_walls.py || true
 
+      # Worst peak-to-trough per stock with dates, and what the index return becomes if you
+      # miss its best days. Needs the Yahoo index series, so it runs after that fetch.
+      - name: "7m2n. What-if: worst falls and missing the best days"
+        run: python scripts/build_whatif.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

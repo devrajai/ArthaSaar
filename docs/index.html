@@ -703,6 +703,54 @@ body.nav-hidden header{
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
 }
+
+/* ------------------------------------------------------------------------------------
+   THE HEADER PAINTS THE PAGE'S OWN BACKGROUND.
+   Making it transparent let content scroll visibly underneath - in the last screenshot
+   the text "What moved" showed THROUGH the search bar, which is the real mess.
+   The page uses --bg-grad with background-attachment:fixed, so painting the SAME gradient
+   with the SAME fixed attachment lines the header up pixel-for-pixel with the page behind
+   it: fully opaque (nothing bleeds through) and invisible as a shape (no band, no square).
+   ------------------------------------------------------------------------------------ */
+header,
+body.scrolled header,
+body.nav-open header,
+body.nav-hidden header{
+  background:var(--bg-grad,#eef6ff) !important;
+  background-attachment:fixed !important;
+  background-color:#eef6ff !important;
+  border-bottom:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+
+/* The search is a plain line of text with a magnifier - no fill, no pill, no box. */
+.searchwrap{
+  background:none !important;
+  background-image:none !important;
+  border:0 !important;
+  border-bottom:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  padding:10px 2px !important;
+}
+.searchwrap .mag{
+  background:none !important; background-image:none !important;
+  box-shadow:none !important; color:var(--accent,#1d4ed8) !important;
+  width:22px !important;height:22px !important;min-width:22px !important;
+}
+.searchwrap .mag svg{width:19px !important;height:19px !important}
+.searchwrap input{background:none !important; padding:0 2px !important;}
+
+/* the mark is letters, not a tile */
+.logo{
+  background:none !important; background-image:none !important;
+  border:0 !important; box-shadow:none !important; border-radius:0 !important;
+  width:auto !important; height:auto !important; min-width:0 !important; padding:0 !important;
+  color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
+  font-size:19px !important; letter-spacing:-.4px !important;
+}
 </style>
 </head>
 <body>

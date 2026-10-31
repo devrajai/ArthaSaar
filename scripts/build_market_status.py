@@ -52,10 +52,33 @@ def from_file():
         return None
 
 
+def special_sessions():
+    """Dates that trade outside the normal weekday hours. Hand-maintained: it is a handful
+    of entries a year, and NSE announces each one separately."""
+    try:
+        data = json.load(open("config/special_sessions.json"))
+        out = []
+        for x in (data.get("sessions") or []):
+            if x.get("date") and x.get("open") and x.get("close"):
+                out.append({"date": x["date"], "open": x["open"], "close": x["close"],
+                            "label": x.get("label") or "Special session"})
+        return out
+    except Exception:
+        return []
+
+
 def main():
     out = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "timezone": "Asia/Kolkata", "open": "09:15", "close": "15:30",
-           "preopen": "09:00", "holidays": [], "source": "", "note": ""}
+           "preopen": "09:00", "holidays": [], "source": "", "note": "",
+           # Special sessions: dates that trade OUTSIDE the normal weekday schedule.
+           # Muhurat trading is the common case and it often falls on a Sunday - 8 Nov 2026
+           # does. Without this the browser's weekday rule marks the market closed while NSE
+           # is actually trading, and the day's bhavcopy never gets captured.
+           "special_sessions": []}
+    out["special_sessions"] = special_sessions()
+    if out["special_sessions"]:
+        print("  special sessions: %d" % len(out["special_sessions"]))
     h = from_api()
     if h:
         out["source"] = "NSE holiday-master API"

@@ -1053,15 +1053,33 @@ function mktUpdate(){
   var pre=toMin(MSTAT.preopen||"09:00"), op=toMin(MSTAT.open||"09:15"), cl=toMin(MSTAT.close||"15:30");
   var holidays=MSTAT.holidays||[];
   var isHol=holidays.some(function(h){ return h && h[0]===iso; });
+
+  // SPECIAL SESSIONS FIRST. Muhurat trading often falls on a Sunday - 8 Nov 2026 does - and
+  // the weekday rule below would report "Closed" while NSE is trading. Checked before the
+  // weekend and holiday rules, because a special session overrides both.
+  var special=(MSTAT.special_sessions||[]).filter(function(s){ return s && s.date===iso; })[0];
   var cls, txt;
+  if(special){
+    var so=toMin(special.open), sc=toMin(special.close);
+    if(mins>=so && mins<sc){ cls="on"; txt="Open"; }
+    else if(mins<so){ cls="pre"; txt="Opens "+special.open; }
+    else { cls="off"; txt="Closed"; }
+    box.className=cls; box.textContent=txt;
+    box.title=special.label+" - "+special.open+" to "+special.close+" IST";
+    return;
+  }
+
   if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
   else if(mins>=pre && mins<op){ cls="pre"; txt="Pre-open"; }
   else if(mins>=op && mins<cl){ cls="on"; txt="Open"; }
   else { cls="off"; txt="Closed"; }
   box.className=cls; box.textContent=txt;
   var upcoming=holidays.filter(function(h){ return h && h[0]>=iso; });
+  var nextSpecial=(MSTAT.special_sessions||[]).filter(function(s){ return s && s.date>iso; })
+                    .sort(function(a,b){ return a.date<b.date?-1:1; })[0];
   box.title = isHol ? "Market holiday today"
-            : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead");
+            : (nextSpecial ? "Special session: "+nextSpecial.date+" "+nextSpecial.open+"-"+nextSpecial.close+" ("+nextSpecial.label+")"
+            : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead"));
 }
 setInterval(mktUpdate, 60000);
 

@@ -1,0 +1,101 @@
+name: Muhurat capture (one-off)
+
+# MUHURAT TRADING, SUNDAY 8 NOVEMBER 2026, 14:20-15:30 IST.
+#
+# Why a separate workflow: the nightly pipeline runs at 23:00 IST and fetches `--latest`, which
+# walks back 10 days - so it would probably pick this up. "Probably" is not good enough for a
+# session that happens once a year and cannot be re-fetched once Yahoo drops it.
+#
+# Two things are captured here:
+#   1. the bhavcopy for 8 Nov, so the daily archive has the session
+#   2. 1-minute bars, because Yahoo keeps them for about 7 days and this is a one-hour session
+#      that no free source will ever serve again
+#
+# Cron: 10:15 UTC = 15:45 IST, fifteen minutes after the session ends, so the bars are final.
+
+on:
+  schedule:
+    - cron: '15 10 8 11 *'      # 15:45 IST on 8 November, every year
+  workflow_dispatch:
+    inputs:
+      session_date:
+        description: 'Session date (YYYY-MM-DD). Blank = today.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: muhurat
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow
+
+      - name: Fetch the session's bhavcopy
+        run: |
+          D="${{ github.event.inputs.session_date }}"
+          if [ -z "$D" ]; then D=$(date -u +%F); fi
+          echo "session date: $D"
+          python scripts/fetch_bhavcopy.py --date "$D" || \
+            echo "::warning title=No bhavcopy::NSE has not published this session yet - re-run later"
+
+      - name: Capture 1-minute bars
+        run: |
+          D="${{ github.event.inputs.session_date }}"
+          if [ -z "$D" ]; then D=$(date -u +%F); fi
+          python scripts/fetch_intraday.py --top 100 --date "$D" || \
+            echo "::warning title=No intraday bars::Yahoo may not carry the special session"
+
+      - name: Show what we got
+        run: |
+          python - <<'EOF'
+          import glob, os
+          import pandas as pd
+          found = False
+          for pat, label in (("data/parquet/cm/*", "bhavcopy"), ("data/intraday/*/*.parquet", "intraday")):
+              files = sorted(glob.glob(pat))
+              if not files:
+                  print(f"{label}: nothing")
+                  continue
+              found = True
+              latest = files[-1]
+              print(f"{label}: {latest}  {os.path.getsize(latest)/1e6:.2f} MB")
+              if latest.endswith(".parquet"):
+                  d = pd.read_parquet(latest)
+                  print(f"   {len(d):,} rows")
+          if not found:
+              print("::warning title=Nothing captured::check the NSE and Yahoo endpoints by hand")
+          EOF
+
+      - name: Commit
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add data/parquet/ data/intraday/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "no changes"
+            exit 0
+          fi
+          git commit -m "data: Muhurat session $(date -u +%F)"
+          for i in 1 2 3 4 5 6 7 8; do
+            git rebase --abort 2>/dev/null || true
+            git pull --rebase --autostash || true
+            if git push; then echo "pushed on attempt $i"; exit 0; fi
+            sleep $((i*15))
+          done
+          echo "::warning title=Push failed::re-run this workflow once the other jobs settle"

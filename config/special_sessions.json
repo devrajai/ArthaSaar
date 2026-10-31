@@ -1,0 +1,11 @@
+{
+  "_comment": "Dates that trade OUTSIDE the normal weekday schedule. NSE announces each one separately, so this is hand-maintained rather than scraped. Times are IST.",
+  "sessions": [
+    {
+      "date": "2026-11-08",
+      "open": "14:20",
+      "close": "15:30",
+      "label": "Muhurat trading (Diwali Laxmi Pujan)"
+    }
+  ]
+}

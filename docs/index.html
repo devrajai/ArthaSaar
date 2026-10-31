@@ -538,6 +538,17 @@ body.scrolled #burger{top:14px !important;left:6px !important}
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
 }
+
+/* simple view - only hides, never changes content */
+body.simple-view #tabs button{display:none}
+body.simple-view #tabs button.simple-keep{display:inline-block}
+body.simple-view .section{display:none}
+body.simple-view #sec-overview{display:block}
+body.simple-view #sec-market{display:block}
+body.simple-view #sec-stocks{display:block}
+body.simple-view #sec-mf{display:block}
+body.simple-view #sec-learn{display:block}
+body.simple-view #sec-tools{display:block}
 </style>
 </head>
 <body>
@@ -1128,7 +1139,7 @@ function applyLang(){
   if(q) q.setAttribute("placeholder", L("searchPh"));
   var tb=document.getElementById("themeBtn");
   if(tb) tb.textContent = (document.body.classList.contains("dark") ? L("light") : L("dark"));
-  if(typeof renderTabs==="function"){ renderTabs(); groupTabs(); }
+  if(typeof renderTabs==="function"){ renderTabs(); groupTabs(); if(typeof wireSimple==="function") wireSimple(); }
 }
 (function bindLang(){
   var b=document.getElementById("langBtn");
@@ -1221,6 +1232,26 @@ function voiceSearch(){
   var b=document.getElementById("micBtn");
   if(b) b.addEventListener("click", voiceSearch);
 })();
+
+// ---- simple view -------------------------------------------------------------------
+// 33 sections and 124 cards is a lot for a first visit. Simple view keeps six and hides the
+// rest behind one toggle. The sections themselves are untouched - this only hides them.
+var SIMPLE_IDS=["overview","market","stocks","mf","learn","tools"];
+function applySimple(){
+  var on=false;
+  try{ on=localStorage.getItem("as-simple")==="1"; }catch(e){}
+  document.body.classList.toggle("simple-view", on);
+  var b=document.getElementById("simpleBtn");
+  if(b){ b.textContent = on ? "Show everything" : "Simple view";
+         b.className="small"+(on?" on":""); }
+  return on;
+}
+function toggleSimple(){
+  var on=false;
+  try{ on=localStorage.getItem("as-simple")==="1"; }catch(e){}
+  try{ localStorage.setItem("as-simple", on?"0":"1"); }catch(e){}
+  applySimple();
+}
 
 function renderTabs(){
   var nav=$("#tabs");nav.innerHTML="";
@@ -2437,6 +2468,32 @@ function build(d){
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
+    // ---- year by year, and the Diwali countdown ---------------------------------------
+    (function(){
+     try{
+      if(!SCORE) return;
+      var kids=[];
+      if(SCORE.diwali){
+        kids.push(para("<b>Diwali "+esc(SCORE.diwali.date)+"</b> is "+SCORE.diwali.days_away+
+          " days away. NSE's own holiday file calls it \""+esc(SCORE.diwali.label)+"\".", true));
+      }
+      if(SCORE.years&&SCORE.years.length){
+        kids.push(tbl({columns:["year","median stock","sessions","best sector","worst sector"],
+          rows:SCORE.years.map(function(y){
+            return [y.year, (y.median_return_pct>0?"+":"")+y.median_return_pct+"%",
+                    String(y.sessions),
+                    y.best_sector?(esc(y.best_sector.name)+" "+(y.best_sector.pct>0?"+":"")+y.best_sector.pct+"%"):"-",
+                    y.worst_sector?(esc(y.worst_sector.name)+" "+(y.worst_sector.pct>0?"+":"")+y.worst_sector.pct+"%"):"-"];
+          })}));
+      }
+      v.appendChild(card("Year by year", SCORE.years.length+" years since 2019", kids,
+        {what:"Each year's return for the median listed stock, with the best and worst sector.",
+         source:"Our split-adjusted archive, grouped by calendar year.", updated:SCORE.updated,
+         note:"Calendar years, not Samvat years. The Samvat year runs Diwali to Diwali, and our holiday file only carries the current year's Muhurat date - so that split is left out rather than guessed. The median stock is used because the index hides how uneven a year was."}));
+     }catch(e){}
+    })();
+
+
     // ---- market case studies, from our own archive ------------------------------------
     // Measured on the MEDIAN listed stock, not the Nifty. A beginner's portfolio is not 50
     // large caps, and the median is what makes a crash feel real: on 4 June 2024 the average
@@ -4004,7 +4061,7 @@ function build(d){
   })();
 
 
-  renderTabs(); groupTabs();
+  renderTabs(); groupTabs(); if(typeof wireSimple==="function") wireSimple();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
 }
@@ -4156,6 +4213,7 @@ function assign(name, v){
     case "whatif.json": WHATIF=v; break;
     case "checklist.json": CHKLIST=v; break;
     case "cases.json": CASES=v; break;
+    case "scoreboard.json": SCORE=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4202,8 +4260,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -4240,6 +4298,23 @@ var GROUPS = [
   ["Tools",         ["tools","backtest","watchlist"]],
   ["More",          ["youtube","learn","data"]]
 ];
+
+function wireSimple(){
+  var nav=document.getElementById("tabs");
+  if(!nav) return;
+  [].slice.call(nav.querySelectorAll("button")).forEach(function(b){
+    if(SIMPLE_IDS.indexOf(b.getAttribute("data-go"))>=0) b.classList.add("simple-keep");
+  });
+  if(!document.getElementById("simpleBtn")){
+    var b=el("button","small","Simple view");
+    b.id="simpleBtn";
+    b.addEventListener("click",toggleSimple);
+    var host=document.getElementById("tabs");
+    if(host&&host.parentNode) host.parentNode.insertBefore(b, host.nextSibling);
+    else document.body.insertBefore(b, document.body.firstChild);
+  }
+  applySimple();
+}
 
 function groupTabs(){
   var nav=document.getElementById("tabs");

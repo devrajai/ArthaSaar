@@ -2437,6 +2437,31 @@ function build(d){
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
+    // ---- market case studies, from our own archive ------------------------------------
+    // Measured on the MEDIAN listed stock, not the Nifty. A beginner's portfolio is not 50
+    // large caps, and the median is what makes a crash feel real: on 4 June 2024 the average
+    // stock fell 5.9% and 1,820 of 1,925 fell.
+    (function(){
+     try{
+      if(!CASES||!CASES.cases||!CASES.cases.length) return;
+      var kids=[];
+      CASES.cases.forEach(function(c){
+        kids.push(para("<b>"+esc(c.label)+"</b> - "+esc(c.summary), false));
+        if(c.kind==="days"&&c.days){
+          kids.push(tbl({columns:["date","average move","stocks that fell"],
+            rows:c.days.map(function(x){return [x.date, (x.avg_pct>0?"+":"")+x.avg_pct+"%",
+                                                x.fell+" of "+x.n];})}));
+        }
+        if(c.about) kids.push(para(esc(c.about), false));
+      });
+      v.appendChild(card("What a bad week looks like", CASES.count+" events since 2019", kids,
+        {what:"Real crashes and shock days, measured on the median listed stock rather than the index.",
+         source:"Our split-adjusted price archive, 2019 to today.", updated:CASES.updated,
+         note:"The median stock, not the Nifty - a beginner's portfolio is not 50 large caps, and mid and small caps fall further. Only stocks listed today are included, so real falls were slightly worse than shown."}));
+     }catch(e){}
+    })();
+
+
     // ---- missing the best days ---------------------------------------------------------
     // The most useful single lesson for someone who panic-sells, and it needs no model -
     // just the index's own daily returns since 2019 with the best few days removed.
@@ -3203,6 +3228,56 @@ function build(d){
             ["Long term (>12m)", num(Math.round(lt)), num(Math.round(Math.max(0,lt-125000)))],
             ["Short term (<=12m)", num(Math.round(st)), num(Math.round(Math.max(0,st)))]
           ], ["Gain","Taxable after Rs 1.25L exemption"]));
+          // ---- plain words, rule based ----
+          // No model, no AI: percentages of the actual money, and what a fall would cost.
+          try{
+            var ST=(typeof STOCKS!=="undefined"&&STOCKS&&STOCKS.stocks)||{};
+            function meta(s){ var k=Object.keys(ST).filter(function(x){return x===s+".NS"||x===s+".BO";})[0]; return k?ST[k]:null; }
+            var secTot={}, betaW=0, betaVal=0;
+            rows.forEach(function(r){
+              var m=meta(r.sym), px=priceOf(r.sym), val=(px!=null?px:r.buyPx)*r.qty;
+              var sec=(m&&m.sector)||"unclassified";
+              secTot[sec]=(secTot[sec]||0)+val;
+              var b=(m&&m.fund&&m.fund.beta);
+              if(b){ betaW+=val*b; betaVal+=val; }
+            });
+            var plain=[];
+            var topSec=Object.keys(secTot).sort(function(a,b){return secTot[b]-secTot[a];})[0];
+            if(topSec&&totalNow>0){
+              var share=100*secTot[topSec]/totalNow;
+              plain.push(num(Math.round(share))+"% of your money is in "+esc(topSec)+
+                ". If that sector falls 20%, you lose about "+num(Math.round(share*0.2))+"% of the total.");
+            }
+            if(betaVal>0){
+              var b=betaW/betaVal;
+              plain.push("This portfolio's beta is "+b.toFixed(2)+
+                ", so a 10% fall in the Nifty has typically meant about "+
+                Math.abs(b*10).toFixed(1)+"% here.");
+            }
+            if(Object.keys(secTot).length<=2&&totalNow>0){
+              plain.push("Everything is in "+Object.keys(secTot).length+
+                " sector(s). One bad piece of news hits all of it at once.");
+            }
+            if(plain.length){
+              out.appendChild(para("In plain words", false));
+              plain.forEach(function(t){ out.appendChild(para(t, false)); });
+            }
+            // ---- share as text, built in the browser ----
+            var shareBtn=el("button","small","Share on WhatsApp");
+            shareBtn.addEventListener("click",function(){
+              var lines=["My portfolio ("+rows.length+" holdings)"];
+              Object.keys(byOwner).forEach(function(k){
+                var o=byOwner[k];
+                lines.push(k+": "+num(Math.round(o.now))+" invested "+num(Math.round(o.cost)));
+              });
+              lines.push("Current value: "+num(Math.round(totalNow)));
+              if(plain.length) lines.push(""); plain.forEach(function(t){ lines.push(t.replace(/<[^>]+>/g,"")); });
+              lines.push(""); lines.push("Not advice - my own numbers.");
+              window.open("https://wa.me/?text="+encodeURIComponent(lines.join("\n")),"_blank");
+            });
+            out.appendChild(shareBtn);
+          }catch(e){}
+
           msg.innerHTML="XIRR uses today's close for the current value. The exemption is applied to "+
             "long-term gain only and assumes you have no other LTCG this year. Rates change - check them.";
         }
@@ -4080,6 +4155,7 @@ function assign(name, v){
     case "crypto_history.json": CRYPTHIST=v; break;
     case "whatif.json": WHATIF=v; break;
     case "checklist.json": CHKLIST=v; break;
+    case "cases.json": CASES=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4126,8 +4202,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json"];
 
 function renderAll(){
   if(!DATA) return;

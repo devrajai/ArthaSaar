@@ -1,6 +1,6 @@
 {
   "model": "TimesFM 2.5 200M (zero-shot)",
-  "updated": "2026-10-30T19:54:39Z",
+  "updated": "2026-10-31T19:12:08Z",
   "horizon_days": 21,
   "series": 73,
   "forecasts": [
@@ -125,23 +125,23 @@
       "direction": "up"
     },
     {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 22936.75,
-      "median_chg_pct": 1.99,
-      "low10_chg_pct": -2.77,
-      "high90_chg_pct": 7.11,
-      "confidence": 60,
+      "symbol": "^IXIC",
+      "name": "Nasdaq",
+      "last": 25437.0,
+      "median_chg_pct": 1.97,
+      "low10_chg_pct": -5.17,
+      "high90_chg_pct": 7.77,
+      "confidence": 48,
       "direction": "up"
     },
     {
-      "symbol": "^IXIC",
-      "name": "Nasdaq",
-      "last": 25461.41,
-      "median_chg_pct": 1.93,
-      "low10_chg_pct": -5.14,
-      "high90_chg_pct": 7.68,
-      "confidence": 49,
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 23053.1,
+      "median_chg_pct": 1.92,
+      "low10_chg_pct": -2.99,
+      "high90_chg_pct": 7.25,
+      "confidence": 59,
       "direction": "up"
     },
     {
@@ -207,11 +207,41 @@
     {
       "symbol": "^GSPC",
       "name": "S&P 500",
-      "last": 7584.91,
+      "last": 7580.07,
+      "median_chg_pct": 1.37,
+      "low10_chg_pct": -2.67,
+      "high90_chg_pct": 4.46,
+      "confidence": 71,
+      "direction": "up"
+    },
+    {
+      "symbol": "^N225",
+      "name": "Nikkei 225",
+      "last": 63290.11,
+      "median_chg_pct": 1.36,
+      "low10_chg_pct": -8.49,
+      "high90_chg_pct": 11.44,
+      "confidence": 20,
+      "direction": "up"
+    },
+    {
+      "symbol": "^NSEBANK",
+      "name": "Bank Nifty",
+      "last": 54686.95,
       "median_chg_pct": 1.35,
-      "low10_chg_pct": -2.64,
-      "high90_chg_pct": 4.39,
-      "confidence": 72,
+      "low10_chg_pct": -4.1,
+      "high90_chg_pct": 6.84,
+      "confidence": 56,
+      "direction": "up"
+    },
+    {
+      "symbol": "^DJI",
+      "name": "Dow Jones",
+      "last": 51770.31,
+      "median_chg_pct": 1.33,
+      "low10_chg_pct": -2.24,
+      "high90_chg_pct": 4.45,
+      "confidence": 73,
       "direction": "up"
     },
     {
@@ -222,16 +252,6 @@
       "low10_chg_pct": -6.93,
       "high90_chg_pct": 12.5,
       "confidence": 22,
-      "direction": "up"
-    },
-    {
-      "symbol": "^DJI",
-      "name": "Dow Jones",
-      "last": 51801.86,
-      "median_chg_pct": 1.21,
-      "low10_chg_pct": -2.38,
-      "high90_chg_pct": 4.32,
-      "confidence": 73,
       "direction": "up"
     },
     {
@@ -247,31 +267,11 @@
     {
       "symbol": "^FTSE",
       "name": "FTSE 100",
-      "last": 10729.78,
+      "last": 10729.8,
       "median_chg_pct": 1.02,
       "low10_chg_pct": -1.55,
       "high90_chg_pct": 3.38,
       "confidence": 80,
-      "direction": "up"
-    },
-    {
-      "symbol": "BTC-USD",
-      "name": "Bitcoin",
-      "last": 76753.95,
-      "median_chg_pct": 1.0,
-      "low10_chg_pct": -11.33,
-      "high90_chg_pct": 14.54,
-      "confidence": 0,
-      "direction": "up"
-    },
-    {
-      "symbol": "^N225",
-      "name": "Nikkei 225",
-      "last": 64659.47,
-      "median_chg_pct": 0.97,
-      "low10_chg_pct": -8.22,
-      "high90_chg_pct": 10.4,
-      "confidence": 26,
       "direction": "up"
     },
     {
@@ -312,16 +312,6 @@
       "low10_chg_pct": -12.62,
       "high90_chg_pct": 17.16,
       "confidence": 0,
-      "direction": "up"
-    },
-    {
-      "symbol": "^NSEBANK",
-      "name": "Bank Nifty",
-      "last": 54909.65,
-      "median_chg_pct": 0.72,
-      "low10_chg_pct": -4.58,
-      "high90_chg_pct": 5.98,
-      "confidence": 58,
       "direction": "up"
     },
     {
@@ -375,16 +365,6 @@
       "direction": "up"
     },
     {
-      "symbol": "INR=X",
-      "name": "USD/INR",
-      "last": 94.94,
-      "median_chg_pct": 0.29,
-      "low10_chg_pct": -1.63,
-      "high90_chg_pct": 2.24,
-      "confidence": 85,
-      "direction": "up"
-    },
-    {
       "symbol": "VENKEYS",
       "name": "VENKEYS",
       "last": 1591.8,
@@ -393,6 +373,26 @@
       "high90_chg_pct": 10.19,
       "confidence": 22,
       "direction": "up"
+    },
+    {
+      "symbol": "INR=X",
+      "name": "USD/INR",
+      "last": 94.95,
+      "median_chg_pct": 0.22,
+      "low10_chg_pct": -1.6,
+      "high90_chg_pct": 2.1,
+      "confidence": 85,
+      "direction": "flat"
+    },
+    {
+      "symbol": "BTC-USD",
+      "name": "Bitcoin",
+      "last": 77516.71,
+      "median_chg_pct": 0.18,
+      "low10_chg_pct": -11.48,
+      "high90_chg_pct": 13.05,
+      "confidence": 2,
+      "direction": "flat"
     },
     {
       "symbol": "FDC",
@@ -447,11 +447,11 @@
     {
       "symbol": "^HSI",
       "name": "Hang Seng",
-      "last": 22958.65,
-      "median_chg_pct": -0.06,
-      "low10_chg_pct": -8.02,
-      "high90_chg_pct": 7.65,
-      "confidence": 37,
+      "last": 23294.42,
+      "median_chg_pct": -0.18,
+      "low10_chg_pct": -7.76,
+      "high90_chg_pct": 7.28,
+      "confidence": 40,
       "direction": "flat"
     },
     {
@@ -555,16 +555,6 @@
       "direction": "down"
     },
     {
-      "symbol": "GC=F",
-      "name": "Gold",
-      "last": 3882.0,
-      "median_chg_pct": -1.25,
-      "low10_chg_pct": -9.7,
-      "high90_chg_pct": 8.91,
-      "confidence": 26,
-      "direction": "down"
-    },
-    {
       "symbol": "UNICHEMLAB",
       "name": "UNICHEMLAB",
       "last": 472.95,
@@ -572,6 +562,16 @@
       "low10_chg_pct": -16.55,
       "high90_chg_pct": 19.72,
       "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "GC=F",
+      "name": "Gold",
+      "last": 3898.9,
+      "median_chg_pct": -1.32,
+      "low10_chg_pct": -9.53,
+      "high90_chg_pct": 8.81,
+      "confidence": 27,
       "direction": "down"
     },
     {
@@ -665,22 +665,22 @@
       "direction": "down"
     },
     {
-      "symbol": "^INDIAVIX",
-      "name": "India VIX",
-      "last": 15.12,
-      "median_chg_pct": -3.45,
-      "low10_chg_pct": -25.57,
-      "high90_chg_pct": 36.17,
+      "symbol": "CL=F",
+      "name": "Crude Oil",
+      "last": 104.12,
+      "median_chg_pct": -3.71,
+      "low10_chg_pct": -22.56,
+      "high90_chg_pct": 11.81,
       "confidence": 0,
       "direction": "down"
     },
     {
-      "symbol": "CL=F",
-      "name": "Crude Oil",
-      "last": 103.04,
-      "median_chg_pct": -3.65,
-      "low10_chg_pct": -22.39,
-      "high90_chg_pct": 11.14,
+      "symbol": "^INDIAVIX",
+      "name": "India VIX",
+      "last": 15.3,
+      "median_chg_pct": -4.99,
+      "low10_chg_pct": -25.74,
+      "high90_chg_pct": 31.28,
       "confidence": 0,
       "direction": "down"
     },
@@ -738,11 +738,11 @@
   "nifty": {
     "symbol": "^NSEI",
     "name": "Nifty 50",
-    "last": 22936.75,
-    "median_chg_pct": 1.99,
-    "low10_chg_pct": -2.77,
-    "high90_chg_pct": 7.11,
-    "confidence": 60,
+    "last": 23053.1,
+    "median_chg_pct": 1.92,
+    "low10_chg_pct": -2.99,
+    "high90_chg_pct": 7.25,
+    "confidence": 59,
     "direction": "up"
   }
 }

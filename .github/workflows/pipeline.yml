@@ -306,6 +306,11 @@ jobs:
       - name: "7m2n. What-if: worst falls and missing the best days"
         run: python scripts/build_whatif.py || true
 
+      # The research checklist: what our data can answer, and the questions it cannot.
+      # Runs after whatif so the worst-fall figures are available.
+      - name: "7m2o. Before-you-buy checklist"
+        run: python scripts/build_checklist.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

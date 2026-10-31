@@ -1609,6 +1609,35 @@ function build(d){
               " ("+wi.peak_date+" to "+wi.trough_date+"). Past drawdowns do not predict future ones.", false));
           }
         }catch(e){}
+        // BEFORE YOU BUY - the checks our data can answer, and the questions it cannot.
+        // The unanswered ones are listed with what to look for rather than dropped: a
+        // checklist that omits the hard questions looks complete when it is not.
+        try{
+          var CK=CHKLIST, row=CK&&CK.stocks&&CK.stocks[s];
+          if(CK&&row){
+            var K=CK.keys, V=CK.verdicts, kid=[];
+            var badge={pass:"✓",watch:"!",fail:"✗",unknown:"?"};
+            var lines=row.c.map(function(c){
+              var extra=c.length>3?(" - "+c[3]):"";
+              return [badge[V[c[2]]]||"?", K[c[0]], (c[1]==null?"not available":String(c[1])),
+                      V[c[2]]+extra];
+            });
+            kid.push(para(row.a+" of "+row.p+" checks answered. "+
+              (row.f?"<b>"+row.f+" failed</b>, ":"")+(row.w?row.w+" to watch.":"Nothing to watch."), true));
+            kid.push(tbl({columns:["","check","value","verdict"],rows:lines}));
+            var cannot=(CK.cannot_answer||[]);
+            if(cannot.length){
+              kid.push(para("What this cannot tell you", false));
+              kid.push(tbl({columns:["check","want","where to look"],
+                rows:cannot.map(function(c){return [c.k, c.want, c.where];})}));
+            }
+            oneOut.appendChild(card("Before you buy", row.a+" of "+row.p+" answered", kid,
+              {what:"A research checklist filled from our own data, plus the questions no price feed can answer.",
+               source:"Prices, fundamentals feed and report cards. Thresholds are Brian Feroldi's.",
+               updated:CK.updated,
+               note:"Facts about the past, not a recommendation. The 15% ROE bar is not universal - banks and utilities never clear it and are not worse for it. ROE is only in our feed for about one stock in nine; where it is blank, the annual report is the only source."}));
+          }
+        }catch(e){}
         oneOut.appendChild(cardTable([s]));
       }
       one.addEventListener("input", paintOne);
@@ -4050,6 +4079,7 @@ function assign(name, v){
     case "oi_walls.json": OIWALLS=v; break;
     case "crypto_history.json": CRYPTHIST=v; break;
     case "whatif.json": WHATIF=v; break;
+    case "checklist.json": CHKLIST=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4096,8 +4126,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json"];
 
 function renderAll(){
   if(!DATA) return;

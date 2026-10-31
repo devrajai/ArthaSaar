@@ -1053,33 +1053,15 @@ function mktUpdate(){
   var pre=toMin(MSTAT.preopen||"09:00"), op=toMin(MSTAT.open||"09:15"), cl=toMin(MSTAT.close||"15:30");
   var holidays=MSTAT.holidays||[];
   var isHol=holidays.some(function(h){ return h && h[0]===iso; });
-
-  // SPECIAL SESSIONS FIRST. Muhurat trading often falls on a Sunday - 8 Nov 2026 does - and
-  // the weekday rule below would report "Closed" while NSE is trading. Checked before the
-  // weekend and holiday rules, because a special session overrides both.
-  var special=(MSTAT.special_sessions||[]).filter(function(s){ return s && s.date===iso; })[0];
   var cls, txt;
-  if(special){
-    var so=toMin(special.open), sc=toMin(special.close);
-    if(mins>=so && mins<sc){ cls="on"; txt="Open"; }
-    else if(mins<so){ cls="pre"; txt="Opens "+special.open; }
-    else { cls="off"; txt="Closed"; }
-    box.className=cls; box.textContent=txt;
-    box.title=special.label+" - "+special.open+" to "+special.close+" IST";
-    return;
-  }
-
   if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
   else if(mins>=pre && mins<op){ cls="pre"; txt="Pre-open"; }
   else if(mins>=op && mins<cl){ cls="on"; txt="Open"; }
   else { cls="off"; txt="Closed"; }
   box.className=cls; box.textContent=txt;
   var upcoming=holidays.filter(function(h){ return h && h[0]>=iso; });
-  var nextSpecial=(MSTAT.special_sessions||[]).filter(function(s){ return s && s.date>iso; })
-                    .sort(function(a,b){ return a.date<b.date?-1:1; })[0];
   box.title = isHol ? "Market holiday today"
-            : (nextSpecial ? "Special session: "+nextSpecial.date+" "+nextSpecial.open+"-"+nextSpecial.close+" ("+nextSpecial.label+")"
-            : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead"));
+            : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead");
 }
 setInterval(mktUpdate, 60000);
 
@@ -2486,6 +2468,49 @@ function build(d){
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
+    // ---- Muhurat trading, as facts ----------------------------------------------------
+    // Analysis only. No stock lists, no targets, no calls - tip lists around Diwali are a
+    // known scam channel, and anything reading as a recommendation carries SEBI obligations
+    // this project cannot meet. Every number here describes a past session.
+    (function(){
+     try{
+      if(!MUHURAT) return;
+      var kids=[];
+      if(MUHURAT.upcoming){
+        kids.push(para("<b>Next Muhurat: "+esc(MUHURAT.upcoming.date)+"</b>, "+MUHURAT.upcoming.open+
+          " to "+MUHURAT.upcoming.close+" IST, in "+MUHURAT.upcoming.days_away+
+          " days. It falls on a Sunday, which is why the market status has a special-session list.", true));
+      }
+      if(MUHURAT.sessions&&MUHURAT.sessions.length){
+        kids.push(tbl({columns:["date","avg move","adv / dec","volume vs normal","next day","next 20d"],
+          rows:MUHURAT.sessions.map(function(s){
+            var f=s.next_sessions_avg_move||{};
+            return [s.date+" ("+s.weekday.slice(0,3)+")",
+                    (s.avg_move_pct>0?"+":"")+s.avg_move_pct+"%",
+                    s.advances+" / "+s.declines,
+                    s.volume_vs_20d!=null?("x"+s.volume_vs_20d):"-",
+                    f["1"]!=null?((f["1"]>0?"+":"")+f["1"]+"%"):"-",
+                    f["20"]!=null?((f["20"]>0?"+":"")+f["20"]+"%"):"-"];
+          })}));
+        var up=MUHURAT.sessions.filter(function(s){return s.avg_move_pct>0;}).length;
+        var nextDown=MUHURAT.sessions.filter(function(s){var f=s.next_sessions_avg_move||{};return f["1"]!=null&&f["1"]<0;}).length;
+        kids.push(para("The session itself closed higher in "+up+" of "+MUHURAT.sessions.length+
+          ". The NEXT session was lower in "+nextDown+" of "+MUHURAT.sessions.length+
+          ". A one-hour symbolic move does not carry forward.", true));
+      }
+      if(MUHURAT.missing&&MUHURAT.missing.length){
+        kids.push(para("Not covered: "+MUHURAT.missing.map(function(m){return m.date+" ("+m.weekday+")";}).join(", ")+
+          " - these fell on a weekend and the bulk backfill only walked weekdays.", false));
+      }
+      v.appendChild(card("Muhurat trading, measured", MUHURAT.count+" of "+MUHURAT.covered_of+" sessions",
+        kids,
+        {what:"What actually happened in the Muhurat sessions we hold, and what followed. Analysis only.",
+         source:"Our split-adjusted archive, equal-weight across listed stocks.", updated:MUHURAT.updated,
+         note:"This is a record of the past, not a forecast, and it contains no stock picks or recommendations. Four sessions is far too few to conclude anything - any pattern here is indistinguishable from chance. The hour is thin: volume runs at a fifth to a third of a normal day and spreads are wider, so a fill is not always available at the screen price."}));
+     }catch(e){}
+    })();
+
+
     // ---- year by year, and the Diwali countdown ---------------------------------------
     (function(){
      try{
@@ -4232,6 +4257,7 @@ function assign(name, v){
     case "checklist.json": CHKLIST=v; break;
     case "cases.json": CASES=v; break;
     case "scoreboard.json": SCORE=v; break;
+    case "muhurat.json": MUHURAT=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4278,8 +4304,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json"];
 
 function renderAll(){
   if(!DATA) return;

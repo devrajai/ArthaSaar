@@ -319,6 +319,10 @@ jobs:
       - name: "7m2q. Yearly scoreboard + Diwali countdown"
         run: python scripts/build_scoreboard.py || true
 
+      # Muhurat trading, measured. Analysis only - no picks, no targets.
+      - name: "7m2r. Muhurat trading study"
+        run: python scripts/build_muhurat.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

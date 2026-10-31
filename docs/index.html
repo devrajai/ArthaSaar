@@ -751,6 +751,57 @@ header{
   color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
   font-size:19px !important; letter-spacing:-.4px !important;
 }
+
+/* ====================================================================================
+   SEARCH BAR - new design.
+   It has been through a filled pill, a bare underline and a square box. This is an
+   outlined field: a soft rounded rectangle with a hairline accent border and a barely
+   there white wash. It reads as a control without being a heavy block, and it is
+   unmistakably different from the square it was.
+   ==================================================================================== */
+.searchwrap{
+  background:rgba(255,255,255,.62) !important;
+  background-image:none !important;
+  border:1.5px solid rgba(29,78,216,.26) !important;
+  border-radius:16px !important;
+  box-shadow:0 2px 10px rgba(29,78,216,.07) !important;
+  padding:13px 16px !important;
+  gap:12px !important;
+  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.searchwrap:focus-within{
+  background:#fff !important;
+  border-color:var(--accent,#1d4ed8) !important;
+  box-shadow:0 0 0 4px rgba(29,78,216,.12), 0 2px 10px rgba(29,78,216,.10) !important;
+}
+/* the magnifier sits plainly inside the field - no filled circle behind it */
+.searchwrap .mag{
+  background:none !important;
+  background-image:none !important;
+  box-shadow:none !important;
+  color:var(--accent,#1d4ed8) !important;
+  width:20px !important; height:20px !important; min-width:20px !important;
+  display:flex; align-items:center; justify-content:center;
+}
+.searchwrap .mag svg{width:19px !important;height:19px !important;display:block}
+.searchwrap input{
+  background:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  font-size:16px !important;
+  color:var(--text,#0b2239) !important;
+}
+.searchwrap input::placeholder{color:#5b7590 !important;opacity:1}
+
+/* the mark: letters with a little breathing room, no tile */
+.logo{
+  background:none !important; background-image:none !important;
+  border:0 !important; box-shadow:none !important; border-radius:0 !important;
+  width:auto !important; height:auto !important; min-width:0 !important; padding:0 !important;
+  color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
+  font-size:19px !important; letter-spacing:-.3px !important;
+}
 </style>
 </head>
 <body>

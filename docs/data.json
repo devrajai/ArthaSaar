@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-03T16:39:17Z",
+  "generated_utc": "2026-11-03T20:52:58Z",
   "fno": {
     "date": "2026-11-03",
     "pcr": {
@@ -568,10 +568,22 @@
           "Asian Paints Limited"
         ],
         [
+          "BSOFT",
+          "Interim Dividend - Rs 3 Per Share",
+          "2026-11-05",
+          "BIRLASOFT LIMITED"
+        ],
+        [
           "COALINDIA",
           "Interim Dividend - Rs 10.25 Per Share",
           "2026-11-04",
           "Coal India Limited"
+        ],
+        [
+          "ENGINERSIN",
+          "Interim Dividend - Rs 1.50 Per Share",
+          "2026-11-05",
+          "Engineers India Limited"
         ],
         [
           "GODREJCP",
@@ -580,22 +592,16 @@
           "Godrej Consumer Products Limited"
         ],
         [
-          "GRAVITA",
-          "Interim Dividend - Rs   7.70 Per Share",
-          "2026-11-03",
-          "Gravita India Limited"
+          "KRISHNADEF",
+          "Interim Dividend - Re 0.75 Per Share",
+          "2026-11-05",
+          "Krishna Defence and Allied Industries Limited"
         ],
         [
-          "INFY",
-          "Interim Dividend - Rs 26 Per Share",
-          "2026-11-03",
-          "Infosys Limited"
-        ],
-        [
-          "MAZDOCK",
-          "Interim Dividend - Rs 5 Per Share",
-          "2026-11-03",
-          "Mazagon Dock Shipbuilders Limited"
+          "MINDSPACE",
+          "Distribution - Rs 6.67 Per Unit Consisting Of Dividend - Rs 4.17 Per Unit/ Repayment Of Spv Debt - Rs 2.50 Per Unit",
+          "2026-11-05",
+          "Mindspace Business Parks REIT"
         ],
         [
           "NAVINFLUOR",
@@ -610,22 +616,16 @@
           "Privi Speciality Chemicals Limited"
         ],
         [
-          "RRKABEL",
-          "Interim Dividend - Rs 6.50 Per Share",
-          "2026-11-03",
-          "R R Kabel Limited"
-        ],
-        [
           "SANOFI",
           "Interim Dividend - Rs 75 Per Share",
           "2026-11-05",
           "Sanofi India Limited"
         ],
         [
-          "SASKEN",
-          "Interim Dividend - Rs 12 Per Share",
-          "2026-11-03",
-          "Sasken Technologies Limited"
+          "SHAREINDIA",
+          "Interim Dividend - Re 0.40 Per Share",
+          "2026-11-05",
+          "Share India Securities Limited"
         ],
         [
           "SILVERTUC",
@@ -660,6 +660,23 @@
       ],
       "total": 17
     },
+    "split": {
+      "columns": [
+        "symbol",
+        "subject",
+        "ex_date",
+        "company"
+      ],
+      "rows": [
+        [
+          "GNRL",
+          "Face Value Split (Sub-Division) - From Rs 10/- Per Share To Re 1/- Per Share",
+          "2026-11-05",
+          "Gujarat Natural Resources Limited"
+        ]
+      ],
+      "total": 1
+    },
     "bonus": {
       "columns": [
         "symbol",
@@ -693,363 +710,7 @@
         ]
       ],
       "total": 1
-    },
-    "other": {
-      "columns": [
-        "symbol",
-        "subject",
-        "ex_date",
-        "company"
-      ],
-      "rows": [
-        [
-          "IRBINVIT",
-          "Distribution - Rs 1.625 Per Unit Consists Of Rs 1.475 Per Unit As Interest & Re 0.15 Per Unit As Return Of Capital",
-          "2026-11-03",
-          "IRB InvIT Fund"
-        ]
-      ],
-      "total": 1
     }
-  },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^BSESN",
-        76917.8516,
-        1.62,
-        "2026-11-03"
-      ],
-      [
-        "^NSEI",
-        23810.8496,
-        1.58,
-        "2026-11-03"
-      ],
-      [
-        "^NSEBANK",
-        55540.0508,
-        0.98,
-        "2026-11-03"
-      ]
-    ],
-    "total": 3
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        3944.5,
-        -0.63,
-        "2026-11-03"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "XRP-USD",
-        1.2772,
-        2.36,
-        "2026-11-03"
-      ],
-      [
-        "AVAX-USD",
-        8.565,
-        2.12,
-        "2026-11-03"
-      ],
-      [
-        "ETH-USD",
-        2293.8401,
-        2.0,
-        "2026-11-03"
-      ],
-      [
-        "SOL-USD",
-        93.38,
-        1.68,
-        "2026-11-03"
-      ],
-      [
-        "DOGE-USD",
-        0.0752,
-        1.52,
-        "2026-11-03"
-      ],
-      [
-        "ADA-USD",
-        0.1905,
-        1.2,
-        "2026-11-03"
-      ],
-      [
-        "BTC-USD",
-        77527.1875,
-        1.11,
-        "2026-11-03"
-      ],
-      [
-        "TRX-USD",
-        0.3224,
-        1.07,
-        "2026-11-03"
-      ],
-      [
-        "LINK-USD",
-        11.142,
-        0.27,
-        "2026-11-03"
-      ],
-      [
-        "BNB-USD",
-        699.7,
-        0.24,
-        "2026-11-03"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "MCX Q2 Results: Profit rockets 130% YoY to Rs 455 crore, revenue jumps 114%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/mcx-q2-results-profit-rockets-130-yoy-to-rs-455-crore-revenue-jumps-114/articleshow/135504568.cms",
-        "Tue, 03 Nov 2026 20:44:21 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Motilal Oswal Financial Services announces leadership rejig; appoints new heads across businesses",
-        "https://economictimes.indiatimes.com/markets/stocks/news/motilal-oswal-financial-services-announces-leadership-rejig-appoints-new-heads-across-businesses/articleshow/135504517.cms",
-        "Tue, 03 Nov 2026 20:42:23 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks today: S&amp;P 500, Nasdaq open higher as oil prices extend declines, midterms on tap",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-sp-500-nasdaq-open-higher-as-oil-prices-extend-declines-midterms-on-tap/articleshow/135503356.cms",
-        "Tue, 03 Nov 2026 20:08:54 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "DuPont raises annual profit forecasts on strong healthcare, aerospace demand",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/dupont-raises-annual-profit-forecasts-on-strong-healthcare-aerospace-demand/articleshow/135502681.cms",
-        "Tue, 03 Nov 2026 19:44:08 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Ferrari nudges up full-year forecasts after beating consensus in Q3",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/ferrari-nudges-up-full-year-forecasts-after-beating-consensus-in-q3/articleshow/135502546.cms",
-        "Tue, 03 Nov 2026 19:38:36 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Prediction markets face US midterms test as election bets soar",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/prediction-markets-face-us-midterms-test-as-election-bets-soar/articleshow/135502488.cms",
-        "Tue, 03 Nov 2026 19:33:21 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Bata India Q2 Results: Profit rises 30% at Rs 18 crore, revenue rises to Rs 862 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/bata-india-q2-results-profit-rises-30-at-rs-18-crore-revenue-rises-to-rs-862-crore/articleshow/135502156.cms",
-        "Tue, 03 Nov 2026 19:21:08 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "India bonds end tad higher on softer oil",
-        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-end-tad-higher-on-softer-oil/articleshow/135501245.cms",
-        "Tue, 03 Nov 2026 18:49:51 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "US stock futures mixed as Apple falls on margin warning, midterm results awaited",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-stock-futures-mixed-as-apple-falls-on-margin-warning-midterm-results-awaited/articleshow/135501177.cms",
-        "Tue, 03 Nov 2026 18:47:16 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "US Stock Market Live Updates: S&amp;P 500, Nasdaq rise ahead of midterm results; Apple falls",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-apple-palantir-nvidia-midterm-elections-us-iran-war-crude-oil-prices-ai-stocks-treasury-yields-earnings-news-3rd-november-2026/liveblog/135501430.cms",
-        "Tue, 03 Nov 2026 18:47:00 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Emcure Pharma Q2 Results: Profit jumps 29%  to Rs 325 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/emcure-pharma-q2-results-profit-jumps-29-to-rs-325-crore/articleshow/135501062.cms",
-        "Tue, 03 Nov 2026 18:43:05 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Nexus Select Trust Q2 net operating income rises 8 pc to Rs 504 cr",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/nexus-select-trust-q2-net-operating-income-rises-8-pc-to-rs-504-cr/articleshow/135501009.cms",
-        "Tue, 03 Nov 2026 18:40:40 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "V-Mart Retail Q2 loss widens to Rs 16 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/v-mart-retail-q2-loss-widens-to-rs-16-crore/articleshow/135500943.cms",
-        "Tue, 03 Nov 2026 18:38:23 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Minda Corp Q2 Results: Net profit jumps 68% to Rs 143 crore on strong revenue growth",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/minda-corp-q2-results-net-profit-jumps-68-to-rs-143-crore-on-strong-revenue-growth/articleshow/135500886.cms",
-        "Tue, 03 Nov 2026 18:36:33 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "NSE Q2 Results: Profit jumps 23% to Rs 2,578 crore, revenue rises 9%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/nse-q2-results-profit-jumps-23-to-rs-2578-crore-revenue-rises-9/articleshow/135499601.cms",
-        "Tue, 03 Nov 2026 18:09:02 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Indian Hotels Company among 6 stocks that hit 52-week highs and rallied up to 16% in a month",
-        "https://economictimes.indiatimes.com/markets/stocks/news/indian-hotels-company-among-6-stocks-that-hit-52-week-highs-and-rallied-up-to-16-in-a-month/slideshow/135499922.cms",
-        "Tue, 03 Nov 2026 18:03:10 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Wall Street's hidden bargains: 10 US largecap stocks trading at historic discount for investors",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/wall-streets-hidden-bargains-10-us-largecap-stocks-trading-at-historic-discount-for-investors/articleshow/135495832.cms",
-        "Tue, 03 Nov 2026 17:46:48 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Market wrap:  BSE, Nestle India, Power Grid, SBI top gainers and losers on Nifty and Sensex on Tuesday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-bse-nestle-india-power-grid-sbi-top-gainers-and-losers-on-nifty-and-sensex-on-tuesday/articleshow/135495602.cms",
-        "Tue, 03 Nov 2026 17:39:42 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "FPIs pour Rs 21,715 crore into Indian stocks in 10 days; is record sell-off finally reversing?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/fpis-pour-rs-21715-crore-into-indian-stocks-in-10-days-is-record-sell-off-finally-reversing/articleshow/135495383.cms",
-        "Tue, 03 Nov 2026 17:28:21 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "European shares fall as tech stocks slide, Middle East tensions weigh",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/european-shares-fall-as-tech-stocks-slide-middle-east-tensions-weigh/articleshow/135495334.cms",
-        "Tue, 03 Nov 2026 17:26:13 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "R&amp;D-focused stocks deliver over 23% annualised returns in five years, outperform NSE 500: Monarch AIF",
-        "https://economictimes.indiatimes.com/markets/stocks/news/rd-focused-stocks-deliver-over-23-annualised-returns-in-five-years-outperform-nse-500-monarch-aif/articleshow/135494023.cms",
-        "Tue, 03 Nov 2026 16:42:00 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Knowledge Realty Trust NOI up 15%, declares record Rs 764 cr distribution in Q2",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/knowledge-realty-trust-noi-up-15-declares-record-rs-764-cr-distribution-in-q2/articleshow/135493546.cms",
-        "Tue, 03 Nov 2026 16:24:52 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Emcure Pharma shares jump 7% after Q2 profit rises 29% YoY to Rs 325 crore",
-        "https://economictimes.indiatimes.com/markets/stocks/news/emcure-pharma-shares-jump-7-after-q2-profit-rises-29-yoy-to-rs-325-crore/articleshow/135492800.cms",
-        "Tue, 03 Nov 2026 16:01:53 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Rupee nudges higher, forward premiums dip with focus on US midterm, oil moves",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-nudges-higher-forward-premiums-dip-with-focus-on-us-midterm-oil-moves/articleshow/135492726.cms",
-        "Tue, 03 Nov 2026 15:58:34 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Is the AI boom losing steam? Global economy faces growing risks",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/is-the-ai-boom-losing-steam-global-economy-faces-growing-risks/articleshow/135491964.cms",
-        "Tue, 03 Nov 2026 15:28:45 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "Bonus issue alert! Choice International to reward shareholders with 1:1 bonus shares. Check details",
-        "https://economictimes.indiatimes.com/markets/stocks/news/bonus-issue-alert-choice-international-to-reward-shareholders-with-11-bonus-shares-check-details/articleshow/135491901.cms",
-        "Tue, 03 Nov 2026 15:27:12 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "MFs cut stakes in 8 smallcap stocks after two quarters of buying; shares tumble up to 30% in 3 months",
-        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-cut-stakes-in-8-smallcap-stocks-after-two-quarters-of-buying-shares-tumble-up-to-30-in-3-months/slideshow/135491144.cms",
-        "Tue, 03 Nov 2026 14:53:37 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "German bond yields rise as oil climbs ahead of US Midterm elections",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/german-bond-yields-rise-as-oil-climbs-ahead-of-us-midterm-elections/articleshow/135490769.cms",
-        "Tue, 03 Nov 2026 14:52:01 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "BLS E-Services Q2 Results: Net profit rises 12% YoY pc to Rs 20.5 cr",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/bls-e-services-q2-results-net-profit-rises-12-yoy-pc-to-rs-20-5-cr/articleshow/135490084.cms",
-        "Tue, 03 Nov 2026 14:31:01 +0530",
-        "2026-11-03T16:10:58Z"
-      ],
-      [
-        "ET Markets",
-        "SBI Q2 Results: Standalone profit rises 14% YoY to Rs 23,038 crore, NII jumps 15%",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/sbi-q2-results-standalone-profit-rises-14-yoy-to-rs-23038-crore-nii-jumps-15/articleshow/135489000.cms",
-        "Tue, 03 Nov 2026 13:59:49 +0530",
-        "2026-11-03T16:10:58Z"
-      ]
-    ],
-    "total": 158
   },
   "archive": {
     "files": 27,
@@ -1583,6 +1244,608 @@
       ]
     ],
     "total": 341
+  },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-11-03T20:52:57Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 23440.8,
+      "median_chg_pct": 1.45,
+      "low10_chg_pct": -3.72,
+      "high90_chg_pct": 6.54,
+      "confidence": 59,
+      "direction": "up"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "FCL",
+        49.12,
+        8.1,
+        -17.09,
+        33.81,
+        "up",
+        0
+      ],
+      [
+        "ZYDUSWELL",
+        463.35,
+        7.13,
+        -6.61,
+        21.47,
+        "up",
+        0
+      ],
+      [
+        "VGUARD",
+        269.3,
+        7.08,
+        -6.86,
+        20.73,
+        "up",
+        0
+      ],
+      [
+        "VAIBHAVGBL",
+        187.48,
+        6.76,
+        -8.8,
+        25.44,
+        "up",
+        0
+      ],
+      [
+        "VEDL",
+        226.5,
+        6.13,
+        -9.76,
+        27.1,
+        "up",
+        0
+      ],
+      [
+        "GOLDIAM",
+        290.35,
+        5.62,
+        -9.91,
+        27.8,
+        "up",
+        0
+      ],
+      [
+        "TIMETECHNO",
+        157.06,
+        4.94,
+        -10.47,
+        20.12,
+        "up",
+        0
+      ],
+      [
+        "GREENLAM",
+        211.95,
+        4.54,
+        -5.97,
+        17.02,
+        "up",
+        8
+      ],
+      [
+        "3MINDIA",
+        28815.0,
+        3.57,
+        -4.7,
+        17.83,
+        "up",
+        10
+      ],
+      [
+        "TIIL",
+        2507.6,
+        3.14,
+        -8.63,
+        18.78,
+        "up",
+        0
+      ],
+      [
+        "ULTRACEMCO",
+        11050.0,
+        2.91,
+        -4.34,
+        10.72,
+        "up",
+        40
+      ],
+      [
+        "ABBOTINDIA",
+        25030.0,
+        2.43,
+        -3.81,
+        11.65,
+        "up",
+        38
+      ],
+      [
+        "WSTCSTPAPR",
+        797.45,
+        1.85,
+        -16.91,
+        21.0,
+        "up",
+        0
+      ],
+      [
+        "^IXIC",
+        25362.2,
+        1.74,
+        -5.32,
+        7.63,
+        "up",
+        48
+      ],
+      [
+        "WHIRLPOOL",
+        790.45,
+        1.68,
+        -12.77,
+        19.65,
+        "up",
+        0
+      ],
+      [
+        "AAVAS",
+        1114.1,
+        1.65,
+        -11.91,
+        17.25,
+        "up",
+        0
+      ],
+      [
+        "^FTSE",
+        10638.43,
+        1.58,
+        -0.99,
+        3.94,
+        "up",
+        80
+      ],
+      [
+        "WIPRO",
+        189.84,
+        1.57,
+        -11.2,
+        18.69,
+        "up",
+        0
+      ],
+      [
+        "AHLUCONT",
+        540.15,
+        1.57,
+        -16.93,
+        24.11,
+        "up",
+        0
+      ],
+      [
+        "^N225",
+        63081.86,
+        1.56,
+        -8.72,
+        12.08,
+        "up",
+        17
+      ],
+      [
+        "UPL",
+        508.65,
+        1.46,
+        -9.1,
+        15.61,
+        "up",
+        1
+      ],
+      [
+        "^NSEI",
+        23440.8,
+        1.45,
+        -3.72,
+        6.54,
+        "up",
+        59
+      ],
+      [
+        "GODREJCP",
+        856.35,
+        1.28,
+        -6.93,
+        12.5,
+        "up",
+        22
+      ],
+      [
+        "^GSPC",
+        7562.24,
+        1.2,
+        -2.95,
+        4.42,
+        "up",
+        70
+      ],
+      [
+        "^NSEBANK",
+        55002.2,
+        1.17,
+        -4.18,
+        6.41,
+        "up",
+        58
+      ]
+    ],
+    "total": 73
+  },
+  "daily": {
+    "as_of": "2026-11-03T20:52:58Z",
+    "items": [
+      "Bhavcopy archive through 2026-11-03 (27 files, 15 days)",
+      "Nifty PCR 1.5 \u00b7 max pain 23000.0",
+      "25 OI spikes in stock futures",
+      "25 volume spikes vs their own average",
+      "Corporate actions: 17 dividends, 1 split, 1 bonus",
+      "341 videos across 10 channels"
+    ]
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^BSESN",
+        76917.8516,
+        1.62,
+        "2026-11-03"
+      ],
+      [
+        "^NSEI",
+        23810.8496,
+        1.58,
+        "2026-11-03"
+      ],
+      [
+        "^NSEBANK",
+        55540.0508,
+        0.98,
+        "2026-11-03"
+      ]
+    ],
+    "total": 3
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        3944.5,
+        -0.63,
+        "2026-11-03"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "XRP-USD",
+        1.2772,
+        2.36,
+        "2026-11-03"
+      ],
+      [
+        "AVAX-USD",
+        8.565,
+        2.12,
+        "2026-11-03"
+      ],
+      [
+        "ETH-USD",
+        2293.8401,
+        2.0,
+        "2026-11-03"
+      ],
+      [
+        "SOL-USD",
+        93.38,
+        1.68,
+        "2026-11-03"
+      ],
+      [
+        "DOGE-USD",
+        0.0752,
+        1.52,
+        "2026-11-03"
+      ],
+      [
+        "ADA-USD",
+        0.1905,
+        1.2,
+        "2026-11-03"
+      ],
+      [
+        "BTC-USD",
+        77527.1875,
+        1.11,
+        "2026-11-03"
+      ],
+      [
+        "TRX-USD",
+        0.3224,
+        1.07,
+        "2026-11-03"
+      ],
+      [
+        "LINK-USD",
+        11.142,
+        0.27,
+        "2026-11-03"
+      ],
+      [
+        "BNB-USD",
+        699.7,
+        0.24,
+        "2026-11-03"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "MCX Q2 Results: Profit rockets 130% YoY to Rs 455 crore, revenue jumps 114%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/mcx-q2-results-profit-rockets-130-yoy-to-rs-455-crore-revenue-jumps-114/articleshow/135504568.cms",
+        "Tue, 03 Nov 2026 20:44:21 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Motilal Oswal Financial Services announces leadership rejig; appoints new heads across businesses",
+        "https://economictimes.indiatimes.com/markets/stocks/news/motilal-oswal-financial-services-announces-leadership-rejig-appoints-new-heads-across-businesses/articleshow/135504517.cms",
+        "Tue, 03 Nov 2026 20:42:23 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks today: S&amp;P 500, Nasdaq open higher as oil prices extend declines, midterms on tap",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-sp-500-nasdaq-open-higher-as-oil-prices-extend-declines-midterms-on-tap/articleshow/135503356.cms",
+        "Tue, 03 Nov 2026 20:08:54 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "DuPont raises annual profit forecasts on strong healthcare, aerospace demand",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/dupont-raises-annual-profit-forecasts-on-strong-healthcare-aerospace-demand/articleshow/135502681.cms",
+        "Tue, 03 Nov 2026 19:44:08 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Ferrari nudges up full-year forecasts after beating consensus in Q3",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/ferrari-nudges-up-full-year-forecasts-after-beating-consensus-in-q3/articleshow/135502546.cms",
+        "Tue, 03 Nov 2026 19:38:36 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Prediction markets face US midterms test as election bets soar",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/prediction-markets-face-us-midterms-test-as-election-bets-soar/articleshow/135502488.cms",
+        "Tue, 03 Nov 2026 19:33:21 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Bata India Q2 Results: Profit rises 30% at Rs 18 crore, revenue rises to Rs 862 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/bata-india-q2-results-profit-rises-30-at-rs-18-crore-revenue-rises-to-rs-862-crore/articleshow/135502156.cms",
+        "Tue, 03 Nov 2026 19:21:08 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "India bonds end tad higher on softer oil",
+        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-end-tad-higher-on-softer-oil/articleshow/135501245.cms",
+        "Tue, 03 Nov 2026 18:49:51 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "US stock futures mixed as Apple falls on margin warning, midterm results awaited",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-stock-futures-mixed-as-apple-falls-on-margin-warning-midterm-results-awaited/articleshow/135501177.cms",
+        "Tue, 03 Nov 2026 18:47:16 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "US Stock Market Live Updates: S&amp;P 500, Nasdaq rise ahead of midterm results; Apple falls",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-apple-palantir-nvidia-midterm-elections-us-iran-war-crude-oil-prices-ai-stocks-treasury-yields-earnings-news-3rd-november-2026/liveblog/135501430.cms",
+        "Tue, 03 Nov 2026 18:47:00 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Emcure Pharma Q2 Results: Profit jumps 29%  to Rs 325 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/emcure-pharma-q2-results-profit-jumps-29-to-rs-325-crore/articleshow/135501062.cms",
+        "Tue, 03 Nov 2026 18:43:05 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Nexus Select Trust Q2 net operating income rises 8 pc to Rs 504 cr",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/nexus-select-trust-q2-net-operating-income-rises-8-pc-to-rs-504-cr/articleshow/135501009.cms",
+        "Tue, 03 Nov 2026 18:40:40 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "V-Mart Retail Q2 loss widens to Rs 16 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/v-mart-retail-q2-loss-widens-to-rs-16-crore/articleshow/135500943.cms",
+        "Tue, 03 Nov 2026 18:38:23 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Minda Corp Q2 Results: Net profit jumps 68% to Rs 143 crore on strong revenue growth",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/minda-corp-q2-results-net-profit-jumps-68-to-rs-143-crore-on-strong-revenue-growth/articleshow/135500886.cms",
+        "Tue, 03 Nov 2026 18:36:33 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "NSE Q2 Results: Profit jumps 23% to Rs 2,578 crore, revenue rises 9%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/nse-q2-results-profit-jumps-23-to-rs-2578-crore-revenue-rises-9/articleshow/135499601.cms",
+        "Tue, 03 Nov 2026 18:09:02 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Indian Hotels Company among 6 stocks that hit 52-week highs and rallied up to 16% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/indian-hotels-company-among-6-stocks-that-hit-52-week-highs-and-rallied-up-to-16-in-a-month/slideshow/135499922.cms",
+        "Tue, 03 Nov 2026 18:03:10 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Wall Street's hidden bargains: 10 US largecap stocks trading at historic discount for investors",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/wall-streets-hidden-bargains-10-us-largecap-stocks-trading-at-historic-discount-for-investors/articleshow/135495832.cms",
+        "Tue, 03 Nov 2026 17:46:48 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Market wrap:  BSE, Nestle India, Power Grid, SBI top gainers and losers on Nifty and Sensex on Tuesday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-wrap-bse-nestle-india-power-grid-sbi-top-gainers-and-losers-on-nifty-and-sensex-on-tuesday/articleshow/135495602.cms",
+        "Tue, 03 Nov 2026 17:39:42 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "FPIs pour Rs 21,715 crore into Indian stocks in 10 days; is record sell-off finally reversing?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/fpis-pour-rs-21715-crore-into-indian-stocks-in-10-days-is-record-sell-off-finally-reversing/articleshow/135495383.cms",
+        "Tue, 03 Nov 2026 17:28:21 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "European shares fall as tech stocks slide, Middle East tensions weigh",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/european-shares-fall-as-tech-stocks-slide-middle-east-tensions-weigh/articleshow/135495334.cms",
+        "Tue, 03 Nov 2026 17:26:13 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "R&amp;D-focused stocks deliver over 23% annualised returns in five years, outperform NSE 500: Monarch AIF",
+        "https://economictimes.indiatimes.com/markets/stocks/news/rd-focused-stocks-deliver-over-23-annualised-returns-in-five-years-outperform-nse-500-monarch-aif/articleshow/135494023.cms",
+        "Tue, 03 Nov 2026 16:42:00 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Knowledge Realty Trust NOI up 15%, declares record Rs 764 cr distribution in Q2",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/knowledge-realty-trust-noi-up-15-declares-record-rs-764-cr-distribution-in-q2/articleshow/135493546.cms",
+        "Tue, 03 Nov 2026 16:24:52 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Emcure Pharma shares jump 7% after Q2 profit rises 29% YoY to Rs 325 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/news/emcure-pharma-shares-jump-7-after-q2-profit-rises-29-yoy-to-rs-325-crore/articleshow/135492800.cms",
+        "Tue, 03 Nov 2026 16:01:53 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee nudges higher, forward premiums dip with focus on US midterm, oil moves",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-nudges-higher-forward-premiums-dip-with-focus-on-us-midterm-oil-moves/articleshow/135492726.cms",
+        "Tue, 03 Nov 2026 15:58:34 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Is the AI boom losing steam? Global economy faces growing risks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/is-the-ai-boom-losing-steam-global-economy-faces-growing-risks/articleshow/135491964.cms",
+        "Tue, 03 Nov 2026 15:28:45 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "Bonus issue alert! Choice International to reward shareholders with 1:1 bonus shares. Check details",
+        "https://economictimes.indiatimes.com/markets/stocks/news/bonus-issue-alert-choice-international-to-reward-shareholders-with-11-bonus-shares-check-details/articleshow/135491901.cms",
+        "Tue, 03 Nov 2026 15:27:12 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "MFs cut stakes in 8 smallcap stocks after two quarters of buying; shares tumble up to 30% in 3 months",
+        "https://economictimes.indiatimes.com/markets/stocks/news/mfs-cut-stakes-in-8-smallcap-stocks-after-two-quarters-of-buying-shares-tumble-up-to-30-in-3-months/slideshow/135491144.cms",
+        "Tue, 03 Nov 2026 14:53:37 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "German bond yields rise as oil climbs ahead of US Midterm elections",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/german-bond-yields-rise-as-oil-climbs-ahead-of-us-midterm-elections/articleshow/135490769.cms",
+        "Tue, 03 Nov 2026 14:52:01 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "BLS E-Services Q2 Results: Net profit rises 12% YoY pc to Rs 20.5 cr",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/bls-e-services-q2-results-net-profit-rises-12-yoy-pc-to-rs-20-5-cr/articleshow/135490084.cms",
+        "Tue, 03 Nov 2026 14:31:01 +0530",
+        "2026-11-03T16:10:58Z"
+      ],
+      [
+        "ET Markets",
+        "SBI Q2 Results: Standalone profit rises 14% YoY to Rs 23,038 crore, NII jumps 15%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/sbi-q2-results-standalone-profit-rises-14-yoy-to-rs-23038-crore-nii-jumps-15/articleshow/135489000.cms",
+        "Tue, 03 Nov 2026 13:59:49 +0530",
+        "2026-11-03T16:10:58Z"
+      ]
+    ],
+    "total": 158
   },
   "indicators": {
     "columns": [
@@ -3382,258 +3645,6 @@
     ],
     "rows": 18522
   },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-11-02T23:04:11Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 23053.1,
-      "median_chg_pct": 2.07,
-      "low10_chg_pct": -2.85,
-      "high90_chg_pct": 7.47,
-      "confidence": 59,
-      "direction": "up"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "LICHSGFIN",
-        490.0,
-        9.64,
-        -1.06,
-        19.54,
-        "up",
-        18
-      ],
-      [
-        "YESBANK",
-        15.8,
-        8.38,
-        -9.67,
-        34.51,
-        "up",
-        0
-      ],
-      [
-        "ZYDUSWELL",
-        463.35,
-        7.13,
-        -6.61,
-        21.47,
-        "up",
-        0
-      ],
-      [
-        "VGUARD",
-        269.3,
-        7.08,
-        -6.86,
-        20.73,
-        "up",
-        0
-      ],
-      [
-        "VEDL",
-        226.5,
-        6.13,
-        -9.76,
-        27.1,
-        "up",
-        0
-      ],
-      [
-        "ACCELYA",
-        952.1,
-        6.09,
-        -8.8,
-        18.69,
-        "up",
-        0
-      ],
-      [
-        "HCLTECH",
-        1422.2,
-        3.89,
-        -9.73,
-        15.48,
-        "up",
-        0
-      ],
-      [
-        "GSFC",
-        135.02,
-        3.82,
-        -8.28,
-        16.45,
-        "up",
-        1
-      ],
-      [
-        "LALPATHLAB",
-        1838.2,
-        3.62,
-        -5.0,
-        12.31,
-        "up",
-        31
-      ],
-      [
-        "3MINDIA",
-        28815.0,
-        3.57,
-        -4.7,
-        17.83,
-        "up",
-        10
-      ],
-      [
-        "LAURUSLABS",
-        1970.0,
-        3.4,
-        -7.47,
-        14.78,
-        "up",
-        11
-      ],
-      [
-        "ABBOTINDIA",
-        25030.0,
-        2.43,
-        -3.81,
-        11.65,
-        "up",
-        38
-      ],
-      [
-        "LEMONTREE",
-        108.94,
-        2.36,
-        -5.97,
-        13.57,
-        "up",
-        22
-      ],
-      [
-        "HDFCAMC",
-        2250.0,
-        2.19,
-        -7.3,
-        17.22,
-        "up",
-        2
-      ],
-      [
-        "EIHOTEL",
-        288.1,
-        2.17,
-        -7.95,
-        13.36,
-        "up",
-        15
-      ],
-      [
-        "VLSFINANCE",
-        198.02,
-        2.14,
-        -14.11,
-        42.61,
-        "up",
-        0
-      ],
-      [
-        "ZEEL",
-        65.42,
-        2.11,
-        -17.9,
-        32.89,
-        "up",
-        0
-      ],
-      [
-        "LINDEINDIA",
-        5723.5,
-        2.1,
-        -6.38,
-        14.43,
-        "up",
-        17
-      ],
-      [
-        "^NSEI",
-        23053.1,
-        2.07,
-        -2.85,
-        7.47,
-        "up",
-        59
-      ],
-      [
-        "HDFCBANK",
-        692.8,
-        2.0,
-        -6.26,
-        12.24,
-        "up",
-        26
-      ],
-      [
-        "^IXIC",
-        25164.32,
-        1.96,
-        -6.2,
-        8.29,
-        "up",
-        42
-      ],
-      [
-        "HDFCLIFE",
-        523.75,
-        1.91,
-        -4.43,
-        10.65,
-        "up",
-        40
-      ],
-      [
-        "WSTCSTPAPR",
-        797.45,
-        1.85,
-        -16.91,
-        21.0,
-        "up",
-        0
-      ],
-      [
-        "VSTTILLERS",
-        3896.6,
-        1.79,
-        -11.43,
-        16.68,
-        "up",
-        0
-      ],
-      [
-        "VMART",
-        777.2,
-        1.64,
-        -12.82,
-        17.71,
-        "up",
-        0
-      ]
-    ],
-    "total": 73
-  },
   "quality": {
     "rows": 3502926,
     "symbols": 3510,
@@ -3700,18 +3711,6 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
-  },
-  "daily": {
-    "as_of": "2026-11-03T16:39:17Z",
-    "items": [
-      "Bhavcopy archive through 2026-11-03 (27 files, 15 days)",
-      "Nifty PCR 1.5 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "25 volume spikes vs their own average",
-      "Corporate actions: 17 dividends, 1 bonus",
-      "341 videos across 10 channels",
-      "158 news headlines"
-    ]
   },
   "fx": {
     "columns": [

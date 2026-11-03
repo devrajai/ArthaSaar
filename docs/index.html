@@ -2768,6 +2768,49 @@ function build(d){
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
+    // ---- does the day of the week matter? tested, not asserted -------------------------
+    // Three common astrology claims, checked against our own archive. One holds, one fails,
+    // one is backwards. Presented as a measurement with its cautions, never as guidance.
+    (function(){
+     try{
+      if(!WEEKDAY) return;
+      var kids=[];
+      if(WEEKDAY.claims&&WEEKDAY.claims.length){
+        kids.push(tbl({columns:["common claim","weekday","tested","result"],
+          rows:WEEKDAY.claims.map(function(c){
+            return [esc(c.claim), esc(c.weekday)+" ("+esc(c.planet)+")", esc(c.tested), esc(c.result)];
+          })}));
+        kids.push(para("Wednesday is the only one that survives: it ranks first of the five "+
+          "weekdays at 1, 5 and 20 day holds, and the edge was positive in "+
+          WEEKDAY.wednesday_years_positive+" of "+WEEKDAY.wednesday_years_total+" years. "+
+          "Thursday for long-term wealth does not hold - it ranks last but one on a one-year "+
+          "hold. And Monday as the cautious choice is backwards: it is the most volatile day.", true));
+      }
+      if(WEEKDAY.rank){
+        var holds=Object.keys(WEEKDAY.rank);
+        kids.push(tbl({columns:["hold"].concat(["1st","2nd","3rd","4th","5th"]),
+          rows:holds.map(function(k){
+            var r=WEEKDAY.rank[k]||[];
+            var row=[k];
+            for(var i=0;i<5;i++) row.push(r[i]?(r[i].weekday.slice(0,3)+" "+(r[i].mean_pct>0?"+":"")+r[i].mean_pct+"%"):"-");
+            return row;
+          })}));
+      }
+      if(WEEKDAY.volatility&&WEEKDAY.volatility.by_weekday){
+        var vw=WEEKDAY.volatility.by_weekday;
+        kids.push(para("Average absolute daily move, which is what 'cautious' actually depends "+
+          "on: "+Object.keys(vw).map(function(k){return k.slice(0,3)+" "+vw[k]+"%";}).join(" \u00b7 ")+
+          ". All days average "+WEEKDAY.volatility.all_days+"%.", false));
+      }
+      v.appendChild(card("Does the day of the week matter?",
+        WEEKDAY.count+" weekday and horizon combinations", kids,
+        {what:"Three common astrology claims about weekdays, tested against our own archive instead of repeated.",
+         source:"Median listed stock, 2019 to today.", updated:WEEKDAY.updated,
+         note:"This is a measurement, not advice. A one-day round trip costs roughly 0.15-0.30% in brokerage, STT, stamp duty and slippage, and the Wednesday edge is thinner than that in most years. It turned negative in 2026, and day-of-week effects have historically weakened once widely known. Twenty weekday-by-horizon combinations were tested, so some look significant by chance. Above all: Monday's behaviour is the weekend news effect, seen in every equity market on earth - a correlation with a weekday is not evidence of a planetary cause."}));
+     }catch(e){}
+    })();
+
+
     // ---- Muhurat trading, as facts ----------------------------------------------------
     // Analysis only. No stock lists, no targets, no calls - tip lists around Diwali are a
     // known scam channel, and anything reading as a recommendation carries SEBI obligations
@@ -4558,6 +4601,7 @@ function assign(name, v){
     case "cases.json": CASES=v; break;
     case "scoreboard.json": SCORE=v; break;
     case "muhurat.json": MUHURAT=v; break;
+    case "weekday.json": WEEKDAY=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4604,8 +4648,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json"];
 
 function renderAll(){
   if(!DATA) return;

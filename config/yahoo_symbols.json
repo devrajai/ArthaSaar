@@ -89,6 +89,17 @@
       "ABB.NS",
       "BEL.NS",
       "ZOMATO.NS"
+    ],
+    "commodities": [
+      "GC=F",
+      "SI=F",
+      "CL=F",
+      "BZ=F",
+      "HG=F"
+    ],
+    "commodities_context": [
+      "^IXIC",
+      "DX-Y.NYB"
     ]
   }
 }

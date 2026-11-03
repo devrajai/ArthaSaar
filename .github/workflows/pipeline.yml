@@ -327,6 +327,18 @@ jobs:
       - name: "7m2s. Weekday effects (tested claims)"
         run: python scripts/build_weekday.py || true
 
+      # Commodities: gold, silver, crude, the gold-silver ratio and the correlations.
+      - name: "7m2t. Fetch commodity futures"
+        run: |
+          python scripts/fetch_yahoo.py --group commodities --period 2y || true
+          python scripts/fetch_yahoo.py --group commodities_context --period 2y || true
+      - name: "7m2u. Commodities and what they track"
+        run: python scripts/build_commodities.py || true
+
+      # Upcoming macro events, merged with the exchange's own special sessions.
+      - name: "7m2v. Macro calendar"
+        run: python scripts/build_macro.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

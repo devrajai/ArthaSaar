@@ -1574,6 +1574,27 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- what is coming up ------------------------------------------------------------
+    // Macro dates are entered by hand from official calendars, not scraped. A guessed date
+    // would be worse than no date, so the card says where they come from.
+    (function(){
+     try{
+      if(!MACRO||!MACRO.events||!MACRO.events.length) return;
+      var kids=[tbl({columns:["when","region","event","in"],
+        rows:MACRO.events.slice(0,8).map(function(e){
+          var w=e.days_away;
+          var when = w===0 ? "today" : (w>0 ? ("in "+w+" days") : "past");
+          return [e.date+(e.time?(" "+e.time):""), esc(e.region), esc(e.label), when];
+        })})];
+      v.appendChild(card("Coming up", MACRO.count+" scheduled", kids,
+        {what:"Macro and exchange events that tend to move Indian markets.",
+         source:"Hand-entered from Federal Reserve, US BLS and NSE calendars.",
+         updated:MACRO.updated,
+         note:"Macro dates are entered by hand from official calendars, not scraped, and only after they appear on the primary source. Dates move - check the source before relying on one."}));
+     }catch(e){}
+    })();
+
+
     // ---- what changed since your last visit ------------------------------------------
     // No login, no server: the previous visit is remembered in this browser. On the first
     // visit there is nothing to compare against, so the card says so rather than pretending.
@@ -2148,6 +2169,37 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    // ---- commodities, the gold-silver ratio, and what metals are tracking -------------
+    (function(){
+     try{
+      if(!COMMOD||!COMMOD.rows||!COMMOD.rows.length) return;
+      var kids=[tbl({columns:["","price","1 day","1 week","1 month"],
+        rows:COMMOD.rows.map(function(r){
+          function f(x){ return x==null ? "-" : ((x>0?"+":"")+x+"%"); }
+          return [esc(r.label), r.close+" "+esc(r.unit), f(r.chg_1d), f(r.chg_1w), f(r.chg_1m)];
+        })})];
+      if(COMMOD.ratio){
+        var rt=COMMOD.ratio;
+        kids.push(para("<b>Gold/silver ratio "+rt.value+"</b>"+
+          (rt.prev_week!=null ? (" - it was "+rt.prev_week+" a week ago, so silver moved "+
+            (rt.value>rt.prev_week?"less":"more")+" than gold.") : "")+
+          " One ounce of gold buys "+rt.value+" ounces of silver.", true));
+      }
+      if(COMMOD.correlations&&COMMOD.correlations.length){
+        kids.push(tbl({columns:["","against","10-session correlation"],
+          rows:COMMOD.correlations.map(function(c){
+            return [esc(c.metal), esc(c.against), (c.correlation>0?"+":"")+c.correlation];
+          })}));
+      }
+      v.appendChild(card("Commodities and what they track",
+        COMMOD.count+" instruments", kids,
+        {what:"Gold, silver and crude, with the gold-silver ratio and the correlations that explain recent moves.",
+         source:"Yahoo Finance futures closes, delayed and unofficial.", updated:COMMOD.updated,
+         note:"A high correlation with tech means metals moved with risk assets over that window - it does not say which caused which. With only 10 sessions the standard error is roughly 0.38, so anything between about -0.4 and +0.4 is indistinguishable from no relationship at all. Read the sign and rough size, never the exact figure."}));
+     }catch(e){}
+    })();
+
+
     if(RECAP&&RECAP.nifty){
       var n=RECAP.nifty, sx=RECAP.sensex, vx=RECAP.vix||{};
       var rk=[para("Nifty "+num(n.last)+"  ("+(n.change_10d_pct>0?"+":"")+n.change_10d_pct+"% over "+
@@ -4602,6 +4654,8 @@ function assign(name, v){
     case "scoreboard.json": SCORE=v; break;
     case "muhurat.json": MUHURAT=v; break;
     case "weekday.json": WEEKDAY=v; break;
+    case "commodities.json": COMMOD=v; break;
+    case "macro.json": MACRO=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4648,8 +4702,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json"];
 
 function renderAll(){
   if(!DATA) return;

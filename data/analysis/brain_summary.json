@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-03T07:27:14Z",
+  "generated_at": "2026-11-03T15:40:38Z",
   "channels": 10,
-  "videos": 327,
+  "videos": 341,
   "window_start": "2026-06-25",
-  "window_end": "2026-11-02",
-  "total_views": 11558815,
+  "window_end": "2026-11-03",
+  "total_views": 11605082,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 75,
+      "mentions": 78,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 34,
+      "mentions": 35,
       "channels": 4
     },
     {
@@ -37,6 +37,11 @@
       "channels": 3
     },
     {
+      "symbol": "ADANIENT",
+      "mentions": 4,
+      "channels": 2
+    },
+    {
       "symbol": "ITC",
       "mentions": 3,
       "channels": 3
@@ -50,38 +55,33 @@
       "symbol": "TCS",
       "mentions": 3,
       "channels": 2
-    },
-    {
-      "symbol": "ADANIENT",
-      "mentions": 3,
-      "channels": 2
     }
   ],
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 82
+      "videos": 85
     },
     {
       "theme": "Beginner/Education",
-      "videos": 75
+      "videos": 81
     },
     {
       "theme": "Earnings/Results",
-      "videos": 63
+      "videos": 67
     },
     {
       "theme": "IPO",
-      "videos": 61
+      "videos": 63
     },
     {
       "theme": "Options/F&O",
-      "videos": 58
+      "videos": 60
     },
     {
       "theme": "Budget/Policy",
-      "videos": 56
+      "videos": 57
     }
   ],
-  "net_sentiment": 137
+  "net_sentiment": 151
 }

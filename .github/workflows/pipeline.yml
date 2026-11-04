@@ -352,6 +352,17 @@ jobs:
       - name: "7m2y. Sector fundamentals"
         run: python scripts/build_sector_fundamentals.py || true
 
+      # What patience is worth, and a claim it disproves.
+      - name: "7m2z. Money behaviour"
+        run: python scripts/build_behaviour.py || true
+
+      # Capacity and volume figures lifted from investor presentations and concalls.
+      - name: "7m2za. Investor presentations"
+        env:
+          PRESENTATION_LIMIT: "40"
+          ANNOUNCEMENT_DAYS: "7"
+        run: python scripts/fetch_presentations.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

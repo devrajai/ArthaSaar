@@ -1838,6 +1838,25 @@ function build(d){
   /* ---------- STOCKS: the full NSE list and the screener, merged ---------- */
   (function(){
     var v=sec("stocks");
+    // ---- what companies say about their own capacity ----------------------------------
+    (function(){
+     try{
+      if(!PRES||!PRES.by_company||!PRES.by_company.length) return;
+      var kids=[];
+      PRES.by_company.slice(0,6).forEach(function(c){
+        kids.push(para("<b>"+esc(c.symbol)+"</b>", false));
+        (c.examples||[]).slice(0,2).forEach(function(x){
+          kids.push(para("\u201c"+esc(x)+"\u201d", false));
+        });
+      });
+      v.appendChild(card("In their own words", PRES.count+" figures from recent filings", kids,
+        {what:"Sentences from investor presentations and concalls that state capacity, volumes or plant sizes.",
+         source:"NSE corporate announcements; each figure links back to its PDF.", updated:PRES.updated,
+         note:"These are the company's own words, not verified by us - a claim about its own capacity, never merged into our computed numbers. Only filings with machine-readable text are covered, so image-only decks yield nothing and coverage is partial."}));
+     }catch(e){}
+    })();
+
+
     // ---- quarterly results: the why behind the price ----------------------------------
     (function(){
      try{
@@ -2903,6 +2922,51 @@ function build(d){
   /* ---------- LEARN (course material) ---------- */
   (function(){
     var v=sec("learn");
+    // ---- what patience is worth, measured ---------------------------------------------
+    // And an honest correction: the usual argument that the best days cluster with the worst
+    // does NOT hold on our data. The real problem is that neither is knowable in advance.
+    (function(){
+     try{
+      if(!BEHAV || BEHAV.buy_and_hold_pct==null) return;
+      var kids=[];
+      if(BEHAV.missing_best&&BEHAV.missing_best.length){
+        kids.push(tbl({columns:["if you missed the N best days","return","vs holding"],
+          rows:[{days:0,return_pct:BEHAV.buy_and_hold_pct,vs_hold_pp:0}].concat(BEHAV.missing_best)
+            .map(function(r){
+              return [r.days===0?"holding throughout":("the best "+r.days+" days"),
+                      (r.return_pct>0?"+":"")+r.return_pct+"%",
+                      r.days===0?"-":((r.vs_hold_pp>0?"+":"")+r.vs_hold_pp+" pp")];
+            })}));
+      }
+      if(BEHAV.missing_worst&&BEHAV.missing_worst.length){
+        var mw=BEHAV.missing_worst[1]||BEHAV.missing_worst[0];
+        kids.push(para("Now the mirror image: dodging the "+mw.days+" <i>worst</i> days would "+
+          "have turned that into <b>"+(mw.return_pct>0?"+":"")+mw.return_pct+"%</b>. That is "+
+          "why market timing is so tempting - and it is only visible in hindsight.", true));
+      }
+      if(BEHAV.clustering){
+        kids.push(para("<b>A claim this page disproves - mine.</b> The usual argument is that "+
+          "the best days sit next to the worst, so you cannot dodge one without missing the "+
+          "other. The data says otherwise: the median gap between a top-10 day and the nearest "+
+          "bottom-10 day is <b>"+BEHAV.clustering.median_gap_sessions+" sessions</b>, and only "+
+          BEHAV.clustering.best_within_5_sessions+" of 10 best days fall within five sessions "+
+          "of a worst day. The days are separable. The problem is that you cannot know in "+
+          "advance which one you are in.", true));
+      }
+      if(BEHAV.drawdown){
+        var d=BEHAV.drawdown;
+        kids.push(para("And the drawdowns are not rare: the median stock fell as much as <b>"+
+          Math.abs(d.deepest_pct)+"%</b> ("+d.deepest_date+"), and sat more than 20% below a "+
+          "previous peak on <b>"+d.pct_sessions_below_20pct+"%</b> of all sessions.", false));
+      }
+      v.appendChild(card("What patience is worth", "measured, not asserted", kids,
+        {what:"What buy-and-hold returned, and what missing a handful of days does to it.",
+         source:"Median listed stock, equal weight, split-adjusted, 2019 to today.", updated:BEHAV.updated,
+         note:"Every 'missing the best days' figure uses perfect hindsight - nobody knows on the morning of a day that it will be one of the ten best. Only stocks listed today are included. This is a record of what happened, not a prediction, and not investment advice."}));
+     }catch(e){}
+    })();
+
+
     // ---- does the day of the week matter? tested, not asserted -------------------------
     // Three common astrology claims, checked against our own archive. One holds, one fails,
     // one is backwards. Presented as a measurement with its cautions, never as guidance.
@@ -4742,6 +4806,8 @@ function assign(name, v){
     case "story.json": STORY=v; break;
     case "fundamentals.json": FUNDA=v; break;
     case "sector_fund.json": SECF=v; break;
+    case "behaviour.json": BEHAV=v; break;
+    case "presentations.json": PRES=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4788,8 +4854,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json"];
 
 function renderAll(){
   if(!DATA) return;

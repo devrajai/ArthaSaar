@@ -1,27 +1,27 @@
 {
-  "generated_utc": "2026-11-04T21:12:28Z",
+  "generated_utc": "2026-11-04T23:56:30Z",
   "fno": {
-    "date": "2026-11-03",
+    "date": "2026-11-04",
     "pcr": {
-      "nifty_pcr_oi": 1.5,
-      "nifty_max_pain": 23000.0
+      "nifty_pcr_oi": 1.15,
+      "nifty_max_pain": 24000.0
     },
     "index_futures": [
       {
         "symbol": "BANKNIFTY",
-        "oi": 2286450
+        "oi": 2324310
       },
       {
         "symbol": "FINNIFTY",
-        "oi": 27600
+        "oi": 28080
       },
       {
         "symbol": "MIDCPNIFTY",
-        "oi": 2286840
+        "oi": 2255040
       },
       {
         "symbol": "NIFTY",
-        "oi": 15256670
+        "oi": 15045095
       },
       {
         "symbol": "NIFTYFPI",
@@ -29,129 +29,129 @@
       },
       {
         "symbol": "NIFTYNXT50",
-        "oi": 17775
+        "oi": 18250
       }
     ],
     "top_oi": [
       {
         "symbol": "IDEA",
-        "oi": 6254729325,
-        "oi_chg": -24850825,
-        "chg": 0.08
+        "oi": 6256927525,
+        "oi_chg": 2198200,
+        "chg": 2.03
       },
       {
         "symbol": "YESBANK",
-        "oi": 1302374700,
-        "oi_chg": -20401600,
-        "chg": -1.09
+        "oi": 1293480100,
+        "oi_chg": -8894600,
+        "chg": 1.8
       },
       {
         "symbol": "SUZLON",
-        "oi": 472884500,
-        "oi_chg": 3975100,
-        "chg": 0.93
+        "oi": 475678500,
+        "oi_chg": 2794000,
+        "chg": 5.4
       },
       {
         "symbol": "IDFCFIRSTB",
-        "oi": 400123500,
-        "oi_chg": -9738750,
-        "chg": -0.75
+        "oi": 392044975,
+        "oi_chg": -8078525,
+        "chg": 2.61
       },
       {
         "symbol": "HDFCBANK",
-        "oi": 375983450,
-        "oi_chg": -10415300,
-        "chg": 3.39
+        "oi": 369969050,
+        "oi_chg": -6014400,
+        "chg": 1.69
       },
       {
         "symbol": "NMDC",
-        "oi": 361314000,
-        "oi_chg": 627750,
-        "chg": -0.77
-      },
-      {
-        "symbol": "TATASTEEL",
-        "oi": 330748000,
-        "oi_chg": -1559250,
-        "chg": -0.73
+        "oi": 359937000,
+        "oi_chg": -1377000,
+        "chg": 2.67
       },
       {
         "symbol": "CANBK",
-        "oi": 330183000,
-        "oi_chg": 1215000,
-        "chg": -1.49
+        "oi": 331101000,
+        "oi_chg": 918000,
+        "chg": 1.24
+      },
+      {
+        "symbol": "TATASTEEL",
+        "oi": 330360250,
+        "oi_chg": -387750,
+        "chg": 2.18
       },
       {
         "symbol": "PNB",
-        "oi": 260528000,
-        "oi_chg": -5992000,
-        "chg": -1.98
+        "oi": 255192000,
+        "oi_chg": -5336000,
+        "chg": 1.25
       },
       {
         "symbol": "ADANIPOWER",
-        "oi": 227906450,
-        "oi_chg": -1306400,
-        "chg": -0.32
+        "oi": 226940850,
+        "oi_chg": -965600,
+        "chg": 3.43
       },
       {
         "symbol": "JIOFIN",
-        "oi": 217118850,
-        "oi_chg": -1699050,
-        "chg": 0.38
+        "oi": 221062150,
+        "oi_chg": 3943300,
+        "chg": 4.12
       },
       {
         "symbol": "ITC",
-        "oi": 216170825,
-        "oi_chg": 2489375,
-        "chg": 2.85
+        "oi": 212334550,
+        "oi_chg": -3836275,
+        "chg": 2.39
       },
       {
         "symbol": "SAIL",
-        "oi": 183276500,
-        "oi_chg": -1283100,
-        "chg": 0.0
+        "oi": 175432200,
+        "oi_chg": -7844300,
+        "chg": 2.2
       },
       {
         "symbol": "RELIANCE",
-        "oi": 165330500,
-        "oi_chg": 2990000,
-        "chg": 1.66
+        "oi": 165824000,
+        "oi_chg": 493500,
+        "chg": 0.6
       },
       {
         "symbol": "WIPRO",
-        "oi": 161190000,
-        "oi_chg": -1065000,
-        "chg": 0.58
-      },
-      {
-        "symbol": "KOTAKBANK",
-        "oi": 152908000,
-        "oi_chg": -4298000,
-        "chg": 1.01
+        "oi": 161793000,
+        "oi_chg": 603000,
+        "chg": -1.42
       },
       {
         "symbol": "MOTHERSON",
-        "oi": 151093200,
-        "oi_chg": 2816700,
-        "chg": 1.37
+        "oi": 155558100,
+        "oi_chg": 4464900,
+        "chg": -0.81
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "oi": 149490000,
+        "oi_chg": -3418000,
+        "chg": -0.8
       },
       {
         "symbol": "BANKBARODA",
-        "oi": 138428550,
-        "oi_chg": -3173625,
-        "chg": -1.1
+        "oi": 135535725,
+        "oi_chg": -2892825,
+        "chg": 0.56
       },
       {
         "symbol": "GMRAIRPORT",
-        "oi": 135545175,
-        "oi_chg": -558000,
-        "chg": 1.79
+        "oi": 134045550,
+        "oi_chg": -1499625,
+        "chg": 4.59
       },
       {
         "symbol": "BANDHANBNK",
-        "oi": 128685600,
-        "oi_chg": -511200,
-        "chg": 0.68
+        "oi": 129488400,
+        "oi_chg": 802800,
+        "chg": 1.07
       }
     ],
     "stock_futures": 218
@@ -169,183 +169,183 @@
       ],
       "rows": [
         [
-          "2026-11-03",
-          "KARURVYSYA",
-          "217000",
-          "181350",
-          "83.57",
-          "-2.01",
+          "2026-11-04",
+          "MOTHERSON",
+          "1309950",
+          "1193100",
+          "91.08",
+          "-0.81",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "SWIGGY",
-          "827750",
-          "581350",
-          "70.23",
-          "-0.28",
+          "2026-11-04",
+          "TATAPOWER",
+          "290000",
+          "246500",
+          "85.0",
+          "1.63",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "NMDC",
-          "560250",
-          "371250",
-          "66.27",
-          "-0.77",
+          "2026-11-04",
+          "NBCC",
+          "520000",
+          "403000",
+          "77.5",
+          "3.6",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "BIOCON",
-          "190000",
-          "125000",
-          "65.79",
-          "-3.02",
+          "2026-11-04",
+          "BLUESTARCO",
+          "214500",
+          "151450",
+          "70.61",
+          "-0.74",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "MARICO",
-          "238800",
-          "156000",
-          "65.33",
-          "8.62",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "IOC",
-          "160875",
-          "92625",
-          "57.58",
-          "1.94",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "ONGC",
-          "121500",
-          "69750",
-          "57.41",
-          "-0.88",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "SBIN",
-          "315000",
-          "175500",
-          "55.71",
-          "-1.77",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "RVNL",
-          "282800",
-          "138875",
-          "49.11",
-          "-1.08",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
+          "2026-11-04",
           "UNIONBANK",
-          "110625",
-          "53100",
-          "48.0",
-          "-1.04",
+          "327450",
+          "216825",
+          "66.22",
+          "-0.34",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "NTPC",
-          "158400",
-          "73600",
-          "46.46",
-          "-0.68",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "INDUSINDBK",
-          "357000",
-          "163100",
-          "45.69",
-          "1.87",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "CANBK",
-          "668250",
-          "303750",
-          "45.45",
-          "-1.34",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "TATASTEEL",
-          "1306250",
-          "544500",
-          "41.68",
-          "-0.79",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
-          "PHOENIXLTD",
-          "170800",
-          "70700",
-          "41.39",
+          "2026-11-04",
+          "UJJIVANSFB",
+          "488000",
+          "272000",
+          "55.74",
           "0.52",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "ASHOKLEY",
-          "385000",
-          "155000",
-          "40.26",
-          "2.29",
+          "2026-11-04",
+          "HAVELLS",
+          "132500",
+          "73500",
+          "55.47",
+          "2.39",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "NBCC",
-          "117000",
-          "45500",
-          "38.89",
-          "-1.36",
+          "2026-11-04",
+          "HYUNDAI",
+          "192225",
+          "105875",
+          "55.08",
+          "1.74",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "IDEA",
-          "5527125",
-          "2095250",
-          "37.91",
-          "0.0",
-          "build-up"
-        ],
-        [
-          "2026-11-03",
+          "2026-11-04",
           "PFC",
-          "306525",
-          "115900",
-          "37.81",
-          "0.05",
+          "614575",
+          "308050",
+          "50.12",
+          "1.21",
           "build-up"
         ],
         [
-          "2026-11-03",
-          "RECLTD",
-          "319925",
-          "118925",
-          "37.17",
-          "-1.39",
+          "2026-11-04",
+          "BIOCON",
+          "370000",
+          "180000",
+          "48.65",
+          "0.45",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "VMM",
+          "116400",
+          "53350",
+          "45.83",
+          "0.78",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "COALINDIA",
+          "153900",
+          "68850",
+          "44.74",
+          "-1.69",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "NHPC",
+          "4531400",
+          "1939050",
+          "42.79",
+          "-2.13",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "GMRAIRPORT",
+          "523125",
+          "223200",
+          "42.67",
+          "4.9",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "NHPC",
+          "472600",
+          "201550",
+          "42.65",
+          "-2.3",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "KARURVYSYA",
+          "376650",
+          "159650",
+          "42.39",
+          "3.11",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "NTPC",
+          "268800",
+          "110400",
+          "41.07",
+          "0.33",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "BANDHANBNK",
+          "374400",
+          "151200",
+          "40.38",
+          "1.03",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "INFY",
+          "176500",
+          "68500",
+          "38.81",
+          "-1.62",
+          "build-up"
+        ],
+        [
+          "2026-11-04",
+          "M&M",
+          "161400",
+          "58400",
+          "36.18",
+          "1.74",
           "build-up"
         ]
       ],
@@ -690,31 +690,352 @@
       "total": 1
     }
   },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^BSESN",
+        76917.8516,
+        1.62,
+        "2026-11-03"
+      ],
+      [
+        "^NSEI",
+        23810.8496,
+        1.58,
+        "2026-11-03"
+      ],
+      [
+        "^NSEBANK",
+        55540.0508,
+        0.98,
+        "2026-11-03"
+      ]
+    ],
+    "total": 3
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        4072.0,
+        3.34,
+        "2026-11-04"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "ETH-USD",
+        2423.6699,
+        6.64,
+        "2026-11-04"
+      ],
+      [
+        "ADA-USD",
+        0.1981,
+        4.05,
+        "2026-11-04"
+      ],
+      [
+        "BTC-USD",
+        80408.4766,
+        3.96,
+        "2026-11-04"
+      ],
+      [
+        "LINK-USD",
+        11.472,
+        3.96,
+        "2026-11-04"
+      ],
+      [
+        "BNB-USD",
+        718.53,
+        2.86,
+        "2026-11-04"
+      ],
+      [
+        "AVAX-USD",
+        8.766,
+        2.84,
+        "2026-11-04"
+      ],
+      [
+        "SOL-USD",
+        95.4,
+        2.67,
+        "2026-11-04"
+      ],
+      [
+        "DOGE-USD",
+        0.0771,
+        2.41,
+        "2026-11-04"
+      ],
+      [
+        "XRP-USD",
+        1.3069,
+        2.32,
+        "2026-11-04"
+      ],
+      [
+        "TRX-USD",
+        0.3196,
+        -0.54,
+        "2026-11-04"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "Alcohol stocks jump as blue wave boosts industry prospects",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/alcohol-stocks-jump-as-blue-wave-boosts-industry-prospects/articleshow/135551002.cms",
+        "Thu, 05 Nov 2026 01:34:38 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Musk stocks lose $120 billion as Democrats\u2019 Texas win rattles investors",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/musk-stocks-lose-120-billion-as-democrats-texas-win-rattles-investors/articleshow/135550872.cms",
+        "Thu, 05 Nov 2026 01:25:59 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Bitcoin rebounds with stocks despite threat to crypto agenda",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/bitcoin-rebounds-with-stocks-despite-threat-to-crypto-agenda/articleshow/135550638.cms",
+        "Thu, 05 Nov 2026 01:02:16 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "AI data center stocks dip, renewables surge after Democrat sweep in US midterm elections",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/ai-data-center-stocks-dip-renewables-surge-after-democrat-sweep-in-us-midterm-elections/articleshow/135545518.cms",
+        "Wed, 04 Nov 2026 22:01:06 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "US Treasury shifts language, opening door to auction size changes",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-treasury-shifts-language-opening-door-to-auction-size-changes/articleshow/135543878.cms",
+        "Wed, 04 Nov 2026 20:51:43 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Meta draws record orders for debut euro bond sale, Bloomberg News reports",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/meta-draws-record-orders-for-debut-euro-bond-sale-bloomberg-news-reports/articleshow/135543860.cms",
+        "Wed, 04 Nov 2026 20:50:06 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Gold gains 3% as dollar slides after Democratic midterm gains",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/gold-gains-3-as-dollar-slides-after-democratic-midterm-gains/articleshow/135543824.cms",
+        "Wed, 04 Nov 2026 20:48:47 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Prediction markets get Democratic win right, with a few surprises",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/prediction-markets-get-democratic-win-right-with-a-few-surprises/articleshow/135543698.cms",
+        "Wed, 04 Nov 2026 20:47:04 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Indian bonds rally most since April as oil slides after US midterm verdict",
+        "https://economictimes.indiatimes.com/markets/bonds/indian-bonds-rally-most-since-april-as-oil-slides-after-us-midterm-verdict/articleshow/135543664.cms",
+        "Wed, 04 Nov 2026 20:45:23 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Aptus Value Housing Finance Q2 profit rises 18% to Rs 267 cr",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/aptus-value-housing-finance-q2-profit-rises-18-to-rs-267-cr/articleshow/135543628.cms",
+        "Wed, 04 Nov 2026 20:43:37 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Keystone Realtors Q2 profit jumps 10-fold to Rs 101 cr",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/keystone-realtors-q2-profit-jumps-10-fold-to-rs-101-cr/articleshow/135543604.cms",
+        "Wed, 04 Nov 2026 20:42:09 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Property giant Vonovia 'concerned' over Berlin left's housing plans",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/property-giant-vonovia-concerned-over-berlin-lefts-housing-plans/articleshow/135543553.cms",
+        "Wed, 04 Nov 2026 20:40:31 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Sunday PropTech acquires 89-room hotel in Kolkata, marks entry into city",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/sunday-proptech-acquires-89-room-hotel-in-kolkata-marks-entry-into-city/articleshow/135543130.cms",
+        "Wed, 04 Nov 2026 20:33:46 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks today: US stocks rally after Democrats' midterm sweep as AI infrastructure stocks slide",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-dow-jones-soars-1000-points-at-open-as-democrats-win-congress-data-center-stocks-slide/articleshow/135542698.cms",
+        "Wed, 04 Nov 2026 20:11:36 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Ather Energy among 15 stocks that hit 52-week highs and rallied up to 30% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/ather-energy-among-15-stocks-that-hit-52-week-highs-and-rallied-up-to-30-in-a-month/slideshow/135541189.cms",
+        "Wed, 04 Nov 2026 19:07:19 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi cancels registrations of 8 investment advisers for non-payment of renewal fees",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-cancels-registrations-of-8-investment-advisers-for-non-payment-of-renewal-fees/articleshow/135540926.cms",
+        "Wed, 04 Nov 2026 19:06:09 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "US Stock Market Highlights: Dow rallies 1,500 pts, S&amp;P, Nasdaq over 1% as Democrats win midterm elections",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-amd-nvidia-tesla-amazon-meta-ai-stocks-us-midterm-election-results-democrat-win-treasury-yield-news-4th-november-2026/liveblog/135540466.cms",
+        "Wed, 04 Nov 2026 18:42:18 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Democratic victory in midterm elections adds a new twist to stock markets' Iran war, AI, and debt worries",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/democratic-sweep-adds-new-twist-to-markets-iran-ai-and-debt-worries/articleshow/135539439.cms",
+        "Wed, 04 Nov 2026 17:59:31 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Beyond Equity: Jiraaf\u2019s Saurav Ghosh on how to customise your portfolio, and the importance of bonds",
+        "https://economictimes.indiatimes.com/markets/bonds/beyond-equity-jiraafs-saurav-ghosh-on-how-to-customise-your-portfolio-and-the-importance-of-bonds/articleshow/135538953.cms",
+        "Wed, 04 Nov 2026 17:48:00 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Nykaa Q2 Results: PAT soars 207% YoY to Rs 101 crore, revenue up 28%; co to acquire 82% stake in Simply Nam",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/nykaa-q2-results-pat-soars-207-yoy-to-rs-101-crore-revenue-up-28-co-to-acquire-82-stake-in-simply-nam/articleshow/135537436.cms",
+        "Wed, 04 Nov 2026 16:51:24 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Auto sales growth to cool post-festive season, says Monarch; bets on Minda Corp, RK Forgings and Sundram Fasteners",
+        "https://economictimes.indiatimes.com/markets/stocks/news/auto-sales-growth-to-cool-post-festive-season-says-monarch-bets-on-minda-corp-rk-forgings-and-sundram-fasteners/articleshow/135537265.cms",
+        "Wed, 04 Nov 2026 16:42:26 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "European shares rise as banks, clean energy stocks rally; Novo Nordisk jumps",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/european-shares-rise-as-banks-clean-energy-stocks-rally-novo-nordisk-jumps/articleshow/135536424.cms",
+        "Wed, 04 Nov 2026 16:17:07 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee gains 17 paise to settle at 94.58 against Us dollar",
+        "https://economictimes.indiatimes.com/markets/forex/rupee-gains-17-paise-to-settle-at-94-58-against-us-dollar/articleshow/135536340.cms",
+        "Wed, 04 Nov 2026 16:13:50 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Bitcoin near $78,600, Ethereum at $2,300 as US midterm results put crypto regulation in focus",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/bitcoin-near-78600-ethereum-at-2300-as-us-midterm-results-put-crypto-regulation-in-focus/articleshow/135536095.cms",
+        "Wed, 04 Nov 2026 16:10:21 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "AI bubble is coming, and there is no way out! Aswath Damodaran explains what investors should do before the crash begins",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/ai-bubble-is-coming-and-there-is-no-way-out-ashwath-damodaran-explains-what-investors-should-do-before-the-crash-begins/articleshow/135535989.cms",
+        "Wed, 04 Nov 2026 16:03:37 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Lenskart Q2 Results: Profit zooms 122% YoY to Rs 227 crore; revenue grows 36%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/lenskart-q2-results-profit-zooms-122-yoy-to-rs-227-crore-revenue-grows-36/articleshow/135535400.cms",
+        "Wed, 04 Nov 2026 16:00:33 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Eurozone bond yields steady as investors await inflation data; US Treasury yields ease after midterm elections",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/eurozone-bond-yields-steady-as-investors-await-inflation-data-us-treasury-yields-ease-after-midterm-elections/articleshow/135535574.cms",
+        "Wed, 04 Nov 2026 15:51:16 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Dr Lal PathLabs posts higher quarterly profit on strong diagnostic test demand",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/dr-lal-pathlabs-posts-higher-quarterly-profit-on-strong-diagnostic-test-demand/articleshow/135535528.cms",
+        "Wed, 04 Nov 2026 15:49:11 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Allcargo Logistics Q2 Results: Co posts Rs 19 crore profit; revenue rises 3.4%",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/allcargo-logistics-q2-results-co-posts-rs-19-crore-profit-revenue-rises-3-4/articleshow/135535457.cms",
+        "Wed, 04 Nov 2026 15:47:19 +0530",
+        "2026-11-04T23:23:14Z"
+      ],
+      [
+        "ET Markets",
+        "Bayer CropScience Q2 profit rises 9% to Rs 166 crore despite 19% decline in revenue",
+        "https://economictimes.indiatimes.com/markets/stocks/earnings/bayer-cropscience-q2-profit-rises-9-to-rs-166-crore-despite-19-decline-in-revenue/articleshow/135535378.cms",
+        "Wed, 04 Nov 2026 15:44:24 +0530",
+        "2026-11-04T23:23:14Z"
+      ]
+    ],
+    "total": 155
+  },
   "archive": {
-    "files": 27,
-    "dates": 15,
+    "files": 29,
+    "dates": 16,
     "symbols_max": 3730,
     "first": "2019-06-14",
-    "last": "2026-11-03",
+    "last": "2026-11-04",
     "recent": [
-      {
-        "date": "2026-10-27",
-        "segment": "cm",
-        "rows": "3670",
-        "symbols": "3670",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-10-27.parquet",
-        "file_csv": "data/csv/cm/cm_2026-10-27.csv"
-      },
-      {
-        "date": "2026-10-27",
-        "segment": "fo",
-        "rows": "41200",
-        "symbols": "219",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-10-27.parquet",
-        "file_csv": "data/csv/fo/fo_2026-10-27.csv"
-      },
       {
         "date": "2026-10-28",
         "segment": "cm",
@@ -804,6 +1125,24 @@
         "era": "udiff",
         "file_parquet": "data/parquet/fo/fo_2026-11-03.parquet",
         "file_csv": "data/csv/fo/fo_2026-11-03.csv"
+      },
+      {
+        "date": "2026-11-04",
+        "segment": "cm",
+        "rows": "3705",
+        "symbols": "3704",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-11-04.parquet",
+        "file_csv": "data/csv/cm/cm_2026-11-04.csv"
+      },
+      {
+        "date": "2026-11-04",
+        "segment": "fo",
+        "rows": "36667",
+        "symbols": "224",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-11-04.parquet",
+        "file_csv": "data/csv/fo/fo_2026-11-04.csv"
       }
     ]
   },
@@ -1222,608 +1561,6 @@
       ]
     ],
     "total": 356
-  },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-11-04T21:12:28Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 23810.85,
-      "median_chg_pct": 0.71,
-      "low10_chg_pct": -4.57,
-      "high90_chg_pct": 5.62,
-      "confidence": 59,
-      "direction": "up"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "LICHSGFIN",
-        490.0,
-        9.64,
-        -1.06,
-        19.54,
-        "up",
-        18
-      ],
-      [
-        "YESBANK",
-        15.8,
-        8.38,
-        -9.67,
-        34.51,
-        "up",
-        0
-      ],
-      [
-        "ZYDUSWELL",
-        463.35,
-        7.13,
-        -6.61,
-        21.47,
-        "up",
-        0
-      ],
-      [
-        "VGUARD",
-        269.3,
-        7.08,
-        -6.86,
-        20.73,
-        "up",
-        0
-      ],
-      [
-        "VEDL",
-        226.5,
-        6.13,
-        -9.76,
-        27.1,
-        "up",
-        0
-      ],
-      [
-        "ACCELYA",
-        952.1,
-        6.09,
-        -8.8,
-        18.69,
-        "up",
-        0
-      ],
-      [
-        "HCLTECH",
-        1422.2,
-        3.89,
-        -9.73,
-        15.48,
-        "up",
-        0
-      ],
-      [
-        "GSFC",
-        135.02,
-        3.82,
-        -8.28,
-        16.45,
-        "up",
-        1
-      ],
-      [
-        "LALPATHLAB",
-        1838.2,
-        3.62,
-        -5.0,
-        12.31,
-        "up",
-        31
-      ],
-      [
-        "3MINDIA",
-        28815.0,
-        3.57,
-        -4.7,
-        17.83,
-        "up",
-        10
-      ],
-      [
-        "LAURUSLABS",
-        1970.0,
-        3.4,
-        -7.47,
-        14.78,
-        "up",
-        11
-      ],
-      [
-        "ABBOTINDIA",
-        25030.0,
-        2.43,
-        -3.81,
-        11.65,
-        "up",
-        38
-      ],
-      [
-        "LEMONTREE",
-        108.94,
-        2.36,
-        -5.97,
-        13.57,
-        "up",
-        22
-      ],
-      [
-        "HDFCAMC",
-        2250.0,
-        2.19,
-        -7.3,
-        17.22,
-        "up",
-        2
-      ],
-      [
-        "EIHOTEL",
-        288.1,
-        2.17,
-        -7.95,
-        13.36,
-        "up",
-        15
-      ],
-      [
-        "VLSFINANCE",
-        198.02,
-        2.14,
-        -14.11,
-        42.61,
-        "up",
-        0
-      ],
-      [
-        "ZEEL",
-        65.42,
-        2.11,
-        -17.9,
-        32.89,
-        "up",
-        0
-      ],
-      [
-        "LINDEINDIA",
-        5723.5,
-        2.1,
-        -6.38,
-        14.43,
-        "up",
-        17
-      ],
-      [
-        "HDFCBANK",
-        692.8,
-        2.0,
-        -6.26,
-        12.24,
-        "up",
-        26
-      ],
-      [
-        "HDFCLIFE",
-        523.75,
-        1.91,
-        -4.43,
-        10.65,
-        "up",
-        40
-      ],
-      [
-        "WSTCSTPAPR",
-        797.45,
-        1.85,
-        -16.91,
-        21.0,
-        "up",
-        0
-      ],
-      [
-        "VSTTILLERS",
-        3896.6,
-        1.79,
-        -11.43,
-        16.68,
-        "up",
-        0
-      ],
-      [
-        "VMART",
-        777.2,
-        1.64,
-        -12.82,
-        17.71,
-        "up",
-        0
-      ],
-      [
-        "LGBBROSLTD",
-        1644.2,
-        1.63,
-        -5.97,
-        9.92,
-        "up",
-        36
-      ],
-      [
-        "^N225",
-        63081.86,
-        1.56,
-        -8.72,
-        12.08,
-        "up",
-        17
-      ]
-    ],
-    "total": 73
-  },
-  "daily": {
-    "as_of": "2026-11-04T21:12:28Z",
-    "items": [
-      "Bhavcopy archive through 2026-11-03 (27 files, 15 days)",
-      "Nifty PCR 1.5 \u00b7 max pain 23000.0",
-      "25 OI spikes in stock futures",
-      "25 volume spikes vs their own average",
-      "Corporate actions: 19 dividends, 1 split",
-      "356 videos across 10 channels"
-    ]
-  },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^NSEBANK",
-        55873.3516,
-        0.6,
-        "2026-11-04"
-      ],
-      [
-        "^NSEI",
-        23896.0996,
-        0.36,
-        "2026-11-04"
-      ],
-      [
-        "^BSESN",
-        77155.3203,
-        0.31,
-        "2026-11-04"
-      ]
-    ],
-    "total": 3
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        4045.2,
-        2.66,
-        "2026-11-04"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "ETH-USD",
-        2321.6299,
-        2.15,
-        "2026-11-04"
-      ],
-      [
-        "AVAX-USD",
-        8.688,
-        1.93,
-        "2026-11-04"
-      ],
-      [
-        "BTC-USD",
-        78380.4922,
-        1.34,
-        "2026-11-04"
-      ],
-      [
-        "LINK-USD",
-        11.178,
-        1.29,
-        "2026-11-04"
-      ],
-      [
-        "ADA-USD",
-        0.1919,
-        0.82,
-        "2026-11-04"
-      ],
-      [
-        "BNB-USD",
-        701.82,
-        0.47,
-        "2026-11-04"
-      ],
-      [
-        "SOL-USD",
-        93.22,
-        0.32,
-        "2026-11-04"
-      ],
-      [
-        "XRP-USD",
-        1.281,
-        0.29,
-        "2026-11-04"
-      ],
-      [
-        "TRX-USD",
-        0.3219,
-        0.16,
-        "2026-11-04"
-      ],
-      [
-        "DOGE-USD",
-        0.0752,
-        -0.11,
-        "2026-11-04"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "Silver prices jump over 4% to reclaim $51/oz as Democrats secure US midterm victory. What\u2019s happening?",
-        "https://economictimes.indiatimes.com/markets/commodities/news/silver-prices-jump-over-4-to-reclaim-51/oz-as-democrats-secure-us-midterm-victory-whats-happening/articleshow/135531935.cms",
-        "Wed, 04 Nov 2026 14:09:18 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "China Services PMI slows to three-month low; what lies ahead for Chinese stocks?",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/china-services-pmi-slows-to-three-month-low-what-lies-ahead-for-chinese-stocks/articleshow/135530252.cms",
-        "Wed, 04 Nov 2026 14:02:57 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Warren Buffett has lived through 16 US Presidents. Why he ignores election impact on markets",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/warren-buffett-has-lived-through-16-us-presidents-why-he-ignores-election-impact-on-markets/articleshow/135530567.cms",
-        "Wed, 04 Nov 2026 13:30:00 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Meta raises $15 billion through bond sale to fund AI infrastructure expansion",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/meta-raises-15-billion-through-bond-sale-to-fund-ai-infrastructure-expansion/articleshow/135530378.cms",
-        "Wed, 04 Nov 2026 13:20:23 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Glittering Prospects: Why Gold is the ultimate sweet spot this Dhanteras",
-        "https://economictimes.indiatimes.com/markets/commodities/news/glittering-prospects-why-gold-is-the-ultimate-sweet-spot-this-dhanteras/articleshow/135530054.cms",
-        "Wed, 04 Nov 2026 13:16:55 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Kopsi, Taiwan, other Asian stocks tumble after US midterm elections signal Democratic victory. What\u2019s the connection?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/kopsi-taiwan-other-asian-stocks-tumble-after-us-midterm-elections-signal-democratic-victory-whats-the-connection/articleshow/135529227.cms",
-        "Wed, 04 Nov 2026 12:47:53 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Equitas Small Finance Bank shares jump 9% after Balaji Nuthalapadi\u2019s appointment as interim CEO",
-        "https://economictimes.indiatimes.com/markets/stocks/news/equitas-small-finance-bank-shares-jump-9-after-balaji-nuthalapadis-appointment-as-interim-ceo/articleshow/135528943.cms",
-        "Wed, 04 Nov 2026 12:44:25 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Super Micro stock soars: AI server boom drives record earnings",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/super-micro-stock-soars-ai-server-boom-drives-record-earnings/slideshow/135529517.cms",
-        "Wed, 04 Nov 2026 12:20:29 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Democrats\u2019 win rattles Trump trades from AI stocks to crypto",
-        "https://economictimes.indiatimes.com/markets/stocks/news/democrats-win-rattles-trump-trades-from-ai-stocks-to-crypto/articleshow/135527407.cms",
-        "Wed, 04 Nov 2026 12:04:15 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Oil slide, Treasury strength boost Indian bonds",
-        "https://economictimes.indiatimes.com/markets/bonds/oil-slide-treasury-strength-boost-indian-bonds/articleshow/135527698.cms",
-        "Wed, 04 Nov 2026 12:04:06 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Gold and silver prices correct ahead of Diwali: Buying opportunity or a trap?",
-        "https://economictimes.indiatimes.com/markets/commodities/news/gold-and-silver-prices-correct-ahead-of-diwali-buying-opportunity-or-a-trap/articleshow/135527505.cms",
-        "Wed, 04 Nov 2026 12:00:10 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "US bond yields fall; Nasdaq, Dow Jones futures slip 2% as Democrats set for big win in US midterm elections",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-bond-yields-fall-nasdaq-dow-jones-futures-slip-2-as-democrats-set-for-big-win-in-us-midterm-elections/articleshow/135527339.cms",
-        "Wed, 04 Nov 2026 11:57:09 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Titan Company Q2 results preview: Profit may rise up to 27% YoY; jewellery growth, margins in focus",
-        "https://economictimes.indiatimes.com/markets/stocks/earnings/titan-company-q2-results-preview-profit-may-rise-up-to-27-yoy-jewellery-growth-margins-in-focus/articleshow/135527059.cms",
-        "Wed, 04 Nov 2026 11:52:40 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "China Banks' applications for PBOC stock loan scheme exceed 200 billion yuan",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/china-banks-applications-for-pboc-stock-loan-scheme-exceed-200-billion-yuan/articleshow/135527139.cms",
-        "Wed, 04 Nov 2026 11:51:30 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Diwali 2026: Will Sensex, Nifty reclaim their peaks or scale new highs? Analysts map the road ahead",
-        "https://economictimes.indiatimes.com/markets/stocks/news/diwali-2026-will-sensex-nifty-reclaim-their-peaks-or-scale-new-highs-analysts-map-the-road-ahead/articleshow/135526939.cms",
-        "Wed, 04 Nov 2026 11:45:12 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "BLS Polymers shares rally 6% after strong stock market debut",
-        "https://economictimes.indiatimes.com/markets/stocks/news/bls-polymers-shares-rally-6-after-strong-stock-market-debut/articleshow/135526812.cms",
-        "Wed, 04 Nov 2026 11:42:32 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "China stocks struggle near one-year lows despite fresh government support measures",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/china-stocks-struggle-near-one-year-lows-despite-fresh-government-support-measures/articleshow/135526707.cms",
-        "Wed, 04 Nov 2026 11:39:35 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "ITC shares jump 6% in two days after Q2 results. More upside ahead?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/itc-shares-jump-6-in-two-days-after-q2-results-more-upside-ahead/articleshow/135526058.cms",
-        "Wed, 04 Nov 2026 11:35:56 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "South Korean shares reverse gains, KOSPI falls over 1% as US midterm results loom",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/south-korean-shares-reverse-gains-kospi-falls-over-1-as-us-midterm-results-loom/articleshow/135525437.cms",
-        "Wed, 04 Nov 2026 11:07:28 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "AMD forecasts fourth-quarter revenue above estimates on strong AI chip demand",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/amd-forecasts-fourth-quarter-revenue-above-estimates-on-strong-ai-chip-demand/articleshow/135525070.cms",
-        "Wed, 04 Nov 2026 10:56:04 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Bharat Electronics shares gain 3% as Motilal raises target price after Q2; Elara Capital upgrades to Buy",
-        "https://economictimes.indiatimes.com/markets/stocks/news/bharat-electronics-shares-gain-3-as-motilal-raises-target-price-after-q2-elara-capital-upgrades-to-buy/articleshow/135524961.cms",
-        "Wed, 04 Nov 2026 10:50:50 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Rupee rises 14 paise to 94.61 against Us dollar in early trade",
-        "https://economictimes.indiatimes.com/markets/forex/rupee-rises-14-paise-to-94-61-against-us-dollar-in-early-trade/articleshow/135524906.cms",
-        "Wed, 04 Nov 2026 10:47:42 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Entering the new Samvat: How to position your portfolio for long-term wealth creation",
-        "https://economictimes.indiatimes.com/markets/stocks/news/entering-the-new-samvat-how-to-position-your-portfolio-for-long-term-wealth-creation/articleshow/135524391.cms",
-        "Wed, 04 Nov 2026 10:43:06 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Awfis Space Solutions shares rally 13% after Q2 profit jumps 94% YoY, revenue rises 20%",
-        "https://economictimes.indiatimes.com/markets/stocks/news/awfis-space-solutions-shares-rally-13-after-q2-profit-jumps-94-yoy-revenue-rises-20/articleshow/135524247.cms",
-        "Wed, 04 Nov 2026 10:30:04 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Bajaj Finserv shares rise 2%, extend gains after Q2 results. Why Jefferies reduced target price but still sees 34% upside",
-        "https://economictimes.indiatimes.com/markets/stocks/news/bajaj-finserv-shares-rise-2-extend-gains-after-q2-results-why-jefferies-reduced-target-price-but-still-sees-34-upside/articleshow/135524029.cms",
-        "Wed, 04 Nov 2026 10:26:03 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Can AMD stock extend its rally on an upbeat 2027 outlook?",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/can-amd-stock-extend-its-rally-on-an-upbeat-2027-outlook/slideshow/135524436.cms",
-        "Wed, 04 Nov 2026 10:22:12 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Sensex jumps 400 points, Nifty above 23,900  as investors eye US midterm poll outcome. What lies ahead?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sensex-jumps-400-points-nifty-above-23900-as-investors-eye-us-midterm-poll-outcome-what-lies-ahead/articleshow/135523578.cms",
-        "Wed, 04 Nov 2026 10:20:16 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "US midterm elections: Early Democratic wins rattle Wall Street",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-midterm-elections-early-democratic-wins-rattle-wall-street/articleshow/135523666.cms",
-        "Wed, 04 Nov 2026 10:18:36 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Diwali dhamaka stocks: Eternal, ICICI Bank, among 10 with upside of up to 34%",
-        "https://economictimes.indiatimes.com/markets/stocks/news/diwali-dhamaka-stocks-eternal-icici-bank-among-10-with-upside-of-up-to-34/slideshow/135523989.cms",
-        "Wed, 04 Nov 2026 10:12:46 +0530",
-        "2026-11-04T09:00:03Z"
-      ],
-      [
-        "ET Markets",
-        "Chinese yuan hits over two-week low against dollar as PBOC signals caution on appreciation",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/chinese-yuan-hits-over-two-week-low-against-dollar-as-pboc-signals-caution-on-appreciation/articleshow/135523461.cms",
-        "Wed, 04 Nov 2026 10:08:54 +0530",
-        "2026-11-04T09:00:03Z"
-      ]
-    ],
-    "total": 158
   },
   "indicators": {
     "columns": [
@@ -2463,10 +2200,10 @@
         "4.39",
         "9.99",
         "1327.5",
-        "1337.5",
+        "1337.51",
         "4292.31",
         "4306.75",
-        "1884.7466666666667"
+        "1884.75"
       ],
       [
         "GFSTEELS",
@@ -2485,10 +2222,10 @@
         "680.54",
         "686.14",
         "612.62",
-        "622.62",
+        "622.63",
         "594.74",
         "609.18",
-        "639.3133333333334"
+        "639.3166666666666"
       ],
       [
         "BGRENERGY",
@@ -2507,10 +2244,10 @@
         "200.24",
         "205.84",
         "264.45",
-        "274.45",
+        "274.46",
         "267.64",
         "282.08",
-        "254.1233333333333"
+        "254.12666666666664"
       ],
       [
         "KSERASERA",
@@ -2518,10 +2255,10 @@
         "150.0",
         "155.6",
         "400.0",
-        "410.0",
+        "410.01",
         "66.67",
         "81.11",
-        "215.57000000000002"
+        "215.57333333333335"
       ],
       [
         "HOTELRUGBY",
@@ -2529,10 +2266,10 @@
         "34.21",
         "39.81",
         "183.33",
-        "193.33",
+        "193.34",
         "325.0",
         "339.44",
-        "190.86"
+        "190.86333333333334"
       ],
       [
         "MODISONLTD",
@@ -2573,10 +2310,10 @@
         "13.71",
         "19.31",
         "200.0",
-        "210.0",
+        "210.01",
         "235.71",
         "250.15",
-        "159.82000000000002"
+        "159.82333333333335"
       ],
       [
         "BURNPUR",
@@ -2593,12 +2330,12 @@
         "BODALCHEM",
         "201.93",
         "2.13",
-        "7.73",
+        "7.74",
         "166.4",
         "176.4",
         "255.45",
         "269.89",
-        "151.34"
+        "151.34333333333333"
       ],
       [
         "TBZ",
@@ -2630,19 +2367,19 @@
         "65.37",
         "75.37",
         "294.19",
-        "308.63",
-        "135.5"
+        "308.62",
+        "135.49666666666667"
       ],
       [
         "TRIL",
         "604.9",
         "-0.26",
-        "5.34",
+        "5.35",
         "119.48",
         "129.49",
         "244.08",
         "258.52",
-        "131.11666666666667"
+        "131.12"
       ],
       [
         "INTEGRA",
@@ -2683,10 +2420,10 @@
         "17.31",
         "22.91",
         "56.41",
-        "66.41",
+        "66.42",
         "238.89",
         "253.33",
-        "114.21666666666665"
+        "114.22000000000001"
       ],
       [
         "RETAIL",
@@ -2727,10 +2464,10 @@
         "91.47",
         "97.07",
         "131.33",
-        "141.33",
+        "141.34",
         "83.56",
         "98.0",
-        "112.13333333333333"
+        "112.13666666666666"
       ],
       [
         "BALLARPUR",
@@ -2738,10 +2475,10 @@
         "0.0",
         "5.6",
         "76.92",
-        "86.92",
+        "86.93",
         "228.57",
         "243.01",
-        "111.84333333333332"
+        "111.84666666666665"
       ],
       [
         "PSL",
@@ -2760,10 +2497,10 @@
         "10.15",
         "15.75",
         "33.85",
-        "43.85",
+        "43.86",
         "244.74",
         "259.18",
-        "106.26"
+        "106.26333333333334"
       ],
       [
         "PRADIP",
@@ -2771,10 +2508,10 @@
         "64.29",
         "69.89",
         "130.0",
-        "140.0",
+        "140.01",
         "91.67",
         "106.11",
-        "105.33333333333333"
+        "105.33666666666666"
       ],
       [
         "QUINT",
@@ -3623,6 +3360,258 @@
     ],
     "rows": 18522
   },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-11-04T21:12:28Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 23810.85,
+      "median_chg_pct": 0.71,
+      "low10_chg_pct": -4.57,
+      "high90_chg_pct": 5.62,
+      "confidence": 59,
+      "direction": "up"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "LICHSGFIN",
+        490.0,
+        9.64,
+        -1.06,
+        19.54,
+        "up",
+        18
+      ],
+      [
+        "YESBANK",
+        15.8,
+        8.38,
+        -9.67,
+        34.51,
+        "up",
+        0
+      ],
+      [
+        "ZYDUSWELL",
+        463.35,
+        7.13,
+        -6.61,
+        21.47,
+        "up",
+        0
+      ],
+      [
+        "VGUARD",
+        269.3,
+        7.08,
+        -6.86,
+        20.73,
+        "up",
+        0
+      ],
+      [
+        "VEDL",
+        226.5,
+        6.13,
+        -9.76,
+        27.1,
+        "up",
+        0
+      ],
+      [
+        "ACCELYA",
+        952.1,
+        6.09,
+        -8.8,
+        18.69,
+        "up",
+        0
+      ],
+      [
+        "HCLTECH",
+        1422.2,
+        3.89,
+        -9.73,
+        15.48,
+        "up",
+        0
+      ],
+      [
+        "GSFC",
+        135.02,
+        3.82,
+        -8.28,
+        16.45,
+        "up",
+        1
+      ],
+      [
+        "LALPATHLAB",
+        1838.2,
+        3.62,
+        -5.0,
+        12.31,
+        "up",
+        31
+      ],
+      [
+        "3MINDIA",
+        28815.0,
+        3.57,
+        -4.7,
+        17.83,
+        "up",
+        10
+      ],
+      [
+        "LAURUSLABS",
+        1970.0,
+        3.4,
+        -7.47,
+        14.78,
+        "up",
+        11
+      ],
+      [
+        "ABBOTINDIA",
+        25030.0,
+        2.43,
+        -3.81,
+        11.65,
+        "up",
+        38
+      ],
+      [
+        "LEMONTREE",
+        108.94,
+        2.36,
+        -5.97,
+        13.57,
+        "up",
+        22
+      ],
+      [
+        "HDFCAMC",
+        2250.0,
+        2.19,
+        -7.3,
+        17.22,
+        "up",
+        2
+      ],
+      [
+        "EIHOTEL",
+        288.1,
+        2.17,
+        -7.95,
+        13.36,
+        "up",
+        15
+      ],
+      [
+        "VLSFINANCE",
+        198.02,
+        2.14,
+        -14.11,
+        42.61,
+        "up",
+        0
+      ],
+      [
+        "ZEEL",
+        65.42,
+        2.11,
+        -17.9,
+        32.89,
+        "up",
+        0
+      ],
+      [
+        "LINDEINDIA",
+        5723.5,
+        2.1,
+        -6.38,
+        14.43,
+        "up",
+        17
+      ],
+      [
+        "HDFCBANK",
+        692.8,
+        2.0,
+        -6.26,
+        12.24,
+        "up",
+        26
+      ],
+      [
+        "HDFCLIFE",
+        523.75,
+        1.91,
+        -4.43,
+        10.65,
+        "up",
+        40
+      ],
+      [
+        "WSTCSTPAPR",
+        797.45,
+        1.85,
+        -16.91,
+        21.0,
+        "up",
+        0
+      ],
+      [
+        "VSTTILLERS",
+        3896.6,
+        1.79,
+        -11.43,
+        16.68,
+        "up",
+        0
+      ],
+      [
+        "VMART",
+        777.2,
+        1.64,
+        -12.82,
+        17.71,
+        "up",
+        0
+      ],
+      [
+        "LGBBROSLTD",
+        1644.2,
+        1.63,
+        -5.97,
+        9.92,
+        "up",
+        36
+      ],
+      [
+        "^N225",
+        63081.86,
+        1.56,
+        -8.72,
+        12.08,
+        "up",
+        17
+      ]
+    ],
+    "total": 73
+  },
   "quality": {
     "rows": 3502926,
     "symbols": 3510,
@@ -3647,18 +3636,18 @@
     ],
     "rows": [
       [
-        "16723.91",
+        "16392.82",
         "DII",
-        "03-Nov-2026",
-        "-3678.85",
-        "20402.76"
+        "04-Nov-2026",
+        "-3712.23",
+        "20105.05"
       ],
       [
-        "20970.51",
+        "21607.38",
         "FII/FPI",
-        "03-Nov-2026",
-        "6836.81",
-        "14133.7"
+        "04-Nov-2026",
+        "7284.03",
+        "14323.35"
       ]
     ],
     "total": 2
@@ -3689,6 +3678,18 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
+  },
+  "daily": {
+    "as_of": "2026-11-04T23:56:30Z",
+    "items": [
+      "Bhavcopy archive through 2026-11-04 (29 files, 16 days)",
+      "Nifty PCR 1.15 \u00b7 max pain 24000.0",
+      "25 OI spikes in stock futures",
+      "25 volume spikes vs their own average",
+      "Corporate actions: 19 dividends, 1 split",
+      "356 videos across 10 channels",
+      "155 news headlines"
+    ]
   },
   "fx": {
     "columns": [

@@ -1,20 +1,20 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-04T08:25:17Z  |  10 channels, 348 videos, window 2026-05-15 to 2026-11-04.
+Generated 2026-11-04T16:43:26Z  |  10 channels, 356 videos, window 2026-05-15 to 2026-11-04.
 
-**Total views across the window:** 12,221,887  |  **net bull-bear keyword score:** 153
+**Total views across the window:** 12,243,891  |  **net bull-bear keyword score:** 163
 
 ## Most-talked-about symbols
 
 | Symbol | Mentions | Channels |
 |---|---|---|
-| NIFTY50 | 78 | 5 |
+| NIFTY50 | 79 | 5 |
 | BANKNIFTY | 35 | 4 |
-| SENSEX | 32 | 4 |
-| RELIANCE | 19 | 6 |
+| SENSEX | 33 | 4 |
+| RELIANCE | 20 | 6 |
+| ADANIENT | 6 | 2 |
 | WIPRO | 4 | 4 |
 | YESBANK | 4 | 3 |
-| ADANIENT | 4 | 2 |
 | ITC | 3 | 3 |
 | INFY | 3 | 3 |
 | TCS | 3 | 2 |
@@ -23,12 +23,12 @@ Generated 2026-11-04T08:25:17Z  |  10 channels, 348 videos, window 2026-05-15 to
 
 | Theme | Videos |
 |---|---|
-| MF/SIP | 88 |
-| Beginner/Education | 82 |
-| Earnings/Results | 68 |
-| IPO | 63 |
-| Options/F&O | 60 |
-| Budget/Policy | 58 |
+| MF/SIP | 89 |
+| Beginner/Education | 85 |
+| Earnings/Results | 71 |
+| IPO | 64 |
+| Options/F&O | 61 |
+| Budget/Policy | 59 |
 
 ## Channels by reach
 
@@ -38,11 +38,11 @@ Generated 2026-11-04T08:25:17Z  |  10 channels, 348 videos, window 2026-05-15 to
 | Abhishek Kar | 26 | 102,523 | 2026-11-01 |
 | Moneytalks by Groww | 21 | 61,041 | 2026-10-31 |
 | WAY2LAABH | 23 | 34,035 | 2026-11-03 |
-| Ghanshyam Tech | 27 | 29,749 | 2026-11-03 |
-| Groww Edge | 48 | 26,868 | 2026-11-03 |
-| Groww | 39 | 19,604 | 2026-11-03 |
-| Markets by Zerodha | 33 | 19,530 | 2026-11-04 |
+| Ghanshyam Tech | 28 | 29,147 | 2026-11-04 |
+| Groww Edge | 50 | 25,854 | 2026-11-04 |
+| Markets by Zerodha | 34 | 18,976 | 2026-11-04 |
+| Groww | 41 | 18,744 | 2026-11-04 |
 | Markets by Zerodha Hindi | 31 | 16,386 | 2026-11-04 |
-| Upstox | 78 | 1,595 | 2026-11-04 |
+| Upstox | 80 | 1,574 | 2026-11-04 |
 
 _Keyword-based analysis. Not investment advice._

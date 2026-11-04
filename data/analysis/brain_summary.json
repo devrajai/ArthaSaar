@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-11-04T08:25:17Z",
+  "generated_at": "2026-11-04T16:43:26Z",
   "channels": 10,
-  "videos": 348,
+  "videos": 356,
   "window_start": "2026-05-15",
   "window_end": "2026-11-04",
-  "total_views": 12221887,
+  "total_views": 12243891,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 78,
+      "mentions": 79,
       "channels": 5
     },
     {
@@ -18,13 +18,18 @@
     },
     {
       "symbol": "SENSEX",
-      "mentions": 32,
+      "mentions": 33,
       "channels": 4
     },
     {
       "symbol": "RELIANCE",
-      "mentions": 19,
+      "mentions": 20,
       "channels": 6
+    },
+    {
+      "symbol": "ADANIENT",
+      "mentions": 6,
+      "channels": 2
     },
     {
       "symbol": "WIPRO",
@@ -35,11 +40,6 @@
       "symbol": "YESBANK",
       "mentions": 4,
       "channels": 3
-    },
-    {
-      "symbol": "ADANIENT",
-      "mentions": 4,
-      "channels": 2
     },
     {
       "symbol": "ITC",
@@ -60,28 +60,28 @@
   "top_themes": [
     {
       "theme": "MF/SIP",
-      "videos": 88
+      "videos": 89
     },
     {
       "theme": "Beginner/Education",
-      "videos": 82
+      "videos": 85
     },
     {
       "theme": "Earnings/Results",
-      "videos": 68
+      "videos": 71
     },
     {
       "theme": "IPO",
-      "videos": 63
+      "videos": 64
     },
     {
       "theme": "Options/F&O",
-      "videos": 60
+      "videos": 61
     },
     {
       "theme": "Budget/Policy",
-      "videos": 58
+      "videos": 59
     }
   ],
-  "net_sentiment": 153
+  "net_sentiment": 163
 }

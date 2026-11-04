@@ -349,6 +349,8 @@ jobs:
         env:
           FUNDAMENTAL_LIMIT: "200"
         run: python scripts/fetch_fundamentals.py || true
+      - name: "7m2y. Sector fundamentals"
+        run: python scripts/build_sector_fundamentals.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.

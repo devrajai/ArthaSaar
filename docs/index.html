@@ -2224,6 +2224,34 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    // ---- where margins are being made and eaten, by sector -----------------------------
+    // A single company's margin says little; a whole sector's margin moving together says
+    // something structural. The CHANGE matters more than the level.
+    (function(){
+     try{
+      if(!SECF||!SECF.sectors||!SECF.sectors.length) return;
+      function sg(x,suf){ return x==null ? "-" : ((x>0?"+":"")+x+(suf||"%")); }
+      var kids=[tbl({columns:["sector","n","median revenue","median margin","margin change"],
+        rows:SECF.sectors.map(function(s){
+          return [esc(s.sector), String(s.n), sg(s.median_revenue_yoy),
+                  s.median_margin==null?"-":s.median_margin+"%", sg(s.median_margin_change," pp")];
+        })})];
+      if(SECF.squeezed&&SECF.squeezed.length){
+        kids.push(para("Hardest margin squeeze - revenue still there, profit keeping less of it", false));
+        kids.push(tbl({columns:["","sector","revenue","margin change"],
+          rows:SECF.squeezed.slice(0,6).map(function(c){
+            return [esc(c.symbol), esc(c._sector||""), sg(c.revenue_yoy_pct), sg(c.margin_change_pp," pp")];
+          })}));
+      }
+      v.appendChild(card("Where margins are moving",
+        SECF.count+" sectors", kids,
+        {what:"Median revenue growth, net margin and the change in margin for each sector, from the companies' own quarterly filings.",
+         source:"NSE results-comparision, standalone, five quarters per company.", updated:SECF.updated,
+         note:"Medians, so one distressed company cannot define a sector. The CHANGE in margin matters more than its level: a whole sector losing margin while revenue stalls says pricing power moved somewhere. This shows THAT margins moved - it cannot show why, because import volumes, capacity additions and feedstock costs are not in our data."}));
+     }catch(e){}
+    })();
+
+
     // ---- commodities, the gold-silver ratio, and what metals are tracking -------------
     (function(){
      try{
@@ -4713,6 +4741,7 @@ function assign(name, v){
     case "macro.json": MACRO=v; break;
     case "story.json": STORY=v; break;
     case "fundamentals.json": FUNDA=v; break;
+    case "sector_fund.json": SECF=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4759,8 +4788,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json"];
 
 function renderAll(){
   if(!DATA) return;

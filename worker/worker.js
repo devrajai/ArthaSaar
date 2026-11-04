@@ -52,9 +52,138 @@ function json(obj, status) {
   });
 }
 
+
+/* ------------------------------------------------------------------------------------
+   YOUTUBE UPLOAD WEBHOOK  (PubSubHubbub)
+
+   WHY: the nightly pipeline runs at 23:00 IST, so a video published at 10:00 waits 13 hours.
+   YouTube's RSS feed has no push notification, but PubSubHubbub does: subscribe to a
+   channel's topic URL and the hub POSTs to us within seconds of a new upload.
+
+   Two things must work here:
+     GET   the hub's verification challenge - it sends hub.challenge and we must echo the
+           exact value back with a 200, or the subscription is never created
+     POST  the actual notification, an Atom XML body
+
+   SECURITY: PubSubHubbub bodies are unsigned unless hub.secret is set at subscribe time.
+   We set one, so every POST carries X-Hub-Signature: sha1=<hmac>. Without verifying it,
+   anyone who learns this URL could trigger workflow runs. Verification is HMAC-SHA1 over
+   the RAW body - it must be read before any parsing.
+   ------------------------------------------------------------------------------------ */
+
+async function hmacSha1Hex(secret, bodyBytes) {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, bodyBytes);
+  return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function youtubeHook(request, env) {
+  const url = new URL(request.url);
+
+  // ---- verification -------------------------------------------------------------
+  if (request.method === "GET") {
+    const mode = url.searchParams.get("hub.mode");
+    const challenge = url.searchParams.get("hub.challenge");
+    const topic = url.searchParams.get("hub.topic") || "";
+    if (mode && challenge) {
+      // Only accept subscriptions aimed at a YouTube feed, so this cannot be used to
+      // register us for arbitrary third-party notifications.
+      if (!topic.includes("youtube.com/xml/feeds/videos.xml")) {
+        return new Response("bad topic", { status: 400 });
+      }
+      console.log("youtube-hook verify:", mode, topic.slice(0, 90));
+      return new Response(challenge, { status: 200, headers: { "Content-Type": "text/plain" } });
+    }
+    return new Response("youtube hook ready", { status: 200 });
+  }
+
+  if (request.method !== "POST") return new Response("POST only", { status: 405 });
+
+  // ---- signature ----------------------------------------------------------------
+  const raw = await request.arrayBuffer();
+  const secret = env && env.YT_HUB_SECRET;
+  if (secret) {
+    const sent = (request.headers.get("X-Hub-Signature") || "").replace(/^sha1=/, "").toLowerCase();
+    const want = await hmacSha1Hex(secret, raw);
+    if (sent !== want) {
+      console.log("youtube-hook: bad signature");
+      return new Response("bad signature", { status: 401 });
+    }
+  } else {
+    console.log("youtube-hook: YT_HUB_SECRET not set - accepting unverified POST");
+  }
+
+  const body = new TextDecoder().decode(raw);
+
+  // ---- what arrived -------------------------------------------------------------
+  // Scope to the <entry> block first. The feed itself also carries a <title> - the channel
+  // name - and matching the whole body picks that up instead of the video title. Caught by
+  // testing against a real Atom body, where the title came back as "Groww Edge".
+  const entry = (body.match(/<entry>([\s\S]*?)<\/entry>/) || [])[1] || body;
+  const videoId = (entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/) || [])[1] || "";
+  const channelId = (entry.match(/<yt:channelId>([^<]+)<\/yt:channelId>/) || [])[1] || "";
+  const title = (entry.match(/<title[^>]*>([^<]*)<\/title>/) || [])[1] || "";
+
+  // The hub can send the same video more than once. Remember recent ids at the edge so
+  // one upload cannot queue several workflow runs.
+  const cache = caches.default;
+  const seenKey = new Request("https://arthasaar.internal/yt-seen/" + (videoId || "unknown"), { method: "GET" });
+  if (videoId && await cache.match(seenKey)) {
+    console.log("youtube-hook: duplicate", videoId);
+    return new Response("duplicate", { status: 200 });
+  }
+
+  // ---- fire the workflow --------------------------------------------------------
+  const token = env && env.GITHUB_DISPATCH_TOKEN;
+  const repo = (env && env.DISPATCH_REPO) || "devrajai/ArthaSaar";
+  if (!token) {
+    console.log("youtube-hook: GITHUB_DISPATCH_TOKEN missing - nothing dispatched");
+    return new Response("no token configured", { status: 500 });
+  }
+
+  const res = await fetch("https://api.github.com/repos/" + repo + "/dispatches", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Accept": "application/vnd.github+json",
+      "User-Agent": "ArthaSaar-YouTube-Hook",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      event_type: "youtube-upload",
+      client_payload: { video_id: videoId, channel_id: channelId, title: title.slice(0, 200) },
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text();
+    console.log("youtube-hook: dispatch failed", res.status, detail.slice(0, 200));
+    return new Response("dispatch failed", { status: 502 });
+  }
+
+  if (videoId) {
+    await cache.put(seenKey, new Response("1", { headers: { "Cache-Control": "max-age=3600" } }));
+  }
+  console.log("youtube-hook: dispatched", videoId, title.slice(0, 60));
+  return new Response("ok", { status: 200 });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    // The YouTube webhook must be handled before the GET-only guard below, because the
+    // hub sends a POST and the verification is a GET with a challenge parameter.
+    if (url.pathname === "/youtube-hook") {
+      try {
+        return await youtubeHook(request, env);
+      } catch (e) {
+        console.log("youtube-hook error", String(e).slice(0, 200));
+        return new Response("hook error", { status: 500 });
+      }
+    }
 
     if (request.method === "OPTIONS") return cors(new Response(null, { status: 204 }));
     if (request.method !== "GET") return cors(json({ error: "GET only" }, 405));

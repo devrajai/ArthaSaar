@@ -117,3 +117,50 @@ secret set and the token in `docs/config.json`. Either works; the token is simpl
 
 The site still works. Without a proxy configured, stock pages fall back to the stored
 daily series and say so plainly - no broken charts, just no intraday.
+
+
+## YouTube upload webhook
+
+`/youtube-hook` receives PubSubHubbub notifications so a new video is collected within a
+minute instead of waiting for the 23:00 IST pipeline.
+
+### One-time setup
+
+1. **Deploy the worker** with the new route:
+
+   ```
+   cd worker && npx wrangler deploy
+   ```
+
+2. **Set two worker secrets:**
+
+   ```
+   npx wrangler secret put YT_HUB_SECRET          # any long random string
+   npx wrangler secret put GITHUB_DISPATCH_TOKEN  # fine-grained PAT, this repo only,
+                                                  # permission: Contents = Read and write
+   ```
+
+   Optional variable `DISPATCH_REPO` if the repo is not `devrajai/ArthaSaar`.
+
+3. **Set two repo secrets** in GitHub → Settings → Secrets → Actions:
+
+   | Secret | Value |
+   |---|---|
+   | `YT_HUB_CALLBACK` | `https://<worker-host>/youtube-hook` |
+   | `YT_HUB_SECRET` | the same string as step 2 |
+
+4. **Create the subscriptions:** Actions → "YouTube webhook subscriptions" → Run workflow.
+
+### How to tell it is working
+
+- The subscribe run prints `subscribed (HTTP 204)` per channel. A 4xx means the worker did
+  not echo `hub.challenge`.
+- After an upload, the worker log shows `youtube-hook: dispatched <videoId>` and a
+  "YouTube upload trigger" run appears within about a minute.
+
+### Two things that will silently break it
+
+- **Lease expiry.** A PubSubHubbub lease lasts days, not forever. `youtube-subscribe.yml`
+  renews every 3 days; if that workflow is disabled, notifications stop with no error.
+- **Worker redeploy without secrets.** The route returns 500 "no token configured" and the
+  hub keeps delivering happily. Check the worker log, not just the HTTP status.

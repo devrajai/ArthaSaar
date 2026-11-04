@@ -1,0 +1,32 @@
+name: YouTube webhook subscriptions
+
+# Creates and RENEWS the PubSubHubbub subscriptions that make youtube-trigger.yml fire.
+#
+# A lease lasts about 5 days. This runs every 3 days so a renewal always lands before the
+# previous one expires - an expired lease is silent, and the only symptom is that the webhook
+# quietly stops arriving.
+
+on:
+  schedule:
+    - cron: '20 3 */3 * *'      # every 3 days, 08:50 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  subscribe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Subscribe every channel
+        env:
+          YT_HUB_CALLBACK: ${{ secrets.YT_HUB_CALLBACK }}
+          YT_HUB_SECRET: ${{ secrets.YT_HUB_SECRET }}
+        run: python scripts/subscribe_youtube_webhook.py

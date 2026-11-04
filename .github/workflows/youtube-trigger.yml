@@ -1,0 +1,79 @@
+name: YouTube upload trigger
+
+# Fires within seconds of a new upload, instead of waiting for the 23:00 IST pipeline.
+#
+# HOW THE CHAIN WORKS
+#   YouTube upload
+#     -> PubSubHubbub hub POSTs an Atom notification to the Worker
+#     -> the Worker verifies the HMAC and calls GitHub's repository_dispatch
+#     -> this workflow starts
+#
+# The Worker route is /youtube-hook. Subscriptions are created and renewed by
+# youtube-subscribe.yml, because a PubSubHubbub lease expires after a few days and a silent
+# expiry looks exactly like "the webhook stopped working".
+
+on:
+  repository_dispatch:
+    types: [youtube-upload]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why are you running this by hand?'
+        required: false
+        default: 'manual'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: youtube-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow
+
+      - name: Show what triggered this
+        run: |
+          echo "event: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "video_id : ${{ github.event.client_payload.video_id }}"
+            echo "channel  : ${{ github.event.client_payload.channel_id }}"
+            echo "title    : ${{ github.event.client_payload.title }}"
+          fi
+
+      - name: Collect uploads
+        run: python scripts/fetch_youtube.py
+
+      - name: Analyse (the brain)
+        run: python scripts/analyze_youtube.py || echo "::warning title=Brain failed::collection succeeded, analysis did not"
+
+      - name: Commit
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add data/youtube/ docs/data.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "nothing new"
+            exit 0
+          fi
+          git commit -m "data: youtube upload $(date -u +%FT%TZ)"
+          for i in 1 2 3 4 5 6; do
+            git rebase --abort 2>/dev/null || true
+            git pull --rebase --autostash || true
+            if git push; then echo "pushed on attempt $i"; exit 0; fi
+            sleep $((i*12))
+          done
+          echo "::warning title=Push failed::the next scheduled run will pick it up"

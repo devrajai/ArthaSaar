@@ -1727,7 +1727,10 @@ function build(d){
       var kids=[tbl({columns:["when","region","event","in"],
         rows:MACRO.events.slice(0,8).map(function(e){
           var w=e.days_away;
-          var when = w===0 ? "today" : (w>0 ? ("in "+w+" days") : "past");
+          // "in 1 days" reads badly and the list is short enough that it shows every time
+          var when = w===0 ? "today"
+                   : (w===1 ? "tomorrow"
+                   : (w>0 ? ("in "+w+" days") : "past"));
           return [e.date+(e.time?(" "+e.time):""), esc(e.region), esc(e.label), when];
         })})];
       v.appendChild(card("Coming up", MACRO.count+" scheduled", kids,

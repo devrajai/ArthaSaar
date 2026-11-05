@@ -60,7 +60,11 @@ def main():
 
     # upcoming first, then most recent past
     out["events"].sort(key=lambda e: (e["days_away"] is None, e["days_away"] if e["days_away"] is not None else 0))
-    out["events"] = [e for e in out["events"] if e["days_away"] is None or e["days_away"] >= -3][:25]
+    # STRICTLY UPCOMING. This used to keep events up to three days in the past, and because
+    # they sorted by days_away they landed at the TOP of the list - so a card titled "Coming
+    # up" led with an election that had already finished. A finished event is history, and
+    # the event study covers history properly; this card is only for what is still ahead.
+    out["events"] = [e for e in out["events"] if e["days_away"] is None or e["days_away"] >= 0][:25]
     out["count"] = len(out["events"])
     out["note"] = ("Macro dates are entered by hand from official calendars, not scraped. A date "
                    "appears only after it is on the primary source.")
@@ -70,7 +74,10 @@ def main():
     print("-> %s  %d events" % (OUT, out["count"]))
     for e in out["events"]:
         print("   %s %-8s %-38s %s" % (e["date"], e["region"], e["label"][:38],
-                                       ("in %d days" % e["days_away"]) if e["days_away"] is not None and e["days_away"] >= 0 else "past"))
+                                       ("today" if e["days_away"] == 0
+                     else ("tomorrow" if e["days_away"] == 1
+                           else "in %d days" % e["days_away"]))
+                    if e["days_away"] is not None and e["days_away"] >= 0 else ""))
     return 0
 
 

@@ -126,6 +126,46 @@ def fetch_history(symbols: list[str], ydir: Path, period: str) -> int:
     return got
 
 
+def series_from_archive(arch: str, missing: list[str]) -> dict:
+    """Last SERIES_LEN closes per symbol, read straight out of the candle archive.
+
+    duckdb does it in one pass with flat memory, but it is an OPTIONAL dependency: it is
+    not in requirements.txt, so on CI this used to raise ImportError and the backfill gave
+    up. pandas and pyarrow are already required, so they are the fallback - slower, but a
+    published series beats a tidy error.
+    """
+    want = [m.replace(".NS", "").replace(".BO", "") for m in missing]
+    try:
+        import duckdb
+        con = duckdb.connect()
+        con.execute("SET threads=1")
+        con.execute("SET memory_limit='1200MB'")
+        rows = con.execute("""
+          WITH r AS (
+            SELECT symbol, close,
+                   row_number() OVER (PARTITION BY symbol ORDER BY date DESC) AS rn
+            FROM read_parquet(?)
+            WHERE close > 0 AND symbol IN (SELECT * FROM unnest(?))
+          )
+          SELECT symbol, close FROM r WHERE rn <= ? ORDER BY symbol, rn DESC
+        """, [arch, want, SERIES_LEN]).fetchall()
+        con.close()
+        out: dict = {}
+        for sym, close in rows:
+            out.setdefault(sym, []).append(round(float(close), 2))
+        return out
+    except ImportError:
+        pass
+
+    df = pd.read_parquet(arch, columns=["symbol", "date", "close"])
+    df = df[df["symbol"].isin(want) & (df["close"] > 0)]
+    if df.empty:
+        return {}
+    df = df.sort_values(["symbol", "date"]).groupby("symbol").tail(SERIES_LEN)
+    return {sym: [round(float(x), 2) for x in g["close"].tolist()]
+            for sym, g in df.groupby("symbol")}
+
+
 def build_record(sym: str, ydir: Path, with_fund: bool) -> dict | None:
     p = ydir / f"{safe(sym)}.parquet"
     if not p.exists():
@@ -262,30 +302,24 @@ def main() -> int:
     #
     # So fill the gaps from the archive itself, in one query, for every stock still missing
     # one. The archive has all of them; there was never a reason to depend on the carry-over.
+    # Carry the previous run's series forward FIRST.
+    #
+    # The archive query below is the fast path, but it depends on two things that are both
+    # optional in practice: a candle archive on disk (restored from Drive / a release asset)
+    # and duckdb. When either is missing this file used to be rebuilt from nothing, so
+    # coverage fell back to whatever was built that day - which is how series.json ended up
+    # publishing 2 series for 2,225 stocks. Merging first means a bad run can only ever add
+    # to the file, never shrink it.
+    series_path = Path(args.out).parent / "series.json"
+    prev_series = (load_json(str(series_path)) or {}).get("series") or {}
     missing = [k for k in stocks if k not in series]
     if missing:
         arch = next((q for q in ("data/candles/daily_adj.parquet",
-                                 "data/candles/daily.parquet") if Path(q).exists()), None)
+                                 "data/candles/daily.parquet",
+                                 "data/candles/cm_daily.parquet") if Path(q).exists()), None)
         if arch:
             try:
-                import duckdb
-                con = duckdb.connect()
-                con.execute("SET threads=1")
-                con.execute("SET memory_limit='1200MB'")
-                want = [m.replace(".NS", "").replace(".BO", "") for m in missing]
-                rows = con.execute("""
-                  WITH r AS (
-                    SELECT symbol, close,
-                           row_number() OVER (PARTITION BY symbol ORDER BY date DESC) AS rn
-                    FROM read_parquet(?)
-                    WHERE close > 0 AND symbol IN (SELECT * FROM unnest(?))
-                  )
-                  SELECT symbol, close FROM r WHERE rn <= ? ORDER BY symbol, rn DESC
-                """, [arch, want, SERIES_LEN]).fetchall()
-                con.close()
-                by_sym = {}
-                for sym, close in rows:
-                    by_sym.setdefault(sym, []).append(round(float(close), 2))
+                by_sym = series_from_archive(arch, missing)
                 filled = 0
                 for m in missing:
                     key = m.replace(".NS", "").replace(".BO", "")
@@ -294,9 +328,24 @@ def main() -> int:
                         filled += 1
                 print(f"  series filled from the archive: {filled} of {len(missing)} missing")
             except Exception as e:
-                print(f"  series backfill failed ({type(e).__name__}): {str(e)[:90]}")
+                # A silent pass here is what hid the bug for so long: the run stayed green
+                # while the website starved. Say it loudly enough to appear on the run.
+                print(f"::warning title=Series backfill failed::"
+                      f"{type(e).__name__}: {str(e)[:120]}")
         else:
-            print("  series backfill skipped - no archive on disk")
+            print("::warning title=No candle archive::"
+                  "series can only be added for stocks built this run")
+    # Only now fill what the archive could not: a stale 3-point series must never win over
+    # 120 points of real history, so the carry-over runs last, not first.
+    carried = 0
+    for k, v in prev_series.items():
+        if k in stocks and not series.get(k) and v:
+            series[k] = v
+            carried += 1
+    if carried:
+        print(f"  series carried over from the last run: {carried}")
+    print(f"  series coverage: {len(series)} of {len(stocks)} stocks")
+
 
     payload = {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

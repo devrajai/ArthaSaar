@@ -18,6 +18,7 @@ WHAT IT WRITES
 docs/global_market.json
 """
 import json, os, sys
+import urllib.parse, urllib.request
 from datetime import datetime, timezone
 
 YAHOO = "data/yahoo"
@@ -69,6 +70,30 @@ def _combined():
     return None
 
 
+
+def live_check(sym):
+    """The last close Yahoo reports right now, or None.
+
+    A heuristic on the series shape cannot tell a noisy synthetic walk from a real market -
+    the fake Nifty had 2,041 distinct daily returns and sailed through every such test. What
+    does work is comparing against the source: a file whose last close is far from the live
+    quote is stale or fabricated, whatever it looks like internally.
+    """
+    try:
+        u = ("https://query1.finance.yahoo.com/v8/finance/chart/"
+             + urllib.parse.quote(sym) + "?interval=1d&range=5d")
+        j = json.loads(urllib.request.urlopen(
+            urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}),
+            timeout=20).read())
+        res = j["chart"]["result"][0]
+        q = res["indicators"]["quote"][0]
+        closes = [c for c in q["close"] if c is not None]
+        return float(closes[-1]) if closes else None
+    except Exception as e:
+        print("  live check failed for %s: %s: %s" % (sym, type(e).__name__, str(e)[:60]))
+        return None
+
+
 def load(sym):
     import pandas as pd
     cdf = _combined()
@@ -77,13 +102,26 @@ def load(sym):
             cols = {c.lower(): c for c in cdf.columns}
             sub = cdf[cdf[cols["symbol"]] == sym]
             if not sub.empty:
-                return {str(d)[:10]: float(c)
-                        for d, c in zip(sub[cols["date"]], sub[cols["close"]])
-                        if c == c}
+                ser = {str(d)[:10]: float(c)
+                       for d, c in zip(sub[cols["date"]], sub[cols["close"]])
+                       if c == c}
+                return ser
         except Exception:
             pass
-    safe = sym.replace("^", "_IDX_").replace("=", "_EQ_").replace(".", "_")
-    for name in (safe + ".parquet", "us_" + safe + ".parquet", sym + ".parquet"):
+    # THREE naming conventions exist in this repo and they do not agree:
+    #   fetch_yahoo._safe()  re.sub(r"[^A-Za-z0-9]+","_",sym).strip("_")  -> "GSPC", "BRK_B"
+    #   the older pipeline   ^ -> _IDX_, = -> _EQ_, . -> _                -> "_IDX_GSPC"
+    #   the Colab            ^ -> IDX_                                   -> "IDX_GSPC"
+    # Looking for only one of them means the file exists and is reported missing, which is
+    # exactly what happened. Try every form.
+    import re as _re
+    yahoo_style = _re.sub(r"[^A-Za-z0-9]+", "_", sym).strip("_")
+    legacy = sym.replace("^", "_IDX_").replace("=", "_EQ_").replace(".", "_")
+    colab = sym.replace("^", "IDX_").replace("=", "EQ_").replace(".", "_")
+    candidates = []
+    for base in (yahoo_style, legacy, colab, sym):
+        candidates += [base + ".parquet", "us_" + base + ".parquet"]
+    for name in candidates:
         p = os.path.join(YAHOO, name)
         if not os.path.exists(p):
             continue
@@ -129,6 +167,13 @@ def main():
         if not s:
             continue
         d = sorted(s)
+        # Cross-check against the live quote. A file that disagrees by more than 10% is
+        # stale or fabricated; drop it rather than publish a wrong level.
+        live = live_check(sym)
+        if live and abs(s[d[-1]] / live - 1) > 0.10:
+            print("  REJECTED %s: file says %.2f on %s, Yahoo says %.2f"
+                  % (sym, s[d[-1]], d[-1], live))
+            continue
         out["indices"].append({"symbol": sym, "name": name, "close": round(s[d[-1]], 2),
                                "date": d[-1], "chg_1d": chg(s, 1), "chg_1w": chg(s, 5),
                                "chg_1m": chg(s, 21)})
@@ -178,6 +223,20 @@ def main():
 
     # does India follow the US? measured, not assumed
     us, ind = load("^GSPC"), load("^NSEI")
+    # The correlation path reads the series directly, so it bypassed the rejection above and
+    # happily computed 0.03 from the fabricated Nifty. Same cross-check applies here.
+    for _sym, _ser in (("^GSPC", us), ("^NSEI", ind)):
+        if not _ser:
+            continue
+        _d = sorted(_ser)
+        _live = live_check(_sym)
+        if _live and abs(_ser[_d[-1]] / _live - 1) > 0.10:
+            print("  REJECTED %s from the correlation: file %.2f vs Yahoo %.2f"
+                  % (_sym, _ser[_d[-1]], _live))
+            if _sym == "^GSPC":
+                us = {}
+            else:
+                ind = {}
     shared = sorted(set(us) & set(ind))
     if len(shared) > 60:
         ru, ri = [], []

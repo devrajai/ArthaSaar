@@ -100,6 +100,61 @@
     "commodities_context": [
       "^IXIC",
       "DX-Y.NYB"
+    ],
+    "us_indices": [
+      "^GSPC",
+      "^IXIC",
+      "^DJI",
+      "^RUT",
+      "^VIX"
+    ],
+    "us_sectors": [
+      "XLK",
+      "XLC",
+      "XLY",
+      "XLF",
+      "XLI",
+      "XLB",
+      "XLE",
+      "XLV",
+      "XLP",
+      "XLU",
+      "XLRE"
+    ],
+    "us_stocks": [
+      "NVDA",
+      "MSFT",
+      "AAPL",
+      "GOOGL",
+      "AMZN",
+      "META",
+      "AVGO",
+      "TSLA",
+      "AMD",
+      "PLTR",
+      "MU",
+      "TSM",
+      "ORCL",
+      "CRM",
+      "NFLX",
+      "JPM",
+      "XOM",
+      "UNH",
+      "LLY",
+      "BRK-B"
+    ],
+    "world_indices": [
+      "^N225",
+      "^HSI",
+      "^FTSE",
+      "^GDAXI",
+      "^FCHI",
+      "^STOXX50E"
+    ],
+    "india_indices": [
+      "^NSEI",
+      "^NSEBANK",
+      "^BSESN"
     ]
   }
 }

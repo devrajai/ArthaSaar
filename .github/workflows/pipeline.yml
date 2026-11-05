@@ -375,6 +375,16 @@ jobs:
         run: python scripts/build_scenarios.py || true
 
       # Global and sector read-through from the Colab-collected US data.
+      # US, world and India index history. The runner reaches Yahoo directly, so this
+      # replaces the Colab upload entirely - 10 years, refreshed every run.
+      - name: "7m2zf. Fetch US, world and India index history"
+        run: |
+          python scripts/fetch_yahoo.py --group us_indices --period 10y || true
+          python scripts/fetch_yahoo.py --group us_sectors --period 10y || true
+          python scripts/fetch_yahoo.py --group world_indices --period 10y || true
+          python scripts/fetch_yahoo.py --group india_indices --period 10y || true
+      - name: "7m2zg. Fetch US megacap"
+        run: python scripts/fetch_yahoo.py --group us_stocks --period 10y || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
 

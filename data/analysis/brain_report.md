@@ -1,34 +1,34 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-05T03:00:08Z  |  10 channels, 356 videos, window 2026-05-15 to 2026-11-04.
+Generated 2026-11-05T10:29:34Z  |  10 channels, 363 videos, window 2026-05-15 to 2026-11-05.
 
-**Total views across the window:** 12,243,891  |  **net bull-bear keyword score:** 163
+**Total views across the window:** 12,261,562  |  **net bull-bear keyword score:** 168
 
 ## Most-talked-about symbols
 
 | Symbol | Mentions | Channels |
 |---|---|---|
-| NIFTY50 | 79 | 5 |
-| BANKNIFTY | 35 | 4 |
-| SENSEX | 33 | 4 |
-| RELIANCE | 20 | 6 |
+| NIFTY50 | 82 | 5 |
+| SENSEX | 36 | 4 |
+| BANKNIFTY | 36 | 4 |
+| RELIANCE | 21 | 6 |
 | ADANIENT | 6 | 2 |
 | WIPRO | 4 | 4 |
 | YESBANK | 4 | 3 |
 | ITC | 3 | 3 |
 | INFY | 3 | 3 |
-| TCS | 3 | 2 |
+| INDIGO | 3 | 3 |
 
 ## Dominant themes
 
 | Theme | Videos |
 |---|---|
-| MF/SIP | 89 |
-| Beginner/Education | 85 |
-| Earnings/Results | 71 |
-| IPO | 64 |
-| Options/F&O | 61 |
-| Budget/Policy | 59 |
+| MF/SIP | 94 |
+| Beginner/Education | 86 |
+| Earnings/Results | 74 |
+| IPO | 68 |
+| Options/F&O | 66 |
+| Budget/Policy | 60 |
 
 ## Channels by reach
 
@@ -40,9 +40,9 @@ Generated 2026-11-05T03:00:08Z  |  10 channels, 356 videos, window 2026-05-15 to
 | WAY2LAABH | 23 | 34,035 | 2026-11-03 |
 | Ghanshyam Tech | 28 | 29,147 | 2026-11-04 |
 | Groww Edge | 50 | 25,854 | 2026-11-04 |
-| Markets by Zerodha | 34 | 18,976 | 2026-11-04 |
 | Groww | 41 | 18,744 | 2026-11-04 |
-| Markets by Zerodha Hindi | 31 | 16,386 | 2026-11-04 |
-| Upstox | 80 | 1,574 | 2026-11-04 |
+| Markets by Zerodha | 35 | 18,704 | 2026-11-05 |
+| Markets by Zerodha Hindi | 32 | 16,068 | 2026-11-05 |
+| Upstox | 85 | 1,505 | 2026-11-05 |
 
 _Keyword-based analysis. Not investment advice._

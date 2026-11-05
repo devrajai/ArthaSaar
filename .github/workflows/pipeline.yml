@@ -385,8 +385,17 @@ jobs:
           python scripts/fetch_yahoo.py --group india_indices --period 10y || true
       - name: "7m2zg. Fetch US megacap"
         run: python scripts/fetch_yahoo.py --group us_stocks --period 10y || true
+      - name: "7m2zh. Fetch world indices, FX and crypto (10y)"
+        run: |
+          python scripts/fetch_yahoo.py --group world_indices --period 10y || true
+          python scripts/fetch_yahoo.py --group fx --period 10y || true
+          python scripts/fetch_yahoo.py --group crypto --period 10y || true
+          python scripts/fetch_yahoo.py --group commodities --period 10y || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
+      # Lead-lag: how the prior US session relates to Nifty's next one.
+      - name: "7m2zi. Lead-lag study"
+        run: python scripts/build_leadlag.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.

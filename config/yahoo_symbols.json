@@ -26,7 +26,12 @@
     "fx": [
       "INR=X",
       "EURINR=X",
-      "GBPINR=X"
+      "GBPINR=X",
+      "JPYINR=X",
+      "USDCNY=X",
+      "USDJPY=X",
+      "EURUSD=X",
+      "DX-Y.NYB"
     ],
     "nse_stocks": [
       "RELIANCE.NS",
@@ -95,7 +100,9 @@
       "SI=F",
       "CL=F",
       "BZ=F",
-      "HG=F"
+      "HG=F",
+      "PL=F",
+      "NG=F"
     ],
     "commodities_context": [
       "^IXIC",
@@ -149,12 +156,26 @@
       "^FTSE",
       "^GDAXI",
       "^FCHI",
-      "^STOXX50E"
+      "^STOXX50E",
+      "^SSEC",
+      "^STI",
+      "^KS11",
+      "^BVSP",
+      "^AXJO",
+      "^ATX",
+      "^RTS"
     ],
     "india_indices": [
       "^NSEI",
       "^NSEBANK",
       "^BSESN"
+    ],
+    "crypto": [
+      "BTC-USD",
+      "ETH-USD",
+      "SOL-USD",
+      "BNB-USD",
+      "XRP-USD"
     ]
   }
 }

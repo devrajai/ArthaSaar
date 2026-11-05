@@ -1,17 +1,145 @@
 {
-  "_comment": "Dates that were on the market calendar in advance. Only dates verified against the primary source are listed - a guessed date would be worse than no date. Union Budget presentation days (1 Feb, plus the two July budgets), and general election result days.",
+  "_comment": "Dates that were on the market calendar in advance. FOMC dates verified against federalreserve.gov (decision day = second day of each meeting). RBI policy dates are NOT included: I could not verify them, and a guessed date is worse than no date. Add them from the RBI calendar before relying on that bucket.",
   "events": [
-    {"date": "2019-07-05", "kind": "budget", "label": "Union Budget"},
-    {"date": "2020-02-01", "kind": "budget", "label": "Union Budget"},
-    {"date": "2021-02-01", "kind": "budget", "label": "Union Budget"},
-    {"date": "2022-02-01", "kind": "budget", "label": "Union Budget"},
-    {"date": "2023-02-01", "kind": "budget", "label": "Union Budget"},
-    {"date": "2024-02-01", "kind": "budget", "label": "Interim Budget"},
-    {"date": "2024-07-23", "kind": "budget", "label": "Union Budget"},
-    {"date": "2025-02-01", "kind": "budget", "label": "Union Budget"},
-    {"date": "2026-02-01", "kind": "budget", "label": "Union Budget"},
-    {"date": "2019-05-23", "kind": "election", "label": "Lok Sabha result"},
-    {"date": "2024-06-04", "kind": "election", "label": "Lok Sabha result"},
-    {"date": "2026-11-03", "kind": "election", "label": "US midterm result"}
+    {
+      "date": "2019-05-23",
+      "kind": "election",
+      "label": "Lok Sabha result"
+    },
+    {
+      "date": "2019-07-05",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2020-02-01",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2021-02-01",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2022-02-01",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2023-02-01",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2024-02-01",
+      "kind": "budget",
+      "label": "Interim Budget"
+    },
+    {
+      "date": "2024-06-04",
+      "kind": "election",
+      "label": "Lok Sabha result"
+    },
+    {
+      "date": "2024-07-23",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2025-01-29",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-02-01",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2025-03-19",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-05-07",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-06-18",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-07-30",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-09-17",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-10-29",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2025-12-10",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-01-28",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-02-01",
+      "kind": "budget",
+      "label": "Union Budget"
+    },
+    {
+      "date": "2026-03-18",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-04-29",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-06-17",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-07-29",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-09-16",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-10-28",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    },
+    {
+      "date": "2026-11-03",
+      "kind": "election",
+      "label": "US midterm result"
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "fed",
+      "label": "FOMC rate decision"
+    }
   ]
 }

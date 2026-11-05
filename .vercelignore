@@ -1,0 +1,10 @@
+# The site is docs/ only. Everything else is data the pipeline uses, and cloning it on every
+# deploy makes the build slow for no benefit - the repo carries hundreds of MB of parquet.
+data/
+.github/
+reference/
+*.parquet
+*.zip
+*.pyc
+__pycache__/
+tests/

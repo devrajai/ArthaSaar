@@ -155,6 +155,34 @@ def main():
         return 0
 
     out["leaders"].sort(key=lambda x: -x["correlation"])
+
+    # ---- what the most recent US session implies for the next Indian open ---------------
+    # This is the live, actionable form of the study: not "the correlation is 0.26" but
+    # "the S&P fell 1.8% overnight, and after a fall that size Nifty's next session was down
+    # 69% of the time". It is a base rate, not a forecast - the site says so.
+    sp = returns(closes("^GSPC"))
+    if sp and out["buckets"]:
+        last_date = max(sp)
+        last_move = sp[last_date]
+        label = None
+        for lbl, cond in BUCKETS:
+            try:
+                if cond(last_move):
+                    label = lbl
+                    break
+            except Exception:
+                continue
+        bucket = next((b for b in out["buckets"] if b["label"] == label), None)
+        out["latest"] = {
+            "us_date": last_date,
+            "us_move_pct": round(last_move, 2),
+            "bucket": label or "outside the studied range",
+            "n": (bucket or {}).get("n"),
+            "up_pct": (bucket or {}).get("up_pct"),
+            "down_pct": (bucket or {}).get("down_pct"),
+            "mean_pct": (bucket or {}).get("mean_pct"),
+            "worst": (bucket or {}).get("worst"),
+        }
     out["note"] = ("How each market's session relates to Nifty's NEXT session. India closes "
                    "before the US does, so the US move lands the following morning.")
     out["cautions"] = {

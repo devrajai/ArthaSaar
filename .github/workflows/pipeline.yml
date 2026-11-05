@@ -396,6 +396,10 @@ jobs:
       # Lead-lag: how the prior US session relates to Nifty's next one.
       - name: "7m2zi. Lead-lag study"
         run: python scripts/build_leadlag.py || true
+      # Scorecard must run AFTER earlymove (it logs today's percentile) and after the
+      # session has data, so yesterday's call can be graded.
+      - name: "7m2zj. Signal scorecard"
+        run: python scripts/build_scorecard.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.

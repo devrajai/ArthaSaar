@@ -496,15 +496,30 @@ jobs:
           # and NOTHING was published, even though every step before it had succeeded.
           # Retry around it, and abort any half-finished rebase instead of leaving the
           # repo stuck in one.
+          # A plain retry loop could never succeed on a content conflict: it aborted the
+          # rebase and pulled again into the same collision, four times, then gave up. On
+          # 5 Nov that cost a whole run - docs/screener.json and docs/vix.json had been
+          # pushed by hand while the pipeline was mid-flight, and the run built everything
+          # and published none of it.
+          #
+          # -X theirs during a rebase keeps THIS pipeline's freshly built copy. Every file
+          # in this commit is a regenerated artefact - docs/*.json and data/* are rebuilt
+          # from scratch each run - so a conflict means "both sides regenerated it", and the
+          # newer build is always the right answer. Hand-maintained files are unstaged above,
+          # so they are never touched by this.
           pushed=0
-          for i in 1 2 3 4; do
+          for i in 1 2 3 4 5 6; do
             git rebase --abort 2>/dev/null || true
-            git pull --rebase --autostash || true
+            git pull --rebase --autostash -X theirs || {
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main || true
+              git rebase origin/main -X theirs || true
+            }
             if git push; then pushed=1; break; fi
-            echo "push attempt $i failed; retrying in 5s"; sleep 5
+            echo "push attempt $i failed; retrying in $((i*5))s"; sleep $((i*5))
           done
           if [ "$pushed" != "1" ]; then
-            echo "::error::could not push after 4 attempts - data was built but not published"
+            echo "::error::could not push after 6 attempts - data was built but not published"
             exit 1
           fi
           echo "published"

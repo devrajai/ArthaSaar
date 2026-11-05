@@ -5664,5 +5664,130 @@ show = function(id){
   }catch(e){}
 };
 </script>
+
+<script>
+/* ArthaSaar — feature pack: 8 rotation · 5 promotion watch · 4 rollover · 3 corp actions · 2 why-moved · 1 delivery */
+(function(){
+  "use strict";
+  window.__fpRan=1;
+  var D={};
+  function J(f){ return fetch(f,{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}); }
+  function fmt(x,d){ return (x==null||isNaN(x))?"—":Number(x).toFixed(d==null?1:d); }
+  function sgn(x,d){ return (x==null||isNaN(x))?"—":(x>0?"+":"")+Number(x).toFixed(d==null?1:d)+"%"; }
+  function num(x){ return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:1}); }
+  function ready(id){ return document.getElementById("sec-"+id); }
+  function put(secId,node,key){
+    var s=ready(secId); if(!s) return false;
+    if(s.querySelector('[data-fp="'+key+'"]')) return true;
+    node.setAttribute("data-fp",key); s.appendChild(node); return true;
+  }
+
+  /* ---------- 8 · sector rotation ---------- */
+  function rotationCard(){
+    var d=D.rotation; if(!d||!d.items) return null;
+    var b=d.bench_r||{};
+    var rows=d.items.map(function(x){ return [x.s, x.r1, x.r3, x.rs3, x.rs6, x.rs12]; });
+    var kids=[ para("Relative strength is the sector's return minus Nifty's over the same window. Positive = beating the index. Leaders on 3 months whose 1 month is also improving are usually early in the rotation; leaders fading on 1 month are late.", false) ];
+    kids.push(tbl({columns:["sector","1m","3m","3m vs Nifty","6m vs Nifty","12m vs Nifty"], rows:rows}, ["1m","3m","3m vs Nifty","6m vs Nifty","12m vs Nifty"]));
+    return card("Sector rotation", "vs Nifty 50 · "+ (d.count||rows.length) +" sectors", kids,
+      {what:"Every sector index's return over 1, 3, 6 and 12 months, and how much of it is above or below Nifty.", source:"Yahoo Finance sector indices + NIFTY 50.", updated:d.updated,
+       note:"Benchmark 1m "+sgn(b["1m"])+", 3m "+sgn(b["3m"])+", 6m "+sgn(b["6m"])+", 12m "+sgn(b["12m"])+". A sector can be up in absolute terms and still lose relative strength - that is the rotation signal."});
+  }
+
+  /* ---------- 5 · promotion watch ---------- */
+  function rebalanceCard(){
+    var d=D.rebalance; if(!d||!d.items) return null;
+    var rows=d.items.slice(0,15).map(function(x){ return [x.s, x.r6, x.adtv]; });
+    var kids=[ para("Candidates from Nifty Next 50, ranked by 6-month return and average daily traded value. NSE's actual review also weighs free-float market cap, which no free feed gives cleanly - so this is who is knocking on the door, not a guaranteed inclusion list.", false) ];
+    kids.push(tbl({columns:["candidate","6m return","avg daily value"], rows:rows}, ["6m return","avg daily value"]));
+    return card("Nifty 50 promotion watch", "from Nifty Next 50", kids,
+      {what:"Which Next-50 names are building the liquidity and momentum that index inclusion usually needs.", source:"Yahoo Finance (prices, volume) + NSE Next-50 constituent list.", updated:d.updated,
+       note:"Educational. Index changes are decided by NSE's index committee, not by this table."});
+  }
+
+  /* ---------- 4 · rollover ---------- */
+  function rolloverCard(){
+    var d=D.rollover; if(!d||!d.items) return null;
+    var rows=d.items.slice(0,15).map(function(x){ return [x.s, x.roll, x.near, x.next]; });
+    var kids=[ para("Rollover is the share of a stock's futures open interest already sitting in the next expiry. High rollover = positions carried forward with conviction. Low = being squared off before expiry.", false) ];
+    kids.push(tbl({columns:["stock","rollover","this expiry OI","next expiry OI"], rows:rows}, ["rollover","this expiry OI","next expiry OI"]));
+    return card("F&O rollover", "expiry "+ (d.items[0]?d.items[0].exp:"") , kids,
+      {what:"How much of each stock's futures open interest has already rolled to the next series.", source:"NSE F&O bhavcopy (all expiries, end of day).", updated:d.updated, note:d.note});
+  }
+
+  /* ---------- 3 · corporate actions ---------- */
+  function corpCard(){
+    var d=D.corp; if(!d||!d.items) return null;
+    var rows=d.items.slice(0,20).map(function(x){ return [x.s, x.d, x.k, (x.k==="split"?("1 : "+x.v):("₹"+x.v))]; });
+    var kids=[ para("A split of 10 means one share became ten, so every price before that date must be divided by ten before you compare it. Skip this and every chart, pattern and backtest across that date is wrong.", false) ];
+    kids.push(tbl({columns:["stock","date","type","detail"], rows:rows}, []));
+    return card("Corporate actions", "splits & dividends · Nifty 50", kids,
+      {what:"Recent splits and dividends, the adjustments your price history needs to stay honest.", source:"Yahoo Finance corporate-action fields.", updated:d.updated, note:d.note});
+  }
+
+  /* ---------- 1 · delivery ---------- */
+  function deliveryCard(){
+    var d=D.delivery; if(!d||!d.items) return null;
+    var rows=d.items.slice(0,18).map(function(x){ return [x.s, x.d, x.chg, x.score]; });
+    var kids=[ para("Delivery % is the share of traded quantity that actually changed hands. A high-delivery move is real accumulation; a big move on low delivery is usually intraday churn that fades.", false) ];
+    kids.push(tbl({columns:["stock","delivery %","day move","score"], rows:rows}, ["delivery %","day move","score"]));
+    return card("Delivery & accumulation", d.count+" stocks · "+ (d.date||""), kids,
+      {what:"Which stocks moved today on genuine delivery rather than intraday churn.", source:"NSE sec_bhavdata_full (delivery quantity and percentage).", updated:d.updated, note:d.note});
+  }
+
+  /* ---------- 2 · why did it move ---------- */
+  function whyCard(){
+    if(!D.delivery) return null;
+    var idx={}; (D.delivery.items||[]).forEach(function(x){ idx[x.s]=x; });
+    var roll={}; ((D.rollover&&D.rollover.items)||[]).forEach(function(x){ roll[x.s]=x; });
+    var corp={}; ((D.corp&&D.corp.items)||[]).forEach(function(x){ (corp[x.s]=corp[x.s]||[]).push(x); });
+    var wrap=el("div","");
+    wrap.appendChild(para("Type a symbol to see the day's move pulled apart: delivery, futures positioning and any corporate action, in one place.", false));
+    var inp=el("input",""); inp.type="search"; inp.placeholder="e.g. RELIANCE"; inp.style.cssText="width:100%;padding:9px 11px;border-radius:10px;border:1px solid #cfe0f5;margin:6px 0 10px;font-size:13px";
+    var out=el("div","");
+    wrap.appendChild(inp); wrap.appendChild(out);
+    function render(){
+      var q=(inp.value||"").trim().toUpperCase(); out.innerHTML="";
+      if(!q) return;
+      var dv=idx[q];
+      if(!dv){ out.appendChild(para("No delivery data for "+q+" in today's file (it may not be in the EQ series).",false)); return; }
+      out.appendChild(kpi("move", sgn(dv.chg), "today"));
+      out.appendChild(kpi("delivery", fmt(dv.d)+"%", "of traded qty"));
+      out.appendChild(kpi("score", fmt(dv.score,0)+"/10", "accumulation"));
+      var lines=[];
+      lines.push((dv.d>=40?"High delivery ("+fmt(dv.d)+"%) - the move had real backing, not just intraday churn.":"Delivery only "+fmt(dv.d)+"% - a lot of this move was intraday, so it can fade."));
+      if(dv.chg>0 && dv.d>=40) lines.push("Price up on high delivery is the classic accumulation read.");
+      if(dv.chg<0 && dv.d>=40) lines.push("Price down on high delivery means real distribution, not just weak hands.");
+      var r=roll[q]; if(r) lines.push("Futures: "+fmt(r.roll)+"% of open interest has rolled to the next expiry ("+(r.roll>=50?"positions being carried with conviction":"being squared off")+").");
+      var cs=corp[q]; if(cs&&cs.length) cs.slice(0,2).forEach(function(c){ lines.push("Corporate action: "+c.k+" on "+c.d+" ("+(c.k==="split"?("1:"+c.v):("₹"+c.v))+") - prices before that date are not comparable until adjusted."); });
+      lines.push("This explains what happened; it is not a reason to buy or sell.");
+      lines.forEach(function(t){ out.appendChild(para(t,false)); });
+    }
+    inp.addEventListener("input",render);
+    return card("Why did it move?", "one symbol, pulled apart", [wrap],
+      {what:"Joins today's price move with delivery, futures rollover and corporate actions for a single stock.", source:"NSE sec_bhavdata_full + F&O bhavcopy + Yahoo corporate actions.", updated:D.delivery.updated,
+       note:"Only explains what the data shows. It does not know about news you have not fed it, and it is not advice."});
+  }
+
+  var placed={};
+  function tryPlace(){
+    if(!D.delivery && !D.rotation) return;
+    var map=[["sectors",rotationCard],["fno",rolloverCard],["fno",rebalanceCard],["corporate",corpCard],["stocks",deliveryCard],["stocks",whyCard]];
+    map.forEach(function(m){
+      var key=m[0]+"_"+m[1].name;
+      try{ var c=m[1](); if(c) put(m[0],c,key); }catch(e){ (window.__fpErr=window.__fpErr||[]).push(key+": "+(e&&e.message||e)); }
+    });
+  }
+  Promise.all([J("sector_rotation.json"),J("rebalance.json"),J("rollover.json"),J("corp_actions.json"),J("delivery.json")])
+    .then(function(r){ window.__fpLoad=[!!r[0],!!r[1],!!r[2],!!r[3],!!r[4]]; D.rotation=r[0]; D.rebalance=r[1]; D.rollover=r[2]; D.corp=r[3]; D.delivery=r[4]; tryPlace(); });
+  var iv=setInterval(tryPlace,700);
+  try{ new MutationObserver(function(){ tryPlace(); }).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+  setTimeout(function(){ clearInterval(iv); }, 120000);
+})();
+</script>
+
+
+
+
 </body>
 </html>

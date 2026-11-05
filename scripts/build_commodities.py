@@ -38,8 +38,20 @@ CONTEXT = [("^IXIC", "Nasdaq Composite"), ("DX-Y.NYB", "Dollar index")]
 def load(sym):
     """Daily closes as {date_str: close} from the pipeline's parquet."""
     import pandas as pd
-    safe = sym.replace("^", "_IDX_").replace("=", "_EQ_").replace(".", "_")
-    for name in (safe + ".parquet", sym + ".parquet"):
+    # THREE naming conventions exist in this repo and they do not agree. Looking for only
+    # the legacy one meant this script reported "no commodity parquet found" on every run,
+    # forever, while fetch_yahoo was writing perfectly good files next to it.
+    #   fetch_yahoo._safe()  re.sub(r"[^A-Za-z0-9]+","_",sym).strip("_")  -> "GC_F"
+    #   legacy pipeline      ^ -> _IDX_, = -> _EQ_, . -> _                -> "GC_EQ_F"
+    #   Colab                ^ -> IDX_                                   -> "GC_F"
+    import re as _re
+    names = []
+    for base in (_re.sub(r"[^A-Za-z0-9]+", "_", sym).strip("_"),
+                 sym.replace("^", "_IDX_").replace("=", "_EQ_").replace(".", "_"),
+                 sym.replace("^", "IDX_").replace("=", "EQ_").replace(".", "_"),
+                 sym):
+        names += [base + ".parquet", "us_" + base + ".parquet"]
+    for name in names:
         p = os.path.join(YAHOO, name)
         if os.path.exists(p):
             df = pd.read_parquet(p)

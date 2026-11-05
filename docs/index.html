@@ -904,6 +904,17 @@ a.bigbtn:hover{background:#1a45c0}
   /* a table that fills the screen and scrolls inside itself */
   .fsbox{max-height:calc(100vh - 160px);overflow:auto;border:1px solid var(--line);
     border-radius:10px;padding:0 10px}
+
+.datepick{font:inherit;font-size:15px;padding:11px 14px;border-radius:12px;
+  border:1px solid rgba(29,78,216,.28);background:rgba(255,255,255,.7);color:inherit;
+  margin:6px 0 12px;max-width:100%}
+.histout{margin:8px 0}
+.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+@media (min-width:700px){.hgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.hrow{display:flex;justify-content:space-between;gap:10px;font-size:13px;
+  padding:7px 0;border-bottom:1px solid rgba(29,78,216,.10)}
+.hrow span{color:var(--muted)}
+.hctx{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -1417,6 +1428,7 @@ var SECTIONS=[
   {id:"levels",      label:"Levels"},
   {id:"charges",   label:"Charges"},
   {id:"learn",     label:"Learn"},
+  {id:"history",   label:"History"},
 ];
 var FEEDS=["archive","fno","spikes","corporate","markets","commodities","fx","crypto","news",
            "brain","channels","videos","indicators","screens","relative_strength","patterns",
@@ -1673,6 +1685,67 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- WHAT'S COMING AT THE OPEN -----------------------------------------------------
+    // The live form of the lead-lag study: not "the correlation is 0.26" but "the S&P fell
+    // 1.1% overnight, and after a fall that size Nifty's next session was down 67% of the
+    // time". A base rate with its sample size, never a forecast.
+    (function(){
+     try{
+      var L=(LEADLAG&&LEADLAG.latest)||null;
+      if(!L||L.up_pct==null) return;
+      var dir=L.us_move_pct<0?"fell":"rose";
+      var tone=L.up_pct>=55?"#0a7d43":(L.up_pct<=45?"#c02b2b":"#b45309");
+      var kids=[];
+      kids.push(para("The S&P 500 <b>"+dir+" "+Math.abs(L.us_move_pct)+"%</b> on "+esc(L.us_date)+
+        ". After a move that size, Nifty's <b>next</b> session was <b style=\"color:"+tone+"\">"+
+        L.down_pct+"% down</b> and "+L.up_pct+"% up, averaging "+(L.mean_pct>0?"+":"")+L.mean_pct+
+        "% over "+L.n+" past cases. Worst was "+L.worst+"%.", true));
+      kids.push(para("India closes before the US does, so the US move lands the following "+
+        "morning - US closes 1:30 AM IST, India opens 9:15 AM IST. This cannot see what "+
+        "happens overnight in Asia or the rupee, which regularly overrides it.", false));
+      v.appendChild(card("What's coming at the open", L.bucket, kids,
+        {what:"How the most recent US session has historically related to India's next one.",
+         source:"S&P 500 and Nifty daily closes, 10 years.", updated:LEADLAG.updated,
+         note:"A conditional base rate, not a forecast. The prior US session explains about 7% of Nifty's next move on an average day; the relationship is only sharp in the tails. The big-move buckets are thin - 32 observations for falls over 3%."}));
+     }catch(e){}
+    })();
+
+    // ---- SIGNAL SCORECARD --------------------------------------------------------------
+    // The record. Every call logged the day it is made, before the outcome is known, then
+    // scored. It will look empty at first, and that is the honest state.
+    (function(){
+     try{
+      if(!SCORE) return;
+      var kids=[];
+      if(!SCORE.scored){
+        kids.push(para("The record starts today. <b>"+num(SCORE.logged)+" signal logged</b> "+
+          "so far and none has an outcome yet - the first scores appear after the next "+
+          "session closes. A track record cannot be backfilled, which is the point.", true));
+      }else{
+        kids.push(para("Base rate over "+num(SCORE.scored)+" scored sessions: <b>"+
+          SCORE.base_rate_pct+"%</b> were big days.", true));
+        kids.push(tbl({columns:["signal","days","big days","hit rate","lift"],
+          rows:(SCORE.slices||[]).map(function(s){
+            return [esc(s.label), num(s.n), num(s.big_days), s.hit_pct+"%",
+                    (s.lift!=null?s.lift+"x":"-")];
+          })}));
+        if(SCORE.recent&&SCORE.recent.length){
+          kids.push(para("Recent calls:", false));
+          kids.push(tbl({columns:["date","percentile","Nifty move","big day"],
+            rows:SCORE.recent.map(function(r){
+              return [r.date, r.pctile==null?"-":r.pctile+"th",
+                      (r.move_pct>0?"+":"")+r.move_pct+"%", r.big_day?"yes":"no"];
+            })}));
+        }
+      }
+      v.appendChild(card("Signal scorecard", num(SCORE.scored)+" scored", kids,
+        {what:"Every signal logged before its outcome was known, then scored against what actually happened.",
+         source:"Our own logged calls, scored against Nifty daily closes.", updated:SCORE.updated,
+         note:"The record starts the day this began running. Early numbers are noise - a handful of calls cannot tell a real edge from luck."}));
+     }catch(e){}
+    })();
+
+
     // ---- TODAY AT A GLANCE -------------------------------------------------------------
     // The newest signals, side by side on a laptop and stacked on a phone. Everything here
     // is already computed elsewhere on the site; this is the one place that puts them in
@@ -3463,7 +3536,79 @@ function build(d){
 
   /* ---------- LEARN (course material) ---------- */
   (function(){
-    var v=sec("learn");
+    var v=sec("history");
+    // ---- a day, month or year you can look up ------------------------------------------
+    // Ten years of daily facts were spread across four files with no way to ask "what
+    // happened on 14 March 2023". This joins them and lets you search by date, then drill
+    // from a year to its months to its sessions.
+    (function(){
+     try{
+      if(!HIST||!HIST.rows||!HIST.rows.length) return;
+      var byDate={};
+      HIST.rows.forEach(function(r){ byDate[r.d]=r; });
+      var kids=[];
+      var pick=el("input"); pick.type="date"; pick.className="datepick";
+      pick.min=HIST.first; pick.max=HIST.last; pick.value=HIST.last;
+      var out=el("div","histout");
+      function fmt(v,suf){ return v==null?"\u2014":((v>0?"+":"")+v+(suf||"")); }
+      function showDay(day){
+        var r=byDate[day];
+        if(!r){
+          out.innerHTML='<p class="hctx">'+esc(day)+' was not a trading session.</p>';
+          return;
+        }
+        var tone = r.chg==null?"inherit":(r.chg>0?"#0a7d43":"#c02b2b");
+        var rowsHtml=
+          '<div class="hrow"><span>Nifty close</span><b>'+num(r.c)+'</b></div>'+
+          '<div class="hrow"><span>Move</span><b style="color:'+tone+'">'+fmt(r.chg,"%")+'</b></div>'+
+          '<div class="hrow"><span>India VIX</span><b>'+(r.vix==null?"\u2014":r.vix)+'</b></div>'+
+          '<div class="hrow"><span>Nifty PCR</span><b>'+(r.pcr==null?"\u2014":r.pcr)+'</b></div>'+
+          '<div class="hrow"><span>Max pain</span><b>'+(r.mp==null?"\u2014":num(r.mp))+'</b></div>'+
+          '<div class="hrow"><span>Big day</span><b>'+(r.big?"yes":"no")+'</b></div>';
+        var mo=HIST.months[day.slice(0,7)], yr=HIST.years[day.slice(0,4)];
+        var ctx="";
+        if(mo) ctx+="That month: "+mo.n+" sessions, "+mo.up_pct+"% up, average "+fmt(mo.avg,"%")+
+                    ", worst "+fmt(mo.worst,"%")+". ";
+        if(yr) ctx+="That year: "+yr.n+" sessions, "+yr.up_pct+"% up, average "+fmt(yr.avg,"%")+
+                    ", "+yr.big+" big days.";
+        out.innerHTML='<div class="hgrid">'+rowsHtml+'</div>'+(ctx?'<p class="hctx">'+ctx+'</p>':'');
+      }
+      pick.addEventListener("change",function(){ showDay(pick.value); });
+      kids.push(para("Look up any trading day:", false));
+      kids.push(pick);
+      kids.push(out);
+
+      var ysel=el("select"); ysel.className="datepick";
+      Object.keys(HIST.years).sort().reverse().forEach(function(y){
+        var o=el("option","",esc(y)); o.value=y; ysel.appendChild(o);
+      });
+      var mbox=el("div","histout");
+      function showYear(y){
+        var ms=Object.keys(HIST.months).filter(function(m){return m.slice(0,4)===y;}).sort();
+        mbox.innerHTML="";
+        if(!ms.length){ mbox.innerHTML='<p class="hctx">No months for '+esc(y)+'.</p>'; return; }
+        var rows=ms.map(function(m){
+          var b=HIST.months[m];
+          return [esc(m), String(b.n), b.up_pct+"%", fmt(b.avg,"%"),
+                  fmt(b.best,"%"), fmt(b.worst,"%"), String(b.big)];
+        });
+        mbox.appendChild(tbl({columns:["month","sessions","% up","average","best","worst","big days"],rows:rows}));
+      }
+      ysel.addEventListener("change",function(){ showYear(ysel.value); });
+      kids.push(para("Or browse a year, month by month:", false));
+      kids.push(ysel);
+      kids.push(mbox);
+
+      v.appendChild(card("History", num(HIST.count)+" sessions \u00b7 "+HIST.first+" to "+HIST.last, kids,
+        {what:"Every trading session since 2016, with the Nifty close, the move, India VIX, the put-call ratio and max pain, joined into one searchable table.",
+         source:"Nifty and India VIX from Yahoo; PCR and max pain from our own F&O archive.", updated:HIST.updated,
+         note:"Values that were never collected are shown as a dash rather than filled in. PCR only starts in 2019 - before that we did not collect it. A big day is a move of 1.5% or more, the same definition used across the site."}));
+      showYear(Object.keys(HIST.years).sort().reverse()[0]);
+      showDay(HIST.last);
+     }catch(e){}
+    })();
+
+var v=sec("learn");
     // ---- what patience is worth, measured ---------------------------------------------
     // And an honest correction: the usual argument that the best days cluster with the worst
     // does NOT hold on our data. The real problem is that neither is knowable in advance.
@@ -5375,6 +5520,8 @@ function assign(name, v){
     case "scenarios.json": SCEN=v; break;
     case "global_market.json": GMKT=v; break;
     case "leadlag.json": LEADLAG=v; break;
+    case "scorecard.json": SCORE=v; break;
+    case "history.json": HIST=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -5422,7 +5569,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -5457,7 +5604,7 @@ var GROUPS = [
   ["Funds & issues",["mf","etf","ipo","charges"]],
   ["Disclosures",   ["corporate","news","calendar","watchlists","deals","insider","promoter","regulator"]],
   ["Tools",         ["tools","backtest","watchlist"]],
-  ["More",          ["learn"]]
+  ["More",          ["learn","history"]]
 ];
 
 function wireSimple(){

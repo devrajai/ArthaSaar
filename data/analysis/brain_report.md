@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-05T15:06:42Z  |  10 channels, 368 videos, window 2026-05-15 to 2026-11-05.
+Generated 2026-11-05T18:25:38Z  |  10 channels, 369 videos, window 2026-05-15 to 2026-11-05.
 
-**Total views across the window:** 12,265,750  |  **net bull-bear keyword score:** 172
+**Total views across the window:** 12,266,077  |  **net bull-bear keyword score:** 171
 
 ## Most-talked-about symbols
 
@@ -24,7 +24,7 @@ Generated 2026-11-05T15:06:42Z  |  10 channels, 368 videos, window 2026-05-15 to
 | Theme | Videos |
 |---|---|
 | MF/SIP | 95 |
-| Beginner/Education | 88 |
+| Beginner/Education | 89 |
 | Earnings/Results | 75 |
 | Options/F&O | 68 |
 | IPO | 68 |
@@ -43,6 +43,6 @@ Generated 2026-11-05T15:06:42Z  |  10 channels, 368 videos, window 2026-05-15 to
 | Groww | 42 | 18,335 | 2026-11-05 |
 | Markets by Zerodha | 36 | 18,193 | 2026-11-05 |
 | Markets by Zerodha Hindi | 32 | 16,068 | 2026-11-05 |
-| Upstox | 86 | 1,490 | 2026-11-05 |
+| Upstox | 87 | 1,477 | 2026-11-05 |
 
 _Keyword-based analysis. Not investment advice._

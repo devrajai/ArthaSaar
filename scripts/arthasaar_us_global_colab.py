@@ -228,52 +228,173 @@ print("can use it. The GitHub side only needs the parquet files, not this notebo
 
 # ============================== CELL 7 =======================================
 # Push the parquet files into the repo so the GitHub pipeline can use them.
-# Without this the data sits in Drive and the site never sees it.
 #
-# Needs a fine-grained GitHub token with Contents: Read and write on this repo only.
-# Paste it below - do NOT commit a notebook containing a real token.
-import base64, json, os, time, urllib.request
+# BEFORE ANYTHING ELSE: this cell checks that the token actually works and says WHY if it
+# does not. The first version swallowed the HTTP status and printed only "HTTPError" for
+# every file, which told nobody anything.
+import base64, json, os, time, urllib.request, urllib.error
 
-GH_TOKEN = ""          # <-- paste your token here, run once, then clear it
 GH_REPO  = "devrajai/ArthaSaar"
-GH_PATH  = "data/yahoo"        # where the pipeline looks
+GH_PATH  = "data/yahoo"
+
+# ---- supply the token -----------------------------------------------------------------
+# Preferred: Colab Secrets (key icon in the left sidebar -> add GH_TOKEN -> Notebook access).
+# Fallback: typed input. getpass is NOT used - it raises KeyboardInterrupt in Colab because
+# the kernel's stdin is not a real terminal.
+GH_TOKEN = ""
+try:
+    from google.colab import userdata
+    GH_TOKEN = (userdata.get("GH_TOKEN") or "").strip()
+    if GH_TOKEN:
+        print("token loaded from Colab Secrets")
+except Exception:
+    pass
+if not GH_TOKEN:
+    print("No GH_TOKEN in Colab Secrets - falling back to typed input.")
+    GH_TOKEN = input("Paste token: ").strip()
 
 if not GH_TOKEN:
-    print("Set GH_TOKEN in cell 7 and run again.")
+    print("No token. Stopping.")
 else:
+    H = {"Authorization": "Bearer " + GH_TOKEN,
+         "Accept": "application/vnd.github+json",
+         "User-Agent": "ArthaSaar-Sync"}
+
+    def call(url, method="GET", payload=None):
+        """Returns (status, body-text). Never raises, so the status is always visible."""
+        data = json.dumps(payload).encode() if payload is not None else None
+        hh = dict(H)
+        if data:
+            hh["Content-Type"] = "application/json"
+        req = urllib.request.Request(url, data=data, method=method, headers=hh)
+        try:
+            with urllib.request.urlopen(req, timeout=45) as r:
+                return r.status, r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode("utf-8", "replace")
+        except Exception as e:
+            return 0, "%s: %s" % (type(e).__name__, str(e)[:150])
+
+    # ---- pre-flight -------------------------------------------------------------------
+    print("\nchecking the token against %s ..." % GH_REPO)
+    status, body = call("https://api.github.com/repos/" + GH_REPO)
+    if status != 200:
+        print("  repository check FAILED: HTTP %s" % status)
+        print("  GitHub says:", body[:300])
+        print("\n  what this means:")
+        print("   401  the token is wrong or incomplete - regenerate and copy the whole string")
+        print("   403  the token has no access to this repository")
+        print("   404  the token is fine but was not granted access to devrajai/ArthaSaar;")
+        print("        set Repository access to 'Only select repositories' and pick it")
+        print("\n  Nothing was uploaded. Fix the token and run this cell again.")
+        GH_TOKEN = ""
+    else:
+        info = json.loads(body)
+        perms = info.get("permissions") or {}
+        print("  repository OK: %s" % info.get("full_name"))
+        print("  your permission on it: push=%s admin=%s" % (perms.get("push"), perms.get("admin")))
+        if not perms.get("push"):
+            print("  WARNING: push is false - the token needs Contents: Read and write,")
+            print("           otherwise every upload will fail with 403.")
+
+if GH_TOKEN:
     files = sorted(f for f in os.listdir(OUT) if f.endswith(".parquet"))
-    print("files to push:", len(files))
+    print("\nfiles to push:", len(files))
     ok = failed = 0
+    first_error = None
     for i, fn in enumerate(files, 1):
-        local = os.path.join(OUT, fn)
-        # the pipeline looks for the same safe-name convention it writes itself
         remote_name = fn[3:] if fn.startswith("us_") else fn
         url = "https://api.github.com/repos/%s/contents/%s/%s" % (GH_REPO, GH_PATH, remote_name)
-        with open(local, "rb") as f:
+        with open(os.path.join(OUT, fn), "rb") as f:
             b64 = base64.b64encode(f.read()).decode()
-        body = {"message": "data: US/global %s" % remote_name, "content": b64}
-        # an existing file needs its sha to be replaced, not created
-        try:
-            req = urllib.request.Request(url, headers={
-                "Authorization": "Bearer " + GH_TOKEN,
-                "Accept": "application/vnd.github+json",
-                "User-Agent": "ArthaSaar-Sync"})
-            with urllib.request.urlopen(req, timeout=30) as r:
-                body["sha"] = json.loads(r.read())["sha"]
-        except Exception:
-            pass
-        try:
-            req = urllib.request.Request(url, data=json.dumps(body).encode(), method="PUT", headers={
-                "Authorization": "Bearer " + GH_TOKEN,
-                "Accept": "application/vnd.github+json",
-                "Content-Type": "application/json",
-                "User-Agent": "ArthaSaar-Sync"})
-            with urllib.request.urlopen(req, timeout=45) as r:
-                ok += 1
-        except Exception as e:
+        payload = {"message": "data: US/global %s" % remote_name, "content": b64}
+
+        st, bd = call(url)
+        if st == 200:
+            try:
+                payload["sha"] = json.loads(bd)["sha"]
+            except Exception:
+                pass
+        elif st not in (404,):
             failed += 1
-            print("  %-22s FAILED %s" % (remote_name, type(e).__name__))
-        time.sleep(0.4)
+            first_error = first_error or (remote_name, st, bd[:200])
+            print("  %-24s FAILED HTTP %s" % (remote_name, st))
+            if failed >= 3:
+                print("\n  stopping after 3 failures - no point grinding through the rest.")
+                break
+            continue
+
+        st2, bd2 = call(url, "PUT", payload)
+        if st2 in (200, 201):
+            ok += 1
+        else:
+            failed += 1
+            first_error = first_error or (remote_name, st2, bd2[:200])
+            print("  %-24s FAILED HTTP %s" % (remote_name, st2))
+            if failed >= 3:
+                print("\n  stopping after 3 failures - no point grinding through the rest.")
+                break
+        time.sleep(0.35)
+
     print("\npushed %d, failed %d" % (ok, failed))
-    print("next: the pipeline's build_global_market.py will pick these up on its next run")
+    if first_error:
+        name, st, bd = first_error
+        print("\nfirst error on %s: HTTP %s" % (name, st))
+        print("GitHub says:", bd)
+        print("\n  403 on upload usually means the token lacks Contents: Read and write.")
+        print("  404 on upload usually means the token cannot see this repository.")
+    elif ok:
+        print("done - the pipeline's build_global_market.py will pick these up next run")
+
+# ============================== CELL 8 =======================================
+# NO-TOKEN ROUTE. Combine every parquet into ONE file you can upload by hand.
+#
+# Why this exists: if creating a token keeps failing, this removes the credential entirely.
+# One file, dragged into GitHub's web uploader. Slower to refresh (manual), but nothing to
+# authenticate and nothing to leak.
+import os
+import pandas as pd
+
+parts = []
+for fn in sorted(f for f in os.listdir(OUT) if f.endswith(".parquet")):
+    df = pd.read_parquet(os.path.join(OUT, fn))
+    if df.empty:
+        continue
+    sym = fn[:-8]                     # strip .parquet
+    sym = sym[3:] if sym.startswith("us_") else sym
+    # Undo the filename-safe encoding, in the same order it was applied:
+    #   ^GSPC -> IDX_GSPC, EURINR=X -> EURINR_EQ_X, BRK.B -> BRK_B
+    # "IDX_" must be consumed before the generic "_" -> "." step, or "^GSPC" becomes "^GSPC"
+    # only by luck. BRK-B is untouched because the hyphen was never encoded.
+    # Tolerate BOTH encodings seen in this repo: "IDX_GSPC" (the Colab's own safe()) and
+    # "_IDX_GSPC" (the pipeline's older convention). Without the lstrip the second form
+    # decodes to ".^GSPC" - a leading dot that silently matches nothing.
+    sym = sym.lstrip("_").replace("IDX_", "^").replace("EQ_", "=").replace("_", ".")
+    df = df.copy()
+    df["symbol"] = sym
+    parts.append(df)
+
+if not parts:
+    print("no parquet files found in", OUT)
+else:
+    all_df = pd.concat(parts, ignore_index=True)
+    all_df = all_df.sort_values(["symbol", "date"])
+    dest = os.path.join(OUT, "global_combined.parquet")
+    all_df.to_parquet(dest, index=False)
+    mb = os.path.getsize(dest) / 1e6
+    print("combined rows :", f"{len(all_df):,}")
+    print("symbols       :", all_df["symbol"].nunique())
+    print("date range    :", all_df["date"].min(), "->", all_df["date"].max())
+    print("file size     : %.2f MB" % mb)
+    print("saved to      :", dest)
+    print()
+    print("NEXT (no token needed):")
+    print("  1. In Drive, find the file: ArthaSaar_us/global_combined.parquet")
+    print("  2. Download it")
+    print("  3. Open github.com/devrajai/ArthaSaar/tree/main/data/yahoo")
+    print("  4. 'Add file' -> 'Upload files' -> drag it in -> Commit")
+    print()
+    if mb > 20:
+        print("NOTE: %.1f MB is close to GitHub's web-upload limit; the per-symbol" % mb)
+        print("      route via cell 7 is better if you can get a token working.")
 

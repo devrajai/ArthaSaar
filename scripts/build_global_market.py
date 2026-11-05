@@ -39,8 +39,49 @@ SECTORS = [("XLK", "Technology", "growth"), ("XLC", "Communication", "growth"),
 MEGA = ["NVDA", "MSFT", "AAPL", "GOOGL", "AMZN", "META", "AVGO", "TSLA", "AMD", "PLTR"]
 
 
+_COMBINED = {"df": None, "tried": False}
+
+
+def _combined():
+    """The single-file route: one parquet with a symbol column, uploaded by hand.
+
+    This exists so the site can use the data without a GitHub token. If it is present it
+    takes precedence for any symbol missing from the per-file layout.
+    """
+    if _COMBINED["tried"]:
+        return _COMBINED["df"]
+    _COMBINED["tried"] = True
+    import pandas as pd
+    for name in ("global_combined.parquet", "us_combined.parquet"):
+        p = os.path.join(YAHOO, name)
+        if not os.path.exists(p):
+            continue
+        try:
+            df = pd.read_parquet(p)
+            cols = {c.lower(): c for c in df.columns}
+            if "symbol" in cols and "close" in cols:
+                _COMBINED["df"] = df
+                print("  combined file found: %s (%d rows, %d symbols)"
+                      % (name, len(df), df[cols["symbol"]].nunique()))
+                return df
+        except Exception:
+            continue
+    return None
+
+
 def load(sym):
     import pandas as pd
+    cdf = _combined()
+    if cdf is not None:
+        try:
+            cols = {c.lower(): c for c in cdf.columns}
+            sub = cdf[cdf[cols["symbol"]] == sym]
+            if not sub.empty:
+                return {str(d)[:10]: float(c)
+                        for d, c in zip(sub[cols["date"]], sub[cols["close"]])
+                        if c == c}
+        except Exception:
+            pass
     safe = sym.replace("^", "_IDX_").replace("=", "_EQ_").replace(".", "_")
     for name in (safe + ".parquet", "us_" + safe + ".parquet", sym + ".parquet"):
         p = os.path.join(YAHOO, name)

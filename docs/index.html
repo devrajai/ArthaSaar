@@ -2704,6 +2704,26 @@ function build(d){
   /* ---------- F&O ---------- */
   (function(){
     var v=sec("fno");
+    // ---- circuit limits / price bands (NSE bhavcopy) ---------------------------
+    (function(){
+      try{
+        if(typeof CIRCUITS==="undefined"||!CIRCUITS||!CIRCUITS.date) return;
+        var kids=[];
+        kids.push(para("Upper circuit = the close locked at the day's high, so there were no sellers left. Lower = locked at the low. The band is implied from how far it moved.", false));
+        if((CIRCUITS.uc||[]).length){
+          kids.push(para("Upper circuit \u00b7 "+CIRCUITS.n_uc+" stocks", false));
+          kids.push(tbl({columns:["symbol","close","move"], rows:CIRCUITS.uc.slice(0,12).map(function(x){return [x.s,x.c,(x.p>0?"+":"")+x.p+"%"];})}, ["close"]));
+        }
+        if((CIRCUITS.lc||[]).length){
+          kids.push(para("Lower circuit \u00b7 "+CIRCUITS.n_lc+" stocks", false));
+          kids.push(tbl({columns:["symbol","close","move"], rows:CIRCUITS.lc.slice(0,12).map(function(x){return [x.s,x.c,(x.p>0?"+":"")+x.p+"%"];})}, ["close"]));
+        }
+        v.appendChild(card("Circuit limits \u00b7 "+CIRCUITS.date, CIRCUITS.n_uc+" upper \u00b7 "+CIRCUITS.n_lc+" lower", kids,
+          {what:"Which stocks were locked at their upper or lower price band today, and how wide that band is.",
+           source:"NSE bhavcopy (the exchange's own end-of-day file).", updated:CIRCUITS.updated, note:CIRCUITS.note}));
+      }catch(e){}
+    })();
+
     // ---- option-writing walls: daily, and tested ------------------------------------
     // The guide this comes from is an INTRADAY indicator on 1-3 minute charts. That cannot
     // be built free: our F&O source is the end-of-day bhavcopy, Yahoo serves intraday price
@@ -5092,7 +5112,7 @@ function assign(name, v){
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
-    case "fo_ban.json": FOBAN=v; break;
+    case "fo_ban.json": FOBAN=v; break;     case "circuits.json": CIRCUITS=v; break;
     case "stocks.json": STOCKS=v; break;
     case "universe.json": UNIVERSE=v; break;
     case "screener.json": SCREENER=v; break;
@@ -5135,8 +5155,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json"];
 
 function renderAll(){
   if(!DATA) return;

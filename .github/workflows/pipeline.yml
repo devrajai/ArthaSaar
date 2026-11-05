@@ -370,6 +370,10 @@ jobs:
       - name: "7m2zc. Event-day study"
         run: python scripts/build_events.py || true
 
+      # Two-sided outcome distributions after a similar session.
+      - name: "7m2zd. Scenario distributions"
+        run: python scripts/build_scenarios.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

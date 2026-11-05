@@ -1,26 +1,16 @@
 {
   "model": "TimesFM 2.5 200M (zero-shot)",
-  "updated": "2026-11-04T21:12:28Z",
+  "updated": "2026-11-05T21:26:28Z",
   "horizon_days": 21,
   "series": 73,
   "forecasts": [
     {
-      "symbol": "LICHSGFIN",
-      "name": "LICHSGFIN",
-      "last": 490.0,
-      "median_chg_pct": 9.64,
-      "low10_chg_pct": -1.06,
-      "high90_chg_pct": 19.54,
-      "confidence": 18,
-      "direction": "up"
-    },
-    {
-      "symbol": "YESBANK",
-      "name": "YESBANK",
-      "last": 15.8,
-      "median_chg_pct": 8.38,
-      "low10_chg_pct": -9.67,
-      "high90_chg_pct": 34.51,
+      "symbol": "FCL",
+      "name": "FCL",
+      "last": 49.12,
+      "median_chg_pct": 8.1,
+      "low10_chg_pct": -17.09,
+      "high90_chg_pct": 33.81,
       "confidence": 0,
       "direction": "up"
     },
@@ -45,6 +35,16 @@
       "direction": "up"
     },
     {
+      "symbol": "VAIBHAVGBL",
+      "name": "VAIBHAVGBL",
+      "last": 187.48,
+      "median_chg_pct": 6.76,
+      "low10_chg_pct": -8.8,
+      "high90_chg_pct": 25.44,
+      "confidence": 0,
+      "direction": "up"
+    },
+    {
       "symbol": "VEDL",
       "name": "VEDL",
       "last": 226.5,
@@ -55,43 +55,53 @@
       "direction": "up"
     },
     {
-      "symbol": "ACCELYA",
-      "name": "ACCELYA",
-      "last": 952.1,
-      "median_chg_pct": 6.09,
-      "low10_chg_pct": -8.8,
-      "high90_chg_pct": 18.69,
+      "symbol": "GOLDIAM",
+      "name": "GOLDIAM",
+      "last": 290.35,
+      "median_chg_pct": 5.62,
+      "low10_chg_pct": -9.91,
+      "high90_chg_pct": 27.8,
       "confidence": 0,
       "direction": "up"
     },
     {
-      "symbol": "HCLTECH",
-      "name": "HCLTECH",
-      "last": 1422.2,
-      "median_chg_pct": 3.89,
-      "low10_chg_pct": -9.73,
-      "high90_chg_pct": 15.48,
+      "symbol": "TIMETECHNO",
+      "name": "TIMETECHNO",
+      "last": 157.06,
+      "median_chg_pct": 4.94,
+      "low10_chg_pct": -10.47,
+      "high90_chg_pct": 20.12,
       "confidence": 0,
       "direction": "up"
     },
     {
-      "symbol": "GSFC",
-      "name": "GSFC",
-      "last": 135.02,
-      "median_chg_pct": 3.82,
-      "low10_chg_pct": -8.28,
-      "high90_chg_pct": 16.45,
-      "confidence": 1,
+      "symbol": "GREENLAM",
+      "name": "GREENLAM",
+      "last": 211.95,
+      "median_chg_pct": 4.54,
+      "low10_chg_pct": -5.97,
+      "high90_chg_pct": 17.02,
+      "confidence": 8,
       "direction": "up"
     },
     {
-      "symbol": "LALPATHLAB",
-      "name": "LALPATHLAB",
-      "last": 1838.2,
-      "median_chg_pct": 3.62,
-      "low10_chg_pct": -5.0,
-      "high90_chg_pct": 12.31,
+      "symbol": "^IXIC",
+      "name": "Nasdaq",
+      "last": 24315.0,
+      "median_chg_pct": 3.75,
+      "low10_chg_pct": -6.12,
+      "high90_chg_pct": 11.17,
       "confidence": 31,
+      "direction": "up"
+    },
+    {
+      "symbol": "^GSPC",
+      "name": "S&P 500",
+      "last": 7353.73,
+      "median_chg_pct": 3.72,
+      "low10_chg_pct": -1.93,
+      "high90_chg_pct": 7.53,
+      "confidence": 62,
       "direction": "up"
     },
     {
@@ -105,13 +115,33 @@
       "direction": "up"
     },
     {
-      "symbol": "LAURUSLABS",
-      "name": "LAURUSLABS",
-      "last": 1970.0,
-      "median_chg_pct": 3.4,
-      "low10_chg_pct": -7.47,
-      "high90_chg_pct": 14.78,
-      "confidence": 11,
+      "symbol": "TIIL",
+      "name": "TIIL",
+      "last": 2507.6,
+      "median_chg_pct": 3.14,
+      "low10_chg_pct": -8.63,
+      "high90_chg_pct": 18.78,
+      "confidence": 0,
+      "direction": "up"
+    },
+    {
+      "symbol": "ULTRACEMCO",
+      "name": "ULTRACEMCO",
+      "last": 11050.0,
+      "median_chg_pct": 2.91,
+      "low10_chg_pct": -4.34,
+      "high90_chg_pct": 10.72,
+      "confidence": 40,
+      "direction": "up"
+    },
+    {
+      "symbol": "^DJI",
+      "name": "Dow Jones",
+      "last": 51523.06,
+      "median_chg_pct": 2.51,
+      "low10_chg_pct": -0.82,
+      "high90_chg_pct": 5.41,
+      "confidence": 75,
       "direction": "up"
     },
     {
@@ -125,86 +155,6 @@
       "direction": "up"
     },
     {
-      "symbol": "LEMONTREE",
-      "name": "LEMONTREE",
-      "last": 108.94,
-      "median_chg_pct": 2.36,
-      "low10_chg_pct": -5.97,
-      "high90_chg_pct": 13.57,
-      "confidence": 22,
-      "direction": "up"
-    },
-    {
-      "symbol": "HDFCAMC",
-      "name": "HDFCAMC",
-      "last": 2250.0,
-      "median_chg_pct": 2.19,
-      "low10_chg_pct": -7.3,
-      "high90_chg_pct": 17.22,
-      "confidence": 2,
-      "direction": "up"
-    },
-    {
-      "symbol": "EIHOTEL",
-      "name": "EIHOTEL",
-      "last": 288.1,
-      "median_chg_pct": 2.17,
-      "low10_chg_pct": -7.95,
-      "high90_chg_pct": 13.36,
-      "confidence": 15,
-      "direction": "up"
-    },
-    {
-      "symbol": "VLSFINANCE",
-      "name": "VLSFINANCE",
-      "last": 198.02,
-      "median_chg_pct": 2.14,
-      "low10_chg_pct": -14.11,
-      "high90_chg_pct": 42.61,
-      "confidence": 0,
-      "direction": "up"
-    },
-    {
-      "symbol": "ZEEL",
-      "name": "ZEEL",
-      "last": 65.42,
-      "median_chg_pct": 2.11,
-      "low10_chg_pct": -17.9,
-      "high90_chg_pct": 32.89,
-      "confidence": 0,
-      "direction": "up"
-    },
-    {
-      "symbol": "LINDEINDIA",
-      "name": "LINDEINDIA",
-      "last": 5723.5,
-      "median_chg_pct": 2.1,
-      "low10_chg_pct": -6.38,
-      "high90_chg_pct": 14.43,
-      "confidence": 17,
-      "direction": "up"
-    },
-    {
-      "symbol": "HDFCBANK",
-      "name": "HDFCBANK",
-      "last": 692.8,
-      "median_chg_pct": 2.0,
-      "low10_chg_pct": -6.26,
-      "high90_chg_pct": 12.24,
-      "confidence": 26,
-      "direction": "up"
-    },
-    {
-      "symbol": "HDFCLIFE",
-      "name": "HDFCLIFE",
-      "last": 523.75,
-      "median_chg_pct": 1.91,
-      "low10_chg_pct": -4.43,
-      "high90_chg_pct": 10.65,
-      "confidence": 40,
-      "direction": "up"
-    },
-    {
       "symbol": "WSTCSTPAPR",
       "name": "WSTCSTPAPR",
       "last": 797.45,
@@ -215,102 +165,142 @@
       "direction": "up"
     },
     {
-      "symbol": "VSTTILLERS",
-      "name": "VSTTILLERS",
-      "last": 3896.6,
-      "median_chg_pct": 1.79,
-      "low10_chg_pct": -11.43,
-      "high90_chg_pct": 16.68,
+      "symbol": "WHIRLPOOL",
+      "name": "WHIRLPOOL",
+      "last": 790.45,
+      "median_chg_pct": 1.68,
+      "low10_chg_pct": -12.77,
+      "high90_chg_pct": 19.65,
       "confidence": 0,
       "direction": "up"
     },
     {
-      "symbol": "VMART",
-      "name": "VMART",
-      "last": 777.2,
-      "median_chg_pct": 1.64,
-      "low10_chg_pct": -12.82,
-      "high90_chg_pct": 17.71,
+      "symbol": "AAVAS",
+      "name": "AAVAS",
+      "last": 1114.1,
+      "median_chg_pct": 1.65,
+      "low10_chg_pct": -11.91,
+      "high90_chg_pct": 17.25,
       "confidence": 0,
       "direction": "up"
     },
     {
-      "symbol": "LGBBROSLTD",
-      "name": "LGBBROSLTD",
-      "last": 1644.2,
-      "median_chg_pct": 1.63,
-      "low10_chg_pct": -5.97,
-      "high90_chg_pct": 9.92,
-      "confidence": 36,
+      "symbol": "WIPRO",
+      "name": "WIPRO",
+      "last": 189.84,
+      "median_chg_pct": 1.57,
+      "low10_chg_pct": -11.2,
+      "high90_chg_pct": 18.69,
+      "confidence": 0,
+      "direction": "up"
+    },
+    {
+      "symbol": "AHLUCONT",
+      "name": "AHLUCONT",
+      "last": 540.15,
+      "median_chg_pct": 1.57,
+      "low10_chg_pct": -16.93,
+      "high90_chg_pct": 24.11,
+      "confidence": 0,
       "direction": "up"
     },
     {
       "symbol": "^N225",
       "name": "Nikkei 225",
-      "last": 63081.86,
-      "median_chg_pct": 1.56,
-      "low10_chg_pct": -8.72,
-      "high90_chg_pct": 12.08,
-      "confidence": 17,
+      "last": 62188.63,
+      "median_chg_pct": 1.49,
+      "low10_chg_pct": -9.0,
+      "high90_chg_pct": 12.26,
+      "confidence": 15,
       "direction": "up"
     },
     {
-      "symbol": "EIHAHOTELS",
-      "name": "EIHAHOTELS",
-      "last": 277.95,
-      "median_chg_pct": 1.53,
-      "low10_chg_pct": -7.15,
-      "high90_chg_pct": 11.72,
-      "confidence": 25,
-      "direction": "up"
-    },
-    {
-      "symbol": "ADVENZYMES",
-      "name": "ADVENZYMES",
-      "last": 248.35,
+      "symbol": "UPL",
+      "name": "UPL",
+      "last": 508.65,
       "median_chg_pct": 1.46,
-      "low10_chg_pct": -10.49,
-      "high90_chg_pct": 17.77,
+      "low10_chg_pct": -9.1,
+      "high90_chg_pct": 15.61,
+      "confidence": 1,
+      "direction": "up"
+    },
+    {
+      "symbol": "GODREJCP",
+      "name": "GODREJCP",
+      "last": 856.35,
+      "median_chg_pct": 1.28,
+      "low10_chg_pct": -6.93,
+      "high90_chg_pct": 12.5,
+      "confidence": 22,
+      "direction": "up"
+    },
+    {
+      "symbol": "^FTSE",
+      "name": "FTSE 100",
+      "last": 10782.66,
+      "median_chg_pct": 1.28,
+      "low10_chg_pct": -1.13,
+      "high90_chg_pct": 3.47,
+      "confidence": 82,
+      "direction": "up"
+    },
+    {
+      "symbol": "FACT",
+      "name": "FACT",
+      "last": 670.7,
+      "median_chg_pct": 1.09,
+      "low10_chg_pct": -12.8,
+      "high90_chg_pct": 21.12,
       "confidence": 0,
       "direction": "up"
     },
     {
-      "symbol": "VIDHIING",
-      "name": "VIDHIING",
-      "last": 318.6,
-      "median_chg_pct": 1.41,
-      "low10_chg_pct": -8.08,
-      "high90_chg_pct": 13.01,
-      "confidence": 16,
-      "direction": "up"
-    },
-    {
-      "symbol": "^IXIC",
-      "name": "Nasdaq",
-      "last": 25736.51,
-      "median_chg_pct": 1.2,
-      "low10_chg_pct": -5.27,
-      "high90_chg_pct": 6.7,
-      "confidence": 52,
-      "direction": "up"
-    },
-    {
-      "symbol": "LTTS",
-      "name": "LTTS",
-      "last": 3910.3,
-      "median_chg_pct": 1.1,
-      "low10_chg_pct": -13.89,
-      "high90_chg_pct": 17.18,
+      "symbol": "WENDT",
+      "name": "WENDT",
+      "last": 7092.0,
+      "median_chg_pct": 0.92,
+      "low10_chg_pct": -14.46,
+      "high90_chg_pct": 21.04,
       "confidence": 0,
       "direction": "up"
     },
     {
-      "symbol": "VRLLOG",
-      "name": "VRLLOG",
-      "last": 260.1,
-      "median_chg_pct": 1.05,
-      "low10_chg_pct": -10.48,
-      "high90_chg_pct": 16.79,
+      "symbol": "^NSEBANK",
+      "name": "Bank Nifty",
+      "last": 55913.6,
+      "median_chg_pct": 0.85,
+      "low10_chg_pct": -4.57,
+      "high90_chg_pct": 5.61,
+      "confidence": 59,
+      "direction": "up"
+    },
+    {
+      "symbol": "GC=F",
+      "name": "Gold",
+      "last": 4099.7,
+      "median_chg_pct": 0.79,
+      "low10_chg_pct": -7.56,
+      "high90_chg_pct": 10.02,
+      "confidence": 30,
+      "direction": "up"
+    },
+    {
+      "symbol": "GODREJPROP",
+      "name": "GODREJPROP",
+      "last": 1496.5,
+      "median_chg_pct": 0.77,
+      "low10_chg_pct": -18.18,
+      "high90_chg_pct": 19.36,
+      "confidence": 0,
+      "direction": "up"
+    },
+    {
+      "symbol": "UFLEX",
+      "name": "UFLEX",
+      "last": 556.95,
+      "median_chg_pct": 0.74,
+      "low10_chg_pct": -16.2,
+      "high90_chg_pct": 18.71,
       "confidence": 0,
       "direction": "up"
     },
@@ -325,63 +315,23 @@
       "direction": "up"
     },
     {
+      "symbol": "GODREJAGRO",
+      "name": "GODREJAGRO",
+      "last": 607.5,
+      "median_chg_pct": 0.66,
+      "low10_chg_pct": -8.15,
+      "high90_chg_pct": 10.94,
+      "confidence": 24,
+      "direction": "up"
+    },
+    {
       "symbol": "^NSEI",
       "name": "Nifty 50",
-      "last": 23810.85,
-      "median_chg_pct": 0.71,
-      "low10_chg_pct": -4.57,
-      "high90_chg_pct": 5.62,
-      "confidence": 59,
-      "direction": "up"
-    },
-    {
-      "symbol": "^NSEBANK",
-      "name": "Bank Nifty",
-      "last": 55540.05,
-      "median_chg_pct": 0.71,
-      "low10_chg_pct": -4.57,
-      "high90_chg_pct": 5.67,
-      "confidence": 59,
-      "direction": "up"
-    },
-    {
-      "symbol": "LT",
-      "name": "LT",
-      "last": 3647.0,
-      "median_chg_pct": 0.69,
-      "low10_chg_pct": -5.9,
-      "high90_chg_pct": 7.57,
-      "confidence": 46,
-      "direction": "up"
-    },
-    {
-      "symbol": "^FTSE",
-      "name": "FTSE 100",
-      "last": 10829.21,
-      "median_chg_pct": 0.61,
-      "low10_chg_pct": -1.99,
-      "high90_chg_pct": 2.96,
-      "confidence": 80,
-      "direction": "up"
-    },
-    {
-      "symbol": "^DJI",
-      "name": "Dow Jones",
-      "last": 53356.12,
-      "median_chg_pct": 0.57,
-      "low10_chg_pct": -2.59,
-      "high90_chg_pct": 3.43,
-      "confidence": 76,
-      "direction": "up"
-    },
-    {
-      "symbol": "^GSPC",
-      "name": "S&P 500",
-      "last": 7688.62,
-      "median_chg_pct": 0.54,
-      "low10_chg_pct": -2.95,
-      "high90_chg_pct": 3.48,
-      "confidence": 74,
+      "last": 23960.6,
+      "median_chg_pct": 0.53,
+      "low10_chg_pct": -4.84,
+      "high90_chg_pct": 5.23,
+      "confidence": 60,
       "direction": "up"
     },
     {
@@ -395,6 +345,16 @@
       "direction": "up"
     },
     {
+      "symbol": "GOCLCORP",
+      "name": "GOCLCORP",
+      "last": 321.25,
+      "median_chg_pct": 0.38,
+      "low10_chg_pct": -13.97,
+      "high90_chg_pct": 21.3,
+      "confidence": 0,
+      "direction": "up"
+    },
+    {
       "symbol": "VESUVIUS",
       "name": "VESUVIUS",
       "last": 393.6,
@@ -402,6 +362,26 @@
       "low10_chg_pct": -11.73,
       "high90_chg_pct": 19.18,
       "confidence": 0,
+      "direction": "up"
+    },
+    {
+      "symbol": "GOKEX",
+      "name": "GOKEX",
+      "last": 674.4,
+      "median_chg_pct": 0.34,
+      "low10_chg_pct": -15.33,
+      "high90_chg_pct": 18.93,
+      "confidence": 0,
+      "direction": "up"
+    },
+    {
+      "symbol": "^HSI",
+      "name": "Hang Seng",
+      "last": 23919.5,
+      "median_chg_pct": 0.33,
+      "low10_chg_pct": -7.48,
+      "high90_chg_pct": 7.49,
+      "confidence": 40,
       "direction": "up"
     },
     {
@@ -415,33 +395,43 @@
       "direction": "up"
     },
     {
-      "symbol": "HEIDELBERG",
-      "name": "HEIDELBERG",
-      "last": 118.4,
-      "median_chg_pct": 0.13,
-      "low10_chg_pct": -12.99,
-      "high90_chg_pct": 13.98,
-      "confidence": 0,
+      "symbol": "FDC",
+      "name": "FDC",
+      "last": 338.7,
+      "median_chg_pct": 0.16,
+      "low10_chg_pct": -11.68,
+      "high90_chg_pct": 12.8,
+      "confidence": 2,
       "direction": "flat"
     },
     {
       "symbol": "INR=X",
       "name": "USD/INR",
-      "last": 94.63,
-      "median_chg_pct": 0.13,
-      "low10_chg_pct": -1.78,
-      "high90_chg_pct": 2.09,
-      "confidence": 85,
+      "last": 94.46,
+      "median_chg_pct": 0.15,
+      "low10_chg_pct": -1.79,
+      "high90_chg_pct": 2.13,
+      "confidence": 84,
       "direction": "flat"
     },
     {
-      "symbol": "^HSI",
-      "name": "Hang Seng",
-      "last": 23525.97,
-      "median_chg_pct": 0.12,
-      "low10_chg_pct": -7.32,
-      "high90_chg_pct": 7.54,
-      "confidence": 41,
+      "symbol": "USHAMART",
+      "name": "USHAMART",
+      "last": 460.05,
+      "median_chg_pct": 0.11,
+      "low10_chg_pct": -10.67,
+      "high90_chg_pct": 10.91,
+      "confidence": 14,
+      "direction": "flat"
+    },
+    {
+      "symbol": "WONDERLA",
+      "name": "WONDERLA",
+      "last": 469.3,
+      "median_chg_pct": 0.1,
+      "low10_chg_pct": -6.89,
+      "high90_chg_pct": 8.59,
+      "confidence": 38,
       "direction": "flat"
     },
     {
@@ -455,54 +445,14 @@
       "direction": "flat"
     },
     {
-      "symbol": "LIQUIDETF",
-      "name": "LIQUIDETF",
-      "last": 999.99,
-      "median_chg_pct": 0.0,
-      "low10_chg_pct": -0.0,
-      "high90_chg_pct": 0.0,
-      "confidence": 100,
-      "direction": "flat"
-    },
-    {
-      "symbol": "LIQUIDBEES",
-      "name": "LIQUIDBEES",
-      "last": 1000.0,
-      "median_chg_pct": -0.0,
-      "low10_chg_pct": -0.0,
-      "high90_chg_pct": 0.0,
-      "confidence": 100,
-      "direction": "flat"
-    },
-    {
-      "symbol": "VIPIND",
-      "name": "VIPIND",
-      "last": 264.5,
-      "median_chg_pct": -0.14,
-      "low10_chg_pct": -10.42,
-      "high90_chg_pct": 10.48,
-      "confidence": 16,
-      "direction": "flat"
-    },
-    {
-      "symbol": "GRSE",
-      "name": "GRSE",
-      "last": 1861.0,
-      "median_chg_pct": -0.15,
-      "low10_chg_pct": -17.21,
-      "high90_chg_pct": 25.42,
-      "confidence": 0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "GC=F",
-      "name": "Gold",
-      "last": 4073.6,
-      "median_chg_pct": -0.31,
-      "low10_chg_pct": -8.63,
-      "high90_chg_pct": 9.64,
+      "symbol": "AJANTPHARM",
+      "name": "AJANTPHARM",
+      "last": 3283.9,
+      "median_chg_pct": -0.06,
+      "low10_chg_pct": -8.87,
+      "high90_chg_pct": 9.27,
       "confidence": 27,
-      "direction": "down"
+      "direction": "flat"
     },
     {
       "symbol": "UNIONBANK",
@@ -515,13 +465,23 @@
       "direction": "down"
     },
     {
-      "symbol": "VSTIND",
-      "name": "VSTIND",
-      "last": 197.15,
-      "median_chg_pct": -0.37,
-      "low10_chg_pct": -5.87,
-      "high90_chg_pct": 10.25,
-      "confidence": 36,
+      "symbol": "GODREJIND",
+      "name": "GODREJIND",
+      "last": 925.7,
+      "median_chg_pct": -0.38,
+      "low10_chg_pct": -13.12,
+      "high90_chg_pct": 19.76,
+      "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "GODFRYPHLP",
+      "name": "GODFRYPHLP",
+      "last": 1669.0,
+      "median_chg_pct": -0.53,
+      "low10_chg_pct": -19.18,
+      "high90_chg_pct": 17.47,
+      "confidence": 0,
       "direction": "down"
     },
     {
@@ -535,53 +495,103 @@
       "direction": "down"
     },
     {
-      "symbol": "VTL",
-      "name": "VTL",
-      "last": 501.45,
-      "median_chg_pct": -1.3,
-      "low10_chg_pct": -12.01,
-      "high90_chg_pct": 10.17,
-      "confidence": 11,
-      "direction": "down"
-    },
-    {
-      "symbol": "ADANIPORTS",
-      "name": "ADANIPORTS",
-      "last": 1702.7,
-      "median_chg_pct": -1.33,
-      "low10_chg_pct": -9.35,
-      "high90_chg_pct": 5.78,
-      "confidence": 39,
-      "direction": "down"
-    },
-    {
-      "symbol": "VOLTAS",
-      "name": "VOLTAS",
-      "last": 950.0,
-      "median_chg_pct": -1.54,
-      "low10_chg_pct": -14.92,
-      "high90_chg_pct": 15.5,
+      "symbol": "GREAVESCOT",
+      "name": "GREAVESCOT",
+      "last": 183.52,
+      "median_chg_pct": -0.71,
+      "low10_chg_pct": -16.61,
+      "high90_chg_pct": 20.16,
       "confidence": 0,
       "direction": "down"
     },
     {
-      "symbol": "LAOPALA",
-      "name": "LAOPALA",
-      "last": 142.0,
-      "median_chg_pct": -1.79,
-      "low10_chg_pct": -17.69,
-      "high90_chg_pct": 16.17,
+      "symbol": "GRINDWELL",
+      "name": "GRINDWELL",
+      "last": 1846.9,
+      "median_chg_pct": -0.72,
+      "low10_chg_pct": -12.17,
+      "high90_chg_pct": 14.13,
       "confidence": 0,
       "direction": "down"
     },
     {
-      "symbol": "EIDPARRY",
-      "name": "EIDPARRY",
-      "last": 627.5,
-      "median_chg_pct": -1.98,
-      "low10_chg_pct": -18.57,
-      "high90_chg_pct": 14.34,
+      "symbol": "BTC-USD",
+      "name": "Bitcoin",
+      "last": 75649.6,
+      "median_chg_pct": -1.02,
+      "low10_chg_pct": -12.7,
+      "high90_chg_pct": 11.81,
+      "confidence": 2,
+      "direction": "down"
+    },
+    {
+      "symbol": "GOLDBEES",
+      "name": "GOLDBEES",
+      "last": 115.9,
+      "median_chg_pct": -1.09,
+      "low10_chg_pct": -9.26,
+      "high90_chg_pct": 8.78,
+      "confidence": 28,
+      "direction": "down"
+    },
+    {
+      "symbol": "AIAENG",
+      "name": "AIAENG",
+      "last": 3579.2,
+      "median_chg_pct": -1.1,
+      "low10_chg_pct": -11.37,
+      "high90_chg_pct": 13.27,
+      "confidence": 1,
+      "direction": "down"
+    },
+    {
+      "symbol": "VADILALIND",
+      "name": "VADILALIND",
+      "last": 6958.0,
+      "median_chg_pct": -1.11,
+      "low10_chg_pct": -11.49,
+      "high90_chg_pct": 8.86,
+      "confidence": 19,
+      "direction": "down"
+    },
+    {
+      "symbol": "TIINDIA",
+      "name": "TIINDIA",
+      "last": 2080.0,
+      "median_chg_pct": -1.13,
+      "low10_chg_pct": -18.7,
+      "high90_chg_pct": 17.34,
       "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "UNICHEMLAB",
+      "name": "UNICHEMLAB",
+      "last": 472.95,
+      "median_chg_pct": -1.32,
+      "low10_chg_pct": -16.55,
+      "high90_chg_pct": 19.72,
+      "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "GNA",
+      "name": "GNA",
+      "last": 517.6,
+      "median_chg_pct": -1.91,
+      "low10_chg_pct": -17.68,
+      "high90_chg_pct": 13.22,
+      "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "UNIENTER",
+      "name": "UNIENTER",
+      "last": 81.51,
+      "median_chg_pct": -1.93,
+      "low10_chg_pct": -11.23,
+      "high90_chg_pct": 8.64,
+      "confidence": 21,
       "direction": "down"
     },
     {
@@ -595,33 +605,13 @@
       "direction": "down"
     },
     {
-      "symbol": "ADFFOODS",
-      "name": "ADFFOODS",
-      "last": 235.0,
-      "median_chg_pct": -2.11,
-      "low10_chg_pct": -14.9,
-      "high90_chg_pct": 12.4,
+      "symbol": "EXIDEIND",
+      "name": "EXIDEIND",
+      "last": 331.95,
+      "median_chg_pct": -2.08,
+      "low10_chg_pct": -20.83,
+      "high90_chg_pct": 17.66,
       "confidence": 0,
-      "direction": "down"
-    },
-    {
-      "symbol": "ZENSARTECH",
-      "name": "ZENSARTECH",
-      "last": 493.7,
-      "median_chg_pct": -2.26,
-      "low10_chg_pct": -14.19,
-      "high90_chg_pct": 13.58,
-      "confidence": 0,
-      "direction": "down"
-    },
-    {
-      "symbol": "BTC-USD",
-      "name": "Bitcoin",
-      "last": 80215.99,
-      "median_chg_pct": -2.37,
-      "low10_chg_pct": -12.98,
-      "high90_chg_pct": 9.48,
-      "confidence": 10,
       "direction": "down"
     },
     {
@@ -645,12 +635,12 @@
       "direction": "down"
     },
     {
-      "symbol": "VOLTAMP",
-      "name": "VOLTAMP",
-      "last": 9615.0,
-      "median_chg_pct": -2.67,
-      "low10_chg_pct": -17.67,
-      "high90_chg_pct": 13.52,
+      "symbol": "CL=F",
+      "name": "Crude Oil",
+      "last": 90.7,
+      "median_chg_pct": -2.52,
+      "low10_chg_pct": -19.98,
+      "high90_chg_pct": 16.82,
       "confidence": 0,
       "direction": "down"
     },
@@ -665,52 +655,32 @@
       "direction": "down"
     },
     {
-      "symbol": "WABAG",
-      "name": "WABAG",
-      "last": 1710.4,
-      "median_chg_pct": -3.2,
-      "low10_chg_pct": -20.35,
-      "high90_chg_pct": 16.13,
+      "symbol": "GMDCLTD",
+      "name": "GMDCLTD",
+      "last": 424.6,
+      "median_chg_pct": -3.16,
+      "low10_chg_pct": -20.31,
+      "high90_chg_pct": 17.99,
       "confidence": 0,
       "direction": "down"
     },
     {
-      "symbol": "CL=F",
-      "name": "Crude Oil",
-      "last": 88.58,
-      "median_chg_pct": -3.49,
-      "low10_chg_pct": -21.81,
-      "high90_chg_pct": 17.4,
+      "symbol": "WELCORP",
+      "name": "WELCORP",
+      "last": 2388.7,
+      "median_chg_pct": -3.22,
+      "low10_chg_pct": -17.53,
+      "high90_chg_pct": 14.55,
       "confidence": 0,
       "direction": "down"
     },
     {
-      "symbol": "HCG",
-      "name": "HCG",
-      "last": 549.65,
-      "median_chg_pct": -3.52,
-      "low10_chg_pct": -16.72,
-      "high90_chg_pct": 14.53,
-      "confidence": 0,
-      "direction": "down"
-    },
-    {
-      "symbol": "VINATIORGA",
-      "name": "VINATIORGA",
-      "last": 1070.9,
-      "median_chg_pct": -4.19,
-      "low10_chg_pct": -15.75,
-      "high90_chg_pct": 7.97,
-      "confidence": 5,
-      "direction": "down"
-    },
-    {
-      "symbol": "VINDHYATEL",
-      "name": "VINDHYATEL",
-      "last": 2476.5,
-      "median_chg_pct": -5.6,
-      "low10_chg_pct": -29.68,
-      "high90_chg_pct": 18.99,
+      "symbol": "WHEELS",
+      "name": "WHEELS",
+      "last": 2157.8,
+      "median_chg_pct": -5.0,
+      "low10_chg_pct": -24.58,
+      "high90_chg_pct": 23.36,
       "confidence": 0,
       "direction": "down"
     },
@@ -727,10 +697,40 @@
     {
       "symbol": "^INDIAVIX",
       "name": "India VIX",
-      "last": 15.72,
-      "median_chg_pct": -6.03,
-      "low10_chg_pct": -26.88,
-      "high90_chg_pct": 29.58,
+      "last": 15.19,
+      "median_chg_pct": -5.81,
+      "low10_chg_pct": -25.99,
+      "high90_chg_pct": 27.39,
+      "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "GMMPFAUDLR",
+      "name": "GMMPFAUDLR",
+      "last": 1211.0,
+      "median_chg_pct": -6.2,
+      "low10_chg_pct": -19.55,
+      "high90_chg_pct": 13.47,
+      "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "WELENT",
+      "name": "WELENT",
+      "last": 633.95,
+      "median_chg_pct": -10.83,
+      "low10_chg_pct": -26.32,
+      "high90_chg_pct": 9.62,
+      "confidence": 0,
+      "direction": "down"
+    },
+    {
+      "symbol": "UNIVCABLES",
+      "name": "UNIVCABLES",
+      "last": 1319.5,
+      "median_chg_pct": -14.49,
+      "low10_chg_pct": -32.65,
+      "high90_chg_pct": 8.81,
       "confidence": 0,
       "direction": "down"
     }
@@ -738,11 +738,11 @@
   "nifty": {
     "symbol": "^NSEI",
     "name": "Nifty 50",
-    "last": 23810.85,
-    "median_chg_pct": 0.71,
-    "low10_chg_pct": -4.57,
-    "high90_chg_pct": 5.62,
-    "confidence": 59,
+    "last": 23960.6,
+    "median_chg_pct": 0.53,
+    "low10_chg_pct": -4.84,
+    "high90_chg_pct": 5.23,
+    "confidence": 60,
     "direction": "up"
   }
 }

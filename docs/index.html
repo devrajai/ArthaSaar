@@ -1153,7 +1153,23 @@ function fmtTime(ts, intraday){
   return intraday ? p(d.getHours())+":"+p(d.getMinutes())
                   : d.getDate()+"/"+(d.getMonth()+1);
 }
-function drawCandles(host, candles, intraday){
+
+// GTI levels for the live chart. gti.json keys stocks without the exchange suffix, so
+// "RELIANCE.NS" has to become "RELIANCE" before the lookup.
+function gtiLevels(sym){
+  try{
+    if(typeof GTI==="undefined" || !GTI || !GTI.stocks || !sym) return [];
+    var base=String(sym).replace(/\.(NS|BO)$/i,"").toUpperCase();
+    var g=GTI.stocks[base] || GTI.stocks[sym];
+    if(!g) return [];
+    var out=[];
+    if(g.vah!=null) out.push({price:g.vah, label:"VAH", col:"#c02b2b"});
+    if(g.poc_daily!=null) out.push({price:g.poc_daily, label:"POC", col:"#1d4ed8"});
+    if(g.val!=null) out.push({price:g.val, label:"VAL", col:"#0a7d43"});
+    return out;
+  }catch(e){ return []; }
+}
+function drawCandles(host, candles, intraday, levels){
   host.innerHTML="";
   var n=candles.length;
   if(!n){ host.appendChild(el("p","msg","No bars returned.")); return; }
@@ -1174,6 +1190,20 @@ function drawCandles(host, candles, intraday){
     var v=lo2+(hi2-lo2)*i/4, y=Y(v);
     s.push('<line class="axis" x1="'+PADL+'" y1="'+y.toFixed(1)+'" x2="'+(W-pad)+'" y2="'+y.toFixed(1)+'"/>');
     s.push('<text class="lbl" x="2" y="'+(y+3).toFixed(1)+'">'+v.toFixed(2)+'</text>');
+  }
+  // GTI overlay: point of control and the value-area edges, drawn as dashed rules so a
+  // reader can see where price sits relative to the day's volume concentration. Only
+  // levels inside the visible window are drawn, otherwise the label would be off-canvas.
+  if(levels && levels.length){
+    levels.forEach(function(lv){
+      if(!lv || lv.price==null || !isFinite(lv.price)) return;
+      if(lv.price<lo2 || lv.price>hi2) return;
+      var y=Y(lv.price);
+      s.push('<line x1="'+PADL+'" y1="'+y.toFixed(1)+'" x2="'+(W-pad)+'" y2="'+y.toFixed(1)+
+             '" stroke="'+lv.col+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.85"/>');
+      s.push('<text x="'+(W-pad-2)+'" y="'+(y-2).toFixed(1)+'" text-anchor="end" '+
+             'font-size="8" fill="'+lv.col+'" opacity="0.95">'+lv.label+' '+lv.price.toFixed(2)+'</text>');
+    });
   }
   for(i=0;i<n;i++){
     c=candles[i];
@@ -1254,7 +1284,7 @@ function liveChart(host, sym){
         }
         out=merged;
       }
-      drawCandles(chartHost, out, iv!=="1d");
+      drawCandles(chartHost, out, iv!=="1d", gtiLevels(sym));
       var last=out.length?out[out.length-1].t:null;
       var lag=last?Math.round((Date.now()/1000-last)):null;
       var mkt=(res.meta&&res.meta.marketState)||"";
@@ -2243,6 +2273,32 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    // ---- early warning of a big move --------------------------------------------------
+    (function(){
+     try{
+      if(!EARLYMOVE||!EARLYMOVE.today) return;
+      var t=EARLYMOVE.today, kids=[];
+      var tone = t.percentile>=80 ? "#c02b2b" : (t.percentile>=50 ? "#b45309" : "#0a7d43");
+      kids.push(para("<b>Score "+t.score+" \u00b7 "+t.percentile+"th percentile</b> \u2014 on "+
+        t.percentile+"% of past days with a setup like this, a move of 1.5% or more followed.", true));
+      kids.push(para("Today's inputs: ATR(14) "+t.features.atr14+"%, 20-day range "+
+        t.features.rng20+"%, distance from the 20-day mean "+t.features.absext+"%, last big day "+
+        t.features.since_big+" session(s) ago.", false));
+      if(EARLYMOVE.lift&&EARLYMOVE.lift.length){
+        kids.push(tbl({columns:["score band","big-day rate","vs base"],
+          rows:EARLYMOVE.lift.map(function(l){
+            return ["top "+l.top_pct+"%", l.big_day_rate_pct+"%", l.lift+"x"];
+          })}));
+      }
+      v.appendChild(card("Early warning of a big move", "base rate "+EARLYMOVE.base_rate_pct+"%",
+        kids,
+        {what:"A probability that a large move is coming, built from volatility, range and how recently the last big day was.",
+         source:"Nifty, 10 years, expanding z-scores so there is no lookahead.", updated:EARLYMOVE.updated,
+         note:"This is not a direction call and not a prediction. It says a large move is more likely, not which way. Even in the top 5% of scores, most days are not big days - a 3.9x lift on a 9.4% base rate is a real edge and still wrong most of the time. The signal is mostly volatility clustering: big days follow big days."}));
+     }catch(e){}
+    })();
+
+
     // ---- where margins are being made and eaten, by sector -----------------------------
     // A single company's margin says little; a whole sector's margin moving together says
     // something structural. The CHANGE matters more than the level.
@@ -4808,6 +4864,7 @@ function assign(name, v){
     case "sector_fund.json": SECF=v; break;
     case "behaviour.json": BEHAV=v; break;
     case "presentations.json": PRES=v; break;
+    case "earlymove.json": EARLYMOVE=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4854,8 +4911,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json"];
 
 function renderAll(){
   if(!DATA) return;

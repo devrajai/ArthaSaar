@@ -362,6 +362,9 @@ jobs:
           PRESENTATION_LIMIT: "40"
           ANNOUNCEMENT_DAYS: "7"
         run: python scripts/fetch_presentations.py || true
+      # Early warning of a big move day, measured on 10 years of Nifty.
+      - name: "7m2zb. Early move warning"
+        run: python scripts/build_earlymove.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.

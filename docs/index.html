@@ -2273,6 +2273,46 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    // ---- which sectors moved, not just the index --------------------------------------
+    (function(){
+     try{
+      if(!GMKT||!GMKT.indices||!GMKT.indices.length) return;
+      var kids=[];
+      kids.push(tbl({columns:["","last","1 day","1 week","1 month"],
+        rows:GMKT.indices.slice(0,10).map(function(x){
+          function f(v){ return v==null?"-":((v>0?"+":"")+v+"%"); }
+          return [esc(x.name), num(x.close), f(x.chg_1d), f(x.chg_1w), f(x.chg_1m)];
+        })}));
+      if(GMKT.rotation){
+        var r=GMKT.rotation;
+        kids.push(para("<b>"+esc(r.kind)+".</b> This week "+esc(r.week_leader)+" led at "+
+          (r.week_leader_pct>0?"+":"")+r.week_leader_pct+"% and "+esc(r.week_laggard)+
+          " lagged at "+r.week_laggard_pct+"%, a spread of "+r.spread_pct+" points. "+
+          "A wide spread means the market was pricing something specific, not selling everything.", true));
+      }
+      if(GMKT.sectors&&GMKT.sectors.length){
+        var srt=GMKT.sectors.slice().filter(function(s){return s.chg_1w!=null;})
+                  .sort(function(a,b){return b.chg_1w-a.chg_1w;});
+        kids.push(tbl({columns:["sector","style","1 week"],
+          rows:srt.map(function(s){
+            return [esc(s.name), esc(s.style), (s.chg_1w>0?"+":"")+s.chg_1w+"%"];
+          })}));
+      }
+      if(GMKT.india_us_corr){
+        var c=GMKT.india_us_corr["last 60 sessions"]||GMKT.india_us_corr.full;
+        if(c) kids.push(para("Nifty versus S&P 500: correlation <b>"+c.correlation+"</b> over "+
+          c.n+" sessions. India does not simply follow the US - a US event is a headwind or a "+
+          "tailwind, not a script.", false));
+      }
+      v.appendChild(card("Global and sector read-through",
+        GMKT.rotation?(GMKT.rotation.spread_pct+" point spread"):"", kids,
+        {what:"Which sectors moved, not just the index. A technology-led fall and an energy-led fall are different events.",
+         source:"US indices, the 11 SPDR sector ETFs and global indices from Yahoo.", updated:GMKT.updated,
+         note:"SPDR ETFs are US-listed proxies - they describe the US sector, not the Indian one. A correlation is a description of the past; India and the US decouple for long stretches when a domestic driver dominates. Yahoo data is delayed and unofficial."}));
+     }catch(e){}
+    })();
+
+
     // ---- both directions, with the sample size ---------------------------------------
     (function(){
      try{
@@ -4976,6 +5016,7 @@ function assign(name, v){
     case "earlymove.json": EARLYMOVE=v; break;
     case "events.json": EVENTS=v; break;
     case "scenarios.json": SCEN=v; break;
+    case "global_market.json": GMKT=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -5022,8 +5063,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json"];
 
 function renderAll(){
   if(!DATA) return;

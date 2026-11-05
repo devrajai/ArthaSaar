@@ -374,6 +374,10 @@ jobs:
       - name: "7m2zd. Scenario distributions"
         run: python scripts/build_scenarios.py || true
 
+      # Global and sector read-through from the Colab-collected US data.
+      - name: "7m2ze. Global market read-through"
+        run: python scripts/build_global_market.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

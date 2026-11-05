@@ -225,3 +225,55 @@ for sym in checks:
 
 print("\nnext step: sync this folder into the repo's data/yahoo/ so the GitHub pipeline")
 print("can use it. The GitHub side only needs the parquet files, not this notebook.")
+
+# ============================== CELL 7 =======================================
+# Push the parquet files into the repo so the GitHub pipeline can use them.
+# Without this the data sits in Drive and the site never sees it.
+#
+# Needs a fine-grained GitHub token with Contents: Read and write on this repo only.
+# Paste it below - do NOT commit a notebook containing a real token.
+import base64, json, os, time, urllib.request
+
+GH_TOKEN = ""          # <-- paste your token here, run once, then clear it
+GH_REPO  = "devrajai/ArthaSaar"
+GH_PATH  = "data/yahoo"        # where the pipeline looks
+
+if not GH_TOKEN:
+    print("Set GH_TOKEN in cell 7 and run again.")
+else:
+    files = sorted(f for f in os.listdir(OUT) if f.endswith(".parquet"))
+    print("files to push:", len(files))
+    ok = failed = 0
+    for i, fn in enumerate(files, 1):
+        local = os.path.join(OUT, fn)
+        # the pipeline looks for the same safe-name convention it writes itself
+        remote_name = fn[3:] if fn.startswith("us_") else fn
+        url = "https://api.github.com/repos/%s/contents/%s/%s" % (GH_REPO, GH_PATH, remote_name)
+        with open(local, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode()
+        body = {"message": "data: US/global %s" % remote_name, "content": b64}
+        # an existing file needs its sha to be replaced, not created
+        try:
+            req = urllib.request.Request(url, headers={
+                "Authorization": "Bearer " + GH_TOKEN,
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "ArthaSaar-Sync"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                body["sha"] = json.loads(r.read())["sha"]
+        except Exception:
+            pass
+        try:
+            req = urllib.request.Request(url, data=json.dumps(body).encode(), method="PUT", headers={
+                "Authorization": "Bearer " + GH_TOKEN,
+                "Accept": "application/vnd.github+json",
+                "Content-Type": "application/json",
+                "User-Agent": "ArthaSaar-Sync"})
+            with urllib.request.urlopen(req, timeout=45) as r:
+                ok += 1
+        except Exception as e:
+            failed += 1
+            print("  %-22s FAILED %s" % (remote_name, type(e).__name__))
+        time.sleep(0.4)
+    print("\npushed %d, failed %d" % (ok, failed))
+    print("next: the pipeline's build_global_market.py will pick these up on its next run")
+

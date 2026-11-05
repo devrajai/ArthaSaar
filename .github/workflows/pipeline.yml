@@ -366,6 +366,10 @@ jobs:
       - name: "7m2zb. Early move warning"
         run: python scripts/build_earlymove.py || true
 
+      # Event-day moves: budget, elections, and every results filing we can match.
+      - name: "7m2zc. Event-day study"
+        run: python scripts/build_events.py || true
+
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
       - name: "7m2k. Price history charts (monthly closes since 2019)"

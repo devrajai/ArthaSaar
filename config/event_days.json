@@ -1,0 +1,17 @@
+{
+  "_comment": "Dates that were on the market calendar in advance. Only dates verified against the primary source are listed - a guessed date would be worse than no date. Union Budget presentation days (1 Feb, plus the two July budgets), and general election result days.",
+  "events": [
+    {"date": "2019-07-05", "kind": "budget", "label": "Union Budget"},
+    {"date": "2020-02-01", "kind": "budget", "label": "Union Budget"},
+    {"date": "2021-02-01", "kind": "budget", "label": "Union Budget"},
+    {"date": "2022-02-01", "kind": "budget", "label": "Union Budget"},
+    {"date": "2023-02-01", "kind": "budget", "label": "Union Budget"},
+    {"date": "2024-02-01", "kind": "budget", "label": "Interim Budget"},
+    {"date": "2024-07-23", "kind": "budget", "label": "Union Budget"},
+    {"date": "2025-02-01", "kind": "budget", "label": "Union Budget"},
+    {"date": "2026-02-01", "kind": "budget", "label": "Union Budget"},
+    {"date": "2019-05-23", "kind": "election", "label": "Lok Sabha result"},
+    {"date": "2024-06-04", "kind": "election", "label": "Lok Sabha result"},
+    {"date": "2026-11-03", "kind": "election", "label": "US midterm result"}
+  ]
+}

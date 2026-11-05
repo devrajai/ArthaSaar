@@ -2273,6 +2273,42 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+    // ---- what a known event date actually does ----------------------------------------
+    (function(){
+     try{
+      if(!EVENTS) return;
+      var kids=[];
+      if(EVENTS.event_summary&&EVENTS.event_summary.length){
+        kids.push(para("Market-wide events, Nifty:", false));
+        kids.push(tbl({columns:["event","n","median |move|","largest","share up"],
+          rows:EVENTS.event_summary.map(function(s){
+            return [esc(s.kind), String(s.n), s.median_abs_pct+"%", s.max_abs_pct+"%", s.up_share_pct+"%"];
+          })}));
+      }
+      if(EVENTS.results){
+        var r=EVENTS.results;
+        kids.push(para("<b>A results day doubles the move.</b> Across "+num(r.filings_matched)+
+          " filings, the median stock moved <b>"+r.median_abs_move_pct+"%</b> on its results day "+
+          "against "+r.normal_median_abs_move_pct+"% on an ordinary one - a "+r.expansion_vs_normal+
+          "x expansion. "+r.share_over_5pct+"% of results days moved more than 5%, and "+
+          r.share_over_10pct+"% more than 10%.", true));
+      }
+      if(EVENTS.market_events&&EVENTS.market_events.length){
+        kids.push(tbl({columns:["session","event","Nifty"],
+          rows:EVENTS.market_events.slice(-10).map(function(e){
+            return [e.date+(e.note?(" ("+e.note+")"):""), esc(e.kind)+" - "+esc(e.label||""),
+                    (e.nifty_pct>0?"+":"")+e.nifty_pct+"%"];
+          })}));
+      }
+      v.appendChild(card("What an event day actually does",
+        EVENTS.results?EVENTS.results.filings_matched+" results filings":"", kids,
+        {what:"The measured move on dates that were on the calendar in advance, so size and stops can be set before the day rather than after it.",
+         source:"Nifty from Yahoo; results dates from NSE filings; prices from our own archive.", updated:EVENTS.updated,
+         note:"This describes what has happened on such days; it does not forecast the next one. A results day reliably means a LARGER move, not a particular direction - the distribution is two-sided. Market-wide event kinds have only a handful of observations each, so a median over nine budget days is a description, not a law. Where an event fell on a non-trading day the next session is used."}));
+     }catch(e){}
+    })();
+
+
     // ---- early warning of a big move --------------------------------------------------
     (function(){
      try{
@@ -4865,6 +4901,7 @@ function assign(name, v){
     case "behaviour.json": BEHAV=v; break;
     case "presentations.json": PRES=v; break;
     case "earlymove.json": EARLYMOVE=v; break;
+    case "events.json": EVENTS=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -4911,8 +4948,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json"];
+var VIX=null, FOBAN=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json"];
 
 function renderAll(){
   if(!DATA) return;

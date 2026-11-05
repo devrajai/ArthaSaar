@@ -879,6 +879,31 @@ a.bigbtn{display:inline-block;margin:10px 0 4px;padding:13px 22px;border-radius:
   background:#1d4ed8;color:#fff;font-weight:800;font-size:15px;text-decoration:none;
   box-shadow:0 6px 18px rgba(29,78,216,.28)}
 a.bigbtn:hover{background:#1a45c0}
+
+  /* ---- Charts tab ---- */
+  .chsearch{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:2px 0 8px}
+  .chsearch input{flex:1 1 280px;min-width:200px;padding:11px 13px;border-radius:10px;
+    border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:15px}
+  .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 6px}
+  @media(max-width:760px){
+    .chsearch{flex-direction:column;align-items:stretch;gap:6px}
+    .chsearch input{flex:1 1 auto;width:100%}
+    .chsearch .tag{text-align:right}
+  }
+  .chiprow button{padding:6px 12px;font-size:13px;border-radius:999px;font-weight:600}
+  .chiprow button.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+  .chlist{display:flex;flex-direction:column;max-height:280px;overflow:auto;margin:4px 0 8px}
+  .chlist button{display:flex;justify-content:space-between;gap:12px;text-align:left;
+    border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;
+    color:var(--text);padding:8px 4px;font-size:13.5px;font-weight:500}
+  .chlist button:hover{background:var(--head)}
+  .chlist span{color:var(--muted);font-size:12.5px;text-align:right}
+  /* two-column block on Home */
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.duo{grid-template-columns:1fr}}
+  /* a table that fills the screen and scrolls inside itself */
+  .fsbox{max-height:calc(100vh - 160px);overflow:auto;border:1px solid var(--line);
+    border-radius:10px;padding:0 10px}
 </style>
 </head>
 <body>
@@ -1106,8 +1131,9 @@ function card(title, sub, kids, info){
   }
   return c;
 }
-function para(t,b){return el("p",b?"big":"",esc(t));}
-function list(items){var u=el("ul");(items||[]).forEach(function(i){u.appendChild(el("li","",esc(i)));});return u;}
+function rich(t){return esc(t).replace(/&lt;(\/?)(b|strong|i|em)&gt;/g,function(m,sl,tg){return "<"+sl+tg+">";});}
+function para(t,b){return el("p",b?"big":"",rich(t));}
+function list(items){var u=el("ul");(items||[]).forEach(function(i){u.appendChild(el("li","",rich(i)));});return u;}
 function kpi(k,v,n){return el("div","kpi",'<div class="k">'+esc(k)+'</div><div class="v">'+v+'</div>'+(n?'<div class="n">'+esc(n)+'</div>':""));}
 function table(cols, rows, numCols, symCol, onRow){
   if(!rows||!rows.length)return el("p","msg","No rows yet.");
@@ -1360,6 +1386,7 @@ function kv(pairs){
 /* ---------- sections ---------- */
 var SECTIONS=[
   {id:"overview",  label:"Overview"},
+  {id:"charts",    label:"Charts"},
   {id:"stocks",    label:"Stocks & Screener"},
   {id:"indices",   label:"Indices"},
   {id:"sectors",   label:"Sectors"},
@@ -1594,7 +1621,7 @@ function voiceSearch(){
 // ---- simple view -------------------------------------------------------------------
 // 33 sections and 124 cards is a lot for a first visit. Simple view keeps six and hides the
 // rest behind one toggle. The sections themselves are untouched - this only hides them.
-var SIMPLE_IDS=["overview","market","stocks","mf","learn","tools"];
+var SIMPLE_IDS=["overview","charts","market","stocks","mf","learn","tools"];
 function applySimple(){
   var on=false;
   try{ on=localStorage.getItem("as-simple")==="1"; }catch(e){}
@@ -1690,6 +1717,96 @@ function build(d){
       var grid=el("div","hero3"); grid.innerHTML=cells.join("");
       box.appendChild(grid);
       v.appendChild(box);
+     }catch(e){}
+    })();
+
+    // ---- TODAY: the strip a reader opens the site for ---------------------------------
+    // Gainers, losers, who bought and sold, the biggest deals, and where option open
+    // interest sits. Every number is read from a file the pipeline already writes; nothing
+    // here is computed twice and nothing is guessed.
+    (function(){
+     try{
+      var ok=[], gain=[], lose=[], adv=null, dec=null;
+      if(SCREENER&&SCREENER.rows&&SCREENER.rows.length){
+        ok=SCREENER.rows.filter(function(r){
+          return r&&r.symbol&&r.close>0&&r.chg_1d!=null&&isFinite(r.chg_1d)&&!r.suspect_move;
+        });
+        adv=ok.filter(function(r){return r.chg_1d>0;}).length;
+        dec=ok.filter(function(r){return r.chg_1d<0;}).length;
+        var sorted=ok.slice().sort(function(a,b){return b.chg_1d-a.chg_1d;});
+        gain=sorted.slice(0,5);
+        lose=sorted.slice(-5).reverse();
+      }
+      var body=[], grid=el("div","kpis");
+      if(adv!=null){
+        grid.appendChild(kpi("Advances", num(adv), "of "+num(ok.length)+" traded"));
+        grid.appendChild(kpi("Declines", num(dec), dec>adv?"breadth negative":"breadth positive"));
+      }
+      if(RECAP&&RECAP.fii_dii&&RECAP.fii_dii.length){
+        RECAP.fii_dii.forEach(function(x){
+          var sign=(x.net_cr>=0?"+":"");
+          grid.appendChild(kpi(x.category+" net",
+            '<span class="'+(x.net_cr>=0?"up":"down")+'">'+sign+num(Math.round(x.net_cr))+' Cr</span>',
+            "cash market · "+x.date));
+        });
+      }
+      if(d.fno&&d.fno.pcr){
+        if(d.fno.pcr.nifty_pcr_oi!=null)grid.appendChild(kpi("Nifty PCR",d.fno.pcr.nifty_pcr_oi,"open interest"));
+        if(d.fno.pcr.nifty_max_pain!=null)grid.appendChild(kpi("Max pain",num(d.fno.pcr.nifty_max_pain),"Nifty"));
+      }
+      if(grid.children.length)body.push(grid);
+
+      if(gain.length||lose.length){
+        var duo=el("div","duo");
+        function movers(label,rows){
+          var w=el("div");
+          w.appendChild(el("p","big",label));
+          w.appendChild(tbl({columns:["symbol","close","chg 1d"],
+            rows:rows.map(function(r){return [r.symbol,r.close,r.chg_1d];})},["close","chg 1d"]));
+          return w;
+        }
+        duo.appendChild(movers("Top 5 gainers",gain));
+        duo.appendChild(movers("Top 5 losers",lose));
+        body.push(duo);
+      }
+
+      if(DEALS&&((DEALS.bulk&&DEALS.bulk.length)||(DEALS.block&&DEALS.block.length))){
+        var drows=[];
+        function addDeals(arr,kind){
+          (arr||[]).forEach(function(r){
+            var q=Number(r[4]), p=Number(r[5]);
+            drows.push({s:r[1],c:r[2],side:r[3],q:q,p:p,v:(isFinite(q)&&isFinite(p)?q*p:0),k:kind});
+          });
+        }
+        addDeals(DEALS.bulk,"bulk"); addDeals(DEALS.block,"block");
+        drows.sort(function(a,b){return b.v-a.v;});
+        body.push(el("p","big","Where the big money went"));
+        body.push(tbl({columns:["symbol","client","side","qty","price","value Cr","type"],
+          rows:drows.slice(0,8).map(function(x){
+            return [x.s,x.c,x.side,x.q,x.p,Math.round(x.v/1e7*100)/100,x.k];})},
+          ["qty","price","value Cr"]));
+      }
+
+      if(OISTRIKES&&OISTRIKES.indices){
+        var lv=Object.keys(OISTRIKES.indices).map(function(k){
+          var o=OISTRIKES.indices[k]||{};
+          return [k,o.pcr,o.call_wall,o.put_wall,o.total_ce_oi,o.total_pe_oi,o.spot];
+        });
+        if(lv.length){
+          body.push(el("p","big","F&O levels · nearest expiry"));
+          body.push(tbl({columns:["index","pcr","call wall","put wall","call OI","put OI","spot"],rows:lv},
+            ["pcr","call wall","put wall","call OI","put OI","spot"]));
+        }
+      }
+
+      if(!body.length) return;
+      v.appendChild(card("Today",
+        (d.generated_utc?ago(d.generated_utc):"")+" · movers, flows, deals, F&O levels",
+        body,
+        {what:"The screen a reader checks first: the five biggest movers each way, who bought and sold in the cash market, the largest bulk and block deals, and where option open interest is concentrated.",
+         source:"docs/screener.json, recap.json, deals.json, oi_strikes.json, data.json",
+         updated:d.generated_utc||"",
+         note:"Movers leave out stocks the screener flags as suspect moves. Deal value is quantity times price - the traded value, not a recommendation."}));
      }catch(e){}
     })();
 
@@ -1872,6 +1989,94 @@ function build(d){
         {what:"Symbols named most often across the watched YouTube channels.",
          source:"YouTube public Atom feeds + keyword analysis.", updated:when,
          note:"Mentions are not recommendations, and the analysis reads titles/descriptions only."}));
+  })();
+
+
+  /* ---------- CHARTS: every listed stock, and the indices ---------- */
+  // The stock pages already draw live candles through the Worker proxy. This tab gives the
+  // same chart its own home with a search box over the whole listed universe, so a reader
+  // does not have to find a stock page first. Indices with no Yahoo ticker are left out of
+  // the list rather than offered and then failing.
+  (function(){
+    var v=sec("charts");
+    var IDX=[["NIFTY","^NSEI"],["BANKNIFTY","^NSEBANK"],["SENSEX","^BSESN"],
+             ["FINNIFTY","NIFTY_FIN_SERVICE.NS"],["MIDCPNIFTY","NIFTY_MID_SELECT.NS"],
+             ["INDIA VIX","^INDIAVIX"],["NIFTY IT","^CNXIT"],["NIFTY AUTO","^CNXAUTO"],
+             ["NIFTY PHARMA","^CNXPHARMA"],["NIFTY FMCG","^CNXFMCG"],["NIFTY METAL","^CNXMETAL"],
+             ["NIFTY ENERGY","^CNXENERGY"],["NIFTY REALTY","^CNXREALTY"],["NIFTY INFRA","^CNXINFRA"]];
+    var host=el("div"), stop=null, ALL=null, current="^NSEI", currentName="NIFTY";
+
+    function pool(){
+      if(ALL) return ALL;
+      ALL=[];
+      IDX.forEach(function(x){ ALL.push({y:x[1],s:x[0],n:"Index",k:"index"}); });
+      try{
+        ((UNIVERSE&&UNIVERSE.rows)||[]).forEach(function(r){
+          if(r&&r.symbol) ALL.push({y:r.symbol+".NS",s:r.symbol,n:r.name||"",k:"stock"});
+        });
+      }catch(e){}
+      return ALL;
+    }
+
+    var input=el("input");
+    input.type="search";
+    input.placeholder="Search any listed stock or index — RELIANCE, Tata Motors, NIFTY…";
+    input.setAttribute("aria-label","Search a symbol to chart");
+    var hint=el("span","tag","");
+    var search=el("div","chsearch"); search.appendChild(input); search.appendChild(hint);
+    var listBox=el("div","chlist");
+    var chips=el("div","chiprow");
+
+    function chartIt(y,label){
+      current=y; currentName=label||y;
+      $$(".chiprow button").forEach(function(b){ b.className=(b.getAttribute("data-y")===y?"on":""); });
+      host.innerHTML="";
+      if(stop){ try{ stop(); }catch(e){} stop=null; }
+      if(!(CONFIG&&CONFIG.proxy)){
+        host.appendChild(el("p","msg","Live charts need the proxy URL in docs/config.json. Everything else on this page works without it."));
+        return;
+      }
+      var h=el("div"); host.appendChild(h);
+      stop=liveChart(h,y);
+      hint.textContent=currentName;
+    }
+
+    function fill(q){
+      q=String(q||"").trim().toUpperCase();
+      listBox.innerHTML="";
+      if(!q) return;
+      var all=pool(), out=[], i, r, n;
+      for(i=0;i<all.length&&out.length<40;i++){
+        r=all[i]; n=String(r.n).toUpperCase();
+        if(r.s.indexOf(q)===0 || n.indexOf(q)>=0) out.push(r);
+      }
+      if(!out.length){ listBox.appendChild(el("p","msg","Nothing in the listed universe matches "+q+".")); return; }
+      out.forEach(function(r){
+        var b=el("button","",'<b>'+esc(r.s)+'</b><span>'+esc(r.n||"")+(r.k==="index"?"":"")+'</span>');
+        b.addEventListener("click",function(){
+          chartIt(r.y,r.s); input.value=r.s; listBox.innerHTML=""; hint.textContent=r.s;
+        });
+        listBox.appendChild(b);
+      });
+    }
+    input.addEventListener("input",function(){ fill(input.value); });
+    input.addEventListener("change",function(){ fill(input.value); });
+
+    IDX.forEach(function(x){
+      var b=el("button","",x[0]); b.setAttribute("data-y",x[1]);
+      b.addEventListener("click",function(){ chartIt(x[1],x[0]); });
+      chips.appendChild(b);
+    });
+
+    v.appendChild(card("Chart any listed stock or index","search + the main indices",
+      [search, chips, listBox, host],
+      {what:"Live candlesticks for the main indices and for any of the listed stocks, on every timeframe Yahoo serves.",
+       source:"Yahoo Finance through the Cloudflare Worker proxy - the same feed the stock pages use.",
+       updated:"live",
+       note:"The search covers the whole listed universe (about 2,600 stocks) plus the indices that have a Yahoo ticker. Intraday history is capped by Yahoo: 1-minute bars reach back 7 days, 5-minute and 15-minute 60 days, hourly 730 days. The 1D / 1W / 1M buttons are the long view."}));
+
+    // Draw once the heavy files are in, so the search box has the full universe behind it.
+    if(SCREENER){ chartIt("^NSEI","NIFTY"); }
   })();
 
   /* ---------- shared detail page (stock, global stock, coin) ---------- */
@@ -2879,15 +3084,34 @@ function build(d){
         {what:"PCR is put/call open-interest ratio; max pain is the strike with the largest total OI.",
          source:"NSE F&O bhavcopy (UDiFF).", updated:d.fno.date||"",
          note:"PCR above 1 is often read as bearish positioning, below 1 as bullish - it is a sentiment gauge, not a signal."}));
-      if(d.fno.top_oi)
-        v.appendChild(card("Top open interest","with long / short buildup",[ tbl({columns:["symbol","oi","oi_chg","chg","buildup"],
-          rows:d.fno.top_oi.map(function(s){return [s.symbol,s.oi,s.oi_chg,s.chg,s.buildup||"—"];})},["oi","oi_chg","chg"]) ],
-          {what:"Stock futures ranked by open interest, each tagged by how price and open interest moved together.",
-           source:"NSE F&O bhavcopy.",updated:d.fno.date||"",
+      if(d.fno.top_oi||d.fno.index_futures){
+        // One board, one scroll box, the height of the screen. The old pair of cards left
+        // most of a laptop viewport empty; this fills it and scrolls inside itself.
+        var fb=el("div","fsbox");
+        if(d.fno.index_futures&&d.fno.index_futures.length){
+          fb.appendChild(el("p","big","Index futures - open interest, and where the option walls sit"));
+          fb.appendChild(tbl({columns:["index","futures OI","pcr","call wall","put wall","call OI","put OI","spot"],
+            rows:d.fno.index_futures.map(function(i){
+              var o=(OISTRIKES&&OISTRIKES.indices)?OISTRIKES.indices[i.symbol]:null;
+              // big() turns a null into 0, so a missing figure is passed as an em dash
+              function g(k){ return (o&&o[k]!=null)?o[k]:"\u2014"; }
+              return [i.symbol,i.oi,g("pcr"),g("call_wall"),g("put_wall"),
+                      g("total_ce_oi"),g("total_pe_oi"),g("spot")];
+            })},
+            ["futures OI","pcr","call wall","put wall","call OI","put OI","spot"]));
+        }
+        if(d.fno.top_oi&&d.fno.top_oi.length){
+          fb.appendChild(el("p","big","Stock futures - ranked by open interest, with the buildup"));
+          fb.appendChild(tbl({columns:["symbol","oi","oi_chg","chg","buildup"],
+            rows:d.fno.top_oi.map(function(s){return [s.symbol,s.oi,s.oi_chg,s.chg,s.buildup||"—"];})},
+            ["oi","oi_chg","chg"]));
+        }
+        v.appendChild(card("Futures board","full height, scrolls inside · "+(d.fno.date||""),[fb],
+          {what:"Index futures open interest next to the option walls and PCR for the same index, then every stock future ranked by open interest with its long/short buildup tag.",
+           source:"NSE F&O bhavcopy, plus docs/oi_strikes.json for the walls.",
+           updated:d.fno.date||"",
            note:"Long buildup = price up and OI up (fresh longs). Short buildup = price down and OI up (fresh shorts). Short covering = price up and OI down. Long unwinding = price down and OI down. Anything under a 0.5% price move or 1% OI move is left blank as noise."}));
-      if(d.fno.index_futures&&d.fno.index_futures.length)
-        v.appendChild(card("Index futures OI","",[ tbl({columns:["symbol","oi"],rows:d.fno.index_futures.map(function(i){return [i.symbol,i.oi];})},["oi"]) ],
-          {what:"Open interest in index futures.",source:"NSE F&O bhavcopy.",updated:d.fno.date||""}));
+      }
     }
     if(VIX&&VIX.series&&VIX.series.length>2){
       var lastv=VIX.series[VIX.series.length-1];
@@ -5228,7 +5452,7 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
 
 /* ---- mobile shell: accordion drawer, hamburger, mic icon ---- */
 var GROUPS = [
-  ["Market",        ["overview","market","indices","sectors","fno","global","crypto","breadth"]],
+  ["Market",        ["overview","charts","market","indices","sectors","fno","global","crypto","breadth"]],
   ["Stocks",        ["stocks","rs","patterns","gaps","levels","correlation","seasonality"]],
   ["Funds & issues",["mf","etf","ipo","charges"]],
   ["Disclosures",   ["corporate","news","calendar","watchlists","deals","insider","promoter","regulator"]],

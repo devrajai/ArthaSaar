@@ -19,6 +19,8 @@ WRITES
 docs/commodities.json
 """
 import json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _yahoo_paths import find_parquet
 from datetime import datetime, timezone
 
 YAHOO = "data/yahoo"

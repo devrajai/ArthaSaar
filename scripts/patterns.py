@@ -21,6 +21,8 @@ Usage
 
 from __future__ import annotations
 
+import os
+
 import argparse
 from pathlib import Path
 
@@ -187,12 +189,17 @@ def detect(g: pd.DataFrame) -> list[dict]:
 
 
 def main() -> int:
+    import argparse, json as _json
+    from datetime import datetime, timezone
+
     ap = argparse.ArgumentParser(description="Numeric chart-pattern detection.")
     ap.add_argument("--in", dest="infile", default="")
     ap.add_argument("--symbol", default="")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--lookback", type=int, default=120)
     ap.add_argument("--min-history", type=int, default=60)
+    ap.add_argument("--limit", type=int, default=600,
+                    help="cap the symbol count; the full universe took minutes")
     ap.add_argument("--out", default="data/patterns")
     args = ap.parse_args()
 
@@ -202,29 +209,74 @@ def main() -> int:
     if not src or not Path(src).exists():
         print("no candle archive found - skipping")
         return 0
-    df = pd.read_parquet(src)
-    sortcol = "date" if "date" in df.columns else "ts"
-    symbols = [args.symbol] if args.symbol else sorted(df["symbol"].unique())
+
+    # DuckDB, not pandas. Reading the whole archive into a DataFrame took minutes and timed
+    # out; only the last `lookback` bars per symbol are ever inspected.
+    import duckdb
+    con = duckdb.connect()
+    con.execute("SET threads=1")
+    con.execute("SET memory_limit='1400MB'")
+    syms = [r[0] for r in con.execute("""
+        SELECT symbol FROM (
+          SELECT symbol, COUNT(*) n FROM read_parquet(?)
+          WHERE close > 0 GROUP BY symbol
+        ) WHERE n >= ? ORDER BY symbol LIMIT ?
+    """, [src, args.min_history, args.limit]).fetchall()]
+    if args.symbol:
+        syms = [args.symbol]
+    if not syms:
+        print("no symbols with enough history")
+        return 0
 
     found = []
-    for sym in symbols:
-        g = df[df["symbol"] == sym].sort_values(sortcol)
-        if len(g) < args.min_history:
+    for sym in syms:
+        rows_q = con.execute("""
+          WITH d AS (SELECT CAST(date AS VARCHAR) dd, open, high, low, close,
+                            ROW_NUMBER() OVER (ORDER BY date DESC) rn
+                     FROM read_parquet(?) WHERE symbol = ? AND close > 0)
+          SELECT dd, open, high, low, close FROM d WHERE rn <= ? ORDER BY dd
+        """, [src, sym, args.lookback]).fetchall()
+        if len(rows_q) < args.min_history:
             continue
-        for r in detect(g.tail(args.lookback)):
-            found.append({"symbol": sym, "as_of": str(g[sortcol].iloc[-1]), **r})
+        g = pd.DataFrame(rows_q, columns=["date", "open", "high", "low", "close"])
+        for r in detect(g):
+            found.append({"symbol": sym, "as_of": str(g["date"].iloc[-1]), **r})
+    con.close()
+
+    os.makedirs("docs", exist_ok=True)
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     if not found:
-        print(f"no patterns detected across {len(symbols)} symbol(s)")
+        _json.dump({"updated": now, "count": 0, "counts": {}, "columns":
+                    ["Symbol", "Pattern", "Bias", "As of"], "rows": [],
+                    "note": "No chart pattern matched on the latest session across %d symbols. "
+                            "Patterns are strict - an empty result is normal on most days."
+                            % len(syms)},
+                   open("docs/patterns.json", "w"), ensure_ascii=False)
+        print("no patterns detected across %d symbols -> docs/patterns.json (count 0)" % len(syms))
         return 0
+
     res = pd.DataFrame(found).sort_values(["pattern", "symbol"])
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     res.to_csv(out / "detected.csv", index=False)
-    print(f"detected {len(res)} pattern(s) across {res['symbol'].nunique()} symbols")
+
+    # the shape the site expects - it was reading docs/patterns.json, which nothing wrote
+    counts = res["pattern"].value_counts().to_dict()
+    cols = ["Symbol", "Pattern", "Bias", "As of"]
+    rows = [[r.get("symbol"), r.get("pattern"), r.get("bias", ""), r.get("as_of", "")]
+            for r in res.to_dict("records")]
+    _json.dump({"updated": now, "count": int(len(res)),
+                "counts": {str(k): int(v) for k, v in counts.items()},
+                "columns": cols, "rows": rows[:400],
+                "note": ("Numeric pattern detection over the candle archive, last %d bars per "
+                         "symbol, %d symbols scanned. A detected shape is a candidate to "
+                         "inspect, not a signal." % (args.lookback, len(syms)))},
+               open("docs/patterns.json", "w"), ensure_ascii=False, separators=(",", ":"))
+
+    print("detected %d pattern(s) across %d symbols" % (len(res), res["symbol"].nunique()))
     print(res["pattern"].value_counts().to_string())
-    print(f"\nWrote {out}/detected.csv")
-    print("  candidates to inspect - measure any rule you trade on with backtest.py")
+    print("-> docs/patterns.json (site) and %s/detected.csv" % out)
     return 0
 
 

@@ -79,9 +79,51 @@ def main() -> int:
         print(f"no stock pages at {args.stocks} - run build_stock_pages.py first")
         return 0
 
+    # THE SERIES DOES NOT LIVE IN stocks.json ANY MORE. The page-size split removed it to keep
+    # that file loadable, and this script kept reading it - so every stock failed the
+    # len(series) < 6 test and screener.json came out with count 0. breadth.json reads
+    # screener.json and went empty too; series.json and rs.json were starved by the same
+    # missing field. Four broken sections, one cause.
+    #
+    # The archive is the source of truth for prices, so read it once and index it by symbol.
+    # DuckDB, not pandas. Loading 3.5 million rows into a DataFrame ran out of memory, and
+    # only the last ~260 sessions per symbol are needed for these screens anyway. DuckDB
+    # reads just those columns and does the windowing in one pass.
+    closes_by_symbol = {}
+    try:
+        import duckdb
+        import _archive
+        src = _archive.pick_candles(prefer_adjusted=True)
+        if src:
+            con = duckdb.connect()
+            con.execute("SET threads=1")
+            con.execute("SET memory_limit='1400MB'")
+            rows_q = con.execute("""
+              WITH d AS (
+                SELECT CAST(date AS VARCHAR) dd, symbol, close,
+                       ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY date DESC) rn
+                FROM read_parquet(?) WHERE close > 0
+              )
+              SELECT symbol, dd, close FROM d WHERE rn <= 260 ORDER BY symbol, dd
+            """, [src]).fetchall()
+            con.close()
+            for sym, _dd, cl in rows_q:
+                closes_by_symbol.setdefault(str(sym).upper(), []).append(float(cl))
+            print("  archive series loaded for %d symbols" % len(closes_by_symbol))
+    except Exception as e:
+        print("  archive unavailable (%s: %s); falling back to stocks.json series"
+              % (type(e).__name__, str(e)[:60]))
+
     rows = []
     for key, r in stocks.items():
-        series = r.get("series") or []
+        # stocks.json keys carry the exchange suffix ("RELIANCE.NS"); the archive stores the
+        # bare symbol ("RELIANCE"). Looking up the raw key matched nothing even with 3,510
+        # series loaded, which is why the count stayed at 0 after the first fix.
+        k_up = str(key).upper()
+        k_bare = k_up.rsplit(".", 1)[0] if "." in k_up else k_up
+        series = (closes_by_symbol.get(k_up)
+                  or closes_by_symbol.get(k_bare)
+                  or r.get("series") or [])
         t = r.get("tech") or {}
         if len(series) < 6:
             continue
@@ -93,6 +135,11 @@ def main() -> int:
             "chg_1d": pct_change(series, 1), "chg_2d": pct_change(series, 2),
             "chg_3d": pct_change(series, 3), "chg_5d": pct_change(series, 5),
             "chg_20d": pct_change(series, 20),
+            # A 20-day move beyond 70% is almost always a split, demerger or bonus that the
+            # adjustment did not catch - not a real price move. Flag it so the screen does not
+            # rank a corporate action as if it were a crash. 19 of 2,208 rows hit this.
+            "suspect_move": (pct_change(series, 20) is not None
+                             and abs(pct_change(series, 20)) > 70),
             "down_streak": down_streak(series), "up_streak": up_streak(series),
             "from_52w_high": (round((close / hi - 1) * 100, 2) if hi else None),
             "above_52w_low": (round((close / lo - 1) * 100, 2) if lo else None),

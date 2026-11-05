@@ -82,15 +82,42 @@ def main():
                 keep = list(counts.index[:TOP])
                 for sym in keep:
                     g = fc[fc[scol] == sym]
+                    best = acc[acc["symbol"] == sym].sort_values("mape")
+                    best_model = best.iloc[0]["model"] if len(best) else None
+
+                    # THE BUG THIS FIXES.
+                    # This took the first 25 rows for the symbol across ALL six models at
+                    # once. Whichever model happened to sort first - the constant "mean"
+                    # one - won, so every published path was the same number repeated 21
+                    # times, and the date column, which forecast.py does not write, came out
+                    # as the string "None". A flat line labelled None is worse than no card.
+                    # Take the model that actually scored best, keep it in step order, and
+                    # leave the date out when there is no real one rather than faking it.
+                    if best_model is not None and "model" in g.columns:
+                        gm = g[g["model"] == best_model]
+                        if len(gm):
+                            g = gm
+                    if "step" in g.columns:
+                        g = g.sort_values("step")
+
                     path = []
                     for _, r in g.iterrows():
-                        d = r.get("date") or r.get("ts")
-                        path.append({"date": str(d)[:10],
-                                     "yhat": round(float(r["yhat"]), 2) if r.get("yhat") == r.get("yhat") else None})
-                    best = acc[acc["symbol"] == sym].sort_values("mape")
+                        d = r.get("date") if "date" in g.columns else None
+                        if (d is None or str(d) == "nan") and "ts" in g.columns:
+                            d = r.get("ts")
+                        ds = None
+                        if d is not None and str(d) not in ("None", "nan", "NaT"):
+                            ds = str(d)[:10]
+                        yh = r.get("yhat")
+                        st = r.get("step")
+                        path.append({
+                            "step": int(st) if st == st and st is not None else len(path) + 1,
+                            "date": ds,
+                            "yhat": round(float(yh), 2) if yh == yh else None,
+                        })
                     out["symbols"][sym] = {
                         "path": path[:25],
-                        "best_model": best.iloc[0]["model"] if len(best) else None,
+                        "best_model": best_model,
                         "best_mape": round(float(best.iloc[0]["mape"]), 2) if len(best) else None,
                     }
         except Exception as e:

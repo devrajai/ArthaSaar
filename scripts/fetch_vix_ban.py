@@ -25,7 +25,7 @@ CTX = ssl.create_default_context()
 CTX.check_hostname = False
 CTX.verify_mode = ssl.CERT_NONE
 
-VIX_URL = "https://query1.finance.yahoo.com/v8/finance/chart/%5EINDIAVIX?interval=1d&range=2y"
+VIX_URL = "https://query1.finance.yahoo.com/v8/finance/chart/%5EINDIAVIX?interval=1d&range=10y"
 BAN_URL = "https://nsearchives.nseindia.com/content/fo/fo_secban.csv"
 
 
@@ -40,7 +40,7 @@ def get(url, timeout=30):
 
 
 def vix():
-    """Daily India VIX closes for the last two years."""
+    """Daily India VIX closes, ten years. Yahoo serves ~2,450 sessions."""
     body = get(VIX_URL)
     out = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "series": [], "count": 0, "latest": None, "note": ""}
@@ -62,13 +62,22 @@ def vix():
     out["count"] = len(out["series"])
     if out["series"]:
         out["latest"] = out["series"][-1][1]
-        vals = [v for _, v in out["series"]]
-        out["low_2y"] = min(vals)
-        out["high_2y"] = max(vals)
-        # where today sits in the two-year range - the only thing most people want from VIX
-        span = max(vals) - min(vals)
-        out["percentile_2y"] = round((out["latest"] - min(vals)) / span * 100) if span else None
-        out["note"] = ("India VIX is the NSE's 30-day implied volatility index, computed from "
+        # Percentile against a TRAILING TWO YEARS, not the whole file. With 10 years of data
+        # a percentile against the full history would compare today to 2017, which is not
+        # the question. 504 sessions is roughly two years of trading.
+        recent = [v for _, v in out["series"][-504:]]
+        out["low_2y"] = min(recent)
+        out["high_2y"] = max(recent)
+        below = sum(1 for v in recent if v <= out["latest"])
+        out["percentile_2y"] = round(below / len(recent) * 100) if recent else None
+        out["window_2y_sessions"] = len(recent)
+        # keep a decadal context too, clearly labelled so the two are not confused
+        allv = [v for _, v in out["series"]]
+        out["low_all"] = min(allv)
+        out["high_all"] = max(allv)
+        out["note"] = ("India VIX is the NSE's 30-day implied volatility index. The percentile "
+                       "is against a trailing two years (about 504 sessions), not the full file. "
+                       "Computed from "
                        "Nifty option prices. High means options are expensive and the market "
                        "expects big moves; low means it is complacent.")
     return out

@@ -915,6 +915,12 @@ a.bigbtn:hover{background:#1a45c0}
   padding:7px 0;border-bottom:1px solid rgba(29,78,216,.10)}
 .hrow span{color:var(--muted)}
 .hctx{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+  /* ---- forecast cone ---- */
+  .cone{margin:8px 0 2px;max-width:780px}
+  .cone svg{width:100%;height:auto;display:block}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 0;font-size:12px;color:var(--muted)}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 </style>
 </head>
 <body>
@@ -1290,6 +1296,58 @@ function drawCandles(host, candles, intraday, levels){
   var svg='<svg viewBox="0 0 '+W+' '+(PH+GAP+VH+16)+'" preserveAspectRatio="none" style="height:280px">'+s.join("")+'</svg>';
   var box=el("div","cwrap"); box.innerHTML=svg; host.appendChild(box);
 }
+function coneSVG(f, extras, w, h){
+  // A 21-session cone from what TimesFM actually publishes: the last price, the median
+  // target and the 10th/90th percentile edges. There is no day-by-day path in the file, so
+  // this draws a cone rather than inventing a curve - the shape is the uncertainty, and the
+  // width of it is the point.
+  w = w || 620; h = h || 230;
+  var last = Number(f && f.last) || 0;
+  if(!last) return '<p class="msg">No level to draw from.</p>';
+  var med = last * (1 + (Number(f.median_chg_pct) || 0) / 100);
+  var lo  = last * (1 + (Number(f.low10_chg_pct) || 0) / 100);
+  var hi  = last * (1 + (Number(f.high90_chg_pct) || 0) / 100);
+  var padL = 58, padR = 74, padT = 14, padB = 24;
+  var vals = [last, med, lo, hi].concat((extras || []).map(function(e){ return Number(e.v); })
+                                                       .filter(function(x){ return isFinite(x); }));
+  var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+  var sp = (mx - mn) || 1; mn -= sp * 0.10; mx += sp * 0.10;
+  function X(t){ return padL + t * (w - padL - padR); }
+  function Y(v){ return padT + (mx - v) / (mx - mn) * (h - padT - padB); }
+  var o = [], i, v2, y;
+  for(i = 0; i <= 4; i++){
+    v2 = mn + (mx - mn) * i / 4; y = Y(v2);
+    o.push('<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (w - padR) +
+           '" y2="' + y.toFixed(1) + '" stroke="var(--line)" stroke-width="1"/>');
+    if(Math.abs(y - Y(last)) > 11){          // never print a grid label under the price
+      o.push('<text x="' + (padL - 6) + '" y="' + (y + 3).toFixed(1) +
+             '" text-anchor="end" font-size="10" fill="var(--muted)">' +
+             Math.round(v2).toLocaleString("en-IN") + '</text>');
+    }
+  }
+  o.push('<polygon points="' + X(0) + ',' + Y(last) + ' ' + X(1) + ',' + Y(hi) + ' ' +
+         X(1) + ',' + Y(lo) + '" fill="rgba(29,78,216,.13)"/>');
+  o.push('<line x1="' + X(0) + '" y1="' + Y(last) + '" x2="' + X(1) + '" y2="' + Y(med) +
+         '" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4"/>');
+  (extras || []).forEach(function(e){
+    var ev = Number(e.v);
+    if(!isFinite(ev)) return;
+    o.push('<line x1="' + padL + '" y1="' + Y(ev).toFixed(1) + '" x2="' + (w - padR) +
+           '" y2="' + Y(ev).toFixed(1) + '" stroke="' + e.col + '" stroke-width="1" stroke-dasharray="3 3"/>');
+    o.push('<text x="' + (w - padR + 4) + '" y="' + (Y(ev) + 3).toFixed(1) +
+           '" font-size="9.5" fill="' + e.col + '">' + esc(e.label) + '</text>');
+  });
+  o.push('<circle cx="' + X(0) + '" cy="' + Y(last) + '" r="3.2" fill="var(--text)"/>');
+  o.push('<text x="' + (padL - 6) + '" y="' + (Y(last) + 3).toFixed(1) +
+         '" text-anchor="end" font-size="10" font-weight="700" fill="var(--text)">' +
+         Math.round(last).toLocaleString("en-IN") + '</text>');
+  o.push('<text x="' + X(0) + '" y="' + (h - 6) + '" font-size="10" fill="var(--muted)">today</text>');
+  o.push('<text x="' + X(1) + '" y="' + (h - 6) + '" text-anchor="end" font-size="10" fill="var(--muted)">+21 sessions</text>');
+  return '<div class="cone"><svg viewBox="0 0 ' + w + ' ' + h + '">' + o.join("") + '</svg></div>' +
+    '<div class="legend"><span><i style="background:rgba(29,78,216,.25)"></i>10th-90th percentile</span>' +
+    '<span><i style="background:var(--accent)"></i>TimesFM median</span></div>';
+}
+
 function liveChart(host, sym){
   // Every timeframe asked for. Some are not native to Yahoo, so they are RESAMPLED from the
   // nearest interval it serves - `agg` means combine N bars into one: 3m=3x1m, 40m=8x5m,
@@ -1398,6 +1456,7 @@ function kv(pairs){
 var SECTIONS=[
   {id:"overview",  label:"Overview"},
   {id:"charts",    label:"Charts"},
+  {id:"forecast",  label:"Forecast"},
   {id:"stocks",    label:"Stocks & Screener"},
   {id:"indices",   label:"Indices"},
   {id:"sectors",   label:"Sectors"},
@@ -1883,6 +1942,34 @@ function build(d){
      }catch(e){}
     })();
 
+    // ---- 21-day outlook: the one model output that belongs above the fold --------------
+    (function(){
+     try{
+      var F=d&&d.fm3;
+      if(!F||!F.nifty||!F.nifty.last) return;
+      var n=F.nifty;
+      var mp=(d.fno&&d.fno.pcr)?d.fno.pcr.nifty_max_pain:null;
+      var box=el("div","");
+      box.innerHTML=coneSVG(n,[{v:mp,label:"max pain",col:"#c02b2b"}]);
+      var gap=(mp!=null)?((Number(n.median_chg_pct)||0)-((mp/n.last-1)*100)):null;
+      var line="Median target "+num(Math.round(n.last*(1+(n.median_chg_pct||0)/100)))+
+        " ("+(n.median_chg_pct>0?"+":"")+n.median_chg_pct+"%) after "+F.horizon_days+
+        " sessions, with an 80% band of "+num(Math.round(n.last*(1+(n.low10_chg_pct||0)/100)))+
+        " to "+num(Math.round(n.last*(1+(n.high90_chg_pct||0)/100)))+
+        ". Confidence "+n.confidence+"/100.";
+      if(gap!=null){
+        line+=" The median sits "+(Math.abs(gap)).toFixed(2)+"% "+(gap>=0?"above":"below")+
+          " the max-pain strike of "+num(mp)+", so the model and the option writers are "+
+          (Math.abs(gap)<1.5?"broadly in agreement.":"not saying the same thing.");
+      }
+      v.appendChild(card("21-day outlook", F.model, [box, para(line,true)],
+        {what:"TimesFM's zero-shot median path for the Nifty over the next 21 sessions, with the 10th and 90th percentile of its own distribution, drawn against the max-pain strike.",
+         source:"data/timesfm_forecasts.json, written by scripts/timesfm_forecast.py; NSE F&O bhavcopy for max pain.",
+         updated:F.updated,
+         note:"Zero-shot means the model was never trained on Indian data - it projects the shape of recent behaviour, not news, results or policy. A wide band is the honest answer, not a hedge. Read the accuracy table on the Forecast tab before you weight any of it."}));
+     }catch(e){}
+    })();
+
 
     // ---- the story of the day ---------------------------------------------------------
     // Generated by rules over our own data. Every figure is computed; none is written by a
@@ -2150,6 +2237,105 @@ function build(d){
 
     // Draw once the heavy files are in, so the search box has the full universe behind it.
     if(SCREENER){ chartIt("^NSEI","NIFTY"); }
+  })();
+
+
+  /* ---------- FORECAST: TimesFM, and where it disagrees with the option market ---------- */
+  (function(){
+    var v=sec("forecast");
+    var F=(d&&d.fm3)||null;
+    if(!F||!F.nifty){
+      v.appendChild(card("Forecast","not published yet",
+        [para("data/timesfm_forecasts.json is not in docs/data.json yet. scripts/timesfm_forecast.py writes it nightly; this tab fills itself once it lands.", false)],
+        {what:"TimesFM's 21-session projection for the Nifty and 73 stocks.",
+         source:"scripts/timesfm_forecast.py", updated:when}));
+      return;
+    }
+    var n=F.nifty;
+    var walls=(OISTRIKES&&OISTRIKES.indices&&OISTRIKES.indices.NIFTY)||null;
+    var mp=(d.fno&&d.fno.pcr)?d.fno.pcr.nifty_max_pain:null;
+
+    // 1. the cone
+    var extras=[];
+    if(mp!=null) extras.push({v:mp,label:"max pain",col:"#c02b2b"});
+    if(walls&&walls.call_wall!=null) extras.push({v:walls.call_wall,label:"call wall",col:"#b45309"});
+    if(walls&&walls.put_wall!=null) extras.push({v:walls.put_wall,label:"put wall",col:"#0a7d43"});
+    var coneHost=el("div","");
+    coneHost.innerHTML=coneSVG(n,extras);
+    v.appendChild(card("Nifty, next "+F.horizon_days+" sessions", F.model,
+      [coneHost, para("Median "+num(Math.round(n.last*(1+(n.median_chg_pct||0)/100)))+
+        " ("+(n.median_chg_pct>0?"+":"")+n.median_chg_pct+"%) from "+num(n.last)+
+        ". The band runs "+num(Math.round(n.last*(1+(n.low10_chg_pct||0)/100)))+" to "+
+        num(Math.round(n.last*(1+(n.high90_chg_pct||0)/100)))+
+        ", and the direction call is "+esc(n.direction)+" at "+n.confidence+"/100 confidence.", true)],
+      {what:"The model's median path and its own 10th-to-90th percentile range, with the option market's walls and max pain drawn over it so you can see whether the two agree.",
+       source:"data/timesfm_forecasts.json; docs/oi_strikes.json; NSE F&O bhavcopy for max pain.",
+       updated:F.updated,
+       note:"A cone that contains the walls is a model saying nothing new. When the median sits outside a wall, one of the two is wrong - that is the only interesting case, and it is not a trade signal on its own."}));
+
+    // 2. where the model and the option market disagree
+    if(walls||mp!=null){
+      var last=Number(n.last)||0;
+      var rows=[];
+      function addRow(label,val,note){
+        if(val==null||!isFinite(Number(val))) return;
+        var pc=last?((Number(val)/last-1)*100):null;
+        rows.push([label,Number(val),pc,note]);
+      }
+      addRow("TimesFM median", Math.round(last*(1+(n.median_chg_pct||0)/100)), "the model");
+      addRow("TimesFM 90th pct", Math.round(last*(1+(n.high90_chg_pct||0)/100)), "optimistic edge");
+      addRow("TimesFM 10th pct", Math.round(last*(1+(n.low10_chg_pct||0)/100)), "pessimistic edge");
+      if(mp!=null) addRow("Max pain", mp, "where option buyers lose most");
+      if(walls){
+        addRow("Call wall", walls.call_wall, "heaviest call OI - supply");
+        addRow("Put wall", walls.put_wall, "heaviest put OI - support");
+      }
+      var verdict;
+      if(mp!=null&&last){
+        var gapPct=(Number(n.median_chg_pct)||0)-((mp/last-1)*100);
+        verdict = Math.abs(gapPct)<1.5
+          ? "The median target and max pain are within "+Math.abs(gapPct).toFixed(2)+"% of each other. Two unrelated methods agreeing is mildly reassuring and completely uninformative about direction."
+          : "The median target is "+Math.abs(gapPct).toFixed(2)+"% "+(gapPct>0?"above":"below")+
+            " max pain. The option market and the time-series model are pulling apart - one of them is wrong, and this page cannot tell you which.";
+      } else verdict="Not enough of both to compare.";
+      v.appendChild(card("Model versus option market","same 21 sessions",
+        [tbl({columns:["level","value","chg vs today","what it is"],rows:rows},["value","chg vs today"]),
+         para(verdict,true)],
+        {what:"The model's target levels next to the strikes where option open interest is concentrated. Both are 21-session views of the same index from completely different data.",
+         source:"data/timesfm_forecasts.json, docs/oi_strikes.json, docs/data.json",
+         updated:F.updated,
+         note:"Max pain is where the most option value expires worthless, not a price target. Walls move every expiry. Neither is a forecast of the close."}));
+    }
+
+    // 3. the 73 series, ranked
+    var frows=(F.rows||[]).map(function(r){
+      return [r[0], r[1], r[2], r[3], r[4], r[6], r[5]];
+    });
+    if(frows.length){
+      frows.sort(function(a,b){ return (Number(b[2])||-999)-(Number(a[2])||-999); });
+      v.appendChild(card("Where the model sees the most movement",
+        frows.length+" series · ranked by median, not by confidence",
+        [tbl({columns:["symbol","last","median chg","10th chg","90th chg","confidence","direction"],rows:frows},
+          ["last","median chg","10th chg","90th chg","confidence"])],
+        {what:"Every series TimesFM covers, sorted by the median 21-session change it projects. Confidence is 0-100 and is a property of the shape of the distribution, not of the odds of being right.",
+         source:"data/timesfm_forecasts.json (scripts/timesfm_forecast.py).",
+         updated:F.updated,
+         note:"A high median with confidence 0 is a flat, uncertain distribution - the model is not saying it will rise, it is saying it has no shape to offer. Sort the table yourself by clicking a column."}));
+    }
+
+    // 4. which model actually wins
+    if(FORECAST&&FORECAST.models&&FORECAST.models.length){
+      v.appendChild(card("What the models have actually scored",
+        FORECAST.models.length+" models · "+num((FORECAST.models[0]||{}).symbols||0)+" symbols each",
+        [tbl({columns:["model","median MAPE %","symbols","vs naive"],rows:FORECAST.models.map(function(m){
+            return [m.model, m.mape, m.symbols, (m.vs_naive==null?null:m.vs_naive)];})},
+          ["median MAPE %","symbols","vs naive"]),
+         para("A 21-session forecast of a stock is barely better than assuming today's price. ARIMA ties the naive baseline exactly (0.00 difference) and the mean-reverting model is 24 points worse. That is the number to keep in mind when the cone looks confident.", true)],
+        {what:"Walk-forward error for each model at the 21-session horizon: hide the last 21 sessions, forecast them, measure the miss.",
+         source:"docs/forecast.json, written by scripts/forecast.py.",
+         updated:FORECAST.updated||when,
+         note:"MAPE is an average of percentage misses, so one explosive stock can dominate it. Compare models against each other, not against zero."}));
+    }
   })();
 
   /* ---------- shared detail page (stock, global stock, coin) ---------- */
@@ -4732,7 +4918,7 @@ var v=sec("learn");
           if(!r){ fOut.appendChild(para("No published path for \""+s+"\". Only the largest 40 are shown.", false)); return; }
           fOut.appendChild(para("Best model for this stock: "+r.best_model+" (median error "+r.best_mape+"%).", false));
           fOut.appendChild(tbl({columns:["date","forecast"],
-            rows:(r.path||[]).map(function(pt){return [pt.date, pt.yhat];})},["forecast"]));
+            rows:(r.path||[]).map(function(pt){return [pt.date || ("T+"+(pt.step||"?")), pt.yhat];})},["forecast"]));
         }
         fi.addEventListener("input", paintF);
         v.appendChild(card("Forecast path", "next 21 sessions",
@@ -5599,7 +5785,7 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
 
 /* ---- mobile shell: accordion drawer, hamburger, mic icon ---- */
 var GROUPS = [
-  ["Market",        ["overview","charts","market","indices","sectors","fno","global","crypto","breadth"]],
+  ["Market",        ["overview","charts","forecast","market","indices","sectors","fno","global","crypto","breadth"]],
   ["Stocks",        ["stocks","rs","patterns","gaps","levels","correlation","seasonality"]],
   ["Funds & issues",["mf","etf","ipo","charges"]],
   ["Disclosures",   ["corporate","news","calendar","watchlists","deals","insider","promoter","regulator"]],

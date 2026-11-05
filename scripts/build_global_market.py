@@ -95,32 +95,28 @@ def live_check(sym):
 
 
 def load(sym):
+    """Daily closes for one symbol.
+
+    ORDER MATTERS. The per-symbol files are refreshed by the pipeline every night; the
+    combined file is a hand-uploaded snapshot that goes stale the moment it is made. Looking
+    at the combined file first - which this did - means a snapshot from last week silently
+    shadows tonight's fresh fetch. So: fresh per-symbol file first, combined only as a
+    fallback when no per-symbol file exists at all.
+    """
     import pandas as pd
-    cdf = _combined()
-    if cdf is not None:
-        try:
-            cols = {c.lower(): c for c in cdf.columns}
-            sub = cdf[cdf[cols["symbol"]] == sym]
-            if not sub.empty:
-                ser = {str(d)[:10]: float(c)
-                       for d, c in zip(sub[cols["date"]], sub[cols["close"]])
-                       if c == c}
-                return ser
-        except Exception:
-            pass
+    import re as _re
+
     # THREE naming conventions exist in this repo and they do not agree:
     #   fetch_yahoo._safe()  re.sub(r"[^A-Za-z0-9]+","_",sym).strip("_")  -> "GSPC", "BRK_B"
     #   the older pipeline   ^ -> _IDX_, = -> _EQ_, . -> _                -> "_IDX_GSPC"
     #   the Colab            ^ -> IDX_                                   -> "IDX_GSPC"
-    # Looking for only one of them means the file exists and is reported missing, which is
-    # exactly what happened. Try every form.
-    import re as _re
     yahoo_style = _re.sub(r"[^A-Za-z0-9]+", "_", sym).strip("_")
     legacy = sym.replace("^", "_IDX_").replace("=", "_EQ_").replace(".", "_")
     colab = sym.replace("^", "IDX_").replace("=", "EQ_").replace(".", "_")
     candidates = []
     for base in (yahoo_style, legacy, colab, sym):
         candidates += [base + ".parquet", "us_" + base + ".parquet"]
+
     for name in candidates:
         p = os.path.join(YAHOO, name)
         if not os.path.exists(p):
@@ -131,7 +127,7 @@ def load(sym):
             d = next((cols[k] for k in ("date", "datetime", "index") if k in cols), None)
             c = next((cols[k] for k in ("close", "adj close", "adj_close") if k in cols), None)
             if d is None or c is None:
-                return {}
+                continue
             out = {}
             for dd, cc in zip(df[d], df[c]):
                 try:
@@ -140,9 +136,23 @@ def load(sym):
                 except Exception:
                     continue
                 out[str(dd)[:10]] = float(cc)
-            return out
+            if out:
+                return out
         except Exception:
             continue
+
+    # fallback: the single hand-uploaded file
+    cdf = _combined()
+    if cdf is not None:
+        try:
+            cols = {c.lower(): c for c in cdf.columns}
+            sub = cdf[cdf[cols["symbol"]] == sym]
+            if not sub.empty:
+                return {str(d)[:10]: float(c)
+                        for d, c in zip(sub[cols["date"]], sub[cols["close"]])
+                        if c == c}
+        except Exception:
+            pass
     return {}
 
 

@@ -1523,13 +1523,25 @@ function mktUpdate(){
   var holidays=MSTAT.holidays||[];
   var isHol=holidays.some(function(h){ return h && h[0]===iso; });
   var cls, txt;
-  if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
+  // SPECIAL SESSIONS COME FIRST. Muhurat trading happens on a Sunday, which the weekday
+  // rule below treats as closed - so on 8 Nov 2026 the header would have said "Closed"
+  // through a live session. Same for any other special session on a weekend or a holiday.
+  var sp=(MSTAT.special_sessions||[]).filter(function(s){ return s && s.date===iso; })[0];
+  if(sp){
+    var spo=toMin(sp.open||"14:20"), spc=toMin(sp.close||"15:30");
+    if(mins>=spo && mins<spc){ cls="on"; txt="Muhurat"; }
+    else if(mins<spo){ cls="pre"; txt="Muhurat "+sp.open; }
+    else { cls="off"; txt="Closed"; }
+  }
+  else if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
   else if(mins>=pre && mins<op){ cls="pre"; txt="Pre-open"; }
   else if(mins>=op && mins<cl){ cls="on"; txt="Open"; }
   else { cls="off"; txt="Closed"; }
   box.className=cls; box.textContent=txt;
   var upcoming=holidays.filter(function(h){ return h && h[0]>=iso; });
-  box.title = isHol ? "Market holiday today"
+  box.title = sp ? ("Special session: "+(sp.label||"Muhurat trading")+" "+(sp.open||"")+"-"+(
+                     sp.close||"")+" IST")
+            : isHol ? "Market holiday today"
             : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead");
 }
 setInterval(mktUpdate, 60000);

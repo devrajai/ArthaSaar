@@ -127,10 +127,17 @@ jobs:
               print(f"{p}: {'%.0f MB' % (os.path.getsize(p)/1e6) if os.path.exists(p) else 'MISSING'}")
           EOF
 
+      # --all covers the whole archive, not 60 names. Chunking keeps memory flat and the
+      # budget stops cleanly before the 90-minute job limit instead of being killed halfway
+      # through writing the file. Most-traded symbols are forecast first, so a short run
+      # still covers the names people look at.
       - name: Run TimesFM forecasts
         env:
           OMP_NUM_THREADS: '2'
-        run: python scripts/timesfm_forecast.py --max-series 60 --context 512 --horizon 63
+        run: python scripts/timesfm_forecast.py --all --chunk 250 --budget-min 70 --context 512 --horizon 63
+
+      - name: Score the forecasts against what actually happened
+        run: python scripts/timesfm_score.py || echo 'scorer failed - the forecast file is still valid'
 
       - name: Save the model cache and forecasts to Google Drive
         if: env.HAS_DRIVE == 'true'
@@ -148,7 +155,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/timesfm_forecasts.json docs/data.json
+          git add data/timesfm_forecasts.json docs/data.json data/forecast_log.jsonl docs/timesfm_score.json
           if git diff --cached --quiet; then
             echo 'No changes.'
           else

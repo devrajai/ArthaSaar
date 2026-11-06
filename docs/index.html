@@ -875,6 +875,10 @@ header{
 
 /* external-tab marker: the tab leaves the site, so say so */
 .extmark{font-size:9px;opacity:.65;margin-left:2px}
+/* a tab that is new gets a dot, because everything lives behind the menu and a new
+   section is otherwise invisible until someone opens it */
+.newmark{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c02b2b;
+  margin-left:4px;vertical-align:2px}
 a.bigbtn{display:inline-block;margin:10px 0 4px;padding:13px 22px;border-radius:14px;
   background:#1d4ed8;color:#fff;font-weight:800;font-size:15px;text-decoration:none;
   box-shadow:0 6px 18px rgba(29,78,216,.28)}
@@ -1329,12 +1333,21 @@ function coneSVG(f, extras, w, h){
          X(1) + ',' + Y(lo) + '" fill="rgba(29,78,216,.13)"/>');
   o.push('<line x1="' + X(0) + '" y1="' + Y(last) + '" x2="' + X(1) + '" y2="' + Y(med) +
          '" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4"/>');
+  var usedLabels = [];
   (extras || []).forEach(function(e){
     var ev = Number(e.v);
     if(!isFinite(ev)) return;
     o.push('<line x1="' + padL + '" y1="' + Y(ev).toFixed(1) + '" x2="' + (w - padR) +
            '" y2="' + Y(ev).toFixed(1) + '" stroke="' + e.col + '" stroke-width="1" stroke-dasharray="3 3"/>');
-    o.push('<text x="' + (w - padR + 4) + '" y="' + (Y(ev) + 3).toFixed(1) +
+    // max pain and a wall often sit on the same level; two labels on one line is
+    // unreadable, so push the later one down until it clears the ones already placed.
+    var ly = Y(ev) + 3;
+    for(var guard = 0; guard < 8; guard++){
+      if(!usedLabels.some(function(u){ return Math.abs(u - ly) < 11; })) break;
+      ly += 11;
+    }
+    usedLabels.push(ly);
+    o.push('<text x="' + (w - padR + 4) + '" y="' + ly.toFixed(1) +
            '" font-size="9.5" fill="' + e.col + '">' + esc(e.label) + '</text>');
   });
   o.push('<circle cx="' + X(0) + '" cy="' + Y(last) + '" r="3.2" fill="var(--text)"/>');
@@ -1714,12 +1727,16 @@ function toggleSimple(){
 // empty and is better handed off than faked.
 var EXTERNAL = {"ipo": "https://ipobodh.vercel.app/"};
 
+var NEW_TABS = {"charts":1,"forecast":1};
 function renderTabs(){
   var nav=$("#tabs");nav.innerHTML="";
   SECTIONS.forEach(function(s){
     var lbl = (LANG==="hi" && STR.hi[s.id]) ? STR.hi[s.id] : s.label;
     var ext = EXTERNAL[s.id];
-    var b=el("button","",esc(lbl)+(ext?'<span class="extmark" title="opens another site"> \u2197</span>':""));
+    var isNew = NEW_TABS[s.id];
+    var b=el("button","",esc(lbl)+
+      (isNew?'<span class="newmark" title="added this week"></span>':"")+
+      (ext?'<span class="extmark" title="opens another site"> \u2197</span>':""));
     b.setAttribute("data-go",s.id);
     if(ext){
       b.setAttribute("data-external",ext);
@@ -2272,6 +2289,56 @@ function build(d){
        source:"data/timesfm_forecasts.json; docs/oi_strikes.json; NSE F&O bhavcopy for max pain.",
        updated:F.updated,
        note:"A cone that contains the walls is a model saying nothing new. When the median sits outside a wall, one of the two is wrong - that is the only interesting case, and it is not a trade signal on its own."}));
+
+    // 1b. has any of it actually worked? --------------------------------------------
+    // A forecast nobody scores is decoration, so this card is the first thing a reader
+    // can use to decide how much weight the cone above deserves.
+    (function(){
+      var S=TSCORE;
+      if(!S){
+        v.appendChild(card("Has the model been right?","no scoreboard yet",
+          [para("docs/timesfm_score.json is not published yet. scripts/timesfm_score.py settles every logged forecast once its 21 sessions have passed, so this card fills itself one horizon after the first logged run.", false)],
+          {what:"A running record of what TimesFM predicted against what the price then did.",
+           source:"scripts/timesfm_score.py over data/forecast_log.jsonl", updated:when}));
+        return;
+      }
+      var o=S.overall||{};
+      if(!o.n){
+        v.appendChild(card("Has the model been right?","nothing settled yet",
+          [para(num(S.runs_logged||0)+" run(s) logged, and every one of them still has its horizon in the future. The first scores appear 21 sessions after the first logged forecast - that is what scoring a 21-day call honestly costs. Grading it on day two would flatter it.", false)],
+          {what:"A running record of what TimesFM predicted against what the price then did.",
+           source:"scripts/timesfm_score.py over data/forecast_log.jsonl and the candle archive.",
+           updated:S.updated,
+           note:"A forecast is only counted once its horizon has actually elapsed in the archive. Nothing is scored early and nothing is dropped."}));
+        return;
+      }
+      var grid=el("div","kpis");
+      grid.appendChild(kpi("Scored", num(o.n), "forecasts settled"));
+      grid.appendChild(kpi("Median miss", o.median_abs_error_pct+"%", "median call vs what happened"));
+      grid.appendChild(kpi("Band hit", o.band_hit_pct+"%", "realised inside the 10-90"));
+      grid.appendChild(kpi("Direction", o.direction_hit_pct+"%", "sign was right"));
+      var kids=[grid];
+      if((S.by_run||[]).length){
+        kids.push(el("p","big","Run by run"));
+        kids.push(tbl({columns:["as of","n","median miss %","band hit %","direction %"],
+          rows:S.by_run.slice(-8).map(function(r){
+            return [r.as_of,r.n,r.median_abs_error_pct,r.band_hit_pct,r.direction_hit_pct];})},
+          ["n","median miss %","band hit %","direction %"]));
+      }
+      if((S.recent||[]).length){
+        kids.push(el("p","big","The last few, settled"));
+        kids.push(tbl({columns:["symbol","as of","forecast chg","realised chg","miss %","in band"],
+          rows:S.recent.slice(0,20).map(function(r){
+            return [r.symbol,r.as_of,r.forecast_pct,r.realised_pct,r.error_pct,r.in_band?"yes":"no"];})},
+          ["forecast chg","realised chg","miss %"]));
+      }
+      v.appendChild(card("Has the model been right?",
+        num(o.n)+" settled · median miss "+o.median_abs_error_pct+"%", kids,
+        {what:"What TimesFM predicted, settled against the close that followed one horizon later. Three numbers, because they answer three different questions: how wrong the median was, whether the realised price stayed inside the band the model drew, and whether the sign was right.",
+         source:"scripts/timesfm_score.py over data/forecast_log.jsonl and the candle archive.",
+         updated:S.updated,
+         note:"A model can be bad on one of these and good on another - a wide band is easy to hit and a flat call is easy to get right on direction. Read all three. Early numbers are small samples; treat anything under about 100 settled forecasts as noise."}));
+    })();
 
     // 2. where the model and the option market disagree
     if(walls||mp!=null){
@@ -5666,7 +5733,7 @@ var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=
     CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null,
     SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null,
     RS=null, SEASON=null, CORR=null, WATCH=null, DEALS=null, INSIDER=null, CAL=null, BRIEF=null, MSTAT=null,
-    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null;
+    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null, TSCORE=null;
 
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
@@ -5697,6 +5764,7 @@ function assign(name, v){
     case "commodities.json": COMMOD=v; break;
     case "macro.json": MACRO=v; break;
     case "story.json": STORY=v; break;
+    case "timesfm_score.json": TSCORE=v; break;
     case "fundamentals.json": FUNDA=v; break;
     case "sector_fund.json": SECF=v; break;
     case "behaviour.json": BEHAV=v; break;
@@ -5755,7 +5823,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json"];
 
 function renderAll(){
   if(!DATA) return;

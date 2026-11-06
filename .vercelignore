@@ -1,10 +1,27 @@
-# The site is docs/ only. Everything else is data the pipeline uses, and cloning it on every
-# deploy makes the build slow for no benefit - the repo carries hundreds of MB of parquet.
+# ArthaSaar is a STATIC site. Everything the browser needs is in docs/.
+#
+# The python files are excluded deliberately: requirements.txt at the repo root makes
+# Vercel's zero-config detection choose the Python runtime, and it then fails with
+#   [PYTHON_ENDPOINT_NOT_FOUND] No python endpoint found
+# because there is no serverless function here - docs/index.html is the whole app.
+# vercel.json also sets "framework": null, so detection cannot pick Python again.
+requirements.txt
+requirements-*.txt
+pyproject.toml
+Pipfile
+setup.py
+runtime.txt
+api/
+
+# pipeline data - hundreds of MB, not part of the site
 data/
 .github/
 reference/
+tests/
+worker/
 *.parquet
 *.zip
 *.pyc
 __pycache__/
-tests/
+scripts/
+config/

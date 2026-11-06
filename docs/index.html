@@ -1523,25 +1523,13 @@ function mktUpdate(){
   var holidays=MSTAT.holidays||[];
   var isHol=holidays.some(function(h){ return h && h[0]===iso; });
   var cls, txt;
-  // SPECIAL SESSIONS COME FIRST. Muhurat trading happens on a Sunday, which the weekday
-  // rule below treats as closed - so on 8 Nov 2026 the header would have said "Closed"
-  // through a live session. Same for any other special session on a weekend or a holiday.
-  var sp=(MSTAT.special_sessions||[]).filter(function(s){ return s && s.date===iso; })[0];
-  if(sp){
-    var spo=toMin(sp.open||"14:20"), spc=toMin(sp.close||"15:30");
-    if(mins>=spo && mins<spc){ cls="on"; txt="Muhurat"; }
-    else if(mins<spo){ cls="pre"; txt="Muhurat "+sp.open; }
-    else { cls="off"; txt="Closed"; }
-  }
-  else if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
+  if(day===0||day===6||isHol){ cls="off"; txt="Closed"; }
   else if(mins>=pre && mins<op){ cls="pre"; txt="Pre-open"; }
   else if(mins>=op && mins<cl){ cls="on"; txt="Open"; }
   else { cls="off"; txt="Closed"; }
   box.className=cls; box.textContent=txt;
   var upcoming=holidays.filter(function(h){ return h && h[0]>=iso; });
-  box.title = sp ? ("Special session: "+(sp.label||"Muhurat trading")+" "+(sp.open||"")+"-"+(
-                     sp.close||"")+" IST")
-            : isHol ? "Market holiday today"
+  box.title = isHol ? "Market holiday today"
             : (upcoming.length ? "Next holiday: "+upcoming[0][0]+" ("+upcoming[0][1]+")" : "No holiday listed ahead");
 }
 setInterval(mktUpdate, 60000);
@@ -1773,43 +1761,6 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
-    // ---- ONE DATE FOR THE PAGE ---------------------------------------------------------
-    // On 6 Nov the page mixed two trading days - the sector map was from the 4th while the
-    // screener was from the 5th - so a green map sat beside "79% of stocks fell". Both were
-    // right, about different days. This states the session once, up front, and names any
-    // file that is behind it instead of leaving the reader to compare twelve timestamps.
-    (function(){
-     try{
-      if(!ASOF||!ASOF.session) return;
-      var kids=[];
-      if(ASOF.consistent){
-        kids.push(para("Every dated figure on this page describes the <b>"+esc(ASOF.session)+
-          "</b> session.", true));
-      }else{
-        var behind=(ASOF.behind||[]).map(function(b){return esc(b.label)+" ("+b.date+")";});
-        kids.push(para("This page is built from the <b>"+esc(ASOF.session)+"</b> session, but "+
-          "these are behind it: <b>"+behind.join(", ")+"</b>. Where they differ, each card's "+
-          "own date is the one that applies - the site is not claiming they are the same day.",
-          true));
-      }
-      if(ASOF.kept&&ASOF.kept.length){
-        var kept=ASOF.kept.map(function(k){return esc(k.file)+" ("+k.before+" \u2192 "+k.now+")";});
-        kids.push(para("<b style=\"color:#b45309\">"+ASOF.kept.length+" file(s) were kept from "+
-          "the previous run</b> because this run built them empty: "+kept.join(", ")+
-          ". The published figures are older than the date above - the alternative was "+
-          "replacing good data with nothing.", true));
-      }
-      kids.push(para("Files that carry no date of their own are rebuilt in the same pipeline "+
-        "pass, so they share this session.", false));
-      v.appendChild(card("Data as of", ASOF.session+
-        (ASOF.consistent?" \\u00b7 all files agree":" \\u00b7 some files behind"), kids,
-        {what:"The single trading session this page describes, and any file that disagrees.",
-         source:"Derived from the candle archive every run.", updated:ASOF.updated,
-         note:"A build timestamp is not a session date. A file rebuilt at midnight would otherwise look like it describes the next day."}));
-     }catch(e){}
-    })();
-
-
     // ---- WHAT'S COMING AT THE OPEN -----------------------------------------------------
     // The live form of the lead-lag study: not "the correlation is 0.26" but "the S&P fell
     // 1.1% overnight, and after a fall that size Nifty's next session was down 67% of the
@@ -5825,7 +5776,6 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
-    case "data_asof.json": ASOF=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -5873,7 +5823,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_asof.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -6239,6 +6189,45 @@ show = function(id){
 
 
 
+
+
+<script>
+/* ArthaSaar — "Report a problem": opens a pre-filled GitHub Issue, no third-party request. */
+(function(){
+  try{
+    if(document.getElementById("asReport")) return;
+    var a=document.createElement("a");
+    a.id="asReport"; a.textContent="Report a problem";
+    a.style.cssText="position:fixed;right:12px;bottom:76px;z-index:9000;background:#0b57d0;color:#fff;"+
+      "padding:8px 13px;border-radius:999px;font:600 12px system-ui,-apple-system,sans-serif;"+
+      "text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.18)";
+    function build(){
+      var t=document.querySelector("#tabs button.active");
+      var tab=t?(t.textContent||"").trim():"";
+      var stamp=(document.getElementById("stamp")||{}).textContent||"";
+      var body=[
+        "**Page:** "+location.href,
+        "**Section:** "+(tab||"(not set)"),
+        "**Data stamp:** "+(stamp||"(not shown)"),
+        "**Screen:** "+window.innerWidth+"x"+window.innerHeight,
+        "**Browser:** "+navigator.userAgent,
+        "",
+        "**What is wrong?**",
+        "",
+        "**What did you expect?**",
+        ""
+      ].join("\n");
+      var title="[site] "+(tab?tab+": ":"")+"problem";
+      return "https://github.com/devrajai/ArthaSaar/issues/new?title="+encodeURIComponent(title)+
+             "&body="+encodeURIComponent(body)+"&labels=bug";
+    }
+    a.href=build(); a.target="_blank"; a.rel="noopener";
+    a.addEventListener("click",function(){ a.href=build(); });
+    a.title="Opens a GitHub issue with this page's details already filled in";
+    document.body.appendChild(a);
+  }catch(e){}
+})();
+</script>
 
 </body>
 </html>

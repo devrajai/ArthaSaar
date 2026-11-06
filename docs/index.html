@@ -1789,6 +1789,92 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- NORMAL RANGE, STOP NOISE, AND A LEVEL CALCULATOR -------------------------------
+    // Measured from ten years of actual sessions, NOT from the model's band. That band has
+    // never been scored (timesfm_score.json reads scored: 0), so a percentage derived from it
+    // would be invented. These are frequencies in real data.
+    (function(){
+     try{
+      if(!RNG||!RNG.index||!RNG.index.range) return;
+      var ix=RNG.index.range, lv=RNG.index.levels||[];
+      var kids=[];
+      kids.push(para("Most 21-session periods for the Nifty stay within <b>"+
+        ix.p10_21d+"% to "+ix.p90_21d+"%</b> (median "+sgn(ix.p50_21d)+"%). That is the "+
+        "middle 80% of "+num(ix.n)+" historical periods. The worst was "+ix.worst_21d+"%, "+
+        "the best "+sgn(ix.best_21d)+"%.", true));
+
+      kids.push(para("<b>Where would a stop sit?</b> A tight stop is inside ordinary movement, "+
+        "so it gets hit without anything being wrong:", false));
+      var ssel=el("select"); ssel.className="datepick";
+      [1,2,3,5].forEach(function(s){
+        var o=el("option","",s+"% below entry"); o.value=s; ssel.appendChild(o);
+      });
+      var sout=el("div","histout");
+      function showStop(){
+        var s=ssel.value;
+        var h5=ix["stop_"+s+"_5d"], h21=ix["stop_"+s+"_21d"];
+        var tone=h21>=50?"#c02b2b":(h21>=25?"#b45309":"#0a7d43");
+        var verdict = h21>=50 ? "That stop sits inside ordinary noise - it would be hit about half the time with nothing actually wrong."
+                    : h21>=25 ? "That is a workable distance, but expect to be stopped out often."
+                    : "That is wide enough to sit outside normal movement.";
+        sout.innerHTML='<p class="hctx">A stop <b>'+s+'% below entry</b> was hit within '+
+          '5 sessions in <b>'+h5+'%</b> of past entries, and within 21 sessions in '+
+          '<b style="color:'+tone+'">'+h21+'%</b>. '+verdict+'</p>';
+      }
+      ssel.addEventListener("change",showStop);
+      kids.push(ssel); kids.push(sout);
+
+      kids.push(para("<b>What are the odds of a level?</b> Measured over 21 sessions. "+
+        "Touching a level is easier than finishing beyond it, because a price can touch and "+
+        "come back - the two are shown separately for that reason.", false));
+      var lsel=el("select"); lsel.className="datepick";
+      lv.forEach(function(x){
+        var o=el("option","",(x.move_pct>0?"+":"")+x.move_pct+"% move");
+        o.value=x.move_pct; lsel.appendChild(o);
+      });
+      var lout=el("div","histout");
+      function showLevel(){
+        var m=parseFloat(lsel.value);
+        var x=null;
+        lv.forEach(function(y){ if(y.move_pct===m) x=y; });
+        if(!x) return;
+        lout.innerHTML='<p class="hctx">The Nifty moved '+(m>0?"up":"down")+' at least '+
+          Math.abs(m)+'% within 21 sessions in <b>'+x.finished_pct+'%</b> of past periods, and '+
+          'touched that level at some point in <b>'+x.touched_pct+'%</b>. '+
+          'Measured over '+num(x.periods)+' periods.</p>';
+      }
+      lsel.addEventListener("change",showLevel);
+      kids.push(lsel); kids.push(lout);
+
+      kids.push(para("<b>Any stock:</b> its own normal 21-session range.", false));
+      var inp=el("input"); inp.className="datepick"; inp.placeholder="e.g. RELIANCE";
+      inp.setAttribute("list","rnglist");
+      var dl=el("datalist"); dl.id="rnglist";
+      Object.keys(RNG.symbols||{}).forEach(function(s){
+        var o=el("option"); o.value=s; dl.appendChild(o);
+      });
+      var pout=el("div","histout");
+      function showStock(){
+        var s=(inp.value||"").trim().toUpperCase();
+        var r=(RNG.symbols||{})[s];
+        if(!r){ pout.innerHTML=s?'<p class="hctx">No range stored for '+esc(s)+'.</p>':""; return; }
+        pout.innerHTML='<p class="hctx"><b>'+esc(s)+'</b>: most 21-session periods stay within '+
+          '<b>'+r.p10_21d+'% to '+r.p90_21d+'%</b> (median '+sgn(r.p50_21d)+'%). Worst '+
+          r.worst_21d+'%, best '+sgn(r.best_21d)+'%. A 2% stop was hit within 21 sessions in '+
+          r.stop_2_21d+'% of entries. Measured over '+num(r.n)+' sessions.</p>';
+      }
+      inp.addEventListener("input",showStock);
+      kids.push(inp); kids.push(dl); kids.push(pout);
+
+      v.appendChild(card("Normal range", num(RNG.count)+" stocks \u00b7 "+RNG.index.last+" session", kids,
+        {what:"How far this market and each stock actually move over 5 and 21 sessions, and how often a stop at a given distance gets hit.",
+         source:"Ten years of Nifty sessions and the candle archive. Frequencies in past data.", updated:RNG.updated,
+         note:"Every figure is a frequency in past data - what happened, not what will. Sample sizes are shown. A 21-session range is not a forecast, and the middle 80% still leaves one period in ten outside it on each side."}));
+      showStop(); showLevel();
+     }catch(e){}
+    })();
+
+
     // ---- ONE DATE FOR THE PAGE ---------------------------------------------------------
     // On 6 Nov the page mixed two trading days - the sector map from the 4th, the screener
     // from the 5th - so a green map sat beside "79% of stocks fell". Both were right, about
@@ -5948,6 +6034,7 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "ranges.json": RNG=v; break;
     case "data_asof.json": ASOF=v; break;
     case "breakers.json": BRK=v; break;
     case "report_cards.json": RCARDS=v; break;
@@ -5996,8 +6083,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, ASOF=null, BRK=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","breakers.json","data_asof.json","data_errors.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, ASOF=null, BRK=null, RNG=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","breakers.json","data_asof.json","data_errors.json","ranges.json"];
 
 function renderAll(){
   if(!DATA) return;

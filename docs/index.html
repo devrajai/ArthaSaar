@@ -1789,6 +1789,88 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- ONE DATE FOR THE PAGE ---------------------------------------------------------
+    // On 6 Nov the page mixed two trading days - the sector map from the 4th, the screener
+    // from the 5th - so a green map sat beside "79% of stocks fell". Both were right, about
+    // different days. This states the session once and names any file behind it.
+    (function(){
+     try{
+      if(!ASOF||!ASOF.session) return;
+      var kids=[];
+      if(ASOF.consistent){
+        kids.push(para("Every dated figure on this page describes the <b>"+esc(ASOF.session)+
+          "</b> session.", true));
+      }else{
+        var behind=(ASOF.behind||[]).map(function(b){return esc(b.label)+" ("+b.date+")";});
+        kids.push(para("This page is built from the <b>"+esc(ASOF.session)+"</b> session, but "+
+          "these are behind it: <b>"+behind.join(", ")+"</b>. Where they differ, each card's "+
+          "own date applies - the site is not claiming they are the same day.", true));
+      }
+      if(ASOF.kept&&ASOF.kept.length){
+        var kept=ASOF.kept.map(function(k){return esc(k.file)+" ("+k.before+" \u2192 "+k.now+")";});
+        kids.push(para("<b style=\"color:#b45309\">"+ASOF.kept.length+" file(s) were kept from "+
+          "the previous run</b> because this run built them empty: "+kept.join(", ")+
+          ". The published figures are older than the date above - the alternative was "+
+          "replacing good data with nothing.", true));
+      }
+      v.appendChild(card("Data as of", ASOF.session+
+        (ASOF.consistent?" \u00b7 all files agree":" \u00b7 some files behind"), kids,
+        {what:"The single trading session this page describes, and any file that disagrees.",
+         source:"Derived from the candle archive every run.", updated:ASOF.updated,
+         note:"A build timestamp is not a session date. A file rebuilt at midnight would otherwise look like it describes the next day."}));
+     }catch(e){}
+    })();
+
+
+    // ---- RANGE BREAKERS AND BAND CALIBRATION --------------------------------------------
+    // Deliberately NOT a probability calculator. Every idea in the last review rests on the
+    // 10-90 band actually containing ~80% of outcomes, and nothing had tested that. This
+    // publishes the measurement first: a factual list of stocks that moved further than the
+    // model expected, and the coverage number that decides whether anything else is safe.
+    (function(){
+     try{
+      if(!BRK) return;
+      var kids=[];
+      if(BRK.coverage_pct==null){
+        kids.push(para("The model has logged <b>"+num(BRK.runs)+"</b> run and <b>nothing has "+
+          "settled yet</b> - every forecast's horizon is still in the future. No probability "+
+          "is published until the band has actually been tested against outcomes.", true));
+        kids.push(para("This card will report what share of actual moves landed inside the "+
+          "10-90 band. A calibrated band gives about 80%. Until then, any \"chance of X\" "+
+          "figure would be invented.", false));
+      }else{
+        var tone=BRK.coverage_pct>=70&&BRK.coverage_pct<=90?"#0a7d43":"#b45309";
+        kids.push(para("Of <b>"+num(BRK.settled)+"</b> forecasts whose horizon has passed, "+
+          "<b style=\"color:"+tone+"\">"+BRK.coverage_pct+"%</b> closed inside the 10-90 band. "+
+          "A calibrated band gives about "+BRK.target_pct+"%.", true));
+        kids.push(para("Verdict: <b>"+esc(BRK.verdict)+"</b>.", false));
+        if(BRK.by_horizon&&BRK.by_horizon.length){
+          kids.push(tbl({columns:["horizon","inside","outside","coverage"],
+            rows:BRK.by_horizon.map(function(b){
+              return [b.h+"d", num(b.inside), num(b.outside),
+                      b.coverage_pct==null?"-":b.coverage_pct+"%"];
+            })}));
+        }
+      }
+      if(BRK.breakers&&BRK.breakers.length){
+        kids.push(para("<b>Range breakers</b> - stocks that moved further than the model "+
+          "thought normal. These are facts about the past, not signals:", false));
+        kids.push(tbl({columns:["stock","forecast band","actual","beyond by"],
+          rows:BRK.breakers.slice(0,25).map(function(b){
+            return [esc(b.symbol), b.forecast_band[0]+"% to "+b.forecast_band[1]+"%",
+                    (b.actual_chg_pct>0?"+":"")+b.actual_chg_pct+"%",
+                    b.beyond_by_pct+"pp"];
+          })}));
+      }
+      v.appendChild(card("Band check", BRK.coverage_pct==null?"collecting":
+          (BRK.coverage_pct+"% inside the band"), kids,
+        {what:"Whether the model's 10-90 band actually contains the share of outcomes it should. This is the measurement every other forecast feature depends on.",
+         source:"Our own forecast log, scored against Yahoo closes.", updated:BRK.updated,
+         note:"Band width is not a probability. Nothing here estimates the chance of a level being reached - that needs a calibrated band first, and this is the check. A coverage figure from a handful of settled forecasts is noise, and the verdict says so below 100 cases."}));
+     }catch(e){}
+    })();
+
+
     // ---- WHAT'S COMING AT THE OPEN -----------------------------------------------------
     // The live form of the lead-lag study: not "the correlation is 0.26" but "the S&P fell
     // 1.1% overnight, and after a fall that size Nifty's next session was down 67% of the
@@ -5828,6 +5910,8 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "data_asof.json": ASOF=v; break;
+    case "breakers.json": BRK=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -5874,8 +5958,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, ASOF=null, BRK=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","breakers.json","data_asof.json"];
 
 function renderAll(){
   if(!DATA) return;

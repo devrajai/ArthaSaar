@@ -93,18 +93,27 @@ def log_forecasts(rows: list[dict], as_of: str, horizon_days: int) -> None:
             keep = [ln for ln in LOG.read_text().splitlines() if ln.strip()][-(LOG_KEEP - 1):]
         except Exception:
             keep = []
-    entry = {
-        "as_of": as_of,
-        "horizon_days": horizon_days,
-        "n": len(rows),
-        "rows": [{"symbol": r["symbol"], "last": r["last"],
-                  "median_chg_pct": r["median_chg_pct"],
-                  "low10_chg_pct": r["low10_chg_pct"],
-                  "high90_chg_pct": r["high90_chg_pct"]} for r in rows],
-    }
+    # TWO entries per run from one model call: the full horizon, and a 1-day band taken from
+    # step 1. The 1-day entry is what lets a range-breaker list be published every day rather
+    # than once every three weeks, and it costs no extra compute.
+    def mk(h: int, key_med: str, key_lo: str, key_hi: str):
+        rr = [{"symbol": r["symbol"], "last": r["last"],
+               "median_chg_pct": r.get(key_med), "low10_chg_pct": r.get(key_lo),
+               "high90_chg_pct": r.get(key_hi)} for r in rows]
+        rr = [x for x in rr if x["low10_chg_pct"] is not None
+              and x["high90_chg_pct"] is not None]
+        return {"as_of": as_of, "horizon_days": h, "n": len(rr), "rows": rr}
+
+    entries = [mk(horizon_days, "median_chg_pct", "low10_chg_pct", "high90_chg_pct")]
+    d1 = mk(1, "day1_median_chg_pct", "day1_low10_chg_pct", "day1_high90_chg_pct")
+    if d1["n"]:
+        entries.append(d1)
+
     LOG.parent.mkdir(parents=True, exist_ok=True)
-    LOG.write_text("\n".join(keep + [json.dumps(entry, separators=(",", ":"))]) + "\n")
-    print(f"  logged {len(rows)} forecasts to {LOG} ({len(keep) + 1} runs kept)")
+    lines = keep + [json.dumps(e, separators=(",", ":")) for e in entries]
+    LOG.write_text("\n".join(lines[-(LOG_KEEP + 1):]) + "\n")
+    print(f"  logged {sum(e['n'] for e in entries)} forecasts in {len(entries)} horizon(s) "
+          f"to {LOG}")
 
 
 def load_series(max_series: int, years: int) -> dict[str, pd.Series]:
@@ -269,6 +278,17 @@ def main() -> int:
                 dropped += 1
                 continue
             band_pct = round(high_chg - low_chg, 2)     # width of the 10-90 band, % of price
+            # Step 1 of the same forecast IS the 1-day band. Logging it costs nothing extra
+            # and is what makes a daily range-breaker list possible without a second run.
+            try:
+                q1 = np.cumsum(qs, axis=0)[0] if q.ndim == 2 else np.cumsum(qs)[0]
+                q1 = np.asarray(q1, dtype=float)
+                q1 = q1[np.isfinite(q1)]
+                day1_med = (np.exp(float(np.sum(rmed[:1]))) - 1) * 100
+                day1_lo = (np.exp(float(np.min(q1))) - 1) * 100
+                day1_hi = (np.exp(float(np.max(q1))) - 1) * 100
+            except Exception:
+                day1_med = day1_lo = day1_hi = None
             rows.append({
                 "symbol": sym,
                 "name": EXTRA.get(sym, sym),
@@ -280,6 +300,9 @@ def main() -> int:
                 # read as a probability and was 0 for two thirds of rows. This is what it
                 # actually is: how wide the band is, as a percentage of the price.
                 "band_pct": band_pct,
+                "day1_median_chg_pct": None if day1_med is None else round(day1_med, 2),
+                "day1_low10_chg_pct": None if day1_lo is None else round(day1_lo, 2),
+                "day1_high90_chg_pct": None if day1_hi is None else round(day1_hi, 2),
                 # direction is only meaningful for an index, where the level is a market
                 # view rather than a single company's price
                 "direction": ("up" if median_chg > 0.25 else ("down" if median_chg < -0.25 else "flat"))

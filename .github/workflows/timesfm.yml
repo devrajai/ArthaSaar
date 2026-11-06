@@ -43,7 +43,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install --index-url https://download.pytorch.org/whl/cpu torch
-          pip install "timesfm" yfinance pandas pyarrow
+          # PINNED. An unpinned `pip install timesfm` means a new release can change every
+          # forecast overnight with nothing in the repo recording what ran. TimesFM 3.0
+          # (28 Aug 2026) also ships NON-COMMERCIAL, NON-PRODUCTION weights, unlike 2.5's
+          # Apache-2.0 - so an unpinned install could silently move this project onto a
+          # licence it cannot use. Range-pinned to the 2.5 series deliberately.
+          pip install "timesfm>=2.5,<3" yfinance pandas pyarrow
+          python -c "import timesfm, sys; print('timesfm', getattr(timesfm,'__version__','unknown'))"
           pip install google-api-python-client google-auth
 
       # THE CHECKPOINT IS ~1 GB. Without a cache it downloads from HuggingFace on every

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-timesfm_forecast.py - Google TimesFM zero-shot forecasts (FM3).
+timesfm_forecast.py - Google TimesFM 2.5 zero-shot forecasts.
 
 Runs the 2.5-200M checkpoint on CPU and writes one JSON the site reads.
 
@@ -52,6 +52,12 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 MODEL_ID = "google/timesfm-2.5-200m-pytorch"
+PKG_VERSION = "2.5"            # written into the output so a run can be traced
+# Only forecast series a model can say something useful about. A stock with 130 sessions of
+# history and no volume produces the kind of output that made VINNY show +1,157%.
+MIN_HISTORY = 750              # ~3 years of sessions
+MIN_AVG_VOLUME = 50_000        # shares a day, applied to archive stocks only
+MAX_ABS_MEDIAN_PCT = 60.0      # a 21-day median beyond this is not a forecast, it is a bug
 OUT = Path("data/timesfm_forecasts.json")
 LOG = Path("data/forecast_log.jsonl")
 LOG_KEEP = 30          # runs kept for the scorer; ~30 x 2,225 rows is a few MB
@@ -121,7 +127,7 @@ def load_series(max_series: int, years: int) -> dict[str, pd.Series]:
                 sortcol = "ts" if "ts" in df.columns else "date"
                 df = df.sort_values(["symbol", sortcol])
                 counts = df.groupby("symbol").size()
-                keep = list(counts[counts >= 120].index)
+                keep = list(counts[counts >= MIN_HISTORY].index)
                 # Most-traded first. With 2,225 symbols a run can hit its time budget, and
                 # when it does the names people actually look at must already be done.
                 vol: dict = {}
@@ -132,7 +138,11 @@ def load_series(max_series: int, years: int) -> dict[str, pd.Series]:
                     except Exception:
                         vol = {}
                 keep.sort(key=lambda x: -(vol.get(x) or 0))
+                # drop the untradeable ones - they were the source of the absurd rows
+                keep = [k for k in keep if (vol.get(k) or 0) >= MIN_AVG_VOLUME]
                 keep = keep[:max_series]
+                print(f"  {len(keep)} series pass the {MIN_HISTORY}-session and "
+                      f"{MIN_AVG_VOLUME:,}-share floor")
                 for s in keep:
                     g = df[df["symbol"] == s]
                     out[str(s)] = pd.Series(g["close"].astype(float).values)
@@ -217,27 +227,48 @@ def main() -> int:
                   f"series - the rest waits for the next run")
             break
         part = syms[start:start + chunk]
-        inputs = [np.asarray(series[s], dtype=float)[-args.context:] for s in part]
+        # FORECAST LOG RETURNS, NOT PRICES.
+        # Feeding raw prices let the model extrapolate a trend indefinitely: a stock at 0.96
+        # was projected to 12, publishing a +1,157% median and a -100% floor. Log returns are
+        # stationary and small, so a path cannot invent a thousand percent, and converting
+        # back with exp() keeps every price positive.
+        raw = [np.asarray(series[s], dtype=float)[-args.context:] for s in part]
+        inputs = [np.diff(np.log(np.clip(r, 1e-9, None))) for r in raw]
         points, quantiles = model.forecast(horizon=args.horizon, inputs=inputs)
         points = np.asarray(points, dtype=float)
         quantiles = np.asarray(quantiles, dtype=float)
 
+        dropped = 0
         for i, sym in enumerate(part):
-            hist = inputs[i]
+            hist = raw[i]                      # prices, for the conversion back
             last = float(hist[-1])
-            med_abs = float(points[i][k])
-            if not last or not np.isfinite(med_abs):
+            if not last or not np.isfinite(last):
                 continue
-            q = quantiles[i][k] if quantiles.ndim == 3 else quantiles[i]
+            # cumulative log return at step k, converted back to a price
+            rmed = np.asarray(points[i], dtype=float)
+            cum_med = float(np.sum(rmed[:k + 1]))
+            if not np.isfinite(cum_med):
+                continue
+            q = quantiles[i] if quantiles.ndim == 3 else quantiles[i][None, :]
             q = np.asarray(q, dtype=float)
-            low_abs, high_abs = float(np.min(q)), float(np.max(q))
-            median_chg = (med_abs / last - 1) * 100
-            low_chg = (low_abs / last - 1) * 100
-            high_chg = (high_abs / last - 1) * 100
-            # confidence: how tight the 10-90 band is, as a share of the price.
-            # a wide band means the model is unsure. 100 = tight, 0 = very wide.
-            band_pct = abs(high_chg - low_chg)
-            confidence = int(max(0, min(100, round(100 - band_pct * 4))))
+            try:
+                qs = q[:k + 1, :] if q.ndim == 2 else q[:k + 1]
+                cum_q = np.cumsum(qs, axis=0)[-1] if q.ndim == 2 else np.cumsum(qs)
+            except Exception:
+                continue
+            cum_q = np.asarray(cum_q, dtype=float)
+            cum_q = cum_q[np.isfinite(cum_q)]
+            if cum_q.size == 0:
+                continue
+            median_chg = (np.exp(cum_med) - 1) * 100
+            low_chg = (np.exp(float(np.min(cum_q))) - 1) * 100
+            high_chg = (np.exp(float(np.max(cum_q))) - 1) * 100
+            # A 21-day median beyond +/-60% is a model failure, not information. Publishing
+            # it would put a four-digit number on the page next to a real stock.
+            if not np.isfinite(median_chg) or abs(median_chg) > MAX_ABS_MEDIAN_PCT:
+                dropped += 1
+                continue
+            band_pct = round(high_chg - low_chg, 2)     # width of the 10-90 band, % of price
             rows.append({
                 "symbol": sym,
                 "name": EXTRA.get(sym, sym),
@@ -245,14 +276,28 @@ def main() -> int:
                 "median_chg_pct": round(median_chg, 2),
                 "low10_chg_pct": round(low_chg, 2),
                 "high90_chg_pct": round(high_chg, 2),
-                "confidence": confidence,
-                "direction": "up" if median_chg > 0.25 else ("down" if median_chg < -0.25 else "flat"),
+                # band width replaces "confidence". The old score was 100 - 4*band, which
+                # read as a probability and was 0 for two thirds of rows. This is what it
+                # actually is: how wide the band is, as a percentage of the price.
+                "band_pct": band_pct,
+                # direction is only meaningful for an index, where the level is a market
+                # view rather than a single company's price
+                "direction": ("up" if median_chg > 0.25 else ("down" if median_chg < -0.25 else "flat"))
+                             if sym in EXTRA else None,
             })
+        if dropped:
+            print(f"  dropped {dropped} series whose forecast exceeded "
+                  f"+/-{MAX_ABS_MEDIAN_PCT:.0f}% over {args.report_days} sessions")
         print(f"  {min(start + chunk, len(syms))}/{len(syms)} forecast, {len(rows)} rows")
 
-    rows.sort(key=lambda r: -r["median_chg_pct"])
+    # Sort by symbol, NOT by median. Sorting by median descending put the twenty-five most
+    # absurd rows at the top of the published file, so the card led with VINNY +1,157%.
+    rows.sort(key=lambda r: r["symbol"])
     payload = {
         "model": "TimesFM 2.5 200M (zero-shot)",
+        "model_id": MODEL_ID,
+        "package_version": PKG_VERSION,
+        "input": "log returns (converted back with exp)",
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "horizon_days": args.report_days,
         "series": len(rows),

@@ -3786,19 +3786,22 @@ function build(d){
       if(f){
         var kids=[];
         if(f.nifty) kids.push(para("Nifty "+(f.horizon_days||21)+"-day median: "+sgn(f.nifty.median_chg_pct)+"%  "+
-          "(band "+sgn(f.nifty.low10_chg_pct)+"% to "+sgn(f.nifty.high90_chg_pct)+"%, confidence "+num(f.nifty.confidence)+")", true));
-        kids.push(tbl(f, ["last","median_chg_pct","low10_chg_pct","high90_chg_pct","confidence"]));
-        v.appendChild(card("FM3 / TimesFM", "Experimental · "+(f.model||"TimesFM")+" · "+(f.horizon_days||21)+"d · "+num(f.total)+" series", kids,
+          "(band "+sgn(f.nifty.low10_chg_pct)+"% to "+sgn(f.nifty.high90_chg_pct)+"%, a range "+
+          num(Math.abs((f.nifty.high90_chg_pct||0)-(f.nifty.low10_chg_pct||0)))+"% wide)", true));
+        kids.push(para("For stocks this is an <b>expected range</b>, not a direction. Foundation "+
+          "models have little skill on daily direction; the width of the band is the honest "+
+          "part. Direction is shown for indices only, and labelled experimental.", false));
+        kids.push(tbl(f, ["last","median_chg_pct","low10_chg_pct","high90_chg_pct","band_pct"]));
+        v.appendChild(card("TimesFM 2.5", "Experimental · "+(f.model||"TimesFM")+" · "+(f.horizon_days||21)+"d · "+num(f.total)+" series", kids,
           {what:"Zero-shot price forecasts per series, with a 10-90 band and a confidence score.",
            source:"Google TimesFM 2.5 (200M) via the timesfm package, run nightly on GitHub Actions.",
-           note:"EXPERIMENTAL. Zero-shot: the model was not trained or tuned on this data, so treat these numbers as a curiosity, not a forecast you would act on. A 21-day Nifty median of +2.7% at 58% confidence is barely different from saying \"probably up a bit\".",
            updated:f.updated?ago(f.updated):when,
-           note:"Zero-shot means the model was never trained on your data. Confidence is how tight the band is, not a probability of being right. Nothing here is a recommendation."}));
+           note:"EXPERIMENTAL. Zero-shot: the model was never trained on this data. The band is the model's own 10th-90th range and its width is not a probability of being right. A 21-day Nifty median of +2.7% is barely different from saying \"probably up a bit\". Nothing here is a recommendation."}));
       } else {
-        v.appendChild(card("FM3 / TimesFM","runs nightly at 20:35 IST",
+        v.appendChild(card("TimesFM 2.5","runs nightly at 20:35 IST",
           [ para("No forecast file yet. This runs in its own workflow because loading the model needs about 3-4 GB of RAM - more than a small container has."),
             para("The model cache and the output are stored in Google Drive, so the nightly job does not re-download a 1 GB checkpoint.") ],
-          {what:"Google TimesFM zero-shot forecasts (FM3).",
+          {what:"Google TimesFM 2.5 zero-shot forecasts.",
            source:"google/timesfm-2.5-200m-pytorch via the timesfm package.",updated:when,
            note:"It appears here as soon as the TimesFM workflow has run once and committed its JSON."}));
       }

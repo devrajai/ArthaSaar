@@ -45,6 +45,12 @@ import pandas as pd
 
 LOG = "data/forecast_log.jsonl"
 OUT = "docs/timesfm_score.json"
+# The kill switch. If the model's own band stops containing what actually happened, the
+# forecast is hidden rather than shown with a disclaimer. Hiding it is a stronger signal
+# than any note under a chart, and it fails in the safe direction.
+KILL_BAND_HIT = 70.0      # percent of realised closes that must land inside the 10-90 band
+KILL_MIN_N = 100          # settled forecasts needed before the switch is allowed to fire
+
 ARCHIVES = ("data/candles/daily_adj.parquet",
             "data/candles/cm_daily_adj.parquet",
             "data/candles/daily.parquet",
@@ -211,10 +217,23 @@ def main() -> int:
                                "horizon in the future. The first scores appear one horizon "
                                "after the first logged run.")
 
+    o = payload["overall"]
+    n = int(o.get("n") or 0)
+    if n >= KILL_MIN_N:
+        hit = float(o.get("band_hit_pct") or 0)
+        payload["status"] = "ok" if hit >= KILL_BAND_HIT else "under_review"
+        payload["status_reason"] = (f"band hit {hit}% over {n} settled forecasts "
+                                    f"(threshold {KILL_BAND_HIT}%)")
+    else:
+        payload["status"] = "too_early"
+        payload["status_reason"] = (f"only {n} settled forecasts; {KILL_MIN_N} are needed "
+                                    f"before this can be judged")
+
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(payload, separators=(",", ":")))
     o = payload["overall"]
+    print(f"status: {payload['status']} - {payload['status_reason']}")
     if o.get("n"):
         print(f"scored {o['n']} forecasts over {len(payload['by_run'])} runs | "
               f"median miss {o['median_abs_error_pct']}% | band hit {o['band_hit_pct']}% | "

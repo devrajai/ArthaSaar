@@ -1773,6 +1773,36 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- ONE DATE FOR THE PAGE ---------------------------------------------------------
+    // On 6 Nov the page mixed two trading days - the sector map was from the 4th while the
+    // screener was from the 5th - so a green map sat beside "79% of stocks fell". Both were
+    // right, about different days. This states the session once, up front, and names any
+    // file that is behind it instead of leaving the reader to compare twelve timestamps.
+    (function(){
+     try{
+      if(!ASOF||!ASOF.session) return;
+      var kids=[];
+      if(ASOF.consistent){
+        kids.push(para("Every dated figure on this page describes the <b>"+esc(ASOF.session)+
+          "</b> session.", true));
+      }else{
+        var behind=(ASOF.behind||[]).map(function(b){return esc(b.label)+" ("+b.date+")";});
+        kids.push(para("This page is built from the <b>"+esc(ASOF.session)+"</b> session, but "+
+          "these are behind it: <b>"+behind.join(", ")+"</b>. Where they differ, each card's "+
+          "own date is the one that applies - the site is not claiming they are the same day.",
+          true));
+      }
+      kids.push(para("Files that carry no date of their own are rebuilt in the same pipeline "+
+        "pass, so they share this session.", false));
+      v.appendChild(card("Data as of", ASOF.session+
+        (ASOF.consistent?" \\u00b7 all files agree":" \\u00b7 some files behind"), kids,
+        {what:"The single trading session this page describes, and any file that disagrees.",
+         source:"Derived from the candle archive every run.", updated:ASOF.updated,
+         note:"A build timestamp is not a session date. A file rebuilt at midnight would otherwise look like it describes the next day."}));
+     }catch(e){}
+    })();
+
+
     // ---- WHAT'S COMING AT THE OPEN -----------------------------------------------------
     // The live form of the lead-lag study: not "the correlation is 0.26" but "the S&P fell
     // 1.1% overnight, and after a fall that size Nifty's next session was down 67% of the
@@ -5788,6 +5818,7 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "data_asof.json": ASOF=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -5835,7 +5866,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_asof.json"];
 
 function renderAll(){
   if(!DATA) return;

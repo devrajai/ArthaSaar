@@ -403,6 +403,10 @@ jobs:
       # The searchable daily history. Runs after the scorecard so it sees today's session.
       - name: "7m2zk. Daily history index"
         run: python scripts/build_history.py || true
+      # Runs last among the builders: it reads the session date out of every published file
+      # and states the single date the whole page describes.
+      - name: "7m2zl. One data-as-of date"
+        run: python scripts/build_data_asof.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.

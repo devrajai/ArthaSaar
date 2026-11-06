@@ -135,6 +135,12 @@ def main():
         else:
             unknown.append(name)
 
+    guard = None
+    try:
+        guard = json.load(open("docs/_guard_report.json"))
+    except Exception:
+        pass
+
     sess, src = archive_session()
     dates = sorted({v["date"] for v in per.values()})
     out = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -183,6 +189,10 @@ def main():
         print("   behind the newest session:")
         for b in out["behind"]:
             print("     %-20s %s  (%s)" % (b["file"], b["date"], b["label"]))
+    if out["kept"]:
+        print("   kept from previous commit (this run built them empty):")
+        for k in out["kept"]:
+            print("     %-24s published %s rows, built %s" % (k["file"], k["before"], k["now"]))
     if unknown:
         print("   no date in file (rebuilt this run):", ", ".join(unknown[:8]),
               "..." if len(unknown) > 8 else "")

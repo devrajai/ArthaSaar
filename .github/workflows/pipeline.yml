@@ -405,7 +405,14 @@ jobs:
         run: python scripts/build_history.py || true
       # Runs last among the builders: it reads the session date out of every published file
       # and states the single date the whole page describes.
-      - name: "7m2zl. One data-as-of date"
+      # Runs BEFORE the data-as-of step and BEFORE the commit. If a builder produced an
+      # empty file where the last commit had data, the published version is kept and marked
+      # stale. This is the rule that would have prevented screener.json sitting empty for a
+      # week while every run reported success.
+      - name: "7m2zl. Never overwrite good data with an empty file"
+        run: python scripts/guard_empty.py
+
+      - name: "7m2zm. One data-as-of date"
         run: python scripts/build_data_asof.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart

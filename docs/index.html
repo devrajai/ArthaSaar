@@ -1792,6 +1792,13 @@ function build(d){
           "own date is the one that applies - the site is not claiming they are the same day.",
           true));
       }
+      if(ASOF.kept&&ASOF.kept.length){
+        var kept=ASOF.kept.map(function(k){return esc(k.file)+" ("+k.before+" \u2192 "+k.now+")";});
+        kids.push(para("<b style=\"color:#b45309\">"+ASOF.kept.length+" file(s) were kept from "+
+          "the previous run</b> because this run built them empty: "+kept.join(", ")+
+          ". The published figures are older than the date above - the alternative was "+
+          "replacing good data with nothing.", true));
+      }
       kids.push(para("Files that carry no date of their own are rebuilt in the same pipeline "+
         "pass, so they share this session.", false));
       v.appendChild(card("Data as of", ASOF.session+

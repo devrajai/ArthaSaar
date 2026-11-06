@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-06T12:40:03Z",
+  "generated_at": "2026-11-06T19:47:24Z",
   "channels": 10,
-  "videos": 381,
+  "videos": 382,
   "window_start": "2026-05-15",
   "window_end": "2026-11-06",
-  "total_views": 12296938,
+  "total_views": 12300423,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
@@ -37,6 +37,11 @@
       "channels": 4
     },
     {
+      "symbol": "INDIGO",
+      "mentions": 4,
+      "channels": 4
+    },
+    {
       "symbol": "YESBANK",
       "mentions": 4,
       "channels": 3
@@ -48,11 +53,6 @@
     },
     {
       "symbol": "INFY",
-      "mentions": 3,
-      "channels": 3
-    },
-    {
-      "symbol": "INDIGO",
       "mentions": 3,
       "channels": 3
     }
@@ -68,7 +68,7 @@
     },
     {
       "theme": "Earnings/Results",
-      "videos": 78
+      "videos": 79
     },
     {
       "theme": "IPO",
@@ -76,12 +76,12 @@
     },
     {
       "theme": "Options/F&O",
-      "videos": 71
+      "videos": 72
     },
     {
       "theme": "Budget/Policy",
-      "videos": 61
+      "videos": 62
     }
   ],
-  "net_sentiment": 179
+  "net_sentiment": 183
 }

@@ -414,10 +414,6 @@ jobs:
 
       - name: "7m2zm. One data-as-of date"
         run: python scripts/build_data_asof.py || true
-      # Band coverage and range breakers. Runs after the data-as-of step because it reads
-      # the forecast log and scores it against actual closes.
-      - name: "7m2zn. Band check and range breakers"
-        run: python scripts/build_breakers.py || true
 
       # Month-end closes per stock, back to 2019, so a stock shows a real multi-year chart
       # instead of a 120-point sparkline. Lazy-loaded on the Stocks tab only.
@@ -445,6 +441,12 @@ jobs:
 
       - name: "7n2. Search index"
         run: python scripts/build_search_index.py || true
+
+      # Runs AFTER the screener, because it reads it. Flags moves too big to be trading and
+      # matches them against the corporate actions we hold, so a 90% "fall" that is really an
+      # unapplied demerger is labelled instead of quietly shown as a crash.
+      - name: "7n2b. Prices that look wrong"
+        run: python scripts/find_data_errors.py || true
 
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py

@@ -49,6 +49,10 @@ CANON = [
     "instrm_type", "strike", "opt_type", "expiry",
     "open", "high", "low", "close", "last", "prevclose",
     "volume", "turnover", "trades", "oi", "oi_change",
+    # lot size and the underlying price were both being thrown away, which is why nothing
+    # downstream could answer "what does taking delivery cost me" - that needs strike x lot,
+    # and the spot to know whether the contract is in the money at all.
+    "lot", "underlying",
 ]
 
 
@@ -138,6 +142,7 @@ def parse(raw: bytes, segment: str, src: Source, d: date) -> pd.DataFrame:
             "OpnIntrst": "oi", "ChngInOpnIntrst": "oi_change",
             "FinInstrmTp": "instrm_type", "StrkPric": "strike", "OptnTp": "opt_type",
             "XpryDt": "expiry", "FininstrmNm": "fininstrm_nm",
+            "NewBrdLotQty": "lot", "UndrlygPric": "underlying",
         }
         out = df.rename(columns=mapping)
     else:  # legacy
@@ -157,7 +162,8 @@ def parse(raw: bytes, segment: str, src: Source, d: date) -> pd.DataFrame:
         out["date"] = d.isoformat()
 
     _to_num(out, ["open", "high", "low", "close", "last", "prevclose",
-                  "volume", "turnover", "trades", "oi", "oi_change", "strike"])
+                  "volume", "turnover", "trades", "oi", "oi_change", "strike",
+                  "lot", "underlying"])
 
     for c in CANON:
         if c not in out.columns:

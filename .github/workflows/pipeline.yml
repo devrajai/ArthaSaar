@@ -424,6 +424,10 @@ jobs:
               sys.exit(1)
           print("F&O expiry present in the last %d file(s)" % len(files))
           EOF
+      # Unusual F&O activity: volume, trade count or open interest far outside a stock's own
+      # recent range. Runs after the F&O fetch so the day it just collected is included.
+      - name: "7m2zr. Unusual activity and big orders"
+        run: python scripts/build_unusual.py || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.

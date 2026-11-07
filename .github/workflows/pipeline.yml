@@ -488,6 +488,12 @@ jobs:
       - name: "7n2b. Prices that look wrong"
         run: python scripts/find_data_errors.py || true
 
+      # Needs only the F&O csv from step 1, so it can run here rather than after the site
+      # build. Publishes the chain with the premium change, which is what makes an action
+      # label possible at all - open interest alone cannot say written vs bought.
+      - name: "7n2c. Option chain with OI action labels"
+        run: python scripts/build_option_chain.py || true
+
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 

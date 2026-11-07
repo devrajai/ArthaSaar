@@ -391,6 +391,12 @@ jobs:
           python scripts/fetch_yahoo.py --group fx --period 10y || true
           python scripts/fetch_yahoo.py --group crypto --period 10y || true
           python scripts/fetch_yahoo.py --group commodities --period 10y || true
+      # MCX commodity contracts. Defensive by design: MCX is unreachable from the build
+      # sandbox, so this exits 0 and writes only a status file when the source is down.
+      # It cannot break the run, and the site says "no MCX data" rather than showing an
+      # empty table as if nothing traded.
+      - name: "7m2zp. Fetch MCX commodity bhavcopy"
+        run: python scripts/fetch_mcx.py --days 7 || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.

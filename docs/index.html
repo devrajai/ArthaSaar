@@ -2408,7 +2408,10 @@ function build(d){
   /* ---------- shared detail page (stock, global stock, coin) ---------- */
   function techPairs(t){
     return [["RSI (14)", t.rsi_14], ["SMA 20", num(t.sma_20)], ["SMA 50", num(t.sma_50)],
-            ["SMA 200", num(t.sma_200)], ["ADX", t.adx], ["ATR %", t.atr_pct],
+            ["SMA 200", num(t.sma_200)], ["ADX", t.adx],
+            // atr_pct is atr_14/close - a fraction. Printing it under an "ATR %" label made
+            // a 2% daily range read as 0.02% on every stock page.
+            ["ATR %", t.atr_pct!=null&&isFinite(t.atr_pct)?(t.atr_pct*100).toFixed(2):null],
             ["MACD hist", t.macd_hist], ["Bollinger %B", t.bb_pctb],
             ["Volume vs 20d avg", t.vol_x?t.vol_x+"x":null],
             ["52w high", num(t.high_52w)], ["52w low", num(t.low_52w)]];
@@ -4516,7 +4519,7 @@ var v=sec("learn");
      try{
       var row=el("div");
       row.style.cssText="display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 0 10px;scrollbar-width:none";
-      [["Position size","Position size and risk-reward"],["Capital gains","Capital gains"],
+      [["Trade check","Trade check"],["Position size","Position size and risk-reward"],["Capital gains","Capital gains"],
        ["Option payoff","Option payoff builder"],["Backtest","__backtest"]].forEach(function(it){
         var b=el("button","small",it[0]);
         b.style.cssText="white-space:nowrap;flex:0 0 auto";
@@ -4579,6 +4582,234 @@ var v=sec("learn");
         {what:"Position size from capital, risk percentage, entry and stop. Also shows the reward-to-risk ratio.",
          source:"Computed in your browser. Nothing is sent anywhere.", updated:when,
          note:"Most professionals risk 0.5% to 2% of capital per idea. Ten losses in a row at 2% leaves you down about 18% - survivable. At 10% it is ruin."}));
+    })();
+
+
+    /* ---- 6. Trade Check: the five things worth knowing before you place it ---- */
+    (function(){
+      // Rates are read out of docs/charges.json rather than typed in here, so a budget
+      // change updates the calculator without touching this file. Anything that cannot be
+      // parsed is left out and said so, instead of being guessed.
+      function ratePct(str){
+        var m=String(str==null?"":str).match(/([\d.]+)\s*%/);
+        return m?parseFloat(m[1]):null;
+      }
+      function perCrore(str){
+        var m=String(str==null?"":str).match(/([\d.]+)\s*per crore/i);
+        return m?parseFloat(m[1])/1e7*100:null;
+      }
+      function rupee(str){
+        var m=String(str==null?"":str).match(/[\u20b9]\s*([\d.]+)/);
+        return m?parseFloat(m[1]):null;
+      }
+      function statutory(name){
+        var st=(CHARGES&&CHARGES.statutory)||[];
+        for(var i=0;i<st.length;i++){ if(String(st[i].name||"").indexOf(name)===0) return st[i]; }
+        return null;
+      }
+      function rowFor(block, test){
+        var rr=(block&&block.rates)||[];
+        for(var i=0;i<rr.length;i++){ if(test(String(rr[i][0]||"").toLowerCase())) return rr[i]; }
+        return null;
+      }
+      // round-trip equity charges; delivery and intraday differ in three places
+      function charges(seg, buyVal, sellVal){
+        var delivery = seg==="delivery";
+        var turnover = buyVal + sellVal;
+        var parts = [], missing = [];
+        var stt = statutory("STT");
+        var sttRow = rowFor(stt, function(t){ return t.indexOf(delivery?"equity delivery":"equity intraday")===0; });
+        var sttPct = sttRow ? ratePct(sttRow[1]) : null;
+        if(sttPct==null){ missing.push("STT"); sttPct=0; }
+        var sttAmt = delivery ? sttPct/100*turnover : sttPct/100*sellVal;
+
+        var exch = statutory("Exchange transaction");
+        var exchRow = rowFor(exch, function(t){ return t.indexOf("equity")===0; });
+        var exchPct = exchRow ? ratePct(exchRow[1]) : null;
+        if(exchPct==null){ missing.push("exchange charges"); exchPct=0; }
+        var exchAmt = exchPct/100*turnover;
+
+        var sebiBlock = statutory("SEBI");
+        var sebiRow = sebiBlock && (sebiBlock.rates||[])[0];
+        var sebiPct = sebiRow ? (perCrore(sebiRow[1])!=null?perCrore(sebiRow[1]):ratePct(sebiRow[1])) : null;
+        if(sebiPct==null){ missing.push("SEBI fee"); sebiPct=0; }
+        var sebiAmt = sebiPct/100*turnover;
+
+        var stamp = statutory("Stamp");
+        var stampRow = rowFor(stamp, function(t){ return t.indexOf(delivery?"equity delivery":"equity intraday")===0; });
+        var stampPct = stampRow ? ratePct(stampRow[1]) : null;
+        if(stampPct==null){ missing.push("stamp duty"); stampPct=0; }
+        var stampAmt = stampPct/100*buyVal;
+
+        // brokerage: the first broker listed is a discount broker, which is what this
+        // calculator assumes. Delivery is nil there, intraday is a percentage with a cap.
+        var brok = (CHARGES&&CHARGES.brokers&&CHARGES.brokers[0])||null;
+        var brokAmt = 0;
+        if(brok){
+          var spec = delivery ? brok.delivery : brok.intraday;
+          if(/nil|zero|free/i.test(String(spec))) brokAmt = 0;
+          else {
+            var bp = ratePct(spec), cap = rupee(spec);
+            var perSide = bp!=null ? bp/100*(delivery?buyVal+sellVal:turnover/2) : 0;
+            if(cap!=null) perSide = Math.min(perSide, cap);
+            brokAmt = perSide * 2;
+          }
+        }
+
+        var dp = 0;
+        if(delivery){
+          var dpBlock = statutory("DP charges");
+          var dpRow = dpBlock && (dpBlock.rates||[])[0];
+          var v = dpRow ? (rupee(dpRow[2])!=null?rupee(dpRow[2]):rupee(dpRow[1])) : null;
+          dp = v==null?0:v;
+        }
+
+        var gstBlock = statutory("GST");
+        var gstRow = gstBlock && (gstBlock.rates||[])[0];
+        var gstPct = gstRow ? ratePct(gstRow[1]) : null;
+        if(gstPct==null){ missing.push("GST"); gstPct=18; }
+        var gstAmt = gstPct/100*(brokAmt + exchAmt + sebiAmt + dp);
+
+        parts.push(["STT", sttAmt]);
+        parts.push(["Exchange", exchAmt]);
+        parts.push(["SEBI", sebiAmt]);
+        parts.push(["Stamp duty", stampAmt]);
+        if(brokAmt) parts.push(["Brokerage", brokAmt]);
+        if(dp) parts.push(["DP charges", dp]);
+        parts.push(["GST", gstAmt]);
+        var total = parts.reduce(function(a,p){ return a+p[1]; }, 0);
+        return {total:total, parts:parts, missing:missing};
+      }
+
+      var sym=el("input"); sym.type="text"; sym.value="RELIANCE"; sym.setAttribute("placeholder","e.g. RELIANCE");
+      var seg=el("select");
+      [["delivery","Delivery (hold overnight)"],["intraday","Intraday (square off today)"]].forEach(function(o){
+        var op=document.createElement("option"); op.value=o[0]; op.textContent=o[1]; seg.appendChild(op);
+      });
+      var qty=el("input"); qty.type="number"; qty.value="100";
+      var entry=el("input"); entry.type="number"; entry.value="";
+      var stop=el("input"); stop.type="number"; stop.value="";
+      var target=el("input"); target.type="number"; target.value="";
+      var cap=el("input"); cap.type="number"; cap.value="100000";
+      var out=el("div","kv"), flags=el("div",""), note=el("div","cnote");
+
+      function rec(){
+        var q=String(sym.value||"").trim().toUpperCase();
+        if(!q||!SCREENER||!SCREENER.rows) return null;
+        var rows=SCREENER.rows;
+        for(var i=0;i<rows.length;i++){
+          if(String(rows[i].symbol||"").toUpperCase()===q) return rows[i];
+        }
+        return null;
+      }
+      function eventsFor(q){
+        var hits=[];
+        try{
+          var days=(CAL&&CAL.days)||[];
+          days.forEach(function(d){
+            (d.events||[]).forEach(function(e){
+              if(String(e.symbol||"").toUpperCase()===q) hits.push({date:e.date,what:(e.type||"event")+": "+(e.detail||"")});
+            });
+          });
+          var co=(DATA&&DATA.corporate&&DATA.corporate.dividend&&DATA.corporate.dividend.rows)||[];
+          co.forEach(function(r){
+            if(String(r[0]||"").toUpperCase()===q) hits.push({date:r[2],what:"dividend: "+r[1]});
+          });
+        }catch(e){}
+        return hits.slice(0,3);
+      }
+
+      function calc(){
+        var r=rec(), q=String(sym.value||"").trim().toUpperCase();
+        var E=+entry.value||0, S=+stop.value||0, T=+target.value||0, Q=+qty.value||0, C=+cap.value||0;
+        if(r && !E){ E=+r.close||0; entry.value=String(E); }
+        var rowsOut=[], bad=[], good=[];
+        if(!r){
+          out.innerHTML="";
+          out.appendChild(el("div","",'<b>Symbol</b>not in the screener - check the spelling, or open its stock page'));
+          note.textContent=""; flags.innerHTML="";
+          return;
+        }
+        // screener.json stores ATR as a FRACTION of price (0.02 = 2%), so it has to be
+        // scaled before it can be compared with a stop distance expressed in percent.
+        var atr=(+r.atr_pct||0)*100;
+        rowsOut.push(["Symbol", esc(r.symbol)+" · "+esc((r.name||"").slice(0,30))]);
+        rowsOut.push(["Last close", num(r.close)+" ("+(r.chg_1d>0?"+":"")+r.chg_1d+"%)"]);
+        rowsOut.push(["Average daily range", atr?atr.toFixed(2)+"% of price":"not in the screener"]);
+
+        var riskPer = Math.abs(E-S);
+        if(!E||!S||!riskPer){ bad.push("Set an entry and a stop - without both there is no risk to measure."); }
+        else {
+          var riskAmt = riskPer*Q;
+          rowsOut.push(["Risk per share", num(riskPer)]);
+          rowsOut.push(["Total risk", num(riskAmt)+(C?(" = "+(100*riskAmt/C).toFixed(2)+"% of capital"):"")]);
+          if(C && riskAmt/C > 0.02) bad.push("You are risking "+(100*riskAmt/C).toFixed(1)+"% of capital. Above 2% a run of losses gets hard to recover from.");
+          var stopPct = 100*riskPer/E;
+          if(atr){
+            var ratio = stopPct/atr;
+            rowsOut.push(["Stop distance", stopPct.toFixed(2)+"% = "+ratio.toFixed(2)+"x the average daily range"]);
+            if(ratio < 0.5) bad.push("Your stop is inside half a normal day's range ("+atr.toFixed(1)+"% a day). Ordinary noise will take it out before the idea is proven.");
+            else if(ratio < 1) bad.push("Your stop is inside one normal day's range. It may still work, but expect to be shaken out sometimes.");
+            else good.push("The stop sits outside a normal day's range ("+ratio.toFixed(2)+"x ATR), so it is not a noise stop.");
+          }
+          if(T){
+            var rr=Math.abs(T-E)/riskPer;
+            rowsOut.push(["Reward : risk", rr.toFixed(2)+" : 1"]);
+            if(rr<1.5) bad.push("Reward-to-risk is "+rr.toFixed(2)+":1. Below 1.5:1 you need a high win rate for this to pay.");
+          }
+          // charges
+          var ch=charges(seg.value, E*Q, (T||E)*Q);
+          if(ch.total>0){
+            var beMove = Q? ch.total/Q : 0;
+            rowsOut.push(["Round-trip charges", num(Math.round(ch.total))]);
+            rowsOut.push(["Break-even move", num(Math.round(beMove*100)/100)+" per share = "+(100*beMove/E).toFixed(2)+"%"]);
+            if(T){
+              var gross=Math.abs(T-E)*Q, net=gross-ch.total;
+              rowsOut.push(["At target, after charges", num(Math.round(net))]);
+              if(net<=0) bad.push("Charges eat the whole target: you would book a loss on a winning trade.");
+              else if(ch.total/gross>0.25) bad.push("Charges are "+(100*ch.total/gross).toFixed(0)+"% of the target profit. This trade is too small to be worth the friction.");
+            }
+            if(ch.missing.length) note.textContent="Some charges could not be read from charges.json ("+ch.missing.join(", ")+"), so the total is understated.";
+          }
+        }
+        // events
+        var ev=eventsFor(q);
+        if(ev.length){
+          rowsOut.push(["Before you exit", ev.map(function(x){ return x.date+" "+x.what.slice(0,44); }).join(" · ")]);
+          bad.push("There is a corporate action or event on file: "+ev[0].date+" "+ev[0].what.slice(0,50)+". A price move on an ex-date is not a trading move.");
+        } else {
+          rowsOut.push(["Before you exit", "no ex-date or board meeting on file in the next 30 days"]);
+        }
+        rowsOut.push(["Overnight gap risk", "not measured per stock yet - the Gaps tab shows the market-wide fill rate"]);
+
+        out.innerHTML="";
+        rowsOut.forEach(function(x){ out.appendChild(el("div","",'<b>'+esc(x[0])+'</b>'+x[1])); });
+
+        flags.innerHTML="";
+        bad.forEach(function(t){ flags.appendChild(el("p","",'<span style="color:var(--down)">\u25b2 '+esc(t)+'</span>')); });
+        good.forEach(function(t){ flags.appendChild(el("p","",'<span style="color:var(--up)">\u25cf '+esc(t)+'</span>')); });
+        if(!bad.length && good.length) flags.appendChild(el("p","","<b>Nothing structural is wrong with this one. That is not the same as it being a good idea.</b>"));
+      }
+
+      [sym,entry,stop,target,qty,cap].forEach(function(i){
+        i.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
+        i.addEventListener("input",calc);
+      });
+      seg.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
+      seg.addEventListener("change",calc);
+
+      var g=el("div","field");
+      [["Symbol",sym],["Trade type",seg],["Entry (₹)",entry],["Stop loss (₹)",stop],["Target (₹)",target],["Quantity",qty],["Capital (₹)",cap]].forEach(function(f){
+        var w=el("div",""); w.appendChild(el("div","sub",esc(f[0]))); w.appendChild(f[1]); g.appendChild(w);
+      });
+      calc();
+      v.appendChild(card("Trade check","Five things worth knowing before you place it",
+        [para("Fill in what you are about to do. It checks the stop against the stock's own daily range, the reward against the risk, the charges against the target, and whether a corporate action lands while you are holding. It does not tell you whether to take the trade, and it cannot see anything you have not typed."),
+         g, flags, out, note],
+        {what:"A pre-trade check: risk as a share of capital, whether the stop sits inside normal daily noise, reward-to-risk, round-trip charges and the move needed to cover them, and any ex-date or board meeting before you would exit.",
+         source:"Screener metrics for price and average range, docs/charges.json for statutory rates and a discount broker, docs/calendar.json and data.json for corporate actions. All arithmetic runs in your browser.",
+         updated:when,
+         note:"Charges use the rates published in charges.json and the first (discount) broker listed - your broker may differ. This is arithmetic, not advice, and it knows nothing about your other positions."}));
     })();
 
     /* ---- 2. capital gains ---- */
@@ -5618,6 +5849,31 @@ function heatColour(p){
   return (c>=0?"rgba(10,125,67,":"rgba(192,43,43,")+a.toFixed(2)+")";
 }
 
+/* ---------- palette helpers: land on a tab with the symbol already typed ---------- */
+function pfInput(sec, sym){
+  var inp=sec.querySelector("input[type=search], input[type=text]");
+  if(!inp) return false;
+  inp.value=sym;
+  inp.dispatchEvent(new Event("input",{bubbles:true}));
+  try{ inp.focus(); }catch(e){}
+  return true;
+}
+function pfSection(id, sym){
+  var sec=document.getElementById("sec-"+id);
+  return sec ? pfInput(sec, sym) : false;
+}
+function pfTradeCheck(sym){
+  // the Tools tab holds several cards, so find the right one rather than the first input
+  var cards=[].slice.call(document.querySelectorAll("#sec-tools .card"));
+  for(var i=0;i<cards.length;i++){
+    var h=cards[i].querySelector("h2");
+    if(h && /Trade check/i.test(h.textContent)){
+      return pfInput(cards[i], sym);
+    }
+  }
+  return false;
+}
+
 /* ---------- Google-style search ---------- */
 function buildPalette(){
   var wrap=el("div","palette");
@@ -5629,7 +5885,7 @@ function buildPalette(){
   document.body.appendChild(wrap);
 
   var results=[], sel=0;
-  var KIND={stock:"Stock",global:"Global",coin:"Coin",news:"News",learn:"Go to"};
+  var KIND={stock:"Stock",global:"Global",coin:"Coin",news:"News",learn:"Go to",cmd:"Command"};
 
   function paint(){
     list.innerHTML="";
@@ -5641,6 +5897,36 @@ function buildPalette(){
       it.addEventListener("click",function(){ go(r); });
       list.appendChild(it);
     });
+  }
+  // Commands first. A search box that only finds names still makes you hunt for the tab
+  // afterwards; typing "gaps" or "reliance chart" should land you there.
+  function commands(q){
+    var out=[];
+    if(!q) return out;
+    // 1. a section by name or id
+    SECTIONS.forEach(function(sec){
+      var lbl=String(sec.label||"").toLowerCase(), id=String(sec.id||"").toLowerCase();
+      if(lbl.indexOf(q)===0 || id===q || (q.length>2 && id.indexOf(q)===0)){
+        out.push({k:"cmd", t:"Go to "+sec.label, s:"section",
+                  act:(function(sid){ return function(){ show(sid); }; })(sec.id)});
+      }
+    });
+    // 2. "<symbol> <verb>" - the shorthand a trader actually types
+    var m=q.match(/^([a-z0-9&.\-]{1,20})\s+(chart|charts|trade|tradecheck|oi|f&o|fno)$/);
+    if(m){
+      var sym=m[1].toUpperCase(), verb=m[2];
+      if(verb==="chart"||verb==="charts"){
+        out.push({k:"cmd", t:"Chart "+sym, s:"open the chart with the symbol filled in",
+                  act:function(){ show("charts"); pfSection("charts",sym); }});
+      } else if(verb==="trade"||verb==="tradecheck"){
+        out.push({k:"cmd", t:"Check a trade in "+sym, s:"open Trade check with the symbol filled in",
+                  act:function(){ show("tools"); pfTradeCheck(sym); }});
+      } else {
+        out.push({k:"cmd", t:"F&O for "+sym, s:"open the F&O tab",
+                  act:function(){ show("fno"); }});
+      }
+    }
+    return out;
   }
   function search(q){
     q=(q||"").trim().toLowerCase();
@@ -5654,18 +5940,19 @@ function buildPalette(){
         if(hit && out.indexOf(it)<0) out.push(it);
       }
     }
-    results=out; sel=0; paint();
+    results=commands(q).concat(out).slice(0,40); sel=0; paint();
   }
   function go(r){
     closePalette();
     if(r.k==="ipo"&&EXTERNAL["ipo"]){ window.location.href=EXTERNAL["ipo"]; return; }
     if(r.k==="learn"){ show(r.h); return; }
+    if(r.k==="cmd"){ try{ r.act(); }catch(e){} return; }
     // land on the right tab and open that item's page where we have one
     if(r.k==="stock"){
+      // This branch used to look up the record and then do nothing with it, so picking a
+      // stock dropped you on the Stocks tab with 2,200 rows and no filter applied.
       show("stocks");
-      var rec=(STOCKS&&STOCKS.stocks)?Object.keys(STOCKS.stocks).map(function(k){return STOCKS.stocks[k];})
-              .filter(function(x){return x.symbol===r.t;})[0]:null;
-      if(rec){ var h=$$("#sec-stocks .card"); }
+      pfSection("stocks", r.t);
     } else if(r.k==="global"){ show("global"); }
     else if(r.k==="coin"){ show("crypto"); }
     else if(r.k==="news"){ show("news"); }
@@ -5715,8 +6002,14 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
   }
   document.addEventListener("keydown",function(e){
     var tag=(e.target&&e.target.tagName)||"";
+    // The chord works from anywhere, including inside another box. After a command the
+    // focus sits in that section's own filter, and a plain "/" there is meant to be typed,
+    // so the guarded path stays below.
+    if((e.metaKey||e.ctrlKey) && String(e.key).toLowerCase()==="k"){
+      e.preventDefault(); openPalette(); return;
+    }
     if(/input|textarea|select/i.test(tag)) return;   // let the palette handle its own keys
-    if(e.key==="/" || ((e.metaKey||e.ctrlKey) && String(e.key).toLowerCase()==="k")){
+    if(e.key==="/"){
       e.preventDefault(); openPalette(); return;
     }
     if(e.key==="Escape") closePalette();

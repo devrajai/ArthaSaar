@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-11-07T03:58:27Z",
+  "generated_at": "2026-11-07T10:52:59Z",
   "channels": 10,
-  "videos": 382,
+  "videos": 385,
   "window_start": "2026-05-15",
-  "window_end": "2026-11-06",
-  "total_views": 12300423,
+  "window_end": "2026-11-07",
+  "total_views": 12339621,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 86,
+      "mentions": 87,
       "channels": 5
     },
     {
       "symbol": "SENSEX",
-      "mentions": 39,
+      "mentions": 40,
       "channels": 4
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 37,
+      "mentions": 38,
       "channels": 4
     },
     {
@@ -28,8 +28,13 @@
     },
     {
       "symbol": "ADANIENT",
-      "mentions": 7,
-      "channels": 2
+      "mentions": 8,
+      "channels": 3
+    },
+    {
+      "symbol": "ITC",
+      "mentions": 4,
+      "channels": 4
     },
     {
       "symbol": "WIPRO",
@@ -44,11 +49,6 @@
     {
       "symbol": "YESBANK",
       "mentions": 4,
-      "channels": 3
-    },
-    {
-      "symbol": "ITC",
-      "mentions": 3,
       "channels": 3
     },
     {
@@ -71,17 +71,17 @@
       "videos": 79
     },
     {
-      "theme": "IPO",
-      "videos": 73
+      "theme": "Options/F&O",
+      "videos": 74
     },
     {
-      "theme": "Options/F&O",
-      "videos": 72
+      "theme": "IPO",
+      "videos": 73
     },
     {
       "theme": "Budget/Policy",
       "videos": 62
     }
   ],
-  "net_sentiment": 183
+  "net_sentiment": 184
 }

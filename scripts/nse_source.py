@@ -42,7 +42,11 @@ HEADERS = {
 # Canonical column names we normalise every era/segment into.
 CANON = [
     "date", "segment", "symbol", "series", "isin",
-    "instrm_type", "strike", "opt_type",
+    # expiry was MISSING here, so the final out[CANON] slice threw it away even though the
+    # NSE file carries it as XpryDt. Everything downstream lost it: oi_strikes.json showed
+    # expiry as "-", open interest was summed across expiries, and no per-contract view was
+    # possible because the same strike traded in several expiries on the same day.
+    "instrm_type", "strike", "opt_type", "expiry",
     "open", "high", "low", "close", "last", "prevclose",
     "volume", "turnover", "trades", "oi", "oi_change",
 ]
@@ -133,6 +137,7 @@ def parse(raw: bytes, segment: str, src: Source, d: date) -> pd.DataFrame:
             "TtlTrfVal": "turnover", "TtlNbOfTxsExctd": "trades",
             "OpnIntrst": "oi", "ChngInOpnIntrst": "oi_change",
             "FinInstrmTp": "instrm_type", "StrkPric": "strike", "OptnTp": "opt_type",
+            "XpryDt": "expiry", "FininstrmNm": "fininstrm_nm",
         }
         out = df.rename(columns=mapping)
     else:  # legacy
@@ -142,6 +147,7 @@ def parse(raw: bytes, segment: str, src: Source, d: date) -> pd.DataFrame:
             "LAST": "last", "PREVCLOSE": "prevclose", "TOTTRDQTY": "volume",
             "TOTTRDVAL": "turnover", "TOTALTRADES": "trades",
             "INSTRUMENT": "instrm_type", "STRIKE_PR": "strike", "OPTION_TYP": "opt_type",
+            "EXPIRY_DT": "expiry",
         }
         out = df.rename(columns=mapping)
         out["date"] = d.isoformat()
@@ -157,6 +163,10 @@ def parse(raw: bytes, segment: str, src: Source, d: date) -> pd.DataFrame:
         if c not in out.columns:
             out[c] = pd.NA
 
+    # the cash segment carries no expiry; without this the CANON slice would raise on a
+    # missing column rather than simply leaving it empty
+    if "expiry" not in out.columns:
+        out["expiry"] = None
     out = out[CANON].dropna(subset=["symbol"])
     out["date"] = pd.to_datetime(out["date"], errors="coerce").dt.strftime("%Y-%m-%d")
     return out.reset_index(drop=True)

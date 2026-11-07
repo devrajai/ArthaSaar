@@ -397,6 +397,33 @@ jobs:
       # empty table as if nothing traded.
       - name: "7m2zp. Fetch MCX commodity bhavcopy"
         run: python scripts/fetch_mcx.py --days 7 || true
+      # The F&O parquet used to be written WITHOUT the expiry column, because nse_source.py's
+      # canonical list did not include it. Everything downstream lost it: oi_strikes showed
+      # expiry as "-", open interest was summed across expiries, and no per-contract view was
+      # possible. This fails loudly if it ever regresses.
+      - name: "7m2zq. F&O expiry check"
+        run: |
+          python - <<'EOF'
+          import glob, sys
+          try:
+              import pandas as pd
+          except ImportError:
+              sys.exit(0)
+          files = sorted(glob.glob("data/parquet/fo/fo_*.parquet"))[-3:]
+          if not files:
+              print("no F&O parquet yet - nothing to check")
+              sys.exit(0)
+          bad = []
+          for f in files:
+              cols = list(pd.read_parquet(f, columns=None).head(1).columns)
+              if "expiry" not in cols:
+                  bad.append(f)
+          if bad:
+              print("::error title=F&O expiry missing::%d recent file(s) have no expiry column: %s"
+                    % (len(bad), ", ".join(bad)))
+              sys.exit(1)
+          print("F&O expiry present in the last %d file(s)" % len(files))
+          EOF
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.

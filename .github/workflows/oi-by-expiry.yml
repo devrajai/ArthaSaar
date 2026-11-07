@@ -1,0 +1,44 @@
+name: Option walls per expiry
+
+on:
+  schedule:
+    # 19:15 IST (13:45 UTC) Mon-Fri - after the F&O bhavcopy is published
+    - cron: '45 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: oi-by-expiry
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build per-expiry walls
+        run: python3 scripts/oi_by_expiry.py
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/oi_by_expiry.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'data: option walls per expiry (spot + expiry carried)'
+            for i in 1 2 3 4 5; do
+              if git pull --rebase --autostash -X theirs origin main && git push; then
+                echo 'Pushed successfully'; exit 0
+              fi
+              git rebase --abort || true
+              sleep 15
+            done
+            echo 'ERROR: push failed'; exit 1
+          fi

@@ -66,7 +66,19 @@ def parse_deals(d):
                 continue
     for x in out:
         x["value_cr"] = round(x["quantity"] * x["price"] / 1e7, 2)
-    return out
+
+    # DEDUPE. NSE lists some trades in BOTH the bulk and block files, so the same deal
+    # appeared twice and was counted twice - ALIVUS and V2RETAIL each showed up at the same
+    # value under both kinds, inflating the total.
+    seen = set()
+    deduped = []
+    for x in out:
+        key = (x["date"], x["symbol"], x["client"], x["side"], x["quantity"], x["price"])
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(x)
+    return deduped
 
 
 def main():
@@ -130,6 +142,11 @@ def main():
                        "F&O footprint beside each. %d of them also showed unusual derivatives "
                        "activity." % (len(rows), out["total_deal_value_cr"],
                                       out["with_footprint"]))
+        if out["with_footprint"] == 0:
+            # worth saying plainly: on this day the big money moved in names with no
+            # derivatives market at all, so there is nothing to cross-reference
+            out["note"] += (" None overlapped this time: the deal stocks are largely outside "
+                            "the F&O segment, so they have no derivatives footprint to match.")
     else:
         out["note"] = ("No deal disclosures in docs/deals.json. The radar fills once "
                        "fetch_deals.py has run.")

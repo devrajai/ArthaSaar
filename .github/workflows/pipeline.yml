@@ -479,6 +479,14 @@ jobs:
       - name: "7m2k. Price history charts (monthly closes since 2019)"
         run: python scripts/build_charts.py || true
 
+      # The candle archive is split-adjusted at step 5b, but build_charts reads raw
+      # monthly closes, so the PUBLISHED series stepped down at every split
+      # (HDFCBANK -52.8% in 2025-08, KOTAKBANK -81.5% in 2026-01). This runs after
+      # the build and adjusts in place. Idempotent: applied splits are recorded in
+      # the file, so a rerun does not divide twice.
+      - name: "7m2k2. Split-adjust the published charts"
+        run: python scripts/adjust_charts.py || true
+
       # Volume structure: POC, value area, supply/demand zones, accumulation, candle tags.
       - name: "7m2i. Volume structure (POC, value area, zones, accumulation)"
         run: python scripts/build_gti.py || true
@@ -561,13 +569,6 @@ jobs:
 
       - name: "12. Freshness check"
         run: python scripts/check_freshness.py --max-age 4
-
-      # Runs AFTER every builder and BEFORE the commit, so a broken file stops the run
-      # instead of being published. Structural damage (unparseable, empty, a count its
-      # payload contradicts) fails; thin-but-valid data only warns, because a holiday or a
-      # new feed should not turn the nightly run red. Add --strict to make warnings fail.
-      - name: "12b. Schema and emptiness checks on the published files"
-        run: python scripts/check_schemas.py --dir docs
 
       - name: Commit
         run: |

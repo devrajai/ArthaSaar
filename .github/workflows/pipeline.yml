@@ -521,6 +521,16 @@ jobs:
       - name: "7n2c. Option chain with OI action labels"
         run: python scripts/build_option_chain.py || true
 
+      - name: "7n2d. Futures rollover"
+        run: python scripts/build_rollover.py || true
+
+      - name: "7n2e. Screener rank momentum"
+        run: python scripts/build_rank_momentum.py || true
+
+      # Needs the candle archive, which is restored and adjusted by step 5b.
+      - name: "7n2f. What followed this setup last time"
+        run: python scripts/build_setup_history.py || true
+
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 
@@ -569,6 +579,13 @@ jobs:
 
       - name: "12. Freshness check"
         run: python scripts/check_freshness.py --max-age 4
+
+      # Runs AFTER every builder and BEFORE the commit, so a broken file stops the run
+      # instead of being published. Structural damage (unparseable, empty, a count its
+      # payload contradicts) fails; thin-but-valid data only warns, because a holiday or a
+      # new feed should not turn the nightly run red. Add --strict to make warnings fail.
+      - name: "12b. Schema and emptiness checks on the published files"
+        run: python scripts/check_schemas.py --dir docs
 
       - name: Commit
         run: |

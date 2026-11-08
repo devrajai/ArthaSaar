@@ -948,6 +948,23 @@ a.bigbtn:hover{background:#1a45c0}
   .cardhead h2{line-height:1.3;word-break:break-word}
   .wrap{padding:0 14px}
 }
+
+/* ====================================================================================
+   READING LEVELS. The Overview grew to about fifteen cards, which is a lot to land on
+   for someone who just wants to know what happened today. Every card is tagged with the
+   level it belongs to and hidden above the reader's choice. Nothing is removed - the
+   Advanced setting shows everything, and a card that cannot be classified defaults to
+   Advanced rather than disappearing.
+   ==================================================================================== */
+.levelbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:2px 0 14px}
+.levelbar .lbl2{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;margin-right:2px}
+.levelbar button{font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;
+  border:1px solid rgba(29,78,216,.22);background:rgba(255,255,255,.6);color:inherit;cursor:pointer}
+.levelbar button.on{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+body[data-level="1"] #sec-overview .card[data-lvl="2"],body[data-level="1"] #sec-overview .card[data-lvl="3"]{display:none}
+body[data-level="2"] #sec-overview .card[data-lvl="3"]{display:none}
+.lvlhint{font-size:12.5px;color:var(--muted);margin:-6px 0 14px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -1643,7 +1660,8 @@ function applyLang(){
   if(q) q.setAttribute("placeholder", L("searchPh"));
   var tb=document.getElementById("themeBtn");
   if(tb) tb.textContent = (document.body.classList.contains("dark") ? L("light") : L("dark"));
-  if(typeof renderTabs==="function"){ renderTabs(); groupTabs(); if(typeof wireSimple==="function") wireSimple(); }
+  if(typeof renderTabs==="function"){ renderTabs(); groupTabs(); if(typeof wireSimple==="function") wireSimple();
+    if(typeof buildLevelBar==="function") buildLevelBar(); }
 }
 (function bindLang(){
   var b=document.getElementById("langBtn");
@@ -1763,6 +1781,78 @@ function toggleSimple(){
 var EXTERNAL = {"ipo": "https://ipobodh.vercel.app/"};
 
 var NEW_TABS = {"charts":1,"forecast":1};
+// ====================================================================================
+// READING LEVELS
+// Tags each rendered card with a level, then shows only what the reader asked for.
+// Matching is by card title, so adding a card needs no other change: anything unlisted
+// falls to Advanced and stays visible there.
+// ====================================================================================
+var CARD_LEVEL = {
+  // 1 - what happened today, in plain terms. Nothing here needs a glossary.
+  "Data as of": 1, "Story of the day": 1, "Today in one look": 1, "Today": 1,
+  "Since your last visit": 1, "Coming up": 1, "PCR trend": 1, "Normal range": 1,
+  // 2 - needs some familiarity with the vocabulary, or a measured claim to read
+  "What's coming at the open": 2, "Big Money Radar": 2, "Band check": 2,
+  "Signal scorecard": 2, "Promoter holding": 2, "Options: cost and structures": 2,
+  "21-day outlook": 2, "Forecast": 2, "Model under review": 2,
+  "Has the model been right?": 2, "Chart any listed stock or index": 2,
+  "Live chart": 2, "Top open interest": 2, "Most talked about": 2,
+  "Daily market update": 2, "Model versus option market": 2,
+  "What the models have actually scored": 2, "Where the model sees the most movement": 2,
+  "Nifty, next": 2
+  // 3 - raw tables and methodology. Anything unlisted lands here and stays visible under
+  //     Advanced, so a new card is never silently hidden.
+};
+var LEVEL_KEY = "as_level";
+function currentLevel(){
+  try{ var v=localStorage.getItem(LEVEL_KEY); return v?(parseInt(v,10)||1):1; }catch(e){ return 1; }
+}
+function applyLevels(){
+  var lvl=currentLevel();
+  document.body.setAttribute("data-level", String(lvl));
+  // OVERVIEW ONLY. These cards run to 170 across every tab; filtering globally would hide
+  // the whole Stocks or F&O tab from a beginner, which is not what "simpler" means. Other
+  // tabs stay complete whatever level is chosen.
+  var ov=document.getElementById("sec-overview");
+  var cards=ov?ov.querySelectorAll(".card"):[];
+  for(var i=0;i<cards.length;i++){
+    var c=cards[i];
+    if(c.getAttribute("data-lvl")) continue;
+    var h2=c.querySelector(".cardhead h2");
+    var title=h2?((h2.childNodes[0]&&h2.childNodes[0].textContent)||"").trim():"";
+    var lv=CARD_LEVEL[title];
+    if(lv===undefined){
+      for(var k in CARD_LEVEL){
+        if(title.indexOf(k)===0){ lv=CARD_LEVEL[k]; break; }
+      }
+    }
+    c.setAttribute("data-lvl", String(lv===undefined?3:lv));
+  }
+  var btns=document.querySelectorAll(".levelbar button");
+  for(var j=0;j<btns.length;j++){
+    btns[j].className=(parseInt(btns[j].getAttribute("data-lv"),10)===lvl)?"on":"";
+  }
+}
+function buildLevelBar(){
+  var app=document.querySelector("#app");
+  if(!app||document.querySelector(".levelbar")) return;
+  var bar=el("div","levelbar");
+  bar.appendChild(el("span","lbl2","Detail level"));
+  [[1,"Beginner"],[2,"Intermediate"],[3,"Advanced"]].forEach(function(pair){
+    var b=el("button","",pair[1]);
+    b.setAttribute("data-lv",pair[0]);
+    b.addEventListener("click",function(){
+      try{ localStorage.setItem(LEVEL_KEY,String(pair[0])); }catch(e){}
+      applyLevels();
+    });
+    bar.appendChild(b);
+  });
+  app.insertBefore(bar, app.firstChild);
+  var hint=el("p","lvlhint","Beginner shows what happened today in plain terms. "
+    +"Intermediate adds positioning and the measured signals. Advanced shows every table.");
+  app.insertBefore(hint, bar.nextSibling);
+  applyLevels();
+}
 function renderTabs(){
   var nav=$("#tabs");nav.innerHTML="";
   SECTIONS.forEach(function(s){
@@ -6305,6 +6395,7 @@ var v=sec("learn");
 
 
   renderTabs(); groupTabs(); if(typeof wireSimple==="function") wireSimple();
+  if(typeof buildLevelBar==="function") buildLevelBar();
   var want=(location.hash||"#overview").slice(1);
   show(SECTIONS.some(function(s){return s.id===want;})?want:"overview");
 }

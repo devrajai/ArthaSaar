@@ -13,6 +13,9 @@ data/youtube/last_run.json
 # fii-history.json is the one we accumulate ourselves, so it IS tracked.
 data/*.json
 !data/fii-history.json
+# The screener's rank history. It is the whole point of rank momentum: without it there
+# is nothing to compare today against, and it has to survive between runs.
+!data/rank_history.json
 # FM3 forecasts are the model's output, written by .github/workflows/timesfm.yml and
 # read by the website - they must be committed, so exempt them from the rule above.
 !data/timesfm_forecasts.json

@@ -1761,6 +1761,54 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- BIG MONEY RADAR ---------------------------------------------------------------
+    // Where unusually large money actually showed up. Joins NSE's bulk/block deal
+    // disclosures (named clients) with our own F&O footprint detector.
+    //
+    // What it deliberately does NOT publish: Nifty weights, index points contributed, or
+    // estimated passive inflows. Those need free-float market cap, which needs promoter
+    // holding, and that field is empty in this pipeline. A number that looks precise and is
+    // invented would be worse than no number.
+    (function(){
+     try{
+      if(!RADAR||!RADAR.rows||!RADAR.rows.length) return;
+      var kids=[];
+      kids.push(para("<b>"+num(RADAR.deals)+" bulk and block deals worth Rs "+
+        num(RADAR.total_deal_value_cr)+" crore</b> on the latest session. A bulk deal is one "+
+        "client above 0.5% of a company's equity; a block deal is a negotiated trade above "+
+        "roughly Rs 10 crore. Both are disclosures, not recommendations.", true));
+
+      var rows=(RADAR.rows||[]).slice(0,18).map(function(r){
+        return [esc(r.symbol), esc(r.kind), esc(r.side), "Rs "+num(r.value_cr)+" cr",
+                esc(r.client), r.also_unusual?"also unusual":"—"];
+      });
+      kids.push(tbl({columns:["stock","type","side","value","client","F&O footprint"],rows:rows}));
+
+      if(RADAR.with_footprint===0){
+        kids.push(para("None of these overlapped with unusual derivatives activity this time: "+
+          "the deal stocks are largely outside the F&O segment, so there is no derivatives "+
+          "footprint to compare against.", false));
+      }else{
+        kids.push(para(num(RADAR.with_footprint)+" of these also showed unusual derivatives "+
+          "activity - volume, trade count or open interest far outside the stock's own recent "+
+          "range.", false));
+      }
+
+      // a fact worth having in front of anyone thinking about small capital
+      var doubles = Math.ceil(Math.log(10000000/1000)/Math.log(2));
+      kids.push(para("<b>Rs 1,000 to Rs 1 crore is "+doubles+" doublings.</b> At 10% a month "+
+        "that is about "+Math.ceil(doubles*Math.log(2)/Math.log(1.10))+" months of never having "+
+        "a losing month. Worth knowing before a small account is aimed at a large number.", true));
+
+      v.appendChild(card("Big Money Radar",
+        num(RADAR.deals)+" deals \u00b7 Rs "+num(RADAR.total_deal_value_cr)+" cr", kids,
+        {what:"Bulk and block deal disclosures, with our F&O footprint beside each, so you can see whether the derivatives market was positioned too.",
+         source:"NSE bulk and block deal files, joined to the F&O activity detector.", updated:RADAR.updated,
+         note:"Disclosures, not recommendations - a large buy can be an index fund rebalancing, a promoter raising cash, or a short seller covering. Nifty weights and passive-inflow estimates are deliberately not shown: they need free-float market cap, which needs promoter holding, and that field is empty here."}));
+     }catch(e){}
+    })();
+
+
     // ---- WHAT AN OPTION ACTUALLY COSTS, AND WHAT THE STRUCTURES ARE ----------------------
     // Two things the site could not show: the real cost of a contract (premium x LOT SIZE,
     // not the premium), and a plain reference for what each options structure is.
@@ -6261,6 +6309,7 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "money_radar.json": RADAR=v; break;
     case "affordable.json": AFFORD=v; break;
     case "strategies.json": STRAT=v; break;
     case "report_cards.json": RCARDS=v; break;
@@ -6309,8 +6358,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, RADAR=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","money_radar.json"];
 
 function renderAll(){
   if(!DATA) return;

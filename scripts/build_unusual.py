@@ -140,17 +140,22 @@ def main():
             thin += 1
             continue
         g["ret"] = g["close"].pct_change() * 100
+        # SHARES PER TRADE is the honest way to spot a single big order. Turnover or average
+        # trade VALUE is misleading across price levels - a Rs 1,400 share always shows a
+        # bigger trade value than a Rs 50 share, with no big order involved. Shares per trade
+        # is scale-free, so a stock is only ever compared with itself.
+        g["spt"] = (g["volume"] / g["trades"].replace(0, pd.NA))
         # a single-session move beyond 50% is a contract roll or a bad row, not a price move
         g.loc[g["ret"].abs() > 50, "ret"] = pd.NA
         # trailing baseline, never including the day being judged
         for col, label in (("volume", "volume"), ("trades", "trades"),
-                           ("oi_change", "open interest")):
+                           ("oi_change", "open interest"), ("spt", "shares per trade")):
             base = g[col].shift(1).rolling(args.min_days, min_periods=max(5, args.min_days // 2))
             mu, sd = base.mean(), base.std()
             z = (g[col] - mu) / sd.replace(0, pd.NA)
             g["z_" + col] = z
         hits = g[(g["z_volume"] > args.sigma) | (g["z_trades"] > args.sigma) |
-                 (g["z_oi_change"] > args.sigma)]
+                 (g["z_oi_change"] > args.sigma) | (g["z_spt"] > args.sigma)]
         for _, r in hits.iterrows():
             d = str(r["date"])
             flagged.append({
@@ -158,6 +163,8 @@ def main():
                 "volume_z": round(float(r["z_volume"]), 1) if pd.notna(r["z_volume"]) else None,
                 "trades_z": round(float(r["z_trades"]), 1) if pd.notna(r["z_trades"]) else None,
                 "oi_z": round(float(r["z_oi_change"]), 1) if pd.notna(r["z_oi_change"]) else None,
+                "spt_z": round(float(r["z_spt"]), 1) if pd.notna(r["z_spt"]) else None,
+                "shares_per_trade": (round(float(r["spt"]), 1) if pd.notna(r["spt"]) else None),
                 "volume": int(r["volume"]), "trades": int(r["trades"]),
                 "oi_change": int(r["oi_change"]),
                 "price_chg_pct": round(float(r["ret"]), 2) if pd.notna(r["ret"]) else None,
@@ -179,7 +186,8 @@ def main():
         s["max_abs_nifty_pct"] = round(max(abs(x) for x in s["moves"]), 2)
         s.pop("moves", None)
 
-    flagged.sort(key=lambda x: -(max(x["volume_z"] or 0, x["trades_z"] or 0, x["oi_z"] or 0)))
+    flagged.sort(key=lambda x: -(max(x["volume_z"] or 0, x["trades_z"] or 0,
+                                      x["oi_z"] or 0, x["spt_z"] or 0)))
     out["flagged"] = flagged[: args.keep]
     out["total_flagged"] = len(flagged)
     out["symbols_impact"] = dict(sorted(impact.items(),
@@ -207,6 +215,10 @@ def main():
                          "free-float market caps, which these files do not carry."),
         "baseline": ("A z-score against a short baseline is noisy. The session count is "
                      "published so a thin result can be discounted."),
+        "shares_per_trade": ("Shares per trade is scale-free, so a stock is only compared "
+                             "with itself. Average trade VALUE is not used: a high-priced "
+                             "share always shows a larger trade value with no big order "
+                             "involved."),
     }
 
     os.makedirs("docs", exist_ok=True)
@@ -215,9 +227,9 @@ def main():
     print("   %d unusual sessions across %d symbols (of %d symbols scanned)"
           % (len(flagged), len(impact), daily["symbol"].nunique()))
     for f in out["flagged"][:8]:
-        print("     %s %-12s vol z=%-6s trades z=%-6s price %s%% nifty %s%%"
-              % (f["date"], f["symbol"], f["volume_z"], f["trades_z"],
-                 f["price_chg_pct"], f["nifty_chg_pct"]))
+        print("     %s %-12s vol z=%-6s spt z=%-6s (%s sh/trade) price %s%%"
+              % (f["date"], f["symbol"], f["volume_z"], f["spt_z"],
+                 f["shares_per_trade"], f["price_chg_pct"]))
     return 0
 
 

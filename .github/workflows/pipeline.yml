@@ -433,6 +433,9 @@ jobs:
         run: |
           python scripts/build_affordable.py || true
           python scripts/build_strategies.py || true
+      # Big Money Radar needs both the deal files and the F&O footprint, so it runs last.
+      - name: "7m2zt. Big Money Radar"
+        run: python scripts/build_money_radar.py || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.

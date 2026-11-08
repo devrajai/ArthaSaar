@@ -403,58 +403,29 @@ jobs:
       # possible. This fails loudly if it ever regresses.
       - name: "7m2zq. F&O expiry check"
         run: |
-          # FAIL ONLY ON NEW FILES. The 15 parquet files written before 7 Nov 2026 genuinely
-          # have no expiry column - that was the bug, and it is history. A check that fails on
-          # them blocked EVERY nightly run from 7 to 9 Nov, so nothing was published at all:
-          # a guard that stops the pipeline is worse than the problem it watches.
-          #
-          # So: files dated on or after the fix must carry expiry, and the run fails if they
-          # do not. Older files are reported once as a warning and left alone.
           python - <<'EOF'
-          import glob, os, re, sys
+          import glob, sys
           try:
               import pandas as pd
           except ImportError:
               sys.exit(0)
-
-          CUTOFF = "2026-11-07"      # the day nse_source.py started keeping expiry
-          files = sorted(glob.glob("data/parquet/fo/fo_*.parquet"))
+          files = sorted(glob.glob("data/parquet/fo/fo_*.parquet"))[-3:]
           if not files:
               print("no F&O parquet yet - nothing to check")
               sys.exit(0)
-
-          def filedate(p):
-              m = re.search(r"fo_(\d{4}-\d{2}-\d{2})", os.path.basename(p))
-              return m.group(1) if m else ""
-
-          new_files = [f for f in files if filedate(f) >= CUTOFF]
-          old_files = [f for f in files if filedate(f) < CUTOFF]
-
-          if old_files:
-              print("::warning title=Old F&O files without expiry::%d file(s) written before %s "
-                    "have no expiry column. That is the historical bug, not a new one - they are "
-                    "ignored by this check." % (len(old_files), CUTOFF))
-
-          if not new_files:
-              print("no F&O file written since %s yet - check skipped" % CUTOFF)
-              sys.exit(0)
-
           bad = []
-          for f in new_files[-5:]:
-              try:
-                  cols = list(pd.read_parquet(f).head(1).columns)
-              except Exception:
-                  continue
+          for f in files:
+              cols = list(pd.read_parquet(f, columns=None).head(1).columns)
               if "expiry" not in cols:
-                  bad.append(os.path.basename(f))
-
+                  bad.append(f)
           if bad:
-              print("::error title=F&O expiry missing::%d file(s) written since %s have no expiry "
-                    "column: %s" % (len(bad), CUTOFF, ", ".join(bad)))
+              print("::error title=F&O expiry missing::%d recent file(s) have no expiry column: %s"
+                    % (len(bad), ", ".join(bad)))
               sys.exit(1)
-          print("F&O expiry present in %d recent file(s)" % len(new_files[-5:]))
+          print("F&O expiry present in the last %d file(s)" % len(files))
           EOF
-
+      # Unusual F&O activity: volume, trade count or open interest far outside a stock's own
+      # recent range. Runs after the F&O fetch so the day it just collected is included.
       - name: "7m2zr. Unusual activity and big orders"
         run: python scripts/build_unusual.py || true
       # What an option costs per lot, and the neutral strategy reference.
@@ -559,6 +530,14 @@ jobs:
       # Needs the candle archive, which is restored and adjusted by step 5b.
       - name: "7n2f. What followed this setup last time"
         run: python scripts/build_setup_history.py || true
+
+      # Needs the VIX series (step 7) and Nifty closes (step 2, the Yahoo pull).
+      - name: "7n2g. Variance risk premium"
+        run: python scripts/build_vrp.py || true
+
+      # Reads today's deals and keeps them; the follow-through appears once deals age.
+      - name: "7n2h. Bulk deal follow-through"
+        run: python scripts/build_deals_followup.py || true
 
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py

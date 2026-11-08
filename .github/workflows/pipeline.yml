@@ -428,6 +428,11 @@ jobs:
       # recent range. Runs after the F&O fetch so the day it just collected is included.
       - name: "7m2zr. Unusual activity and big orders"
         run: python scripts/build_unusual.py || true
+      # What an option costs per lot, and the neutral strategy reference.
+      - name: "7m2zs. Option cost per lot and strategies"
+        run: |
+          python scripts/build_affordable.py || true
+          python scripts/build_strategies.py || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.

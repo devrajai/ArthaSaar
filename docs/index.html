@@ -1761,6 +1761,70 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- WHAT AN OPTION ACTUALLY COSTS, AND WHAT THE STRUCTURES ARE ----------------------
+    // Two things the site could not show: the real cost of a contract (premium x LOT SIZE,
+    // not the premium), and a plain reference for what each options structure is.
+    // Deliberately not a "small capital strategy". A cheap option is cheap because the
+    // market expects it to expire worthless - that is the odds, not a discount.
+    (function(){
+     try{
+      if(!AFFORD&&!STRAT) return;
+      var kids=[];
+
+      if(AFFORD&&AFFORD.buckets&&AFFORD.buckets.length){
+        kids.push(para("<b>The premium is not the cost.</b> Premium times <b>lot size</b> is "+
+          "what leaves your account. A Rs 2 option on a 3,000 lot costs Rs 6,000.", true));
+        kids.push(para("Cost per lot on the "+esc(AFFORD.session||"latest")+" session, counting "+
+          "only contracts that actually traded - a cheap strike nobody trades cannot be exited:",
+          false));
+        var rows=[];
+        (AFFORD.buckets||[]).forEach(function(b){
+          (b.rows||[]).slice(0,5).forEach(function(r){
+            rows.push([esc(r.symbol), r.strike, esc(r.type),
+                       "Rs "+num(r.premium), "x "+num(r.lot),
+                       "Rs "+num(r.cost_per_lot), num(r.volume)]);
+          });
+        });
+        kids.push(tbl({columns:["stock","strike","type","premium","lot","cost per lot","volume"],rows:rows}));
+        var counts=(AFFORD.buckets||[]).map(function(b){
+          return "Rs "+b.min_cost+"-"+b.max_cost+": "+num(b.count);
+        }).join("  ·  ");
+        kids.push(para("Tradeable contracts by cost per lot - "+counts+".", false));
+
+        if(AFFORD.base_rates&&AFFORD.base_rates.insufficient_history){
+          kids.push(para("<b style=\"color:#b45309\">No doubling or expiry base rate is shown.</b> "+
+            "Only "+AFFORD.base_rates.sessions+" sessions of F&O history are stored, and a base "+
+            "rate needs about "+AFFORD.base_rates.needed+". A cheap option's whole life is the "+
+            "question, and a few days cannot answer it.", true));
+        }else if(AFFORD.base_rates){
+          var br=AFFORD.base_rates;
+          kids.push(para("Of "+num(br.cheap_contracts_followed)+" contracts trading under Rs "+
+            br.premium_under+", <b>"+br.doubled_pct+"%</b> ever doubled and <b>"+
+            br.fell_to_a_quarter_pct+"%</b> fell to a quarter of their value.", true));
+        }
+      }
+
+      if(STRAT&&STRAT.rows&&STRAT.rows.length){
+        kids.push(para("<b>Options structures</b>, as payoff shapes rather than suggestions. "+
+          "Which one suits anyone depends on capital, risk tolerance and what they expect - "+
+          "none of which this page can know.", false));
+        kids.push(tbl({columns:STRAT.columns,rows:STRAT.rows}));
+      }
+
+      kids.push(para("<b>SEBI's own studies have found most individual F&O traders lose money "+
+        "over time.</b> Every structure above is arithmetic; none of it changes those odds. "+
+        "Brokerage, STT, exchange charges and GST are not included in the cost figures, and on "+
+        "a small premium they can be a large share of the stake.", true));
+
+      v.appendChild(card("Options: cost and structures",
+        AFFORD?num(AFFORD.total_contracts)+" tradeable contracts":"reference", kids,
+        {what:"What a contract actually costs to hold, and a neutral reference for the common options structures.",
+         source:"NSE F&O bhavcopy and the lot-size file; payoff descriptions written from the structure of each position.", updated:AFFORD?AFFORD.updated:STRAT.updated,
+         note:"Educational reference only - not advice, not a recommendation, not a signal. A low premium is the market's estimate that the option expires worthless, not a discount. Charges are excluded."}));
+     }catch(e){}
+    })();
+
+
     // ---- WHAT'S COMING AT THE OPEN -----------------------------------------------------
     // The live form of the lead-lag study: not "the correlation is 0.26" but "the S&P fell
     // 1.1% overnight, and after a fall that size Nifty's next session was down 67% of the
@@ -6197,6 +6261,8 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "affordable.json": AFFORD=v; break;
+    case "strategies.json": STRAT=v; break;
     case "report_cards.json": RCARDS=v; break;
     case "patterns_reference.json": PATREF=v; break;
     case "listings.json": LISTINGS=v; break;
@@ -6243,8 +6309,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json"];
 
 function renderAll(){
   if(!DATA) return;

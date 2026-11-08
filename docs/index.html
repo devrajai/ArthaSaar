@@ -2949,6 +2949,86 @@ function build(d){
   /* ---------- STOCKS: the full NSE list and the screener, merged ---------- */
   (function(){
     var v=sec("stocks");
+
+    // ---- which stocks are climbing the screener, and what this setup did before --------
+    (function(){
+     try{
+      if(RANKM){
+        if(!RANKM.climbers||!RANKM.climbers.length){
+          v.appendChild(card("Rank momentum","building history",
+            [para("The screener ranks "+num(RANKM.universe)+" stocks every day, and this keeps one "+
+              "snapshot a day so it can say who is climbing rather than who is merely up. "+
+              num(RANKM.days_of_history||0)+" day(s) stored so far - a rank change needs at least "+
+              "five before it means anything, and the card stays quiet until then instead of "+
+              "showing noise.", false)],
+            {what:"Change in each stock's screener rank, once there is enough history to compare.",
+             source:"scripts/build_rank_momentum.py over docs/screener.json",
+             updated:RANKM.updated,
+             note:"The rank is a weighted percentile of RSI, distance from the 52-week high and the 20-day move, computed across the whole universe each day."}));
+        } else {
+          var duo=el("div","duo");
+          function side(title,list,up){
+            var w=el("div");
+            w.appendChild(el("p","big",title));
+            w.appendChild(tbl({columns:["symbol","was","now","moved"],
+              rows:(list||[]).map(function(x){return [x.symbol,x.was,x.now,up?("+"+x.moved):x.moved];})},
+              ["was","now"]));
+            return w;
+          }
+          duo.appendChild(side("Climbing",RANKM.climbers,true));
+          duo.appendChild(side("Falling",RANKM.fallers,false));
+          v.appendChild(card("Rank momentum",
+            "since "+esc(RANKM.compared_with||"")+" · "+num(RANKM.universe)+" ranked",
+            [duo, para("A climb means the stock improved against every other stock, not that it rose. The whole market can fall and a stock still climb this table - which is the point: it is relative strength in the ranks, not in the price.", false)],
+            {what:"Biggest movers in the screener's own composite rank since the earliest stored snapshot.",
+             source:"scripts/build_rank_momentum.py over docs/screener.json",
+             updated:RANKM.updated,
+             note:"Composite = 40% percentile of RSI, 30% distance from the 52-week high, 30% the 20-day move. Percentiles, so the score stays comparable when the whole market moves."}));
+        }
+      }
+
+      if(SETUP&&SETUP.symbols){
+        var keys=Object.keys(SETUP.symbols);
+        var rows=keys.map(function(k){
+          var r=SETUP.symbols[k];
+          return {s:k, b:r.bucket, n:r.n, m5:r.fwd5_median, h5:r.fwd5_hit, m20:r.fwd20_median, h20:r.fwd20_hit};
+        }).filter(function(r){ return r.n >= 15 && r.m20!=null; });
+        rows.sort(function(a,b){ return b.m20-a.m20; });
+        var out=el("div","");
+        var inp=el("input");
+        inp.type="search";
+        inp.placeholder="Type a symbol to see its own record, e.g. RELIANCE";
+        inp.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
+        function paintSetup(){
+          out.innerHTML="";
+          var q=String(inp.value||"").trim().toUpperCase();
+          if(q){
+            var r=SETUP.symbols[q];
+            if(!r){ out.appendChild(el("p","msg",q+" has no record: either too few bars, or fewer than "+SETUP.min_cases+" past days with today's setup.")); return; }
+            out.appendChild(para(q+" today: "+esc(r.bucket.replace("|"," and "))+" · RSI "+r.rsi+
+              " · "+num(r.n)+" past days looked like this", true));
+            out.appendChild(tbl({columns:["horizon","median move","share higher","cases"],
+              rows:[["5 sessions",r.fwd5_median+"%",r.fwd5_hit+"%",r.n],
+                    ["20 sessions",r.fwd20_median+"%",r.fwd20_hit+"%",r.n]]},["median move","share higher","cases"]));
+            return;
+          }
+          out.appendChild(tbl({columns:["symbol","setup","cases","5d median","5d higher","20d median","20d higher"],
+            rows:rows.slice(0,25).map(function(r){return [r.s,r.b.replace("|"," / "),r.n,r.m5,r.h5,r.m20,r.h20];})},
+            ["cases","5d median","5d higher","20d median","20d higher"]));
+        }
+        inp.addEventListener("input",paintSetup);
+        paintSetup();
+        v.appendChild(card("Last time this happened",
+          num(SETUP.count)+" stocks with enough history",
+          [para("For each stock, the past days when it had the same shape as today - the same RSI band and the same side of its 200-day average - and what the next 5 and 20 sessions did. Type a symbol to see its own record; the table below ranks the whole universe by the 20-session median."),
+           inp, out],
+          {what:"A base rate per stock: what followed the last times its setup looked like today.",
+           source:"scripts/build_setup_history.py over the candle archive.",
+           updated:SETUP.updated,
+           note:"A base rate, not a forecast. Ten buckets per stock keeps the sample usable, and anything under 15 cases is left out of the table rather than printed. A stock that rose the last eight times it looked like this has eight cases, not an edge."}));
+      }
+     }catch(e){}
+    })();
     // ---- what companies say about their own capacity ----------------------------------
     (function(){
      try{
@@ -3354,6 +3434,34 @@ function build(d){
   /* ---------- MARKET ---------- */
   (function(){
     var v=sec("market");
+
+    // ---- variance risk premium: what options charge against what the index delivers ----
+    (function(){
+     try{
+      if(!VRP) return;
+      var kids=[];
+      var grid=el("div","kpis");
+      grid.appendChild(kpi("Implied move", VRP.implied_pct+"%", "over "+VRP.window+" sessions, from India VIX"));
+      grid.appendChild(kpi("Realised move", VRP.realised_pct+"%", "the last "+VRP.window+" sessions"));
+      grid.appendChild(kpi("Premium", (VRP.premium_pct>0?"+":"")+VRP.premium_pct+" pts",
+        VRP.premium_pct>0?"options priced above realised":"options priced below realised"));
+      kids.push(grid);
+      if(VRP.history&&VRP.history.length>5){
+        kids.push(sparkline(VRP.history.map(function(h){return h.prem;}), 620, 120));
+        kids.push(el("p","sub","The premium, day by day over the last "+VRP.history.length+" sessions."));
+      }
+      kids.push(para("Over the last year the premium averaged "+(VRP.premium_avg_1y>0?"+":"")+
+        VRP.premium_avg_1y+" points and was positive on "+VRP.paid_pct_1y+"% of the "+
+        num(VRP.n_days_1y)+" sessions measured. Positive means an option seller was paid more "+
+        "than the index actually moved; negative means the buyer got the better of it.", true));
+      v.appendChild(card("Variance risk premium", VRP.date+" · what options charge",
+        kids,
+        {what:"India VIX expressed as a 30-day move in percent, next to the same measure computed from realised Nifty closes, and the difference between them.",
+         source:"docs/vix.json for the implied side; Nifty daily closes for the realised side. scripts/build_vrp.py",
+         updated:VRP.updated,
+         note:"This is not a trade signal. The premium stays positive for long stretches because it is payment for tail risk, and a seller who collects it every month still loses everything in the month the index gaps. A realised window also looks backwards by definition."}));
+     }catch(e){}
+    })();
     // ---- which sectors moved, not just the index --------------------------------------
     (function(){
      try{
@@ -3948,6 +4056,38 @@ function build(d){
            updated:OCHAIN.updated,
            note:"This is the minimum across that symbol's in-the-money strikes, so a deeper strike costs more. Rules on physical settlement and the extra margin have been revised before - check the current NSE circular rather than relying on this page."}));
       }
+    }
+
+    // ---- rollover: how much of the futures book is being carried --------------
+    if(ROLL&&ROLL.stocks){
+      var irows=[];
+      Object.keys(ROLL.indices||{}).forEach(function(k){
+        var x=ROLL.indices[k];
+        irows.push([k, x.near_oi, x.next_oi, x.rollover_pct, x.next_oi_chg, x.basis_pct]);
+      });
+      var srows=(ROLL.stocks||[]).map(function(x){
+        return [x.symbol, x.near_oi, x.next_oi, x.rollover_pct, x.next_oi_chg, x.basis_pct];
+      });
+      var kids=[];
+      if(irows.length){
+        kids.push(el("p","big","Index futures"));
+        kids.push(tbl({columns:["index","near OI","next OI","rollover %","next added today","basis %"],
+          rows:irows},["near OI","next OI","rollover %","next added today","basis %"]));
+      }
+      kids.push(el("p","big","Stock futures, highest rollover first"));
+      kids.push(tbl({columns:["symbol","near OI","next OI","rollover %","next added today","basis %"],
+        rows:srows},["near OI","next OI","rollover %","next added today","basis %"]));
+      kids.push(para("Market-wide rollover is "+ROLL.market_rollover_pct+"% across "+num(ROLL.count)+
+        " stocks: that much of the open interest already sits in the next contract. A high number "+
+        "with next-month OI still rising means positions are being carried. A low one with both "+
+        "contracts falling means they are being closed - the trader left instead of rolling.", false));
+      v.appendChild(card("Rollover into the next expiry",
+        (ROLL.date||"")+" · "+num(ROLL.count)+" stock futures",
+        kids,
+        {what:"Next-month open interest as a share of the two nearest contracts, per stock and per index, with how much was added to the next contract today and the basis to spot.",
+         source:"scripts/build_rollover.py over the NSE F&O bhavcopy (every expiry of every future).",
+         updated:ROLL.updated,
+         note:"Rollover measures whether positions were carried, not which way they point. A 40% rollover is not bullish - it is a book that stayed. Rollover climbs through expiry week by construction, so compare it with yesterday rather than against a fixed number."}));
     }
       v.appendChild(card("F&O overview", d.fno.date||"",
         [ para("Stock futures: "+num(d.fno.stock_futures)+
@@ -4888,6 +5028,35 @@ var v=sec("learn");
   /* ---------- ETFs ---------- */
   (function(){
     var v=sec("etf");
+
+    // ---- ETF premium and discount: paying above the assets you are buying --------
+    (function(){
+     try{
+      if(!ETFPR||!ETFPR.rows) return;
+      var priced=(ETFPR.rows||[]).filter(function(r){ return r.premium_pct!=null; });
+      if(!priced.length){
+        v.appendChild(card("ETF premium to NAV","not computed yet",
+          [para("The ETF list is matched to published NAVs ("+num(ETFPR.matched||0)+" matches) but no NAV value came through, so a premium cannot be computed. Nothing is shown rather than a guess.", false)],
+          {what:"How far each ETF trades from its net asset value.",
+           source:"docs/etf_premium.json, from the NSE ETF list and AMFI NAVs.",
+           updated:ETFPR.updated,
+           note:"A wrong premium is worse than none, which is why the matcher is strict."}));
+        return;
+      }
+      var rows=priced.slice(0,25).map(function(r){
+        return [r.symbol, r.close, r.nav, r.premium_pct];
+      });
+      v.appendChild(card("ETF premium and discount",
+        num(priced.length)+" ETFs priced against NAV",
+        [ tbl({columns:["symbol","market price","NAV","premium %"],rows:rows},
+            ["market price","NAV","premium %"]),
+          para("A premium means you are paying more than the assets are worth; a discount means less. Small gaps are normal on illiquid ETFs and are not free money - the gap usually widens again when you try to sell. The ones worth noticing are the wide gaps on funds you can actually trade in size.", false)],
+        {what:"Market price against net asset value for every ETF that could be matched to a published NAV, widest gaps first.",
+         source:"docs/etf_premium.json, built from the NSE ETF list and AMFI's NAV file.",
+         updated:ETFPR.updated,
+         note:"NAV is published once a day after the close, so the comparison is against yesterday's value on an intraday price. An ETF trading at a premium after a big market move may simply be ahead of a NAV that has not been struck yet."}));
+     }catch(e){}
+    })();
 
     // ---- ETF price history, from our own archive -------------------------------------
     // 190 of the 341 listed ETFs already carry 94 months of split-adjusted closes in
@@ -6204,6 +6373,49 @@ var v=sec("learn");
   /* ---------- BULK AND BLOCK DEALS (Task 7) ---------- */
   (function(){
     var v=sec("deals");
+
+    // ---- bulk deals: today's flow, and what past deals were followed by --------
+    (function(){
+     try{
+      if(!DFOLLOW) return;
+      var kids=[];
+      if(DFOLLOW.today&&DFOLLOW.today.symbols&&DFOLLOW.today.symbols.length){
+        kids.push(el("p","big","Net bulk and block flow by stock, "+DFOLLOW.date));
+        kids.push(tbl({columns:["symbol","net ₹ Cr"],
+          rows:DFOLLOW.today.symbols.slice(0,15).map(function(x){return [x.symbol,x.net_cr];})},
+          ["net ₹ Cr"]));
+      }
+      if(DFOLLOW.today&&DFOLLOW.today.repeat_clients&&DFOLLOW.today.repeat_clients.length){
+        kids.push(el("p","big","Clients who appeared more than once"));
+        kids.push(tbl({columns:["client","deals","₹ Cr","stocks"],
+          rows:DFOLLOW.today.repeat_clients.slice(0,8).map(function(c){
+            return [c.client, c.deals, c.value_cr, (c.symbols||[]).join(", ")];})},
+          ["deals","₹ Cr"]));
+      }
+      var fu=DFOLLOW.follow_up||{};
+      var keys=Object.keys(fu);
+      if(keys.length){
+        kids.push(el("p","big","What followed past deals"));
+        kids.push(tbl({columns:["deal","cases","median move","share higher"],
+          rows:keys.map(function(k){
+            var x=fu[k];
+            return [k.replace("_"," "), x.n, x.median_pct, x.hit_pct];})},
+          ["cases","median move","share higher"]));
+      } else {
+        kids.push(para("No follow-through yet. A deal needs to be at least 20 sessions old before "+
+          "it can be measured, and this file has been collecting for less than that - "+
+          num(DFOLLOW.stored||0)+" deals stored so far. The table appears on its own once the "+
+          "first deals age past the horizon; until then there is nothing honest to show.", false));
+      }
+      v.appendChild(card("Bulk deals, and what came next",
+        num(DFOLLOW.stored||0)+" deals stored",
+        kids,
+        {what:"Today's net bulk and block flow per stock, clients appearing in more than one deal, and the median move that followed past deals of the same side.",
+         source:"docs/deals.json from NSE, accumulated in data/deals_history.json; measured against the candle archive.",
+         updated:DFOLLOW.updated,
+         note:"A bulk deal is a completed transaction, not an opinion. The follow-through is a median over past cases, and a median hides the spread: half the cases were worse than the number shown."}));
+     }catch(e){}
+    })();
     if(!DEALS||!DEALS.count){
       v.appendChild(card("Deals","Bulk and block deals",
         [para(DEALS&&DEALS.note?DEALS.note:"Not fetched yet.")],
@@ -6585,7 +6797,7 @@ var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=
     CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null,
     SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null,
     RS=null, SEASON=null, CORR=null, WATCH=null, DEALS=null, INSIDER=null, CAL=null, BRIEF=null, MSTAT=null,
-    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null, TSCORE=null, DERR=null, OCHAIN=null;
+    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null, TSCORE=null, DERR=null, OCHAIN=null, ROLL=null, RANKM=null, SETUP=null, VRP=null, DFOLLOW=null;
 
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
@@ -6619,6 +6831,11 @@ function assign(name, v){
     case "timesfm_score.json": TSCORE=v; break;
     case "data_errors.json": DERR=v; break;
     case "option_chain.json": OCHAIN=v; break;
+    case "rollover.json": ROLL=v; break;
+    case "rank_momentum.json": RANKM=v; break;
+    case "setup_history.json": SETUP=v; break;
+    case "vrp.json": VRP=v; break;
+    case "deals_followup.json": DFOLLOW=v; break;
     case "fundamentals.json": FUNDA=v; break;
     case "sector_fund.json": SECF=v; break;
     case "behaviour.json": BEHAV=v; break;
@@ -6684,7 +6901,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json"];
 
 function renderAll(){
   if(!DATA) return;

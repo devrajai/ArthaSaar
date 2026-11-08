@@ -97,6 +97,50 @@ def load_amfi_isin():
     return out
 
 
+def load_navs():
+    """{scheme_code: latest NAV} from the same AMFI file.
+
+    The premium was never published because only the scheme CODE was carried through the
+    match - the NAV itself was looked up and thrown away, so docs/etf_premium.json had a
+    scheme_code and a market price and no way to compare them. Column names differ between
+    AMFI dumps, so this tries the obvious ones rather than assuming.
+    """
+    path = "data/amfi/navall.parquet"
+    if not os.path.exists(path):
+        return {}
+    try:
+        import pandas as pd
+        df = pd.read_parquet(path)
+    except Exception as e:
+        print("  amfi navs unreadable (%s)" % type(e).__name__)
+        return {}
+    if "code" not in df.columns:
+        return {}
+    navcol = next((c for c in ("nav", "NAV", "latest_nav", "net_asset_value", "nav_value")
+                   if c in df.columns), None)
+    if not navcol:
+        # last resort: a numeric column that is not the code or a date
+        for c in df.columns:
+            if c in ("code", "date", "isin_growth", "isin_div"):
+                continue
+            if str(df[c].dtype).startswith(("float", "int")):
+                navcol = c
+                break
+    if not navcol:
+        print("  amfi navs: no NAV column found in %s" % list(df.columns)[:8])
+        return {}
+    out = {}
+    for code, nav in zip(df["code"], df[navcol]):
+        try:
+            f = float(nav)
+        except Exception:
+            continue
+        if f > 0:
+            out[str(code)] = f
+    print("  amfi navs: %d schemes (column '%s')" % (len(out), navcol))
+    return out
+
+
 def load_closes():
     """Latest close per symbol from the newest bhavcopy CSV on disk."""
     files = sorted(glob.glob("data/csv/cm/*.csv"))
@@ -219,6 +263,7 @@ def main():
 
     idx = build_index(schemes)
     isin_map = load_amfi_isin()
+    navs = load_navs()
     matched = dropped = no_price = by_isin = 0
     for sym, name, isin in etfs:
         px = closes.get(sym)
@@ -238,9 +283,19 @@ def main():
         matched += 1
         if score == "isin":
             by_isin += 1
-        out["rows"].append({"symbol": sym, "name": name, "close": round(px, 2),
-                            "scheme_code": code, "match_tokens": score})
+        row = {"symbol": sym, "name": name, "close": round(px, 2),
+               "scheme_code": code, "match_tokens": score}
+        nav = navs.get(str(code))
+        if nav:
+            row["nav"] = round(nav, 2)
+            row["premium_pct"] = round(100.0 * (px - nav) / nav, 2)
+        out["rows"].append(row)
 
+    with_nav = [r for r in out["rows"] if "premium_pct" in r]
+    with_nav.sort(key=lambda r: -abs(r["premium_pct"]))
+    without = [r for r in out["rows"] if "premium_pct" not in r]
+    out["rows"] = with_nav + without          # widest gaps first, unmatched last
+    out["with_premium"] = len(with_nav)
     out["count"] = len(out["rows"])
     out["matched"], out["dropped"], out["no_price"] = matched, dropped, no_price
     out["matched_by_isin"] = by_isin
@@ -248,9 +303,10 @@ def main():
         out["note"] = ("No ETF could be matched to a published NAV with confidence "
                        "(%d dropped as ambiguous). A wrong premium is worse than none." % dropped)
     else:
-        out["note"] = ("%d ETFs matched to a published NAV (%d by exact ISIN, %d by name). "
+        out["note"] = ("%d ETFs matched to a published NAV (%d by exact ISIN, %d by name), "
+                       "%d of them with a NAV value so a premium could be computed. "
                        "%d dropped as ambiguous, %d had no close price."
-                       % (matched, by_isin, matched - by_isin, dropped, no_price))
+                       % (matched, by_isin, matched - by_isin, len(with_nav), dropped, no_price))
     os.makedirs("docs", exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False)

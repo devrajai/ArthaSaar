@@ -2949,86 +2949,6 @@ function build(d){
   /* ---------- STOCKS: the full NSE list and the screener, merged ---------- */
   (function(){
     var v=sec("stocks");
-
-    // ---- which stocks are climbing the screener, and what this setup did before --------
-    (function(){
-     try{
-      if(RANKM){
-        if(!RANKM.climbers||!RANKM.climbers.length){
-          v.appendChild(card("Rank momentum","building history",
-            [para("The screener ranks "+num(RANKM.universe)+" stocks every day, and this keeps one "+
-              "snapshot a day so it can say who is climbing rather than who is merely up. "+
-              num(RANKM.days_of_history||0)+" day(s) stored so far - a rank change needs at least "+
-              "five before it means anything, and the card stays quiet until then instead of "+
-              "showing noise.", false)],
-            {what:"Change in each stock's screener rank, once there is enough history to compare.",
-             source:"scripts/build_rank_momentum.py over docs/screener.json",
-             updated:RANKM.updated,
-             note:"The rank is a weighted percentile of RSI, distance from the 52-week high and the 20-day move, computed across the whole universe each day."}));
-        } else {
-          var duo=el("div","duo");
-          function side(title,list,up){
-            var w=el("div");
-            w.appendChild(el("p","big",title));
-            w.appendChild(tbl({columns:["symbol","was","now","moved"],
-              rows:(list||[]).map(function(x){return [x.symbol,x.was,x.now,up?("+"+x.moved):x.moved];})},
-              ["was","now"]));
-            return w;
-          }
-          duo.appendChild(side("Climbing",RANKM.climbers,true));
-          duo.appendChild(side("Falling",RANKM.fallers,false));
-          v.appendChild(card("Rank momentum",
-            "since "+esc(RANKM.compared_with||"")+" · "+num(RANKM.universe)+" ranked",
-            [duo, para("A climb means the stock improved against every other stock, not that it rose. The whole market can fall and a stock still climb this table - which is the point: it is relative strength in the ranks, not in the price.", false)],
-            {what:"Biggest movers in the screener's own composite rank since the earliest stored snapshot.",
-             source:"scripts/build_rank_momentum.py over docs/screener.json",
-             updated:RANKM.updated,
-             note:"Composite = 40% percentile of RSI, 30% distance from the 52-week high, 30% the 20-day move. Percentiles, so the score stays comparable when the whole market moves."}));
-        }
-      }
-
-      if(SETUP&&SETUP.symbols){
-        var keys=Object.keys(SETUP.symbols);
-        var rows=keys.map(function(k){
-          var r=SETUP.symbols[k];
-          return {s:k, b:r.bucket, n:r.n, m5:r.fwd5_median, h5:r.fwd5_hit, m20:r.fwd20_median, h20:r.fwd20_hit};
-        }).filter(function(r){ return r.n >= 15 && r.m20!=null; });
-        rows.sort(function(a,b){ return b.m20-a.m20; });
-        var out=el("div","");
-        var inp=el("input");
-        inp.type="search";
-        inp.placeholder="Type a symbol to see its own record, e.g. RELIANCE";
-        inp.style.cssText="font:inherit;font-size:14px;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);width:100%";
-        function paintSetup(){
-          out.innerHTML="";
-          var q=String(inp.value||"").trim().toUpperCase();
-          if(q){
-            var r=SETUP.symbols[q];
-            if(!r){ out.appendChild(el("p","msg",q+" has no record: either too few bars, or fewer than "+SETUP.min_cases+" past days with today's setup.")); return; }
-            out.appendChild(para(q+" today: "+esc(r.bucket.replace("|"," and "))+" · RSI "+r.rsi+
-              " · "+num(r.n)+" past days looked like this", true));
-            out.appendChild(tbl({columns:["horizon","median move","share higher","cases"],
-              rows:[["5 sessions",r.fwd5_median+"%",r.fwd5_hit+"%",r.n],
-                    ["20 sessions",r.fwd20_median+"%",r.fwd20_hit+"%",r.n]]},["median move","share higher","cases"]));
-            return;
-          }
-          out.appendChild(tbl({columns:["symbol","setup","cases","5d median","5d higher","20d median","20d higher"],
-            rows:rows.slice(0,25).map(function(r){return [r.s,r.b.replace("|"," / "),r.n,r.m5,r.h5,r.m20,r.h20];})},
-            ["cases","5d median","5d higher","20d median","20d higher"]));
-        }
-        inp.addEventListener("input",paintSetup);
-        paintSetup();
-        v.appendChild(card("Last time this happened",
-          num(SETUP.count)+" stocks with enough history",
-          [para("For each stock, the past days when it had the same shape as today - the same RSI band and the same side of its 200-day average - and what the next 5 and 20 sessions did. Type a symbol to see its own record; the table below ranks the whole universe by the 20-session median."),
-           inp, out],
-          {what:"A base rate per stock: what followed the last times its setup looked like today.",
-           source:"scripts/build_setup_history.py over the candle archive.",
-           updated:SETUP.updated,
-           note:"A base rate, not a forecast. Ten buckets per stock keeps the sample usable, and anything under 15 cases is left out of the table rather than printed. A stock that rose the last eight times it looked like this has eight cases, not an edge."}));
-      }
-     }catch(e){}
-    })();
     // ---- what companies say about their own capacity ----------------------------------
     (function(){
      try{
@@ -4028,38 +3948,6 @@ function build(d){
            updated:OCHAIN.updated,
            note:"This is the minimum across that symbol's in-the-money strikes, so a deeper strike costs more. Rules on physical settlement and the extra margin have been revised before - check the current NSE circular rather than relying on this page."}));
       }
-    }
-
-    // ---- rollover: how much of the futures book is being carried --------------
-    if(ROLL&&ROLL.stocks){
-      var irows=[];
-      Object.keys(ROLL.indices||{}).forEach(function(k){
-        var x=ROLL.indices[k];
-        irows.push([k, x.near_oi, x.next_oi, x.rollover_pct, x.next_oi_chg, x.basis_pct]);
-      });
-      var srows=(ROLL.stocks||[]).map(function(x){
-        return [x.symbol, x.near_oi, x.next_oi, x.rollover_pct, x.next_oi_chg, x.basis_pct];
-      });
-      var kids=[];
-      if(irows.length){
-        kids.push(el("p","big","Index futures"));
-        kids.push(tbl({columns:["index","near OI","next OI","rollover %","next added today","basis %"],
-          rows:irows},["near OI","next OI","rollover %","next added today","basis %"]));
-      }
-      kids.push(el("p","big","Stock futures, highest rollover first"));
-      kids.push(tbl({columns:["symbol","near OI","next OI","rollover %","next added today","basis %"],
-        rows:srows},["near OI","next OI","rollover %","next added today","basis %"]));
-      kids.push(para("Market-wide rollover is "+ROLL.market_rollover_pct+"% across "+num(ROLL.count)+
-        " stocks: that much of the open interest already sits in the next contract. A high number "+
-        "with next-month OI still rising means positions are being carried. A low one with both "+
-        "contracts falling means they are being closed - the trader left instead of rolling.", false));
-      v.appendChild(card("Rollover into the next expiry",
-        (ROLL.date||"")+" · "+num(ROLL.count)+" stock futures",
-        kids,
-        {what:"Next-month open interest as a share of the two nearest contracts, per stock and per index, with how much was added to the next contract today and the basis to spot.",
-         source:"scripts/build_rollover.py over the NSE F&O bhavcopy (every expiry of every future).",
-         updated:ROLL.updated,
-         note:"Rollover measures whether positions were carried, not which way they point. A 40% rollover is not bullish - it is a book that stayed. Rollover climbs through expiry week by construction, so compare it with yesterday rather than against a fixed number."}));
     }
       v.appendChild(card("F&O overview", d.fno.date||"",
         [ para("Stock futures: "+num(d.fno.stock_futures)+
@@ -6697,7 +6585,7 @@ var STOCKS=null, UNIVERSE=null, CRYPTO=null, GLOBAL=null, SCREENER=null, SEARCH=
     CONFIG=null, INDICES=null, SECTORS=null, CHARGES=null, MF=null, ETF=null, DATA=null,
     SEBI=null, IPO=null, SHAREHOLD=null, ETFPR=null,
     RS=null, SEASON=null, CORR=null, WATCH=null, DEALS=null, INSIDER=null, CAL=null, BRIEF=null, MSTAT=null,
-    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null, TSCORE=null, DERR=null, OCHAIN=null, ROLL=null, RANKM=null, SETUP=null;
+    BREADTH=null, GAPS=null, LEVELS=null, PATTERNS=null, TSCORE=null, DERR=null, OCHAIN=null;
 
 function getJson(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();});}
 function optional(url){return getJson(url).catch(function(){return null;});}   // the site works without these
@@ -6731,9 +6619,6 @@ function assign(name, v){
     case "timesfm_score.json": TSCORE=v; break;
     case "data_errors.json": DERR=v; break;
     case "option_chain.json": OCHAIN=v; break;
-    case "rollover.json": ROLL=v; break;
-    case "rank_momentum.json": RANKM=v; break;
-    case "setup_history.json": SETUP=v; break;
     case "fundamentals.json": FUNDA=v; break;
     case "sector_fund.json": SECF=v; break;
     case "behaviour.json": BEHAV=v; break;
@@ -6799,7 +6684,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -7253,6 +7138,131 @@ show = function(id){
 })();
 </script>
 
+
+
+<script>
+/* ArthaSaar — "What changed today" (deltas, not state) + delivery screener */
+(function(){
+  "use strict";
+  function J(f){return fetch(f,{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});}
+  function n(x,d){return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?1:d});}
+  function sgn(x,d){return (x==null||isNaN(x))?"—":(x>0?"+":"")+Number(x).toFixed(d==null?1:d)+"%";}
+  function card2(t,sub,kids,info){
+    if(typeof card==="function"){ try{ return card(t,sub,kids,info); }catch(e){} }
+    var d=document.createElement("div"); d.className="card";
+    d.innerHTML='<div class="cardhead"><h2>'+t+(sub?'<span class="sub">'+sub+'</span>':'')+'</h2></div>';
+    kids.forEach(function(k){ d.appendChild(k); }); return d;
+  }
+  function p(t){ return (typeof para==="function")?para(t,false):(function(){var e=document.createElement("p");e.textContent=t;return e;})(); }
+  function tbl2(cols,rows,nums){
+    if(typeof tbl==="function"){ try{ return tbl({columns:cols,rows:rows},nums||[]); }catch(e){} }
+    var t=document.createElement("table");
+    t.innerHTML="<tr>"+cols.map(function(c){return "<th>"+c+"</th>";}).join("")+"</tr>"+
+      rows.map(function(r){return "<tr>"+r.map(function(c){return "<td>"+c+"</td>";}).join("")+"</tr>";}).join("");
+    return t;
+  }
+  var D={};
+
+  /* ---------- What changed today ---------- */
+  function changes(){
+    var kids=[], lines=0;
+    // 1) fresh option OI (change in OI, per strike, nearest expiry)
+    try{
+      var o=D.oi, idx=o&&o.indices&&o.indices.NIFTY, e=idx&&idx.expiries&&idx.expiries[0];
+      if(e&&e.strikes){
+        var ce=e.strikes.slice().sort(function(a,b){return (b.ce_chg||0)-(a.ce_chg||0);}).slice(0,2);
+        var pe=e.strikes.slice().sort(function(a,b){return (b.pe_chg||0)-(a.pe_chg||0);}).slice(0,2);
+        var t=[];
+        ce.forEach(function(s){ if(s.ce_chg>0) t.push("fresh call OI at "+n(s.strike,0)+" (+"+n(s.ce_chg/1e5,1)+" L)"); });
+        pe.forEach(function(s){ if(s.pe_chg>0) t.push("fresh put OI at "+n(s.strike,0)+" (+"+n(s.pe_chg/1e5,1)+" L)"); });
+        if(t.length){ kids.push(p("Options ("+e.expiry+", "+e.label+"): "+t.join("; ")+".")); lines++; }
+      }
+    }catch(err){}
+    // 2) delivery leaders
+    try{
+      var d=D.delivery&&D.delivery.items;
+      if(d&&d.length){
+        var top=d.filter(function(x){return x.score>=7 && x.d>=50;}).slice(0,3);
+        if(top.length){ kids.push(p("Real delivery, not churn: "+top.map(function(x){return x.s+" "+n(x.d,0)+"% delivery, "+sgn(x.chg);}).join("; ")+".")); lines++; }
+      }
+    }catch(err){}
+    // 3) circuits
+    try{
+      var c=D.circuits;
+      if(c&&c.n_uc!=null){
+        var up=(c.uc||[]).slice(0,2).map(function(x){return x.s+" "+sgn(x.p);}).join(", ");
+        kids.push(p("Circuits: "+c.n_uc+" locked upper, "+c.n_lc+" locked lower"+(up?" (biggest: "+up+")":"")+".")); lines++;
+      }
+    }catch(err){}
+    // 4) corporate actions in the last 10 days
+    try{
+      var ca=D.corp&&D.corp.items||[];
+      var cut=new Date(Date.now()-10*864e5).toISOString().slice(0,10);
+      var recent=ca.filter(function(x){return x.d>=cut;});
+      if(recent.length){
+        kids.push(p("Corporate actions this fortnight: "+recent.slice(0,3).map(function(x){return x.s+" "+(x.k==="split"?"split 1:"+x.v:"dividend ₹"+x.v)+" on "+x.d;}).join("; ")+(recent.length>3?" and "+(recent.length-3)+" more":"")+".")); lines++;
+      }
+    }catch(err){}
+    if(!lines) kids.push(p("No deltas available yet today - the collectors may still be running."));
+    kids.unshift(p("Only what moved since the previous close. The rest of the site shows where things stand; this shows what changed."));
+    var c2=card2("What changed today", (D.oi&&D.oi.date)||"", kids,
+      {what:"The day's actual deltas: fresh option open interest, stocks that moved on real delivery, circuit activity and corporate actions.",
+       source:"NSE F&O bhavcopy, NSE delivery file, NSE bhavcopy, Yahoo corporate actions.",
+       updated:(D.oi&&D.oi.updated)||"", note:"Deltas are measured against the previous close. A change is not a direction, and this is not advice."});
+    c2.setAttribute("data-fp","changed");
+    return c2;
+  }
+
+  /* ---------- Delivery screener ---------- */
+  function deliveryScreener(){
+    var d=D.delivery; if(!d||!d.items) return null;
+    var mode="all";
+    var kids=[p("Delivery is the share of traded quantity that actually changed hands. High delivery with a rising price is accumulation; a big move on thin delivery is usually intraday churn.")];
+    var chips=document.createElement("div");
+    chips.style.cssText="display:flex;gap:6px;margin:8px 0;flex-wrap:wrap";
+    var out=document.createElement("div");
+    function chip(label,val){
+      var b=document.createElement("button"); b.textContent=label;
+      b.style.cssText="padding:6px 11px;border-radius:999px;border:1px solid #cfe0f5;background:"+(mode===val?"#0b57d0":"#fff")+";color:"+(mode===val?"#fff":"#123")+";font:600 11px system-ui;cursor:pointer";
+      b.onclick=function(){ mode=val; renderChips(); draw(); };
+      return b;
+    }
+    function renderChips(){ chips.innerHTML=""; chips.appendChild(chip("All","all")); chips.appendChild(chip("Accumulating","acc")); chips.appendChild(chip("High delivery","hi")); }
+    function draw(){
+      var rows=d.items.slice();
+      if(mode==="acc") rows=rows.filter(function(x){return x.score>=7;});
+      if(mode==="hi") rows=rows.filter(function(x){return x.d>=50;});
+      rows=rows.slice(0,20);
+      out.innerHTML="";
+      out.appendChild(tbl2(["stock","delivery %","day move","score"],
+        rows.map(function(x){return [x.s, x.d, x.chg, x.score];}),
+        ["delivery %","day move","score"]));
+    }
+    renderChips(); draw();
+    kids.push(chips); kids.push(out);
+    var c=card2("Delivery screener", (d.count||0)+" stocks · "+(d.date||""), kids,
+      {what:"Filter the market by delivery instead of price alone - who is taking actual delivery of shares, not just trading them intraday.",
+       source:"NSE sec_bhavdata_full (delivery quantity and percentage).", updated:d.updated, note:d.note});
+    c.setAttribute("data-fp","delivscreen");
+    return c;
+  }
+
+  function place(id, node, key){
+    var s=document.getElementById("sec-"+id);
+    if(!s||!node) return;
+    if(s.querySelector('[data-fp="'+key+'"]')) return;
+    s.appendChild(node);
+  }
+  function run(){
+    try{ place("overview", changes(), "changed"); }catch(e){}
+    try{ place("stocks", deliveryScreener(), "delivscreen"); }catch(e){}
+  }
+  Promise.all([J("oi_by_expiry.json"),J("delivery.json"),J("circuits.json"),J("corp_actions.json")])
+    .then(function(r){ D.oi=r[0]; D.delivery=r[1]; D.circuits=r[2]; D.corp=r[3]; run(); });
+  var iv=setInterval(run,800); setTimeout(function(){clearInterval(iv);},90000);
+  try{ new MutationObserver(run).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+})();
+</script>
 
 </body>
 </html>

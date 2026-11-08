@@ -1,0 +1,130 @@
+name: MCX probe
+
+# A one-off diagnostic. The ArthaSaar build sandbox cannot reach mcxindia.com (the proxy
+# returns 502), so the MCX collector has never been tested against the real endpoint. GitHub
+# runners have open internet, so this asks the question directly and prints the answer.
+#
+# Run it manually from the Actions tab, or it also runs on the first of each month to notice
+# if MCX changes its paths.
+#
+# It fetches nothing large and writes nothing: it reports status codes and a sample row.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 1 * *"      # 09:30 IST on the 1st of each month
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Probe MCX bhavcopy
+        run: |
+          python - <<'EOF'
+          import json, re, sys, urllib.error, urllib.request, urllib.parse
+          from datetime import date, timedelta
+
+          UA = {
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+              "Accept": "application/json, text/javascript, */*; q=0.01",
+              "Accept-Language": "en-US,en;q=0.9",
+              "X-Requested-With": "XMLHttpRequest",
+              "Referer": "https://www.mcxindia.com/market-data/bhavcopy",
+          }
+          PAGE = "https://www.mcxindia.com/market-data/bhavcopy"
+          API = "https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy"
+
+          print("=== 1. can a runner reach the bhavcopy page at all? ===")
+          import http.cookiejar
+          cj = http.cookiejar.CookieJar()
+          opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+          token = None
+          try:
+              html = opener.open(
+                  urllib.request.Request(PAGE, headers={"User-Agent": UA["User-Agent"]}),
+                  timeout=60).read().decode("utf-8", "replace")
+              print("  HTTP 200, %d bytes, %d cookies" % (len(html), len(list(cj))))
+              m = re.search(r'name="__RequestVerificationToken"[^>]*value="([^"]+)"', html)
+              if not m:
+                  m = re.search(r'value="([^"]+)"[^>]*name="__RequestVerificationToken"', html)
+              token = m.group(1) if m else None
+              print("  csrf token:", "FOUND" if token else "NOT FOUND")
+              if "bhavcopy" in html.lower():
+                  print("  page mentions bhavcopy: yes")
+          except Exception as e:
+              print("  FAILED: %s: %s" % (type(e).__name__, str(e)[:160]))
+              print("\n  RESULT: a runner cannot reach MCX either. The MCX path is closed to")
+              print("  this pipeline, and the collector cannot be used. Say so on the site")
+              print("  rather than leaving an empty table.")
+              sys.exit(0)
+
+          print()
+          print("=== 2. does the data endpoint answer? ===")
+          # walk back a few days in case today is a holiday
+          for back in range(1, 6):
+              d = date.today() - timedelta(days=back)
+              dmy = d.strftime("%d/%m/%Y")
+              url = "%s?InstrumentName=ALL&fromDate=%s&toDate=%s" % (
+                  API, urllib.parse.quote(dmy), urllib.parse.quote(dmy))
+              headers = dict(UA)
+              if token:
+                  headers["__RequestVerificationToken"] = token
+              try:
+                  raw = opener.open(urllib.request.Request(url, headers=headers),
+                                    timeout=60).read().decode("utf-8", "replace")
+              except urllib.error.HTTPError as e:
+                  print("  %s -> HTTP %s" % (dmy, e.code))
+                  continue
+              except Exception as e:
+                  print("  %s -> %s" % (dmy, type(e).__name__))
+                  continue
+              print("  %s -> HTTP 200, %d bytes" % (dmy, len(raw)))
+              try:
+                  j = json.loads(raw)
+              except Exception:
+                  print("     not JSON. First 200 chars: %r" % raw[:200])
+                  continue
+              data = None
+              for k in ("Data", "data", "d"):
+                  v = j.get(k) if isinstance(j, dict) else None
+                  if isinstance(v, list):
+                      data = v; break
+                  if isinstance(v, str):
+                      try:
+                          inner = json.loads(v)
+                          if isinstance(inner, dict):
+                              for kk in ("Data", "data"):
+                                  if isinstance(inner.get(kk), list):
+                                      data = inner[kk]; break
+                      except Exception:
+                          pass
+              if data is None:
+                  print("     JSON keys %s, no row list found" % (list(j)[:8] if isinstance(j, dict) else type(j).__name__))
+                  continue
+              print("     ROWS: %d" % len(data))
+              if data:
+                  print("     COLUMNS: %s" % ", ".join(list(data[0])[:16]))
+                  print("     SAMPLE : %s" % json.dumps(data[0])[:300])
+                  print()
+                  print("  RESULT: MCX WORKS from a runner. The collector can be used.")
+                  sys.exit(0)
+
+          print()
+          print("  RESULT: the page loads but no date in the last 5 returned rows.")
+          print("  Either every one was a holiday, or the endpoint has moved. Compare the")
+          print("  request above with what a browser makes on the bhavcopy page.")
+          EOF
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### MCX probe finished" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Read the step log above. It reports whether a runner can reach" >> $GITHUB_STEP_SUMMARY
+          echo "mcxindia.com, whether the CSRF token was found, and whether the" >> $GITHUB_STEP_SUMMARY
+          echo "bhavcopy endpoint returned rows." >> $GITHUB_STEP_SUMMARY

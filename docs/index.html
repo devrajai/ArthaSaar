@@ -925,6 +925,29 @@ a.bigbtn:hover{background:#1a45c0}
   .cone svg{width:100%;height:auto;display:block}
   .legend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 0;font-size:12px;color:var(--muted)}
   .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+/* ====================================================================================
+   MOBILE READABILITY. The viewport tag was already correct (width=device-width,
+   initial-scale=1), so the page did not force a zoom - but a dozen rules set 10px and
+   11px, which on a phone is unreadable without pinching. This raises the floor to 12px
+   and gives every tappable control a 44px target. Desktop is untouched.
+   ==================================================================================== */
+@media (max-width:680px){
+  .chart .lbl, .pitem .kind, .lvl, .cwrap .lbl, .chip, #mkt, .herocell .hlab{font-size:12px}
+  .sector, .tag, .kv b, table.corr{font-size:12px}
+  .kpi .k, .kpi .n, .legend, .herocell .hsub, #voiceHint, .tf .live{font-size:12.5px}
+  .cardhead .sub{font-size:11.5px}
+  th, td{padding:9px 8px}
+  /* tables scroll sideways instead of squeezing the text to nothing */
+  .card table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
+  /* every control reachable with a thumb */
+  button, select, input[type=date], input[type=text], .datepick, a.bigbtn{
+    min-height:44px;font-size:16px}   /* 16px stops iOS auto-zooming on focus */
+  .datepick{min-height:44px}
+  /* long card titles wrap instead of pushing the layout wide */
+  .cardhead h2{line-height:1.3;word-break:break-word}
+  .wrap{padding:0 14px}
+}
 </style>
 </head>
 <body>
@@ -1773,6 +1796,70 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- PCR: THE TREND, AND WHAT EACH BAND HAS ACTUALLY PRECEDED ------------------------
+    // A single PCR number cannot be read - 1.07 is neither high nor low without its own
+    // history. This shows the direction (5 and 20 sessions) and, more usefully, what the
+    // Nifty actually did after each PCR band across 1,930 sessions, beside the baseline.
+    //
+    // The contrarian folklore says high PCR means too many puts and a likely bounce. The
+    // bands below are the TEST of that claim, not a restatement of it.
+    (function(){
+     try{
+      if(!PCRS||!PCRS.trend) return;
+      var t=PCRS.trend, kids=[];
+      var arrow=function(d){ return d==="rising"?"\u2191":(d==="falling"?"\u2193":"\u2192"); };
+      var col=function(d){ return d==="rising"?"#0a7d43":(d==="falling"?"#c02b2b":"#64748b"); };
+      kids.push(para("Nifty PCR is <b>"+t.pcr+"</b> on "+esc(PCRS.current.date)+
+        ". Over 5 sessions it is <b style=\"color:"+col(t.direction_5)+"\">"+
+        arrow(t.direction_5)+" "+t.direction_5+"</b> ("+sgn(t.chg_5)+"), and over 20 it is <b style=\"color:"+
+        col(t.direction_20)+"\">"+arrow(t.direction_20)+" "+t.direction_20+"</b> ("+sgn(t.chg_20)+").", true));
+
+      var b=(PCRS.baseline||{})[21]||{};
+      kids.push(para("A rising ratio means more puts are being bought than calls - positioning "+
+        "turning defensive. Whether that has predicted anything is a separate question, and "+
+        "the table below is the answer rather than the assumption.", false));
+
+      var rows=[];
+      (PCRS.bands||[]).forEach(function(bd){
+        (bd.horizons||[]).forEach(function(hh){
+          if(hh.insufficient){ return; }
+          rows.push([esc(bd.band), hh.h+"d", num(hh.n),
+                     sgn(hh.mean_pct)+"%", hh.up_pct+"%",
+                     sgn(hh.vs_baseline_pp)+"pp", esc(hh.edge)]);
+        });
+      });
+      if(rows.length){
+        kids.push(para("<b>What each PCR band has preceded</b>, over "+num(b.n||0)+
+          " sessions. Baseline: 21-day average "+sgn(b.mean)+"%, "+b.up_pct+"% of periods up. "+
+          "The last column compares the band with that baseline.", false));
+        kids.push(tbl({columns:["PCR band","horizon","cases","avg move","% up","vs baseline","verdict"],rows:rows}));
+      }
+
+      var vh=null;
+      (PCRS.bands||[]).forEach(function(bd){
+        if(bd.band.indexOf("very high")===0){
+          (bd.horizons||[]).forEach(function(hh){ if(hh.h===21) vh=hh; });
+        }
+      });
+      if(vh&&vh.edge==="better than baseline"){
+        kids.push(para("<b>The folklore partly holds.</b> After a very high PCR (above 1.20) the "+
+          "Nifty averaged "+sgn(vh.mean_pct)+"% over the next 21 sessions against a baseline of "+
+          sgn(b.mean)+"%, and rose in "+vh.up_pct+"% of cases against "+b.up_pct+"%. That is a "+
+          "real tilt of about "+Math.abs(vh.vs_baseline_pp)+" percentage points - and still a "+
+          "spread wide enough to lose money on any single instance.", true));
+      }else if(vh){
+        kids.push(para("<b>The folklore does not hold on this data.</b> After a very high PCR the "+
+          "Nifty did "+esc(vh.edge)+" over 21 sessions.", true));
+      }
+
+      v.appendChild(card("PCR trend", "Nifty "+t.pcr+" \u00b7 "+t.direction_5, kids,
+        {what:"The put-call ratio's direction, and what each PCR band has actually preceded, measured against a baseline.",
+         source:"NSE F&O open interest summed across expiries, against Nifty daily closes.", updated:PCRS.updated,
+         note:"A band that beats the baseline beats it by a small average margin with a wide spread - a tilt in the odds, not a direction call. PCR says nothing about news, results, policy or a global risk-off move. Nothing here is advice."}));
+     }catch(e){}
+    })();
+
+
     // ---- DATA AS OF ---------------------------------------------------------------------
     (function(){
      try{
@@ -6452,6 +6539,7 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "pcr_signal.json": PCRS=v; break;
     case "data_asof.json": ASOF=v; break;
     case "breakers.json": BRK=v; break;
     case "ranges.json": RNG=v; break;
@@ -6504,8 +6592,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json"];
 
 function renderAll(){
   if(!DATA) return;

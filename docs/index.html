@@ -542,9 +542,9 @@ body.scrolled #burger{top:14px !important;left:6px !important}
 }
 
 /* simple view - only hides, never changes content */
-body.simple-view #tabs button{display:none}
+/* simple-view hiding disabled - the control was removed */
 body.simple-view #tabs button.simple-keep{display:inline-block}
-body.simple-view .section{display:none}
+/* simple-view hiding disabled - the control was removed */
 body.simple-view #sec-overview{display:block}
 body.simple-view #sec-market{display:block}
 body.simple-view #sec-stocks{display:block}
@@ -877,7 +877,7 @@ header{
 .extmark{font-size:9px;opacity:.65;margin-left:2px}
 /* a tab that is new gets a dot, because everything lives behind the menu and a new
    section is otherwise invisible until someone opens it */
-.newmark{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c02b2b;
+.newmark-disabled{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c02b2b;
   margin-left:4px;vertical-align:2px}
 a.bigbtn{display:inline-block;margin:10px 0 4px;padding:13px 22px;border-radius:14px;
   background:#1d4ed8;color:#fff;font-weight:800;font-size:15px;text-decoration:none;
@@ -1800,13 +1800,14 @@ function voiceSearch(){
 // rest behind one toggle. The sections themselves are untouched - this only hides them.
 var SIMPLE_IDS=["overview","charts","market","stocks","mf","learn","tools"];
 function applySimple(){
-  var on=false;
-  try{ on=localStorage.getItem("as-simple")==="1"; }catch(e){}
-  document.body.classList.toggle("simple-view", on);
+  // ALWAYS OFF, and the stored flag is cleared. A visitor who once chose "Simple view" would
+  // otherwise keep a hidden-tab state from before this control was removed, with no button
+  // left to undo it.
+  try{ localStorage.removeItem("as-simple"); }catch(e){}
+  document.body.classList.remove("simple-view");
   var b=document.getElementById("simpleBtn");
-  if(b){ b.textContent = on ? "Show everything" : "Simple view";
-         b.className="small"+(on?" on":""); }
-  return on;
+  if(b && b.parentNode) b.parentNode.removeChild(b);
+  return false;
 }
 function toggleSimple(){
   var on=false;
@@ -1820,7 +1821,10 @@ function toggleSimple(){
 // empty and is better handed off than faked.
 var EXTERNAL = {"ipo": "https://ipobodh.vercel.app/"};
 
-var NEW_TABS = {"charts":1,"forecast":1};
+// Red "new" dots removed. They marked two tabs as added this week, which was true once
+// and stayed on the menu for ever after - a permanent red dot beside a label reads as an
+// error, not as news.
+var NEW_TABS = {};
 // ====================================================================================
 // READING LEVELS
 // Tags each rendered card with a level, then shows only what the reader asked for.
@@ -6971,30 +6975,31 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
   });
 
 /* ---- mobile shell: accordion drawer, hamburger, mic icon ---- */
+// MENU, grouped by what a person is trying to do rather than by where the data comes from.
+// The old groups mixed an activity ("Tools") with a source ("Disclosures") and left ten tabs
+// under one heading. Each section below appears exactly once, in the order someone is likely
+// to want it.
 var GROUPS = [
-  ["Market",        ["overview","charts","forecast","market","indices","sectors","fno","global","crypto","breadth"]],
-  ["Stocks",        ["stocks","rs","patterns","gaps","levels","correlation","seasonality"]],
-  ["Funds & issues",["mf","etf","ipo","charges"]],
-  ["Disclosures",   ["corporate","news","calendar","watchlists","deals","insider","promoter","regulator"]],
-  ["Tools",         ["tools","backtest","watchlist"]],
-  ["More",          ["learn","history"]]
+  // what happened today - the first thing anyone opens
+  ["Today",         ["overview","market","indices","sectors","breadth"]],
+  // one stock at a time: find it, chart it, see its levels and behaviour
+  ["Stocks",        ["stocks","charts","rs","levels","patterns","gaps","seasonality","correlation"]],
+  // derivatives and what the model expects
+  ["F&O & forecast",["fno","forecast"]],
+  // everything outside India, plus pooled products
+  ["World & funds", ["global","crypto","mf","etf","ipo"]],
+  // who is buying or selling, and what they must disclose
+  ["Who's buying",  ["deals","insider","promoter","corporate","watchlists","regulator"]],
+  ["News & dates",  ["news","calendar"]],
+  ["Tools",         ["tools","backtest","watchlist","charges","history"]],
+  ["Learn",         ["learn"]]
 ];
 
 function wireSimple(){
-  var nav=document.getElementById("tabs");
-  if(!nav) return;
-  [].slice.call(nav.querySelectorAll("button")).forEach(function(b){
-    if(SIMPLE_IDS.indexOf(b.getAttribute("data-go"))>=0) b.classList.add("simple-keep");
-  });
-  if(!document.getElementById("simpleBtn")){
-    var b=el("button","small","Simple view");
-    b.id="simpleBtn";
-    b.addEventListener("click",toggleSimple);
-    var host=document.getElementById("tabs");
-    if(host&&host.parentNode) host.parentNode.insertBefore(b, host.nextSibling);
-    else document.body.insertBefore(b, document.body.firstChild);
-  }
-  applySimple();
+  // REMOVED. The reading-level switcher (Beginner / Intermediate / Advanced) does this job,
+  // and two overlapping "make it simpler" controls in one header was the clutter the level
+  // bar was meant to remove. Kept as a no-op so existing callers stay valid.
+  return;
 }
 
 function groupTabs(){

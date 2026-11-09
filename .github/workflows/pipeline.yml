@@ -52,6 +52,13 @@ jobs:
       - name: "1. NSE bhavcopy (equities + F&O)"
         run: python scripts/fetch_bhavcopy.py --latest
 
+      # A skipped session is silent - it just leaves a hole that skews every average
+      # and backtest across it. This asks NSE whether a bhavcopy exists for any day
+      # the site is missing (weekends included, for Muhurat sessions) and re-fetches
+      # it, so the day is healed before the analysis steps run.
+      - name: "1b. Backfill missing trading days"
+        run: python scripts/gap_detector.py --backfill || true
+
       - name: "2. Yahoo Finance (indices, global)"
         run: |
           python scripts/fetch_yahoo.py --group indices --period 5y || true

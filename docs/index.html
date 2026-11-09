@@ -437,7 +437,7 @@ input,select,textarea{color:var(--text)}
 .fresh{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;
   padding:3px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;
   background:var(--purple-soft,#eef2ff);color:var(--purple,#1d4ed8)}
-.fresh.stale{background:#fde8e8;color:#b91c1c}
+.fresh.stale{background:#eef2f7;color:#64748b}   /* was red; a red dot on every stale card was visual noise. The word and the tooltip still carry the meaning. */
 @media (max-width:680px){.fresh{font-size:9px;padding:2px 7px}}
 
 /* ============================================================================
@@ -956,15 +956,55 @@ a.bigbtn:hover{background:#1a45c0}
    Advanced setting shows everything, and a card that cannot be classified defaults to
    Advanced rather than disappearing.
    ==================================================================================== */
-.levelbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:2px 0 14px}
-.levelbar .lbl2{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.5px;
-  text-transform:uppercase;margin-right:2px}
-.levelbar button{font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;
+.levelbar{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;margin:2px 0 10px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.levelbar .lbl2{font-size:9.5px;color:var(--muted);font-weight:800;letter-spacing:.4px;
+  text-transform:uppercase;margin-right:1px;white-space:nowrap;flex:0 0 auto}
+.levelbar button{font:inherit;font-size:11.5px;font-weight:700;padding:6px 11px;
+  border-radius:999px;white-space:nowrap;flex:0 0 auto;
   border:1px solid rgba(29,78,216,.22);background:rgba(255,255,255,.6);color:inherit;cursor:pointer}
 .levelbar button.on{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+@media (max-width:400px){.levelbar .lbl2{display:none}
+  .levelbar button{font-size:11px;padding:6px 9px}}
 body[data-level="1"] #sec-overview .card[data-lvl="2"],body[data-level="1"] #sec-overview .card[data-lvl="3"]{display:none}
 body[data-level="2"] #sec-overview .card[data-lvl="3"]{display:none}
 .lvlhint{font-size:12.5px;color:var(--muted);margin:-6px 0 14px;line-height:1.5}
+
+/* inline emphasis colours for paragraph text. rich() strips style attributes on purpose -
+   letting arbitrary CSS through user-facing strings is how a page gets broken. These three
+   classes are the only colours allowed inside a paragraph. */
+p .good, p b.good{color:#0a7d43}
+p .warn, p b.warn{color:#b45309}
+p .bad,  p b.bad{color:#c02b2b}
+
+/* ====================================================================================
+   MOBILE PASS. The page should read cleanly on a phone with no pinching and no sideways
+   scroll except inside tables, which scroll on their own.
+   ==================================================================================== */
+@media (max-width:680px){
+  html,body{overflow-x:hidden}          /* nothing may push the page wider than the screen */
+  .wrap{padding:0 12px}
+  .card{padding:14px 14px;border-radius:16px}
+  .cardhead{flex-wrap:wrap;gap:6px}
+  .cardhead h2{font-size:16.5px;line-height:1.25}
+  .cardhead .sub{display:block;margin-top:2px;font-size:11.5px}
+  p{font-size:14px;line-height:1.55}
+  p.big{font-size:15px}
+  /* the info button and badge should not fight the title for space */
+  .cardhead .fresh{font-size:9px;padding:2px 6px}
+  .ibtn{width:24px;height:24px;font-size:12px}
+  /* tables: scroll inside the card, never stretch the page */
+  .card table{display:block;width:100%;overflow-x:auto;white-space:nowrap;
+    -webkit-overflow-scrolling:touch;font-size:12px}
+  .card table th,.card table td{padding:8px 9px}
+  /* charts scale to the card */
+  .chart{max-width:100%;height:auto}
+  /* touch targets */
+  button,select,input,.datepick{min-height:42px}
+  .datepick{font-size:16px}
+  /* the level bar and tabs must not force a horizontal scroll on the page itself */
+  #tabs,.tabsrow{overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
 </style>
 </head>
 <body>
@@ -1192,7 +1232,7 @@ function card(title, sub, kids, info){
   }
   return c;
 }
-function rich(t){return esc(t).replace(/&lt;(\/?)(b|strong|i|em)&gt;/g,function(m,sl,tg){return "<"+sl+tg+">";});}
+function rich(t){return esc(t).replace(/&lt;(\/?)(b|strong|i|em)(?: class=(warn|good|bad))?&gt;/g,function(m,sl,tg,cls){return "<"+sl+tg+(cls?' class="'+cls+'"':"")+">";});}
 function para(t,b){return el("p",b?"big":"",rich(t));}
 function list(items){var u=el("ul");(items||[]).forEach(function(i){u.appendChild(el("li","",rich(i)));});return u;}
 function kpi(k,v,n){return el("div","kpi",'<div class="k">'+esc(k)+'</div><div class="v">'+v+'</div>'+(n?'<div class="n">'+esc(n)+'</div>':""));}
@@ -1897,12 +1937,12 @@ function build(d){
      try{
       if(!PCRS||!PCRS.trend) return;
       var t=PCRS.trend, kids=[];
+      var cls=function(d){ return d==="rising"?"good":(d==="falling"?"bad":"warn"); };
       var arrow=function(d){ return d==="rising"?"\u2191":(d==="falling"?"\u2193":"\u2192"); };
       var col=function(d){ return d==="rising"?"#0a7d43":(d==="falling"?"#c02b2b":"#64748b"); };
       kids.push(para("Nifty PCR is <b>"+t.pcr+"</b> on "+esc(PCRS.current.date)+
-        ". Over 5 sessions it is <b style=\"color:"+col(t.direction_5)+"\">"+
-        arrow(t.direction_5)+" "+t.direction_5+"</b> ("+sgn(t.chg_5)+"), and over 20 it is <b style=\"color:"+
-        col(t.direction_20)+"\">"+arrow(t.direction_20)+" "+t.direction_20+"</b> ("+sgn(t.chg_20)+").", true));
+        ". Over 5 sessions it is <b class="+cls(t.direction_5)+">"+
+        arrow(t.direction_5)+" "+t.direction_5+"</b> ("+sgn(t.chg_5)+"), and over 20 it is <b class="+cls(t.direction_20)+">"+arrow(t.direction_20)+" "+t.direction_20+"</b> ("+sgn(t.chg_20)+").", true));
 
       var b=(PCRS.baseline||{})[21]||{};
       kids.push(para("A rising ratio means more puts are being bought than calls - positioning "+
@@ -1965,7 +2005,7 @@ function build(d){
       }
       if(ASOF.kept&&ASOF.kept.length){
         var kept=ASOF.kept.map(function(k){return esc(k.file)+" ("+k.before+" \u2192 "+k.now+")";});
-        kids.push(para("<b style=\"color:#b45309\">"+ASOF.kept.length+" file(s) kept from the "+
+        kids.push(para("<b class=warn>"+ASOF.kept.length+" file(s) kept from the "+
           "previous run</b> because this run built them empty: "+kept.join(", ")+
           ". Those figures are older than the date above.", true));
       }
@@ -1989,7 +2029,7 @@ function build(d){
       }else{
         var tone=BRK.coverage_pct>=70&&BRK.coverage_pct<=90?"#0a7d43":"#b45309";
         kids.push(para("Of <b>"+num(BRK.settled)+"</b> forecasts whose horizon has passed, "+
-          "<b style=\"color:"+tone+"\">"+BRK.coverage_pct+"%</b> closed inside the 10-90 band. "+
+          "<b class="+tone+">"+BRK.coverage_pct+"%</b> closed inside the 10-90 band. "+
           "A calibrated band gives about "+BRK.target_pct+"%.", true));
         kids.push(para("Verdict: <b>"+esc(BRK.verdict)+"</b>.", false));
       }
@@ -2160,7 +2200,7 @@ function build(d){
         kids.push(para("Tradeable contracts by cost per lot - "+counts+".", false));
 
         if(AFFORD.base_rates&&AFFORD.base_rates.insufficient_history){
-          kids.push(para("<b style=\"color:#b45309\">No doubling or expiry base rate is shown.</b> "+
+          kids.push(para("<b class=warn>No doubling or expiry base rate is shown.</b> "+
             "Only "+AFFORD.base_rates.sessions+" sessions of F&O history are stored, and a base "+
             "rate needs about "+AFFORD.base_rates.needed+". A cheap option's whole life is the "+
             "question, and a few days cannot answer it.", true));
@@ -2203,9 +2243,10 @@ function build(d){
       if(!L||L.up_pct==null) return;
       var dir=L.us_move_pct<0?"fell":"rose";
       var tone=L.up_pct>=55?"#0a7d43":(L.up_pct<=45?"#c02b2b":"#b45309");
+      var tcls=L.up_pct>=55?"good":(L.up_pct<=45?"bad":"warn");
       var kids=[];
       kids.push(para("The S&P 500 <b>"+dir+" "+Math.abs(L.us_move_pct)+"%</b> on "+esc(L.us_date)+
-        ". After a move that size, Nifty's <b>next</b> session was <b style=\"color:"+tone+"\">"+
+        ". After a move that size, Nifty's <b>next</b> session was <b class="+tcls+">"+
         L.down_pct+"% down</b> and "+L.up_pct+"% up, averaging "+(L.mean_pct>0?"+":"")+L.mean_pct+
         "% over "+L.n+" past cases. Worst was "+L.worst+"%.", true));
       kids.push(para("India closes before the US does, so the US move lands the following "+

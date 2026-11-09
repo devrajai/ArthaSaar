@@ -7152,6 +7152,69 @@ function groupTabs(){
   hd.style.setProperty("transform","translateY(0)","important");
 })();
 
+/* ====================================================================================
+   OVERVIEW CARD ORDER.
+   Every card added over the past weeks was appended at the top of the Overview, so the
+   newest one always landed first regardless of whether it was useful. By this morning the
+   landing page opened with "Volume at price" - a per-stock lookup tool - and "Today", the
+   market snapshot, was the TWELFTH card down. That is backwards.
+
+   These are ordered by what a trader or investor actually opens the site for: what happened
+   today, what changed since last time, then the signals, then the reference material.
+   Anything not listed keeps its existing order and follows the listed ones.
+   ==================================================================================== */
+var OV_ORDER = [
+  "Today",                          // the snapshot: PCR, max pain - the first thing anyone wants
+  "What changed today",             // deltas, not state
+  "Today in one look",
+  "Story of the day",
+  "Since your last visit",
+  "Coming up",                      // scheduled events
+  "What's coming at the open",
+  "PCR trend",
+  "21-day outlook",                 // the forecast
+  "Big Money Radar",                // who is buying and selling
+  "Signal scorecard",
+  "Self-audit",                     // whether any of it has worked
+  "Normal range",
+  "Band check",
+  "Options: cost and structures",
+  "Promoter holding",
+  "Most talked about",
+  "Daily market update",
+  "Top open interest",
+  "Cheap options: the real odds",
+  "Volume at price",                // a lookup tool - belongs well below the daily picture
+  "Data as of"                      // housekeeping goes last
+];
+(function(){
+  function reorder(){
+    var ov=document.getElementById("sec-overview");
+    if(!ov) return;
+    var cards=[].slice.call(ov.children);
+    if(cards.length<2) return;
+    function rank(c){
+      var h2=c.querySelector(".cardhead h2");
+      var t=h2?((h2.childNodes[0]&&h2.childNodes[0].textContent)||"").trim():"";
+      for(var i=0;i<OV_ORDER.length;i++){
+        if(t===OV_ORDER[i] || (t && t.indexOf(OV_ORDER[i])===0)) return i;
+      }
+      return OV_ORDER.length;   // unlisted cards keep their order, after the listed ones
+    }
+    var keyed=cards.map(function(c,i){ return {c:c, r:rank(c), i:i}; });
+    keyed.sort(function(a,b){ return (a.r-b.r) || (a.i-b.i); });
+    var changed=false;
+    keyed.forEach(function(k,idx){ if(cards[idx]!==k.c) changed=true; });
+    if(!changed) return;
+    keyed.forEach(function(k){ ov.appendChild(k.c); });   // appendChild moves, so this reorders
+  }
+  // cards.js injects its own cards later, so re-run on any change to the section
+  try{ new MutationObserver(reorder).observe(document.getElementById("sec-overview")||document.body,
+        {childList:true}); }catch(e){}
+  var n=0, iv=setInterval(function(){ reorder(); if(++n>20) clearInterval(iv); }, 400);
+  reorder();
+})();
+
 if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");
 
 var _show = show;

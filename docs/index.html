@@ -1041,7 +1041,7 @@ header .searchwrap input{padding:9px 12px 9px 34px !important;font-size:14px !im
     </div>
     <div class="searchwrap">
       <span class="mag">⌕</span>
-      <input id="search" type="search" placeholder="Search stocks, coins, news…"
+      <input id="search" type="search" placeholder="Search…" title="Search stocks, coins, news, funds and more"
              autocomplete="off" aria-label="Search everything">
       <button id="micBtn" title="Search by voice (Hindi)" aria-label="Search by voice"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg></button>
       <span id="voiceHint"></span>
@@ -6821,7 +6821,7 @@ function buildPalette(){
   var wrap=el("div","palette");
   var box=el("div","pbox");
   var input=el("input");
-  input.type="text"; input.placeholder="Search stocks, coins, news…";
+  input.type="text"; input.placeholder="Search…";
   var list=el("div","plist");
   box.appendChild(input); box.appendChild(list); wrap.appendChild(box);
   document.body.appendChild(wrap);
@@ -6925,7 +6925,7 @@ function openPalette(){
   PALETTE.input.placeholder="loading the index…";
   optional(BASE+"search.json").then(function(s){
     SEARCH=s||{items:[]};
-    PALETTE.input.placeholder="Search stocks, coins, news…";
+    PALETTE.input.placeholder="Search…";
     PALETTE.input.value="";
     PALETTE.search("");
     PALETTE.input.focus();

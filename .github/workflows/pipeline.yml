@@ -610,6 +610,15 @@ jobs:
         run: python scripts/fetch_telegram_pcr.py || true
 
 
+      # Gann and Fibonacci levels with measured bounce-before-break rates.
+
+
+      - name: "7n2j. Gann and Fibonacci levels"
+
+
+        run: python scripts/build_levels.py || true
+
+
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 

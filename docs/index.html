@@ -1886,6 +1886,66 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- CHEAP OPTIONS: THE REAL ODDS ---------------------------------------------------
+    // The honest answer to "a Rs 0.85 option became Rs 6". Measured across every contract we
+    // hold, from the expiry column that now exists. This is the number to read BEFORE the
+    // premium, not after.
+    (function(){
+     try{
+      var R=PRRATES, M=PRMOVERS;
+      if(!R&&!M) return;
+      var kids=[];
+
+      if(R&&R.available&&R.contracts_followed){
+        var tone = R.ended_below_quarter_pct>=50 ? "#c02b2b" : "#b45309";
+        kids.push(para("Of <b>"+num(R.contracts_followed)+"</b> option contracts that were "+
+          "trading under Rs "+R.cheap_threshold+" in their final "+R.final_window_sessions+
+          " sessions before expiry, and had actually traded:", true));
+        kids.push(tbl({columns:["outcome","share of contracts"],
+          rows:[["ever doubled (2x)","<b>"+R.reached_2x_pct+"%</b>"],
+                ["reached 5x",R.reached_5x_pct+"%"],
+                ["reached 10x",R.reached_10x_pct+"%"],
+                ["doubled, then fell back",R.doubled_then_fell_pct+"%"],
+                ["ended at a quarter or less",
+                 "<b style=\"color:"+tone+"\">"+R.ended_below_quarter_pct+"%</b>"]]}));
+        kids.push(para("<b>"+R.ended_below_quarter_pct+"% ended at a quarter of that price or "+
+          "less.</b> The cheap option is not a discount - it is the market's estimate that it "+
+          "expires worthless, and it is right about two times in three.", true));
+        kids.push(para("Measured over "+num(R.sessions)+" sessions ("+esc(R.first)+" to "+
+          esc(R.last)+"). 'Reached 2x' means the premium touched 2x at some close - selling at "+
+          "the peak is not something anyone does reliably.", false));
+      }else if(R&&!R.available){
+        kids.push(para("Base rates unavailable: "+esc(R.note||""), false));
+      }
+
+      if(M&&M.rows&&M.rows.length){
+        kids.push(para("<b>It does happen.</b> These premiums multiplied "+M.multiple+"x or more "+
+          "within "+M.window_sessions+" sessions, from Rs 0.50 or higher with volume on both "+
+          "days. The top of the list is not the middle of it:", false));
+        kids.push(tbl({columns:["stock","strike","type","expiry","from","to","multiple"],
+          rows:M.rows.slice(0,8).map(function(r){
+            return [esc(r.symbol), num(r.strike), esc(r.type), esc(r.expiry),
+                    "Rs "+r.from_px, "Rs "+r.to_px, "<b>"+r.multiple+"x</b>"];
+          })}));
+        kids.push(para("A "+M.rows[0].multiple+"x on an expiry-day index option is real "+
+          "arithmetic - the strike goes from far out of the money to deep in the money. It is "+
+          "also the single luckiest case in the file, which is why the rates above matter more "+
+          "than this table.", false));
+      }
+
+      kids.push(para("Charges are not included in any of this - on a small premium, brokerage, "+
+        "STT, exchange fees and GST are a large share of the stake. Nothing here is advice.",
+        false));
+
+      v.appendChild(card("Cheap options: the real odds",
+        R&&R.available?(num(R.contracts_followed)+" contracts measured"):"reference", kids,
+        {what:"What actually happened to cheap options before expiry, measured across every contract in the F&O history.",
+         source:"NSE F&O bhavcopy with expiry, from the rebuilt 2019-2026 history.", updated:(R||M).updated,
+         note:"Only contracts that traded are counted - an option at Rs 0.05 with no volume cannot be bought, so including it would flatter the odds. 'Reached 2x' means the premium touched 2x at some close, not that anyone sold there. The worthlessness share is the number to read beside the multipliers, not after them."}));
+     }catch(e){}
+    })();
+
+
     // ---- PCR: THE TREND, AND WHAT EACH BAND HAS ACTUALLY PRECEDED ------------------------
     // A single PCR number cannot be read - 1.07 is neither high nor low without its own
     // history. This shows the direction (5 and 20 sessions) and, more usefully, what the
@@ -6847,6 +6907,8 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "premium_base_rates.json": PRRATES=v; break;
+    case "premium_movers.json": PRMOVERS=v; break;
     case "pcr_signal.json": PCRS=v; break;
     case "data_asof.json": ASOF=v; break;
     case "breakers.json": BRK=v; break;
@@ -6900,8 +6962,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, PRRATES=null, PRMOVERS=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","premium_base_rates.json","premium_movers.json"];
 
 function renderAll(){
   if(!DATA) return;

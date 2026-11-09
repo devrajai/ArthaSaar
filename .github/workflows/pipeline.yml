@@ -443,6 +443,10 @@ jobs:
       # PCR trend and what each band has actually preceded.
       - name: "7m2zv. PCR trend and bands"
         run: python scripts/build_pcr_signal.py || true
+      # Contract explorer data, premium movers and the cheap-option base rates. Needs the F&O
+      # history WITH expiry; if the stored files lack it the script says so and writes nothing.
+      - name: "7m2zw. Contracts, movers and cheap-option odds"
+        run: python scripts/build_contracts.py || true
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.

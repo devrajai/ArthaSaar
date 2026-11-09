@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-08T22:36:58Z  |  10 channels, 398 videos, window 2026-05-15 to 2026-11-08.
+Generated 2026-11-09T02:17:33Z  |  10 channels, 399 videos, window 2026-05-15 to 2026-11-09.
 
-**Total views across the window:** 12,478,136  |  **net bull-bear keyword score:** 195
+**Total views across the window:** 12,478,214  |  **net bull-bear keyword score:** 194
 
 ## Most-talked-about symbols
 
@@ -12,7 +12,7 @@ Generated 2026-11-08T22:36:58Z  |  10 channels, 398 videos, window 2026-05-15 to
 | SENSEX | 41 | 4 |
 | BANKNIFTY | 40 | 4 |
 | RELIANCE | 22 | 7 |
-| ADANIENT | 9 | 4 |
+| ADANIENT | 10 | 4 |
 | ITC | 4 | 4 |
 | WIPRO | 4 | 4 |
 | INDIGO | 4 | 4 |
@@ -24,7 +24,7 @@ Generated 2026-11-08T22:36:58Z  |  10 channels, 398 videos, window 2026-05-15 to
 | Theme | Videos |
 |---|---|
 | MF/SIP | 101 |
-| Beginner/Education | 97 |
+| Beginner/Education | 98 |
 | Earnings/Results | 83 |
 | Options/F&O | 78 |
 | IPO | 74 |
@@ -43,6 +43,6 @@ Generated 2026-11-08T22:36:58Z  |  10 channels, 398 videos, window 2026-05-15 to
 | Markets by Zerodha | 39 | 17,071 | 2026-11-07 |
 | Groww | 46 | 16,961 | 2026-11-08 |
 | Markets by Zerodha Hindi | 35 | 15,320 | 2026-11-08 |
-| Upstox | 97 | 1,374 | 2026-11-08 |
+| Upstox | 98 | 1,361 | 2026-11-09 |
 
 _Keyword-based analysis. Not investment advice._

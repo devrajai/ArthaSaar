@@ -626,7 +626,9 @@ header{
   box-shadow:none !important;
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
-  transform:none !important;
+  /* transform is NOT set here. It used to be `transform:none !important`, which beat the
+     inline transform the hide-on-scroll script writes - an !important CSS rule outranks an
+     inline style without !important - so the header could never hide. The script owns it. */
 }
 .searchwrap .mag svg{width:19px !important;height:19px !important}
 
@@ -7138,12 +7140,16 @@ function groupTabs(){
 
     if (wantHidden !== hidden){
       hidden = wantHidden;
-      hd.style.transform = hidden ? "translateY(-100%)" : "translateY(0)";
+      // setProperty with "important": there are header rules in this stylesheet that use
+      // !important, and a plain inline style loses to those. This is why the header stayed
+      // on screen while scrolling even though the class logic was correct.
+      hd.style.setProperty("transform",
+        hidden ? "translateY(-100%)" : "translateY(0)", "important");
     }
     lastY = y;
   }
   window.addEventListener("scroll", onScroll, {passive:true});
-  hd.style.transform = "translateY(0)";
+  hd.style.setProperty("transform","translateY(0)","important");
 })();
 
 if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");

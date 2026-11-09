@@ -575,6 +575,41 @@ jobs:
       - name: "7n2c. Option chain with OI action labels"
         run: python scripts/build_option_chain.py || true
 
+      # RESTORED. These six steps existed until recently and were removed, but the page
+
+      # still references all six output files - option_chain, rank_momentum, setup_history,
+
+      # vrp, deals_followup and telegram_pcr were all 404ing, so those cards had no data.
+
+      # The scripts were never deleted, only the steps. Each is guarded with '|| true' so a
+
+      # failure here cannot stop the run.
+
+      - name: "7n2d. Futures rollover"
+
+        run: python scripts/build_rollover.py || true
+
+      - name: "7n2e. Screener rank momentum"
+
+        run: python scripts/build_rank_momentum.py || true
+
+      - name: "7n2f. What followed this setup last time"
+
+        run: python scripts/build_setup_history.py || true
+
+      - name: "7n2g. Variance risk premium"
+
+        run: python scripts/build_vrp.py || true
+
+      - name: "7n2h. Bulk deal follow-through"
+
+        run: python scripts/build_deals_followup.py || true
+
+      - name: "7n2i. Telegram PCR digest"
+
+        run: python scripts/fetch_telegram_pcr.py || true
+
+
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 

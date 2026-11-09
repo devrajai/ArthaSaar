@@ -1848,6 +1848,7 @@ var NEW_TABS = {};
 // falls to Advanced and stays visible there.
 // ====================================================================================
 var CARD_LEVEL = {
+  "Volume at price": 2,
   "Self-audit": 1,
   // added from cards.js - it lands on Overview and would otherwise fall to level 3
   "What changed today": 1,
@@ -1929,6 +1930,75 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- VOLUME AT PRICE ---------------------------------------------------------------
+    // The honest version of an order-flow picture. Live orders and market depth are paid
+    // exchange feeds; free data does not have them. What free one-minute bars DO support is
+    // the same question from the other side: at which prices did volume actually trade.
+    (function(){
+     try{
+      if(!VP||!VP.symbols||!VP.count) return;
+      var kids=[];
+      kids.push(para("For each price level, how much traded there in the <b>"+esc(VP.session)+
+        "</b> session, from one-minute bars. The busiest price is the <b>point of control</b>; "+
+        "the band holding 70% of the volume is the <b>value area</b>.", true));
+
+      var inp=el("input"); inp.className="datepick"; inp.placeholder="e.g. RELIANCE";
+      inp.setAttribute("list","vplist");
+      var dl=el("datalist"); dl.id="vplist";
+      Object.keys(VP.symbols).sort().forEach(function(s){ var o=el("option"); o.value=s; dl.appendChild(o); });
+      var out=el("div","histout");
+
+      function draw(sym){
+        var d=VP.symbols[sym];
+        if(!d){ out.innerHTML='<p class="hctx">No profile stored for '+esc(sym)+'.</p>'; return; }
+        var lv=(d.levels||[]).slice().sort(function(a,b){return a[0]-b[0];});
+        var mx=0; lv.forEach(function(x){ if(x[1]>mx) mx=x[1]; });
+        var W=340, rowH=15, H=lv.length*rowH+10, pad=4;
+        var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" style="display:block">';
+        lv.forEach(function(x,i){
+          var w=Math.max(1,(x[1]/mx)*(W-96));
+          var y=pad+i*rowH;
+          var inVA = (x[0]>=d.val && x[0]<=d.vah);
+          var col = inVA ? "#1d4ed8" : "#b9cbe8";
+          svg+='<rect x="0" y="'+y+'" width="'+w.toFixed(1)+'" height="'+(rowH-3)+'" rx="2" fill="'+col+'"/>';
+          svg+='<text x="'+(w+6).toFixed(1)+'" y="'+(y+rowH-6)+'" font-size="10" fill="#475569">'+
+               x[0].toFixed(2)+'</text>';
+        });
+        svg+='</svg>';
+        out.innerHTML='<p class="hctx"><b>'+esc(sym)+'</b> &nbsp; day '+d.low+'–'+d.high+
+          ' &nbsp;·&nbsp; <b>POC '+d.poc+'</b> &nbsp;·&nbsp; value area <b>'+d.val+'–'+d.vah+'</b>'+
+          (d.buy_pct_est!=null?(' &nbsp;·&nbsp; buy pressure est. <b>'+d.buy_pct_est+'%</b>'):'')+
+          '<br><span style="font-size:11.5px;color:#64748b">Blue bars are inside the value area.</span></p>'+svg;
+      }
+      inp.addEventListener("input",function(){ draw((inp.value||"").trim().toUpperCase()); });
+      kids.push(para("Look up any stock:", false));
+      kids.push(inp); kids.push(dl); kids.push(out);
+
+      // the busiest names by volume, so the card is useful without typing
+      var top=Object.keys(VP.symbols).slice(0,6);
+      if(top.length){
+        kids.push(tbl({columns:["stock","POC","value area","buy est."],
+          rows:top.map(function(s){
+            var d=VP.symbols[s];
+            return [esc(s), d.poc, d.val+" – "+d.vah,
+                    (d.buy_pct_est==null?"—":d.buy_pct_est+"%")];
+          })}));
+      }
+
+      kids.push(para("<b>This is not an order book.</b> Individual orders and market depth are "+
+        "paid exchange feeds, and free data does not contain them. Nothing here shows who "+
+        "bought, or how many orders there were. The buy-pressure figure is an <b>estimate</b> "+
+        "from each bar's close against its open - a proxy, not proof.", true));
+
+      v.appendChild(card("Volume at price",
+        num(VP.count)+" stocks \u00b7 "+esc(VP.session||""), kids,
+        {what:"Where volume actually traded by price level, with the point of control and the value area. The real-data version of an order-flow picture.",
+         source:"One-minute intraday bars; volume spread across the price range each bar touched.", updated:VP.updated,
+         note:"A profile describes one session and is not a lasting support level - run it again tomorrow and the shape changes. No order book, no individual orders, and the buy/sell split is a labelled estimate."}));
+     }catch(e){}
+    })();
+
+
     // ---- SELF-AUDIT: what each signal has actually done ---------------------------------
     // The point of this page: every signal here states a probability or a claim, and until
     // this card none of them said whether it had ever been right.
@@ -6949,6 +7019,7 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "volume_profile.json": VP=v; break;
     case "audit.json": AUDIT=v; break;
     case "pcr_signal.json": PCRS=v; break;
     case "data_asof.json": ASOF=v; break;
@@ -7003,8 +7074,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json"];
 
 function renderAll(){
   if(!DATA) return;

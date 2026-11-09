@@ -1028,6 +1028,67 @@ header .searchwrap input{padding:9px 12px 9px 34px !important;font-size:14px !im
 /* removed: this was the rule that widened the search bar to full width on a
    phone, which is the opposite of what was wanted. The narrow rule at the end of this
    stylesheet is the only one that sets the width now. */
+
+/* ====================================================================================
+   SEARCH BAR - FINAL. This stylesheet accumulated EIGHT successive .searchwrap rules, each
+   from a past design pass, most of them !important. They were overriding each other, which
+   is why the bar kept changing width, losing its fill, or showing white text on a pale
+   background. Nothing above is removed (some of it still sets layout), but this block is
+   complete: it states every property that matters, so no earlier rule can leak through.
+   ==================================================================================== */
+header .searchwrap,
+.top .searchwrap{
+  /* geometry */
+  flex:0 0 340px !important;width:340px !important;max-width:340px !important;
+  margin:0 10px !important;padding:9px 14px !important;gap:10px !important;
+  border-radius:999px !important;display:flex !important;align-items:center !important;
+  /* surface: one flat light-blue pill, no gradient, no inner border */
+  background:#e2ecfa !important;background-image:none !important;
+  border:0 !important;box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;backdrop-filter:none !important;
+}
+header .searchwrap:focus-within,
+.top .searchwrap:focus-within{background:#d3e4fb !important;box-shadow:none !important}
+
+/* the magnifier: a plain blue glyph, no filled circle behind it */
+header .searchwrap .mag,
+.top .searchwrap .mag{
+  position:static !important;transform:none !important;inset:auto !important;
+  flex:0 0 auto !important;width:18px !important;height:18px !important;min-width:18px !important;
+  background:none !important;background-image:none !important;box-shadow:none !important;
+  color:#1d4ed8 !important;display:flex !important;align-items:center !important;
+  justify-content:center !important;font-size:0 !important;
+}
+header .searchwrap .mag svg,
+.top .searchwrap .mag svg{width:18px !important;height:18px !important;display:block !important;
+  stroke:#1d4ed8 !important}
+
+/* the field: transparent, DARK text. White text on a pale pill was the visible bug. */
+header .searchwrap input,
+.top .searchwrap input,
+header .searchwrap input[type="search"],
+.top .searchwrap input[type="search"]{
+  flex:1 1 auto !important;min-width:0 !important;width:100% !important;
+  -webkit-appearance:none !important;appearance:none !important;
+  background:transparent !important;background-image:none !important;
+  border:0 !important;box-shadow:none !important;outline:none !important;
+  padding:0 !important;margin:0 !important;
+  font:inherit !important;font-size:14.5px !important;line-height:1.3 !important;
+  color:#0b2239 !important;caret-color:#1d4ed8 !important;
+}
+header .searchwrap input::placeholder,
+.top .searchwrap input::placeholder{color:#6b8199 !important;opacity:1 !important}
+
+@media (max-width:900px){
+  header .searchwrap,.top .searchwrap{
+    flex:0 0 260px !important;width:260px !important;max-width:260px !important}
+}
+@media (max-width:680px){
+  header .searchwrap,.top .searchwrap{
+    flex:0 0 auto !important;width:74% !important;max-width:290px !important;
+    margin:4px auto 10px !important;padding:8px 13px !important}
+  header .searchwrap input,.top .searchwrap input{font-size:13.5px !important}
+}
 </style>
 </head>
 <body>

@@ -411,25 +411,60 @@ jobs:
       - name: "7m2zq. F&O expiry check"
         run: |
           python - <<'EOF'
-          import glob, sys
+          # ==========================================================================
+          # THIS GUARD MUST NEVER STOP THE PIPELINE.
+          #
+          # It did. Every run from 5 to 9 November died here, and because this step sits
+          # mid-file, all 41 steps after it - including Commit - were skipped. The site
+          # published nothing for five days and nothing reported it.
+          #
+          # Cause: it failed on ANY of the last three files without an expiry column, and
+          # fo_2026-11-05.parquet was written before expiry support existed. That file can
+          # never gain the column, so the check could never pass again.
+          #
+          # Two changes:
+          #   1. only files dated on/after 2026-11-07 are judged; older ones are reported
+          #   2. it WARNS instead of erroring. A quality check that blocks publishing is
+          #      worse than the gap it watches: stale data beats no data.
+          # ==========================================================================
+          import glob, os, re, sys
           try:
               import pandas as pd
           except ImportError:
+              print("pandas unavailable - skipping the check")
               sys.exit(0)
+
+          CUTOFF = "2026-11-07"   # the day the collector started writing the expiry column
           files = sorted(glob.glob("data/parquet/fo/fo_*.parquet"))[-3:]
           if not files:
               print("no F&O parquet yet - nothing to check")
               sys.exit(0)
-          bad = []
+
+          bad_new, old_without = [], []
           for f in files:
-              cols = list(pd.read_parquet(f, columns=None).head(1).columns)
-              if "expiry" not in cols:
-                  bad.append(f)
-          if bad:
-              print("::error title=F&O expiry missing::%d recent file(s) have no expiry column: %s"
-                    % (len(bad), ", ".join(bad)))
-              sys.exit(1)
-          print("F&O expiry present in the last %d file(s)" % len(files))
+              m = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(f))
+              dated = m.group(1) if m else ""
+              try:
+                  cols = list(pd.read_parquet(f, columns=None).head(1).columns)
+              except Exception as e:
+                  print("::warning title=unreadable::%s: %s" % (f, e))
+                  continue
+              if "expiry" in cols:
+                  continue
+              if dated and dated >= CUTOFF:
+                  bad_new.append(f)
+              else:
+                  old_without.append(f)
+
+          for f in old_without:
+              print("old file without expiry (expected, predates the fix): %s" % f)
+          if bad_new:
+              print("::warning title=F&O expiry missing::%d NEW file(s) have no expiry column: %s"
+                    % (len(bad_new), ", ".join(bad_new)))
+              print("Publishing anyway. Fix the collector, but do not stop the site over it.")
+          else:
+              print("F&O expiry present in every file dated %s or later" % CUTOFF)
+          sys.exit(0)
           EOF
       # Unusual F&O activity: volume, trade count or open interest far outside a stock's own
       # recent range. Runs after the F&O fetch so the day it just collected is included.

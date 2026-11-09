@@ -71,10 +71,6 @@
 
   /* ---- Google-style search ---- */
   .searchwrap{flex:1 1 320px;max-width:520px;position:relative;margin:0 6px}
-  .searchwrap input{width:100%;font:inherit;font-size:15px;padding:12px 16px 12px 42px;
-    border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);
-    box-shadow:0 1px 3px rgba(0,0,0,.06)}
-  .searchwrap input:focus{outline:none;border-color:var(--accent);box-shadow:0 2px 10px rgba(29,78,216,.18)}
   .searchwrap .mag{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
   .palette{position:fixed;left:0;right:0;top:0;bottom:0;z-index:100;display:none;
     background:rgba(8,12,20,.45);padding:8vh 16px 16px}
@@ -250,15 +246,6 @@ body{
   background:var(--bg-grad); background-attachment:fixed;
   color:var(--text); font-size:16px; line-height:1.6;
 }
-
-/* ---- the glass ---- */
-.card,.kpi,.searchwrap,.info,.chartbox,.cwrap,.tile{
-  background:var(--glass);
-  -webkit-backdrop-filter:blur(18px) saturate(180%);
-  backdrop-filter:blur(18px) saturate(180%);
-  border:1px solid var(--glass-line);
-  box-shadow:var(--shadow), inset 0 1px 0 var(--glass-inner);
-}
 /* sheen as a background LAYER: an overlay would need overflow:hidden, which then CLIPS the
    wide tables instead of letting .tablewrap scroll them */
 .card,.kpi{
@@ -268,7 +255,6 @@ body{
 }
 @supports not ((backdrop-filter:blur(4px)) or (-webkit-backdrop-filter:blur(4px))){
   body{background:#eef6ff}
-  .card,.kpi,.searchwrap,.info,.chartbox,.cwrap,.tile{background:#fff;box-shadow:0 2px 10px rgba(29,78,216,.10)}
   header,.tabsrow{background:#f4f9ff}
 }
 
@@ -317,15 +303,6 @@ h1{font-size:18px;font-weight:800;letter-spacing:-.3px;margin:0}
 #burger i{display:block;height:2px;background:var(--blue);border-radius:2px}
 #burger i:nth-child(2){width:66%}
 .right{display:none}
-
-/* NARROW search: capped width, slimmer, sits under the header rather than filling the row */
-.searchwrap{
-  order:5;flex:0 1 auto;width:100%;max-width:330px;
-  margin:0 0 12px;padding:9px 13px;border-radius:999px;
-  display:flex;align-items:center;gap:8px;position:static;
-}
-.searchwrap input{flex:1;min-width:0;border:0;background:transparent;font:inherit;
-  font-size:14.5px;color:var(--text);outline:none}
 .searchwrap input::placeholder{color:var(--muted);font-size:14px}
 .searchwrap .mag{color:var(--blue);font-size:16px;line-height:1}
 #micBtn{background:transparent;border:0;padding:0;cursor:pointer;color:var(--blue);
@@ -469,31 +446,7 @@ input,select,textarea{color:var(--text)}
 #burger{position:absolute;left:6px;top:14px;transform:none;margin:0}
 .logo{width:38px;height:38px;border-radius:12px;font-size:14px}
 h1{font-size:20px;font-weight:800;letter-spacing:-.4px;margin:0}
-
-/* 6. Search bar: one wide rounded pill with the magnifier on the left and no mic.
-      The shape follows the reference, but stays in the blue glass palette - the pink
-      in the example belongs to a different product. */
-/* Option B: a faintly blue-tinted pill with the magnifier in its own filled circle, so
-   the eye lands on it first. Chosen from the three demos. */
-.searchwrap{
-  order:5;flex:1 1 100%;max-width:none;width:100%;
-  margin:2px 0 14px;padding:11px 12px;border-radius:999px;
-  background:rgba(226,240,255,.72);
-  border:1px solid rgba(255,255,255,.95);
-  box-shadow:0 8px 26px rgba(29,78,216,.15), inset 0 1px 0 #fff;
-  display:flex;align-items:center;gap:13px;
-}
-.searchwrap .mag{
-  position:static !important;transform:none !important;inset:auto !important;
-  flex:0 0 auto;width:38px;height:38px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(150deg,#4f8df7,#1d4ed8);
-  box-shadow:0 4px 12px rgba(29,78,216,.35);
-  color:#fff;font-size:0;line-height:1;   /* font-size:0 hides the old ⌕ glyph */
-}
 .searchwrap .mag svg{display:block}
-.searchwrap input{flex:1;min-width:0;border:0;background:transparent;
-  font:inherit;font-size:16px;color:var(--text,#0b2239);outline:none;padding:0 6px}
 .searchwrap input::placeholder{color:#4a6a8e;font-size:16px;opacity:1}
 
 /* 7. The disclaimer belongs on the landing page, not repeated under every tab. */
@@ -569,19 +522,6 @@ header{
   border-bottom:1px solid rgba(255,255,255,.55) !important;
   box-shadow:0 1px 0 rgba(29,78,216,.05) !important;
 }
-
-/* 2. Kill the native search box. Chrome on Android paints its own background and
-      decorations inside a styled pill, which is what looked like a box in a box. */
-.searchwrap input,
-#search,
-input[type="search"]{
-  -webkit-appearance:none !important;
-  appearance:none !important;
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  outline:none !important;
-}
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
@@ -589,12 +529,6 @@ input[type="search"]::-webkit-search-results-decoration{
   -webkit-appearance:none !important;
   appearance:none !important;
   display:none !important;
-}
-/* the pill itself stays one clean surface */
-.searchwrap{
-  background:rgba(226,240,255,.55) !important;
-  border:1px solid rgba(255,255,255,.85) !important;
-  box-shadow:0 6px 20px rgba(29,78,216,.10), inset 0 1px 0 rgba(255,255,255,.9) !important;
 }
 
 /* 3. The logo loses the filled gradient tile. A thin ring and accent letters keep the mark
@@ -634,14 +568,6 @@ body.nav-hidden header{background:transparent !important; box-shadow:none !impor
   border-bottom:0 !important; backdrop-filter:none !important;
   -webkit-backdrop-filter:none !important;}
 
-/* The search pill was a lighter box sitting on the band. Softer, so it reads as a
-   control rather than a tile, and it stops competing with the cards below. */
-.searchwrap{
-  background:rgba(255,255,255,.42) !important;
-  border:1px solid rgba(255,255,255,.70) !important;
-  box-shadow:0 4px 14px rgba(29,78,216,.07), inset 0 1px 0 rgba(255,255,255,.85) !important;
-}
-
 /* ------------------------------------------------------------------------------------
    NO FILLED SHAPES IN THE HEADER.
    The AS badge and the search pill were the last two boxes up there. Both become
@@ -661,30 +587,7 @@ body.nav-hidden header{background:transparent !important; box-shadow:none !impor
   font-size:19px !important;
   letter-spacing:-.4px !important;
 }
-
-/* the search: a hairline, not a pill */
-.searchwrap{
-  background:none !important;
-  background-image:none !important;
-  border:0 !important;
-  border-bottom:1px solid rgba(29,78,216,.28) !important;
-  border-radius:0 !important;
-  box-shadow:none !important;
-  padding:8px 2px !important;
-  gap:10px !important;
-}
-.searchwrap .mag{
-  background:none !important;
-  background-image:none !important;
-  box-shadow:none !important;
-  color:var(--blue,#1d4ed8) !important;
-  width:22px !important;height:22px !important;min-width:22px !important;
-}
 .searchwrap .mag svg{width:19px !important;height:19px !important}
-.searchwrap input{
-  background:none !important;
-  padding:0 2px !important;
-}
 
 /* ------------------------------------------------------------------------------------
    The header NEVER paints a background. Not at the top, not when scrolled, not when
@@ -725,23 +628,7 @@ header{
   backdrop-filter:none !important;
   transform:none !important;
 }
-
-/* the search: a line of text with a magnifier, no fill and no box */
-.searchwrap{
-  background:none !important;
-  background-image:none !important;
-  border:0 !important;
-  border-radius:0 !important;
-  box-shadow:none !important;
-  padding:10px 2px !important;
-}
-.searchwrap .mag{
-  background:none !important; background-image:none !important;
-  box-shadow:none !important; color:var(--accent,#1d4ed8) !important;
-  width:22px !important;height:22px !important;min-width:22px !important;
-}
 .searchwrap .mag svg{width:19px !important;height:19px !important}
-.searchwrap input{background:none !important; padding:0 2px !important;}
 
 /* the mark is letters, not a tile */
 .logo{
@@ -751,47 +638,7 @@ header{
   color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
   font-size:19px !important; letter-spacing:-.4px !important;
 }
-
-/* ====================================================================================
-   SEARCH BAR - new design.
-   It has been through a filled pill, a bare underline and a square box. This is an
-   outlined field: a soft rounded rectangle with a hairline accent border and a barely
-   there white wash. It reads as a control without being a heavy block, and it is
-   unmistakably different from the square it was.
-   ==================================================================================== */
-.searchwrap{
-  background:rgba(255,255,255,.62) !important;
-  background-image:none !important;
-  border:1.5px solid rgba(29,78,216,.26) !important;
-  border-radius:16px !important;
-  box-shadow:0 2px 10px rgba(29,78,216,.07) !important;
-  padding:13px 16px !important;
-  gap:12px !important;
-  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
-}
-.searchwrap:focus-within{
-  background:#fff !important;
-  border-color:var(--accent,#1d4ed8) !important;
-  box-shadow:0 0 0 4px rgba(29,78,216,.12), 0 2px 10px rgba(29,78,216,.10) !important;
-}
-/* the magnifier sits plainly inside the field - no filled circle behind it */
-.searchwrap .mag{
-  background:none !important;
-  background-image:none !important;
-  box-shadow:none !important;
-  color:var(--accent,#1d4ed8) !important;
-  width:20px !important; height:20px !important; min-width:20px !important;
-  display:flex; align-items:center; justify-content:center;
-}
 .searchwrap .mag svg{width:19px !important;height:19px !important;display:block}
-.searchwrap input{
-  background:none !important;
-  border:0 !important;
-  box-shadow:none !important;
-  padding:0 !important;
-  font-size:16px !important;
-  color:var(--text,#0b2239) !important;
-}
 .searchwrap input::placeholder{color:#5b7590 !important;opacity:1}
 
 /* the mark: letters with a little breathing room, no tile */
@@ -802,43 +649,7 @@ header{
   color:var(--accent,#1d4ed8) !important; font-weight:800 !important;
   font-size:19px !important; letter-spacing:-.3px !important;
 }
-
-/* ====================================================================================
-   SEARCH BAR - design B, the soft filled pill.
-   No border, no shadow, no outline: a light grey-blue fill at full round. Chosen from the
-   four rendered options. It reads as a control without drawing the eye before the content,
-   which the outlined version did.
-   ==================================================================================== */
-.searchwrap{
-  background:#e2ecfa !important;
-  background-image:none !important;
-  border:0 !important;
-  border-radius:999px !important;
-  box-shadow:none !important;
-  padding:14px 20px !important;
-  gap:12px !important;
-  transition:background .18s ease;
-}
-.searchwrap:focus-within{
-  background:#d3e4fb !important;
-}
-.searchwrap .mag{
-  background:none !important;
-  background-image:none !important;
-  box-shadow:none !important;
-  color:var(--accent,#1d4ed8) !important;
-  width:20px !important; height:20px !important; min-width:20px !important;
-  display:flex; align-items:center; justify-content:center;
-}
 .searchwrap .mag svg{width:19px !important;height:19px !important;display:block}
-.searchwrap input{
-  background:none !important;
-  border:0 !important;
-  box-shadow:none !important;
-  padding:0 !important;
-  font-size:16px !important;
-  color:var(--text,#0b2239) !important;
-}
 .searchwrap input::placeholder{color:#5b7590 !important;opacity:1}
 
 /* the mark stays letters, no tile */
@@ -1030,33 +841,32 @@ header .searchwrap input{padding:9px 12px 9px 34px !important;font-size:14px !im
    stylesheet is the only one that sets the width now. */
 
 /* ====================================================================================
-   SEARCH BAR - FINAL. This stylesheet accumulated EIGHT successive .searchwrap rules, each
-   from a past design pass, most of them !important. They were overriding each other, which
-   is why the bar kept changing width, losing its fill, or showing white text on a pale
-   background. Nothing above is removed (some of it still sets layout), but this block is
-   complete: it states every property that matters, so no earlier rule can leak through.
+   /* ====================================================================================
+   SEARCH BAR - THE ONLY RULE THAT SETS ITS APPEARANCE.
+   Thirty visual .searchwrap rules had accumulated here across past design passes, eight of
+   them fighting over the background with !important. That is why the bar kept changing on
+   its own and why four fixes in a row did nothing visible. Twenty-six are removed above.
+
+   The chosen design: full width, white, NO border. A soft shadow separates it from the pale
+   header - white on near-white needs something, and a shadow is not a border.
    ==================================================================================== */
-/* body.scrolled .searchwrap is (0,2,0) and was beating header .searchwrap (0,1,1) for
-   padding, margin and gap - so the bar changed shape once the page was scrolled. Every
-   selector below is listed in its scrolled form too, at (0,2,1), which wins. */
 header .searchwrap,
 .top .searchwrap,
 body.scrolled header .searchwrap,
 body.scrolled .top .searchwrap{
-  /* geometry */
-  flex:0 0 340px !important;width:340px !important;max-width:340px !important;
-  margin:0 10px !important;padding:9px 14px !important;gap:10px !important;
+  flex:0 0 auto !important;width:100% !important;max-width:100% !important;
+  margin:0 0 10px !important;padding:11px 16px !important;gap:11px !important;
   border-radius:999px !important;display:flex !important;align-items:center !important;
-  /* surface: one flat light-blue pill, no gradient, no inner border */
-  background:#e2ecfa !important;background-image:none !important;
-  border:0 !important;box-shadow:none !important;
+  background:#ffffff !important;background-image:none !important;
+  border:0 !important;
+  box-shadow:0 2px 10px rgba(29,78,216,.10) !important;
   -webkit-backdrop-filter:none !important;backdrop-filter:none !important;
 }
 header .searchwrap:focus-within,
 .top .searchwrap:focus-within,
-body.scrolled header .searchwrap:focus-within{background:#d3e4fb !important;box-shadow:none !important}
-
-/* the magnifier: a plain blue glyph, no filled circle behind it */
+body.scrolled header .searchwrap:focus-within{
+  box-shadow:0 2px 16px rgba(29,78,216,.20) !important;
+}
 header .searchwrap .mag,
 .top .searchwrap .mag,
 body.scrolled header .searchwrap .mag{
@@ -1067,10 +877,8 @@ body.scrolled header .searchwrap .mag{
   justify-content:center !important;font-size:0 !important;
 }
 header .searchwrap .mag svg,
-.top .searchwrap .mag svg{width:18px !important;height:18px !important;display:block !important;
-  stroke:#1d4ed8 !important}
-
-/* the field: transparent, DARK text. White text on a pale pill was the visible bug. */
+.top .searchwrap .mag svg{width:18px !important;height:18px !important;
+  display:block !important;stroke:#1d4ed8 !important}
 header .searchwrap input,
 .top .searchwrap input,
 body.scrolled header .searchwrap input,
@@ -1086,15 +894,11 @@ header .searchwrap input[type="search"],
 }
 header .searchwrap input::placeholder,
 .top .searchwrap input::placeholder{color:#6b8199 !important;opacity:1 !important}
-
-@media (max-width:900px){
-  header .searchwrap,.top .searchwrap{
-    flex:0 0 260px !important;width:260px !important;max-width:260px !important}
-}
+header .searchwrap input::-webkit-search-cancel-button,
+.top .searchwrap input::-webkit-search-cancel-button{-webkit-appearance:none !important;
+  display:none !important}
 @media (max-width:680px){
-  header .searchwrap,.top .searchwrap{
-    flex:0 0 auto !important;width:74% !important;max-width:290px !important;
-    margin:4px auto 10px !important;padding:8px 13px !important}
+  header .searchwrap,.top .searchwrap{padding:10px 14px !important;margin:4px 0 10px !important}
   header .searchwrap input,.top .searchwrap input{font-size:13.5px !important}
 }
 </style>

@@ -1848,6 +1848,7 @@ var NEW_TABS = {};
 // falls to Advanced and stays visible there.
 // ====================================================================================
 var CARD_LEVEL = {
+  "Self-audit": 1,
   // added from cards.js - it lands on Overview and would otherwise fall to level 3
   "What changed today": 1,
   "Cheap options: the real odds": 2,
@@ -1928,6 +1929,64 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- SELF-AUDIT: what each signal has actually done ---------------------------------
+    // The point of this page: every signal here states a probability or a claim, and until
+    // this card none of them said whether it had ever been right.
+    //
+    // Forward records (logged before the outcome, then settled) and historical backtests are
+    // kept strictly apart. A backtest tests a rule on data its author could see; a track
+    // record tests it on data nobody had seen. Only the second is evidence.
+    (function(){
+     try{
+      if(!AUDIT) return;
+      var kids=[], S=AUDIT.summary||{};
+      kids.push(para("Every signal on this site makes a claim. This is where each one is "+
+        "scored against what actually happened. <b>"+num(S.signals_forward)+" signals are "+
+        "being scored forward</b>, with <b>"+num(S.settled_total)+" settled calls</b> between "+
+        "them - and <b>"+num(S.readable)+" are readable yet</b>.", true));
+
+      if(AUDIT.forward&&AUDIT.forward.length){
+        kids.push(para("<b>Forward record</b> - a call logged before the outcome, then settled. "+
+          "This is the only kind of evidence that counts.", false));
+        kids.push(tbl({columns:["signal","status","settled","hit rate","baseline"],
+          rows:AUDIT.forward.map(function(f){
+            var tone = f.status==="measurable" ? "good"
+                     : (f.status==="too early"||f.status==="collecting") ? "warn" : "";
+            return [esc(f.signal),
+                    tone?('<b class="'+tone+'">'+esc(f.status)+'</b>'):esc(f.status),
+                    num(f.settled),
+                    (f.hit_pct==null?"—":f.hit_pct+"%"),
+                    (f.baseline_pct==null?"—":f.baseline_pct+"%")];
+          })}));
+        // say why, in the signal's own words
+        (AUDIT.forward||[]).forEach(function(f){
+          if(f.why) kids.push(para("<b>"+esc(f.signal)+":</b> "+esc(f.why), false));
+        });
+      }
+
+      if(AUDIT.historical&&AUDIT.historical.length){
+        kids.push(para("<b>Backtests</b> - a rule tested over past data in one pass. Kept "+
+          "separate on purpose: a backtest is not a track record, and the two are never added "+
+          "together.", false));
+        (AUDIT.historical||[]).forEach(function(h){
+          kids.push(para("<b>"+esc(h.study)+"</b> ("+num(h.cases)+" cases): "+esc(h.finding)+
+            "<br><span class=\"hctx\">"+esc(h.caveat||"")+"</span>", false));
+        });
+      }
+
+      kids.push(para("<b>Nothing here is called proven below "+num(AUDIT.readable_at)+" settled "+
+        "calls.</b> A run of three hits cannot be told apart from luck, and a page that reports "+
+        "100% on three calls teaches the reader to trust noise.", true));
+
+      v.appendChild(card("Self-audit",
+        (S.settled_total||0)+" settled \u00b7 "+(S.readable||0)+" readable", kids,
+        {what:"What each signal has actually done, scored against reality rather than asserted. Forward records and backtests are shown separately and never combined.",
+         source:"The site's own signal logs, scored against Nifty closes.", updated:AUDIT.updated,
+         note:"A hit rate is published with the misses it implies. Nothing is called proven below 100 settled calls. This is a record of measurement, not a recommendation."}));
+     }catch(e){}
+    })();
+
+
     // ---- PCR: THE TREND, AND WHAT EACH BAND HAS ACTUALLY PRECEDED ------------------------
     // A single PCR number cannot be read - 1.07 is neither high nor low without its own
     // history. This shows the direction (5 and 20 sessions) and, more usefully, what the
@@ -6890,6 +6949,7 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "audit.json": AUDIT=v; break;
     case "pcr_signal.json": PCRS=v; break;
     case "data_asof.json": ASOF=v; break;
     case "breakers.json": BRK=v; break;
@@ -6943,8 +7003,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json"];
 
 function renderAll(){
   if(!DATA) return;

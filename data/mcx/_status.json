@@ -1,10 +1,10 @@
 {
  "reachable": false,
  "blocked_from": "both",
- "reason": "mcxindia.com refuses automated requests: 403 Forbidden from a GitHub Actions runner, 502 from the ArthaSaar build sandbox (egress proxy).",
+ "reason": "HTTPError: HTTP Error 403: Forbidden",
  "probed_on_runner": "2026-11-08",
  "probe_workflow": ".github/workflows/mcx-probe.yml",
  "rows": 0,
  "note": "MCX commodity data cannot be collected by this pipeline. The exchange blocks non-browser clients. A Google Colab run uses different IPs and may work - that is the only untested path, and it is not automatic.",
- "updated": "2026-11-08T19:20:00Z"
+ "updated": "2026-11-09T17:28:17Z"
 }

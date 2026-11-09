@@ -1005,6 +1005,22 @@ p .bad,  p b.bad{color:#c02b2b}
   /* the level bar and tabs must not force a horizontal scroll on the page itself */
   #tabs,.tabsrow{overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
+
+/* ====================================================================================
+   NARROWER SEARCH BAR. Several earlier rules set max-width:520px, then 330px, then none,
+   some with !important, so the only reliable place to settle it is last.
+   ==================================================================================== */
+.top .searchwrap, header .searchwrap{
+  flex:0 1 360px !important;max-width:360px !important;margin:0 10px !important}
+.top .searchwrap input, header .searchwrap input{padding:10px 14px 10px 38px !important}
+@media (max-width:900px){
+  .top .searchwrap, header .searchwrap{flex:0 1 280px !important;max-width:280px !important}
+}
+@media (max-width:680px){
+  /* on a phone it gets its own row, so full width is correct there */
+  .top .searchwrap, header .searchwrap{
+    flex:1 1 100% !important;max-width:none !important;margin:2px 0 12px !important}
+}
 </style>
 </head>
 <body>
@@ -1832,6 +1848,9 @@ var NEW_TABS = {};
 // falls to Advanced and stays visible there.
 // ====================================================================================
 var CARD_LEVEL = {
+  // added from cards.js - it lands on Overview and would otherwise fall to level 3
+  "What changed today": 1,
+  "Cheap options: the real odds": 2,
   // 1 - what happened today, in plain terms. Nothing here needs a glossary.
   "Data as of": 1, "Story of the day": 1, "Today in one look": 1, "Today": 1,
   "Since your last visit": 1, "Coming up": 1, "PCR trend": 1, "Normal range": 1,
@@ -1851,12 +1870,9 @@ var LEVEL_KEY = "as_level";
 function currentLevel(){
   try{ var v=localStorage.getItem(LEVEL_KEY); return v?(parseInt(v,10)||1):1; }catch(e){ return 1; }
 }
+var FIXED_LEVEL = 2;   // Overview shows the everyday cards; deeper tables live in their tabs
 function applyLevels(){
-  var lvl=currentLevel();
-  document.body.setAttribute("data-level", String(lvl));
-  // OVERVIEW ONLY. These cards run to 170 across every tab; filtering globally would hide
-  // the whole Stocks or F&O tab from a beginner, which is not what "simpler" means. Other
-  // tabs stay complete whatever level is chosen.
+  document.body.setAttribute("data-level", String(FIXED_LEVEL));
   var ov=document.getElementById("sec-overview");
   var cards=ov?ov.querySelectorAll(".card"):[];
   for(var i=0;i<cards.length;i++){
@@ -1872,30 +1888,12 @@ function applyLevels(){
     }
     c.setAttribute("data-lvl", String(lv===undefined?3:lv));
   }
-  var btns=document.querySelectorAll(".levelbar button");
-  for(var j=0;j<btns.length;j++){
-    btns[j].className=(parseInt(btns[j].getAttribute("data-lv"),10)===lvl)?"on":"";
-  }
 }
 function buildLevelBar(){
-  var app=document.querySelector("#app");
-  if(!app||document.querySelector(".levelbar")) return;
-  var bar=el("div","levelbar");
-  bar.appendChild(el("span","lbl2","Detail level"));
-  [[1,"Beginner"],[2,"Intermediate"],[3,"Advanced"]].forEach(function(pair){
-    var b=el("button","",pair[1]);
-    b.setAttribute("data-lv",pair[0]);
-    b.addEventListener("click",function(){
-      try{ localStorage.setItem(LEVEL_KEY,String(pair[0])); }catch(e){}
-      applyLevels();
-    });
-    bar.appendChild(b);
-  });
-  app.insertBefore(bar, app.firstChild);
-  var hint=el("p","lvlhint","Beginner shows what happened today in plain terms. "
-    +"Intermediate adds positioning and the measured signals. Advanced shows every table.");
-  app.insertBefore(hint, bar.nextSibling);
-  applyLevels();
+  // REMOVED. The three buttons asked the reader to choose a difficulty before they had seen
+  // anything, and the hint text below them explained a control most people never touch.
+  // The page now shows one curated Overview, and the deeper material lives in its own tab.
+  return;
 }
 function renderTabs(){
   var nav=$("#tabs");nav.innerHTML="";

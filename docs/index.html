@@ -1025,11 +1025,9 @@ header .searchwrap input{padding:9px 12px 9px 34px !important;font-size:14px !im
   header .searchwrap input{font-size:13.5px !important;padding:8px 12px 8px 32px !important}
   header .searchwrap .mag{left:11px !important}
 }
-@media (max-width:680px){
-  /* on a phone it gets its own row, so full width is correct there */
-  .top .searchwrap, header .searchwrap{
-    flex:1 1 100% !important;max-width:none !important;margin:2px 0 12px !important}
-}
+/* removed: this was the rule that widened the search bar to full width on a
+   phone, which is the opposite of what was wanted. The narrow rule at the end of this
+   stylesheet is the only one that sets the width now. */
 </style>
 </head>
 <body>

@@ -854,8 +854,8 @@ header .searchwrap,
 .top .searchwrap,
 body.scrolled header .searchwrap,
 body.scrolled .top .searchwrap{
-  flex:0 0 auto !important;width:100% !important;max-width:100% !important;
-  margin:0 0 10px !important;padding:11px 16px !important;gap:11px !important;
+  flex:0 0 auto !important;width:100% !important;max-width:560px !important;
+  margin:0 0 9px !important;padding:8px 15px !important;gap:10px !important;
   border-radius:999px !important;display:flex !important;align-items:center !important;
   background:#ffffff !important;background-image:none !important;
   border:0 !important;
@@ -871,7 +871,7 @@ header .searchwrap .mag,
 .top .searchwrap .mag,
 body.scrolled header .searchwrap .mag{
   position:static !important;transform:none !important;inset:auto !important;
-  flex:0 0 auto !important;width:18px !important;height:18px !important;min-width:18px !important;
+  flex:0 0 auto !important;width:16px !important;height:16px !important;min-width:16px !important;
   background:none !important;background-image:none !important;box-shadow:none !important;
   color:#1d4ed8 !important;display:flex !important;align-items:center !important;
   justify-content:center !important;font-size:0 !important;
@@ -889,7 +889,7 @@ header .searchwrap input[type="search"],
   background:transparent !important;background-image:none !important;
   border:0 !important;box-shadow:none !important;outline:none !important;
   padding:0 !important;margin:0 !important;
-  font:inherit !important;font-size:14.5px !important;line-height:1.3 !important;
+  font:inherit !important;font-size:13.5px !important;line-height:1.25 !important;
   color:#0b2239 !important;caret-color:#1d4ed8 !important;
 }
 header .searchwrap input::placeholder,
@@ -898,7 +898,8 @@ header .searchwrap input::-webkit-search-cancel-button,
 .top .searchwrap input::-webkit-search-cancel-button{-webkit-appearance:none !important;
   display:none !important}
 @media (max-width:680px){
-  header .searchwrap,.top .searchwrap{padding:10px 14px !important;margin:4px 0 10px !important}
+  header .searchwrap,.top .searchwrap{max-width:100% !important;
+    padding:8px 13px !important;margin:4px 0 9px !important}
   header .searchwrap input,.top .searchwrap input{font-size:13.5px !important}
 }
 </style>
@@ -1570,14 +1571,14 @@ var STR = {
        ipo:"IPOs", regulator:"Regulator", promoter:"Promoter", rs:"Rel. strength",
        seasonality:"Seasonality", correlation:"Correlation", calendar:"Calendar",
        watchlists:"Surveillance", deals:"Deals", insider:"Insider", charges:"Charges",
-       searchPh:"Search stocks, coins, news…", dark:"Dark mode", light:"Light mode"},
+       searchPh:"Search…", dark:"Dark mode", light:"Light mode"},
   hi: {overview:"अवलोकन", markets:"बाज़ार", stocks:"शेयर", screener:"स्क्रीनर",
        crypto:"क्रिप्टो", global:"वैश्विक", learn:"सीखें", indices:"सूचकांक", sectors:"क्षेत्र",
        etf:"ईटीएफ", mf:"म्यूचुअल फंड", tools:"औज़ार", backtest:"बैकटेस्ट", watchlist:"वॉचलिस्ट",
        ipo:"आईपीओ", regulator:"नियामक", promoter:"प्रोमोटर", rs:"सापेक्ष बल",
        seasonality:"मौसमी", correlation:"सहसंबंध", calendar:"कैलेंडर",
        watchlists:"निगरानी", deals:"सौदे", insider:"इनसाइडर", charges:"खर्च",
-       searchPh:"शेयर, वैश्विक, कॉइन, समाचार खोजें…  ( / दबाएँ)", dark:"डार्क मोड", light:"लाइट मोड"}
+       searchPh:"खोजें…", dark:"डार्क मोड", light:"लाइट मोड"}
 };
 function L(key){ var m=STR[LANG]||STR.en; return (m[key]!=null?m[key]:STR.en[key])||key; }
 function applyLang(){

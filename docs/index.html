@@ -7304,8 +7304,16 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
   .then(function(res){
     CORE.forEach(function(f,i){ assign(f,res[i]); });
     if(!DATA) throw new Error("data.json did not load");
-    renderAll();
-    mktUpdate(); glossPass(); applyLang(); applyA11y();
+    // DO NOT RENDER HERE.
+    //
+    // This used to call renderAll() as soon as the CORE files landed, then renderAll()
+    // again when HEAVY arrived. The second call rebuilt the entire page from scratch, so
+    // three seconds after load the cards visibly changed: "Today" showed PCR and max pain
+    // first, then swapped to advances and declines, and cards that need HEAVY data popped
+    // in at the top. Two renders of different data is worse than one render of the right
+    // data - a reader should never watch the page contradict itself.
+    //
+    // The skeleton stays up until everything is in, then the page is built once.
     setStamp("loading", "Updated "+(DATA.generated_utc||"—")+" · loading the rest…");
     return Promise.all(HEAVY.map(function(f){ return optional(BASE+f); }));
   })
@@ -7507,6 +7515,10 @@ function groupTabs(){
    Anything not listed keeps its existing order and follows the listed ones.
    ==================================================================================== */
 var OV_ORDER = [
+  // the hero summary goes first - it is the one card a reader can take in at a glance,
+  // and leaving it unlisted meant it landed wherever it was appended and then moved
+  // when the reorder ran, which read as the page reshuffling itself.
+  "Today at a glance",
   "Today",                          // the snapshot: PCR, max pain - the first thing anyone wants
   "What changed today",             // deltas, not state
   "Today in one look",

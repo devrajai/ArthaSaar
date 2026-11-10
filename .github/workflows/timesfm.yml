@@ -48,7 +48,14 @@ jobs:
           # (28 Aug 2026) also ships NON-COMMERCIAL, NON-PRODUCTION weights, unlike 2.5's
           # Apache-2.0 - so an unpinned install could silently move this project onto a
           # licence it cannot use. Range-pinned to the 2.5 series deliberately.
-          pip install "timesfm>=2.5,<3" yfinance pandas pyarrow
+                    # THE PIN WAS IMPOSSIBLE. PyPI has no timesfm 2.5 - the versions jump 2.0.2 -> 3.0.0.
+          # "timesfm>=2.5,<3" could never resolve, so pip failed before any forecast ran and
+          # this workflow died four nights in a row. The card kept showing a stale date and
+          # nobody noticed, which is the second half of the problem.
+          #
+          # 2.0.2 is the closest published API to the 2.x code here. If it turns out to need
+          # 3.x, the install line is the only thing to change.
+          pip install "timesfm>=2.0,<3" yfinance pandas pyarrow
           python -c "import timesfm, sys; print('timesfm', getattr(timesfm,'__version__','unknown'))"
           pip install google-api-python-client google-auth
 

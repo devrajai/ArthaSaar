@@ -231,7 +231,27 @@
         kids.push(p("Corporate actions this fortnight: "+recent.slice(0,3).map(function(x){return x.s+" "+(x.k==="split"?"split 1:"+x.v:"dividend ₹"+x.v)+" on "+x.d;}).join("; ")+(recent.length>3?" and "+(recent.length-3)+" more":"")+".")); lines++;
       }
     }catch(err){}
-    if(!lines) kids.push(p("No deltas available yet today - the collectors may still be running."));
+    // Distinguish "the data never arrived" from "the data arrived and nothing moved".
+    // The old message blamed the collectors for both, and on an expiry day it was simply
+    // wrong: option OI unwinds across every strike, so no positive build-up exists to report.
+    if(!lines){
+      var loaded = !!(D.oi && D.delivery && D.circuits && D.corp);
+      if(loaded){
+        var e0 = D.oi && D.oi.indices && D.oi.indices.NIFTY &&
+                 D.oi.indices.NIFTY.expiries && D.oi.indices.NIFTY.expiries[0];
+        var unwound = e0 && e0.strikes && e0.strikes.length &&
+          e0.strikes.every(function(x){ return (x.ce_chg||0)<=0 && (x.pe_chg||0)<=0; });
+        kids.push(p(unwound
+          ? "Nothing built up today: open interest fell at every NIFTY strike, which is what an "
+            + "expiry day looks like. Positions were closed, not opened. That is itself the "
+            + "news - there was no fresh conviction to report."
+          : "The data loaded and nothing moved far enough to report today. A quiet day is a "
+            + "result, not a missing file."));
+      }else{
+        kids.push(p("The change data has not arrived yet - the collectors are still running. "
+          + "This card fills in once oi_by_expiry and delivery land."));
+      }
+    }
     kids.unshift(p("Only what moved since the previous close. The rest of the site shows where things stand; this shows what changed."));
     var c2=card2("What changed today", (D.oi&&D.oi.date)||"", kids,
       {what:"The day's actual deltas: fresh option open interest, stocks that moved on real delivery, circuit activity and corporate actions.",

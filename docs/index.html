@@ -6925,7 +6925,9 @@ var v=sec("learn");
   /* ---------- LEVELS ---------- */
   (function(){
     var v=sec("levels");
-    if(!LEVELS||!LEVELS.count){
+    // Check ROWS, not count. A file with count=400 and no rows passed the old guard and
+    // then threw on .map(), which blanked the entire page behind "Could not load data.json".
+    if(!LEVELS||!LEVELS.rows||!LEVELS.rows.length){
       v.appendChild(card("Levels","Pivot, Camarilla and Fibonacci",
         [para(LEVELS&&LEVELS.note?LEVELS.note:"Not computed yet.")],
         {what:"Support and resistance levels per stock.", source:"the candle archive", updated:when}));
@@ -7274,6 +7276,9 @@ function assign(name, v){
     case "breadth.json": BREADTH=v; break;
     case "gaps.json": GAPS=v; break;
     case "levels.json": LEVELS=v; break;
+    // LVLS was declared but never assigned, so the Gann/Fib card silently rendered
+    // nothing from the day it shipped. A missing case is invisible, not an error.
+    case "gann_fib.json": LVLS=v; break;
     case "patterns.json": PATTERNS=v; break;
   }
 }
@@ -7288,7 +7293,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null, CLAIMS=null, TM=null, SCR=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json"];
 
 function renderAll(){
   if(!DATA) return;

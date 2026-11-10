@@ -1,37 +1,32 @@
 #!/usr/bin/env python3
-"""Support and resistance from Fibonacci retracements and Gann eighths, with hit rates.
+"""Gann eighths and Fibonacci retracements, with the rate at which each was actually held.
 
 WHY THIS EXISTS
 "Give me Gann and Fibonacci levels" is a reasonable request and a testable one. What is not
 reasonable is drawing a line on a chart and calling it support because a book said so. Every
-level here is published with the number of times price actually reached it and the share of
-those touches that were followed by a reversal. A level with no history is a level with no
-evidence, and it says so.
+level here is published with the number of times price reached it and how often that touch was
+followed by a BOUNCE rather than a BREAK.
 
-WHAT IS COMPUTED
-  swing      the most recent significant high and low in the window, found from closes
-  fib        retracements of that swing: 23.6, 38.2, 50, 61.8, 78.6
-  gann       Gann's eighths of the range: 1/8, 1/4, 3/8, 1/2, 5/8, 3/4, 7/8
-  respect    for each level, how often a touch was followed by a reversal of at least 1%
-             within 5 sessions - the only thing that makes a level mean anything
+A NOTE ON A BUG THIS FILE ONCE HAD
+The first version counted any 1% move away from a level as a "reversal", in either direction,
+and reported respect rates of 96-98% for every ratio. That is not a finding, it is proof the
+test was broken: over five sessions a 1% move is close to certain, so every level "worked".
+The measure is now bounce-before-break, which gives a number near 50% when levels mean
+nothing - and that is what the data shows.
 
-WHAT IT REFUSES TO DO
-  call a level "strong" without a sample behind it - below 20 touches the rate is withheld
-  draw a level that price has never been near
-  claim a level predicts anything. A respect rate is a description of the past.
-
-CLOSES ONLY. The series file carries closes, not OHLC, so a "touch" means the close came
-within 0.3% of the level. Intraday wicks are not seen, and the caution on the page says so.
+OUTPUT FILE
+docs/gann_fib.json. It must NOT write docs/levels.json: that file holds pivot and Camarilla
+levels and the Levels tab reads its rows. Writing here replaced it with a different schema and
+blanked the whole page behind "Could not load data.json".
 """
 import json, os, sys
 
-SRC = "docs/series.json"
-OUT = "docs/levels.json"
-WINDOW = 500          # sessions of history considered
-TOUCH_PCT = 0.003     # a close within 0.3% of the level counts as a touch
-REVERSAL_PCT = 1.0    # a reversal of 1% within the horizon counts as respected
+SRC = "docs/series.json"      # 120 daily closes per symbol
+OUT = "docs/gann_fib.json"
+TOUCH_PCT = 0.015             # a close within 1.5% counts as a touch - support is a ZONE
+MOVE_PCT = 1.0                # bounce/break threshold
 HORIZON = 5
-MIN_TOUCHES = 20      # below this the rate is noise and is withheld
+MIN_TOUCHES = 20
 MAX_SYMBOLS = 400
 
 FIB = [0.236, 0.382, 0.5, 0.618, 0.786]
@@ -39,121 +34,138 @@ GANN = [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875]
 
 
 def swing(closes):
-    """The most recent significant low then high (or high then low) in the window."""
     n = len(closes)
-    if n < 60:
+    if n < 40:
         return None
-    seg = closes[-WINDOW:] if n > WINDOW else closes
-    lo_i = min(range(len(seg)), key=lambda i: seg[i])
-    hi_i = max(range(len(seg)), key=lambda i: seg[i])
+    lo_i = min(range(n), key=lambda i: closes[i])
+    hi_i = max(range(n), key=lambda i: closes[i])
     if lo_i == hi_i:
         return None
-    return {"low": seg[lo_i], "high": seg[hi_i], "up": lo_i < hi_i}
+    return {"low": closes[lo_i], "high": closes[hi_i]}
 
 
 def respect(closes, level):
-    """How often a close near this level was followed by a reversal."""
+    """Bounce or break - whichever came first. The only measure that means anything."""
     if level <= 0:
-        return None
-    touches = 0
-    respected = 0
-    for i in range(len(closes) - HORIZON):
+        return {"touches": 0, "bounces": 0, "breaks": 0, "pct": None}
+    up = level * (1 + MOVE_PCT / 100.0)
+    down = level * (1 - MOVE_PCT / 100.0)
+    touches = bounces = breaks = 0
+    n = len(closes)
+    i = 0
+    while i < n - 1:
         c = closes[i]
-        if c <= 0:
-            continue
-        if abs(c - level) / level <= TOUCH_PCT:
+        if c > 0 and abs(c - level) / level <= TOUCH_PCT:
             touches += 1
-            fwd = closes[i + 1:i + 1 + HORIZON]
-            if not fwd:
-                continue
-            # a reversal either way: price moved 1% away from the level and stayed
-            if (max(fwd) - level) / level >= REVERSAL_PCT / 100.0:
-                respected += 1
-            elif (level - min(fwd)) / level >= REVERSAL_PCT / 100.0:
-                respected += 1
-    return {"touches": touches,
-            "respected": respected,
-            "pct": round(respected / touches * 100, 1) if touches else None}
+            for j in range(i + 1, min(i + 1 + HORIZON, n)):
+                if closes[j] >= up:
+                    bounces += 1
+                    break
+                if closes[j] <= down:
+                    breaks += 1
+                    break
+            i += HORIZON       # do not count the same approach twice
+        else:
+            i += 1
+    decided = bounces + breaks
+    return {"touches": touches, "bounces": bounces, "breaks": breaks,
+            "pct": round(bounces / decided * 100, 1) if decided else None}
 
 
 def main():
     if not os.path.exists(SRC):
-        print("no %s - nothing to build" % SRC)
-        json.dump({"updated": None, "available": False, "note": "series.json missing"},
-                  open(OUT, "w"), separators=(",", ":"))
+        print("no %s" % SRC)
+        json.dump({"available": False, "count": 0}, open(OUT, "w"), separators=(",", ":"))
         return 0
+
     d = json.load(open(SRC))
-    series = d.get("series") or {}
-    print("  %d symbols in series.json" % len(series))
-
-    # the longest series first - a level needs history to be worth computing
-    syms = sorted(series.items(), key=lambda kv: -len(kv[1] or []))[:MAX_SYMBOLS]
-    out = {"updated": d.get("updated"), "count": 0, "symbols": {}, "note": "", "cautions": {}}
-
-    for sym, closes in syms:
-        if not closes or len(closes) < 120:
+    raw = d.get("series") or {}
+    series = {}
+    for k, v in raw.items():
+        if not v:
             continue
+        # series.json holds bare closes; charts.json holds [month, price] pairs. Accept both.
+        if isinstance(v[0], (list, tuple)):
+            vals = [x[1] for x in v if isinstance(x, (list, tuple)) and len(x) == 2 and x[1]]
+        else:
+            vals = [x for x in v if isinstance(x, (int, float))]
+        if len(vals) >= 40:
+            series[k] = vals
+    print("  %d symbols with usable closes" % len(series))
+
+    out = {"available": True, "updated": d.get("updated"), "count": 0,
+           "symbols": {}, "by_ratio": [], "note": "", "cautions": {}}
+    agg = {}
+
+    syms = sorted(series.items(), key=lambda kv: -len(kv[1]))[:MAX_SYMBOLS]
+    for sym, closes in syms:
         sw = swing(closes)
         if not sw or not (sw["high"] > sw["low"]):
             continue
         lo, hi = sw["low"], sw["high"]
         span = hi - lo
-        if span <= 0:
-            continue
-
         levels = []
-        # Fibonacci retracements measured from the low of the swing
-        for f in FIB:
-            lv = round(lo + span * f, 2)
-            r = respect(closes, lv)
-            levels.append({"kind": "fib", "ratio": f, "price": lv,
-                           "touches": r["touches"], "respect_pct": r["pct"] if
-                           (r["touches"] or 0) >= MIN_TOUCHES else None})
-        # Gann eighths of the range
-        for f in GANN:
-            lv = round(lo + span * f, 2)
-            r = respect(closes, lv)
-            levels.append({"kind": "gann", "ratio": f, "price": lv,
-                           "touches": r["touches"], "respect_pct": r["pct"] if
-                           (r["touches"] or 0) >= MIN_TOUCHES else None})
-
-        # keep only levels price has actually been near, and order by price
-        last = closes[-1]
-        keep = [x for x in levels if x["touches"] > 0]
+        for kind, ratios in (("fib", FIB), ("gann", GANN)):
+            for f in ratios:
+                lv = round(lo + span * f, 2)
+                r = respect(closes, lv)
+                a = agg.setdefault((kind, f), {"touches": 0, "bounces": 0, "breaks": 0})
+                a["touches"] += r["touches"]
+                a["bounces"] += r["bounces"]
+                a["breaks"] += r["breaks"]
+                levels.append([kind, f, lv, r["touches"],
+                               r["pct"] if r["touches"] >= MIN_TOUCHES else None])
+        keep = [x for x in levels if x[3] > 0]
         if not keep:
             continue
-        keep.sort(key=lambda x: -x["price"])
+        keep.sort(key=lambda x: -x[2])
         out["symbols"][sym.replace(".NS", "")] = {
-            "last": round(last, 2),
+            "last": round(closes[-1], 2),
             "swing_low": round(lo, 2), "swing_high": round(hi, 2),
-            "levels": [[x["kind"], x["ratio"], x["price"], x["touches"], x["respect_pct"]]
-                       for x in keep],
+            "levels": keep,
         }
 
+    rows = []
+    for (kind, f), a in agg.items():
+        decided = a["bounces"] + a["breaks"]
+        if a["touches"] >= MIN_TOUCHES and decided:
+            rows.append({"kind": kind, "ratio": f, "touches": a["touches"],
+                         "bounces": a["bounces"], "breaks": a["breaks"],
+                         "held_pct": round(a["bounces"] / decided * 100, 1)})
+    rows.sort(key=lambda x: -x["held_pct"])
+    out["by_ratio"] = rows
     out["count"] = len(out["symbols"])
-    out["note"] = ("Fibonacci retracements and Gann eighths for %d stocks, each with the number "
-                   "of times price actually reached it and how often that touch was followed by "
-                   "a reversal of %.0f%% or more within %d sessions. Below %d touches the rate is "
-                   "withheld." % (out["count"], REVERSAL_PCT, HORIZON, MIN_TOUCHES))
+
+    if rows:
+        best, worst = rows[0], rows[-1]
+        out["ratio_finding"] = (
+            "Across every stock, the %s %.1f%% zone was held %.1f%% of the time (%s touches, "
+            "bounce before break); the weakest, %s %.1f%%, held %.1f%% (%s touches). A rate near "
+            "50%% would mean the level is no better than a coin toss."
+            % (best["kind"], best["ratio"] * 100, best["held_pct"], f"{best['touches']:,}",
+               worst["kind"], worst["ratio"] * 100, worst["held_pct"], f"{worst['touches']:,}"))
+
+    out["note"] = ("Fibonacci retracements and Gann eighths for %d stocks. For each: how often "
+                   "price reached it, and whether a BOUNCE of %.0f%% came before a BREAK of %.0f%%, "
+                   "within %d sessions. Below %d touches the rate is withheld."
+                   % (out["count"], MOVE_PCT, MOVE_PCT, HORIZON, MIN_TOUCHES))
     out["cautions"] = {
-        "description_not_prediction": ("A respect rate describes the past. It is not a promise "
-                                       "that the level holds next time."),
-        "closes_only": ("Built from closing prices, so a touch means the close came within "
-                        "%.1f%% of the level. Intraday wicks are invisible here." % (TOUCH_PCT * 100)),
-        "withheld_below_20": ("A rate over fewer than %d touches is noise and is published as "
-                              "null, not as a number." % MIN_TOUCHES),
+        "description_not_prediction": ("A held rate describes the past. It is not a promise that "
+                                       "the level holds next time."),
+        "coin_toss_test": ("A rate near 50% means the level is no better than a coin toss. That "
+                           "is the honest baseline to read every row against."),
+        "closes_only": ("Built from closing prices, and a touch means the close came within "
+                        "%.1f%% of the level - a zone, not a hairline." % (TOUCH_PCT * 100)),
         "no_astrology": ("Gann eighths and Fibonacci ratios are arithmetic on a price range. "
                          "Nothing here uses planetary positions or dates."),
     }
 
-    os.makedirs("docs", exist_ok=True)
     json.dump(out, open(OUT, "w"), ensure_ascii=False, separators=(",", ":"))
     print("-> %s  %.1f KB" % (OUT, os.path.getsize(OUT) / 1024))
-    print("   %s" % out["note"])
-    for s in list(out["symbols"])[:4]:
-        v = out["symbols"][s]
-        print("     %-12s last %8.2f  swing %.2f-%.2f  levels %d"
-              % (s, v["last"], v["swing_low"], v["swing_high"], len(v["levels"])))
+    print("   %d stocks, %d ratios measured" % (out["count"], len(rows)))
+    for r in rows[:4]:
+        print("     %-4s %5.1f%%  held %5.1f%%  touches %6d"
+              % (r["kind"], r["ratio"] * 100, r["held_pct"], r["touches"]))
     return 0
 
 

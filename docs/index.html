@@ -2025,45 +2025,7 @@ function build(d){
     // The pipeline died on 5 November and nobody knew for five days: every run failed at one
     // guard, 41 steps were skipped including Commit, and the page kept serving Tuesday's
     // numbers. This surfaces the existing per-file health check so that cannot stay silent.
-    (function(){
-     try{
-      if(!HEALTH) return;
-      var h=HEALTH, kids=[];
-      var stale=(h.stale||[]), empty=(h.empty||[]);
-      var bad = stale.length>0 || empty.length>0;
-      var rows=(h.rows||[]);
-      var worst=rows.slice().sort(function(a,b){return (b.age_days||0)-(a.age_days||0);})[0];
-      var tone = bad ? "warn" : "good";
-
-      kids.push(para("Every published file, with its age and how many rows it carries. "+
-        "<b class="+tone+">"+num(h.files)+" files, "+num(h.total_kb)+" KB total"+
-        (stale.length?(", <b class=\"warn\">"+stale.length+" stale</b>"):"")+
-        (empty.length?(", <b class=\"bad\">"+empty.length+" empty</b>"):"")+".</b>", true));
-
-      if(worst && worst.age_days!=null){
-        kids.push(para("Oldest data: <b>"+esc(worst.file)+"</b>, "+worst.age_days+" days old."+
-          (worst.age_days>3?" That is not today's market.":""), false));
-      }
-      if(empty.length){
-        kids.push(para("<b>Empty files:</b> "+empty.slice(0,8).map(esc).join(", ")+
-          (empty.length>8?" and "+(empty.length-8)+" more":"")+
-          ". An empty file means the builder failed - not that the market was quiet.", false));
-      }
-      if(stale.length){
-        kids.push(para("<b>Stale:</b> "+stale.slice(0,8).map(esc).join(", ")+
-          (stale.length>8?" and "+(stale.length-8)+" more":"")+".", false));
-      }
-      var biggest=(h.biggest||[]).slice(0,5);
-      if(biggest.length){
-        kids.push(para("Largest files (every byte is downloaded by a phone): "+
-          biggest.map(function(b){ return esc(b.file)+" "+b.kb+"KB"; }).join(", ")+".", false));
-      }
-      v.appendChild(card("Data health", num(h.files)+" files \u00b7 "+num(h.total_kb)+" KB", kids,
-        {what:"Every published file with its age and row count. If a section looks blank, look here first - it names the file and the reason.",
-         source:"The health check that runs at the end of every pipeline run.", updated:h.updated,
-         note:"This reports that data exists and is recent. It cannot tell you whether a number is right - the self-audit does that."}));
-     }catch(e){}
-    })();
+    
 
 
     // ---- GANN AND FIBONACCI: measured, not asserted -------------------------------------
@@ -2112,33 +2074,7 @@ function build(d){
     // ---- DATA HEALTH: is the site actually being fed? -----------------------------------
     // The pipeline died on 5 November and nobody knew for five days. This card exists so that
     // cannot happen silently again: it says when the feed was last written, in plain words.
-    (function(){
-     try{
-      if(!HEALTH) return;
-      var kids=[], h=HEALTH;
-      var bad = h.verdict==="stale" || h.verdict==="broken";
-      var warn = h.verdict==="behind";
-      var tone = bad ? "bad" : (warn ? "warn" : "good");
-      kids.push(para("The site is fed by a nightly run. <b class="+tone+">"+esc(h.note||"")+"</b>", true));
-      kids.push(tbl({columns:["",""],
-        rows:[["Files carrying data", num(h.ok)+" of "+num(h.checked)],
-              ["Site feed written", h.hours_since_newest==null?"unknown":
-                 (h.hours_since_newest<1?"less than an hour ago":
-                  Math.round(h.hours_since_newest)+" hours ago")],
-              ["Files individually behind", num(h.behind_count||0)],
-              ["Empty or unreadable", num((h.empty||[]).length+(h.unreadable||[]).length)]]}));
-      if(h.behind_files && h.behind_files.length){
-        kids.push(para("Behind: "+h.behind_files.slice(0,5).map(function(x){
-          return esc(x.file)+" ("+Math.round(x.hours)+"h)"; }).join(", ")+".", false));
-      }
-      kids.push(para("<b>An empty file is reported, never shown as a zero.</b> A section with "+
-        "no rows means the builder failed, not that the market was quiet.", false));
-      v.appendChild(card("Data health", h.verdict, kids,
-        {what:"Whether the site is actually being fed: how many files carry data, when the feed was last written, and what is empty.",
-         source:"Every JSON in docs/, checked for existence, parseability and freshness.", updated:h.updated,
-         note:"This checks that data exists and is recent. It cannot tell you whether a number is right - the self-audit does that."}));
-     }catch(e){}
-    })();
+    
 
 
     // ---- VOLUME AT PRICE ---------------------------------------------------------------
@@ -7575,6 +7511,65 @@ var OV_ORDER = [
   reorder();
 })();
 
+/* ====================================================================================
+   THE HOME PAGE SHOWS EIGHT CARDS, NOT TWENTY-SIX.
+   Measured before this: 26 cards and 29,808 characters of text on the landing page -
+   roughly twenty-five phone screens of scrolling before anything else could be reached.
+   A visitor who wants "what happened today" should not have to scroll past a tax calculator.
+
+   Nothing is removed. The other cards stay on the page, collapsed behind one button, and
+   the choice is remembered. A reader who wants everything is one tap from it; a reader who
+   wants the day's picture gets it without scrolling.
+   ==================================================================================== */
+var HOME_KEEP = [
+  "Today at a glance",     // the one-screen summary
+  "Today",                 // PCR, max pain, advances and declines
+  "What changed today",    // deltas, not state
+  "Coming up",             // what is scheduled
+  "PCR trend",             // the positioning signal, with its history
+  "21-day outlook",        // the forecast
+  "Big Money Radar",       // who is buying and selling
+  "Signal scorecard"       // has any of it been right
+];
+(function(){
+  var KEY="as-home-all";
+  function allOn(){ try{ return localStorage.getItem(KEY)==="1"; }catch(e){ return false; } }
+  function apply(){
+    var ov=document.getElementById("sec-overview");
+    if(!ov) return;
+    var showAll=allOn();
+    var cards=[].slice.call(ov.querySelectorAll(":scope > .card"));
+    var hidden=0;
+    cards.forEach(function(c){
+      var h2=c.querySelector(".cardhead h2");
+      var t=h2?((h2.childNodes[0]&&h2.childNodes[0].textContent)||"").trim():"";
+      var keep = HOME_KEEP.some(function(k){ return t===k || (t && t.indexOf(k)===0); });
+      if(keep){ c.style.display=""; return; }
+      hidden++;
+      c.style.display = showAll ? "" : "none";
+    });
+    var btn=document.getElementById("homeToggle");
+    if(!btn){
+      btn=el("button","small");
+      btn.id="homeToggle";
+      btn.style.cssText="display:block;margin:18px auto 8px";
+      btn.addEventListener("click",function(){
+        try{ localStorage.setItem(KEY, allOn()?"0":"1"); }catch(e){}
+        apply();
+      });
+      ov.appendChild(btn);
+    }
+    btn.textContent = showAll
+      ? "Show only the essentials"
+      : "Show all " + cards.length + " cards on this page";
+    btn.style.display = hidden ? "block" : "none";
+  }
+  try{ new MutationObserver(apply).observe(document.getElementById("sec-overview")||document.body,
+        {childList:true}); }catch(e){}
+  var n=0, iv=setInterval(function(){ apply(); if(++n>24) clearInterval(iv); }, 400);
+  apply();
+})();
+
 if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");
 
 var _show = show;
@@ -7620,21 +7615,6 @@ show = function(id){
   }catch(e){}
 };
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <script src="cards.js?v=20261110a"></script>

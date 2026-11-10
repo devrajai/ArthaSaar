@@ -619,6 +619,24 @@ jobs:
         run: python scripts/build_levels.py || true
 
 
+      # Base rates for any move size over any horizon - the claim checker.
+
+
+      - name: "7n2k. Claim checker base rates"
+
+
+        run: python scripts/build_claims.py || true
+
+
+      # What Rs 1 lakh became, with the worst fall along the way.
+
+
+      - name: "7n2l. One lakh time machine"
+
+
+        run: python scripts/build_timemachine.py || true
+
+
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
 

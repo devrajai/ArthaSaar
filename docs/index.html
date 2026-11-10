@@ -1772,6 +1772,9 @@ var NEW_TABS = {};
 // falls to Advanced and stays visible there.
 // ====================================================================================
 var CARD_LEVEL = {
+  "Compare two stocks": 2,
+  "The one lakh time machine": 2,
+  "Claim checker": 2,
   "Gann and Fibonacci levels": 2,
   "Data health": 1,
   "Volume at price": 2,
@@ -1856,6 +1859,168 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    // ---- COMPARE TWO STOCKS -------------------------------------------------------------
+    // The most common question a beginner has is "which of these two". screener.json already
+    // carries every number needed to answer it honestly, side by side.
+    (function(){
+     try{
+      // screener.json binds to SCREENER, not SCR - reading the wrong variable silently
+      // produced an empty card rather than an error.
+      if(!SCREENER||!SCREENER.rows||!SCREENER.rows.length) return;
+      var kids=[], idx={};
+      SCREENER.rows.forEach(function(r){ if(r.symbol) idx[r.symbol]=r; });
+      var a=el("input"); a.className="datepick"; a.placeholder="first stock, e.g. TCS";
+      var b=el("input"); b.className="datepick"; b.placeholder="second stock, e.g. INFY";
+      a.setAttribute("list","cmplist"); b.setAttribute("list","cmplist");
+      var dl=el("datalist"); dl.id="cmplist";
+      Object.keys(idx).slice(0,2500).forEach(function(s){ var o=el("option"); o.value=s; dl.appendChild(o); });
+      var out=el("div","histout");
+      var ROWS=[["close","Price",""],["chg_1d","1 day","%"],["chg_5d","1 week","%"],
+                ["chg_20d","1 month","%"],["from_52w_high","From 52-week high","%"],
+                ["above_52w_low","Above 52-week low","%"],["rsi","RSI (14)",""],
+                ["up_streak","Up streak","days"],["down_streak","Down streak","days"]];
+      function pct(x){ return (x==null)?"—":((x>0?"+":"")+x+"%"); }
+      function draw(){
+        var s1=(a.value||"").trim().toUpperCase(), s2=(b.value||"").trim().toUpperCase();
+        var r1=idx[s1], r2=idx[s2];
+        if(!r1&&!r2){ out.innerHTML='<p class="hctx">Type two stock symbols.</p>'; return; }
+        var h='<table><thead><tr><th>measure</th><th>'+esc(s1||"—")+'</th><th>'+esc(s2||"—")+
+              '</th></tr></thead><tbody>';
+        ROWS.forEach(function(row){
+          var k=row[0], lbl=row[1], unit=row[2];
+          function v(r){
+            if(!r||r[k]==null) return "—";
+            if(unit==="%") return pct(r[k]);
+            return num(r[k]);
+          }
+          var x=v(r1), y=v(r2);
+          h+='<tr><td>'+lbl+'</td><td><b>'+x+'</b></td><td><b>'+y+'</b></td></tr>';
+        });
+        h+='</tbody></table><p class="hctx">RSI above 70 is often called overbought, below 30 '+
+           'oversold. Those labels are folklore; the site measures what actually followed.</p>';
+        out.innerHTML=h;
+      }
+      a.addEventListener("input",draw); b.addEventListener("input",draw);
+      kids.push(a); kids.push(b); kids.push(dl); kids.push(out);
+      draw();
+      v.appendChild(card("Compare two stocks", num(SCREENER.count)+" stocks", kids,
+        {what:"Two stocks side by side on price, recent returns, distance from the 52-week high and low, RSI and streaks.",
+         source:"screener.json - the same numbers behind the screener.", updated:SCREENER.updated,
+         note:"Past returns and RSI describe what happened, not what will. Nothing here is a recommendation."}));
+     }catch(e){}
+    })();
+
+
+    // ---- THE ONE LAKH TIME MACHINE ------------------------------------------------------
+    // Every fund house prints "Rs 1 lakh became Rs 2.4 lakh". That is true and it is half the
+    // story. The other half is the worst fall on the way, which is the number that decides
+    // whether a real person stayed invested. Both are shown together, always.
+    (function(){
+     try{
+      if(!TM||!TM.available) return;
+      var kids=[], T=TM;
+      if(T.drawdown_finding) kids.push(para(esc(T.drawdown_finding), true));
+
+      var inp=el("input"); inp.className="datepick"; inp.placeholder="fund or stock, e.g. RELIANCE";
+      inp.setAttribute("list","tmlist");
+      var dl=el("datalist"); dl.id="tmlist";
+      var names=[];
+      (T.funds||[]).forEach(function(f){ if(f.name){ names.push(f.name); } });
+      (T.stocks||[]).forEach(function(s){ names.push(s.symbol); });
+      names.slice(0,1200).forEach(function(n){ var o=el("option"); o.value=n; dl.appendChild(o); });
+      var out=el("div","histout");
+      function money(v){ return v==null?"—":"Rs "+num(Math.round(v)); }
+      function show(q){
+        q=(q||"").trim().toUpperCase();
+        if(!q){ out.innerHTML='<p class="hctx">Type a fund name or a stock symbol.</p>'; return; }
+        var f=(T.funds||[]).filter(function(x){return (x.name||"").toUpperCase().indexOf(q)>=0;})[0];
+        var s=(T.stocks||[]).filter(function(x){return (x.symbol||"").toUpperCase()===q;})[0];
+        var rec=f||s; if(!rec){ out.innerHTML='<p class="hctx">Not found.</p>'; return; }
+        var label=f?f.name:esc(s.symbol);
+        var h='<p class="hctx"><b>'+label+'</b>'+(f&&f.house?' · '+esc(f.house):'')+
+              ' · worst fall <b class="bad">'+(rec.max_dd||0)+'%</b></p>';
+        h+='<table><thead><tr><th>held for</th><th>Rs 1,00,000 became</th><th>gain</th></tr></thead><tbody>';
+        [["1y","1 year"],["3y","3 years"],["5y","5 years"],["10y","10 years"]].forEach(function(p){
+          var d=rec[p[0]]; if(!d) return;
+          h+='<tr><td>'+p[1]+'</td><td><b>'+money(d.value)+'</b></td><td class="'+
+             (d.gain_pct>=0?"good":"bad")+'">'+(d.gain_pct>=0?"+":"")+d.gain_pct+'%</td></tr>';
+        });
+        h+='</tbody></table>';
+        if(rec.max_dd) h+='<p class="hctx">Along the way it fell <b>'+rec.max_dd+
+           '%</b> from its peak. Most people sell during a fall like that, which is why the fall '+
+           'matters more than the average.</p>';
+        out.innerHTML=h;
+      }
+      inp.addEventListener("input",function(){ show(inp.value); });
+      kids.push(inp); kids.push(dl); kids.push(out); show("RELIANCE");
+
+      v.appendChild(card("The one lakh time machine",
+        num(T.count_funds)+" funds \u00b7 "+num(T.count_stocks)+" stocks", kids,
+        {what:"What Rs 1 lakh became over 1, 3, 5 and 10 years, with the worst fall along the way. Both numbers, always together.",
+         source:"AMFI NAV history for funds; monthly closes since 2019 for stocks.", updated:T.updated,
+         note:"Stock figures use monthly closes, so an intra-month fall is not seen - the real drawdown is equal or worse, never better. Past returns are not a forecast, and only funds that still exist are listed."}));
+     }catch(e){}
+    })();
+
+
+    // ---- CLAIM CHECKER ------------------------------------------------------------------
+    // A video says "Nifty 28,000". A message says "this will double". Neither number means
+    // anything without two things: how far away it is, and by when. This turns any claim into
+    // those two numbers and answers it from 10 years of sessions - upside AND downside.
+    (function(){
+     try{
+      if(!CLAIMS||!CLAIMS.available) return;
+      var kids=[], C=CLAIMS;
+      var HS=[["5","5 sessions"],["21","1 month"],["63","3 months"],["126","6 months"],["252","1 year"]];
+      var MV=["5","10","12","20","30"];
+      kids.push(para("Nifty closed at <b>"+num(C.last)+"</b> on "+esc(C.as_of)+". Say how far a "+
+        "target is, and this shows how often the market actually moved that far - up <b>and</b> "+
+        "down - in "+num(C.sessions)+" sessions of history.", true));
+
+      var inp=el("input"); inp.className="datepick"; inp.type="number";
+      inp.placeholder="target, e.g. 28000"; inp.min="1";
+      var out=el("div","histout");
+      function draw(){
+        var tgt=parseFloat(inp.value);
+        if(!tgt||tgt<=0){ out.innerHTML='<p class="hctx">Enter a Nifty target, for example 28000.</p>'; return; }
+        var move=(tgt/C.last-1)*100;
+        var h='<p class="hctx"><b>'+num(tgt)+'</b> is '+(move>=0?'<b class="good">+':'<b class="bad">')+
+              move.toFixed(1)+'%</b> from '+num(C.last)+'.</p>';
+        h+='<table><thead><tr><th>within</th><th>closed that far up</th><th>touched it</th>'+
+           '<th>closed that far DOWN</th><th>touched a fall</th></tr></thead><tbody>';
+        var m=Math.abs(move).toFixed(0);
+        // find the nearest published move size
+        var best=MV.reduce(function(a,b){return Math.abs(+b-Math.abs(move))<Math.abs(+a-Math.abs(move))?b:a;},MV[0]);
+        HS.forEach(function(p){
+          var k=p[0];
+          var up=(C.up[k]||{})[best], tu=(C.touch_up[k]||{})[best];
+          var dn=(C.down[k]||{})[best], td=(C.touch_down[k]||{})[best];
+          if(up==null) return;
+          h+='<tr><td>'+p[1]+'</td><td><b>'+up+'%</b></td><td>'+tu+'%</td>'+
+             '<td>'+dn+'%</td><td>'+td+'%</td></tr>';
+        });
+        h+='</tbody></table><p class="hctx">Figures are for a move of '+best+
+           '% - the nearest size published. &ldquo;Touched&rdquo; means it reached that level '+
+           'at some point inside the window, not only at the end.</p>';
+        out.innerHTML=h;
+      }
+      inp.addEventListener("input",draw);
+      kids.push(inp); kids.push(out); draw();
+
+      if(C.drawdown_finding===undefined && C.touch_down && C.touch_down["252"]){
+        kids.push(para("<b>Read the touched columns, not just the closing ones.</b> Over a year "+
+          "Nifty fell 5% at some point <b>"+C.touch_down["252"]["5"]+"%</b> of the time, but "+
+          "only closed the year 5% down <b>"+C.down["252"]["5"]+"%</b> of the time. The dip is "+
+          "far more common than the loss.", true));
+      }
+      v.appendChild(card("Claim checker", "any target, measured", kids,
+        {what:"Turn a target price into the two numbers that matter - how far, and by when - then answer it from every past session.",
+         source:"Nifty closes, "+num(C.sessions)+" sessions from "+esc(C.first||"")+" to "+esc(C.as_of||"")+".", updated:C.updated,
+         note:"This is how often a move happened before, not a probability for this occasion. Every upside figure has a matching downside figure - a claim quoting only the upside has quoted half the data."}));
+     }catch(e){}
+    })();
+
+
     // ---- DATA HEALTH: is the site actually being fed? -----------------------------------
     // The pipeline died on 5 November and nobody knew for five days: every run failed at one
     // guard, 41 steps were skipped including Commit, and the page kept serving Tuesday's
@@ -7065,6 +7230,8 @@ function assign(name, v){
     case "leadlag.json": LEADLAG=v; break;
     case "scorecard.json": SCORE=v; break;
     case "history.json": HIST=v; break;
+    case "timemachine.json": TM=v; break;
+    case "claims.json": CLAIMS=v; break;
     case "volume_profile.json": VP=v; break;
     case "audit.json": AUDIT=v; break;
     case "pcr_signal.json": PCRS=v; break;
@@ -7120,8 +7287,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null, CLAIMS=null, TM=null, SCR=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -7356,6 +7523,9 @@ var OV_ORDER = [
   "Top open interest",
   "Cheap options: the real odds",
   "Volume at price",                // a lookup tool - belongs well below the daily picture
+  "Claim checker",
+  "The one lakh time machine",
+  "Compare two stocks",
   "Gann and Fibonacci levels",
   "Data health",
   "Data as of"                      // housekeeping goes last

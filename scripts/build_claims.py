@@ -16,6 +16,7 @@ WHAT IT DOES NOT DO
   It does not adjust for the fact that the past ten years contained one extraordinary rally.
 """
 import json, statistics, sys
+from datetime import datetime, timezone
 
 SRC = "docs/history.json"
 OUT = "docs/claims.json"
@@ -45,6 +46,7 @@ def main():
 
     last = closes[-1]
     out = {
+        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "available": True,
         "index": "Nifty 50",
         "last": round(last, 2),

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-10T14:13:58Z",
+  "generated_utc": "2026-11-10T20:34:35Z",
   "fno": {
     "date": "2026-11-09",
     "pcr": {
@@ -740,8 +740,8 @@
     "rows": [
       [
         "GC=F",
-        4057.7,
-        -1.38,
+        4037.3,
+        -1.88,
         "2026-11-10"
       ]
     ],
@@ -757,60 +757,66 @@
     "rows": [
       [
         "AVAX-USD",
-        8.305,
-        -3.8,
-        "2026-11-10"
-      ],
-      [
-        "ETH-USD",
-        2063.45,
-        -3.19,
-        "2026-11-10"
-      ],
-      [
-        "XRP-USD",
-        1.0631,
-        -3.08,
+        8.239,
+        -4.57,
         "2026-11-10"
       ],
       [
         "SOL-USD",
-        84.04,
-        -2.9,
+        82.77,
+        -4.37,
         "2026-11-10"
       ],
       [
-        "LINK-USD",
-        10.412,
-        -2.1,
+        "ETH-USD",
+        2041.24,
+        -4.23,
         "2026-11-10"
       ],
       [
         "DOGE-USD",
-        0.0688,
-        -1.62,
+        0.0673,
+        -3.7,
+        "2026-11-10"
+      ],
+      [
+        "LINK-USD",
+        10.284,
+        -3.3,
+        "2026-11-10"
+      ],
+      [
+        "XRP-USD",
+        1.0653,
+        -2.88,
+        "2026-11-10"
+      ],
+      [
+        "BTC-USD",
+        73333.7578,
+        -2.51,
         "2026-11-10"
       ],
       [
         "BNB-USD",
-        683.12,
-        -1.01,
+        674.1,
+        -2.31,
         "2026-11-10"
       ],
       [
         "ADA-USD",
-        0.1759,
-        -0.61,
+        0.1737,
+        -1.88,
         "2026-11-10"
       ],
       [
         "TRX-USD",
-        0.3185,
-        0.36,
+        0.3176,
+        0.06,
         "2026-11-10"
       ]
     ],
-    "total": 9
+    "total": 10
   },
   "news": {
     "columns": [
@@ -823,216 +829,216 @@
     "rows": [
       [
         "ET Markets",
+        "US stocks: Five things to know about Anthropic",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-five-things-to-know-about-anthropic/articleshow/135718802.cms",
+        "Wed, 11 Nov 2026 00:23:44 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "Chipmakers warn AI demand is creating bottlenecks in automotive supply chain",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/chipmakers-warn-ai-demand-is-creating-bottlenecks-in-automotive-supply-chain/articleshow/135718403.cms",
+        "Tue, 10 Nov 2026 23:55:20 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "US Fed's Logan calls for two more rate hikes, possibly rapidly",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-feds-logan-calls-for-two-more-rate-hikes-possibly-rapidly/articleshow/135718142.cms",
+        "Tue, 10 Nov 2026 23:35:16 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "Traders raise odds of 50 bps Fed rate hike as CPI rise exceeds expectations",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/traders-raise-odds-of-50-bps-fed-rate-hike-as-cpi-rise-exceeds-expectations/articleshow/135714586.cms",
+        "Tue, 10 Nov 2026 20:45:45 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks: Dow Jones falls 200 points as hot inflation revives rate-hike fears; Nvidia sinks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-us-market-opens-lower-after-octobers-hot-inflation-print/articleshow/135714411.cms",
+        "Tue, 10 Nov 2026 20:40:03 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic's potential mega IPO joins ranks of world's biggest stock market listings",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropics-potential-mega-ipo-joins-ranks-of-worlds-biggest-stock-market-listings/articleshow/135714028.cms",
+        "Tue, 10 Nov 2026 20:25:20 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "TSMC to invest up to $1 billion in Anthropic, OpenAI",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/tsmc-to-invest-up-to-1-billion-in-anthropic-openai/articleshow/135713301.cms",
+        "Tue, 10 Nov 2026 19:52:30 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "US consumer prices rise above expectations in October",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-consumer-prices-rise-above-expectations-in-october/articleshow/135712897.cms",
+        "Tue, 10 Nov 2026 19:31:53 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
+        "Nasdaq drops over 1% amid tech-led rout; Nvidia drops 6%: Stock Market Live Updates",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-anthropic-ipo-nvidia-intel-marvell-tech-ai-chip-stocks-inflation-fed-rate-hike-treasury-bond-yield-news-10th-november-2026/liveblog/135712173.cms",
+        "Tue, 10 Nov 2026 18:33:22 +0530",
+        "2026-11-10T20:00:03Z"
+      ],
+      [
+        "ET Markets",
         "Nasdaq futures slip with Nvidia woes, Anthropic IPO in focus",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/nasdaq-futures-slip-with-nvidia-woes-anthropic-ipo-in-focus/articleshow/135711347.cms",
         "Tue, 10 Nov 2026 18:19:57 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Anthropic's IPO: A close look at AI frontrunner's rapid growth, spiraling costs",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropics-ipo-a-close-look-at-ai-frontrunners-rapid-growth-spiraling-costs/articleshow/135711237.cms",
         "Tue, 10 Nov 2026 18:15:55 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "US Treasury yields rise as Fed's Waller presses rate hike case",
         "https://economictimes.indiatimes.com/markets/bonds/us-treasury-yields-rise-as-feds-waller-presses-rate-hike-case/articleshow/135708551.cms",
         "Tue, 10 Nov 2026 16:25:56 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Bajaj Finance issues 5.74 crore warrants to promoter for Rs 5,799 crore",
         "https://economictimes.indiatimes.com/markets/stocks/news/bajaj-finance-issues-5-74-crore-warrants-to-promoter-for-rs-5799-crore/articleshow/135708439.cms",
         "Tue, 10 Nov 2026 16:22:44 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "FPIs turn net buyers; pour Rs 53,739 crore in D-Street in Nov so far",
         "https://economictimes.indiatimes.com/markets/stocks/news/fpis-turn-net-buyers-pour-rs-53739-crore-in-d-street-in-nov-so-far/articleshow/135708381.cms",
         "Tue, 10 Nov 2026 16:19:34 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Eurozone bond yields fall as lower energy prices ease inflation concerns",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/eurozone-bond-yields-fall-as-lower-energy-prices-ease-inflation-concerns/articleshow/135707370.cms",
         "Tue, 10 Nov 2026 15:46:43 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Why Rocket Lab shares fell despite record revenue and booming Neutron demand",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/why-rocket-lab-shares-fell-despite-record-revenue-and-booming-neutron-demand/slideshow/135702575.cms",
         "Tue, 10 Nov 2026 11:47:40 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Why The Trade Desk stock surged 15% despite revenue decline",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/why-the-trade-desk-stock-surged-15-despite-revenue-decline/slideshow/135701057.cms",
         "Tue, 10 Nov 2026 11:01:01 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Anthropic plans IPO live stream with Amodei, JPMorgan CEO Dimon",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-plans-ipo-live-stream-with-amodei-jpmorgan-ceo-dimon/articleshow/135699137.cms",
         "Tue, 10 Nov 2026 09:54:56 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Anthropic retracts details of $69 billion IPO filing sent to bankers. Why analysts are raising worries over valuations",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-sends-out-then-retracts-details-of-ipo-filing-emails-show/articleshow/135696816.cms",
         "Tue, 10 Nov 2026 07:48:28 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "RBI said to query bank valuations of some bond derivative trades",
         "https://economictimes.indiatimes.com/markets/bonds/rbi-said-to-query-bank-valuations-of-some-bond-derivative-trades/articleshow/135696624.cms",
         "Tue, 10 Nov 2026 07:32:12 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Oil falls as Trump downplays prospect of escalation with Iran",
         "https://economictimes.indiatimes.com/markets/commodities/news/oil-falls-as-trump-downplays-prospect-of-escalation-with-iran/articleshow/135696497.cms",
         "Tue, 10 Nov 2026 07:15:29 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Gold dips ahead of US inflation data",
         "https://economictimes.indiatimes.com/markets/commodities/news/gold-dips-ahead-of-us-inflation-data/articleshow/135696094.cms",
         "Tue, 10 Nov 2026 06:26:50 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Dollar sellers hit pause for US inflation data",
         "https://economictimes.indiatimes.com/markets/forex/forex-news/dollar-sellers-hit-pause-for-us-inflation-data/articleshow/135696077.cms",
         "Tue, 10 Nov 2026 06:21:32 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Global Market Today: Asian stocks rally after US tech surge, oil slump",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-asian-stocks-rally-after-us-tech-surge-oil-slump/articleshow/135696042.cms",
         "Tue, 10 Nov 2026 06:15:50 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Trump administration's embrace of \"perp\" futures sets off risk alarms for Wall Street stalwarts",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/trump-administrations-embrace-of-perp-futures-sets-off-risk-alarms-for-wall-street-stalwarts/articleshow/135688561.cms",
         "Mon, 09 Nov 2026 22:28:59 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "US dollar dips as easing AI and Mideast worries limit its appeal",
         "https://economictimes.indiatimes.com/markets/forex/forex-news/us-dollar-dips-as-easing-ai-and-mideast-worries-limit-its-appeal/articleshow/135687593.cms",
         "Mon, 09 Nov 2026 21:46:36 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "US stocks: Dow Jones rallies 500 points, Nasdaq over 2% as chip stocks rebound; Nvidia probe weighs",
         "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-us-market-opens-higher-after-last-weeks-ai-rout/articleshow/135685663.cms",
         "Mon, 09 Nov 2026 20:35:56 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Nvidia sell-off continues: Chipmaker stock plunges 9% as Jensen Huang faces espionage controversy",
         "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/nvidia-stock-crashes-8-after-a-foreign-intelligence-probe-initiated-by-ai-company-into-ceo-jensen-huang/articleshow/135685302.cms",
         "Mon, 09 Nov 2026 20:14:09 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "Dow Jones| Nasdaq | US Stock Market Today | Highlights: Dow rockets 1,200 pts after last week's tech-led rout; oil prices swing",
         "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/dow-jones-us-stock-market-live-updates-nasdaq-sp-500-iran-war-hormuz-deal-brent-crude-oil-inflation-fed-rate-nvidia-jensen-huang-marvell-tech-qualcomm-meta-micrsoft-ai-chip-stock-price-news-9th-november-2026/liveblog/135683531.cms",
         "Mon, 09 Nov 2026 18:41:00 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ],
       [
         "ET Markets",
         "India bonds continue rally ahead of inflation data",
         "https://economictimes.indiatimes.com/markets/bonds/india-bonds-continue-rally-ahead-of-inflation-data/articleshow/135681750.cms",
         "Mon, 09 Nov 2026 17:41:27 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "Uno Minda among 7 stocks hitting 52-week highs; rally up to 26% in a month",
-        "https://economictimes.indiatimes.com/markets/stocks/news/uno-minda-among-7-stocks-hitting-52-week-highs-rally-up-to-26-in-a-month/slideshow/135681703.cms",
-        "Mon, 09 Nov 2026 17:19:40 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "US market remains tied to tech stocks despite sharp AI sell-off",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-markets-still-reliant-on-tech-stocks-despite-ai-selloff-and-democrat-win-triggered-political-risks/articleshow/135679992.cms",
-        "Mon, 09 Nov 2026 16:46:25 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "FIIs cut stake in 10 smallcap stocks for 3 consecutive quarters; shares fall up to 70% in CY26",
-        "https://economictimes.indiatimes.com/markets/stocks/news/fiis-cut-stake-in-10-smallcap-stocks-for-3-consecutive-quarters-shares-fall-up-to-70-in-cy26/slideshow/135680171.cms",
-        "Mon, 09 Nov 2026 16:40:47 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "Indian rupee breaks six-day winning streak on state banks' dollar bids",
-        "https://economictimes.indiatimes.com/markets/forex/indian-rupee-breaks-six-day-winning-streak-on-state-banks-dollar-bids/articleshow/135678769.cms",
-        "Mon, 09 Nov 2026 15:54:26 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "RBI's $239 bn forward dollar position to limit rupee gains despite FPI inflows: Report",
-        "https://economictimes.indiatimes.com/markets/forex/rbis-usd-239-bn-forward-dollar-position-to-limit-rupee-gains-despite-fpi-inflows-report/articleshow/135678171.cms",
-        "Mon, 09 Nov 2026 15:34:34 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "MakeMyTrip's India arm gets Sebi nod to float IPO",
-        "https://economictimes.indiatimes.com/markets/ipos/fpos/makemytrips-india-arm-gets-sebi-nod-to-float-ipo/articleshow/135675673.cms",
-        "Mon, 09 Nov 2026 13:42:31 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "Indian bonds drift with oil; inflation data in focus",
-        "https://economictimes.indiatimes.com/markets/bonds/indian-bonds-drift-with-oil-inflation-data-in-focus/articleshow/135674915.cms",
-        "Mon, 09 Nov 2026 13:03:21 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "Explained: Why Nvidia shares dropped 4% in overnight trade and what analysts warn can trigger a bloodbath?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/explained-why-nvidia-shares-dropped-4-in-overnight-trade-and-what-analysts-warn-can-trigger-a-bloodbath/articleshow/135674705.cms",
-        "Mon, 09 Nov 2026 13:00:59 +0530",
-        "2026-11-10T13:37:14Z"
-      ],
-      [
-        "ET Markets",
-        "Nvidia stock in focus: 3 key risks after Jensen Huang probe",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/nvidia-stock-in-focus-3-key-risks-after-jensen-huang-probe/slideshow/135674350.cms",
-        "Mon, 09 Nov 2026 12:13:18 +0530",
-        "2026-11-10T13:37:14Z"
+        "2026-11-10T20:00:03Z"
       ]
     ],
-    "total": 165
+    "total": 157
   },
   "archive": {
     "files": 37,
@@ -1153,13 +1159,13 @@
   },
   "brain": {
     "channels": 10,
-    "videos": 411,
+    "videos": 413,
     "window": [
       "2026-05-15",
       "2026-11-10"
     ],
-    "total_views": 12603236,
-    "net_sentiment": 206,
+    "total_views": 12626978,
+    "net_sentiment": 212,
     "top_symbols": [
       {
         "symbol": "NIFTY50",
@@ -1219,11 +1225,11 @@
       },
       {
         "theme": "Beginner/Education",
-        "videos": 101
+        "videos": 102
       },
       {
         "theme": "Earnings/Results",
-        "videos": 84
+        "videos": 86
       },
       {
         "theme": "Options/F&O",
@@ -1266,7 +1272,7 @@
         "31",
         "2026-11-10",
         "2026-09-29",
-        "89868",
+        "89812",
         "50433",
         "Stock Market CRASH nifty sensex me kya kare?",
         "474041"
@@ -1296,30 +1302,20 @@
         "31",
         "2026-11-10",
         "2026-09-29",
-        "27789",
+        "27783",
         "20789",
         "FAKE vs REAL BREAKOUT \u0915\u0948\u0938\u0947 \u092a\u0939\u091a\u093e\u0928\u0947\u0902? | 90% Traders \u092f\u0939\u0940\u0902 \u092b\u0902\u0938\u0924\u0947 \u0939\u0948\u0902!",
         "65943"
       ],
       [
         "Groww Edge",
-        "54",
+        "55",
         "2026-11-10",
         "2026-10-09",
-        "24175",
-        "5596",
+        "24080",
+        "5884",
         "Is the Oil in Your Samosa the Same Oil Planes Want?",
         "255474"
-      ],
-      [
-        "Groww",
-        "47",
-        "2026-11-09",
-        "2026-10-06",
-        "16663",
-        "7785",
-        "How to Buy US Stocks from India? Complete Guide",
-        "165710"
       ],
       [
         "Markets by Zerodha",
@@ -1330,6 +1326,16 @@
         "10490",
         "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
         "85869"
+      ],
+      [
+        "Groww",
+        "48",
+        "2026-11-10",
+        "2026-10-06",
+        "16457",
+        "7574",
+        "How to Buy US Stocks from India? Complete Guide",
+        "165710"
       ],
       [
         "Markets by Zerodha Hindi",
@@ -1378,9 +1384,9 @@
         "2026-11-10T07:21:37+00:00",
         "https://www.youtube.com/watch?v=4Yr1J5tV9kI",
         "https://i1.ytimg.com/vi/4Yr1J5tV9kI/hqdefault.jpg",
-        "67527",
+        "65794",
         "9 November 2026 ko ek hi din mein Citi aur HSBC ne India ko simultaneously upgrade kar diya \u2014 aur yeh koi coincidence nahi, ek bada signal hai! Is video mein hum decode kar rahe hain us 'Double Barrel Upgrade' ko jo Indian equity markets ki poori narrative badal sakta hai. Jaaniye Nifty 28,000 ke target ke peeche ka sach, $12 billion ke massive FII inflows, crude oil ka wildcard factor, aur global AI rotation se India ko milne wale fayde ke baare mein.\n\nKya yeh ek historic bull run ki shuruat ha",
-        "2026-11-10T11:58:56Z"
+        "2026-11-10T11:51:30Z"
       ],
       [
         "GR1s-4m_DKY",
@@ -1565,7 +1571,7 @@
         "2026-10-19T05:50:31Z"
       ]
     ],
-    "total": 411
+    "total": 413
   },
   "indicators": {
     "columns": [
@@ -3685,15 +3691,15 @@
     "niftysmallcap50": 50
   },
   "daily": {
-    "as_of": "2026-11-10T14:13:58Z",
+    "as_of": "2026-11-10T20:34:35Z",
     "items": [
       "Bhavcopy archive through 2026-11-09 (37 files, 20 days)",
       "Nifty PCR 1.15 \u00b7 max pain 25000.0",
       "25 OI spikes in stock futures",
       "25 volume spikes vs their own average",
       "Corporate actions: 17 dividends",
-      "411 videos across 10 channels",
-      "165 news headlines"
+      "413 videos across 10 channels",
+      "157 news headlines"
     ]
   },
   "fx": {

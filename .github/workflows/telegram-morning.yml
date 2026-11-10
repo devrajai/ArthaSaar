@@ -10,6 +10,11 @@ concurrency:
   group: telegram
   cancel-in-progress: false
 
+# Least privilege. This workflow uses secrets, so it must not inherit the
+# repository default token scope. contents:write is all it needs - it commits its output.
+permissions:
+  contents: write
+
 jobs:
   send:
     runs-on: ubuntu-latest

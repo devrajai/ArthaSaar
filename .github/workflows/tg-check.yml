@@ -1,6 +1,11 @@
 name: "Telegram channel diagnostic"
 on:
   workflow_dispatch: {}
+# Least privilege. This workflow uses secrets, so it must not inherit the
+# repository default token scope. contents:read is all it needs.
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest

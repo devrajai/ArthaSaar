@@ -10,7 +10,7 @@ checking the arithmetic and the output shape the site depends on.
 It verifies:
   * series are picked up and the last CONTEXT points are fed to the model
   * median / low / high change percentages are computed from the right quantiles
-  * confidence falls as the band widens
+  * band_pct IS the band width, so a wider band must show a bigger band_pct
   * the JSON has the exact keys the website reads
   * a flat forecast does not produce a fake "up" direction
 
@@ -122,16 +122,20 @@ def main() -> int:
             check("median ~ +10%", abs(nif["median_chg_pct"] - 10.0) < 0.01, str(nif["median_chg_pct"]))
             check("low ~ +5%", abs(nif["low10_chg_pct"] - 5.0) < 0.01, str(nif["low10_chg_pct"]))
             check("high ~ +15%", abs(nif["high90_chg_pct"] - 15.0) < 0.01, str(nif["high90_chg_pct"]))
-            check("confidence 60 (band 10%)", nif["confidence"] == 60, str(nif["confidence"]))
+            # The forecast field was renamed confidence -> band_pct when the model was fixed
+            # to forecast log returns instead of raw prices. This test kept asserting the old
+            # key and crashed with KeyError on every run - hidden by `|| true` in the pipeline.
+            check("band_pct present", "band_pct" in nif, str(list(nif)))
+            check("band_pct ~ 10%", abs(nif.get("band_pct", 0) - 10.0) < 0.01, str(nif.get("band_pct")))
             check("direction up", nif["direction"] == "up", nif["direction"])
 
         # ---- case 2: wider band must mean LOWER confidence ----
         out2 = str(Path(td) / "b.json")
         _, d2 = run_case(0.10, 0.15, 63, series, out2)
         n2 = d2.get("nifty", {})
-        check("wider band -> lower confidence",
-              n2.get("confidence", 999) < nif["confidence"],
-              f"{n2.get('confidence')} vs {nif['confidence']}")
+        check("wider band -> wider band_pct",
+              n2.get("band_pct", 0) > nif.get("band_pct", 0),
+              f"{n2.get('band_pct')} vs {nif.get('band_pct')}")
 
         # ---- case 3: flat forecast must not claim a direction ----
         out3 = str(Path(td) / "c.json")
@@ -142,7 +146,7 @@ def main() -> int:
 
         # ---- case 4: exact keys the website reads ----
         keys = {"symbol", "name", "last", "median_chg_pct", "low10_chg_pct", "high90_chg_pct",
-                "confidence", "direction"}
+                "band_pct"}
         got = set(d["forecasts"][0].keys())
         check("site keys present", keys.issubset(got), str(keys - got))
 

@@ -113,19 +113,41 @@ def prepare(con, arch):
 
 
 def find_archive():
-    # ORDER MATTERS, and it was wrong. cm_daily.parquet is written by
-    # candles_from_bhavcopy --from-local and holds only the handful of sessions whose bhavcopy
-    # is in the repo. It was checked FIRST, so this script read four days of prices, found
-    # nothing to compute, and wrote report_cards.json with zero cards - while the full
-    # 3.5-million-row archive sat next to it in daily_adj.parquet, unused.
-    #
-    # Prefer the longest, split-adjusted archive; fall back only if it is absent.
-    for p in ("data/candles/daily_adj.parquet",
-              "data/candles/daily.parquet",
-              "data/candles/cm_daily.parquet"):
-        if os.path.exists(p):
-            return p
-    return None
+    """Pick the archive that reaches the NEWEST date, not the one with the nicest name.
+
+    An earlier version ordered candidates by filename and preferred daily_adj.parquet. That
+    was wrong in a way that hid itself: daily_adj came from the public release asset and ended
+    weeks earlier, while cm_daily was rebuilt every run from bhavcopy and was current. Preferring
+    the name meant the technical layer silently froze on an old date.
+
+    Recency decides now. "adjusted" is only a tie-break, because an adjusted series is better
+    than a raw one when both reach the same day - not when one is stale.
+    """
+    import duckdb
+    cands = ["data/candles/daily_adj.parquet",
+             "data/candles/cm_daily_adj.parquet",
+             "data/candles/daily.parquet",
+             "data/candles/cm_daily.parquet"]
+    best = None
+    con = duckdb.connect()
+    con.execute("SET threads=1")
+    for c in cands:
+        if not os.path.exists(c):
+            continue
+        try:
+            r = con.execute("SELECT MAX(date), COUNT(*) FROM read_parquet(?)", [c]).fetchone()
+            newest = str(r[0])[:10] if r and r[0] else ""
+            rows = r[1] if r else 0
+        except Exception:
+            continue
+        adjusted = "adj" in os.path.basename(c)
+        print("  candidate %-34s newest %s  rows %s%s"
+              % (c, newest or "?", f"{rows:,}", "  (adjusted)" if adjusted else ""))
+        key = (newest, 1 if adjusted else 0, rows)
+        if best is None or key > best[0]:
+            best = (key, c)
+    con.close()
+    return best[1] if best else None
 
 
 def q1(con, sql, params=None):

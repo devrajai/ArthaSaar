@@ -689,6 +689,11 @@ jobs:
       # MUST RUN LAST. It reported shareholding.json as empty while the file was
       # still being written eight minutes later - the check was reading a half-built
       # docs/ directory and calling the gap a failure.
+      # FAILS THE RUN. Reads the page next to the data it will receive and refuses to
+      # publish a contract that throws. This is the check that would have caught the
+      # LEVELS.rows crash and the unbound-variable bug before either reached the site.
+      - name: "7y. Page gate - the page must match the data"
+        run: python scripts/check_page.py
       - name: "7z. Data health (every file, its age and row count)"
         run: python scripts/build_health.py || true
       - name: Commit

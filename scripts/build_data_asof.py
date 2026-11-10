@@ -143,13 +143,28 @@ def main():
 
     sess, src = archive_session()
     dates = sorted({v["date"] for v in per.values()})
+    # THE SESSION COMES FROM THE DATA, NOT FROM THE ARCHIVE.
+    #
+    # This used to treat the candle archive as authoritative, so when the archive lagged -
+    # it ended 2026-10-23 while history.json held 2026-11-09 - every current file was labelled
+    # "ahead" of the session, `behind` came out empty, and the page printed "Every dated file
+    # describes the same session: 2026-10-23". That is the exact inverse of the truth: the
+    # archive was the stale thing, and the files were right.
+    #
+    # The newest date any published file describes IS the session. The archive is reported
+    # separately so a lagging archive is visible instead of silently redefining "today".
     out = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "files": per, "unknown": unknown, "missing": missing,
            "dates": dates,
-           # the archive is authoritative: it is the data every builder in this run read
-           "session": sess or (dates[-1] if dates else None),
-           "session_source": src or "newest dated file",
-           "spread_days": None, "consistent": None, "behind": [], "ahead": [], "note": ""}
+           "session": (dates[-1] if dates else sess),
+           "session_source": "newest dated published file",
+           "archive_session": sess, "archive_source": src,
+           "spread_days": None, "consistent": None, "behind": [], "ahead": [],
+           # "kept" is populated by the empty-file guard when it preserves a
+           # previously good file. It was read here but never set, so this script
+           # crashed at the very end of every run - after writing its output, which
+           # is why the file looked fine and nobody noticed.
+           "kept": [], "note": ""}
 
     if dates:
         try:
@@ -158,17 +173,30 @@ def main():
             out["spread_days"] = (d1 - d0).days
         except Exception:
             pass
-        latest = out["session"] or dates[-1]
-        # "behind" means OLDER than the session being shown. A file dated later than the
-        # archive is not stale, it is simply ahead of it - flagging that as a problem would
-        # be wrong and would fire on every run where the archive lags the exchange.
+        latest = out["session"]
+        # Anything older than the newest session is genuinely behind. Nothing can be "ahead"
+        # now that the session is defined as the newest date, so that list is always empty -
+        # kept in the output so an older reader of this file does not break.
         out["behind"] = [{"file": k, "date": v["date"], "label": v["label"]}
                          for k, v in per.items() if v["date"] < latest]
-        out["ahead"] = [{"file": k, "date": v["date"], "label": v["label"]}
-                        for k, v in per.items() if v["date"] > latest]
+        out["ahead"] = []
         out["consistent"] = not out["behind"]
+        out["archive_lags"] = bool(sess and sess < latest)
+        out["archive_lag_days"] = None
+        if out["archive_lags"]:
+            try:
+                out["archive_lag_days"] = (datetime.fromisoformat(latest).date()
+                                           - datetime.fromisoformat(sess).date()).days
+            except Exception:
+                pass
 
-    if out["consistent"]:
+    if out.get("archive_lags"):
+        out["note"] = ("The site describes the %s session. The candle archive ends %s - %s days "
+                       "behind - so anything built from it (levels, patterns, deep history) is "
+                       "that much older than the rest of the page."
+                       % (out["session"], out.get("archive_session"),
+                          out.get("archive_lag_days")))
+    elif out["consistent"]:
         out["note"] = ("Every dated file describes the same session: %s." % out["session"])
     elif dates:
         names = ", ".join("%s (%s)" % (b["label"], b["date"]) for b in out["behind"][:5])

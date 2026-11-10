@@ -52,6 +52,11 @@ ACCEPTED_EMPTY = {
     "shareholding.json": "NSE sends no promoter figures; the section says so.",
     "rs.json": "fills in once series.json is populated; checked separately via series floor.",
     "telegram_pcr.json": "channel web preview is off; the step is parked.",
+    # The IPO section was deliberately handed off to https://ipobodh.vercel.app/ - NSE's IPO
+    # endpoints returned nothing usable, so the tab navigates there instead of showing an
+    # empty table. This file is kept only for the search index. Requiring rows here failed
+    # every run after the hand-off: a requirement that outlived its reason.
+    "ipo.json": "IPO tab hands off to ipobodh.vercel.app; kept for search only.",
 }
 
 

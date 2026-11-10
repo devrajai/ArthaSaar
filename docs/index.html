@@ -904,6 +904,13 @@ header .searchwrap input::-webkit-search-cancel-button,
     padding:8px 13px !important;margin:4px 0 9px !important}
   header .searchwrap input,.top .searchwrap input{font-size:13.5px !important}
 }
+
+/* The plain-language line. Larger and looser than body text because it is meant to be the
+   first thing read, and quieter in colour so it does not compete with the card title. */
+p.plain{font-size:15px;line-height:1.5;color:#33506f;margin:2px 0 12px;
+  padding:9px 12px;border-radius:10px;background:rgba(29,78,216,.055);
+  border-left:3px solid rgba(29,78,216,.35)}
+@media (max-width:680px){p.plain{font-size:14px;padding:8px 10px;margin-bottom:10px}}
 </style>
 </head>
 <body>
@@ -1079,9 +1086,51 @@ function feedDate(s){
   return null;
 }
 
+// ====================================================================================
+// PLAIN ENGLISH, ONE LINE PER CARD.
+// The site is read by students and by people who have traded for thirty years. The tables
+// serve the second group; this line serves the first. It says, without jargon, what the card
+// is telling you - no "PCR", no "OI", no "basis points" unless explained in the same breath.
+//
+// Written for someone who has never bought a share. If a sentence needs a second read, it is
+// the wrong sentence.
+// ====================================================================================
+var PLAIN = {
+  "Today": "The four numbers that describe today's market, in one place.",
+  "What changed today": "What is different from yesterday - not what the market is, but what moved.",
+  "Today in one look": "A short summary of the day for someone who has two minutes.",
+  "Story of the day": "The one thing that mattered most today, explained in a paragraph.",
+  "Since your last visit": "What happened while you were away.",
+  "Coming up": "Events due in the next few days that often move prices.",
+  "What's coming at the open": "What to expect when the market opens tomorrow morning.",
+  "PCR trend": "How many people are betting on a fall versus a rise, and which way that is shifting.",
+  "21-day outlook": "A computer's guess at where the market may be in about a month - a range, not a promise.",
+  "Big Money Radar": "Large trades by big investors, which the law requires them to disclose.",
+  "Signal scorecard": "How often this site's own warnings have been right, counted honestly.",
+  "Self-audit": "Every prediction this site makes, scored against what actually happened.",
+  "Normal range": "How far the market usually moves in a day, so you can tell a normal day from a big one.",
+  "Band check": "Whether the market is behaving as expected, or has stepped outside its usual range.",
+  "Options: cost and structures": "What it actually costs to take an options position, in rupees.",
+  "Promoter holding": "How much of each company its own founders and owners hold.",
+  "Gann and Fibonacci levels": "Popular price levels, and how often prices actually respected them - mostly not.",
+  "Data health": "Whether the numbers on this site are fresh, or left over from an earlier day.",
+  "Volume at price": "At which prices most trading happened today.",
+  "Cheap options: the real odds": "What usually happens to very cheap options - most of them end worthless.",
+  "Most talked about": "What the finance videos and channels are discussing today.",
+  "Top open interest": "Where option traders have placed the most bets.",
+  "Daily market update": "A summary of the day, written in plain words."
+};
+
 function card(title, sub, kids, info){
   var c=el("div","card");
   var head=el("div","cardhead");
+  // one plain sentence before anything else, so a reader who knows nothing about markets
+  // still learns what this panel is for
+  var plain=PLAIN[title];
+  if(plain){
+    var pl=el("p","plain",esc(plain));
+    c.appendChild(pl);
+  }
   head.appendChild(el("h2","",esc(title)+(sub?'<span class="sub">'+esc(sub)+'</span>':"")));
   // "Last updated", and a red STALE label when the feed is more than two days old. The
   // watchdog already checks freshness; this shows the same fact on the card itself, so

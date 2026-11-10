@@ -113,7 +113,16 @@ def prepare(con, arch):
 
 
 def find_archive():
-    for p in ("data/candles/cm_daily.parquet", "data/candles/daily.parquet"):
+    # ORDER MATTERS, and it was wrong. cm_daily.parquet is written by
+    # candles_from_bhavcopy --from-local and holds only the handful of sessions whose bhavcopy
+    # is in the repo. It was checked FIRST, so this script read four days of prices, found
+    # nothing to compute, and wrote report_cards.json with zero cards - while the full
+    # 3.5-million-row archive sat next to it in daily_adj.parquet, unused.
+    #
+    # Prefer the longest, split-adjusted archive; fall back only if it is absent.
+    for p in ("data/candles/daily_adj.parquet",
+              "data/candles/daily.parquet",
+              "data/candles/cm_daily.parquet"):
         if os.path.exists(p):
             return p
     return None

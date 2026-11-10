@@ -272,12 +272,6 @@ jobs:
       - name: "7i15. Ten-session market recap"
         run: python scripts/build_recap.py || true
 
-      # Data health runs LAST, after every other file is written, so it describes the run
-      # that just finished. This is the page that would have caught the empty Seasonality
-      # card on its own: every file, its age and its row count.
-      - name: "7z. Data health (every file, its age and row count)"
-        run: python scripts/build_health.py || true
-
       # AMFI's NAV file, kept for its ISINs. Both NSE's ETF list and AMFI carry an ISIN,
       # which is an exact key - so the ETF premium stops guessing at names (that matched
       # 2 of 356). Must run BEFORE the premium build.
@@ -692,6 +686,11 @@ jobs:
       - name: "10z. Ensure docs/cards.js is still loaded"
         run: python scripts/ensure_cards_include.py || true
 
+      # MUST RUN LAST. It reported shareholding.json as empty while the file was
+      # still being written eight minutes later - the check was reading a half-built
+      # docs/ directory and calling the gap a failure.
+      - name: "7z. Data health (every file, its age and row count)"
+        run: python scripts/build_health.py || true
       - name: Commit
         run: |
           git config user.name "data-bot"

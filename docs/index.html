@@ -2231,6 +2231,10 @@ function build(d){
       (PCRS.bands||[]).forEach(function(bd){
         (bd.horizons||[]).forEach(function(hh){
           if(hh.insufficient){ return; }
+          // 21-day only. The paragraph above the table is about the 21-day baseline, so the
+          // 5d and 10d rows were doubling the table's height without answering anything the
+          // text asked. They are still in pcr_signal.json for anyone who wants them.
+          if(hh.h!==21){ return; }
           rows.push([esc(bd.band), hh.h+"d", num(hh.n),
                      sgn(hh.mean_pct)+"%", hh.up_pct+"%",
                      sgn(hh.vs_baseline_pp)+"pp", esc(hh.edge)]);
@@ -2313,7 +2317,7 @@ function build(d){
       }
       if(BRK.breakers&&BRK.breakers.length){
         kids.push(tbl({columns:["stock","forecast band","actual","beyond by"],
-          rows:BRK.breakers.slice(0,15).map(function(b){
+          rows:BRK.breakers.slice(0,5).map(function(b){
             return [esc(b.symbol), b.forecast_band[0]+"% to "+b.forecast_band[1]+"%",
                     (b.actual_chg_pct>0?"+":"")+b.actual_chg_pct+"%", b.beyond_by_pct+"pp"];
           })}));
@@ -2359,7 +2363,10 @@ function build(d){
         num(RADAR.total_deal_value_cr)+" crore</b> on the latest session. Disclosures, not "+
         "recommendations.", true));
       kids.push(tbl({columns:["stock","type","side","value","client","F&O footprint"],
-        rows:(RADAR.rows||[]).slice(0,15).map(function(r){
+        // five, not fifteen. The five biggest deals make the point; the other ten are a
+        // list rather than a signal, and they cost about 1,200 characters of scrolling on
+        // the one card a reader is most likely to skim.
+        rows:(RADAR.rows||[]).slice(0,5).map(function(r){
           return [esc(r.symbol), esc(r.kind), esc(r.side), "Rs "+num(r.value_cr)+" cr",
                   esc(r.client), r.also_unusual?"also unusual":"\u2014"];
         })}));

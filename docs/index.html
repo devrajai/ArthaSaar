@@ -3748,6 +3748,7 @@ var v=sec("overview");
       volspike:   function(r){ return r.vol_x!=null && r.vol_x>=2; },
       macdbull:   function(r){ return r.macd_hist!=null && r.macd_hist>0; },
       strongup:   function(r){ return r.trend==="up" && r.adx!=null && r.adx>25; },
+      tight:      function(r){ return r.contract!=null && r.contract<=0.6 && r.vol_x!=null && r.vol_x>=1.2; },
       strongdown: function(r){ return r.trend==="down" && r.adx!=null && r.adx>25; }
     };
     var state={ preset:"", q:"", onlyDeep:false, scanned:false };

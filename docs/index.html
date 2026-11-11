@@ -6291,14 +6291,20 @@ var v=sec("learn");
         var c=TGPCR.channels[ch];
         if(c.latest==null){ body.push(para("@"+ch+": no PCR found in the last "+c.messages_seen+" messages.", false)); return; }
         body.push(para("@"+ch+" - latest PCR "+c.latest, false));
+        if(c.max_pain!=null) body.push(para("@"+ch+" - max pain "+num(c.max_pain), false));
         if(c.latest_text) body.push(para(c.latest_text, false));
         if(c.readings&&c.readings.length>1){
           body.push(tbl({columns:["pcr","post"],
             rows:c.readings.slice(0,8).map(function(r){return [r.pcr, (r.text||"").slice(0,70)];})},["pcr"]));
         }
       });
+      // The mandatory disclaimer belongs on the card, not in a note nobody opens: this card
+      // republishes somebody else's market claim.
+      var disc=TGPCR.disclaimer||"ALL CHARTS & DATA SHARED HERE ARE ONLY WITH THE MOTIVE OF EDUCATIONAL PURPOSE. IT'S NOT A RECOMMENDATION OR CALL. CONSULT YOUR FINANCIAL ADVISOR BEFORE TAKING ANY POSITION";
+      // para() escapes once and allows <b>; pre-escaping here double-encoded the ampersand
+      body.push(para("<b>"+disc+"</b>", false));
       if(body.length){
-        v.appendChild(card("Telegram PCR", "third party, unverified", body,
+        v.appendChild(card("Telegram digest", "@"+tch.join(", @")+" · third party, unverified", body,
           {what:"PCR as posted by a public Telegram channel, read from Telegram's own web preview.",
            source:"Public channel preview. Not an exchange feed.", updated:TGPCR.updated,
            note:TGPCR.note}));

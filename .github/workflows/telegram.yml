@@ -19,8 +19,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch ArthaSaar market data
-        run: python3 scripts/fetch_arthasaar_data.py
 
       - run: python3 scripts/telegram_alert.py
         env:

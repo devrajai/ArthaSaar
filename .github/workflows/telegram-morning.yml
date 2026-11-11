@@ -27,13 +27,17 @@ jobs:
         with:
           ref: main
 
+      # fetch_arthasaar_data.py REMOVED. It pulled data/*.json from ArthaSaar into this
+      # repo - written when the Telegram scripts lived in a separate repository. This repo
+      # IS ArthaSaar, so it fetched from itself, from a data/ folder that holds none of
+      # those files, and printed eleven MISSING lines on every run. telegram_alert.py now
+      # reads docs/ directly.
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Fetch ArthaSaar market data
-        run: python3 scripts/fetch_arthasaar_data.py
 
       # morning_unified.py was REMOVED from here. It reads the OLD ArthaSaar layout -
       # data/mood.json, smart-brain.json, radar.json, gti.json, oi-gti.json,

@@ -28,6 +28,18 @@ PATTERNS = [
     r"put\s*call\s*ratio[^0-9]{0,18}(\d{1,2}\.\d{1,2})",
     r"p\s*/\s*c\s*ratio[^0-9]{0,18}(\d{1,2}\.\d{1,2})",
 ]
+# A channel that posts option data usually posts max pain too. Same rule applies: the
+# number is stored with the sentence it came from, never on its own.
+MAXPAIN = [
+    r"max\s*pain[^0-9]{0,20}(\d{4,6})",
+    r"maxpain[^0-9]{0,20}(\d{4,6})",
+]
+
+# SEBI's social-media requirement, carried with the data so the card cannot show a
+# third-party claim without it.
+DISCLAIMER = ("ALL CHARTS & DATA SHARED HERE ARE ONLY WITH THE MOTIVE OF EDUCATIONAL PURPOSE. "
+              "IT'S NOT A RECOMMENDATION OR CALL. CONSULT YOUR FINANCIAL ADVISOR BEFORE TAKING "
+              "ANY POSITION")
 
 
 def channels():
@@ -61,6 +73,19 @@ def messages(html):
         if txt:
             out.append(txt)
     return out
+
+
+def find_max_pain(text):
+    for pat in MAXPAIN:
+        m = re.search(pat, text, re.I)
+        if m:
+            try:
+                v = float(m.group(1))
+            except Exception:
+                continue
+            if 1000 <= v <= 100000:
+                return v
+    return None
 
 
 def find_pcr(text):
@@ -99,22 +124,34 @@ def main():
 
         msgs = messages(html)
         readings = []
+        pains = []
         for m in msgs:
             v = find_pcr(m)
             if v is not None:
                 readings.append({"pcr": v, "text": m[:280]})
+            mp = find_max_pain(m)
+            if mp is not None:
+                pains.append({"max_pain": mp, "text": m[:280]})
         # newest last in the page, so reverse for newest-first
         readings = readings[::-1]
+        pains = pains[::-1]
         print("  %-28s %d messages, %d with a PCR" % (ch, len(msgs), len(readings)))
         out["channels"][ch] = {
             "latest": readings[0]["pcr"] if readings else None,
             "latest_text": readings[0]["text"] if readings else None,
             "readings": readings[:20],
+            "max_pain": pains[0]["max_pain"] if pains else None,
+            "max_pain_text": pains[0]["text"] if pains else None,
             "messages_seen": len(msgs),
+            # The first run against a new channel tells you what it actually posts. Three
+            # raw posts, trimmed, so the extraction can be tuned to the channel instead of
+            # guessed at.
+            "sample": [m[:200] for m in msgs[-3:]],
         }
 
+    out["disclaimer"] = DISCLAIMER
     out["count"] = sum(1 for c in out["channels"].values() if c.get("latest") is not None)
-    out["note"] = ("PCR as posted by public Telegram channels, read from Telegram's own web "
+    out["note"] = ("PCR and max pain as posted by public Telegram channels, read from Telegram's own web "
                    "preview. This is somebody's post, not an exchange feed, and it is not "
                    "verified - it is kept separate from the PCR computed from NSE bhavcopy.")
     out["cautions"] = {

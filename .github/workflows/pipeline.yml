@@ -609,7 +609,10 @@ jobs:
           # pipeline. Staging all of docs/ meant the runner committed its own stale copy
           # over any concurrent edit - which silently reverted a merged pull request.
           # Unstage them so the commit only ever contains what this pipeline generated.
-          git reset -q -- docs/index.html docs/sw.js docs/config.json docs/charges.json docs/learn.json 2>/dev/null || true
+          # docs/cards.js added: it is hand-maintained like index.html, and without this the
+          # pipeline committed its own stale copy over every edit - which is why the
+          # "Report a problem" button kept reappearing after being deleted three times.
+          git reset -q -- docs/index.html docs/cards.js docs/sw.js docs/config.json docs/charges.json docs/learn.json 2>/dev/null || true
           git commit -m "pipeline: $(date -u +%FT%TZ)" || echo "no changes to commit"
 
           # A concurrent push (a manual commit, another workflow) makes this fail with

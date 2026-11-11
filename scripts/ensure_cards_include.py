@@ -27,9 +27,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "docs" / "index.html"
-TAG = '<script src="cards.js?v=20261111b"></script>'
+TAG = '<script src="cards-20261111c.js"></script>'
 # any cards.js script tag, with or without a version query
-ANY = re.compile(r'<script\s+src="cards\.js(?:\?[^"]*)?"\s*>\s*</script>')
+ANY = re.compile(r'<script\s+src="cards[^"]*\.js(?:\?[^"]*)?"\s*>\s*</script>')
 
 
 def main():

@@ -971,6 +971,9 @@ function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m];});}
 function num(v){if(v==null||v===""||!isFinite(Number(v)))return "—";return Number(v).toLocaleString("en-IN");}
 function sgn(v){var n=Number(v);if(!isFinite(n))return "—";return (n>=0?"+":"")+n.toFixed(2);}
+// A holding percentage, not a price change - no plus sign, and an em dash when the filing
+// had no value rather than a misleading 0.0%.
+function fmtPct(v){if(v==null||v===""||!isFinite(Number(v)))return "—";return Number(v).toFixed(2)+"%";}
 function big(v){var n=Number(v);if(!isFinite(n))return "—";var a=Math.abs(n);
   if(a>=1e7)return (n/1e7).toFixed(2)+" Cr";if(a>=1e5)return (n/1e5).toFixed(2)+" L";
   if(a>=1e3)return (n/1e3).toFixed(1)+"k";return num(n);}
@@ -1513,7 +1516,7 @@ var SECTIONS=[
   {id:"calendar",    label:"Calendar"},
   {id:"watchlists",  label:"Surveillance"},
   {id:"deals",       label:"Deals"},
-  {id:"insider",     label:"Insider"},
+  
   {id:"breadth",     label:"Breadth"},
   {id:"patterns",    label:"Patterns"},
   {id:"gaps",        label:"Gaps"},
@@ -6550,15 +6553,23 @@ var v=sec("learn");
         {what:"Promoter holding and pledge, quarter by quarter.", source:"NSE shareholding pattern", updated:when}));
       return;
     }
+    // THE FIELDS WERE WRONG. This read r.q, r.promoter and r.pledge, but shareholding.json
+    // carries as_of, promoter_pct, public_pct and free_float_proxy_pct. Every cell therefore
+    // rendered as an em dash - the section looked broken while the data sat there intact.
+    //
+    // PLEDGE IS NOT COLLECTED AT ALL. The card was titled "Pledge and holding" and promised a
+    // pledged-percentage column that no source here provides. Rather than print a column of
+    // dashes, it now shows the three things the filing actually gives, and says so.
     var body=SHAREHOLD.rows.map(function(r){
-      return [r.symbol, r.q, r.promoter, r.pledge];
+      return [r.symbol, r.as_of, fmtPct(r.promoter_pct), fmtPct(r.public_pct), fmtPct(r.free_float_proxy_pct)];
     });
-    v.appendChild(card("Promoter","Pledge and holding, quarter by quarter",
-      [para("How much of the company promoters hold, and how much of that is pledged as collateral. A rising pledge next to a falling price is the pattern worth noticing."),
-       table(["Symbol","Quarter","Promoter %","Pledged %"], body, ["promoter %","pledged %"], 0, null)],
-      {what:"Promoter holding and pledged percentage by quarter.",
+    v.appendChild(card("Promoter","Holding by company, latest quarter",
+      [para("How much of each company its promoters hold, and how much is in public hands. Promoter holding above roughly 50% usually means control is not contested; a steadily falling number is the pattern worth noticing."),
+       table(["Symbol","As of","Promoter %","Public %","Free float"], body,
+             ["promoter %","public %","free float"], 0, null)],
+      {what:"Promoter and public holding, latest quarter per company.",
        source:"NSE shareholding-pattern filings", updated:when,
-       note:"A pledge is not automatically bad - promoters pledge for many reasons, including personal and business loans. It is a RISING pledge alongside a falling price that deserves attention."}));
+       note:"PLEDGE IS NOT SHOWN because no free source here reports it. The pledged percentage would be the more useful number - a rising pledge next to a falling price is the pattern that matters - but printing a column of dashes for it is worse than leaving it out. Free float here is a proxy computed from the public holding, not an exchange figure."}));
   })();
 
 
@@ -6760,22 +6771,6 @@ var v=sec("learn");
       v.appendChild(card(g[0],"", [table(DEALS.columns||["Date","Symbol","Client","Buy/Sell","Quantity","Price"], g[1], [], 1, null)],
         {what:g[0], source:"NSE deal archives", updated:when, note:DEALS.note||""}));
     });
-  })();
-
-  /* ---------- INSIDER AND PROMOTER TRADES (Task 8) ---------- */
-  (function(){
-    var v=sec("insider");
-    if(!INSIDER||!INSIDER.count){
-      v.appendChild(card("Insider","Promoter and insider disclosures",
-        [para(INSIDER&&INSIDER.note?INSIDER.note:"Not fetched yet.")],
-        {what:"Promoter and insider buy/sell disclosures.", source:"NSE PIT and SAST filings", updated:when}));
-      return;
-    }
-    v.appendChild(card("Insider","Promoter and insider disclosures, newest first",
-      [para("What promoters and insiders have disclosed buying and selling."),
-       table(INSIDER.columns||["Date","Symbol","Person","Category","Buy/Sell","Value"], INSIDER.rows, [], 1, null)],
-      {what:"Insider and promoter transactions from NSE filings.",
-       source:"NSE PIT and SAST filings", updated:when, note:INSIDER.note||""}));
   })();
 
   /* ---------- CORPORATE ACTIONS CALENDAR (Task 9) ---------- */
@@ -7219,8 +7214,7 @@ function assign(name, v){
     case "correlation.json": CORR=v; break;
     case "watchlists.json": WATCH=v; break;
     case "deals.json": DEALS=v; break;
-    case "insider.json": INSIDER=v; break;
-    case "calendar.json": CAL=v; break;
+        case "calendar.json": CAL=v; break;
     case "brief.json": BRIEF=v; break;
     case "market_status.json": MSTAT=v; break;
     case "breadth.json": BREADTH=v; break;
@@ -7243,7 +7237,7 @@ function setStamp(state, text){
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null, CLAIMS=null, TM=null, SCR=null, LVLS=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","insider.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json"];
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json"];
 
 function renderAll(){
   if(!DATA) return;
@@ -7313,7 +7307,7 @@ var GROUPS = [
   // everything outside India, plus pooled products
   ["World & funds", ["global","crypto","mf","etf","ipo"]],
   // who is buying or selling, and what they must disclose
-  ["Who's buying",  ["deals","insider","promoter","corporate","watchlists","regulator"]],
+  ["Who's buying",  ["deals","promoter","corporate","watchlists","regulator"]],
   ["News & dates",  ["news","calendar"]],
   ["Tools",         ["tools","backtest","watchlist","charges","history"]],
   ["Learn",         ["learn"]]

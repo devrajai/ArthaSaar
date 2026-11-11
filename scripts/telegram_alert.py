@@ -56,12 +56,23 @@ def pct(p, pc):
 def sgn(v):
     return "+" if v >= 0 else ""
 
-sb = jload("data/smart-brain.json")
-br = jload("data/breadth.json")
-fd = jload("data/fii-dii.json")
-mt = jload("data/mf-top.json")
-fu = jload("data/futures.json")
-sc = jload("data/brain-screener.json")
+# THESE READ THE OLD LAYOUT. Every one of these paths was data/*.json, from a previous
+# codebase; this repository publishes to docs/*.json. So six reads failed on every run,
+# eleven "MISSING" lines printed, and the evening message went out with whatever survived -
+# live Yahoo quotes and a PCR figure. The workflow was green the whole time.
+#
+# Remapped to what this repo actually publishes. data.json already carries the futures open
+# interest, the put-call ratio and FII/DII in one file, so most of it comes from there.
+_d = jload("docs/data.json") or {}
+_fno = (_d.get("fno") or {})
+sb = (_d.get("brain") or {})
+br = jload("docs/breadth.json") or {}
+fd = (_d.get("fii_dii") or {})
+mt = jload("docs/mf.json") or {}
+fu = {"stocks": _fno.get("top_oi") or [], "pcr": _fno.get("pcr") or {}}
+sc = jload("docs/screener.json") or {}
+if not _d:
+    print("docs/data.json missing - the evening message will be thin")
 
 # ---- live quotes: indices ----
 nifty, npc, nhi, nlo = yahoo("%5ENSEI")
@@ -78,11 +89,16 @@ for s in top_oi:
         movers.append((s["symbol"], c, s.get("oi_chg")))
     time.sleep(0.15)
 movers.sort(key=lambda x: -x[1])
-up = movers[:5]
-dn = sorted(movers, key=lambda x: x[1])[:5]
+up = [m for m in movers if m[1] > 0][:5]   # only real gains
+dn = sorted([m for m in movers if m[1] < 0], key=lambda x: x[1])[:5]   # only real falls
 
 # ---- volume movers from screener (EOD) ----
-vols = sorted((sc.get("stocks") or []), key=lambda s: -(s.get("vol_vs_avg20") or 0) * (1 if (s.get("change_pct") or 0) > 0 else 0))[:4]
+# No volume-vs-average column exists in this repo's screener.json, so this used to emit four
+# rows of "+0% (0.0x vol)". Only keep stocks that actually carry a ratio above zero.
+vols = [x for x in (sc.get("rows") or [])
+        if (x.get("vol_vs_avg20") or 0) > 0 and (x.get("change_pct") or 0) > 0]
+vols.sort(key=lambda x: -(x.get("vol_vs_avg20") or 0))
+vols = vols[:4]
 
 # ---- OI build-up (relative % change) ----
 def oi_pct(s):
@@ -170,7 +186,10 @@ if mode != "open" and (fii_today is not None or dii_today is not None):
         ("Sell \u20B9%s Cr" % "{:,.0f}".format(abs(dii_today)) if dii_today < 0
          else "Buy \u20B9%s Cr" % "{:,.0f}".format(dii_today)) if dii_today is not None else "\u2014"))
 if pcr.get("nifty_pcr_oi") is not None:
-    L.append("\U0001F3AF Nifty PCR %s | Max Pain %s" % (pcr.get("nifty_pcr_oi"), pcr.get("nifty_max_pain")))
+    # "25000.0" reads like a price. A strike is a round number - print it as one.
+    _mp = pcr.get("nifty_max_pain")
+    _mps = ("{:,}".format(int(round(_mp))) if isinstance(_mp, (int, float)) else (str(_mp) if _mp else "\u2014"))
+    L.append("\U0001F3AF Nifty PCR %s | Max Pain %s" % (pcr.get("nifty_pcr_oi"), _mps))
 
 if up:
     L.append("")
@@ -194,7 +213,7 @@ if g:
 
 if br:
     L.append("")
-    L.append("\U0001F4C8 Breadth: %s%% stocks EMA200 ke upar" % br.get("above_ema200_pct", "\u2014"))
+    L.append("\U0001F4C8 Breadth: %s%% stocks EMA200 ke upar" % (br.get("above_200") if br.get("above_200") is not None else br.get("above_ema200_pct", "\u2014")))
 if fd:
     cats = fd.get("categories") or {}
     fii = (cats.get("FII/FPI") or {}).get("net_cr")

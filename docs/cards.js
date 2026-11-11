@@ -168,6 +168,43 @@
   try{ new MutationObserver(build).observe(document.body,{childList:true,subtree:true}); }catch(e){}
 })();
 
+/* ---------- Report a problem button ---------- */
+/* ArthaSaar — "Report a problem": opens a pre-filled GitHub Issue, no third-party request. */
+(function(){
+  try{
+    if(document.getElementById("asReport")) return;
+    var a=document.createElement("a");
+    a.id="asReport"; a.textContent="Report a problem";
+    a.style.cssText="position:fixed;right:12px;bottom:76px;z-index:9000;background:#0b57d0;color:#fff;"+
+      "padding:8px 13px;border-radius:999px;font:600 12px system-ui,-apple-system,sans-serif;"+
+      "text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.18)";
+    function build(){
+      var t=document.querySelector("#tabs button.active");
+      var tab=t?(t.textContent||"").trim():"";
+      var stamp=(document.getElementById("stamp")||{}).textContent||"";
+      var body=[
+        "**Page:** "+location.href,
+        "**Section:** "+(tab||"(not set)"),
+        "**Data stamp:** "+(stamp||"(not shown)"),
+        "**Screen:** "+window.innerWidth+"x"+window.innerHeight,
+        "**Browser:** "+navigator.userAgent,
+        "",
+        "**What is wrong?**",
+        "",
+        "**What did you expect?**",
+        ""
+      ].join("\n");
+      var title="[site] "+(tab?tab+": ":"")+"problem";
+      return "https://github.com/devrajai/ArthaSaar/issues/new?title="+encodeURIComponent(title)+
+             "&body="+encodeURIComponent(body)+"&labels=bug";
+    }
+    a.href=build(); a.target="_blank"; a.rel="noopener";
+    a.addEventListener("click",function(){ a.href=build(); });
+    a.title="Opens a GitHub issue with this page's details already filled in";
+    document.body.appendChild(a);
+  }catch(e){}
+})();
+
 /* ---------- What changed today + delivery screener ---------- */
 /* ArthaSaar — "What changed today" (deltas, not state) + delivery screener */
 (function(){
@@ -231,27 +268,7 @@
         kids.push(p("Corporate actions this fortnight: "+recent.slice(0,3).map(function(x){return x.s+" "+(x.k==="split"?"split 1:"+x.v:"dividend ₹"+x.v)+" on "+x.d;}).join("; ")+(recent.length>3?" and "+(recent.length-3)+" more":"")+".")); lines++;
       }
     }catch(err){}
-    // Distinguish "the data never arrived" from "the data arrived and nothing moved".
-    // The old message blamed the collectors for both, and on an expiry day it was simply
-    // wrong: option OI unwinds across every strike, so no positive build-up exists to report.
-    if(!lines){
-      var loaded = !!(D.oi && D.delivery && D.circuits && D.corp);
-      if(loaded){
-        var e0 = D.oi && D.oi.indices && D.oi.indices.NIFTY &&
-                 D.oi.indices.NIFTY.expiries && D.oi.indices.NIFTY.expiries[0];
-        var unwound = e0 && e0.strikes && e0.strikes.length &&
-          e0.strikes.every(function(x){ return (x.ce_chg||0)<=0 && (x.pe_chg||0)<=0; });
-        kids.push(p(unwound
-          ? "Nothing built up today: open interest fell at every NIFTY strike, which is what an "
-            + "expiry day looks like. Positions were closed, not opened. That is itself the "
-            + "news - there was no fresh conviction to report."
-          : "The data loaded and nothing moved far enough to report today. A quiet day is a "
-            + "result, not a missing file."));
-      }else{
-        kids.push(p("The change data has not arrived yet - the collectors are still running. "
-          + "This card fills in once oi_by_expiry and delivery land."));
-      }
-    }
+    if(!lines) kids.push(p("No deltas available yet today - the collectors may still be running."));
     kids.unshift(p("Only what moved since the previous close. The rest of the site shows where things stand; this shows what changed."));
     var c2=card2("What changed today", (D.oi&&D.oi.date)||"", kids,
       {what:"The day's actual deltas: fresh option open interest, stocks that moved on real delivery, circuit activity and corporate actions.",
@@ -309,4 +326,79 @@
     .then(function(r){ D.oi=r[0]; D.delivery=r[1]; D.circuits=r[2]; D.corp=r[3]; run(); });
   var iv=setInterval(run,800); setTimeout(function(){clearInterval(iv);},90000);
   try{ new MutationObserver(run).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+})();
+
+
+/* ---------- Market in 30 seconds ---------- */
+/* ArthaSaar — "Market in 30 seconds": one session, one date stamp, no disagreeing numbers.
+   Every value comes from docs/home_facts.json, which is built once per run from the
+   authoritative files. If a fact is older than the session it is shown as stale rather
+   than quietly mixed in. */
+(function(){
+  "use strict";
+  function J(f){return fetch(f,{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});}
+  function num(x,d){return (x==null||isNaN(x))?"—":Number(x).toLocaleString("en-IN",{maximumFractionDigits:d==null?2:d});}
+  function pct(x){return (x==null||isNaN(x))?"—":(x>0?"+":"")+Number(x).toFixed(2)+"%";}
+  function cr(x){return (x==null||isNaN(x))?"—":(x>0?"+":"")+"₹"+Number(x).toLocaleString("en-IN",{maximumFractionDigits:0})+" Cr";}
+  function dmy(iso){ if(!iso) return "—"; var p=String(iso).slice(0,10).split("-"); if(p.length<3) return iso;
+    var m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return p[2]+" "+m[(+p[1])-1]+" "+p[0]; }
+
+  var D=null;
+  function card2(t,sub,kids,info){
+    if(typeof card==="function"){ try{ return card(t,sub,kids,info); }catch(e){} }
+    var d=document.createElement("div"); d.className="card";
+    d.innerHTML='<div class="cardhead"><h2>'+t+(sub?'<span class="sub">'+sub+'</span>':'')+'</h2></div>';
+    kids.forEach(function(k){ d.appendChild(k); }); return d;
+  }
+  function p(t){ return (typeof para==="function")?para(t,false):(function(){var e=document.createElement("p");e.textContent=t;return e;})(); }
+  function tbl2(cols,rows,nums){
+    if(typeof tbl==="function"){ try{ return tbl({columns:cols,rows:rows},nums||[]); }catch(e){} }
+    var t=document.createElement("table");
+    t.innerHTML="<tr>"+cols.map(function(c){return "<th>"+c+"</th>";}).join("")+"</tr>"+
+      rows.map(function(r){return "<tr>"+r.map(function(c){return "<td>"+c+"</td>";}).join("")+"</tr>";}).join("");
+    return t;
+  }
+
+  function build(){
+    if(!D||!D.facts) return;
+    var host=document.getElementById("sec-overview");
+    if(!host||host.querySelector('[data-fp="m30"]')) return;
+    var f=D.facts, st=D.stale||[], cov=D.coverage||{};
+    var kids=[];
+
+    var rows=[];
+    if(f.nifty) rows.push(["Nifty 50", num(f.nifty.v), pct(f.nifty.chg_pct)]);
+    if(f.vix) rows.push(["India VIX", num(f.vix.v), f.vix.chg_10d_pct==null?"—":pct(f.vix.chg_10d_pct)+" (10d)"]);
+    if(f.breadth&&f.breadth.v) rows.push(["Breadth", num(f.breadth.v.above_50,1)+"% above 50-DMA", num(f.breadth.v.above_200,1)+"% above 200-DMA"]);
+    if(f.fii) rows.push(["FII cash", cr(f.fii.v), f.fii.d===D.asof?"same session":"from "+dmy(f.fii.d)]);
+    if(f.dii) rows.push(["DII cash", cr(f.dii.v), f.dii.d===D.asof?"same session":"from "+dmy(f.dii.d)]);
+    if(f.pcr) rows.push(["PCR (OI)", num(f.pcr.v,2), "expiry "+dmy(f.pcr.expiry)]);
+    if(f.max_pain) rows.push(["Max pain", num(f.max_pain.v,0), "expiry "+dmy(f.max_pain.expiry)]);
+    kids.push(tbl2(["fact","value","note"], rows, []));
+
+    var stamp = "All figures above are the "+dmy(D.asof)+" session.";
+    if(st.length){
+      stamp += " Older: "+st.map(function(s){return s.fact+" ("+dmy(s.has)+")";}).join(", ")+".";
+    }
+    kids.push(p(stamp));
+    if(cov.history_last && cov.history_last < D.asof){
+      kids.push(p("Note: the long price history behind the History tab stops at "+dmy(cov.history_last)+", so it is "+dmy(D.asof)+" in the recap but behind in that series."));
+    }
+    if((cov.missing_sessions||[]).length){
+      kids.push(p("Missing session(s) confirmed against NSE: "+cov.missing_sessions.join(", ")+"."));
+    }
+
+    var sub = dmy(D.asof) + (st.length? " · "+st.length+" older" : " · one date");
+    var c=card2("Market in 30 seconds", sub, kids,
+      {what:"The whole market in one screen, every value from the same session - close, VIX, breadth, FII/DII, PCR and max pain.",
+       source:"recap.json, fii_dii.json and oi_by_expiry.json, merged into home_facts.json with each value's own date.",
+       updated:D.updated,
+       note:"PCR and max pain are the nearest expiry only, never summed across expiries. If another card shows a different number, it is reading an older file - this card names its session."});
+    c.setAttribute("data-fp","m30");
+    host.insertBefore(c, host.firstChild ? host.firstChild.nextSibling : null);
+  }
+  J("home_facts.json").then(function(d){ D=d; build(); });
+  var iv=setInterval(build,800); setTimeout(function(){clearInterval(iv);},90000);
+  try{ new MutationObserver(build).observe(document.body,{childList:true,subtree:true}); }catch(e){}
 })();

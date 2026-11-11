@@ -7,6 +7,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ArthaSaar — market data</title>
 <link rel="alternate" type="application/rss+xml" title="ArthaSaar daily brief" href="feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ArthaSaar">
+<meta property="og:title" content="ArthaSaar - NSE data, F&amp;O and market analysis">
+<meta property="og:description" content="Free NSE end-of-day archive with derived analysis: screener, option chain with OI labels, rollover, breadth, deals and forecasts. Every figure names its source.">
+<meta property="og:url" content="https://devrajai.github.io/ArthaSaar/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ArthaSaar - NSE data, F&amp;O and market analysis">
+<meta name="twitter:description" content="Free NSE end-of-day archive with derived analysis. Every figure names its source.">
 <meta name="description" content="NSE archive, F&O, global markets, crypto, news, corporate actions, YouTube analysis. Educational data, not investment advice.">
 <script>
   /* Evict the previous site's service worker (it served a cached app shell). */
@@ -37,6 +45,22 @@
   .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 
   header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+  /* the ticker rides inside the sticky header, so it stays on screen without a second
+     fixed layer fighting the header for z-index */
+  .ticker{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;
+    padding:7px 0;font-size:12.5px;border-bottom:1px solid var(--line)}
+  .ticker .ti{display:flex;gap:6px;align-items:baseline;white-space:nowrap}
+  .ticker .tk{color:var(--muted);font-size:11px;letter-spacing:.4px;text-transform:uppercase}
+  .ticker .tv{font-weight:700;font-variant-numeric:tabular-nums}
+  .ticker .tc{font-weight:700;font-variant-numeric:tabular-nums}
+  .ticker .tc.up{color:var(--up)} .ticker .tc.down{color:var(--down)}
+  /* The theme toggle is hidden, not fixed, on purpose. A later block in this stylesheet
+     sets the same light palette for html[data-theme="dark"] as for light - the glass design
+     hardcodes light gradients, so switching the attribute changes nothing visible. A button
+     that does nothing is worse than no button. Real dark mode needs a palette pass over the
+     glass backgrounds; the OS-aware code below is ready for it. */
+  #themeBtn{display:none}
+  @media(max-width:680px){.ticker{font-size:11.5px;gap:4px 12px;padding:6px 0}}
   .top{display:flex;align-items:center;gap:12px;padding:14px 0}
   .logo{width:40px;height:40px;border-radius:10px;background:#f0b24a;color:#3a2708;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
   h1{margin:0;font-size:20px;letter-spacing:.5px}
@@ -952,6 +976,7 @@ p.plain{font-size:15px;line-height:1.5;color:#33506f;margin:2px 0 12px;
 <body>
 
 <header>
+  <div class="wrap"><div class="ticker" id="ticker" aria-label="Market snapshot"></div></div>
   <div class="wrap top">
     <div class="logo">AS</div>
     <div>
@@ -977,9 +1002,17 @@ p.plain{font-size:15px;line-height:1.5;color:#33506f;margin:2px 0 12px;
 <nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
 <div id="glossPop"></div>
-<main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div></main>
+<main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div>
+<noscript><div class="card"><h2>ArthaSaar</h2>
+<p>Free NSE end-of-day data with derived analysis: a screener over 2,200 stocks, an option
+chain labelled by open-interest action, futures rollover, market breadth, bulk deals and
+21-session forecasts. Every figure names its source and its session date.</p>
+<p>This page builds its sections in the browser, so it needs JavaScript. The underlying data
+is plain JSON at
+<a href="https://github.com/devrajai/ArthaSaar/tree/main/docs">github.com/devrajai/ArthaSaar/tree/main/docs</a>.</p>
+<p><strong>For education and research. Not investment advice.</strong></p></div></noscript></main>
 
-<footer class="wrap"><p class="build" style="font-size:11px;opacity:.65">build 25 Oct 10:32 UTC</p>
+<footer class="wrap"><p class="build" id="buildStamp" style="font-size:11px;opacity:.65">data loaded</p>
   <p><strong>For education and research. Not investment advice.</strong> Nothing here is a
   recommendation to buy or sell. Prices and fundamentals can be wrong, delayed, or missing —
   check anything you intend to act on against the exchange or your broker.</p>
@@ -990,8 +1023,10 @@ p.plain{font-size:15px;line-height:1.5;color:#33506f;margin:2px 0 12px;
   Each section names its own source.</p>
 
   <p><strong>Something missing or wrong?</strong>
-  <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM" target="_blank" rel="noopener">Tell me what to add or fix</a>
-  &mdash; a one-minute form. It goes to me, not to a third party.</p>
+  <a id="asIssue" href="https://github.com/devrajai/ArthaSaar/issues/new?title=Data%20issue%3A%20"
+     target="_blank" rel="noopener">Tell me what to add or fix</a>
+  &mdash; it opens a pre-filled issue on the repository, so you can see what has already been
+  reported and I can reply there. Nothing is sent to a third party.</p>
 
   <p><strong>Licence.</strong> NSE and BSE data is governed by their Data Sharing &amp; Usage Policy.
   Personal, non-commercial use is generally fine; redistributing exchange data publicly, or
@@ -1020,7 +1055,23 @@ function ago(iso){if(!iso)return "—";var s=(Date.now()-new Date(iso).getTime()
 
 /* theme: light by default */
 var saved=null;try{saved=localStorage.getItem("as-theme");}catch(e){}
-setTheme("light");   /* one theme only: light blue glass */
+// This read the saved theme and then called setTheme("light") regardless, so a reader who
+// chose dark got light again on every visit, and nothing ever asked the operating system.
+// Order: an explicit choice wins, then the OS, then light.
+(function(){
+  var osDark=false;
+  try{ osDark=!!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches); }catch(e){}
+  setTheme(saved || (osDark ? "dark" : "light"));
+  try{
+    var mq=window.matchMedia("(prefers-color-scheme: dark)");
+    if(mq && mq.addEventListener){
+      mq.addEventListener("change", function(e){
+        var chosen=null; try{ chosen=localStorage.getItem("as-theme"); }catch(err){}
+        if(!chosen) setTheme(e.matches ? "dark" : "light");
+      });
+    }
+  }catch(e){}
+})();
 function setTheme(t){
   if(t==="dark")document.documentElement.setAttribute("data-theme","dark");
   else document.documentElement.removeAttribute("data-theme");
@@ -7307,7 +7358,59 @@ var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","e
 var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null, CLAIMS=null, TM=null, SCR=null, LVLS=null, ATTN=null;
 var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json","attention.json"];
 
+function buildTicker(){
+  // A one-line read of the market that never scrolls away. Every value comes from a file
+  // already loaded, and anything missing is left out rather than shown as a dash.
+  try{
+    var box=document.getElementById("ticker");
+    if(!box) return;
+    var items=[];
+    function add(k,v,c){
+      items.push('<span class="ti"><span class="tk">'+esc(k)+'</span><span class="tv">'+v+'</span>'+
+                 (c!=null?'<span class="tc '+(c>=0?"up":"down")+'">'+(c>=0?"+":"")+Number(c).toFixed(2)+'%</span>':"")+
+                 '</span>');
+    }
+    // Fixed order, Nifty first - the data file lists them in whatever order the pull wrote,
+    // and a ticker that reshuffles itself day to day is harder to read at a glance.
+    var mk=(DATA&&DATA.markets&&DATA.markets.rows)||[];
+    var bySym={}; mk.forEach(function(r){ bySym[r[0]]=r; });
+    [["^NSEI","Nifty"],["^NSEBANK","Bank Nifty"],["^BSESN","Sensex"]].forEach(function(p){
+      var r=bySym[p[0]];
+      if(r && r[1]!=null) add(p[1], num(Math.round(r[1]*100)/100), r[2]);
+    });
+    if(typeof VIX!=="undefined" && VIX && VIX.latest!=null){
+      items.push('<span class="ti"><span class="tk">India VIX</span><span class="tv">'+
+                 Number(VIX.latest).toFixed(2)+'</span></span>');
+    }
+    if(typeof RECAP!=="undefined" && RECAP && RECAP.fii_dii){
+      RECAP.fii_dii.forEach(function(x){
+        var v=Number(x.net_cr);
+        if(!isFinite(v)) return;
+        var lab=(x.category==="DII")?"DII":"FII";
+        items.push('<span class="ti"><span class="tk">'+lab+' net</span><span class="tc '+
+                   (v>=0?"up":"down")+'">'+(v>=0?"+":"")+num(Math.round(v))+' Cr</span></span>');
+      });
+    }
+    if(!items.length) return;
+    box.innerHTML=items.join("");
+    box.title=(DATA&&DATA.generated_utc)?("Data run "+DATA.generated_utc):"";
+  }catch(e){}
+}
+
 function renderAll(){
+  buildTicker();
+  // The footer used to carry a hand-written "build 25 Oct" label that never changed, so a
+  // site updating nightly looked frozen. Derive it from the data instead.
+  try{
+    var bs=document.getElementById("buildStamp");
+    if(bs&&DATA){
+      var gen=DATA.generated_utc||"";
+      bs.textContent = gen
+        ? ("data run "+String(gen).replace("T"," ").slice(0,16)+" UTC"+
+           (DATA.fno&&DATA.fno.date?(" \u00b7 F&O "+DATA.fno.date):""))
+        : "data loaded";
+    }
+  }catch(e){}
   try{ document.getElementById("app").setAttribute("data-printed",
         new Date().toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"})); }catch(e){}
   if(!DATA) return;

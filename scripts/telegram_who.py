@@ -23,6 +23,39 @@ req = Request("https://api.telegram.org/bot%s/getUpdates" % TOKEN,
 with urlopen(req, timeout=25) as r:
     data = json.loads(r.read().decode())
 
+# ---- diagnostics -------------------------------------------------------------------
+# getUpdates returning nothing has two very different causes, and the plain message could
+# not tell them apart: either nobody has messaged the bot, or a WEBHOOK is set, which makes
+# Telegram refuse to hand messages to getUpdates at all. Print which bot the token belongs
+# to as well, because "I sent hi" is usually "I sent it to a different bot".
+def api(method):
+    try:
+        with urlopen(Request("https://api.telegram.org/bot%s/%s" % (TOKEN, method),
+                             headers={"User-Agent": "telegram-who"}), timeout=25) as rr:
+            return json.loads(rr.read().decode())
+    except Exception as e:
+        return {"ok": False, "error": "%s: %s" % (type(e).__name__, str(e)[:120])}
+
+me = api("getMe")
+if me.get("ok"):
+    b_ = me["result"]
+    print("Bot: @%s  (name: %s, id: %s)" % (b_.get("username"), b_.get("first_name"), b_.get("id")))
+else:
+    print("Could not read the bot identity:", me.get("error") or me.get("description"))
+
+wh = api("getWebhookInfo")
+if wh.get("ok"):
+    info = wh["result"]
+    url_ = info.get("url") or ""
+    if url_:
+        print("!! A WEBHOOK IS SET: %s" % url_)
+        print("   While a webhook is set, getUpdates returns nothing. Delete it with:")
+        print("   curl https://api.telegram.org/bot<TOKEN>/deleteWebhook")
+        print("   pending_update_count: %s" % info.get("pending_update_count"))
+    else:
+        print("Webhook: none (getUpdates is the active method - good)")
+        print("pending_update_count: %s" % info.get("pending_update_count"))
+
 seen = {}
 for upd in data.get("result", []):
     msg = upd.get("message") or upd.get("edited_message") or {}

@@ -170,21 +170,33 @@ def main() -> int:
         if not apath.exists():
             raise SystemExit(f"no actions at {apath} - run --fetch first")
         actions = pd.read_csv(apath, parse_dates=["ex_date"])
-        src = args.infile
-        if not src:
-            for cand in ("data/candles/daily.parquet", "data/candles/cm_daily.parquet"):
-                if Path(cand).exists():
-                    src = cand
-                    break
-        if not src or not Path(src).exists():
+        # Adjust EVERY raw archive, not just the first one found.
+        #
+        # This used to adjust data/candles/daily.parquet and stop. That file comes from the
+        # Drive backup; the archive the pipeline grows itself is cm_daily.parquet, and it was
+        # never adjusted - so cm_daily_adj.parquet did not exist at all. Every consumer asks
+        # for an adjusted archive, found only the frozen one, and the technical layer stayed
+        # stuck at the Drive backup's last date while fresh candles piled up unused.
+        if args.infile:
+            targets = [args.infile]
+        else:
+            targets = [c for c in ("data/candles/daily.parquet", "data/candles/cm_daily.parquet")
+                       if Path(c).exists()]
+        if not targets:
             raise SystemExit("no candle archive to adjust")
-        candles = pd.read_parquet(src)
-        adjusted = adjust(candles, actions)
-        dest = Path(args.out or (str(Path(src).with_suffix("")) + "_adj.parquet"))
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        adjusted.to_parquet(dest, index=False)
-        touched = int((adjusted["adj_factor"] != 1.0).sum())
-        print(f"Wrote {dest}  |  {len(adjusted):,} rows, {touched:,} back-adjusted")
+        for src in targets:
+            if not Path(src).exists():
+                continue
+            candles = pd.read_parquet(src)
+            adjusted = adjust(candles, actions)
+            if args.out and len(targets) == 1:
+                dest = Path(args.out)
+            else:
+                dest = Path(str(Path(src).with_suffix("")) + "_adj.parquet")
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            adjusted.to_parquet(dest, index=False)
+            touched = int((adjusted["adj_factor"] != 1.0).sum())
+            print(f"Wrote {dest}  |  {len(adjusted):,} rows, {touched:,} back-adjusted")
     return 0
 
 

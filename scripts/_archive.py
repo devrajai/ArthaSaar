@@ -23,13 +23,50 @@ CANDIDATES = [
 ]
 
 
+def last_date(path: str) -> str:
+    """The newest date in one archive, or '' if it cannot be read. One column, so it is cheap."""
+    try:
+        import pyarrow.parquet as pq
+        col = pq.read_table(path, columns=["date"]).column("date").to_pylist()
+    except Exception:
+        return ""
+    if not col:
+        return ""
+    return max(str(v) for v in col)
+
+
 def pick_candles(prefer_adjusted: bool = True) -> str:
-    """Return the best available candle archive path, or '' if none exists."""
-    order = CANDIDATES if prefer_adjusted else CANDIDATES[2:]
-    for c in order:
-        if Path(c).exists():
-            return c
-    return ""
+    """Return the archive with the MOST RECENT data, or '' if none exists.
+
+    THIS USED TO RETURN THE FIRST FILE THAT EXISTED, in a fixed order with
+    daily_adj.parquet first. That file is restored from a Google Drive backup which stopped
+    updating on 23 October, so it won every single time - and the entire technical layer
+    (screener, RSI, ADX, moving averages, breadth, patterns, levels, setups, ranks) froze at
+    23 October while candles_from_bhavcopy kept writing fresh prices into cm_daily.parquet
+    that nothing ever read. The site looked healthy and was eleven sessions stale.
+
+    Now the newest data wins, and "adjusted" only breaks a tie. Adjustment still matters -
+    it is what makes a split not look like a crash - but being current matters more.
+    """
+    have = [c for c in CANDIDATES if Path(c).exists()]
+    if not have:
+        return ""
+    if not prefer_adjusted:
+        have = [c for c in have if not is_adjusted(c)]
+        if not have:
+            return ""
+    if len(have) == 1:
+        return have[0]
+
+    def rank(path: str):
+        # (date, is_adjusted) - a newer date always wins; on the same date the adjusted file does
+        return (last_date(path), 1 if is_adjusted(path) else 0)
+
+    best = max(have, key=rank)
+    if len(have) > 1:
+        others = ", ".join(f"{Path(c).name}={last_date(c) or '?'}" for c in have if c != best)
+        print(f"  archive: using {Path(best).name} ({last_date(best) or '?'}) over {others}")
+    return best
 
 
 def is_adjusted(path: str) -> bool:

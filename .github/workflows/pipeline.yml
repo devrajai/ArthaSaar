@@ -599,8 +599,11 @@ jobs:
 
         run: python scripts/build_deals_followup.py || true
 
-      - name: "7n2i. Telegram PCR digest"
-
+      - name: "7n2i. Telegram digest (public channel, no credentials)"
+        env:
+          # Public channel. Telegram serves a plain HTML preview at t.me/s/<name>, which is
+          # the only clean way to read a channel you do not own: no bot token, no login.
+          TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
         run: python scripts/fetch_telegram_pcr.py || true
 
 

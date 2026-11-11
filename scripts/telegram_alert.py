@@ -6,8 +6,8 @@ Supports multiple chat ids in TG_CHAT_ID (comma-separated).
 """
 import json, os, sys, time, urllib.request, urllib.parse, datetime as dt
 
-TOKEN = os.environ.get("TG_TOKEN", "")
-CHATS = [c.strip() for c in os.environ.get("TG_CHAT_ID", "").split(",") if c.strip()]
+TOKEN = (os.environ.get("TG_TOKEN") or "").strip()
+CHATS = [c.strip() for c in (os.environ.get("TG_CHAT_ID") or "").strip().split(",") if c.strip()]
 DRY = os.environ.get("TG_DRY") == "1"
 mode = sys.argv[1] if len(sys.argv) > 1 else None
 

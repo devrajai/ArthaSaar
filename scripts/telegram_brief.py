@@ -16,8 +16,8 @@ Missing secrets are a clean skip, never a crash.
 """
 import json, os, sys, urllib.request, urllib.parse
 
-TOKEN = os.environ.get("TG_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN") or ""
-CHATS = [c.strip() for c in (os.environ.get("TG_CHAT_ID") or os.environ.get("TELEGRAM_CHAT_ID") or "").split(",") if c.strip()]
+TOKEN = (os.environ.get("TG_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
+CHATS = [c.strip() for c in (os.environ.get("TG_CHAT_ID") or os.environ.get("TELEGRAM_CHAT_ID") or "").strip().split(",") if c.strip()]
 DRY = "--dry" in sys.argv
 
 

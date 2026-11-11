@@ -12,7 +12,7 @@ import json
 import os
 from urllib.request import Request, urlopen
 
-TOKEN = os.environ.get("TG_TOKEN")
+TOKEN = (os.environ.get("TG_TOKEN") or "").strip() or None
 if not TOKEN:
     print("Missing TG_TOKEN")
     raise SystemExit(1)

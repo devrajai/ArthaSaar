@@ -2920,9 +2920,10 @@ function build(d){
     if(d.spikes&&d.spikes.oi)grid.appendChild(kpi("OI spikes",num(d.spikes.oi.total),"stock futures"));
     if(d.corporate){var cd=(d.corporate.dividend||{}).total||0, cs=(d.corporate.split||{}).total||0;
       grid.appendChild(kpi("Dividends",num(cd),"announced")); grid.appendChild(kpi("Splits",num(cs),"announced"));}
-    if(d.brain){grid.appendChild(kpi("Channels",num(d.brain.channels),"YouTube watched"));
-      grid.appendChild(kpi("Videos",num(d.brain.videos),"collected"));}
-    if(d.archive)grid.appendChild(kpi("Trading days",num(d.archive.dates),"in the archive"));
+    // Channels / Videos / Trading days removed. They described the plumbing - how much had
+    // been collected - rather than the market. A reader opening this page wants to know what
+    // happened, not how many files the pipeline wrote. The counts still appear on the
+    // Channels card and in Data health, where they belong.
     if(grid.children.length)v.appendChild(grid);
 
     if(d.fno&&d.fno.top_oi)
@@ -7538,14 +7539,11 @@ var OV_ORDER = [
 })();
 
 /* ====================================================================================
-   THE HOME PAGE SHOWS EIGHT CARDS, NOT TWENTY-SIX.
-   Measured before this: 26 cards and 29,808 characters of text on the landing page -
-   roughly twenty-five phone screens of scrolling before anything else could be reached.
-   A visitor who wants "what happened today" should not have to scroll past a tax calculator.
-
-   Nothing is removed. The other cards stay on the page, collapsed behind one button, and
-   the choice is remembered. A reader who wants everything is one tap from it; a reader who
-   wants the day's picture gets it without scrolling.
+   THE HOME PAGE SHOWS EIGHT CARDS. NOTHING IS HIDDEN BEHIND A BUTTON.
+   An earlier version collapsed the other sixteen behind a "Show all" toggle. The toggle
+   itself became the clutter it was meant to remove, and a collapsed card is a card nobody
+   reads. They are now MOVED into the Tools tab instead: still one tap away, still on the
+   page, and the home page carries only what a reader opens it for.
    ==================================================================================== */
 var HOME_KEEP = [
   "Today at a glance",     // the one-screen summary
@@ -7558,42 +7556,22 @@ var HOME_KEEP = [
   "Signal scorecard"       // has any of it been right
 ];
 (function(){
-  var KEY="as-home-all";
-  function allOn(){ try{ return localStorage.getItem(KEY)==="1"; }catch(e){ return false; } }
-  function apply(){
+  function relocate(){
     var ov=document.getElementById("sec-overview");
-    if(!ov) return;
-    var showAll=allOn();
+    var tools=document.getElementById("sec-tools");
+    if(!ov||!tools) return;
     var cards=[].slice.call(ov.querySelectorAll(":scope > .card"));
-    var hidden=0;
     cards.forEach(function(c){
       var h2=c.querySelector(".cardhead h2");
       var t=h2?((h2.childNodes[0]&&h2.childNodes[0].textContent)||"").trim():"";
       var keep = HOME_KEEP.some(function(k){ return t===k || (t && t.indexOf(k)===0); });
-      if(keep){ c.style.display=""; return; }
-      hidden++;
-      c.style.display = showAll ? "" : "none";
+      if(!keep && c.parentNode===ov){ tools.appendChild(c); }   // appendChild moves it
     });
-    var btn=document.getElementById("homeToggle");
-    if(!btn){
-      btn=el("button","small");
-      btn.id="homeToggle";
-      btn.style.cssText="display:block;margin:18px auto 8px";
-      btn.addEventListener("click",function(){
-        try{ localStorage.setItem(KEY, allOn()?"0":"1"); }catch(e){}
-        apply();
-      });
-      ov.appendChild(btn);
-    }
-    btn.textContent = showAll
-      ? "Show only the essentials"
-      : "Show all " + cards.length + " cards on this page";
-    btn.style.display = hidden ? "block" : "none";
   }
-  try{ new MutationObserver(apply).observe(document.getElementById("sec-overview")||document.body,
+  try{ new MutationObserver(relocate).observe(document.getElementById("sec-overview")||document.body,
         {childList:true}); }catch(e){}
-  var n=0, iv=setInterval(function(){ apply(); if(++n>24) clearInterval(iv); }, 400);
-  apply();
+  var n=0, iv=setInterval(function(){ relocate(); if(++n>24) clearInterval(iv); }, 400);
+  relocate();
 })();
 
 if(/[?&]nav=1/.test(location.search)) document.body.classList.add("nav-open");

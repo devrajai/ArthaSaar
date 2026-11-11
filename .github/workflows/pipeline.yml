@@ -593,6 +593,20 @@ jobs:
       - name: "10y. Smoke test (empty cards, mixed dates, missing sessions)"
         run: python scripts/smoke_test.py || echo "::warning title=Smoke test::see log"
 
+      # Wikipedia attention - official API, free, no key.
+      - name: "7x. Wikipedia attention"
+        run: python scripts/build_attention.py || true
+
+      # Page gate: reads the page next to the data it will receive. Fails the run on a
+      # contract that would throw. This is the check that would have caught the crash
+      # that blanked the site, so it deliberately has no "|| true".
+      - name: "7y. Page gate - the page must match the data"
+        run: python scripts/check_page.py
+
+      # SHA-256 for every published file. Runs after everything it hashes, before the
+      # commit so the manifest describes exactly what is being committed.
+      - name: "7w. Checksum manifest"
+        run: python scripts/build_manifest.py || true
       - name: Commit
         run: |
           git config user.name "data-bot"

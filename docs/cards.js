@@ -402,3 +402,96 @@
   var iv=setInterval(build,800); setTimeout(function(){clearInterval(iv);},90000);
   try{ new MutationObserver(build).observe(document.body,{childList:true,subtree:true}); }catch(e){}
 })();
+
+
+/* ---------- header fix + calendar link ---------- */
+/* ArthaSaar — header fix + calendar link.
+   BUG: a hide-on-scroll script sets transform:translateY(-100%) !important on <header>
+   as soon as you scroll down 90px. The header is the only place the language, colour-blind,
+   text-size and theme buttons live, so on a long page they vanish and are unreachable.
+   This re-asserts the header on every scroll (added later, so it runs after the other one)
+   and adds a link to the corporate-action calendar feed. */
+(function(){
+  "use strict";
+  try{
+    var hd=document.querySelector("header");
+    if(hd){
+      var keep=function(){ hd.style.setProperty("transform","translateY(0)","important"); };
+      keep();
+      window.addEventListener("scroll", keep, {passive:true});
+      document.addEventListener("visibilitychange", keep);
+    }
+  }catch(e){}
+
+  try{
+    if(!document.getElementById("asCal")){
+      var a=document.createElement("a");
+      a.id="asCal";
+      a.href="arthasaar.ics";
+      a.setAttribute("download","arthasaar.ics");
+      a.textContent="Dividends · .ics";
+      a.title="Download the dividend and corporate-action calendar, then import it into Google Calendar";
+      a.style.cssText="position:fixed;right:12px;bottom:122px;z-index:9000;background:#0f7b4f;color:#fff;"+
+        "padding:8px 13px;border-radius:999px;font:600 12px system-ui,-apple-system,sans-serif;"+
+        "text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.18)";
+      document.body.appendChild(a);
+    }
+  }catch(e){}
+})();
+
+
+/* ---------- settings panel (restores the lost controls) ---------- */
+/* ArthaSaar — always-reachable settings panel.
+   BUG: a script moves the four header controls (language, colour-blind, text-size, theme)
+   into the drawer, and CSS sets .right{display:none !important}. With the tab bar hidden on
+   both phone and desktop, the burger drawer is the only route to them - so if the drawer is
+   closed or broken, the controls are unreachable.
+   FIX: move the SAME nodes (so their existing listeners survive) into a fixed gear panel
+   that is always one tap away, on phone and desktop. */
+(function(){
+  "use strict";
+  try{
+    if(document.getElementById("asGear")) return;
+    var ids=["langBtn","cbBtn","fzBtn","themeBtn"];
+    var gear=document.createElement("button");
+    gear.id="asGear"; gear.type="button"; gear.setAttribute("aria-label","Settings");
+    gear.textContent="⚙";
+    gear.style.cssText="position:fixed;right:12px;bottom:168px;z-index:9001;width:42px;height:42px;"+
+      "border-radius:50%;border:none;background:#123;color:#fff;font-size:19px;line-height:1;"+
+      "cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)";
+    var panel=document.createElement("div");
+    panel.id="asGearPanel";
+    panel.style.cssText="position:fixed;right:12px;bottom:216px;z-index:9001;display:none;"+
+      "background:#fff;border:1px solid #cfe0f5;border-radius:14px;padding:10px;min-width:190px;"+
+      "box-shadow:0 10px 30px rgba(0,0,0,.18);max-height:60vh;overflow:auto";
+    var title=document.createElement("div");
+    title.textContent="Settings";
+    title.style.cssText="font:700 12px system-ui;color:#123;margin:0 0 8px 2px";
+    panel.appendChild(title);
+
+    var moved=0;
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el) return;
+      el.style.display="block";
+      el.style.width="100%";
+      el.style.margin="0 0 6px 0";
+      el.style.textAlign="left";
+      panel.appendChild(el);   // same node -> existing click handlers keep working
+      moved++;
+    });
+    if(!moved){ return; }
+
+    document.body.appendChild(panel);
+    document.body.appendChild(gear);
+    gear.addEventListener("click",function(e){
+      e.stopPropagation();
+      panel.style.display = panel.style.display==="none" ? "block" : "none";
+    });
+    document.addEventListener("click",function(e){
+      if(panel.style.display==="block" && !panel.contains(e.target) && e.target!==gear){
+        panel.style.display="none";
+      }
+    });
+  }catch(e){}
+})();

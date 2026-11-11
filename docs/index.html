@@ -1978,7 +1978,10 @@ function build(d){
      }catch(e){}
     })();
 
-var v=sec("overview");
+// (duplicate var v=sec("overview") removed - it created a SECOND section with the
+    // same id, so getElementById returned the empty one and every ordering pass acted on
+    // nothing while the cards sat in the other. That was the flicker.)
+    
     // ---- COMPARE TWO STOCKS -------------------------------------------------------------
     // The most common question a beginner has is "which of these two". screener.json already
     // carries every number needed to answer it honestly, side by side.
@@ -2355,7 +2358,11 @@ var v=sec("overview");
           // 5d and 10d rows were doubling the table's height without answering anything the
           // text asked. They are still in pcr_signal.json for anyone who wants them.
           if(hh.h!==21){ return; }
-          rows.push([esc(bd.band), hh.h+"d", num(hh.n),
+          // RAW, not esc(bd.band). table() runs esc() on every text cell itself, so
+          // escaping here escaped twice and the reader saw the entity: the cell read
+          // "very low (&lt;0.80)" instead of "very low (<0.80)". Confirmed by dumping the
+          // rendered cell - textContent held the entity, which only happens on double escape.
+          rows.push([bd.band, hh.h+"d", num(hh.n),
                      sgn(hh.mean_pct)+"%", hh.up_pct+"%",
                      sgn(hh.vs_baseline_pp)+"pp", esc(hh.edge)]);
         });
@@ -7415,6 +7422,20 @@ function renderAll(){
         new Date().toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"})); }catch(e){}
   if(!DATA) return;
   build(DATA);
+  // ORDER AND RELOCATE AFTER THE BUILD, BEFORE THE BROWSER PAINTS.
+  //
+  // These two passes used to run from a MutationObserver plus a 400ms interval - up to
+  // twenty ticks, eight seconds - so the page appeared in append order and then shuffled
+  // itself while the reader watched: the top card moved from "PCR trend" to "Today at a
+  // glance", and sixteen cards slid out to the Tools tab.
+  //
+  // They must run AFTER build(), not before: build() rewrites #app from scratch, so a pass
+  // placed above it orders an empty section and is then overwritten. That mistake showed up
+  // immediately as an overview with one card and then none.
+  try{
+    if(typeof window.__ovReorder==="function") window.__ovReorder();
+    if(typeof window.__ovRelocate==="function") window.__ovRelocate();
+  }catch(e){}
 }
 
 // TWO-PHASE LOAD.
@@ -7704,10 +7725,12 @@ var OV_ORDER = [
     if(!changed) return;
     keyed.forEach(function(k){ ov.appendChild(k.c); });   // appendChild moves, so this reorders
   }
+  window.__ovReorder = reorder;
   // cards.js injects its own cards later, so re-run on any change to the section
   try{ new MutationObserver(reorder).observe(document.getElementById("sec-overview")||document.body,
         {childList:true}); }catch(e){}
-  var n=0, iv=setInterval(function(){ reorder(); if(++n>20) clearInterval(iv); }, 400);
+  // one late pass for cards.js, which injects after the first render
+  var n=0, iv=setInterval(function(){ reorder(); if(++n>3) clearInterval(iv); }, 400);
   reorder();
 })();
 
@@ -7741,9 +7764,10 @@ var HOME_KEEP = [
       if(!keep && c.parentNode===ov){ tools.appendChild(c); }   // appendChild moves it
     });
   }
+  window.__ovRelocate = relocate;
   try{ new MutationObserver(relocate).observe(document.getElementById("sec-overview")||document.body,
         {childList:true}); }catch(e){}
-  var n=0, iv=setInterval(function(){ relocate(); if(++n>24) clearInterval(iv); }, 400);
+  var n=0, iv=setInterval(function(){ relocate(); if(++n>3) clearInterval(iv); }, 400);
   relocate();
 })();
 

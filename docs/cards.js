@@ -168,43 +168,6 @@
   try{ new MutationObserver(build).observe(document.body,{childList:true,subtree:true}); }catch(e){}
 })();
 
-/* ---------- Report a problem button ---------- */
-/* ArthaSaar — "Report a problem": opens a pre-filled GitHub Issue, no third-party request. */
-(function(){
-  try{
-    if(document.getElementById("asReport")) return;
-    var a=document.createElement("a");
-    a.id="asReport"; a.textContent="Report a problem";
-    a.style.cssText="position:fixed;right:12px;bottom:76px;z-index:9000;background:#0b57d0;color:#fff;"+
-      "padding:8px 13px;border-radius:999px;font:600 12px system-ui,-apple-system,sans-serif;"+
-      "text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.18)";
-    function build(){
-      var t=document.querySelector("#tabs button.active");
-      var tab=t?(t.textContent||"").trim():"";
-      var stamp=(document.getElementById("stamp")||{}).textContent||"";
-      var body=[
-        "**Page:** "+location.href,
-        "**Section:** "+(tab||"(not set)"),
-        "**Data stamp:** "+(stamp||"(not shown)"),
-        "**Screen:** "+window.innerWidth+"x"+window.innerHeight,
-        "**Browser:** "+navigator.userAgent,
-        "",
-        "**What is wrong?**",
-        "",
-        "**What did you expect?**",
-        ""
-      ].join("\n");
-      var title="[site] "+(tab?tab+": ":"")+"problem";
-      return "https://github.com/devrajai/ArthaSaar/issues/new?title="+encodeURIComponent(title)+
-             "&body="+encodeURIComponent(body)+"&labels=bug";
-    }
-    a.href=build(); a.target="_blank"; a.rel="noopener";
-    a.addEventListener("click",function(){ a.href=build(); });
-    a.title="Opens a GitHub issue with this page's details already filled in";
-    document.body.appendChild(a);
-  }catch(e){}
-})();
-
 /* ---------- What changed today + delivery screener ---------- */
 /* ArthaSaar — "What changed today" (deltas, not state) + delivery screener */
 (function(){

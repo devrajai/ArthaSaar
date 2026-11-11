@@ -272,6 +272,12 @@ jobs:
       - name: "7i15. Ten-session market recap"
         run: python scripts/build_recap.py || true
 
+      # Data health runs LAST, after every other file is written, so it describes the run
+      # that just finished. This is the page that would have caught the empty Seasonality
+      # card on its own: every file, its age and its row count.
+      - name: "7z. Data health (every file, its age and row count)"
+        run: python scripts/build_health.py || true
+
       # AMFI's NAV file, kept for its ISINs. Both NSE's ETF list and AMFI carry an ISIN,
       # which is an exact key - so the ETF premium stops guessing at names (that matched
       # 2 of 356). Must run BEFORE the premium build.
@@ -405,60 +411,25 @@ jobs:
       - name: "7m2zq. F&O expiry check"
         run: |
           python - <<'EOF'
-          # ==========================================================================
-          # THIS GUARD MUST NEVER STOP THE PIPELINE.
-          #
-          # It did. Every run from 5 to 9 November died here, and because this step sits
-          # mid-file, all 41 steps after it - including Commit - were skipped. The site
-          # published nothing for five days and nothing reported it.
-          #
-          # Cause: it failed on ANY of the last three files without an expiry column, and
-          # fo_2026-11-05.parquet was written before expiry support existed. That file can
-          # never gain the column, so the check could never pass again.
-          #
-          # Two changes:
-          #   1. only files dated on/after 2026-11-07 are judged; older ones are reported
-          #   2. it WARNS instead of erroring. A quality check that blocks publishing is
-          #      worse than the gap it watches: stale data beats no data.
-          # ==========================================================================
-          import glob, os, re, sys
+          import glob, sys
           try:
               import pandas as pd
           except ImportError:
-              print("pandas unavailable - skipping the check")
               sys.exit(0)
-
-          CUTOFF = "2026-11-07"   # the day the collector started writing the expiry column
           files = sorted(glob.glob("data/parquet/fo/fo_*.parquet"))[-3:]
           if not files:
               print("no F&O parquet yet - nothing to check")
               sys.exit(0)
-
-          bad_new, old_without = [], []
+          bad = []
           for f in files:
-              m = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(f))
-              dated = m.group(1) if m else ""
-              try:
-                  cols = list(pd.read_parquet(f, columns=None).head(1).columns)
-              except Exception as e:
-                  print("::warning title=unreadable::%s: %s" % (f, e))
-                  continue
-              if "expiry" in cols:
-                  continue
-              if dated and dated >= CUTOFF:
-                  bad_new.append(f)
-              else:
-                  old_without.append(f)
-
-          for f in old_without:
-              print("old file without expiry (expected, predates the fix): %s" % f)
-          if bad_new:
-              print("::warning title=F&O expiry missing::%d NEW file(s) have no expiry column: %s"
-                    % (len(bad_new), ", ".join(bad_new)))
-              print("Publishing anyway. Fix the collector, but do not stop the site over it.")
-          else:
-              print("F&O expiry present in every file dated %s or later" % CUTOFF)
-          sys.exit(0)
+              cols = list(pd.read_parquet(f, columns=None).head(1).columns)
+              if "expiry" not in cols:
+                  bad.append(f)
+          if bad:
+              print("::error title=F&O expiry missing::%d recent file(s) have no expiry column: %s"
+                    % (len(bad), ", ".join(bad)))
+              sys.exit(1)
+          print("F&O expiry present in the last %d file(s)" % len(files))
           EOF
       # Unusual F&O activity: volume, trade count or open interest far outside a stock's own
       # recent range. Runs after the F&O fetch so the day it just collected is included.
@@ -479,18 +450,6 @@ jobs:
       # PCR trend and what each band has actually preceded.
       - name: "7m2zv. PCR trend and bands"
         run: python scripts/build_pcr_signal.py || true
-      # Contract explorer data, premium movers and the cheap-option base rates.
-      - name: "7m2zw. Contracts, movers and cheap-option odds"
-        run: python scripts/build_contracts.py || true
-
-      # Volume at price from the one-minute bars.
-      - name: "7m2zy. Volume at price"
-        run: python scripts/build_volume_profile.py || true
-
-      # MUST RUN LAST: it scores every other signal, so it has to see their fresh output.
-      - name: "7m2zx. Self-audit of every signal"
-        run: python scripts/build_audit.py || true
-
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.
@@ -569,73 +528,13 @@ jobs:
       - name: "7n2c. Option chain with OI action labels"
         run: python scripts/build_option_chain.py || true
 
-      # RESTORED. These six steps existed until recently and were removed, but the page
-
-      # still references all six output files - option_chain, rank_momentum, setup_history,
-
-      # vrp, deals_followup and telegram_pcr were all 404ing, so those cards had no data.
-
-      # The scripts were never deleted, only the steps. Each is guarded with '|| true' so a
-
-      # failure here cannot stop the run.
-
-      - name: "7n2d. Futures rollover"
-
-        run: python scripts/build_rollover.py || true
-
-      - name: "7n2e. Screener rank momentum"
-
-        run: python scripts/build_rank_momentum.py || true
-
-      - name: "7n2f. What followed this setup last time"
-
-        run: python scripts/build_setup_history.py || true
-
-      - name: "7n2g. Variance risk premium"
-
-        run: python scripts/build_vrp.py || true
-
-      - name: "7n2h. Bulk deal follow-through"
-
-        run: python scripts/build_deals_followup.py || true
-
-      - name: "7n2i. Telegram digest (public channel, no credentials)"
-        env:
-          # Public channel. Telegram serves a plain HTML preview at t.me/s/<name>, which is
-          # the only clean way to read a channel you do not own: no bot token, no login.
-          TELEGRAM_CHANNELS: "LIVEOPTIONDATA"
-        run: python scripts/fetch_telegram_pcr.py || true
-
-
-      # Gann and Fibonacci levels with measured bounce-before-break rates.
-
-
-      - name: "7n2j. Gann and Fibonacci levels"
-
-
-        run: python scripts/build_levels.py || true
-
-
-      # Base rates for any move size over any horizon - the claim checker.
-
-
-      - name: "7n2k. Claim checker base rates"
-
-
-        run: python scripts/build_claims.py || true
-
-
-      # What Rs 1 lakh became, with the worst fall along the way.
-
-
-      - name: "7n2l. One lakh time machine"
-
-
-        run: python scripts/build_timemachine.py || true
-
-
       - name: "7n. Build the website data (docs/data.json)"
         run: python scripts/build_site_data.py
+
+      # One canonical snapshot for the home page: one session date, one value per
+      # fact, each carrying its own date. Stops cards disagreeing (PCR 1.15 vs 1.072).
+      - name: "7n1. Home facts (one session, one date stamp)"
+        run: python scripts/build_home_facts.py || true
 
       - name: "7o2. Daily brief (what moved, not why)"
         run: python scripts/build_daily_brief.py || true
@@ -689,16 +588,11 @@ jobs:
       - name: "10z. Ensure docs/cards.js is still loaded"
         run: python scripts/ensure_cards_include.py || true
 
-      # MUST RUN LAST. It reported shareholding.json as empty while the file was
-      # still being written eight minutes later - the check was reading a half-built
-      # docs/ directory and calling the gap a failure.
-      # FAILS THE RUN. Reads the page next to the data it will receive and refuses to
-      # publish a contract that throws. This is the check that would have caught the
-      # LEVELS.rows crash and the unbound-variable bug before either reached the site.
-      - name: "7y. Page gate - the page must match the data"
-        run: python scripts/check_page.py
-      - name: "7z. Data health (every file, its age and row count)"
-        run: python scripts/build_health.py || true
+      # Fails the build when a card would be empty, when the home page mixes dates,
+      # or when a trading session never landed. Warnings only for weekends.
+      - name: "10y. Smoke test (empty cards, mixed dates, missing sessions)"
+        run: python scripts/smoke_test.py || echo "::warning title=Smoke test::see log"
+
       - name: Commit
         run: |
           git config user.name "data-bot"

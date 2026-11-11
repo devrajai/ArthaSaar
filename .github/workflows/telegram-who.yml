@@ -24,5 +24,5 @@ jobs:
 
       - name: List chat ids
         env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_TOKEN: ${{ secrets.TG_TOKEN || secrets.TELEGRAM }}
         run: python scripts/telegram_who.py

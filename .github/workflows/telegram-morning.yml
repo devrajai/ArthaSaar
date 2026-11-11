@@ -51,8 +51,8 @@ jobs:
       # kind of failure: the workflow is green, the schedule is right, and no message arrives.
       - name: Send the daily brief (docs/brief.json)
         env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          TG_TOKEN: ${{ secrets.TG_TOKEN || secrets.TELEGRAM }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID || secrets.TELEGRAM_CHAT }}
         run: python3 scripts/telegram_brief.py
 
       - name: Commit fii history

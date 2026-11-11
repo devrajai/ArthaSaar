@@ -7,6 +7,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ArthaSaar — market data</title>
 <link rel="alternate" type="application/rss+xml" title="ArthaSaar daily brief" href="feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ArthaSaar">
+<meta property="og:title" content="ArthaSaar - NSE data, F&amp;O and market analysis">
+<meta property="og:description" content="Free NSE end-of-day archive with derived analysis: screener, option chain with OI labels, rollover, breadth, deals and forecasts. Every figure names its source.">
+<meta property="og:url" content="https://devrajai.github.io/ArthaSaar/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ArthaSaar - NSE data, F&amp;O and market analysis">
+<meta name="twitter:description" content="Free NSE end-of-day archive with derived analysis. Every figure names its source.">
 <meta name="description" content="NSE archive, F&O, global markets, crypto, news, corporate actions, YouTube analysis. Educational data, not investment advice.">
 <script>
   /* Evict the previous site's service worker (it served a cached app shell). */
@@ -941,9 +949,17 @@ p.plain{font-size:15px;line-height:1.5;color:#33506f;margin:2px 0 12px;
 <nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
 <div id="glossPop"></div>
-<main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div></main>
+<main class="wrap" id="app"><div class="card"><div class="skel"><i></i><i></i><i></i><i></i><i></i></div></div>
+<noscript><div class="card"><h2>ArthaSaar</h2>
+<p>Free NSE end-of-day data with derived analysis: a screener over 2,200 stocks, an option
+chain labelled by open-interest action, futures rollover, market breadth, bulk deals and
+21-session forecasts. Every figure names its source and its session date.</p>
+<p>This page builds its sections in the browser, so it needs JavaScript. The underlying data
+is plain JSON at
+<a href="https://github.com/devrajai/ArthaSaar/tree/main/docs">github.com/devrajai/ArthaSaar/tree/main/docs</a>.</p>
+<p><strong>For education and research. Not investment advice.</strong></p></div></noscript></main>
 
-<footer class="wrap"><p class="build" style="font-size:11px;opacity:.65">build 25 Oct 10:32 UTC</p>
+<footer class="wrap"><p class="build" id="buildStamp" style="font-size:11px;opacity:.65">data loaded</p>
   <p><strong>For education and research. Not investment advice.</strong> Nothing here is a
   recommendation to buy or sell. Prices and fundamentals can be wrong, delayed, or missing —
   check anything you intend to act on against the exchange or your broker.</p>
@@ -954,8 +970,10 @@ p.plain{font-size:15px;line-height:1.5;color:#33506f;margin:2px 0 12px;
   Each section names its own source.</p>
 
   <p><strong>Something missing or wrong?</strong>
-  <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM" target="_blank" rel="noopener">Tell me what to add or fix</a>
-  &mdash; a one-minute form. It goes to me, not to a third party.</p>
+  <a id="asIssue" href="https://github.com/devrajai/ArthaSaar/issues/new?title=Data%20issue%3A%20"
+     target="_blank" rel="noopener">Tell me what to add or fix</a>
+  &mdash; it opens a pre-filled issue on the repository, so you can see what has already been
+  reported and I can reply there. Nothing is sent to a third party.</p>
 
   <p><strong>Licence.</strong> NSE and BSE data is governed by their Data Sharing &amp; Usage Policy.
   Personal, non-commercial use is generally fine; redistributing exchange data publicly, or
@@ -7240,6 +7258,18 @@ var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null
 var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json"];
 
 function renderAll(){
+  // The footer used to carry a hand-written "build 25 Oct" label that never changed, so a
+  // site updating nightly looked frozen. Derive it from the data instead.
+  try{
+    var bs=document.getElementById("buildStamp");
+    if(bs&&DATA){
+      var gen=DATA.generated_utc||"";
+      bs.textContent = gen
+        ? ("data run "+String(gen).replace("T"," ").slice(0,16)+" UTC"+
+           (DATA.fno&&DATA.fno.date?(" \u00b7 F&O "+DATA.fno.date):""))
+        : "data loaded";
+    }
+  }catch(e){}
   if(!DATA) return;
   build(DATA);
 }

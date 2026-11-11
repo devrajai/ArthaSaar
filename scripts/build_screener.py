@@ -90,6 +90,7 @@ def main() -> int:
     # only the last ~260 sessions per symbol are needed for these screens anyway. DuckDB
     # reads just those columns and does the windowing in one pass.
     closes_by_symbol = {}
+    ranges_by_symbol = {}
     try:
         import duckdb
         import _archive
@@ -100,15 +101,23 @@ def main() -> int:
             con.execute("SET memory_limit='1400MB'")
             rows_q = con.execute("""
               WITH d AS (
-                SELECT CAST(date AS VARCHAR) dd, symbol, close,
+                SELECT CAST(date AS VARCHAR) dd, symbol, close, high, low,
                        ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY date DESC) rn
                 FROM read_parquet(?) WHERE close > 0
               )
-              SELECT symbol, dd, close FROM d WHERE rn <= 260 ORDER BY symbol, dd
+              SELECT symbol, dd, close, high, low FROM d WHERE rn <= 260 ORDER BY symbol, dd
             """, [src]).fetchall()
             con.close()
-            for sym, _dd, cl in rows_q:
-                closes_by_symbol.setdefault(str(sym).upper(), []).append(float(cl))
+            for sym, _dd, cl, hi, lo in rows_q:
+                k = str(sym).upper()
+                closes_by_symbol.setdefault(k, []).append(float(cl))
+                # the day's own range, as a share of its close - this is what a contraction
+                # screen needs, and close alone cannot give it
+                try:
+                    rng = (float(hi) - float(lo)) / float(cl) * 100.0 if float(cl) > 0 else None
+                except Exception:
+                    rng = None
+                ranges_by_symbol.setdefault(k, []).append(rng)
             print("  archive series loaded for %d symbols" % len(closes_by_symbol))
     except Exception as e:
         print("  archive unavailable (%s: %s); falling back to stocks.json series"
@@ -129,8 +138,17 @@ def main() -> int:
             continue
         close = series[-1]
         hi, lo = t.get("high_52w"), t.get("low_52w")
+        # Range contraction: the last three sessions' average range against the 20-day
+        # average. Below 1 means the stock is coiling; the screen wants well below 1 on
+        # above-average volume, which is the shape swing traders call a VCP.
+        rngs = [x for x in (ranges_by_symbol.get(k_up) or ranges_by_symbol.get(k_bare) or []) if x is not None]
+        r3 = round(sum(rngs[-3:]) / 3, 2) if len(rngs) >= 3 else None
+        r20 = round(sum(rngs[-20:]) / 20, 2) if len(rngs) >= 20 else None
+        contract = round(r3 / r20, 2) if (r3 is not None and r20) else None
+
         rows.append({
             "symbol": r.get("symbol"), "name": (r.get("name") or "")[:28],
+            "range_3d": r3, "range_20d": r20, "contract": contract,
             "close": close,
             "chg_1d": pct_change(series, 1), "chg_2d": pct_change(series, 2),
             "chg_3d": pct_change(series, 3), "chg_5d": pct_change(series, 5),
@@ -180,6 +198,14 @@ def main() -> int:
          "test": "r.trend==='up' && has(r.adx) && r.adx>25"},
         {"id": "strongdown", "label": "Strong downtrend", "note": "Trend down and ADX above 25",
          "test": "r.trend==='down' && has(r.adx) && r.adx>25"},
+        # Volatility contraction: the last three sessions' range against the 20-day average.
+        # Below 1 means the stock is coiling; with above-average volume that is the shape
+        # swing traders call a VCP. Nothing else in the screener measures the RANGE - every
+        # other screen is built on the close, and a stock can be flat on the close while its
+        # daily range collapses.
+        {"id": "tight", "label": "Tight range",
+         "note": "Last 3 sessions' range under 60% of the 20-day average, on 1.2x volume",
+         "test": "has(r.contract) && r.contract<=0.6 && has(r.vol_x) && r.vol_x>=1.2"},
     ]
 
     rows.sort(key=lambda r: (r.get("chg_5d") if r.get("chg_5d") is not None else 0))

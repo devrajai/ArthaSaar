@@ -45,7 +45,14 @@ jobs:
       # The daily brief from this repo's own data. morning_unified.py reads the OLD
       # ArthaSaar layout (mood.json, smart-brain.json, ...) and nine of those ten files
       # no longer exist, so it would have sent a near-empty message with no error.
+      # THE ENV BLOCK WAS MISSING. telegram_brief.py reads TG_TOKEN and TG_CHAT_ID, and it
+      # treats missing secrets as a clean skip rather than a crash - so this step has run
+      # green at 08:30 every weekday and sent nothing at all. A silent no-op is the worst
+      # kind of failure: the workflow is green, the schedule is right, and no message arrives.
       - name: Send the daily brief (docs/brief.json)
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
         run: python3 scripts/telegram_brief.py
 
       - name: Commit fii history

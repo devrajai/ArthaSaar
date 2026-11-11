@@ -4,9 +4,10 @@ Live Nifty/Sensex + live F&O stock movers (Yahoo) + OI build-up (futures.json) +
 volume movers (brain-screener.json) + Smart Brain + breadth + FII/DII + gold/silver.
 Supports multiple chat ids in TG_CHAT_ID (comma-separated).
 """
-import json, os, sys, time, urllib.request, urllib.parse, datetime as dt
+import json, os, re, sys, time, urllib.request, urllib.parse, datetime as dt
+import re
 
-TOKEN = (os.environ.get("TG_TOKEN") or "").strip()
+TOKEN = re.sub(r"\s+", "", os.environ.get("TG_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN") or "")
 CHATS = [c.strip() for c in (os.environ.get("TG_CHAT_ID") or "").strip().split(",") if c.strip()]
 DRY = os.environ.get("TG_DRY") == "1"
 mode = sys.argv[1] if len(sys.argv) > 1 else None

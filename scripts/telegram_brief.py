@@ -14,9 +14,10 @@ repo actually produces: docs/brief.json, plus the index levels and the news head
 
 Missing secrets are a clean skip, never a crash.
 """
-import json, os, sys, urllib.request, urllib.parse
+import json, os, re, sys, urllib.request, urllib.parse
+import re
 
-TOKEN = (os.environ.get("TG_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
+TOKEN = re.sub(r"\s+", "", os.environ.get("TG_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN") or "")
 CHATS = [c.strip() for c in (os.environ.get("TG_CHAT_ID") or os.environ.get("TELEGRAM_CHAT_ID") or "").strip().split(",") if c.strip()]
 DRY = "--dry" in sys.argv
 

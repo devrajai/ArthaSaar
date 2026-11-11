@@ -10,9 +10,10 @@ Usage: python3 scripts/telegram_who.py
 """
 import json
 import os
+import re
 from urllib.request import Request, urlopen
 
-TOKEN = (os.environ.get("TG_TOKEN") or "").strip() or None
+TOKEN = re.sub(r"\s+", "", os.environ.get("TG_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN") or "")
 if not TOKEN:
     print("Missing TG_TOKEN")
     raise SystemExit(1)

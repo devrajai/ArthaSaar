@@ -1219,6 +1219,18 @@ header .searchwrap, .top .searchwrap{
   }
   #searchDot{ width:50px; height:50px; right:14px; bottom:80px; }
 }
+
+/* ====================================================================================
+   THE HEADER SEARCH BAR IS GONE.
+
+   It sat under the logo taking the full width of a phone screen, and the floating button at
+   the bottom right now does the same job. One search entry point, and the row it used to
+   occupy goes back to the cards.
+
+   The element is removed from the markup, not merely hidden, so nothing can tab into it.
+   The scripts that referenced it are all null-guarded, which is why this is safe.
+   ==================================================================================== */
+.searchwrap{ display:none !important; }
 </style>
 </head>
 <body>
@@ -1234,14 +1246,7 @@ header .searchwrap, .top .searchwrap{
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
            stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
     </button>
-    <div class="searchwrap" id="searchwrap">
-      <input id="search" type="search" placeholder="Search… ask anything"
-             title="Search a stock, or ask: top 5 gainers, pcr, dividends"
-             autocomplete="off" aria-label="Search everything">
-      <span class="mag" aria-hidden="true">⌕</span>
-      <button id="micBtn" title="Search by voice (Hindi)" aria-label="Search by voice"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg></button>
-      <span id="voiceHint"></span>
-    </div>
+    
     <div class="right">
       <button id="langBtn" class="small" title="Switch language">हिं</button>
       <button id="cbBtn" class="small">Colour-blind</button>
@@ -7661,17 +7666,21 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 (function searchDot(){
   try{
     var dot=document.getElementById("searchDot");
-    var wrap=document.getElementById("searchwrap");
-    var box=document.getElementById("search");
-    if(!dot||!box) return;
-    // The bar is already on screen, so the floating button opens the same palette the bar
-    // does - one search experience, two ways in.
+    // NOT guarded on the header field any more - that field was removed, so requiring it
+    // here returned early and the button did nothing at all. The dot is now the ONLY way
+    // into search, so it must stand on its own.
+    if(!dot) return;
     dot.addEventListener("click", function(e){
       e.preventDefault();
+      e.stopPropagation();
       try{
         if(typeof openPalette==="function"){ openPalette(); return; }
       }catch(err){}
-      try{ box.focus(); }catch(err){}
+      // fallback: open the palette element directly if the helper is missing
+      try{
+        var pal=document.querySelector(".palette");
+        if(pal) pal.className="palette on";
+      }catch(err){}
     });
   }catch(e){}
 })();

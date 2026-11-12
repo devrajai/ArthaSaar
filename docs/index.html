@@ -1118,6 +1118,41 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
   header .searchwrap, .top .searchwrap{ max-width:none !important; margin:6px 0 4px !important; }
   header .searchwrap input, .top .searchwrap input{ padding:12px 44px 12px 17px !important; }
 }
+
+/* ====================================================================================
+   DATA-STATUS LINE.
+
+   The site shows the previous close, refined overnight - not an intraday feed. A reader who
+   does not know that will read a stale price as a current one and act on it. One sentence,
+   stated once, under the search bar, where it is read before the first card.
+
+   Muted on purpose: it is a fact about the data, not a warning banner.
+   ==================================================================================== */
+.datanote{
+  display:flex;
+  align-items:flex-start;
+  gap:7px;
+  font-size:11.5px;
+  line-height:1.5;
+  color:#5b7590;
+  padding:6px 2px 10px;
+  max-width:640px;
+}
+.datanote b{ color:#12345c; font-weight:700; }
+.datanote .pip{
+  flex:0 0 auto;
+  width:6px; height:6px;
+  border-radius:50%;
+  margin-top:6px;
+  background:#a86500;
+}
+.datanote .d{
+  color:#12345c;
+  font-weight:600;
+}
+@media print{
+  .datanote{ color:#333 !important; }
+}
 </style>
 </head>
 <body>
@@ -1143,6 +1178,8 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
       <button id="themeBtn" class="small">Dark mode</button>
     </div>
   </div>
+  <div class="wrap"><div class="datanote" id="datanote"><span class="pip"></span><span><b>Not a live feed.</b> These figures are the last completed session, cleaned and reconciled overnight. Prices may have moved since.</span></div></div>
+
 
 </header>
 
@@ -7575,6 +7612,35 @@ function buildTicker(){
 }
 
 function renderAll(){
+  // The status line says which session the figures belong to, once we know. A generic
+  // sentence is fine; a sentence carrying the actual date is better, because the reader
+  // can see for themselves how old it is.
+  try{
+    var dn=document.getElementById("datanote");
+    if(dn && DATA){
+      var asof=(DATA.archive&&DATA.archive.session)||"";
+      if(!asof){
+        var mk=(DATA.markets&&DATA.markets.rows)||[];
+        for(var mi=0; mi<mk.length; mi++){ if(mk[mi]&&mk[mi][3]){ asof=mk[mi][3]; break; } }
+      }
+      if(asof){
+        var span=dn.querySelector("span:last-child");
+        if(span){
+          // "2026-11-11" is a machine date. A reader should see "11 Nov 2026".
+          var pretty=String(asof);
+          try{
+            var dt=new Date(String(asof)+"T00:00:00");
+            if(!isNaN(dt.getTime())){
+              pretty=dt.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+            }
+          }catch(e){}
+          span.innerHTML='<b>Not a live feed.</b> These figures are from the '+
+            '<span class="d">'+esc(pretty)+'</span> session, cleaned and reconciled '+
+            'overnight. Prices may have moved since.';
+        }
+      }
+    }
+  }catch(e){}
   // buildTicker() is NOT called any more. The strip showed Nifty, Bank Nifty, Sensex, VIX and
   // FII/DII at the top of every page, which reads as a live tape - and it is not one. Those
   // numbers come from the last pipeline run, so a visitor at 2pm sees a figure from 9:41am

@@ -41,3 +41,15 @@ jobs:
 
       - name: Every script compiles
         run: python -m compileall -q scripts
+
+      # THE GATE THAT WAS MISSING. scripts/check_page.py has existed for weeks and nothing
+      # called it, so it never ran - not on push, not on pull request, not in the pipeline.
+      # On 10 Nov a page-breaking commit reached the live site and no check stopped it: the
+      # script that would have caught it was sitting in the repo, orphaned.
+      #
+      # It reads docs/index.html against the JSON files the page will actually receive and
+      # fails if a card would throw - a guard checking the wrong field, a name used but never
+      # declared, a binding pointed at a file that does not exist. No `|| true`: a gate that
+      # cannot fail is decoration.
+      - name: Page gate - the page must match the data
+        run: python scripts/check_page.py

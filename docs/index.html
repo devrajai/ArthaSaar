@@ -1153,6 +1153,65 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
 @media print{
   .datanote{ color:#333 !important; }
 }
+
+/* ====================================================================================
+   OPTION 1 - THE SEARCH COLLAPSES TO A DOT.
+
+   The field takes the whole row on a phone, which is space the cards need. It now starts as
+   a 42px circle and slides open when tapped, so the row costs nothing until it is used.
+
+   The dot keeps a gradient rim like the field, so the two read as one control rather than a
+   button next to a box.
+   ==================================================================================== */
+#searchDot{
+  flex:0 0 auto;
+  width:42px; height:42px;
+  border-radius:50%;
+  border:0;
+  padding:1.5px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#9dc0f2 0%,#d6e6fa 45%,#9dc0f2 100%);
+  box-shadow:none;
+  order:-1;
+}
+#searchDot svg{
+  background:linear-gradient(180deg,#fff,#f1f7ff);
+  border-radius:50%;
+  width:100%; height:100%;
+  padding:10px;
+  box-sizing:border-box;
+  color:#1d4ed8;
+  display:block;
+}
+#searchDot:active{ transform:scale(.95); }
+
+/* collapsed by default: zero width, no opacity, nothing to tap */
+header .searchwrap, .top .searchwrap{
+  max-width:0 !important;
+  opacity:0;
+  overflow:hidden;
+  pointer-events:none;
+  margin:0 !important;
+  padding:0 !important;
+  transition:max-width .28s cubic-bezier(.4,0,.2,1), opacity .2s ease, margin .28s ease, padding .28s ease;
+}
+/* opened: the field takes the row */
+body.search-open header .searchwrap, body.search-open .top .searchwrap{
+  max-width:560px !important;
+  opacity:1;
+  pointer-events:auto;
+  margin:8px 0 6px !important;
+  padding:1.5px !important;
+}
+@media (max-width:680px){
+  body.search-open header .searchwrap, body.search-open .top .searchwrap{
+    max-width:none !important;
+    margin:6px 0 4px !important;
+    padding:1.5px !important;
+  }
+  #searchDot{ width:40px; height:40px; }
+}
 </style>
 </head>
 <body>
@@ -1164,8 +1223,13 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
       <h1>ArthaSaar</h1>
       <div class="tag" id="stamp">Loading…</div><span id="mkt" title=""></span>
     </div>
-    <div class="searchwrap">
-      <input id="search" type="search" placeholder="Search…" title="Search stocks, coins, news, funds and more"
+    <button id="searchDot" type="button" aria-label="Search" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    </button>
+    <div class="searchwrap" id="searchwrap">
+      <input id="search" type="search" placeholder="Search… ask anything"
+             title="Search a stock, or ask: top 5 gainers, pcr, dividends"
              autocomplete="off" aria-label="Search everything">
       <span class="mag" aria-hidden="true">⌕</span>
       <button id="micBtn" title="Search by voice (Hindi)" aria-label="Search by voice"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg></button>
@@ -7359,9 +7423,157 @@ function buildPalette(){
     }
     return out;
   }
+
+  /* ====================================================================================
+     INTENT LAYER - the search box answers questions, not just names.
+
+     Typing "top 5 gainers" should SHOW five gainers, not offer a link called "gainers".
+     Everything here is computed from files this site already publishes; there is no model,
+     no API call and no external service. The "AI" is a pattern match over our own data,
+     which means it cannot invent a number and cannot go stale differently from the site.
+     ==================================================================================== */
+  var _screenPromise=null;
+  function screenReady(){
+    try{ return (typeof SCREENER!=="undefined" && SCREENER && SCREENER.rows && SCREENER.rows.length) ? SCREENER : null; }
+    catch(e){ return null; }
+  }
+  function ensureScreen(){
+    if(screenReady()) return Promise.resolve(screenReady());
+    if(_screenPromise) return _screenPromise;
+    _screenPromise = optional(BASE+"screener.json").then(function(s){
+      try{ if(typeof SCREENER!=="undefined" && s) SCREENER=s; }catch(e){}
+      return s;
+    }).catch(function(){ return null; });
+    return _screenPromise;
+  }
+  // "top 5 gainers", "5 losers", "best 10 performers", "worst 3"
+  function parseIntent(q){
+    var s=String(q||"").toLowerCase().trim();
+    if(!s) return null;
+    var m, n=5;
+    var num=s.match(/\b(\d{1,2})\b/);
+    if(num){ n=Math.max(1, Math.min(25, parseInt(num[1],10))); }
+
+    if(/\b(top|best|highest)\b.*\b(gain|gainer|gainer[s]?|up|riser|performer)/.test(s) ||
+       /^(gainers?|top gainers?)$/.test(s) || /\bgainers?\b/.test(s))
+      return {type:"gainers", n:n};
+    if(/\b(top|worst|biggest|lowest)\b.*\b(los|loser|down|faller|decliner)/.test(s) ||
+       /^(losers?|top losers?)$/.test(s) || /\blosers?\b/.test(s))
+      return {type:"losers", n:n};
+    if(/\b(most active|volume|volumes|heaviest|high volume)\b/.test(s))
+      return {type:"volume", n:n};
+    if(/\b(52\s*week|52w|one year|near high|all.time high)\b/.test(s))
+      return {type:"high52", n:n};
+    if(/\b(5\s*day|five day|week)\b/.test(s) && /\b(gain|best|top)\b/.test(s))
+      return {type:"gainers5", n:n};
+    if(/\b(20\s*day|month|one month)\b/.test(s) && /\b(gain|best|top)\b/.test(s))
+      return {type:"gainers20", n:n};
+    if(/\b(oversold)\b/.test(s)) return {type:"oversold", n:n};
+    if(/\b(overbought)\b/.test(s)) return {type:"overbought", n:n};
+    if(/\b(up streak|rising streak|consecutive up)\b/.test(s)) return {type:"upstreak", n:n};
+    if(/\b(down streak|falling streak|consecutive down)\b/.test(s)) return {type:"downstreak", n:n};
+
+    // single-fact questions answered by a jump, with the number shown in the subtitle
+    if(/^pcr$|\bpcr\b|put call|put-call/.test(s)) return {type:"jump", sec:"overview", label:"PCR", hint:"put-call ratio and what each band has preceded"};
+    if(/^vix$|\bindia vix\b|\bvolatility index\b/.test(s)) return {type:"jump", sec:"market", label:"India VIX", hint:"volatility index level"};
+    if(/\bfii\b|\bdii\b|\bflows?\b|institutional/.test(s)) return {type:"jump", sec:"overview", label:"FII and DII flows", hint:"who bought and sold in the cash market"};
+    if(/\bbreadth\b|advances|declines/.test(s)) return {type:"jump", sec:"breadth", label:"Breadth", hint:"how many stocks rose against how many fell"};
+    if(/\bmax pain\b/.test(s)) return {type:"jump", sec:"overview", label:"Max pain", hint:"the strike where option buyers lose most"};
+    if(/\bdividend|ex.date|corporate action/.test(s)) return {type:"jump", sec:"calendar", label:"Dividends and corporate actions", hint:"ex-dates and board meetings"};
+    if(/\bresult|earnings|board meeting/.test(s)) return {type:"jump", sec:"calendar", label:"Results calendar", hint:"who reports, and when"};
+    if(/\bdeal|block|bulk/.test(s)) return {type:"jump", sec:"deals", label:"Bulk and block deals", hint:"large trades filed with the exchange"};
+    if(/\bipo|listing/.test(s)) return {type:"jump", sec:"ipo", label:"IPOs", hint:"open, closed and listed issues"};
+    if(/\bcircuit|upper circuit|lower circuit/.test(s)) return {type:"jump", sec:"market", label:"Circuits", hint:"stocks locked at a price band"};
+    if(/\bforecast|prediction|outlook|timesfm/.test(s)) return {type:"jump", sec:"forecast", label:"21-day outlook", hint:"the model's band, and its measured error"};
+    return null;
+  }
+
+  function screenRows(t){
+    var sc=screenReady();
+    if(!sc) return [];
+    var rows=(sc.rows||[]).filter(function(r){ return r && r.symbol; });
+    // a suspect move is a data artefact, not a real gain - keep it out of the top list
+    var clean=rows.filter(function(r){ return !r.suspect_move; });
+    function byNum(key, dir){
+      return clean.slice().sort(function(a,b){
+        var x=Number(a[key]), y=Number(b[key]);
+        var xv=isFinite(x)?x:(dir>0?-1e9:1e9), yv=isFinite(y)?y:(dir>0?-1e9:1e9);
+        return dir>0 ? (yv-xv) : (xv-yv);
+      });
+    }
+    if(t.type==="gainers")   return byNum("chg_1d", 1).filter(function(r){return Number(r.chg_1d)>0;});
+    if(t.type==="losers")    return byNum("chg_1d", -1).filter(function(r){return Number(r.chg_1d)<0;});
+    if(t.type==="gainers5")  return byNum("chg_5d", 1).filter(function(r){return Number(r.chg_5d)>0;});
+    if(t.type==="gainers20") return byNum("chg_20d", 1).filter(function(r){return Number(r.chg_20d)>0;});
+    if(t.type==="high52")    return byNum("from_52w_high", 1);
+    if(t.type==="volume")    return byNum("range_3d", 1);
+    if(t.type==="upstreak")  return byNum("up_streak", 1).filter(function(r){return Number(r.up_streak)>0;});
+    if(t.type==="downstreak")return byNum("down_streak", 1).filter(function(r){return Number(r.down_streak)>0;});
+    if(t.type==="oversold")  return byNum("chg_5d", -1).filter(function(r){return Number(r.chg_5d)<-10;});
+    if(t.type==="overbought")return byNum("chg_5d", 1).filter(function(r){return Number(r.chg_5d)>10;});
+    return [];
+  }
+
+  var TITLES={
+    gainers:"Top gainers today", losers:"Top losers today", volume:"Most active today",
+    high52:"Closest to their 52-week high", gainers5:"Best over 5 days",
+    gainers20:"Best over 20 days", oversold:"Weakest over 5 days",
+    overbought:"Strongest over 5 days", upstreak:"Longest rising streaks",
+    downstreak:"Longest falling streaks"
+  };
+  function fmtPct(v){ var n=Number(v); if(!isFinite(n)) return ""; return (n>=0?"+":"")+n.toFixed(2)+"%"; }
+  function fmtRs(v){ var n=Number(v); if(!isFinite(n)) return ""; return n.toLocaleString("en-IN",{maximumFractionDigits:2}); }
+
+  function intentResults(t){
+    var out=[];
+    if(t.type==="jump"){
+      out.push({k:"cmd", t:t.label, s:t.hint, act:(function(sid){ return function(){ show(sid); }; })(t.sec)});
+      return out;
+    }
+    var rows=screenRows(t).slice(0, t.n||5);
+    if(!rows.length) return out;
+    var key = t.type==="gainers5"||t.type==="oversold"||t.type==="overbought" ? "chg_5d"
+            : t.type==="gainers20" ? "chg_20d"
+            : t.type==="high52" ? "from_52w_high"
+            : t.type==="upstreak" ? "up_streak"
+            : t.type==="downstreak" ? "down_streak"
+            : t.type==="volume" ? "range_3d" : "chg_1d";
+    rows.forEach(function(r){
+      var val = (key==="up_streak"||key==="down_streak") ? (Number(r[key])+" days")
+              : (key==="from_52w_high") ? (fmtPct(r[key])+" from high")
+              : fmtPct(r[key]);
+      out.push({k:"stock", t:r.symbol,
+                s:(r.name?String(r.name).slice(0,42)+" · ":"")+val+" · Rs "+fmtRs(r.close)});
+    });
+    // and a way to see the whole list rather than only five
+    var SHOWALL={
+      gainers:"See every gainer", losers:"See every loser", volume:"See the most active",
+      high52:"See all near their high", gainers5:"See the 5-day leaders",
+      gainers20:"See the 20-day leaders", oversold:"See the weakest",
+      overbought:"See the strongest", upstreak:"See all rising streaks",
+      downstreak:"See all falling streaks"
+    };
+    out.push({k:"cmd", t:(SHOWALL[t.type]||"Open the screener"),
+              s:"full list in the screener", act:function(){ show("stocks"); }});
+    return out;
+  }
+
   function search(q){
     q=(q||"").trim().toLowerCase();
     if(!q){ results=(SEARCH.items||[]).filter(function(i){return i.k==="learn";}).slice(0,10); sel=0; paint(); return; }
+
+    // A question about the data is answered with the data, before any name matching.
+    var intent=parseIntent(q);
+    if(intent){
+      if(intent.type!=="jump" && !screenReady()){
+        results=[{k:"cmd", t:"Reading the screener…", s:"2,200 stocks, a moment", act:function(){}}];
+        sel=0; paint();
+        ensureScreen().then(function(){ if(input.value.trim().toLowerCase()===q) search(q); });
+        return;
+      }
+      var ir=intentResults(intent);
+      if(ir.length){ results=ir; sel=0; paint(); return; }
+    }
     var items=SEARCH.items||[], out=[];
     // starts-with first, then contains - the way a search box should feel
     for(var pass=0; pass<2 && out.length<40; pass++){
@@ -7421,6 +7633,33 @@ function openPalette(){
   });
 }
 function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
+
+/* The dot opens the field; tapping it again (or Escape) closes it. The field itself still
+   opens the full palette on focus, which is where the intent answers appear. */
+(function searchDot(){
+  try{
+    var dot=document.getElementById("searchDot");
+    var wrap=document.getElementById("searchwrap");
+    var box=document.getElementById("search");
+    if(!dot||!box) return;
+    function open(){
+      document.body.classList.add("search-open");
+      dot.setAttribute("aria-expanded","true");
+      setTimeout(function(){ try{ box.focus(); }catch(e){} }, 180);
+    }
+    function close(){
+      document.body.classList.remove("search-open");
+      dot.setAttribute("aria-expanded","false");
+    }
+    dot.addEventListener("click", function(e){
+      e.preventDefault();
+      if(document.body.classList.contains("search-open")){ close(); } else { open(); }
+    });
+    document.addEventListener("keydown", function(e){
+      if(e.key==="Escape" && document.body.classList.contains("search-open")){ close(); }
+    });
+  }catch(e){}
+})();
 
 /* ---------- search bar + keyboard ---------- */
 (function(){

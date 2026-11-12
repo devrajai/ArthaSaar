@@ -27,7 +27,7 @@ Output: data/timesfm_forecasts.json
   {
     "model": "...", "updated": "...", "horizon_days": 21,
     "nifty": {...},                       # kept for the old site's report card
-    "forecasts": [ {symbol,name,last,median_chg_pct,low10_chg_pct,high90_chg_pct,confidence}, ... ]
+    "forecasts": [ {symbol,name,last,median_chg_pct,low10_chg_pct,high90_chg_pct,band_pct}, ... ]
   }
 
 Usage:
@@ -339,7 +339,7 @@ def main() -> int:
     if nif:
         print(f"  Nifty {args.report_days}d: {nif['median_chg_pct']:+.2f}%  "
               f"(band {nif['low10_chg_pct']:+.2f} to {nif['high90_chg_pct']:+.2f}, "
-              f"confidence {nif['confidence']})")
+              f"band {nif['band_pct']:.2f}% of price)")
     return 0
 
 

@@ -106,6 +106,9 @@ def main():
     ap.add_argument("--range", default="1d")
     ap.add_argument("--sleep", type=float, default=0.4)
     ap.add_argument("--date", default="", help="label the file with this date (YYYY-MM-DD)")
+    ap.add_argument("--day", default="",
+                    help="keep only bars from this IST session date (YYYY-MM-DD). Use with a "
+                         "wider --range to recover a session that was missed.")
     args = ap.parse_args()
 
     import pandas as pd
@@ -149,7 +152,26 @@ def main():
     # IST session date, because an NSE session is defined in IST. Converting to IST first
     # avoids a late-evening UTC bar landing on the wrong calendar day.
     ist = df["datetime"].dt.tz_convert("Asia/Kolkata")
-    day = str(ist.dt.strftime("%Y-%m-%d").mode().iloc[0])
+    ist_day = ist.dt.strftime("%Y-%m-%d")
+
+    # A wider --range returns SEVERAL sessions at once. The old code took the modal date and
+    # wrote ONE file, which silently discarded every other day in the pull - so a 7-day
+    # backfill would have written 11 Nov and thrown away the 8 and 10 Nov bars it was run to
+    # recover. --day keeps only the requested session, so each missed day can be recovered
+    # into its own file.
+    if args.day:
+        keep = ist_day == args.day
+        dropped = int((~keep).sum())
+        df = df[keep].reset_index(drop=True)
+        ist_day = ist_day[keep].reset_index(drop=True)
+        if df.empty:
+            print("::warning title=No bars for %s::Yahoo returned nothing for that session - it "
+                  "may be outside the 7-day window for 1-minute bars" % args.day)
+            return 0
+        day = args.day
+        print("kept %d bars for %s, discarded %d from other sessions" % (len(df), day, dropped))
+    else:
+        day = str(ist_day.mode().iloc[0])
 
     dest_dir = os.path.join(OUT_DIR, day[:4])
     os.makedirs(dest_dir, exist_ok=True)

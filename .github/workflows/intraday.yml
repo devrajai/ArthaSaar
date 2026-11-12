@@ -16,6 +16,12 @@ name: Intraday archive (daily, after close)
 on:
   schedule:
     - cron: '30 10 * * 1-5'      # Mon-Fri, 4 PM IST
+    # WEEKENDS TOO. Muhurat trading is announced on a Sunday - 8 Nov 2026 was one, open
+    # 14:20 to 15:30 IST - and a Mon-Fri-only cron can never capture it. The guard step
+    # below exits immediately on an ordinary weekend, so this costs one skipped run, not a
+    # wasted capture. Yahoo carries no bars for that Muhurat session at all, which is why
+    # 8 Nov is still missing; the schedule is fixed so the next one is not lost the same way.
+    - cron: '30 10 * * 0,6'
   workflow_dispatch:
     inputs:
       top:
@@ -54,7 +60,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas pyarrow
 
+      # On a weekend, only continue if today is an announced special session. Without this
+      # the weekend cron would run a full 102-symbol capture against a closed market.
+      - name: Weekend guard
+        id: guard
+        run: |
+          python - <<'EOF'
+          import datetime as dt, json, os, sys
+          now = dt.datetime.now(dt.timezone(dt.timedelta(hours=5, minutes=30)))
+          if now.weekday() < 5:
+              print("weekday - proceeding")
+              sys.exit(0)
+          try:
+              cfg = json.load(open("config/special_sessions.json"))
+              days = {s["date"] for s in cfg.get("sessions", [])}
+          except Exception:
+              days = set()
+          today = now.strftime("%Y-%m-%d")
+          if today in days:
+              print("special session today (%s) - proceeding" % today)
+              sys.exit(0)
+          print("weekend and not a special session - skipping")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write("skip=1\n")
+          EOF
+
       - name: Capture the session
+        if: steps.guard.outputs.skip != '1'
         run: |
           python scripts/fetch_intraday.py \
             --top "${{ github.event.inputs.top || '100' }}" \

@@ -1164,58 +1164,60 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
    button next to a box.
    ==================================================================================== */
 #searchDot{
-  flex:0 0 auto;
-  width:42px; height:42px;
+  /* BOTTOM RIGHT OF THE SCREEN, not the header row.
+
+     Two earlier attempts put it inside the header - first at the far left, then at the far
+     right. Both were the wrong place: it belongs DOWN and RIGHT, floating above the page
+     like a search handle, which is what the reference shows.
+
+     Fixed positioning takes it out of the header flow entirely, so the row is unchanged and
+     the button sits where a thumb reaches it. */
+  position:fixed;
+  right:16px;
+  bottom:88px;              /* clears the mobile browser bar */
+  z-index:9000;
+  width:52px; height:52px;
   border-radius:50%;
   border:0;
-  padding:1.5px;
+  padding:0;
   cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,#9dc0f2 0%,#d6e6fa 45%,#9dc0f2 100%);
-  box-shadow:none;
-  /* RIGHT END OF THE ROW. order:-1 put it first, which is the far left - the opposite of
-     where it belongs. order:99 plus margin-left:auto pushes it past every other child so it
-     sits at the right edge, and the field opens to its LEFT. */
-  order:99;
-  margin-left:auto;
+  background:linear-gradient(180deg,#ffffff,#f1f7ff);
+  box-shadow:0 6px 20px rgba(23,58,120,.22), inset 0 1px 0 #fff;
+  order:0;
+  margin:0;
 }
 #searchDot svg{
-  background:linear-gradient(180deg,#fff,#f1f7ff);
-  border-radius:50%;
-  width:100%; height:100%;
-  padding:10px;
+  background:none;
+  border-radius:0;
+  width:22px; height:22px;
+  padding:0;
   box-sizing:border-box;
   color:#1d4ed8;
   display:block;
 }
 #searchDot:active{ transform:scale(.95); }
+/* the palette covers the screen - a floating button over it is in the way */
+body:has(.palette.on) #searchDot{ display:none; }
+@media print{ #searchDot{ display:none !important; } }
 
-/* collapsed by default: zero width, no opacity, nothing to tap */
+/* The field stays visible. The dot is an ADDITIONAL way in, floating at the bottom right
+   where a thumb reaches it - not a replacement for the bar. */
 header .searchwrap, .top .searchwrap{
-  order:98;                 /* immediately left of the dot */
-  max-width:0 !important;
-  opacity:0;
-  overflow:hidden;
-  pointer-events:none;
-  margin:0 !important;
-  padding:0 !important;
-  transition:max-width .28s cubic-bezier(.4,0,.2,1), opacity .2s ease, margin .28s ease, padding .28s ease;
-}
-/* opened: the field takes the row */
-body.search-open header .searchwrap, body.search-open .top .searchwrap{
   max-width:560px !important;
   opacity:1;
+  overflow:visible;
   pointer-events:auto;
   margin:8px 0 6px !important;
   padding:1.5px !important;
 }
 @media (max-width:680px){
-  body.search-open header .searchwrap, body.search-open .top .searchwrap{
+  header .searchwrap, .top .searchwrap{
     max-width:none !important;
     margin:6px 0 4px !important;
     padding:1.5px !important;
   }
-  #searchDot{ width:40px; height:40px; }
+  #searchDot{ width:50px; height:50px; right:14px; bottom:80px; }
 }
 </style>
 </head>
@@ -7639,6 +7641,21 @@ function openPalette(){
 }
 function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
 
+/* The dot is moved OUT of the header and into <body>.
+   The header carries transform: translateY(0) and will-change: transform, and either of those
+   makes it the containing block for position:fixed descendants. Left inside, the button would
+   anchor to the header's corner instead of the screen's - it would sit under the header, not at
+   the bottom right, and look broken on every scroll. Moving it to <body> is what makes fixed
+   mean fixed. */
+(function liftSearchDot(){
+  try{
+    var dot=document.getElementById("searchDot");
+    if(dot && dot.parentElement && dot.parentElement.tagName!=="BODY"){
+      document.body.appendChild(dot);
+    }
+  }catch(e){}
+})();
+
 /* The dot opens the field; tapping it again (or Escape) closes it. The field itself still
    opens the full palette on focus, which is where the intent answers appear. */
 (function searchDot(){
@@ -7647,21 +7664,14 @@ function closePalette(){ if(PALETTE) PALETTE.wrap.className="palette"; }
     var wrap=document.getElementById("searchwrap");
     var box=document.getElementById("search");
     if(!dot||!box) return;
-    function open(){
-      document.body.classList.add("search-open");
-      dot.setAttribute("aria-expanded","true");
-      setTimeout(function(){ try{ box.focus(); }catch(e){} }, 180);
-    }
-    function close(){
-      document.body.classList.remove("search-open");
-      dot.setAttribute("aria-expanded","false");
-    }
+    // The bar is already on screen, so the floating button opens the same palette the bar
+    // does - one search experience, two ways in.
     dot.addEventListener("click", function(e){
       e.preventDefault();
-      if(document.body.classList.contains("search-open")){ close(); } else { open(); }
-    });
-    document.addEventListener("keydown", function(e){
-      if(e.key==="Escape" && document.body.classList.contains("search-open")){ close(); }
+      try{
+        if(typeof openPalette==="function"){ openPalette(); return; }
+      }catch(err){}
+      try{ box.focus(); }catch(err){}
     });
   }catch(e){}
 })();

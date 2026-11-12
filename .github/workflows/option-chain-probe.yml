@@ -1,0 +1,36 @@
+name: NSE option chain probe
+
+# One question: can a GitHub runner read NSE's option chain? From the development sandbox
+# it answers HTTP 200 with a two-byte body - an empty payload - so the sandbox cannot settle
+# it. A runner has a different network path. This is the same approach that closed the MCX
+# question: ask from the real environment, print the evidence, do not guess.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Probe the option chain
+        run: python scripts/probe_option_chain.py
+
+      - name: Show the raw result
+        if: always()
+        run: |
+          if [ -f option_chain_probe.json ]; then
+            echo "--- saved probe ---"
+            head -c 2000 option_chain_probe.json
+          else
+            echo "no probe file written"
+          fi

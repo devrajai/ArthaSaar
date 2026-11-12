@@ -1018,6 +1018,106 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
   header .searchwrap, .top .searchwrap{ max-width:none !important; margin:6px 0 2px !important; }
   header .searchwrap input, .top .searchwrap input{ padding:12px 44px 12px 18px !important; }
 }
+
+/* ====================================================================================
+   SEARCH BAR - OPTION 2 (glass rim), and NO BOX AROUND IT.
+
+   The bar sits in a translucent header that painted its own rectangle, so the field looked
+   like a white card inside a paler card - a square box behind a rounded one. Everything
+   around the field is now fully transparent: header, the row wrapper, and the field's own
+   container. The only thing that draws is the pill.
+
+   The rim is a 1.5px gradient border rather than a drop shadow, which is what makes it read
+   as glass instead of a card.
+   ==================================================================================== */
+header, header .wrap, .wrap.top, .top{
+  background:transparent !important;
+  background-image:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+
+/* the pill: gradient rim + soft inner surface, nothing behind it */
+header .searchwrap, .top .searchwrap, body.scrolled header .searchwrap{
+  flex:1 1 auto !important;
+  max-width:560px !important;
+  width:auto !important;
+  position:relative !important;
+  margin:8px 0 6px !important;
+  padding:1.5px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:linear-gradient(135deg,#9dc0f2 0%,#d6e6fa 45%,#9dc0f2 100%) !important;
+  background-image:linear-gradient(135deg,#9dc0f2 0%,#d6e6fa 45%,#9dc0f2 100%) !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  display:flex !important;
+  align-items:center !important;
+}
+/* the inner surface carries the white, so the rim shows as a hairline */
+header .searchwrap::before, .top .searchwrap::before{
+  content:"";
+  position:absolute;
+  inset:1.5px;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(240,247,255,.93));
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+  z-index:0;
+}
+header .searchwrap input, .top .searchwrap input,
+header .searchwrap input[type="search"], input#search{
+  position:relative !important;
+  z-index:1 !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+  font:inherit !important;
+  font-size:14.5px !important;
+  padding:12.5px 46px 12.5px 19px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:transparent !important;
+  background-image:none !important;
+  color:#12345c !important;
+  box-shadow:none !important;
+  outline:none !important;
+  -webkit-appearance:none !important;
+  appearance:none !important;
+}
+header .searchwrap input::placeholder, .top .searchwrap input::placeholder{
+  color:#7d90a8 !important;
+  opacity:1 !important;
+}
+/* magnifier on the right, in the site blue */
+header .searchwrap .mag, .top .searchwrap .mag,
+body.scrolled header .searchwrap .mag{
+  position:absolute !important;
+  right:16px !important;
+  left:auto !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  inset:auto 16px auto auto !important;
+  width:auto !important;
+  height:auto !important;
+  background:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  color:#1d4ed8 !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  display:flex !important;
+  align-items:center !important;
+}
+header .searchwrap input::-webkit-search-cancel-button{ display:none !important; }
+#micBtn, #voiceHint{ display:none !important; }
+@media (max-width:680px){
+  header .searchwrap, .top .searchwrap{ max-width:none !important; margin:6px 0 4px !important; }
+  header .searchwrap input, .top .searchwrap input{ padding:12px 44px 12px 17px !important; }
+}
 </style>
 </head>
 <body>
@@ -7663,6 +7763,51 @@ function groupTabs(){
   b.innerHTML="<i></i><i></i><i></i>";
   b.addEventListener("click",function(){ document.body.classList.add("nav-open"); });
   top.insertBefore(b, top.firstChild);
+})();
+
+/* ====================================================================================
+   BACK BUTTON CLOSES THE MENU.
+
+   Opening the menu only added a class. Nothing touched browser history, so pressing back
+   while the menu was open navigated away from the site entirely - the reader lost their
+   place and had to come back.
+
+   One history entry is pushed when the menu opens. Back then fires popstate, which closes
+   the menu and keeps the reader on the page. Closing with the X or by picking a section
+   consumes that entry with history.back(), so the back button does not appear to do
+   nothing the next time it is pressed.
+   ==================================================================================== */
+(function menuBackButton(){
+  try{
+    var pushed=false, popping=false;
+    function isOpen(){
+      return document.body.classList.contains("nav-open");
+    }
+    // Watch the class rather than the click handlers: the menu is opened and closed from
+    // several places (burger, X, section select, ?nav=1) and this covers all of them
+    // without rewriting any of them.
+    new MutationObserver(function(){
+      if(popping) return;
+      if(isOpen()){
+        if(!pushed){
+          try{ history.pushState({asMenu:1}, "", location.href); pushed=true; }catch(e){}
+        }
+      }else if(pushed){
+        // closed by the page itself, not by back - give the entry back
+        pushed=false;
+        try{ history.back(); }catch(e){}
+      }
+    }).observe(document.body,{attributes:true, attributeFilter:["class"]});
+
+    window.addEventListener("popstate", function(){
+      popping=true;
+      if(isOpen()){
+        pushed=false;
+        document.body.classList.remove("nav-open");
+      }
+      setTimeout(function(){ popping=false; }, 0);
+    });
+  }catch(e){}
 })();
 
 // Put the logo and the name into one centred group. Done in JS rather than CSS because

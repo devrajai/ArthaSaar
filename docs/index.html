@@ -1173,7 +1173,11 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
   display:flex; align-items:center; justify-content:center;
   background:linear-gradient(135deg,#9dc0f2 0%,#d6e6fa 45%,#9dc0f2 100%);
   box-shadow:none;
-  order:-1;
+  /* RIGHT END OF THE ROW. order:-1 put it first, which is the far left - the opposite of
+     where it belongs. order:99 plus margin-left:auto pushes it past every other child so it
+     sits at the right edge, and the field opens to its LEFT. */
+  order:99;
+  margin-left:auto;
 }
 #searchDot svg{
   background:linear-gradient(180deg,#fff,#f1f7ff);
@@ -1188,6 +1192,7 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
 
 /* collapsed by default: zero width, no opacity, nothing to tap */
 header .searchwrap, .top .searchwrap{
+  order:98;                 /* immediately left of the dot */
   max-width:0 !important;
   opacity:0;
   overflow:hidden;

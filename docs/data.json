@@ -1,27 +1,27 @@
 {
-  "generated_utc": "2026-11-12T12:42:57Z",
+  "generated_utc": "2026-11-12T21:15:40Z",
   "fno": {
-    "date": "2026-11-11",
+    "date": "2026-11-12",
     "pcr": {
-      "nifty_pcr_oi": 0.98,
-      "nifty_max_pain": 26000.0
+      "nifty_pcr_oi": 1.0,
+      "nifty_max_pain": 24000.0
     },
     "index_futures": [
       {
         "symbol": "BANKNIFTY",
-        "oi": 2505240
+        "oi": 2509620
       },
       {
         "symbol": "FINNIFTY",
-        "oi": 32460
+        "oi": 32640
       },
       {
         "symbol": "MIDCPNIFTY",
-        "oi": 2154120
+        "oi": 2147280
       },
       {
         "symbol": "NIFTY",
-        "oi": 13487825
+        "oi": 14291225
       },
       {
         "symbol": "NIFTYFPI",
@@ -29,129 +29,129 @@
       },
       {
         "symbol": "NIFTYNXT50",
-        "oi": 17400
+        "oi": 17325
       }
     ],
     "top_oi": [
       {
         "symbol": "IDEA",
-        "oi": 6337991150,
-        "oi_chg": 69115850,
-        "chg": 1.63
+        "oi": 6408920700,
+        "oi_chg": 70929550,
+        "chg": 0.46
       },
       {
         "symbol": "YESBANK",
-        "oi": 1339445900,
-        "oi_chg": 14057200,
-        "chg": 0.98
+        "oi": 1330582400,
+        "oi_chg": -8863500,
+        "chg": 2.23
       },
       {
         "symbol": "SUZLON",
-        "oi": 486181400,
-        "oi_chg": 6781800,
-        "chg": -0.36
+        "oi": 497738400,
+        "oi_chg": 11557000,
+        "chg": -0.15
       },
       {
         "symbol": "IDFCFIRSTB",
-        "oi": 376806150,
-        "oi_chg": 3533775,
-        "chg": 2.98
+        "oi": 377650175,
+        "oi_chg": 844025,
+        "chg": 0.84
       },
       {
         "symbol": "NMDC",
-        "oi": 365377500,
-        "oi_chg": 8194500,
-        "chg": 0.25
+        "oi": 366383250,
+        "oi_chg": 1005750,
+        "chg": -0.74
       },
       {
         "symbol": "TATASTEEL",
-        "oi": 332634500,
-        "oi_chg": -8109750,
-        "chg": 1.96
+        "oi": 335252500,
+        "oi_chg": 2618000,
+        "chg": -0.14
       },
       {
         "symbol": "CANBK",
-        "oi": 329784750,
-        "oi_chg": -5346000,
-        "chg": 3.1
+        "oi": 333018000,
+        "oi_chg": 3233250,
+        "chg": 0.53
       },
       {
         "symbol": "HDFCBANK",
-        "oi": 319686950,
-        "oi_chg": -18698400,
-        "chg": 0.95
+        "oi": 316211700,
+        "oi_chg": -3475250,
+        "chg": 0.63
       },
       {
         "symbol": "JIOFIN",
-        "oi": 229752450,
-        "oi_chg": 3384000,
-        "chg": 0.12
-      },
-      {
-        "symbol": "PNB",
-        "oi": 227040000,
-        "oi_chg": -9464000,
-        "chg": 4.36
+        "oi": 229110900,
+        "oi_chg": -641550,
+        "chg": 0.22
       },
       {
         "symbol": "ADANIPOWER",
-        "oi": 221914050,
-        "oi_chg": -621250,
-        "chg": 0.91
+        "oi": 222695050,
+        "oi_chg": 781000,
+        "chg": -0.05
+      },
+      {
+        "symbol": "PNB",
+        "oi": 221936000,
+        "oi_chg": -5104000,
+        "chg": 3.01
       },
       {
         "symbol": "ITC",
-        "oi": 210502750,
-        "oi_chg": -2508175,
-        "chg": 1.9
+        "oi": 213122900,
+        "oi_chg": 2620150,
+        "chg": 0.12
       },
       {
         "symbol": "SAIL",
-        "oi": 176466200,
-        "oi_chg": -6561200,
-        "chg": 3.29
+        "oi": 179615200,
+        "oi_chg": 3149000,
+        "chg": 1.19
       },
       {
         "symbol": "RELIANCE",
-        "oi": 173961000,
-        "oi_chg": 640000,
-        "chg": 0.7
+        "oi": 175361500,
+        "oi_chg": 1400500,
+        "chg": 0.4
       },
       {
         "symbol": "WIPRO",
-        "oi": 160839000,
-        "oi_chg": -1185000,
-        "chg": -0.52
+        "oi": 161412000,
+        "oi_chg": 573000,
+        "chg": -0.38
       },
       {
         "symbol": "MOTHERSON",
-        "oi": 154986150,
-        "oi_chg": -227550,
-        "chg": 4.52
+        "oi": 158922150,
+        "oi_chg": 3936000,
+        "chg": -1.65
       },
       {
         "symbol": "KOTAKBANK",
-        "oi": 141784000,
-        "oi_chg": -350000,
-        "chg": 1.59
+        "oi": 144298000,
+        "oi_chg": 2514000,
+        "chg": 0.7
       },
       {
         "symbol": "BANKBARODA",
-        "oi": 132572700,
-        "oi_chg": -5048550,
-        "chg": 5.44
-      },
-      {
-        "symbol": "BANDHANBNK",
-        "oi": 129434400,
-        "oi_chg": 169200,
-        "chg": 1.6
+        "oi": 132555150,
+        "oi_chg": -17550,
+        "chg": 0.75
       },
       {
         "symbol": "NHPC",
-        "oi": 126580350,
-        "oi_chg": 535150,
-        "chg": -2.27
+        "oi": 129200500,
+        "oi_chg": 2620150,
+        "chg": -1.86
+      },
+      {
+        "symbol": "BANDHANBNK",
+        "oi": 126763200,
+        "oi_chg": -2671200,
+        "chg": 2.38
       }
     ],
     "stock_futures": 218
@@ -169,183 +169,183 @@
       ],
       "rows": [
         [
-          "2026-11-11",
+          "2026-11-12",
+          "PETRONET",
+          "1022200",
+          "657400",
+          "64.31",
+          "0.97",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "ONGC",
+          "1239750",
+          "762750",
+          "61.52",
+          "-3.96",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "VMM",
+          "10888250",
+          "5490200",
+          "50.42",
+          "0.5",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "CHOLAFIN",
+          "1429375",
+          "699375",
+          "48.93",
+          "2.74",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "HAVELLS",
+          "623000",
+          "290500",
+          "46.63",
+          "-0.03",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
           "NAVINFLUOR",
-          "107475",
-          "88725",
-          "82.55",
-          "5.42",
+          "199725",
+          "92250",
+          "46.19",
+          "3.15",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "COCHINSHIP",
-          "200400",
-          "164800",
-          "82.24",
-          "-8.56",
+          "2026-11-12",
+          "ATHERENERG",
+          "720375",
+          "326625",
+          "45.34",
+          "2.84",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "CIPLA",
-          "223975",
-          "172975",
-          "77.23",
-          "0.27",
+          "2026-11-12",
+          "SIEMENS",
+          "284725",
+          "124425",
+          "43.7",
+          "-0.43",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "COCHINSHIP",
-          "1215600",
-          "914800",
-          "75.26",
-          "-8.45",
+          "2026-11-12",
+          "BDL",
+          "179350",
+          "75650",
+          "42.18",
+          "-5.68",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "NESTLEIND",
-          "181500",
-          "123000",
-          "67.77",
-          "-0.89",
+          "2026-11-12",
+          "BDL",
+          "1134325",
+          "469625",
+          "41.4",
+          "-5.33",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "MOTILALOFS",
-          "389825",
-          "244900",
-          "62.82",
-          "1.07",
+          "2026-11-12",
+          "MANAPPURAM",
+          "1137000",
+          "465000",
+          "40.9",
+          "-0.78",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "LICHSGFIN",
-          "1620000",
-          "932000",
-          "57.53",
-          "1.71",
+          "2026-11-12",
+          "HAVELLS",
+          "287000",
+          "115000",
+          "40.07",
+          "-0.33",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "MAHABANK",
-          "325000",
-          "175500",
-          "54.0",
-          "3.14",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "IOC",
-          "726375",
-          "390000",
-          "53.69",
+          "2026-11-12",
+          "AMBER",
+          "140000",
+          "51600",
+          "36.86",
           "0.11",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "VMM",
-          "5398050",
-          "2895450",
-          "53.64",
-          "3.54",
+          "2026-11-12",
+          "MOTILALOFS",
+          "609150",
+          "219325",
+          "36.01",
+          "4.92",
           "build-up"
         ],
         [
-          "2026-11-11",
-          "SAIL",
-          "658000",
-          "333700",
-          "50.71",
-          "3.33",
+          "2026-11-12",
+          "NHPC",
+          "1813950",
+          "646350",
+          "35.63",
+          "-1.82",
           "build-up"
         ],
         [
-          "2026-11-11",
+          "2026-11-12",
+          "LTM",
+          "292950",
+          "102600",
+          "35.02",
+          "1.72",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "VOLTAS",
+          "574125",
+          "198000",
+          "34.49",
+          "-0.62",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "PATANJALI",
+          "868600",
+          "296700",
+          "34.16",
+          "0.76",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
+          "LICI",
+          "3959200",
+          "1330000",
+          "33.59",
+          "0.51",
+          "build-up"
+        ],
+        [
+          "2026-11-12",
           "BPCL",
-          "1374600",
-          "683350",
-          "49.71",
-          "-0.14",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "HINDALCO",
-          "206500",
-          "102200",
-          "49.49",
-          "0.06",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "KALYANKJIL",
-          "166050",
-          "79650",
-          "47.97",
-          "8.75",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "COROMANDEL",
-          "770100",
-          "362700",
-          "47.1",
-          "6.49",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "VBL",
-          "456450",
-          "211650",
-          "46.37",
-          "-0.88",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "CHOLAFIN",
-          "730000",
-          "328750",
-          "45.03",
-          "0.82",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "MAHABANK",
-          "1677000",
-          "754000",
-          "44.96",
-          "2.68",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "TATAPOWER",
-          "3587300",
-          "1596450",
-          "44.5",
-          "0.17",
-          "build-up"
-        ],
-        [
-          "2026-11-11",
-          "RVNL",
-          "886275",
-          "383800",
-          "43.3",
-          "4.04",
+          "154050",
+          "49375",
+          "32.05",
+          "-1.56",
           "build-up"
         ]
       ],
@@ -556,22 +556,34 @@
       ],
       "rows": [
         [
-          "BAYERCROP",
-          "Interim Dividend - Rs 90 Per Share",
-          "2026-11-12",
-          "Bayer Cropscience Limited"
+          "APTUS",
+          "Interim Dividend - Rs 2 Per Share",
+          "2026-11-13",
+          "Aptus Value Housing Finance India Limited"
         ],
         [
-          "CITIUSINVT",
-          "Distribution - Rs 2.9585 Per Unit Consists Of Rs 1.7560 Per Unit As Interest/ Re 0.4885 Per Unit As Repayment Of Debt/ Rs 0.6943 Per Unit As Dividend/ Rs 0.0197 Per Unit As Other Income",
-          "2026-11-12",
-          "Citius TransNet Investment Trust"
+          "ASTRAL",
+          "Interim Dividend - Rs 1.50 Per Share",
+          "2026-11-13",
+          "Astral Limited"
         ],
         [
-          "GAJA",
-          "Interim Dividend - Re 0.50 Per Share",
-          "2026-11-12",
-          "Gaja Alternative Asset Management Limited"
+          "BMWVENTLTD",
+          "Interim Dividend - Rs 1.50 Per Share",
+          "2026-11-13",
+          "BMW Ventures Limited"
+        ],
+        [
+          "CAMS",
+          "Interim Dividend - Rs 3.25 Per Share",
+          "2026-11-13",
+          "Computer Age Management Services Limited"
+        ],
+        [
+          "DYNAMATECH",
+          "Interim Dividend - Rs 2 Per Share",
+          "2026-11-13",
+          "Dynamatic Technologies Limited"
         ],
         [
           "GESHIP",
@@ -580,34 +592,10 @@
           "The Great Eastern Shipping Company Limited"
         ],
         [
-          "GODFRYPHLP",
-          "Interim Dividend - Rs 10 Per Share",
-          "2026-11-12",
-          "Godfrey Phillips India Limited"
-        ],
-        [
           "GOLDIAM",
           "Interim Dividend - Rs 2 Per Share",
           "2026-11-13",
           "Goldiam International Limited"
-        ],
-        [
-          "GPPL",
-          "Interim Dividend - Rs 3 Per Share",
-          "2026-11-12",
-          "Gujarat Pipavav Port Limited"
-        ],
-        [
-          "GPTHEALTH",
-          "Interim Dividend - Re 1 Per Share",
-          "2026-11-12",
-          "GPT Healthcare Limited"
-        ],
-        [
-          "HINDUNILVR",
-          "Interim Dividend - Rs 19 Per Share",
-          "2026-11-12",
-          "Hindustan Unilever Limited"
         ],
         [
           "IGPL",
@@ -616,34 +604,16 @@
           "IG Petrochemicals Limited"
         ],
         [
-          "IMFA",
+          "ORIENTTECH",
+          "Interim Dividend - Rs 2 Per Share",
+          "2026-11-13",
+          "Orient Technologies Limited"
+        ],
+        [
+          "PGIL",
           "Interim Dividend - Rs 5 Per Share",
-          "2026-11-12",
-          "Indian Metals & Ferro Alloys Limited"
-        ],
-        [
-          "INSECTICID",
-          "Interim Dividend - Rs 5 Per Share",
-          "2026-11-12",
-          "Insecticides (India) Limited"
-        ],
-        [
-          "IRB",
-          "Interim Dividend - Re 0.05 Per Share",
-          "2026-11-12",
-          "IRB Infrastructure Developers Limited"
-        ],
-        [
-          "NLCINDIA",
-          "Interim Dividend - Rs 1.50 Per Share",
-          "2026-11-12",
-          "NLC India Limited"
-        ],
-        [
-          "ONGC",
-          "Interim Dividend - Rs 8 Per Share",
-          "2026-11-12",
-          "Oil & Natural Gas Corporation Limited"
+          "2026-11-13",
+          "Pearl Global Industries Limited"
         ],
         [
           "PPAP",
@@ -652,19 +622,60 @@
           "PPAP Automotive Limited"
         ],
         [
-          "SAFARI",
+          "PRECWIRE",
+          "Interim Dividend - Re 0.35 Per Share",
+          "2026-11-13",
+          "Precision Wires India Limited"
+        ],
+        [
+          "RAIN",
+          "Interim Dividend - Re 0.50 Per Share",
+          "2026-11-13",
+          "Rain Industries Limited"
+        ],
+        [
+          "REPCOHOME",
+          "Interim Dividend - Rs 5 Per Share",
+          "2026-11-13",
+          "Repco Home Finance Limited"
+        ],
+        [
+          "SBCL",
           "Interim Dividend - Rs 2 Per Share",
-          "2026-11-12",
-          "Safari Industries (India) Limited"
+          "2026-11-13",
+          "Shivalik Bimetal Controls Limited"
         ],
         [
           "SOMANYCERA",
           "Interim Dividend - Rs 6 Per Share",
           "2026-11-13",
           "Somany Ceramics Limited"
+        ],
+        [
+          "STARCEMENT",
+          "Interim Dividend - Re 1 Per Share",
+          "2026-11-13",
+          "Star Cement Limited"
         ]
       ],
-      "total": 18
+      "total": 17
+    },
+    "bonus": {
+      "columns": [
+        "symbol",
+        "subject",
+        "ex_date",
+        "company"
+      ],
+      "rows": [
+        [
+          "PASHUPATI",
+          "Bonus 3:2",
+          "2026-11-13",
+          "Pashupati Cotspin Limited"
+        ]
+      ],
+      "total": 1
     },
     "other": {
       "columns": [
@@ -675,16 +686,16 @@
       ],
       "rows": [
         [
+          "679GS2027",
+          "Interest Payment",
+          "2026-11-13",
+          "GOVERNMENT OF INDIA"
+        ],
+        [
           "FDC",
           "Buy Back",
           "2026-11-13",
           "FDC Limited"
-        ],
-        [
-          "NHIT",
-          "Distribution - Rs 2.529 Per Unit Consisting Of Rs 2.518 Per Unit As Interest / Re 0.011 Per Unit As Other Income",
-          "2026-11-12",
-          "National Highways Infra Trust"
         ]
       ],
       "total": 2
@@ -700,21 +711,21 @@
     "rows": [
       [
         "^NSEBANK",
-        61518.5,
-        1.19,
-        "2026-11-12"
-      ],
-      [
-        "^NSEI",
-        25299.3496,
-        0.18,
-        "2026-11-12"
+        60792.3984,
+        1.76,
+        "2026-11-11"
       ],
       [
         "^BSESN",
-        81911.0078,
-        0.04,
-        "2026-11-12"
+        81879.3984,
+        0.95,
+        "2026-11-11"
+      ],
+      [
+        "^NSEI",
+        25255.0508,
+        0.84,
+        "2026-11-11"
       ]
     ],
     "total": 3
@@ -729,8 +740,8 @@
     "rows": [
       [
         "GC=F",
-        3951.3,
-        -1.23,
+        3886.3999,
+        -2.85,
         "2026-11-12"
       ]
     ],
@@ -746,62 +757,62 @@
     "rows": [
       [
         "BNB-USD",
-        663.55,
-        -2.35,
-        "2026-11-12"
-      ],
-      [
-        "LINK-USD",
-        9.973,
-        -2.16,
-        "2026-11-12"
-      ],
-      [
-        "ETH-USD",
-        2018.33,
-        -1.83,
-        "2026-11-12"
-      ],
-      [
-        "DOGE-USD",
-        0.0664,
-        -1.71,
-        "2026-11-12"
-      ],
-      [
-        "ADA-USD",
-        0.1716,
-        -1.63,
-        "2026-11-12"
-      ],
-      [
-        "XRP-USD",
-        1.0361,
-        -1.59,
+        653.28,
+        -3.86,
         "2026-11-12"
       ],
       [
         "BTC-USD",
-        72830.0078,
-        -1.53,
+        71382.7734,
+        -3.49,
+        "2026-11-12"
+      ],
+      [
+        "DOGE-USD",
+        0.0658,
+        -2.53,
         "2026-11-12"
       ],
       [
         "SOL-USD",
-        82.27,
-        -1.26,
+        81.41,
+        -2.29,
         "2026-11-12"
       ],
       [
         "AVAX-USD",
-        8.438,
-        -0.92,
+        8.333,
+        -2.15,
+        "2026-11-12"
+      ],
+      [
+        "ETH-USD",
+        2014.96,
+        -1.99,
+        "2026-11-12"
+      ],
+      [
+        "XRP-USD",
+        1.0348,
+        -1.71,
+        "2026-11-12"
+      ],
+      [
+        "LINK-USD",
+        10.047,
+        -1.43,
+        "2026-11-12"
+      ],
+      [
+        "ADA-USD",
+        0.1722,
+        -1.28,
         "2026-11-12"
       ],
       [
         "TRX-USD",
-        0.3159,
-        -0.21,
+        0.3154,
+        -0.38,
         "2026-11-12"
       ]
     ],
@@ -818,233 +829,224 @@
     "rows": [
       [
         "ET Markets",
+        "US Fed sets new meeting schedule for 2027, as foretold by Chairman Kevin Warsh",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-fed-sets-new-meeting-schedule-for-2027-as-foretold-by-chairman-kevin-warsh/articleshow/135781878.cms",
+        "Fri, 13 Nov 2026 01:42:45 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Kalshi ends Donald Trump Jr's advisory contract due to Polymarket conflict",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/kalshi-ends-donald-trump-jrs-advisory-contract-due-to-polymarket-conflict/articleshow/135780903.cms",
+        "Fri, 13 Nov 2026 00:16:11 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "October retail inflation surge may weigh on housing demand, raise rate hike concerns: Knight Frank, PHDCCI",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/october-retail-inflation-surge-may-weigh-on-housing-demand-raise-rate-hike-concerns-knight-frank-phdcci/articleshow/135776096.cms",
+        "Thu, 12 Nov 2026 21:39:52 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Nvidia default risk nears record high as board weighs CEO\u2019s fate",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/nvidia-default-risk-nears-record-high-as-board-weighs-ceos-fate/articleshow/135775893.cms",
+        "Thu, 12 Nov 2026 21:30:02 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks: S&amp;P 500, Nasdaq fall as Nvidia CEO exit rattles AI stocks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-us-market-opens-lower-after-nvidia-ceo-steps-down/articleshow/135773944.cms",
+        "Thu, 12 Nov 2026 20:30:31 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Nebius beats quarterly revenue estimates on strong AI demand",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/nebius-beats-quarterly-revenue-estimates-on-strong-ai-demand/articleshow/135771184.cms",
+        "Thu, 12 Nov 2026 18:47:09 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Nasdaq, S&amp;P 500 futures fall as Nvidia turbulence unsettles AI stocks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/nasdaq-sp-500-futures-fall-as-nvidia-turbulence-unsettles-ai-stocks/articleshow/135771074.cms",
+        "Thu, 12 Nov 2026 18:44:54 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Clean Max Enviro Energy pledges Rs 50,000 crore investment in Andhra Pradesh",
+        "https://economictimes.indiatimes.com/markets/companies/clean-max-enviro-energy-pledges-rs-50000-crore-investment-in-andhra-pradesh/articleshow/135771043.cms",
+        "Thu, 12 Nov 2026 18:41:57 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks edge lower as Nvidia, oil volatility weighs on sentiment: Stock Market Live Updates",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-nvidia-intel-micron-ai-stocks-marvell-coreweave-ai-chip-stocks-treasury-yield-news-12th-november-2026/liveblog/135771380.cms",
+        "Thu, 12 Nov 2026 18:40:17 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "India bonds track Treasury weakness ahead of debt supply",
+        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-track-treasury-weakness-ahead-of-debt-supply/articleshow/135769595.cms",
+        "Thu, 12 Nov 2026 17:58:02 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Punjab National Bank among 4 stocks hitting 52-week highs; rally up to 22% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/punjab-national-bank-among-4-stocks-hitting-52-week-highs-rally-up-to-22-in-a-month/slideshow/135769519.cms",
+        "Thu, 12 Nov 2026 17:51:16 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
+        "Nvidia Boardroom Turmoil: What's Happening to Jensen Huang?",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/nvidia-boardroom-turmoil-whats-happening-to-jensen-huang/videoshow/135769095.cms",
+        "Thu, 12 Nov 2026 17:41:01 +0530",
+        "2026-11-12T20:40:18Z"
+      ],
+      [
+        "ET Markets",
         "Zee Entertainment approves Rs 600-crore share buyback at Rs 91 apiece; promoters to stay out",
         "https://economictimes.indiatimes.com/markets/stocks/news/zee-entertainment-approves-rs-600-crore-share-buyback-at-rs-91-apiece-promoters-to-stay-out/articleshow/135767979.cms",
         "Thu, 12 Nov 2026 17:16:29 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Rupee slips with traders clinging to equity cues, awaiting inflation data",
         "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-slips-with-traders-clinging-to-equity-cues-awaiting-inflation-data/articleshow/135765691.cms",
         "Thu, 12 Nov 2026 16:08:06 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Unique Picks: 9 stocks held by just one MF scheme in October, rally up to 144% YTD",
         "https://economictimes.indiatimes.com/markets/stocks/news/unique-picks-9-stocks-held-by-just-one-mf-scheme-in-october-rally-up-to-144-ytd/slideshow/135763800.cms",
         "Thu, 12 Nov 2026 14:58:52 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Bloom Energy shares jump 13%: Can the AI power stock sustain its rally?",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/bloom-energy-shares-jump-13-can-the-ai-power-stock-sustain-its-rally/slideshow/135760252.cms",
         "Thu, 12 Nov 2026 12:38:20 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Mahindra &amp; Mahindra among 5 stocks showing White Marubozu Pattern",
         "https://economictimes.indiatimes.com/markets/stocks/news/mahindra-amp-mahindra-among-5-stocks-showing-white-marubozu-pattern/slideshow/135758580.cms",
         "Thu, 12 Nov 2026 11:59:25 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Indian bonds drift as US debt rout saps oil relief before CPI",
         "https://economictimes.indiatimes.com/markets/bonds/indian-bonds-drift-as-us-debt-rout-saps-oil-relief-before-cpi/articleshow/135758028.cms",
         "Thu, 12 Nov 2026 11:46:58 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "FIIs are back! Jefferies lists 11 stocks that can be the biggest beneficiaries",
         "https://economictimes.indiatimes.com/markets/stocks/news/fiis-are-back-jefferies-lists-11-stocks-that-can-be-the-biggest-beneficiaries/slideshow/135758277.cms",
         "Thu, 12 Nov 2026 11:24:56 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "From SpaceX to Anthropic, markets have a new playbook for mega-share debuts",
         "https://economictimes.indiatimes.com/markets/stocks/news/from-spacex-to-anthropic-markets-have-a-new-playbook-for-mega-share-debuts/articleshow/135756798.cms",
         "Thu, 12 Nov 2026 11:05:33 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Vishal Mega Mart among 5 stocks showing RSI trending up",
         "https://economictimes.indiatimes.com/markets/stocks/news/vishal-mega-mart-among-5-stocks-showing-rsi-trending-up/slideshow/135755604.cms",
         "Thu, 12 Nov 2026 10:06:34 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Oil India among 6 stocks closing above VWAP",
         "https://economictimes.indiatimes.com/markets/stocks/news/oil-india-among-6-stocks-closing-above-vwap/slideshow/135755140.cms",
         "Thu, 12 Nov 2026 09:43:06 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
-        "Tech Mahindra Share Price Live Updates: Tech Mahindra's Current Market Position",
+        "Tech Mahindra Share Price Highlights: Tech Mahindra Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tech-mahindra-share-price-today-live-updates-12-nov-2026/liveblog/135754851.cms",
         "Thu, 12 Nov 2026 09:36:09 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
-        "Tata Motors Passenger Vehicles Share Price Live Updates: Announcement under Regulation 30 (LODR)-Allotment of ESOP / ESPS",
+        "Tata Motors PV Share Price Highlights: Tata Motors PV Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-motors-pv-stock-price-today-live-12-nov-2026/liveblog/135754348.cms",
         "Thu, 12 Nov 2026 09:15:24 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
-        "Dr Reddys Share Price Live Updates: Dr. Reddys shows positive movement in the market",
+        "Dr Reddys Share Price Highlights: Dr. Reddys Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/dr-reddys-share-price-live-updates-12-nov-2026/liveblog/135754002.cms",
         "Thu, 12 Nov 2026 09:06:31 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
-        "JSW Steel Share Price Live Updates: JSW Steel Price Movement",
+        "JSW Steel Share Price Highlights: JSW Steel Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/jsw-steel-stock-price-livestock-price-today-live-updates-12-nov-2026/liveblog/135753811.cms",
         "Thu, 12 Nov 2026 09:00:41 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
-        "ITC Share Price Live Updates: ITC's Daily Price Change",
+        "ITC Share Price Highlights: ITC Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/itc-share-price-today-live-12-nov-2026/liveblog/135753807.cms",
         "Thu, 12 Nov 2026 09:00:23 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Tata Power shares rise 2% after Q2 results. Why brokerages are bullish despite target price cuts",
         "https://economictimes.indiatimes.com/markets/stocks/news/tata-power-shares-in-focus-after-q2-results-why-brokerages-are-bullish-despite-target-price-cuts/articleshow/135753647.cms",
         "Thu, 12 Nov 2026 08:57:59 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
         "Nvidia shares plummet 10% in after-hours trade as investors consider a future without Huang",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/nvidia-shares-slide-as-investors-consider-future-without-huang/articleshow/135753594.cms",
         "Thu, 12 Nov 2026 08:51:39 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ],
       [
         "ET Markets",
-        "Divis Labs Share Price Live Updates: Divis Labs Current Trading Status",
+        "Divis Labs Share Price Highlights: Divis Labs Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/divis-labs-share-price-today-live-updates-12-nov-2026/liveblog/135753606.cms",
         "Thu, 12 Nov 2026 08:50:11 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Eicher Motors Share Price Live Updates: Eicher Motors Daily Performance Overview",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/eicher-motors-stock-price-live-updates-12-nov-2026/liveblog/135753520.cms",
-        "Thu, 12 Nov 2026 08:45:05 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Grasim Inds Share Price Live Updates: Grasim Industries shows a downward trend in pricing",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/grasim-inds-share-price-today-live-updates-12-nov-2026/liveblog/135753396.cms",
-        "Thu, 12 Nov 2026 08:40:22 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Hindalco Share Price Live Updates: Hindalco's Current Market Performance",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hindalco-share-price-today-live-updates-12-nov-2026/liveblog/135753389.cms",
-        "Thu, 12 Nov 2026 08:40:05 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Cipla Share Price Live Updates: Cipla's Market Performance Today",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/cipla-stock-price-today-live-12-nov-2026/liveblog/135753318.cms",
-        "Thu, 12 Nov 2026 08:35:29 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "RIL Share Price Live Updates: RIL's Current Trading Status",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ril-stock-price-today-live-12-nov-2026/liveblog/135753316.cms",
-        "Thu, 12 Nov 2026 08:35:24 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Positive Breakout: These 5 stocks close above their 200 DMA",
-        "https://economictimes.indiatimes.com/markets/stocks/news/positive-breakout-these-5-stocks-close-above-their-200-dma/slideshow/135753555.cms",
-        "Thu, 12 Nov 2026 08:33:46 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Axis Bank Share Price Live Updates: Axis Bank  Price Movement Analysis",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/axis-bank-share-price-live-12-nov-2026/liveblog/135753254.cms",
-        "Thu, 12 Nov 2026 08:32:00 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "SBI Life Share Price Live Updates: SBI Life ends the trading session at Rs 1819.5",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sbi-life-share-price-live-12-nov-2026/liveblog/135753244.cms",
-        "Thu, 12 Nov 2026 08:31:23 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Bajaj Finance Share Price Live Updates: Bajaj Finance Stock Details",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-finance-share-price-live-updates-12-nov-2026/liveblog/135753231.cms",
-        "Thu, 12 Nov 2026 08:30:46 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Nestle India Share Price Live Updates: Nestle India sees a decline in stock price",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/nestle-india-stock-price-today-live-12-nov-2026/liveblog/135753223.cms",
-        "Thu, 12 Nov 2026 08:30:29 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "UPL Share Price Live Updates: UPL's Daily Performance Update",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/upl-share-price-live-12-nov-2026/liveblog/135753213.cms",
-        "Thu, 12 Nov 2026 08:30:10 +0530",
-        "2026-11-12T12:05:52Z"
-      ],
-      [
-        "ET Markets",
-        "Power Grid Share Price Live Updates: Power Grid's Current Trading Status",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/power-grid-share-price-today-live-updates-12-nov-2026/liveblog/135753153.cms",
-        "Thu, 12 Nov 2026 08:26:25 +0530",
-        "2026-11-12T12:05:52Z"
+        "2026-11-12T20:40:18Z"
       ]
     ],
-    "total": 142
+    "total": 135
   },
   "archive": {
-    "files": 40,
+    "files": 41,
     "dates": 22,
     "symbols_max": 3770,
     "first": "2019-06-14",
     "last": "2026-11-12",
     "recent": [
-      {
-        "date": "2026-11-04",
-        "segment": "fo",
-        "rows": "36667",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-04.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-04.csv"
-      },
       {
         "date": "2026-11-05",
         "segment": "cm",
@@ -1143,22 +1145,31 @@
         "era": "udiff",
         "file_parquet": "data/parquet/cm/cm_2026-11-12.parquet",
         "file_csv": "data/csv/cm/cm_2026-11-12.csv"
+      },
+      {
+        "date": "2026-11-12",
+        "segment": "fo",
+        "rows": "42967",
+        "symbols": "224",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-11-12.parquet",
+        "file_csv": "data/csv/fo/fo_2026-11-12.csv"
       }
     ]
   },
   "brain": {
     "channels": 10,
-    "videos": 441,
+    "videos": 447,
     "window": [
       "2026-05-15",
       "2026-11-12"
     ],
-    "total_views": 12696911,
-    "net_sentiment": 235,
+    "total_views": 12805660,
+    "net_sentiment": 242,
     "top_symbols": [
       {
         "symbol": "NIFTY50",
-        "mentions": 98,
+        "mentions": 99,
         "channels": 5
       },
       {
@@ -1214,23 +1225,23 @@
       },
       {
         "theme": "Beginner/Education",
-        "videos": 111
+        "videos": 113
       },
       {
         "theme": "Earnings/Results",
-        "videos": 93
+        "videos": 95
       },
       {
         "theme": "Options/F&O",
-        "videos": 91
+        "videos": 93
       },
       {
         "theme": "IPO",
-        "videos": 88
+        "videos": 89
       },
       {
         "theme": "Budget/Policy",
-        "videos": 68
+        "videos": 69
       }
     ]
   },
@@ -1298,31 +1309,31 @@
       ],
       [
         "Groww Edge",
-        "57",
-        "2026-11-11",
+        "59",
+        "2026-11-12",
         "2026-10-09",
-        "23342",
+        "24051",
         "5309",
         "Is the Oil in Your Samosa the Same Oil Planes Want?",
         "255474"
       ],
       [
         "Groww",
-        "49",
-        "2026-11-11",
+        "51",
+        "2026-11-12",
         "2026-10-06",
-        "16163",
+        "15874",
         "7363",
         "How to Buy US Stocks from India? Complete Guide",
         "165710"
       ],
       [
         "Markets by Zerodha",
-        "44",
+        "45",
         "2026-11-12",
         "2026-10-05",
-        "15940",
-        "10120",
+        "15604",
+        "9750",
         "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
         "85869"
       ],
@@ -1338,11 +1349,11 @@
       ],
       [
         "Upstox",
-        "117",
+        "118",
         "2026-11-12",
         "2026-10-15",
-        "1252",
-        "212",
+        "1256",
+        "219",
         "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
         "10837"
       ]
@@ -1560,7 +1571,7 @@
         "2026-10-22T18:08:42Z"
       ]
     ],
-    "total": 441
+    "total": 447
   },
   "indicators": {
     "columns": [
@@ -2655,18 +2666,18 @@
     ],
     "rows": [
       [
-        "19704.39",
+        "15855.13",
         "DII",
-        "11-Nov-2026",
-        "-8434.53",
-        "28138.92"
+        "12-Nov-2026",
+        "-6331.17",
+        "22186.3"
       ],
       [
-        "30087.21",
+        "20273.32",
         "FII/FPI",
-        "11-Nov-2026",
-        "12563.33",
-        "17523.88"
+        "12-Nov-2026",
+        "7830.6",
+        "12442.72"
       ]
     ],
     "total": 2
@@ -2699,15 +2710,15 @@
     "niftysmallcap50": 50
   },
   "daily": {
-    "as_of": "2026-11-12T12:42:57Z",
+    "as_of": "2026-11-12T21:15:40Z",
     "items": [
-      "Bhavcopy archive through 2026-11-12 (40 files, 22 days)",
-      "Nifty PCR 0.98 \u00b7 max pain 26000.0",
+      "Bhavcopy archive through 2026-11-12 (41 files, 22 days)",
+      "Nifty PCR 1.0 \u00b7 max pain 24000.0",
       "25 OI spikes in stock futures",
       "25 volume spikes vs their own average",
-      "Corporate actions: 18 dividends",
-      "441 videos across 10 channels",
-      "142 news headlines"
+      "Corporate actions: 17 dividends, 1 bonus",
+      "447 videos across 10 channels",
+      "135 news headlines"
     ]
   },
   "relative_strength": {

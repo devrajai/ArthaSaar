@@ -22,6 +22,14 @@ on:
         description: 'How many stocks besides the two indices'
         required: false
         default: '100'
+      day:
+        description: 'Recover ONE session only, as YYYY-MM-DD. Leave empty for today.'
+        required: false
+        default: ''
+      range:
+        description: 'Yahoo range. Use 7d with a day to recover a missed session.'
+        required: false
+        default: '1d'
 
 permissions:
   contents: write
@@ -47,7 +55,13 @@ jobs:
           pip install pandas pyarrow
 
       - name: Capture the session
-        run: python scripts/fetch_intraday.py --top "${{ github.event.inputs.top || '100' }}"
+        run: |
+          python scripts/fetch_intraday.py \
+            --top "${{ github.event.inputs.top || '100' }}" \
+            --range "${{ github.event.inputs.range || '1d' }}" \
+            ${DAY:+--day "$DAY"}
+        env:
+          DAY: ${{ github.event.inputs.day }}
 
       - name: Show what we got
         run: |

@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Probe NSE's option chain from wherever this runs, and report exactly what came back.
+"""Find the exact request NSE's option chain accepts, from a runner.
 
-WHY
-An intraday put-call ratio needs option-chain snapshots through the session. From the
-development sandbox the endpoint answers HTTP 200 with a two-byte body - an empty payload,
-the same block the insider endpoints return. A GitHub runner has a different network path,
-so the only way to know whether intraday PCR is buildable is to ask from there.
+THE FIRST PROBE CHANGED THE QUESTION. From the development sandbox the endpoint returns
+HTTP 200 with a two-byte body - indistinguishable from a hard block. From a GitHub runner it
+returned 73 bytes of plain text:
 
-This prints the raw evidence rather than a verdict: status, byte count, and the shape of
-whatever came back. A 200 with an empty body is not a success and must not be read as one.
+    missing symbol={ NIFTY | FINNIFTY | BANKNIFTY | NIFTYMID50 | MIDCPNIFTY }
+
+That is the API answering. It is reachable; the request shape is wrong. A message that names
+the accepted values is the opposite of a block, so "not usable" was the wrong verdict to
+print and this probe retries with a matrix of parameter shapes instead of one guess.
 """
-import json, sys, time, urllib.request
+import json, sys, time, urllib.parse, urllib.request
 
 UA = {
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -18,106 +19,99 @@ UA = {
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.9",
     "Referer": "https://www.nseindia.com/option-chain",
-    "Connection": "keep-alive",
 }
 
-TARGETS = [
-    ("option-chain-v3-indices",
-     "https://www.nseindia.com/api/option-chain-v3"),
-    ("option-chain-v3-banknifty",
-     "https://www.nseindia.com/api/option-chain-v3"),
-    ("option-chain-indices",
-     "https://www.nseindia.com/api/option-chain-indices"),
-    ("option-chain-equities",
-     "https://www.nseindia.com/api/option-chain-equities"),
+BASE = "https://www.nseindia.com/api/option-chain-v3"
+VARIANTS = [
+    ("q type=Indices&symbol=NIFTY",   BASE + "?type=Indices&symbol=NIFTY"),
+    ("q symbol=NIFTY&type=Indices",   BASE + "?symbol=NIFTY&type=Indices"),
+    ("q type=indices&symbol=NIFTY",   BASE + "?type=indices&symbol=NIFTY"),
+    ("q symbol=NIFTY only",           BASE + "?symbol=NIFTY"),
+    ("q type=Indices only",           BASE + "?type=Indices"),
+    ("q type=Indices&symbol=NIFTY&expiryDate=30-12-2026",
+     BASE + "?type=Indices&symbol=NIFTY&expiryDate=" + urllib.parse.quote("30-12-2026")),
+    ("path /NIFTY",                   BASE + "/NIFTY"),
+    ("q index=NIFTY",                 BASE + "?type=Indices&index=NIFTY"),
 ]
 
 
-def probe(name, url):
-    out = {"name": name, "url": url}
+def call(name, url, method="GET"):
+    out = {"name": name, "url": url, "method": method}
     try:
-        req = urllib.request.Request(url, headers=UA)
+        req = urllib.request.Request(url, headers=UA, method=method)
         with urllib.request.urlopen(req, timeout=30) as r:
             body = r.read()
             out["status"] = r.status
             out["bytes"] = len(body)
-            out["content_type"] = r.headers.get("Content-Type", "")
-            if len(body) < 200:
-                out["body_preview"] = body.decode("utf-8", "replace")
+            txt = body.decode("utf-8", "replace")
             try:
-                d = json.loads(body)
-            except Exception:
-                out["parsed"] = False
-                return out
-            out["parsed"] = True
-            if isinstance(d, dict):
-                out["keys"] = list(d)[:8]
-                rec = d.get("records") or {}
+                d = json.loads(txt)
+                out["json"] = True
+                rec = d.get("records") if isinstance(d, dict) else None
                 if isinstance(rec, dict):
-                    out["expiry_dates"] = (rec.get("expiryDates") or [])[:3]
                     rows = rec.get("data") or []
                     out["strike_rows"] = len(rows)
+                    out["expiry_dates"] = (rec.get("expiryDates") or [])[:3]
+                    out["underlying"] = rec.get("underlyingValue")
                     if rows:
                         r0 = rows[0]
-                        out["sample"] = {k: r0.get(k) for k in
-                                         ("strikePrice", "expiryDate") if k in r0}
                         ce = r0.get("CE") or {}
                         pe = r0.get("PE") or {}
-                        out["sample_oi"] = {"CE_oi": ce.get("openInterest"),
-                                            "PE_oi": pe.get("openInterest")}
-                    under = rec.get("underlyingValue")
-                    out["underlying"] = under
-            elif isinstance(d, list):
-                out["list_len"] = len(d)
+                        out["sample_oi"] = {"CE": ce.get("openInterest"),
+                                            "PE": pe.get("openInterest"),
+                                            "strike": r0.get("strikePrice")}
+                elif isinstance(d, dict):
+                    out["keys"] = list(d)[:8]
+            except Exception:
+                out["json"] = False
+                out["text"] = txt[:140]
     except Exception as e:
-        out["error"] = "%s: %s" % (type(e).__name__, str(e)[:160])
+        out["error"] = "%s: %s" % (type(e).__name__, str(e)[:120])
     return out
 
 
 def main():
-    print("=" * 70)
-    print("NSE OPTION CHAIN PROBE")
-    print("=" * 70)
-    # NSE sets a session cookie on the homepage; a bare API call is often refused without it
+    print("=" * 72)
+    print("NSE OPTION CHAIN - PARAMETER MATRIX")
+    print("=" * 72)
+    # a homepage visit sometimes sets the cookie the API wants
     try:
         urllib.request.urlopen(urllib.request.Request(
             "https://www.nseindia.com/", headers=UA), timeout=30).read()
-        print("homepage: reachable (cookie may be set)")
+        print("homepage: reachable")
     except Exception as e:
-        print("homepage: %s: %s" % (type(e).__name__, str(e)[:100]))
+        print("homepage: %s: %s" % (type(e).__name__, str(e)[:90]))
     time.sleep(1.5)
 
     results = []
-    for name, url in TARGETS:
-        r = probe(name, url)
+    for name, url in VARIANTS:
+        r = call(name, url)
         results.append(r)
-        status = r.get("status", "-")
-        print("\n%-26s status=%s bytes=%s parsed=%s"
-              % (name, status, r.get("bytes", "-"), r.get("parsed", "-")))
-        if r.get("strike_rows"):
-            print("   strike rows: %s | expiries: %s"
-                  % (r["strike_rows"], r.get("expiry_dates")))
-            print("   sample OI: %s" % r.get("sample_oi"))
-            print("   underlying: %s" % r.get("underlying"))
-        elif r.get("body_preview") is not None:
-            print("   body: %r" % r["body_preview"][:120])
-        elif r.get("error"):
-            print("   error: %s" % r["error"])
+        rows = r.get("strike_rows") or 0
+        flag = "WORKS" if rows else "     "
+        print("\n%s %-42s status=%s bytes=%s" %
+              (flag, name, r.get("status", "-"), r.get("bytes", "-")))
+        if rows:
+            print("      strike rows: %d | expiries: %s" % (rows, r.get("expiry_dates")))
+            print("      sample OI: %s | underlying: %s" % (r.get("sample_oi"), r.get("underlying")))
+        elif r.get("text"):
+            print("      text: %r" % r["text"][:110])
         elif r.get("keys") is not None:
-            print("   keys: %s" % r.get("keys"))
-        time.sleep(1.2)
+            print("      keys: %s" % r.get("keys"))
+        elif r.get("error"):
+            print("      error: %s" % r["error"])
+        time.sleep(1.1)
 
-    workable = [r for r in results if (r.get("strike_rows") or 0) > 0]
-    print("\n" + "=" * 70)
-    if workable:
-        print("VERDICT: option chain IS reachable from here - %d of %d endpoints returned "
-              "strike rows." % (len(workable), len(results)))
-        print("An intraday PCR is buildable: sum PE open interest over CE open interest "
-              "per snapshot.")
+    good = [r for r in results if (r.get("strike_rows") or 0) > 0]
+    print("\n" + "=" * 72)
+    if good:
+        print("VERDICT: option chain IS usable from a runner.")
+        print("Working shape: %s" % good[0]["name"])
+        print("Intraday PCR is buildable - sum PE open interest over CE per snapshot.")
     else:
-        print("VERDICT: option chain is NOT usable from here - no endpoint returned strike "
-              "rows. Intraday PCR cannot be built from NSE.")
-    print("=" * 70)
+        print("VERDICT: no parameter shape returned strike rows.")
+        print("The API answers, but not with data. Read the text above before concluding.")
+    print("=" * 72)
     with open("option_chain_probe.json", "w") as fh:
         json.dump(results, fh, indent=1)
     return 0

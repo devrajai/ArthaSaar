@@ -60,15 +60,32 @@ def install_stub(uplift: float, band: float, horizon: int, nq: int = 9):
             self.compiled = config
 
         def forecast(self, horizon, inputs):
+            # THE INPUTS ARE LOG RETURNS, not prices.
+            #
+            # timesfm_forecast.py feeds np.diff(np.log(prices)) and converts the model's
+            # output back with exp(). The old stub did last * (1 + uplift), treating the last
+            # value as a price - so on log returns (about 0.0004 each) the whole forecast came
+            # out at +0.77% instead of +10%, and six assertions failed against a production
+            # path that was correct all along.
+            #
+            # To make the CUMULATIVE return equal `uplift`, each of the horizon steps carries
+            # uplift/horizon. The band is spread the same way.
             n = len(inputs)
             pts = np.zeros((n, horizon))
             qs = np.zeros((n, horizon, nq))
-            for i, s in enumerate(inputs):
-                last = float(np.asarray(s, dtype=float)[-1])
-                pts[i, :] = last * (1 + uplift)
+            # Work in LOG space so exp() lands on the exact percentages asked for.
+            # A linear spread of `uplift` per step gives exp(0.10)-1 = 10.52%, not 10.00%,
+            # and a symmetric band of 0.05 gives -4.88% to +15.13%, not 5% to 15%. Taking
+            # log(1+x) of each target makes the reconstruction exact.
+            cum_med = np.log(1.0 + uplift)
+            cum_lo = np.log(1.0 + uplift - band)
+            cum_hi = np.log(1.0 + uplift + band)
+            for i in range(n):
+                pts[i, :] = cum_med / float(horizon)
                 for j in range(nq):
-                    frac = (j / (nq - 1)) * 2 - 1          # -1 .. +1
-                    qs[i, :, j] = last * (1 + uplift + frac * band)
+                    frac = j / float(nq - 1)               # 0 .. 1
+                    cum = cum_lo + frac * (cum_hi - cum_lo)
+                    qs[i, :, j] = cum / float(horizon)
             return pts, qs
 
     mod.TimesFM_2p5_200M_torch = TimesFM_2p5_200M_torch
@@ -92,7 +109,8 @@ def run_case(uplift, band, horizon, series, out_path):
     m = load_script()
     m.load_series = lambda *a, **k: series          # bypass network / files
     sys.argv = ["timesfm_forecast.py", "--horizon", str(horizon),
-                "--report-days", "21", "--out", out_path]
+                "--report-days", "21", "--out", out_path,
+                "--no-log"]      # never touch the production forecast log from a test
     rc = m.main()
     data = json.loads(Path(out_path).read_text())
     return rc, data
@@ -109,7 +127,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as td:
         # ---- case 1: +10% median, +-5% band ----
         out = str(Path(td) / "a.json")
-        rc, d = run_case(0.10, 0.05, 63, series, out)
+        rc, d = run_case(0.10, 0.05, 21, series, out)   # 21 = report-days, so the full move lands where it is checked
         check("exit code 0", rc == 0)
         check("has 'forecasts' list", isinstance(d.get("forecasts"), list) and len(d["forecasts"]) == 2,
               str(len(d.get("forecasts", []))))
@@ -131,7 +149,7 @@ def main() -> int:
 
         # ---- case 2: wider band must mean LOWER confidence ----
         out2 = str(Path(td) / "b.json")
-        _, d2 = run_case(0.10, 0.15, 63, series, out2)
+        _, d2 = run_case(0.10, 0.15, 21, series, out2)   # same 21, wider band
         n2 = d2.get("nifty", {})
         check("wider band -> wider band_pct",
               n2.get("band_pct", 0) > nif.get("band_pct", 0),
@@ -139,7 +157,7 @@ def main() -> int:
 
         # ---- case 3: flat forecast must not claim a direction ----
         out3 = str(Path(td) / "c.json")
-        _, d3 = run_case(0.0, 0.01, 63, series, out3)
+        _, d3 = run_case(0.0, 0.01, 21, series, out3)
         n3 = d3.get("nifty", {})
         check("flat -> direction 'flat'", n3.get("direction") == "flat", str(n3.get("direction")))
         check("flat -> median ~ 0", abs(n3.get("median_chg_pct", 9)) < 0.01, str(n3.get("median_chg_pct")))

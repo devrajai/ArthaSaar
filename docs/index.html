@@ -4150,6 +4150,67 @@ function build(d){
   (function(){
     var v=sec("market");
 
+// ---- WEEKLY INDEX WRAP: where Nifty and Bank Nifty actually closed ----
+    // The site had no daily index history at all, so "what happened this week" could not be
+    // answered from our own files. index_history.json now carries two years of daily bars for
+    // the three indices plus the weekly aggregation this card reads.
+    (function(){
+     try{
+      if(!IHT||!IHT.indices||!IHT.indices.length) return;
+      var kids=[];
+      kids.push(para("Where the three indices closed the week, the range they covered, and the "
+        +"levels the same range implies for next week. A weekly bar is a summary of what "
+        +"happened, not a view on what comes next.", false));
+
+      // RAW numbers, not num()-formatted strings. table() formats every column declared
+      // numeric, so passing "25,144.3" had it call num() on a comma string, Number() returned
+      // NaN, and close, range, pivot and R1/S1 all printed as an em dash while the percentages
+      // - which I formatted myself - worked. Format once, in one place.
+      var rows=IHT.indices.map(function(ix){
+        var w=ix.week, L=ix.levels;
+        return [ix.name,
+                w.close,
+                w.chg_pct,
+                w.range,
+                L.pivot,
+                L.r1,
+                ix.from_high_pct];
+      });
+      // "week pct" and "from high pct", not "week %" and "from 52w high". table() only
+      // applies percent formatting (sign, colour, trailing %) when the column name contains
+      // pct/chg/ret - the shorthand "%" did not match, so those cells printed bare numbers.
+      kids.push(tbl({columns:["index","close","week pct","range","pivot","R1","from high pct"],
+                     rows:rows}, ["close","week pct","range","pivot","R1","from high pct"]));
+
+      // the spread between the two is the story most weeks
+      var n=null,b=null;
+      IHT.indices.forEach(function(ix){ if(ix.symbol==="^NSEI") n=ix; if(ix.symbol==="^NSEBANK") b=ix; });
+      if(n&&b){
+        var gap=(b.week.chg_pct-n.week.chg_pct);
+        var who=gap>=0?"Bank Nifty":"Nifty";
+        kids.push(para("<b>"+who+" led by "+Math.abs(gap).toFixed(2)+" percentage points</b> this "
+          +"week (Bank Nifty "+b.week.chg_pct.toFixed(2)+"%, Nifty "+n.week.chg_pct.toFixed(2)+"%). "
+          +"A gap that wide usually means money moved between sectors rather than into or out of "
+          +"the market.", false));
+      }
+
+      var w0=IHT.indices[0].week;
+      if(w0.days<5){
+        kids.push(para("<b>Part week.</b> This week has "+w0.days+" sessions so far"
+          +(w0.days<5?" - the figures change as the week fills in":"")+".", false));
+      }
+
+      v.appendChild(card("This week in the indices",
+        "Nifty, Bank Nifty and Sensex · week from "+esc(String(w0.start)),
+        kids,
+        {what:"Weekly open, high, low and close for the three indices, with the levels that "
+              +"range implies for the next week.",
+         source:"Yahoo daily index bars; weekly aggregation computed here",
+         updated:IHT.updated,
+         note:(IHT.note||"")+" "+(IHT.cautions&&IHT.cautions.not_a_forecast||"")}));
+     }catch(e){}
+    })();
+
     // ---- variance risk premium: what options charge against what the index delivers ----
     (function(){
      try{
@@ -7813,6 +7874,7 @@ function assign(name, v){
     case "breadth.json": BREADTH=v; break;
     case "gaps.json": GAPS=v; break;
     case "levels.json": LEVELS=v; break;
+    case "index_history.json": IHT=v; break;
     case "attention.json": ATTN=v; break;
     // LVLS was declared but never assigned, so the Gann/Fib card silently rendered
     // nothing from the day it shipped. A missing case is invisible, not an error.
@@ -7830,8 +7892,8 @@ function setStamp(state, text){
 // small files: everything the first screen and the nav need (~130 KB total)
 var CORE=["data.json","config.json","learn.json","charges.json","crypto.json","etf.json"];
 // heavier files: needed by the big tabs. Fetched after the first paint, not before it.
-var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null, CLAIMS=null, TM=null, SCR=null, LVLS=null, ATTN=null;
-var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json","attention.json"];
+var VIX=null, FOBAN=null, CIRCUITS=null, METALS=null, LISTINGS=null, IPODOC=null, PATREF=null, MSTATS=null, RCARDS=null, RECAP=null, HEALTH=null, OISTRIKES=null, GTI=null, FORECAST=null, TGPCR=null, OIHIST=null, HIST=null, OISTATS=null, OIWALLS=null, CRYPTHIST=null, WHATIF=null, CHKLIST=null, CASES=null, SCORE=null, MUHURAT=null, WEEKDAY=null, COMMOD=null, MACRO=null, STORY=null, FUNDA=null, SECF=null, BEHAV=null, PRES=null, EARLYMOVE=null, EVENTS=null, SCEN=null, GMKT=null, LEADLAG=null, AFFORD=null, STRAT=null, SHOLD=null, ASOF=null, BRK=null, RNG=null, RADAR=null, PCRS=null, AUDIT=null, VP=null, CLAIMS=null, TM=null, SCR=null, LVLS=null, ATTN=null, IHT=null;
+var HEAVY=["stocks.json","universe.json","screener.json","indices.json","sectors.json","global.json","mf.json","sebi.json","ipo.json","shareholding.json","etf_premium.json","rs.json","seasonality.json","correlation.json","watchlists.json","deals.json","calendar.json","brief.json","market_status.json","breadth.json","gaps.json","levels.json","patterns.json","vix.json","fo_ban.json","circuits.json","metals.json","listings.json","ipo_doc.json","patterns_reference.json","market_stats.json","report_cards.json","recap.json","health.json","oi_strikes.json","gti.json","forecast.json","telegram_pcr.json","oi_history.json","oi_stats.json","oi_walls.json","crypto_history.json","whatif.json","checklist.json","cases.json","scoreboard.json","muhurat.json","weekday.json","commodities.json","macro.json","story.json","fundamentals.json","sector_fund.json","behaviour.json","presentations.json","earlymove.json","events.json","scenarios.json","global_market.json","leadlag.json","scorecard.json","history.json","timesfm_score.json","data_errors.json","option_chain.json","affordable.json","strategies.json","data_asof.json","breakers.json","ranges.json","money_radar.json","pcr_signal.json","rollover.json","rank_momentum.json","setup_history.json","vrp.json","deals_followup.json","audit.json","volume_profile.json","claims.json","timemachine.json","gann_fib.json","attention.json","index_history.json"];
 
 function buildTicker(){
   // Disabled: see the note in renderAll. Kept only so a stale caller cannot throw.

@@ -6,5 +6,5 @@
  "probe_workflow": ".github/workflows/mcx-probe.yml",
  "rows": 0,
  "note": "MCX commodity data cannot be collected by this pipeline. The exchange blocks non-browser clients. A Google Colab run uses different IPs and may work - that is the only untested path, and it is not automatic.",
- "updated": "2026-11-12T23:03:35Z"
+ "updated": "2026-11-13T09:10:03Z"
 }

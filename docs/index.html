@@ -1231,6 +1231,46 @@ header .searchwrap, .top .searchwrap{
    The scripts that referenced it are all null-guarded, which is why this is safe.
    ==================================================================================== */
 .searchwrap{ display:none !important; }
+
+/* ====================================================================================
+   THE FOUR HEADER CONTROLS WERE UNREACHABLE.
+
+   .right{display:none} was added when a floating gear panel held these buttons. The gear was
+   removed (it duplicated them) but the header copies stayed hidden, so language, colour-blind
+   and text-size were not available anywhere - a straight regression, and the reason a review
+   reported them missing from the page.
+
+   They now live at the bottom of the menu, where settings belong, instead of crowding the
+   header. Dark mode stays hidden on purpose: this site has one theme.
+   ==================================================================================== */
+#tabs .settingsrow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:18px 16px 26px;
+  border-top:1px solid var(--line);
+  margin-top:10px;
+}
+#tabs .settingsrow .lbl{
+  flex:1 0 100%;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+#tabs .settingsrow button{
+  flex:1 1 auto;
+  min-width:96px;
+  padding:11px 12px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--navy);
+  font:600 13px system-ui,-apple-system,sans-serif;
+  cursor:pointer;
+}
+#tabs .settingsrow button:active{ transform:scale(.98); }
 </style>
 </head>
 <body>
@@ -8099,6 +8139,8 @@ function groupTabs(){
   close.addEventListener("click",function(){ document.body.classList.remove("nav-open"); });
   nav.appendChild(close);
 
+
+
   var used={};
   GROUPS.forEach(function(g,gi){
     var live=g[1].filter(function(id){ return byId[id]; });
@@ -8138,11 +8180,32 @@ function groupTabs(){
   });
   btns.forEach(function(b){ if(!used[b.getAttribute("data-go")]) nav.appendChild(b); });
 
+  // CLONES, NOT MOVES. groupTabs() starts with nav.innerHTML="", so any node MOVED into the
+  // menu is destroyed the next time the menu is rebuilt - and because the originals were
+  // moved out of .right, there was nothing left to put back. Language, colour-blind and
+  // text-size disappeared from the page entirely after the first rebuild, which is why a
+  // review reported them missing while they were plainly in the markup.
+  //
+  // A clone is disposable. The real button stays in .right (hidden) and owns the state; the
+  // clone forwards its click and mirrors the label back.
   var src=document.querySelector(".right");
-  if(src && !document.getElementById("drawerCtl")){
+  if(src){
     var box=document.createElement("div"); box.className="drawer-controls"; box.id="drawerCtl";
-    [].slice.call(src.children).forEach(function(c){ box.appendChild(c); });
-    nav.appendChild(box);
+    var any=false;
+    [].slice.call(src.children).forEach(function(c){
+      if(!c.id || c.id==="themeBtn") return;          // one theme only - dark mode stays out
+      if(!c.textContent || !c.textContent.trim()) return;
+      var b=document.createElement("button");
+      b.type="button";
+      b.textContent=c.textContent.trim();
+      b.addEventListener("click", function(e){
+        e.preventDefault();
+        try{ c.click(); }catch(err){}
+        setTimeout(function(){ b.textContent=(c.textContent||"").trim(); }, 60);
+      });
+      box.appendChild(b); any=true;
+    });
+    if(any) nav.appendChild(box);
   }
 }
 

@@ -195,6 +195,12 @@ def main() -> int:
                     help="stop forecasting after this many minutes so the run finishes cleanly")
     ap.add_argument("--years", type=int, default=2)
     ap.add_argument("--out", default=str(OUT))
+    # Tests and dry runs must not append to the production forecast log. Without this,
+    # every run of test_timesfm.py wrote four stub forecasts into data/forecast_log.jsonl,
+    # which is the file the site scores real forecasts from - so the test corrupted the
+    # very record it exists to protect.
+    ap.add_argument("--no-log", action="store_true",
+                    help="do not append to data/forecast_log.jsonl")
     args = ap.parse_args()
 
     series = load_series(10 ** 9 if args.all else args.max_series, args.years)
@@ -330,7 +336,8 @@ def main() -> int:
     if nif:
         payload["nifty"] = nif
 
-    log_forecasts(rows, payload["updated"][:10], args.report_days)
+    if not getattr(args, "no_log", False):
+        log_forecasts(rows, payload["updated"][:10], args.report_days)
 
     dest = Path(args.out)
     dest.parent.mkdir(parents=True, exist_ok=True)

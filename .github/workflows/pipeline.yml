@@ -598,6 +598,12 @@ jobs:
       - name: "10y. Smoke test (empty cards, mixed dates, missing sessions)"
         run: python scripts/smoke_test.py || echo "::warning title=Smoke test::see log"
 
+      # Daily index history. The site had none - charts.json is monthly and holds only
+      # Nifty ETFs, series.json holds stocks but no index, and data.json carries a single
+      # day. Without this a weekly wrap cannot be computed from our own files at all.
+      - name: "7v. Index history (Nifty, Bank Nifty, Sensex)"
+        run: python scripts/build_index_history.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

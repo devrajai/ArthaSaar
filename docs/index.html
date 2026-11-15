@@ -8100,21 +8100,49 @@ Promise.all(CORE.map(function(f){ return f==="data.json" ? getJson(BASE+f) : opt
 // The old groups mixed an activity ("Tools") with a source ("Disclosures") and left ten tabs
 // under one heading. Each section below appears exactly once, in the order someone is likely
 // to want it.
+// THE MENU IS GROUPED BY THE QUESTION A PERSON IS ASKING, not by where the data comes from.
+//
+// The previous structure had a Stocks group holding EIGHT sections - find, chart, compare,
+// levels, patterns, gaps, seasonality, correlation - which is a list, not a category. It is
+// now split: "Which stock" is discovery, "Levels & derivatives" is the pricing question, and
+// they are asked at different moments.
+//
+// Every one of the 33 sections appears exactly once. Nothing was removed and nothing was
+// renamed. The last group is named for the question rather than "Tools", because that is
+// where the backtests and the model's measured error live - the part of the site that says
+// whether any of it worked.
 var GROUPS = [
-  // what happened today - the first thing anyone opens
+  // something happened - what was it
+  ["What happened",       ["overview","market","breadth","news","indices"]],
+  // what is scheduled next, and who must disclose
+  ["What's coming",       ["calendar","corporate","ipo","watchlists"]],
+  // find and compare a stock
+  ["Which stock",         ["stocks","sectors","rs","charts","patterns","gaps"]],
+  // at what price, and what the derivatives say
+  ["Levels & derivatives",["fno","levels","seasonality","correlation"]],
+  // who is behind the move
+  ["Who's moving",        ["deals","promoter","regulator","watchlist"]],
+  // pooled products and everything outside India
+  ["Funds & the world",   ["mf","etf","global","crypto"]],
+  // did any of it work
+  ["Does any of it work", ["forecast","backtest","history","tools","charges","learn"]]
+];
+
+// The previous grouping, kept for a day so the two can be compared on a real phone.
+// Reach it with ?menu=classic - the same URL with nothing added uses the new menu.
+var GROUPS_CLASSIC = [
   ["Today",         ["overview","market","indices","sectors","breadth"]],
-  // one stock at a time: find it, chart it, see its levels and behaviour
   ["Stocks",        ["stocks","charts","rs","levels","patterns","gaps","seasonality","correlation"]],
-  // derivatives and what the model expects
   ["F&O & forecast",["fno","forecast"]],
-  // everything outside India, plus pooled products
   ["World & funds", ["global","crypto","mf","etf","ipo"]],
-  // who is buying or selling, and what they must disclose
   ["Who's buying",  ["deals","promoter","corporate","watchlists","regulator"]],
   ["News & dates",  ["news","calendar"]],
   ["Tools",         ["tools","backtest","watchlist","charges","history"]],
   ["Learn",         ["learn"]]
 ];
+try{
+  if(/[?&]menu=classic/.test(location.search)) GROUPS = GROUPS_CLASSIC;
+}catch(e){}
 
 function wireSimple(){
   // REMOVED. The reading-level switcher (Beginner / Intermediate / Advanced) does this job,

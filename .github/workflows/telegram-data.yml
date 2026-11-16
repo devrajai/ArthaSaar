@@ -1,0 +1,42 @@
+name: Telegram data brief
+
+# "What the data says about tomorrow" - sent after the close.
+#
+# Why this exists: a trading channel posts "TOMORROW 5% GAP UP - BUY UPL 600CE @2.40,
+# TARGET 8". That is a specific buy call to the public, which needs SEBI research-analyst or
+# adviser registration, and it is built to be unfalsifiable - no sample size, no base rate,
+# no record. This sends the same subject matter with the evidence attached.
+#
+# Runs 10:45 UTC = 4:15 PM IST, fifteen minutes after the close summary, so the two do not
+# arrive together.
+
+on:
+  schedule:
+    - cron: '45 10 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram-data
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Send what the data says
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN || secrets.TELEGRAM }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID || secrets.TELEGRAM_CHAT }}
+        run: python scripts/telegram_data_brief.py

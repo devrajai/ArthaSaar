@@ -295,6 +295,12 @@ jobs:
       # Also corrects `spot`: the Colab step fell back to the max-OI strike where the
       # bhavcopy had no underlying price, and that is not a price - on 2020-03-23 it read
       # 10,000 when the Nifty closed at 7,610.
+      # THE MISSING LINK. build_oi_history reads data/oi/oi_history.parquet, which
+      # nothing was updating - so the whole open-interest chain froze at 28 Oct while
+      # fresh bhavcopy kept arriving in data/parquet/fo/. This converts one to the other.
+      - name: "6z1. Aggregate OI history from F&O bhavcopy"
+        run: python scripts/aggregate_oi_history.py
+
       - name: "7m2j. Option-chain history (PCR and walls since 2019)"
         run: python scripts/build_oi_history.py || true
 
@@ -449,7 +455,7 @@ jobs:
         run: python scripts/build_shareholding.py || true
       # PCR trend and what each band has actually preceded.
       - name: "7m2zv. PCR trend and bands"
-        run: python scripts/build_pcr_signal.py || true
+        run: python scripts/build_pcr_signal.py
       - name: "7m2ze. Global market read-through"
         run: python scripts/build_global_market.py || true
       # Lead-lag: how the prior US session relates to Nifty's next one.
@@ -603,6 +609,11 @@ jobs:
       # day. Without this a weekly wrap cannot be computed from our own files at all.
       - name: "7v. Index history (Nifty, Bank Nifty, Sensex)"
         run: python scripts/build_index_history.py || true
+
+      # Never scheduled before - run by hand once, which is why rank_history.json
+      # held a single day and the momentum card was empty.
+      - name: "7r. Screener rank momentum"
+        run: python scripts/build_rank_momentum.py
 
       - name: Commit
         run: |

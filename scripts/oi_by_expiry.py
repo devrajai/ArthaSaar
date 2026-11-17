@@ -13,7 +13,7 @@ Output: docs/oi_by_expiry.json
   { updated, date, indices: { NIFTY: { spot, expiries: [ {expiry, days_out, dte_label,
       pcr, max_pain, call_wall, put_wall, total_ce_oi, total_pe_oi, strikes:[...] } ] } } }
 
-Only the two nearest expiries are kept (the ones people actually trade).
+All listed expiries are kept, up to six. Far expiries are usually thin - the note on each block says how much of the total open interest it holds.
 """
 import csv, io, json, sys, urllib.request, zipfile
 from datetime import datetime, timedelta, timezone
@@ -24,7 +24,11 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 INDICES = ("NIFTY", "BANKNIFTY")
 NEAR = 14          # strikes either side of spot
-KEEP_EXPIRIES = 2  # nearest two
+# ALL expiries, not the nearest two. A reader asking "where is the positioning for December
+# and January" could not be answered while the builder threw those rows away - the bhavcopy
+# carries them. Capped at 6 so a malformed file with dozens of stale expiries cannot bloat
+# the page, and the far ones are labelled thin because they usually are.
+KEEP_EXPIRIES = 6
 
 
 def grab_bhavcopy():

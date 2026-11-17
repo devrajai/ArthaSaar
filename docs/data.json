@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-16T23:48:21Z",
+  "generated_utc": "2026-11-17T01:35:38Z",
   "fno": {
     "date": "2026-11-16",
     "pcr": {
@@ -580,6 +580,12 @@
           "Ingersoll Rand (India) Limited"
         ],
         [
+          "JAMNAAUTO",
+          "Interim Dividend - Re 1 Per Share",
+          "2026-11-20",
+          "Jamna Auto Industries Limited"
+        ],
+        [
           "MANAPPURAM",
           "Interim Dividend - Re 1 Per Share",
           "2026-11-18",
@@ -646,7 +652,7 @@
           "Vertis Infrastructure Trust"
         ]
       ],
-      "total": 15
+      "total": 16
     },
     "rights": {
       "columns": [
@@ -680,12 +686,6 @@
           "Government of India"
         ],
         [
-          "DRAGARWQ",
-          "Merger",
-          "2026-11-18",
-          "Dr Agarwals Eye Hospital Limited"
-        ],
-        [
           "GLOBAL",
           "Buy Back",
           "2026-11-18",
@@ -698,8 +698,347 @@
           "Jullundur Motor Agency (Delhi) Limited"
         ]
       ],
-      "total": 4
+      "total": 3
     }
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^NSEBANK",
+        61034.1016,
+        -0.79,
+        "2026-11-13"
+      ],
+      [
+        "^NSEI",
+        25144.3008,
+        -0.61,
+        "2026-11-13"
+      ],
+      [
+        "^BSESN",
+        81592.4531,
+        -0.39,
+        "2026-11-13"
+      ]
+    ],
+    "total": 3
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        3859.3,
+        -0.69,
+        "2026-11-16"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "AVAX-USD",
+        7.068,
+        -3.14,
+        "2026-11-17"
+      ],
+      [
+        "XRP-USD",
+        0.9532,
+        -2.2,
+        "2026-11-17"
+      ],
+      [
+        "ADA-USD",
+        0.1519,
+        -2.15,
+        "2026-11-17"
+      ],
+      [
+        "LINK-USD",
+        9.086,
+        -2.13,
+        "2026-11-17"
+      ],
+      [
+        "DOGE-USD",
+        0.0587,
+        -1.88,
+        "2026-11-17"
+      ],
+      [
+        "SOL-USD",
+        71.46,
+        -1.68,
+        "2026-11-17"
+      ],
+      [
+        "ETH-USD",
+        1812.97,
+        -1.23,
+        "2026-11-17"
+      ],
+      [
+        "BTC-USD",
+        64565.7188,
+        -1.13,
+        "2026-11-17"
+      ],
+      [
+        "BNB-USD",
+        590.16,
+        -0.98,
+        "2026-11-17"
+      ],
+      [
+        "TRX-USD",
+        0.3051,
+        -0.05,
+        "2026-11-17"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "Interest in Trump's meme coin dinner fades as $TRUMP sinks to record lows",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/interest-in-trumps-meme-coin-dinner-fades-as-trump-sinks-to-record-lows/articleshow/135899741.cms",
+        "Mon, 16 Nov 2026 23:57:28 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Trump Media faces possible $1 billion debt repayment as stock nears record lows",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/trump-media-faces-possible-1-billion-debt-repayment-as-stock-nears-record-lows/articleshow/135898089.cms",
+        "Mon, 16 Nov 2026 23:14:02 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Nvidia earnings spotlight shifts to leadership, AI financing after Huang exit",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nvidia-set-to-deliver-first-life-after-huang-briefing/articleshow/135896160.cms",
+        "Mon, 16 Nov 2026 22:13:54 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Barclays lowers 2027 year-end target for S&amp;P 500 index to 8,700",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/barclays-lowers-2027-year-end-target-for-sp-500-index-to-8700/articleshow/135894874.cms",
+        "Mon, 16 Nov 2026 21:20:17 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks: Summit shares drop after US FDA declines to approve lung cancer drug",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-summit-shares-drop-after-us-fda-declines-to-approve-lung-cancer-drug/articleshow/135894815.cms",
+        "Mon, 16 Nov 2026 21:18:04 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "US stocks: Nasdaq slides over 1% as AI selloff deepens ahead of Nvidia earnings",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nasdaq-falls-1-at-open-as-nvidia-woes-weigh-on-sentiment-ahead-of-earnings/articleshow/135894333.cms",
+        "Mon, 16 Nov 2026 21:04:11 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Dalal Street becomes best-performing stock market in a month. Can it rally more?",
+        "https://economictimes.indiatimes.com/markets/stocks/dalal-street-becomes-best-performing-stock-market-in-a-month-can-it-rally-more/videoshow/135891640.cms",
+        "Mon, 16 Nov 2026 19:18:06 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Nasdaq tumbles over 2%, Dow drops 700 pts as AI selloff deepens: Stock Market Highlights",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-coreweave-nebius-nvidia-earnings-anthropic-ipo-treasury-yield-news-16th-november-2026/liveblog/135890877.cms",
+        "Mon, 16 Nov 2026 18:44:29 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi sets up sub-group under PMAC to review key IPO norms; NSE's Chauhan to head panel",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-sets-up-sub-group-under-pmac-to-review-key-ipo-norms-nses-chauhan-to-head-panel/articleshow/135890467.cms",
+        "Mon, 16 Nov 2026 18:37:52 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Retain capital gains tax on equities, economists tell FM Sitharaman ahead of Budget 2027-28",
+        "https://economictimes.indiatimes.com/markets/stocks/news/retain-capital-gains-tax-on-equities-economists-tell-fm-sitharaman-ahead-of-budget-2027-28/articleshow/135890410.cms",
+        "Mon, 16 Nov 2026 18:35:46 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Blackstone REIT to buy majority stake in $5 billion Amazon data center portfolio",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/blackstone-reit-to-buy-majority-stake-in-5-billion-amazon-data-center-portfolio/articleshow/135890381.cms",
+        "Mon, 16 Nov 2026 18:34:02 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Warren Buffett donates $5.47 billion in Berkshire Hathaway shares to charities, confidence in successors remains 'strong as ever'",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/warren-buffett-donates-more-berkshire-shares-confidence-in-successors-as-strong-as-ever/articleshow/135890059.cms",
+        "Mon, 16 Nov 2026 18:25:53 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi forms panel to simplify capital-raising rules",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-forms-panel-to-simplify-capital-raising-rules/articleshow/135889803.cms",
+        "Mon, 16 Nov 2026 18:14:54 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "S&amp;P 500, Nasdaq futures slide as Nvidia earnings, Anthropic debut loom",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/sp-500-nasdaq-futures-slide-as-nvidia-earnings-anthropic-debut-loom/articleshow/135888956.cms",
+        "Mon, 16 Nov 2026 17:49:06 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "India's investments in US Treasuries jump USD 38.4 bn in Jun-Aug amid FCNR flows",
+        "https://economictimes.indiatimes.com/markets/stocks/news/indias-investments-in-us-treasuries-jump-usd-38-4-bn-in-jun-aug-amid-fcnr-flows/articleshow/135888824.cms",
+        "Mon, 16 Nov 2026 17:47:29 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "PNB among 4 stocks hitting 52-week highs; stock rallies up to 24% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/pnb-among-4-stocks-hitting-52-week-highs-stock-rallies-up-to-24-in-a-month/slideshow/135888569.cms",
+        "Mon, 16 Nov 2026 17:33:47 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Hong Kong debuts offshore yuan bond index to promote RMB assets",
+        "https://economictimes.indiatimes.com/markets/bonds/hong-kong-debuts-offshore-yuan-bond-index-to-promote-rmb-assets/articleshow/135888402.cms",
+        "Mon, 16 Nov 2026 17:32:10 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "India bonds dip as elevated inflation fuels rate hike expectations",
+        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-dip-as-elevated-inflation-fuels-rate-hike-expectations/articleshow/135888382.cms",
+        "Mon, 16 Nov 2026 17:30:15 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Nvidia's AI financing machine may survive Huang, but with less risk appetite",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/nvidias-ai-financing-machine-may-survive-huang-but-with-less-risk-appetite/articleshow/135888314.cms",
+        "Mon, 16 Nov 2026 17:29:00 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Morgan Stanley turns bullish on global stocks, targets S&amp;P 500 at 8,700",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/morgan-stanley-raises-global-equities-to-maximum-overweight-on-cheap-valuations-earnings-strength/articleshow/135888237.cms",
+        "Mon, 16 Nov 2026 17:27:08 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi may propose raising FPI beneficial ownership threshold to 25%; plans consultation paper",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-may-propose-raising-fpi-beneficial-ownership-threshold-to-25-plans-consultation-paper/articleshow/135883637.cms",
+        "Mon, 16 Nov 2026 15:51:12 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee rises, volatility ebbs as equity inflows blunt global headwinds",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-volatility-ebbs-as-equity-inflows-blunt-global-headwinds/articleshow/135883543.cms",
+        "Mon, 16 Nov 2026 15:49:15 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Swiggy among 10 midcap stocks that dropped up to 50% in CY26",
+        "https://economictimes.indiatimes.com/markets/stocks/news/swiggy-among-10-midcap-stocks-that-dropped-up-to-50-in-cy26/slideshow/135883464.cms",
+        "Mon, 16 Nov 2026 15:40:54 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "UPL Share Price Highlights: UPL Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/upl-stock-price-live-updates-16-nov-2026/liveblog/135872604.cms",
+        "Mon, 16 Nov 2026 09:47:59 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Technical picks:  ABB India among 5 stocks to buy this week for healthy returns",
+        "https://economictimes.indiatimes.com/markets/stocks/news/tech-picks-abb-india-among-5-stocks-to-buy-this-week-for-healthy-returns/slideshow/135872688.cms",
+        "Mon, 16 Nov 2026 09:43:24 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Sun Pharma Share Price Highlights: Sun Pharma Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sun-pharma-share-price-today-live-updates-16-nov-2026/liveblog/135871948.cms",
+        "Mon, 16 Nov 2026 09:20:11 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-16-nov-2026/liveblog/135871604.cms",
+        "Mon, 16 Nov 2026 09:05:24 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "BPCL Share Price Highlights: BPCL Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bpcl-stock-price-live-updates-16-nov-2026/liveblog/135871462.cms",
+        "Mon, 16 Nov 2026 09:01:16 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Coal India Share Price Highlights: Coal India Ltd Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/coal-india-ltd-stock-price-livestock-price-today-live-updates-16-nov-2026/liveblog/135871357.cms",
+        "Mon, 16 Nov 2026 08:55:08 +0530",
+        "2026-11-17T01:00:28Z"
+      ],
+      [
+        "ET Markets",
+        "Tech Mahindra Share Price Highlights: Tech Mahindra Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tech-mahindra-share-price-live-16-nov-2026/liveblog/135871297.cms",
+        "Mon, 16 Nov 2026 08:51:15 +0530",
+        "2026-11-17T01:00:28Z"
+      ]
+    ],
+    "total": 136
   },
   "archive": {
     "files": 45,
@@ -1233,611 +1572,6 @@
       ]
     ],
     "total": 486
-  },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-11-16T23:48:19Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 25144.3,
-      "median_chg_pct": 0.24,
-      "low10_chg_pct": -17.02,
-      "high90_chg_pct": 26.91,
-      "band_pct": 43.93,
-      "day1_median_chg_pct": 0.03,
-      "day1_low10_chg_pct": -0.87,
-      "day1_high90_chg_pct": 1.12,
-      "direction": "flat"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "20MICRONS",
-        174.94,
-        -9.72,
-        -46.47,
-        92.99,
-        null,
-        null
-      ],
-      [
-        "360ONE",
-        997.1,
-        -1.93,
-        -39.99,
-        54.48,
-        null,
-        null
-      ],
-      [
-        "3IINFOLTD",
-        26.93,
-        8.36,
-        -32.95,
-        122.55,
-        null,
-        null
-      ],
-      [
-        "5PAISA",
-        321.35,
-        -7.4,
-        -42.75,
-        73.51,
-        null,
-        null
-      ],
-      [
-        "63MOONS",
-        859.95,
-        -4.15,
-        -51.74,
-        122.83,
-        null,
-        null
-      ],
-      [
-        "A2ZINFRA",
-        12.52,
-        -9.9,
-        -52.93,
-        119.24,
-        null,
-        null
-      ],
-      [
-        "AAATECH",
-        102.24,
-        -2.45,
-        -55.94,
-        130.86,
-        null,
-        null
-      ],
-      [
-        "AAKASH",
-        7.79,
-        -10.92,
-        -40.32,
-        56.55,
-        null,
-        null
-      ],
-      [
-        "AAREYDRUGS",
-        106.73,
-        3.0,
-        -52.59,
-        152.37,
-        null,
-        null
-      ],
-      [
-        "AARTIDRUGS",
-        374.9,
-        -7.17,
-        -39.84,
-        62.08,
-        null,
-        null
-      ],
-      [
-        "AARTIIND",
-        427.55,
-        -1.52,
-        -51.19,
-        71.04,
-        null,
-        null
-      ],
-      [
-        "AARTIPHARM",
-        820.85,
-        -0.78,
-        -48.31,
-        98.62,
-        null,
-        null
-      ],
-      [
-        "AARTISURF",
-        658.55,
-        10.96,
-        -46.93,
-        244.0,
-        null,
-        null
-      ],
-      [
-        "AARVEEDEN",
-        38.05,
-        1.07,
-        -51.85,
-        171.24,
-        null,
-        null
-      ],
-      [
-        "AAVAS",
-        1114.1,
-        -6.67,
-        -42.03,
-        63.68,
-        null,
-        null
-      ],
-      [
-        "ABAN",
-        44.96,
-        -9.44,
-        -48.33,
-        103.45,
-        null,
-        null
-      ],
-      [
-        "ABB",
-        6140.0,
-        -1.14,
-        -42.48,
-        50.85,
-        null,
-        null
-      ],
-      [
-        "ABCAPITAL",
-        347.25,
-        -2.97,
-        -42.78,
-        70.22,
-        null,
-        null
-      ],
-      [
-        "ABFRL",
-        39.77,
-        -14.98,
-        -51.57,
-        70.58,
-        null,
-        null
-      ],
-      [
-        "ABSLAMC",
-        889.05,
-        -2.35,
-        -44.51,
-        80.96,
-        null,
-        null
-      ],
-      [
-        "ABSLBANETF",
-        55.53,
-        -1.4,
-        -20.1,
-        20.92,
-        null,
-        null
-      ],
-      [
-        "ACC",
-        1159.4,
-        -2.87,
-        -31.99,
-        37.87,
-        null,
-        null
-      ],
-      [
-        "ACCURACY",
-        3.92,
-        -9.17,
-        -51.42,
-        65.53,
-        null,
-        null
-      ],
-      [
-        "ACE",
-        1000.1,
-        -7.41,
-        -47.9,
-        78.0,
-        null,
-        null
-      ],
-      [
-        "ACI",
-        478.45,
-        -2.04,
-        -42.76,
-        69.19,
-        null,
-        null
-      ]
-    ],
-    "total": 1431
-  },
-  "daily": {
-    "as_of": "2026-11-16T23:48:21Z",
-    "items": [
-      "Bhavcopy archive through 2026-11-16 (45 files, 24 days)",
-      "Nifty PCR 1.03 \u00b7 max pain 26000.0",
-      "25 OI spikes in stock futures",
-      "25 volume spikes vs their own average",
-      "Corporate actions: 15 dividends",
-      "486 videos across 10 channels"
-    ]
-  },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^NSEBANK",
-        61575.8984,
-        0.89,
-        "2026-11-16"
-      ],
-      [
-        "^BSESN",
-        82104.7891,
-        0.63,
-        "2026-11-16"
-      ],
-      [
-        "^NSEI",
-        25291.0996,
-        0.58,
-        "2026-11-16"
-      ]
-    ],
-    "total": 3
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        3862.1001,
-        -0.62,
-        "2026-11-16"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "SOL-USD",
-        71.24,
-        -1.98,
-        "2026-11-16"
-      ],
-      [
-        "AVAX-USD",
-        7.164,
-        -1.82,
-        "2026-11-16"
-      ],
-      [
-        "ADA-USD",
-        0.1525,
-        -1.77,
-        "2026-11-16"
-      ],
-      [
-        "XRP-USD",
-        0.9599,
-        -1.51,
-        "2026-11-16"
-      ],
-      [
-        "LINK-USD",
-        9.152,
-        -1.41,
-        "2026-11-16"
-      ],
-      [
-        "BNB-USD",
-        589.9,
-        -1.02,
-        "2026-11-16"
-      ],
-      [
-        "DOGE-USD",
-        0.0593,
-        -0.95,
-        "2026-11-16"
-      ],
-      [
-        "ETH-USD",
-        1823.03,
-        -0.68,
-        "2026-11-16"
-      ],
-      [
-        "BTC-USD",
-        64872.0,
-        -0.66,
-        "2026-11-16"
-      ],
-      [
-        "TRX-USD",
-        0.3067,
-        0.48,
-        "2026-11-16"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "US stocks: Nvidia set to deliver first life-after-Huang briefing",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nvidia-set-to-deliver-first-life-after-huang-briefing/articleshow/135896160.cms",
-        "Mon, 16 Nov 2026 22:13:54 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Barclays lowers 2027 year-end target for S&amp;P 500 index to 8,700",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/barclays-lowers-2027-year-end-target-for-sp-500-index-to-8700/articleshow/135894874.cms",
-        "Mon, 16 Nov 2026 21:20:17 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks: Summit shares drop after US FDA declines to approve lung cancer drug",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-summit-shares-drop-after-us-fda-declines-to-approve-lung-cancer-drug/articleshow/135894815.cms",
-        "Mon, 16 Nov 2026 21:18:04 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "US stocks: Nasdaq slides over 1% as AI selloff deepens ahead of Nvidia earnings",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nasdaq-falls-1-at-open-as-nvidia-woes-weigh-on-sentiment-ahead-of-earnings/articleshow/135894333.cms",
-        "Mon, 16 Nov 2026 21:04:11 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Dalal Street becomes best-performing stock market in a month. Can it rally more?",
-        "https://economictimes.indiatimes.com/markets/stocks/dalal-street-becomes-best-performing-stock-market-in-a-month-can-it-rally-more/videoshow/135891640.cms",
-        "Mon, 16 Nov 2026 19:18:06 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Dollar climbs to its highest since April 2025 on Fed rate-hike bets; Nasdaq dips: Stock Market Live Updates",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-coreweave-nebius-nvidia-earnings-anthropic-ipo-treasury-yield-news-16th-november-2026/liveblog/135890877.cms",
-        "Mon, 16 Nov 2026 18:44:29 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Sebi sets up sub-group under PMAC to review key IPO norms; NSE's Chauhan to head panel",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-sets-up-sub-group-under-pmac-to-review-key-ipo-norms-nses-chauhan-to-head-panel/articleshow/135890467.cms",
-        "Mon, 16 Nov 2026 18:37:52 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Retain capital gains tax on equities, economists tell FM Sitharaman ahead of Budget 2027-28",
-        "https://economictimes.indiatimes.com/markets/stocks/news/retain-capital-gains-tax-on-equities-economists-tell-fm-sitharaman-ahead-of-budget-2027-28/articleshow/135890410.cms",
-        "Mon, 16 Nov 2026 18:35:46 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Blackstone REIT to buy majority stake in $5 billion Amazon data center portfolio",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/blackstone-reit-to-buy-majority-stake-in-5-billion-amazon-data-center-portfolio/articleshow/135890381.cms",
-        "Mon, 16 Nov 2026 18:34:02 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Warren Buffett donates $5.47 billion in Berkshire Hathaway shares to charities, confidence in successors remains 'strong as ever'",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/warren-buffett-donates-more-berkshire-shares-confidence-in-successors-as-strong-as-ever/articleshow/135890059.cms",
-        "Mon, 16 Nov 2026 18:25:53 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Sebi forms panel to simplify capital-raising rules",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-forms-panel-to-simplify-capital-raising-rules/articleshow/135889803.cms",
-        "Mon, 16 Nov 2026 18:14:54 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "S&amp;P 500, Nasdaq futures slide as Nvidia earnings, Anthropic debut loom",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/sp-500-nasdaq-futures-slide-as-nvidia-earnings-anthropic-debut-loom/articleshow/135888956.cms",
-        "Mon, 16 Nov 2026 17:49:06 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "India's investments in US Treasuries jump USD 38.4 bn in Jun-Aug amid FCNR flows",
-        "https://economictimes.indiatimes.com/markets/stocks/news/indias-investments-in-us-treasuries-jump-usd-38-4-bn-in-jun-aug-amid-fcnr-flows/articleshow/135888824.cms",
-        "Mon, 16 Nov 2026 17:47:29 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "PNB among 4 stocks hitting 52-week highs; stock rallies up to 24% in a month",
-        "https://economictimes.indiatimes.com/markets/stocks/news/pnb-among-4-stocks-hitting-52-week-highs-stock-rallies-up-to-24-in-a-month/slideshow/135888569.cms",
-        "Mon, 16 Nov 2026 17:33:47 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Hong Kong debuts offshore yuan bond index to promote RMB assets",
-        "https://economictimes.indiatimes.com/markets/bonds/hong-kong-debuts-offshore-yuan-bond-index-to-promote-rmb-assets/articleshow/135888402.cms",
-        "Mon, 16 Nov 2026 17:32:10 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "India bonds dip as elevated inflation fuels rate hike expectations",
-        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-dip-as-elevated-inflation-fuels-rate-hike-expectations/articleshow/135888382.cms",
-        "Mon, 16 Nov 2026 17:30:15 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Nvidia's AI financing machine may survive Huang, but with less risk appetite",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/nvidias-ai-financing-machine-may-survive-huang-but-with-less-risk-appetite/articleshow/135888314.cms",
-        "Mon, 16 Nov 2026 17:29:00 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Morgan Stanley raises global equities to 'maximum overweight' on cheap valuations, earnings strength",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/morgan-stanley-raises-global-equities-to-maximum-overweight-on-cheap-valuations-earnings-strength/articleshow/135888237.cms",
-        "Mon, 16 Nov 2026 17:27:08 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Sebi may propose raising FPI beneficial ownership threshold to 25%; plans consultation paper",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-may-propose-raising-fpi-beneficial-ownership-threshold-to-25-plans-consultation-paper/articleshow/135883637.cms",
-        "Mon, 16 Nov 2026 15:51:12 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Rupee rises, volatility ebbs as equity inflows blunt global headwinds",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-volatility-ebbs-as-equity-inflows-blunt-global-headwinds/articleshow/135883543.cms",
-        "Mon, 16 Nov 2026 15:49:15 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Swiggy among 10 midcap stocks that dropped up to 50% in CY26",
-        "https://economictimes.indiatimes.com/markets/stocks/news/swiggy-among-10-midcap-stocks-that-dropped-up-to-50-in-cy26/slideshow/135883464.cms",
-        "Mon, 16 Nov 2026 15:40:54 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "UPL Share Price Highlights: UPL Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/upl-stock-price-live-updates-16-nov-2026/liveblog/135872604.cms",
-        "Mon, 16 Nov 2026 09:47:59 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Technical picks:  ABB India among 5 stocks to buy this week for healthy returns",
-        "https://economictimes.indiatimes.com/markets/stocks/news/tech-picks-abb-india-among-5-stocks-to-buy-this-week-for-healthy-returns/slideshow/135872688.cms",
-        "Mon, 16 Nov 2026 09:43:24 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Sun Pharma Share Price Highlights: Sun Pharma Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sun-pharma-share-price-today-live-updates-16-nov-2026/liveblog/135871948.cms",
-        "Mon, 16 Nov 2026 09:20:11 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-16-nov-2026/liveblog/135871604.cms",
-        "Mon, 16 Nov 2026 09:05:24 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "BPCL Share Price Highlights: BPCL Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bpcl-stock-price-live-updates-16-nov-2026/liveblog/135871462.cms",
-        "Mon, 16 Nov 2026 09:01:16 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Coal India Share Price Highlights: Coal India Ltd Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/coal-india-ltd-stock-price-livestock-price-today-live-updates-16-nov-2026/liveblog/135871357.cms",
-        "Mon, 16 Nov 2026 08:55:08 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Tech Mahindra Share Price Highlights: Tech Mahindra Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tech-mahindra-share-price-live-16-nov-2026/liveblog/135871297.cms",
-        "Mon, 16 Nov 2026 08:51:15 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "Nestle India Share Price Highlights: Nestle India Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/nestle-india-share-price-today-live-16-nov-2026/liveblog/135871285.cms",
-        "Mon, 16 Nov 2026 08:50:26 +0530",
-        "2026-11-16T17:48:01Z"
-      ],
-      [
-        "ET Markets",
-        "M&amp;M Share Price Highlights: M&amp;M Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/mm-share-price-live-16-nov-2026/liveblog/135871088.cms",
-        "Mon, 16 Nov 2026 08:40:29 +0530",
-        "2026-11-16T17:48:01Z"
-      ]
-    ],
-    "total": 151
   },
   "indicators": {
     "columns": [
@@ -2654,8 +2388,263 @@
           "-1.0"
         ]
       ],
-      "total": 641
+      "total": 642
     }
+  },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-11-16T23:48:19Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 25144.3,
+      "median_chg_pct": 0.24,
+      "low10_chg_pct": -17.02,
+      "high90_chg_pct": 26.91,
+      "band_pct": 43.93,
+      "day1_median_chg_pct": 0.03,
+      "day1_low10_chg_pct": -0.87,
+      "day1_high90_chg_pct": 1.12,
+      "direction": "flat"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "20MICRONS",
+        174.94,
+        -9.72,
+        -46.47,
+        92.99,
+        null,
+        null
+      ],
+      [
+        "360ONE",
+        997.1,
+        -1.93,
+        -39.99,
+        54.48,
+        null,
+        null
+      ],
+      [
+        "3IINFOLTD",
+        26.93,
+        8.36,
+        -32.95,
+        122.55,
+        null,
+        null
+      ],
+      [
+        "5PAISA",
+        321.35,
+        -7.4,
+        -42.75,
+        73.51,
+        null,
+        null
+      ],
+      [
+        "63MOONS",
+        859.95,
+        -4.15,
+        -51.74,
+        122.83,
+        null,
+        null
+      ],
+      [
+        "A2ZINFRA",
+        12.52,
+        -9.9,
+        -52.93,
+        119.24,
+        null,
+        null
+      ],
+      [
+        "AAATECH",
+        102.24,
+        -2.45,
+        -55.94,
+        130.86,
+        null,
+        null
+      ],
+      [
+        "AAKASH",
+        7.79,
+        -10.92,
+        -40.32,
+        56.55,
+        null,
+        null
+      ],
+      [
+        "AAREYDRUGS",
+        106.73,
+        3.0,
+        -52.59,
+        152.37,
+        null,
+        null
+      ],
+      [
+        "AARTIDRUGS",
+        374.9,
+        -7.17,
+        -39.84,
+        62.08,
+        null,
+        null
+      ],
+      [
+        "AARTIIND",
+        427.55,
+        -1.52,
+        -51.19,
+        71.04,
+        null,
+        null
+      ],
+      [
+        "AARTIPHARM",
+        820.85,
+        -0.78,
+        -48.31,
+        98.62,
+        null,
+        null
+      ],
+      [
+        "AARTISURF",
+        658.55,
+        10.96,
+        -46.93,
+        244.0,
+        null,
+        null
+      ],
+      [
+        "AARVEEDEN",
+        38.05,
+        1.07,
+        -51.85,
+        171.24,
+        null,
+        null
+      ],
+      [
+        "AAVAS",
+        1114.1,
+        -6.67,
+        -42.03,
+        63.68,
+        null,
+        null
+      ],
+      [
+        "ABAN",
+        44.96,
+        -9.44,
+        -48.33,
+        103.45,
+        null,
+        null
+      ],
+      [
+        "ABB",
+        6140.0,
+        -1.14,
+        -42.48,
+        50.85,
+        null,
+        null
+      ],
+      [
+        "ABCAPITAL",
+        347.25,
+        -2.97,
+        -42.78,
+        70.22,
+        null,
+        null
+      ],
+      [
+        "ABFRL",
+        39.77,
+        -14.98,
+        -51.57,
+        70.58,
+        null,
+        null
+      ],
+      [
+        "ABSLAMC",
+        889.05,
+        -2.35,
+        -44.51,
+        80.96,
+        null,
+        null
+      ],
+      [
+        "ABSLBANETF",
+        55.53,
+        -1.4,
+        -20.1,
+        20.92,
+        null,
+        null
+      ],
+      [
+        "ACC",
+        1159.4,
+        -2.87,
+        -31.99,
+        37.87,
+        null,
+        null
+      ],
+      [
+        "ACCURACY",
+        3.92,
+        -9.17,
+        -51.42,
+        65.53,
+        null,
+        null
+      ],
+      [
+        "ACE",
+        1000.1,
+        -7.41,
+        -47.9,
+        78.0,
+        null,
+        null
+      ],
+      [
+        "ACI",
+        478.45,
+        -2.04,
+        -42.76,
+        69.19,
+        null,
+        null
+      ]
+    ],
+    "total": 1431
   },
   "quality": {
     "rows": 86748,
@@ -2722,6 +2711,18 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
+  },
+  "daily": {
+    "as_of": "2026-11-17T01:35:38Z",
+    "items": [
+      "Bhavcopy archive through 2026-11-16 (45 files, 24 days)",
+      "Nifty PCR 1.03 \u00b7 max pain 26000.0",
+      "25 OI spikes in stock futures",
+      "25 volume spikes vs their own average",
+      "Corporate actions: 16 dividends",
+      "486 videos across 10 channels",
+      "136 news headlines"
+    ]
   },
   "relative_strength": {
     "columns": [

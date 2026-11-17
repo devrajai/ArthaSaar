@@ -1,0 +1,80 @@
+name: Telegram deep messages
+
+# Four messages the daily briefs do not cover:
+#
+#   expiry       - the expiry-morning note: max pain, walls, OI, with the arithmetic stated
+#   positioning  - what sits in the December and January expiries, plus stocks rolled forward
+#                  while the price falls
+#   weekly       - Sunday: what the channels named next to what the data did, PCR extremes
+#                  against their baseline, and where Nifty sits
+#   review       - on demand: a holding review for one symbol, facts only
+#
+# None of them carries a target, an entry, a stoploss or a verdict. That is the design, not
+# an omission.
+
+on:
+  schedule:
+    # 03:45 UTC = 09:15 IST, at the open, on weekdays. The expiry note only fires when an
+    # expiry actually falls that day; on other days it says so and stops.
+    - cron: '45 3 * * 1-5'
+    # 04:00 UTC = 09:30 IST on the first of the month, for the far-expiry view.
+    - cron: '0 4 1 * *'
+    # 03:30 UTC = 09:00 IST on Sunday, for the weekly read.
+    - cron: '30 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'expiry | positioning | weekly | review'
+        required: true
+        default: 'weekly'
+      symbol:
+        description: 'symbol for review mode'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram-deep
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
+        with:
+          python-version: '3.12'
+
+      - name: Pick the message for this schedule
+        id: pick
+        run: |
+          if [ -n "${{ github.event.inputs.mode }}" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+          else
+            DOW=$(date -u +%u)      # 1=Mon .. 7=Sun
+            DOM=$(date -u +%d)
+            if [ "$DOW" = "7" ]; then MODE=weekly
+            elif [ "$DOM" = "01" ]; then MODE=positioning
+            else MODE=expiry; fi
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "chosen: $MODE"
+
+      - name: Send
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN || secrets.TELEGRAM }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID || secrets.TELEGRAM_CHAT }}
+        run: |
+          MODE="${{ steps.pick.outputs.mode }}"
+          if [ "$MODE" = "review" ]; then
+            python scripts/telegram_deep.py review "${{ github.event.inputs.symbol }}"
+          else
+            python scripts/telegram_deep.py "$MODE"
+          fi

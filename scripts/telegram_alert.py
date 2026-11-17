@@ -43,6 +43,15 @@ def yahoo(sym):
     except Exception:
         return None, None, None, None
 
+def _inr(v):
+    """Indian-grouped integer. This file has esc() but no num(); calling one that does not
+    exist threw a NameError inside a try/except and silently dropped the whole section."""
+    try:
+        return "{:,.0f}".format(float(v))
+    except Exception:
+        return "—"
+
+
 def esc(s):
     # These were HTML entities that had been decoded, so each replace() was a no-op:
     # "&" -> "&", "<" -> "<". Any symbol or headline containing <, > or & therefore broke
@@ -238,6 +247,48 @@ if bull:
     L.append("\U0001F42C <b>Bull:</b> " + " \u00b7 ".join("%s %s" % (esc(b.get("symbol")), b.get("score")) for b in bull))
 if bear:
     L.append("\U0001F428 <b>Bear:</b> " + " \u00b7 ".join("%s %s" % (esc(b.get("symbol")), b.get("score")) for b in bear))
+
+# ---- option chain: what the strikes actually did -------------------------------------
+# option_chain.json already carries, per strike and both sides, the change in open interest
+# alongside the change in premium, and labels the combination: writing, short covering,
+# long buildup, unwinding. That is the standard chain reading and it is a DESCRIPTION of
+# what happened - not a signal, and not a reason to buy anything.
+try:
+    oc = jload("docs/option_chain.json") or {}
+    ix = (oc.get("indices") or {})
+    nif = ix.get("NIFTY") if isinstance(ix, dict) else None
+    if nif and nif.get("strikes"):
+        L.append("")
+        L.append("\U0001F9FE <b>Option chain</b> · %s expiry" % esc(str(nif.get("expiry") or "")))
+        if nif.get("pcr") is not None:
+            L.append("Nifty PCR %.2f · spot %s" % (float(nif["pcr"]),
+                                                   _inr(float(nif.get("spot") or 0))))
+        # largest OI CHANGE, not largest OI - the biggest pile is often months old and says
+        # nothing about today
+        best_ce = best_pe = None
+        for st in nif["strikes"]:
+            ce, pe = st.get("ce") or {}, st.get("pe") or {}
+            dc, dp = ce.get("oi_chg") or 0, pe.get("oi_chg") or 0
+            if best_ce is None or dc > best_ce[1]:
+                best_ce = (st.get("strike"), dc, ce.get("action"))
+            if best_pe is None or dp > best_pe[1]:
+                best_pe = (st.get("strike"), dp, pe.get("action"))
+        def line(lbl, t):
+            if not t or not t[1]:
+                return None
+            return "%s %s: OI %s%s (%s)" % (lbl, _inr(t[0]), "+" if t[1] >= 0 else "",
+                                            _inr(t[1]), esc(str(t[2] or "")))
+        for lbl, t in (("Call", best_ce), ("Put", best_pe)):
+            ln = line(lbl, t)
+            if ln:
+                L.append(ln)
+        un = oc.get("unusual") or []
+        if un:
+            L.append("Unusual volume: %d strikes" % len(un))
+except Exception as _e:
+    # A missing or unreadable chain must never stop the close message, but it must not be
+    # invisible either. A bare `pass` here hid a NameError that removed the whole section.
+    print("option-chain section skipped: %s: %s" % (type(_e).__name__, str(_e)[:120]))
 
 L.append("")
 

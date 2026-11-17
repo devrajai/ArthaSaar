@@ -615,6 +615,11 @@ jobs:
       - name: "7r. Screener rank momentum"
         run: python scripts/build_rank_momentum.py
 
+      # What the public Telegram channels named, beside what the data did. Runs after
+      # the collector has refreshed messages.parquet.
+      - name: "7s. Telegram channels vs the chain"
+        run: python scripts/build_telegram_vs_chain.py
+
       - name: Commit
         run: |
           git config user.name "data-bot"

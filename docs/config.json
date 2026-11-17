@@ -3,10 +3,8 @@
  "proxy": "https://arthasaar-proxy.devraj-resume.workers.dev",
  "token": "",
  "telegram_channels": [
-  "way2laabh",
-  "LIVEOPTIONDATA",
-  "ghanshyamtech",
-  "marketfeed"
+  "sureshsharma1",
+  "way2laabh"
  ],
- "_telegram_comment": "Public Telegram channels read through t.me/s/<name> - no bot token, no login. Tested 17 Nov 2026 on a GitHub runner: these four posted that day and have the web preview enabled. Excluded on evidence, not preference: powerofstocks last posted 15 Jul 2026 and stockmarketupdates last posted in 2016, so collecting them every run buys nothing. abhishekkar and nseindia return NO PREVIEW - the owner has not enabled 'Show a preview of posts on the web', and there is no way around that from outside."
+ "_telegram_comment": "Two channels, tested on a GitHub runner 17 Nov 2026. Both posted that day and have the web preview enabled. sureshsharma1 posts structured intraday calls with entry, SL and target, which makes them scoreable. way2laabh posts commentary and tickers. Removed on evidence: LIVEOPTIONDATA (129 messages, most containing only 'Sent via TeleFeed' because the content is a screenshot), powerofstocks (last post 15 Jul 2026), stockmarketupdates (last post 2016), abhishekkar and nseindia (no web preview)."
 }

@@ -1,9 +1,12 @@
 {
-  "_comment": "The Cloudflare Worker proxy. Yahoo sends no CORS header, so a browser cannot read its chart API directly - this worker fetches it server-side and adds the header, which is what lets the terminal draw live intraday candles. Leave proxy empty and the site still works: stock pages fall back to the stored daily series.",
-  "proxy": "https://arthasaar-proxy.devraj-resume.workers.dev",
-  "token": "",
-  "telegram_channels": [
-    "LIVEOPTIONDATA"
-  ],
-  "_telegram_comment": "Public Telegram channels read through t.me/s/<name>. No token, no login. Everything pulled from them is a third-party claim and is shown separately from exchange-derived numbers."
+ "_comment": "The Cloudflare Worker proxy. Yahoo sends no CORS header, so a browser cannot read its chart API directly - this worker fetches it server-side and adds the header, which is what lets the terminal draw live intraday candles. Leave proxy empty and the site still works: stock pages fall back to the stored daily series.",
+ "proxy": "https://arthasaar-proxy.devraj-resume.workers.dev",
+ "token": "",
+ "telegram_channels": [
+  "way2laabh",
+  "LIVEOPTIONDATA",
+  "ghanshyamtech",
+  "marketfeed"
+ ],
+ "_telegram_comment": "Public Telegram channels read through t.me/s/<name> - no bot token, no login. Tested 17 Nov 2026 on a GitHub runner: these four posted that day and have the web preview enabled. Excluded on evidence, not preference: powerofstocks last posted 15 Jul 2026 and stockmarketupdates last posted in 2016, so collecting them every run buys nothing. abhishekkar and nseindia return NO PREVIEW - the owner has not enabled 'Show a preview of posts on the web', and there is no way around that from outside."
 }

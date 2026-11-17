@@ -290,6 +290,32 @@ except Exception as _e:
     # invisible either. A bare `pass` here hid a NameError that removed the whole section.
     print("option-chain section skipped: %s: %s" % (type(_e).__name__, str(_e)[:120]))
 
+# ---- the forecast model, with its own error --------------------------------------------
+# The model's band is wide and its scored record is empty. Saying both is the point: a
+# forecast shown without its error is a horoscope.
+try:
+    tf = jload("data/timesfm_forecasts.json") or {}
+    sc = jload("docs/timesfm_score.json") or {}
+    nf = tf.get("nifty") or {}
+    if nf.get("median_chg_pct") is not None:
+        L.append("")
+        L.append("\U0001F52E <b>%s-day outlook</b> (model)" % tf.get("horizon_days", 21))
+        L.append("Nifty median %+.2f%% · band %+.1f%% to %+.1f%%"
+                 % (float(nf["median_chg_pct"]), float(nf.get("low10_chg_pct") or 0),
+                    float(nf.get("high90_chg_pct") or 0)))
+        if nf.get("band_pct") is not None:
+            L.append("Band width %.1f%% of price · direction %s"
+                     % (float(nf["band_pct"]), esc(str(nf.get("direction") or "-"))))
+        # the scored record, or the honest absence of one
+        ov = sc.get("overall") or {}
+        if sc.get("scored"):
+            L.append("Scored so far: %s runs, median miss %s%%"
+                     % (sc.get("scored"), ov.get("median_abs_error_pct", "-")))
+        else:
+            L.append("<i>No scored record yet — no logged forecast has reached its horizon.</i>")
+except Exception as _e:
+    print("forecast section skipped: %s: %s" % (type(_e).__name__, str(_e)[:120]))
+
 L.append("")
 
 msg = "\n".join(L)

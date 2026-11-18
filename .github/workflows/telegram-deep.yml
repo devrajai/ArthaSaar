@@ -31,6 +31,10 @@ on:
         description: 'symbol for review mode'
         required: false
         default: ''
+      slot:
+        description: 'morning | night (blank = chosen by the clock)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -55,6 +59,7 @@ jobs:
       - name: Pick the message for this schedule
         id: pick
         run: |
+          SLOT="${{ github.event.inputs.slot }}"
           if [ -n "${{ github.event.inputs.mode }}" ]; then
             MODE="${{ github.event.inputs.mode }}"
           else
@@ -71,6 +76,7 @@ jobs:
             else MODE=expiry; fi
           fi
           echo "slot=${SLOT:-}" >> "$GITHUB_OUTPUT"
+          echo "slot chosen: ${SLOT:-auto}"
           echo "mode=$MODE" >> "$GITHUB_OUTPUT"
           echo "chosen: $MODE"
 

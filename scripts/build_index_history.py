@@ -20,11 +20,14 @@ from datetime import datetime, timezone
 
 OUT = "docs/index_history.json"
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36"}
-CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range=2y"
+CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range=10y"
 
 INDICES = [("^NSEI", "Nifty 50"), ("^NSEBANK", "Bank Nifty"), ("^BSESN", "Sensex")]
 
-DAILY_KEEP = 260      # about one trading year, enough for a 52-week range
+# TEN YEARS, not one. A 21-session range percentile computed on 260 bars is a statement about
+# the last year, not about Nifty - and the Telegram message was going to say "since 2019" over
+# one year of data. Yahoo serves about ten years of daily bars; keeping them costs ~200 KB.
+DAILY_KEEP = 2600
 WEEKLY_KEEP = 16      # four months of weeks
 
 
@@ -159,8 +162,8 @@ def main():
                          "the only free source for it here."),
         "partial_week": ("If the newest week has fewer than five sessions the numbers describe "
                          "a part-week and change as it fills in."),
-        "two_years": ("About two years of daily history. A 52-week high or low is computed from "
-                      "the last 252 sessions in that window."),
+        "history_depth": ("About ten years of daily bars where Yahoo has them. A 52-week high or "
+                       "low is computed from the last 252 sessions."),
     }
 
     os.makedirs("docs", exist_ok=True)

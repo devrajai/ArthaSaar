@@ -1341,6 +1341,46 @@ body{padding-bottom:76px}
 .kpi{border-radius:15px !important}
 header{border-bottom-color:rgba(255,255,255,.09) !important}
 
+
+/* ---- new.html landing block ---- */
+.newhome{margin:0 0 18px}
+.nhStrip{background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:16px 18px 13px;margin-bottom:12px}
+.nhStrip{display:block}
+.nhRow{display:flex;align-items:stretch}
+.nhItem{flex:1;min-width:0;text-align:center}
+.nhDiv{width:1px;background:var(--line);margin:2px 6px}
+.nhName{font-size:9.5px;letter-spacing:.45px;color:var(--muted);font-weight:700;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nhLvl{font-size:19px;font-weight:700;letter-spacing:-.6px;margin-top:3px;
+  font-variant-numeric:tabular-nums;color:var(--text)}
+.nhChg{font-size:11px;font-weight:600;margin-top:1px;font-variant-numeric:tabular-nums}
+.nhFoot{display:flex;justify-content:space-between;gap:10px;margin-top:11px;padding-top:9px;
+  border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+.nhTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.nhTile{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px 14px}
+.nhK{font-size:9.5px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase;font-weight:700}
+.nhV{font-size:21px;font-weight:700;letter-spacing:-.6px;margin-top:4px;color:var(--text)}
+.nhD{font-size:10.5px;color:var(--muted);margin-top:1px}
+.nhHead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 2px 10px}
+.nhHead h2{margin:0;font-size:14px;font-weight:700;color:var(--text)}
+.nhHead span{font-size:11px;color:var(--muted)}
+.nhRibWrap{position:relative;margin:0 -16px}
+.nhRibs{display:flex;gap:9px;overflow-x:auto;padding:2px 16px 10px;
+  scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.nhRibs::-webkit-scrollbar{display:none}
+.nhRibWrap::after{content:"";position:absolute;top:0;right:0;bottom:10px;width:44px;
+  pointer-events:none;background:linear-gradient(90deg,transparent,var(--bg))}
+.nhRib{flex:0 0 152px;scroll-snap-align:start;border-radius:16px;padding:12px 13px;
+  background:var(--card);border:1px solid var(--line)}
+.nhRn{font-size:11px;font-weight:650;color:var(--muted);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.nhRm{font-size:19px;font-weight:700;letter-spacing:-.6px;margin-top:4px}
+.nhBar{height:4px;border-radius:99px;background:rgba(255,255,255,.10);margin-top:8px;overflow:hidden}
+.nhBar i{display:block;height:100%;border-radius:99px;background:var(--up);opacity:.75}
+.nhRb{font-size:9.5px;color:var(--muted);margin-top:4px}
+@media(max-width:520px){ .nhLvl{font-size:17px} .nhV{font-size:19px} }
+
 </style>
 </head>
 <body>
@@ -2372,6 +2412,81 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
+    /* ==================================================================================
+       LANDING BLOCK - the new.html home design.
+       Placed ABOVE the existing overview cards, so the landing page leads with the market
+       strip, breadth and sector ribbons, and every card that was already here still follows
+       underneath. Nothing is removed.
+       ================================================================================== */
+    (function(){
+     try{
+      var wrap=el("div"); wrap.className="newhome";
+
+      /* ---- 1. index strip ---- */
+      var want=[["nifty50","NIFTY 50"],["niftybank","BANK NIFTY"],["sensex","SENSEX"]];
+      var idxMap={};
+      ((INDICES&&INDICES.indices)||[]).forEach(function(x){ if(x&&x.id) idxMap[x.id]=x; });
+      var cells=want.map(function(w){
+        var x=idxMap[w[0]];
+        if(!x||x.level==null) return "";
+        var up=(x.chg_pct||0)>=0;
+        var cl=up?"var(--up)":"var(--down)";
+        var pts=(x.points==null?"":(up?"+":"")+Math.abs(x.points).toFixed(2)+" · ");
+        return '<div class="nhItem"><div class="nhName">'+w[1]+'</div>'+
+               '<div class="nhLvl">'+x.level.toLocaleString("en-IN",{maximumFractionDigits:2})+'</div>'+
+               '<div class="nhChg" style="color:'+cl+'">'+pts+
+               (up?"+":"")+(x.chg_pct||0).toFixed(2)+'%</div></div>';
+      }).filter(Boolean);
+      if(cells.length){
+        var strip=el("div","nhStrip");
+        // the cells must sit in their own flex row; without the wrapper the first item
+        // became the flex container and the strip collapsed to one line.
+        strip.innerHTML='<div class="nhRow">'+cells.join('<div class="nhDiv"></div>')+'</div>'+
+          '<div class="nhFoot"><span>Last close</span><span>'+
+          (BREADTH&&BREADTH.total?BREADTH.total.toLocaleString("en-IN")+" stocks":"")+'</span></div>';
+        wrap.appendChild(strip);
+      }
+
+      /* ---- 2. breadth tiles ---- */
+      if(BREADTH){
+        var tiles=el("div","nhTiles");
+        tiles.innerHTML=
+          '<div class="nhTile"><div class="nhK">Breadth</div><div class="nhV">'+
+            (BREADTH.above_50!=null?BREADTH.above_50+"%":"—")+'</div>'+
+            '<div class="nhD">above 50-day</div></div>'+
+          '<div class="nhTile"><div class="nhK">Long-term</div><div class="nhV">'+
+            (BREADTH.above_200!=null?BREADTH.above_200+"%":"—")+'</div>'+
+            '<div class="nhD">above 200-day</div></div>';
+        wrap.appendChild(tiles);
+      }
+
+      /* ---- 3. sector ribbons ---- */
+      var secs=(SECTORS&&SECTORS.sectors)||[];
+      if(secs.length){
+        var sorted=secs.slice().sort(function(a,b){return (b.avg_chg||0)-(a.avg_chg||0);});
+        var head=el("div","nhHead");
+        head.innerHTML='<h2>Sector trend</h2><span>swipe →</span>';
+        wrap.appendChild(head);
+        var rw=el("div","nhRibWrap");
+        var rb=el("div","nhRibs");
+        rb.innerHTML=sorted.map(function(s){
+          var c=(s.avg_chg||0);
+          var cl=c>0?"var(--up)":(c<0?"var(--down)":"var(--flat)");
+          var tot=(s.count||0);
+          var pct=tot?Math.round((s.advances||0)/tot*100):0;
+          return '<div class="nhRib"><div class="nhRn">'+esc(s.name||"")+'</div>'+
+            '<div class="nhRm" style="color:'+cl+'">'+(c>0?"+":"")+c.toFixed(2)+'%</div>'+
+            '<div class="nhBar"><i style="width:'+Math.max(3,pct)+'%"></i></div>'+
+            '<div class="nhRb">'+pct+'% up · '+(s.advances||0)+'/'+tot+'</div></div>';
+        }).join("");
+        rw.appendChild(rb); wrap.appendChild(rw);
+      }
+
+      v.appendChild(wrap);
+     }catch(e){ console.warn("newhome:",e); }
+    })();
+
+
     // ---- WIKIPEDIA ATTENTION ------------------------------------------------------------
     // The Wikimedia pageview API is official, free and needs no key. For a listed company it
     // is a proxy for public attention: a sudden run of lookups usually means something
@@ -8538,6 +8653,10 @@ var OV_ORDER = [
     var cards=[].slice.call(ov.children);
     if(cards.length<2) return;
     function rank(c){
+      // The new landing block has no card title, so it ranked last and reorder() pushed it to
+      // the bottom of the overview - which is why the landing page still looked unchanged.
+      // It is pinned first instead.
+      if(c.classList && c.classList.contains("newhome")) return -1;
       var h2=c.querySelector(".cardhead h2");
       var t=h2?((h2.childNodes[0]&&h2.childNodes[0].textContent)||"").trim():"";
       for(var i=0;i<OV_ORDER.length;i++){

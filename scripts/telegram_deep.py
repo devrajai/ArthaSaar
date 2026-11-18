@@ -635,29 +635,42 @@ def build_metals(slot="night"):
         L.append("<i>A stale or invented rate would be worse than none.</i>")
         return "\n".join(L)
 
-    for key, label in (("gold", "Gold"), ("silver", "Silver")):
-        b = d.get(key) or {}
-        if not b.get("per_gram"):
-            continue
+    def arrow(chg):
+        return "\u25B2" if (chg or 0) > 0 else ("\u25BC" if (chg or 0) < 0 else "\u2022")
+
+    # ---- gold, by purity ----
+    gp = d.get("gold_purities") or []
+    if gp:
         L.append("")
-        L.append("<b>%s</b>" % label)
-        chg = b.get("chg_per_gram")
-        pct = b.get("chg_pct")
-        arrow = "\u25B2" if (chg or 0) > 0 else ("\u25BC" if (chg or 0) < 0 else "\u2022")
-        # rupees per gram, with the change in rupees and in percent
-        line = "%s 1 g <b>Rs %s</b>" % (arrow, "{:,.0f}".format(b["per_gram"]))
-        if chg is not None:
-            line += " (%s%s, %s%s%%)" % ("+" if chg >= 0 else "-", "{:,.0f}".format(abs(chg)),
-                                          "+" if pct >= 0 else "-", "{:.2f}".format(abs(pct)))
-        L.append(line)
-        L.append("10 g <b>Rs %s</b>%s" % ("{:,.0f}".format(b["per_10g"]),
-                 (" (%sRs %s)" % ("+" if (b.get("chg_per_10g") or 0) >= 0 else "-",
-                                  "{:,.0f}".format(abs(b.get("chg_per_10g") or 0))))
-                 if b.get("chg_per_10g") is not None else ""))
-        L.append("12 g <b>Rs %s</b>%s" % ("{:,.0f}".format(b["per_12g"]),
-                 (" (%sRs %s)" % ("+" if (b.get("chg_per_12g") or 0) >= 0 else "-",
-                                  "{:,.0f}".format(abs(b.get("chg_per_12g") or 0))))
-                 if b.get("chg_per_12g") is not None else ""))
+        L.append("<b>GOLD</b>")
+        for row in gp:
+            chg = row.get("chg_per_gram")
+            pct = row.get("chg_pct")
+            L.append("%s <b>%s</b> · 1 g Rs %s · 10 g Rs %s%s"
+                     % (arrow(chg), esc(str(row["label"])),
+                        "{:,.0f}".format(row["per_gram"]),
+                        "{:,.0f}".format(row["per_10g"]),
+                        (" (%sRs %s, %s%.2f%%)" % ("+" if (chg or 0) >= 0 else "-",
+                         "{:,.0f}".format(abs(chg or 0)), "+" if (pct or 0) >= 0 else "-",
+                         abs(pct or 0))) if chg is not None else ""))
+        L.append("<i>12 g: " + " · ".join("%s Rs %s" % (esc(str(r["label"])),
+                 "{:,.0f}".format(r["per_12g"])) for r in gp) + "</i>")
+
+    # ---- silver, by fineness ----
+    sf = d.get("silver_fineness") or []
+    if sf:
+        L.append("")
+        L.append("<b>SILVER</b>")
+        for row in sf:
+            chg = row.get("chg_per_gram")
+            pct = row.get("chg_pct")
+            L.append("%s <b>%s</b> · 1 g Rs %s · 10 g Rs %s%s"
+                     % (arrow(chg), esc(str(row["label"])),
+                        "{:,.2f}".format(row["per_gram"]),
+                        "{:,.0f}".format(row["per_10g"]),
+                        (" (%sRs %s, %s%.2f%%)" % ("+" if (chg or 0) >= 0 else "-",
+                         "{:,.2f}".format(abs(chg or 0)), "+" if (pct or 0) >= 0 else "-",
+                         abs(pct or 0))) if chg is not None else ""))
 
     if d.get("usdinr"):
         L.append("")
@@ -666,23 +679,24 @@ def build_metals(slot="night"):
 
     etfs = d.get("etf_cross_check") or {}
     if etfs:
-        L.append("")
         bits = []
         for k, lbl in (("goldbees", "GOLDBEES"), ("silverbees", "SILVERBEES")):
             e = etfs.get(k)
             if e and e.get("price"):
                 bits.append("%s Rs %.2f (%+.2f%%)" % (lbl, e["price"], e.get("chg_pct") or 0))
         if bits:
+            L.append("")
             L.append("Domestic ETFs: " + " · ".join(bits))
 
     L.append("")
-    L.append("<i>International spot converted at the live USD/INR rate. This is NOT your "
-             "jeweller's rate - local retail adds import duty, GST and a dealer premium, so it "
-             "usually sits 10-15% above this.</i>")
+    L.append("<i>Purity is arithmetic on the pure-metal price: 24K is 24/24, 22K is 22/24, 18K "
+             "is 18/24. Silver fineness is parts per thousand, so 958 is 95.8%.")
+    L.append("Making charges, hallmarking and a jeweller's margin are NOT included - two shops "
+             "quoting the same purity can differ by hundreds of rupees a gram on those alone.")
+    L.append("Converted from international spot at USD/INR, not the retail rate, which adds "
+             "import duty and GST.</i>")
     L.append("<i>Data health: %s.</i>" % esc(str(d.get("as_of_ist") or "")))
     return "\n".join(L)
-
-
 
 
 # ---------------------------------------------------------------- what changed

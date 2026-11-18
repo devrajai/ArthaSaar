@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ArthaSaar — News</title>
+<style>
+:root{
+  --ink:#0d1f33; --ink2:#3a5372; --muted:#6d86a3; --faint:#8fa6c0;
+  --glass:rgba(255,255,255,.58); --glass2:rgba(255,255,255,.74);
+  --line:rgba(138,178,224,.30); --line2:rgba(138,178,224,.52);
+  --up:#0b7a5c; --down:#b23a4b;
+  --blue:#2f6fd0; --sky:#8fbcff;
+  --cat-general:#2f6fd0; --cat-results:#0b7a5c; --cat-global:#7b58c9; --cat-policy:#b0752a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:var(--ink);-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1200px 640px at 10% -10%, #dbe9ff 0%, transparent 56%),
+    radial-gradient(980px 560px at 94% 2%, #e8f2ff 0%, transparent 50%),
+    radial-gradient(820px 520px at 46% 108%, #cfe3ff 0%, transparent 58%),
+    linear-gradient(168deg,#f6faff 0%,#ecf4ff 50%,#e2eeff 100%);
+  background-attachment:fixed;min-height:100vh;
+}
+
+/* ── header ── */
+header{
+  position:sticky;top:0;z-index:60;padding:14px 16px 12px;
+  display:flex;align-items:flex-start;gap:10px;
+  background:linear-gradient(180deg,rgba(246,250,255,.9),rgba(246,250,255,0));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s;
+}
+header.hide{transform:translateY(-108%);opacity:0}
+.burger{
+  width:30px;height:30px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;
+  background:rgba(255,255,255,.7);border:1px solid var(--line);cursor:pointer;
+}
+.burger i{display:block;width:14px;height:1.7px;background:var(--ink2);border-radius:2px;
+  position:relative}
+.burger i::before,.burger i::after{content:"";position:absolute;left:0;width:14px;height:1.7px;
+  background:var(--ink2);border-radius:2px}
+.burger i::before{top:-4.5px} .burger i::after{top:4.5px}
+.hdText h1{margin:0;font-size:19px;font-weight:680;letter-spacing:-.5px}
+.hdText p{margin:2px 0 0;font-size:11.5px;color:var(--muted);line-height:1.45;max-width:250px}
+
+.wrap{max-width:760px;margin:0 auto;padding:2px 16px 130px}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:8px;margin:4px 0 14px}
+.tab{
+  display:flex;align-items:center;gap:7px;padding:9px 15px;border-radius:13px;
+  font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;
+  background:rgba(255,255,255,.6);border:1px solid var(--line);
+  transition:all .18s;
+}
+.tab.on{
+  background:linear-gradient(150deg,rgba(226,239,255,.95),rgba(200,224,255,.9));
+  border-color:rgba(120,170,230,.6);color:#17427e;
+  box-shadow:0 6px 18px rgba(70,130,210,.16),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.tab svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* ── glass ── */
+.g{background:var(--glass);border:1px solid var(--line);border-radius:20px;
+  backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%);
+  box-shadow:0 12px 38px rgba(66,118,188,.10),inset 0 1px 0 rgba(255,255,255,.88)}
+
+/* ── the live block ── */
+.live{padding:16px;margin-bottom:14px}
+.liveTop{display:flex;align-items:center;gap:12px}
+.flame{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(150deg,#ffd9d0,#ff9f7e 55%,#f2743f);
+  box-shadow:0 8px 20px rgba(240,120,70,.32),inset 0 1px 0 rgba(255,255,255,.75);
+}
+.flame svg{width:20px;height:20px;fill:#fff;opacity:.95}
+.liveTop h2{margin:0;font-size:15.5px;font-weight:670;letter-spacing:-.2px}
+.liveTop .s{margin:1px 0 0;font-size:11.5px;color:var(--muted)}
+
+.alerts{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 13px;
+  border-radius:14px;background:rgba(255,255,255,.55);border:1px solid var(--line)}
+.alerts .lbl{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:620;
+  color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+.alerts .lbl svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+.alerts .off{font-size:10px;padding:2px 7px;border-radius:99px;background:rgba(178,58,75,.1);
+  color:var(--down);font-weight:640}
+.alerts .chips{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.achip{font-size:11px;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.85);
+  border:1px solid var(--line);color:var(--ink2);cursor:pointer;display:flex;align-items:center;gap:5px}
+.achip .dot{width:6px;height:6px;border-radius:99px;background:var(--faint)}
+
+/* ── search ── */
+.search{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:12px 15px;
+  border-radius:15px;background:rgba(255,255,255,.72);border:1px solid var(--line)}
+.search svg{width:16px;height:16px;fill:none;stroke:var(--faint);stroke-width:2;flex:0 0 auto}
+.search input{border:0;outline:0;background:transparent;flex:1;font-size:13.5px;color:var(--ink)}
+.search input::placeholder{color:var(--faint)}
+
+/* ── count chips ── */
+.countsWrap{position:relative;margin:0 -16px}
+.counts{display:flex;gap:7px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none}
+.counts::-webkit-scrollbar{display:none}
+.countsWrap::after{content:"";position:absolute;top:0;right:0;bottom:12px;width:44px;
+  pointer-events:none;background:linear-gradient(90deg,rgba(236,244,255,0),rgba(236,244,255,.92))}
+.cchip{flex:0 0 auto;font-size:12px;padding:7px 13px;border-radius:99px;cursor:pointer;
+  background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--ink2);
+  display:flex;align-items:center;gap:6px;font-weight:560}
+.cchip.on{background:#0d1f33;color:#fff;border-color:#0d1f33}
+.cchip .d{width:6px;height:6px;border-radius:99px}
+.cchip .n{opacity:.72;font-weight:500}
+
+/* ── news cards ── */
+.item{padding:14px 15px;margin-bottom:10px;border-radius:17px;
+  background:var(--glass2);border:1px solid var(--line);
+  box-shadow:0 8px 24px rgba(66,118,188,.07),inset 0 1px 0 rgba(255,255,255,.9)}
+.meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+.pill{font-size:10.5px;padding:4px 9px;border-radius:99px;font-weight:620;
+  display:flex;align-items:center;gap:5px;border:1px solid transparent}
+.pill .d{width:5px;height:5px;border-radius:99px;background:currentColor}
+.p-general{background:rgba(47,111,208,.1);color:#1f5cb8;border-color:rgba(47,111,208,.2)}
+.p-results{background:rgba(11,122,92,.1);color:#0b6b52;border-color:rgba(11,122,92,.2)}
+.p-global{background:rgba(123,88,201,.1);color:#6544b0;border-color:rgba(123,88,201,.2)}
+.p-policy{background:rgba(176,117,42,.1);color:#8f5f1e;border-color:rgba(176,117,42,.2)}
+.co{font-size:10.5px;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.9);
+  border:1px solid var(--line);color:var(--ink2);display:flex;align-items:center;gap:5px;
+  font-weight:600}
+.co .av{width:12px;height:12px;border-radius:99px;
+  background:linear-gradient(145deg,#cfe4ff,#7fb2f0);display:grid;place-items:center;
+  font-size:6.5px;color:#fff;font-weight:700}
+.coName{font-size:10.5px;color:var(--faint)}
+.time{margin-left:auto;font-size:10.5px;color:var(--faint);display:flex;align-items:center;
+  gap:4px;white-space:nowrap}
+.time svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2}
+h3{margin:0;font-size:13.5px;font-weight:640;line-height:1.45;letter-spacing:-.1px;color:var(--ink)}
+a.itemLink{text-decoration:none;color:inherit;display:block}
+
+/* ── AI fab ── */
+.ai{
+  position:fixed;right:16px;bottom:22px;z-index:80;width:50px;height:50px;border-radius:99px;
+  display:grid;place-items:center;cursor:pointer;border:1px solid var(--line2);
+  background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(206,229,255,.92));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 12px 30px rgba(60,115,190,.26),inset 0 1px 0 rgba(255,255,255,.95);
+  font-size:13px;font-weight:720;color:#2f6fd0;letter-spacing:-.3px;
+  transition:transform .2s,opacity .2s;
+}
+.ai:active{transform:scale(.94)}
+.ai.tuck{transform:translateY(76px) scale(.9);opacity:0;pointer-events:none}
+
+.foot{margin-top:22px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7}
+.empty{padding:26px;text-align:center;font-size:13px;color:var(--muted)}
+
+@media(max-width:520px){
+  .wrap{padding:2px 12px 120px}
+  .hdText h1{font-size:18px}
+  .alerts{flex-wrap:wrap}
+  .alerts .chips{margin-left:0;width:100%;margin-top:6px}
+}
+</style>
+</head>
+<body>
+
+<header id="hd">
+  <div class="burger"><i></i></div>
+  <div class="hdText">
+    <h1>News</h1>
+    <p>Stay ahead with the latest market news and financial updates.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tabs">
+    <div class="tab on">
+      <svg viewBox="0 0 24 24"><path d="M12 2s4 4.5 4 9a4 4 0 1 1-8 0c0-4.5 4-9 4-9z"/></svg>
+      Live News
+    </div>
+    <div class="tab">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/>
+        <path d="M8 3v4M16 3v4M3 11h18"/></svg>
+      Events Calendar
+    </div>
+  </div>
+
+  <!-- live block -->
+  <section class="g live">
+    <div class="liveTop">
+      <div class="flame">
+        <svg viewBox="0 0 24 24"><path d="M12 2s4.5 5 4.5 9.5a4.5 4.5 0 1 1-9 0C7.5 7 12 2 12 2z"/></svg>
+      </div>
+      <div>
+        <h2>Live Market News</h2>
+        <p class="s">Corporate filings and market intelligence.</p>
+      </div>
+    </div>
+    <div class="alerts">
+      <span class="lbl">
+        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/>
+          <path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        News alerts
+      </span>
+      <span class="off">All off</span>
+      <span class="chips">
+        <span class="achip"><span class="dot"></span>All</span>
+        <span class="achip"><span class="dot" style="background:#0b7a5c"></span>Results</span>
+        <span class="achip"><span class="dot" style="background:#2f6fd0"></span>General</span>
+        <span class="achip"><span class="dot" style="background:#7b58c9"></span>Global</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- search -->
+  <div class="search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" placeholder="Search by stock, company name, category or keyword…">
+  </div>
+
+  <!-- counts -->
+  <div class="countsWrap"><div class="counts" id="counts"></div></div>
+
+  <!-- list -->
+  <div id="list"></div>
+
+  <div class="foot">
+    Headlines and links belong to the publishers named on each item.<br>
+    Categories are keyword tags on the headline, not editorial judgement.<br>
+    Market data and descriptions only. Not investment advice.
+  </div>
+</div>
+
+<div class="ai" id="ai">AI</div>
+
+<script>
+let DATA=null, CAT='all', Q='';
+const CAT_LABEL={all:'All',results:'Results',general:'General',global:'Global',policy:'Policy'};
+const CAT_COLOR={general:'#2f6fd0',results:'#0b7a5c',global:'#7b58c9',policy:'#b0752a'};
+
+function when(pub){
+  if(!pub) return '';
+  const d=new Date(pub);
+  if(isNaN(d)) return String(pub).slice(0,16);
+  const now=new Date();
+  const same=d.toDateString()===now.toDateString();
+  const t=d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+  return (same?'Today, ':'')+t;
+}
+
+function render(){
+  const items=(DATA.items||[]).filter(it=>{
+    if(CAT!=='all' && it.category!==CAT) return false;
+    if(Q){
+      const s=(it.title+' '+(it.company||'')+' '+it.source+' '+it.category).toLowerCase();
+      if(s.indexOf(Q.toLowerCase())<0) return false;
+    }
+    return true;
+  });
+
+  // counts
+  const counts={all:(DATA.items||[]).length};
+  (DATA.items||[]).forEach(i=>{counts[i.category]=(counts[i.category]||0)+1});
+  document.getElementById('counts').innerHTML=
+    Object.keys(CAT_LABEL).filter(k=>counts[k]).map(k=>`
+      <span class="cchip ${CAT===k?'on':''}" data-c="${k}">
+        ${k!=='all'?`<span class="d" style="background:${CAT_COLOR[k]}"></span>`:''}
+        ${CAT_LABEL[k]} <span class="n">${counts[k]}</span>
+      </span>`).join('');
+  document.querySelectorAll('.cchip').forEach(c=>c.onclick=()=>{CAT=c.dataset.c;render()});
+
+  // list
+  document.getElementById('list').innerHTML = items.length ? items.map(it=>`
+    <a class="itemLink" href="${it.link}" target="_blank" rel="noopener">
+      <div class="item">
+        <div class="meta">
+          <span class="pill p-${it.category}"><span class="d"></span>${CAT_LABEL[it.category]||it.category}</span>
+          ${it.company?`<span class="co"><span class="av">${it.company.slice(0,2)}</span>${it.company}</span>`:''}
+          <span class="coName">${it.source}</span>
+          <span class="time">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            ${when(it.published)}
+          </span>
+        </div>
+        <h3>${it.title.replace(/</g,'&lt;')}</h3>
+      </div>
+    </a>`).join('')
+    : `<div class="g empty">Nothing matches. ${Q?`No headline contains “${Q.replace(/</g,'&lt;')}”.`:'Try another category.'}</div>`;
+}
+
+document.getElementById('q').addEventListener('input', e=>{Q=e.target.value.trim();render()});
+
+document.querySelectorAll('.tab').forEach((t,i)=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(z=>z.classList.remove('on'));
+    t.classList.add('on');
+  };
+});
+
+/* header hides on scroll down; the AI button steps aside while scrolling */
+let lastY=0,tmr=null;
+addEventListener('scroll',()=>{
+  const y=scrollY, hd=document.getElementById('hd'), ai=document.getElementById('ai');
+  if(y>lastY && y>70) hd.classList.add('hide'); else hd.classList.remove('hide');
+  lastY=y;
+  ai.classList.add('tuck');
+  clearTimeout(tmr); tmr=setTimeout(()=>ai.classList.remove('tuck'),420);
+},{passive:true});
+
+(async()=>{
+  try{ DATA=await (await fetch('news_feed.json',{cache:'no-store'})).json(); }
+  catch(e){
+    document.getElementById('list').innerHTML=
+      '<div class="g empty">Could not load news_feed.json — this page expects it in the same folder.</div>';
+    return;
+  }
+  render();
+})();
+</script>
+</body>
+</html>

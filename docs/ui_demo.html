@@ -45,7 +45,7 @@ header.hide{transform:translateY(-108%);opacity:0}
 .wordmark em{font-style:normal;color:var(--muted);font-weight:520;font-size:12px;
   letter-spacing:0;margin-left:7px}
 
-.wrap{max-width:1080px;margin:0 auto;padding:4px 16px 120px}
+.wrap{max-width:1080px;margin:0 auto;padding:4px 16px 160px}
 
 /* ───────── shared glass ───────── */
 .g{
@@ -54,6 +54,20 @@ header.hide{transform:translateY(-108%);opacity:0}
   box-shadow:0 12px 38px rgba(66,118,188,.11), inset 0 1px 0 rgba(255,255,255,.88);
 }
 .pad{padding:18px}
+
+/* ───────── compact index strip ───────── */
+.strip{padding:16px 18px 13px}
+.stripRow{display:flex;align-items:stretch;gap:0}
+.sItem{flex:1;min-width:0;text-align:center}
+.sDiv{width:1px;background:rgba(138,178,224,.30);margin:2px 6px}
+.sName{font-size:10px;letter-spacing:.5px;color:var(--muted);font-weight:600;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sLvl{font-size:19px;font-weight:670;letter-spacing:-.7px;margin-top:4px;
+  font-variant-numeric:tabular-nums}
+.sChg{font-size:11.5px;font-weight:600;margin-top:1px;font-variant-numeric:tabular-nums}
+.stripFoot{display:flex;justify-content:space-between;gap:10px;margin-top:12px;
+  padding-top:10px;border-top:1px solid rgba(138,178,224,.22);
+  font-size:10.5px;color:var(--faint)}
 
 /* ───────── hero ───────── */
 .hero{position:relative;overflow:hidden;padding:22px 20px 18px;margin-bottom:14px}
@@ -137,6 +151,9 @@ header.hide{transform:translateY(-108%);opacity:0}
   font-variant-numeric:tabular-nums}
 
 /* ───────── floating search dot ───────── */
+/* THE DOT HIDES WHILE YOU SCROLL. At bottom-right it sat on the last row of the page, which
+   is the row a reader is most likely to be reading when they reach it. It now steps aside
+   during a scroll and comes back when the page stops. */
 .fab{
   position:fixed;right:16px;bottom:22px;z-index:80;
   width:52px;height:52px;border-radius:99px;border:1px solid var(--line2);
@@ -147,6 +164,7 @@ header.hide{transform:translateY(-108%);opacity:0}
   transition:transform .2s, box-shadow .2s;
 }
 .fab:active{transform:scale(.94)}
+.fab.tuck{transform:translateY(78px) scale(.9);opacity:0;pointer-events:none}
 .fab svg{width:21px;height:21px;stroke:#2f6fd0;fill:none;stroke-width:2.1;stroke-linecap:round}
 
 .sheet{
@@ -201,37 +219,30 @@ header.hide{transform:translateY(-108%);opacity:0}
 
 <div class="wrap">
 
-  <!-- HERO -->
-  <section class="g hero">
-    <div class="heroTop">
-      <div>
-        <div class="idxName">Nifty 50 · 18 Nov</div>
-        <div class="idxLevel" id="lv">25,247</div>
-        <div class="idxChg" id="ch"></div>
+  <!-- COMPACT INDEX STRIP: three numbers, one row. No giant hero. -->
+  <section class="g strip" style="margin-bottom:14px">
+    <div class="stripRow">
+      <div class="sItem">
+        <div class="sName">NIFTY 50</div>
+        <div class="sLvl">25,247</div>
+        <div class="sChg" style="color:var(--down)">−140 · −0.55%</div>
       </div>
-      <div style="text-align:right">
-        <div class="idxName">21-session range</div>
-        <div style="font-size:15px;font-weight:650;margin-top:4px">−5.6% to +7.7%</div>
-        <div style="font-size:11px;color:var(--faint);margin-top:1px">90% of windows</div>
+      <div class="sDiv"></div>
+      <div class="sItem">
+        <div class="sName">BANK NIFTY</div>
+        <div class="sLvl">62,123</div>
+        <div class="sChg" style="color:var(--up)">+142 · +0.23%</div>
+      </div>
+      <div class="sDiv"></div>
+      <div class="sItem">
+        <div class="sName">SENSEX</div>
+        <div class="sLvl">82,043</div>
+        <div class="sChg" style="color:var(--up)">+235 · +0.29%</div>
       </div>
     </div>
-    <div class="spark"><svg id="sp" viewBox="0 0 600 74" preserveAspectRatio="none"></svg></div>
-    <div class="heroRow">
-      <div class="mini">
-        <div class="k">Breadth</div>
-        <div class="v">36.5%</div>
-        <div class="d" style="color:var(--down)">2,219 stocks · above 50d</div>
-      </div>
-      <div class="mini">
-        <div class="k">PCR</div>
-        <div class="v">1.03</div>
-        <div class="d" style="color:var(--muted)">expiry 17 Nov</div>
-      </div>
-      <div class="mini">
-        <div class="k">Trending up</div>
-        <div class="v">223</div>
-        <div class="d" style="color:var(--muted)">of 2,231 stocks</div>
-      </div>
+    <div class="stripFoot">
+      <span>Session 17 Nov 2026</span>
+      <span>223 of 2,231 stocks trending up</span>
     </div>
   </section>
 
@@ -270,6 +281,41 @@ header.hide{transform:translateY(-108%);opacity:0}
   <div class="shead"><h2>What changed since yesterday</h2><span>4 fields</span></div>
   <section class="g pad">
     <div class="chg" id="chg"></div>
+  </section>
+
+  <!-- NIFTY DETAIL: the chart lives here now, not at the top -->
+  <div class="shead"><h2>Nifty · 60 sessions</h2><span>history, not a forecast</span></div>
+  <section class="g hero">
+    <div class="heroTop">
+      <div>
+        <div class="idxName">Nifty 50</div>
+        <div class="idxLevel" id="lv">25,247</div>
+        <div class="idxChg" id="ch"></div>
+      </div>
+      <div style="text-align:right">
+        <div class="idxName">21-session range</div>
+        <div style="font-size:15px;font-weight:650;margin-top:4px">−5.6% to +7.7%</div>
+        <div style="font-size:11px;color:var(--faint);margin-top:1px">90% of windows</div>
+      </div>
+    </div>
+    <div class="spark"><svg id="sp" viewBox="0 0 600 74" preserveAspectRatio="none"></svg></div>
+    <div class="heroRow">
+      <div class="mini">
+        <div class="k">Breadth</div>
+        <div class="v">36.5%</div>
+        <div class="d" style="color:var(--down)">2,219 stocks · above 50d</div>
+      </div>
+      <div class="mini">
+        <div class="k">PCR</div>
+        <div class="v">1.03</div>
+        <div class="d" style="color:var(--muted)">expiry 17 Nov</div>
+      </div>
+      <div class="mini">
+        <div class="k">Trending up</div>
+        <div class="v">223</div>
+        <div class="d" style="color:var(--muted)">of 2,231 stocks</div>
+      </div>
+    </div>
   </section>
 
   <div class="foot">
@@ -378,6 +424,16 @@ document.getElementById('chg').innerHTML = CHANGES.map(c=>`
   if(!r) return;
   const upd=()=>{ w.classList.toggle('scrolled', r.scrollLeft>6); };
   r.addEventListener('scroll', upd, {passive:true}); upd();
+})();
+
+/* ── the dot steps aside while scrolling ────────────── */
+(function(){
+  const fab=document.getElementById('fab'); let t=null;
+  addEventListener('scroll', ()=>{
+    fab.classList.add('tuck');
+    clearTimeout(t);
+    t=setTimeout(()=>fab.classList.remove('tuck'), 420);
+  }, {passive:true});
 })();
 
 /* ── hide header on scroll down ─────────────────────── */

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ArthaSaar — claim vs base rate</title>
+<style>
+:root{
+  --ink:#0f2137; --ink2:#3b5473; --muted:#6b83a0;
+  --glass:rgba(255,255,255,.62); --line:rgba(140,180,225,.34);
+  --up:#0e7a5f; --down:#b03a4a; --accent:#2f6fd0;
+  --rare:#b03a4a; --ordinary:#0e7a5f;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 600px at 12% -8%, #dceaff 0%, transparent 58%),
+    radial-gradient(900px 520px at 92% 4%, #e6f1ff 0%, transparent 52%),
+    linear-gradient(170deg,#f4f9ff 0%,#eaf3ff 52%,#e3eeff 100%);
+  background-attachment:fixed; min-height:100vh;
+}
+.wrap{max-width:900px;margin:0 auto;padding:18px 16px 64px}
+.top{display:flex;align-items:center;gap:10px;padding:6px 2px 18px}
+.logo{width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(145deg,#cfe4ff,#8fbcff 60%,#5f9bf0);
+  box-shadow:0 6px 16px rgba(80,140,220,.30),inset 0 1px 0 rgba(255,255,255,.9)}
+.brand{font-weight:650;font-size:16px;letter-spacing:-.2px}
+.brand span{color:var(--muted);font-weight:500;font-size:13px;margin-left:6px}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:20px;
+  padding:18px;margin-bottom:14px;backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 10px 34px rgba(70,120,190,.12),inset 0 1px 0 rgba(255,255,255,.86)}
+h2{margin:0 0 4px;font-size:15px;font-weight:640}
+.sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+
+.claim{padding:14px;border-radius:15px;background:rgba(255,255,255,.72);
+  border:1px solid var(--line);margin-bottom:10px}
+.chead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ch{font-weight:650;font-size:13.5px}
+.when{color:var(--muted);font-size:11.5px}
+.q{font-size:13px;color:var(--ink2);margin:6px 0 10px;font-style:italic}
+
+.line{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:7px 0;border-top:1px dashed rgba(140,180,225,.4);font-size:13px}
+.line:first-of-type{border-top:none}
+.lab{color:var(--muted)}
+.val{font-variant-numeric:tabular-nums;font-weight:620}
+
+/* the gauge */
+.gauge{margin-top:10px}
+.gtrack{height:9px;border-radius:99px;background:rgba(150,180,215,.26);position:relative;overflow:hidden}
+.gfill{position:absolute;left:0;top:0;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#9ec7f7,#3f7fd6)}
+.gmark{position:absolute;top:-3px;width:2px;height:15px;background:#123;border-radius:2px}
+.gscale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+.verdict{display:inline-block;font-size:11.5px;padding:4px 10px;border-radius:99px;margin-top:10px}
+.v-rare{background:rgba(255,225,228,.9);border:1px solid rgba(200,110,120,.4);color:#8d2b3a}
+.v-mid{background:rgba(255,244,214,.9);border:1px solid rgba(215,180,105,.45);color:#7d5c15}
+.v-ord{background:rgba(214,242,230,.9);border:1px solid rgba(120,190,160,.42);color:#1c6b52}
+
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0 0}
+.empty{color:var(--muted);font-size:13px}
+@media(max-width:520px){ .wrap{padding:14px 12px 48px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo"></div>
+    <div class="brand">ArthaSaar <span>claim vs base rate</span></div>
+  </div>
+
+  <div class="card">
+    <h2>What a channel said, beside what history says</h2>
+    <p class="sub" id="headline">Loading…</p>
+    <p class="note">
+      A channel says "Nifty 26,000 soon". That is a claim with a number in it, which makes it
+      falsifiable. This turns the target into the move it requires, then asks a simpler
+      question: over ten years, how often did the Nifty move that far within that many sessions?
+    </p>
+    <p class="note">
+      It does <b>not</b> say the claim is wrong. A 60th-percentile move is entirely possible —
+      it is just not insight. The value is in replacing "soon" with a number.
+    </p>
+  </div>
+
+  <div class="card">
+    <div id="list"><p class="empty">Loading…</p></div>
+  </div>
+
+  <div class="card">
+    <h2>What this does not do</h2>
+    <p class="note">
+      No claim is scored as right or wrong — only the size of the move it requires is measured
+      against history. Only a target level written next to an index name, with a
+      forward-looking word beside it, is parsed; "Nifty fell to 22,500" is a description, not a
+      claim, and is skipped rather than guessed at.
+    </p>
+    <p class="note">Market data and descriptions only. Not investment advice.</p>
+  </div>
+
+</div>
+
+<script>
+const fmt = n => n.toLocaleString('en-IN');
+const pct = v => (v>0?'+':'') + v.toFixed(1) + '%';
+
+function verdict(p){
+  if(p==null) return {cls:'v-mid', txt:'not enough history'};
+  if(p<=5)  return {cls:'v-rare', txt:'rare — top 5% of historical moves'};
+  if(p<=20) return {cls:'v-mid',  txt:'uncommon — top 20% of moves'};
+  if(p<=80) return {cls:'v-ord',  txt:'ordinary — inside the middle of the distribution'};
+  return {cls:'v-ord', txt:'very common — happens most of the time'};
+}
+
+function card(c){
+  const b = (c.base_rate||{})['21'] || {};
+  const p = b.pct;
+  const v = verdict(p);
+  const w = Math.max(2, Math.min(100, p==null?0:p));
+  return `<div class="claim">
+    <div class="chead">
+      <span class="ch">${c.channel||'—'}</span>
+      <span class="when">${c.when||''} · ${c.index}</span>
+    </div>
+    <div class="q">"${(c.text||'').replace(/</g,'&lt;')}"</div>
+    <div class="line"><span class="lab">Target</span><span class="val">${fmt(c.target)}</span></div>
+    <div class="line"><span class="lab">Spot when measured</span><span class="val">${fmt(c.spot)}</span></div>
+    <div class="line"><span class="lab">Move required</span>
+      <span class="val" style="color:${c.implied_pct>=0?'var(--up)':'var(--down)'}">${pct(c.implied_pct)}</span></div>
+    <div class="line"><span class="lab">Historical windows that moved that far in 21 sessions</span>
+      <span class="val">${p==null?'—':p+'%'}</span></div>
+    <div class="gauge">
+      <div class="gtrack"><div class="gfill" style="width:${w}%"></div></div>
+      <div class="gscale"><span>0% — never</span><span>50%</span><span>100% — always</span></div>
+    </div>
+    <span class="verdict ${v.cls}">${v.txt}</span>
+    <div class="line" style="border-top:none;margin-top:8px">
+      <span class="lab">Windows measured</span><span class="val">${b.n?fmt(b.n):'—'}</span></div>
+  </div>`;
+}
+
+(async()=>{
+  let d;
+  try{ d = await (await fetch('claim_vs_base.json',{cache:'no-store'})).json(); }
+  catch(e){
+    document.getElementById('list').innerHTML =
+      '<p class="empty">Could not load claim_vs_base.json — this page expects it in the same folder.</p>';
+    return;
+  }
+  const cl = d.claims||[];
+  document.getElementById('headline').textContent =
+    `${d.sources_scanned||0} videos and posts scanned · ${d.claims_found||0} claims with a target level · ${cl.length} shown`;
+  document.getElementById('list').innerHTML = cl.length
+    ? cl.map(card).join('')
+    : '<p class="empty">No claim in the collected videos or posts names an index level with a forward-looking word. Precision was chosen over volume: "Nifty fell to 22,500" is a description, not a claim.</p>';
+})();
+</script>
+</body>
+</html>

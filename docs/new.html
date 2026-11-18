@@ -9,483 +9,633 @@
   --ink:#0d1f33;--ink2:#3a5372;--muted:#6d86a3;--faint:#8fa6c0;
   --glass:rgba(255,255,255,.58);--glass2:rgba(255,255,255,.76);
   --line:rgba(138,178,224,.30);--line2:rgba(138,178,224,.55);
-  --up:#0b7a5c;--down:#b23a4b;--flat:#7b8ba1;
-  --blue:#2f6fd0;
+  --up:#0b7a5c;--down:#b23a4b;--flat:#7b8ba1;--blue:#2f6fd0;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{
-  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+body{font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
   color:var(--ink);-webkit-font-smoothing:antialiased;
-  background:
-    radial-gradient(1200px 640px at 10% -10%,#dbe9ff 0%,transparent 56%),
-    radial-gradient(980px 560px at 94% 2%,#e8f2ff 0%,transparent 50%),
-    radial-gradient(820px 520px at 46% 108%,#cfe3ff 0%,transparent 58%),
-    linear-gradient(168deg,#f6faff 0%,#ecf4ff 50%,#e2eeff 100%);
-  background-attachment:fixed;min-height:100vh;
-}
-header{position:sticky;top:0;z-index:60;padding:13px 16px 11px;
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  background:linear-gradient(180deg,rgba(246,250,255,.92),rgba(246,250,255,0));
+  background:radial-gradient(1200px 640px at 10% -10%,#dbe9ff 0,transparent 56%),
+    radial-gradient(980px 560px at 94% 2%,#e8f2ff 0,transparent 50%),
+    radial-gradient(820px 520px at 46% 108%,#cfe3ff 0,transparent 58%),
+    linear-gradient(168deg,#f6faff 0,#ecf4ff 50%,#e2eeff 100%);
+  background-attachment:fixed;min-height:100vh}
+header{position:sticky;top:0;z-index:60;padding:12px 16px 10px;display:flex;
+  align-items:center;justify-content:center;gap:9px;position:sticky;
+  background:linear-gradient(180deg,rgba(246,250,255,.94),rgba(246,250,255,0));
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s}
 header.hide{transform:translateY(-108%);opacity:0}
+.burger{position:absolute;left:14px;width:30px;height:30px;border-radius:9px;display:grid;
+  place-items:center;background:rgba(255,255,255,.72);border:1px solid var(--line);cursor:pointer}
+.burger i{display:block;width:14px;height:1.7px;background:var(--ink2);border-radius:2px;position:relative}
+.burger i::before,.burger i::after{content:"";position:absolute;left:0;width:14px;height:1.7px;
+  background:var(--ink2);border-radius:2px}
+.burger i::before{top:-4.5px}.burger i::after{top:4.5px}
 .mark{width:26px;height:26px;border-radius:8px;flex:0 0 auto;
   background:linear-gradient(150deg,#d8e9ff,#8fbcff 58%,#4f8ce8);
   box-shadow:0 5px 14px rgba(70,130,215,.32),inset 0 1px 0 rgba(255,255,255,.92)}
 .wm{font-size:16.5px;font-weight:660;letter-spacing:-.35px}
 .wm em{font-style:normal;color:var(--muted);font-weight:520;font-size:12px;margin-left:7px}
-
-.wrap{max-width:760px;margin:0 auto;padding:2px 16px 108px}
+.wrap{max-width:760px;margin:0 auto;padding:2px 16px 104px}
 .g{background:var(--glass);border:1px solid var(--line);border-radius:20px;
   backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%);
   box-shadow:0 12px 38px rgba(66,118,188,.10),inset 0 1px 0 rgba(255,255,255,.88)}
 .pad{padding:17px}
 section.page{display:none}
-section.page.on{display:block;animation:fade .22s ease}
+section.page.on{display:block;animation:fade .2s ease}
 @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-
-.shead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:20px 4px 10px}
-.shead h2{margin:0;font-size:13.5px;font-weight:660;letter-spacing:-.1px}
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 4px 9px}
+.shead h2{margin:0;font-size:13.5px;font-weight:660}
 .shead span{font-size:11.5px;color:var(--faint)}
-
-/* index strip */
-.strip{padding:16px 18px 13px;margin-bottom:12px}
+.strip{padding:15px 17px 12px;margin-bottom:11px}
 .stripRow{display:flex}
 .sItem{flex:1;min-width:0;text-align:center}
 .sDiv{width:1px;background:rgba(138,178,224,.30);margin:2px 5px}
-.sName{font-size:9.5px;letter-spacing:.45px;color:var(--muted);font-weight:620;
-  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sLvl{font-size:18px;font-weight:670;letter-spacing:-.6px;margin-top:3px;font-variant-numeric:tabular-nums}
-.sChg{font-size:11px;font-weight:600;margin-top:1px;font-variant-numeric:tabular-nums}
-.stripFoot{display:flex;justify-content:space-between;gap:10px;margin-top:11px;padding-top:9px;
+.sName{font-size:9px;letter-spacing:.45px;color:var(--muted);font-weight:620;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sLvl{font-size:17.5px;font-weight:670;letter-spacing:-.6px;margin-top:3px;font-variant-numeric:tabular-nums}
+.sChg{font-size:10.5px;font-weight:600;margin-top:1px;font-variant-numeric:tabular-nums}
+.stripFoot{display:flex;justify-content:space-between;gap:10px;margin-top:10px;padding-top:9px;
   border-top:1px solid rgba(138,178,224,.22);font-size:10px;color:var(--faint)}
-
-/* mini tiles */
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tile{padding:13px 14px;border-radius:16px;background:var(--glass2);border:1px solid var(--line);
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tile{padding:12px 13px;border-radius:15px;background:var(--glass2);border:1px solid var(--line);
   box-shadow:0 8px 22px rgba(66,118,188,.07),inset 0 1px 0 rgba(255,255,255,.9)}
-.tile .k{font-size:9.5px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase;font-weight:620}
-.tile .v{font-size:20px;font-weight:670;letter-spacing:-.6px;margin-top:4px}
-.tile .d{font-size:10.5px;color:var(--faint);margin-top:1px}
-
-/* ribbons */
+.tile .k{font-size:9px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase;font-weight:620}
+.tile .v{font-size:19px;font-weight:670;letter-spacing:-.6px;margin-top:3px}
+.tile .d{font-size:10px;color:var(--faint);margin-top:1px}
 .ribWrap{position:relative;margin:0 -16px}
 .ribs{display:flex;gap:9px;overflow-x:auto;padding:2px 16px 10px;scroll-snap-type:x mandatory;
   scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .ribs::-webkit-scrollbar{display:none}
 .ribWrap::after{content:"";position:absolute;top:0;right:0;bottom:10px;width:48px;pointer-events:none;
   background:linear-gradient(90deg,rgba(236,244,255,0),rgba(236,244,255,.93))}
-.rib{flex:0 0 156px;scroll-snap-align:start;border-radius:17px;padding:13px 14px;
+.rib{flex:0 0 152px;scroll-snap-align:start;border-radius:16px;padding:12px 13px;
   background:var(--glass2);border:1px solid var(--line);cursor:pointer;
   box-shadow:0 8px 22px rgba(66,118,188,.08),inset 0 1px 0 rgba(255,255,255,.9)}
-.rib .n{font-size:11.5px;font-weight:620;color:var(--ink2);white-space:nowrap;overflow:hidden;
+.rib .n{font-size:11px;font-weight:620;color:var(--ink2);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.rib .m{font-size:20px;font-weight:680;letter-spacing:-.6px;margin-top:4px}
-.rib .bb{height:4px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:8px;overflow:hidden}
+.rib .m{font-size:19px;font-weight:680;letter-spacing:-.6px;margin-top:3px}
+.rib .bb{height:4px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:7px;overflow:hidden}
 .rib .bb i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a8ccf8,#3f7fd6)}
-.rib .bt{font-size:10px;color:var(--faint);margin-top:4px}
-
-/* rows */
+.rib .bt{font-size:9.5px;color:var(--faint);margin-top:4px}
 .rows{display:flex;flex-direction:column}
-.rw{display:flex;align-items:center;gap:11px;padding:12px 2px;
+.rw{display:flex;align-items:center;gap:10px;padding:11px 2px;
   border-bottom:1px solid rgba(138,178,224,.20)}
 .rw:last-child{border-bottom:none}
-.dot{width:7px;height:7px;border-radius:99px;flex:0 0 auto}
-.rl{flex:1;font-size:13px;color:var(--ink2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rv{font-variant-numeric:tabular-nums;font-weight:640;font-size:13px}
-.rp{font-size:11px;color:var(--faint);width:58px;text-align:right;font-variant-numeric:tabular-nums}
-
-/* metals */
-.mcard{padding:15px;margin-bottom:10px}
-.mcard .t{font-size:10px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);font-weight:620}
-.mcard .p{font-size:26px;font-weight:680;letter-spacing:-1px;margin-top:4px}
-.mcard .u{font-size:11px;color:var(--faint)}
-.tiers{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.tier{font-size:10.5px;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.8);
+.dot{width:6px;height:6px;border-radius:99px;flex:0 0 auto}
+.rl{flex:1;font-size:12.5px;color:var(--ink2);min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.rl small{display:block;font-size:9.5px;color:var(--faint)}
+.rv{font-variant-numeric:tabular-nums;font-weight:640;font-size:12.5px}
+.rp{font-size:10.5px;color:var(--faint);width:54px;text-align:right;font-variant-numeric:tabular-nums}
+.mcard{padding:14px;margin-bottom:9px}
+.mcard .t{font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);font-weight:620}
+.mcard .p{font-size:25px;font-weight:680;letter-spacing:-1px;margin-top:3px}
+.mcard .u{font-size:10.5px;color:var(--faint)}
+.tiers{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.tier{font-size:10px;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.8);
   border:1px solid var(--line);color:var(--ink2);font-variant-numeric:tabular-nums;font-weight:560}
-
-/* chain table */
 .chain{display:flex;flex-direction:column}
-.cx{display:flex;align-items:center;gap:10px;padding:12px 2px;
+.cx{display:flex;align-items:center;gap:10px;padding:11px 2px;
   border-bottom:1px solid rgba(138,178,224,.20)}
 .cx:last-child{border-bottom:none}
 .cxe{flex:1}
 .cxd{font-size:12.5px;font-weight:640}
-.cxs{font-size:10.5px;color:var(--faint)}
-.cxr{text-align:right;font-size:11.5px;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1.5}
-.cxr b{font-weight:640}
-
-/* news */
-.tabs{display:flex;gap:7px;margin:2px 0 12px}
-.tab{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:13px;font-size:12.5px;
+.cxs{font-size:10px;color:var(--faint)}
+.cxr{text-align:right;font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1.5}
+.tabs{display:flex;gap:7px;margin:2px 0 11px}
+.tab{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:12px;font-size:12px;
   font-weight:600;color:var(--ink2);cursor:pointer;background:rgba(255,255,255,.6);
   border:1px solid var(--line)}
 .tab.on{background:linear-gradient(150deg,rgba(226,239,255,.95),rgba(200,224,255,.9));
   border-color:rgba(120,170,230,.6);color:#17427e;
   box-shadow:0 6px 18px rgba(70,130,210,.16),inset 0 1px 0 rgba(255,255,255,.9)}
-.tab svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
-.search{display:flex;align-items:center;gap:9px;margin-bottom:11px;padding:11px 14px;
-  border-radius:14px;background:rgba(255,255,255,.72);border:1px solid var(--line)}
+.search{display:flex;align-items:center;gap:9px;margin-bottom:10px;padding:10px 13px;
+  border-radius:13px;background:rgba(255,255,255,.72);border:1px solid var(--line)}
 .search svg{width:15px;height:15px;fill:none;stroke:var(--faint);stroke-width:2;flex:0 0 auto}
 .search input{border:0;outline:0;background:transparent;flex:1;font-size:13px;color:var(--ink)}
 .search input::placeholder{color:var(--faint)}
 .cWrap{position:relative;margin:0 -16px}
-.cnts{display:flex;gap:7px;overflow-x:auto;padding:0 16px 11px;scrollbar-width:none}
+.cnts{display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;scrollbar-width:none}
 .cnts::-webkit-scrollbar{display:none}
-.cWrap::after{content:"";position:absolute;top:0;right:0;bottom:11px;width:42px;pointer-events:none;
+.cWrap::after{content:"";position:absolute;top:0;right:0;bottom:10px;width:42px;pointer-events:none;
   background:linear-gradient(90deg,rgba(236,244,255,0),rgba(236,244,255,.93))}
-.cc{flex:0 0 auto;font-size:11.5px;padding:7px 12px;border-radius:99px;cursor:pointer;
+.cc{flex:0 0 auto;font-size:11px;padding:6px 11px;border-radius:99px;cursor:pointer;
   background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--ink2);
   display:flex;align-items:center;gap:5px;font-weight:560}
 .cc.on{background:#0d1f33;color:#fff;border-color:#0d1f33}
-.cc .d{width:6px;height:6px;border-radius:99px}
+.cc .d{width:5px;height:5px;border-radius:99px}
 .cc .n{opacity:.7;font-weight:500}
-.item{padding:13px 14px;margin-bottom:9px;border-radius:16px;background:var(--glass2);
+.item{padding:12px 13px;margin-bottom:8px;border-radius:15px;background:var(--glass2);
   border:1px solid var(--line);text-decoration:none;color:inherit;display:block;
   box-shadow:0 8px 24px rgba(66,118,188,.07),inset 0 1px 0 rgba(255,255,255,.9)}
-.meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.pill{font-size:10px;padding:4px 9px;border-radius:99px;font-weight:620;display:flex;
-  align-items:center;gap:5px;border:1px solid transparent}
-.pill .d{width:5px;height:5px;border-radius:99px;background:currentColor}
+.meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.pill{font-size:9.5px;padding:3px 8px;border-radius:99px;font-weight:620;display:flex;
+  align-items:center;gap:4px;border:1px solid transparent}
+.pill .d{width:4px;height:4px;border-radius:99px;background:currentColor}
 .p-general{background:rgba(47,111,208,.1);color:#1f5cb8;border-color:rgba(47,111,208,.2)}
 .p-results{background:rgba(11,122,92,.1);color:#0b6b52;border-color:rgba(11,122,92,.2)}
 .p-global{background:rgba(123,88,201,.1);color:#6544b0;border-color:rgba(123,88,201,.2)}
 .p-policy{background:rgba(176,117,42,.1);color:#8f5f1e;border-color:rgba(176,117,42,.2)}
-.co{font-size:10px;padding:4px 8px;border-radius:99px;background:rgba(255,255,255,.9);
+.co{font-size:9.5px;padding:3px 7px;border-radius:99px;background:rgba(255,255,255,.9);
   border:1px solid var(--line);color:var(--ink2);display:flex;align-items:center;gap:4px;font-weight:600}
-.co .av{width:11px;height:11px;border-radius:99px;background:linear-gradient(145deg,#cfe4ff,#7fb2f0);
-  display:grid;place-items:center;font-size:6px;color:#fff;font-weight:700}
-.src{font-size:10px;color:var(--faint)}
-.tm{margin-left:auto;font-size:10px;color:var(--faint);display:flex;align-items:center;gap:3px;white-space:nowrap}
-.tm svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2}
-.item h3{margin:0;font-size:13px;font-weight:640;line-height:1.45;letter-spacing:-.1px}
-
-/* bottom nav */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:70;padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+.co .av{width:10px;height:10px;border-radius:99px;background:linear-gradient(145deg,#cfe4ff,#7fb2f0);
+  display:grid;place-items:center;font-size:5.5px;color:#fff;font-weight:700}
+.src{font-size:9.5px;color:var(--faint)}
+.tm{margin-left:auto;font-size:9.5px;color:var(--faint);display:flex;align-items:center;gap:3px;
+  white-space:nowrap}
+.tm svg{width:9px;height:9px;fill:none;stroke:currentColor;stroke-width:2}
+.item h3{margin:0;font-size:12.5px;font-weight:640;line-height:1.45}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:70;padding:7px 8px calc(7px + env(safe-area-inset-bottom));
   display:flex;justify-content:space-around;align-items:center;
-  background:rgba(250,253,255,.86);backdrop-filter:blur(26px) saturate(160%);
+  background:rgba(250,253,255,.88);backdrop-filter:blur(26px) saturate(160%);
   -webkit-backdrop-filter:blur(26px) saturate(160%);
   border-top:1px solid var(--line2);box-shadow:0 -6px 30px rgba(60,110,180,.10)}
-.nv{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border-radius:13px;
-  cursor:pointer;color:var(--faint);transition:color .16s,background .16s;flex:1;max-width:78px}
-.nv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.85;
+.nv{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;border-radius:12px;
+  cursor:pointer;color:var(--faint);flex:1;max-width:72px;transition:color .16s,background .16s}
+.nv svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.85;
   stroke-linecap:round;stroke-linejoin:round}
-.nv span{font-size:9.5px;font-weight:600;letter-spacing:.1px}
+.nv span{font-size:9px;font-weight:600}
 .nv.on{color:var(--blue);background:rgba(47,111,208,.09)}
-
-.note{font-size:11px;color:var(--faint);line-height:1.6;margin-top:12px;text-align:center}
-@media(max-width:520px){
-  .wrap{padding:2px 12px 104px}
-  .sLvl{font-size:16.5px}
-  .tile .v{font-size:18px}
-}
-@media(min-width:760px){ .wrap{max-width:820px} }
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,45,80,.18);z-index:88;opacity:0;
+  pointer-events:none;transition:opacity .26s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:min(84vw,330px);z-index:90;overflow-y:auto;
+  padding:20px 16px 28px;transform:translateX(-102%);
+  transition:transform .3s cubic-bezier(.32,.72,0,1);
+  background:rgba(250,253,255,.96);backdrop-filter:blur(30px) saturate(165%);
+  -webkit-backdrop-filter:blur(30px) saturate(165%);
+  border-right:1px solid var(--line2);box-shadow:6px 0 50px rgba(50,100,170,.18)}
+.drawer.open{transform:translateX(0)}
+.dHead{display:flex;align-items:center;gap:9px;margin-bottom:18px}
+.dGrp{font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--faint);
+  font-weight:680;margin:16px 0 6px;padding-left:10px}
+.dIt{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:11px;cursor:pointer;
+  font-size:13.5px;color:var(--ink2);font-weight:560}
+.dIt.on{background:rgba(47,111,208,.10);color:#17427e;font-weight:660}
+.dIt .n{margin-left:auto;font-size:10px;color:var(--faint)}
+.note{font-size:10.5px;color:var(--faint);line-height:1.6;margin-top:11px;text-align:center}
+@media(max-width:520px){.wrap{padding:2px 12px 100px}.sLvl{font-size:16px}}
 </style>
 </head>
 <body>
 
 <header id="hd">
+  <div class="burger" id="burger"><i></i></div>
   <div class="mark"></div>
   <div class="wm">ArthaSaar <em>market, measured</em></div>
 </header>
 
-<div class="wrap">
-
-  <!-- ══════════ HOME ══════════ -->
-  <section class="page on" id="p-home">
-    <div class="g strip" id="strip"></div>
-    <div class="tiles" id="tiles"></div>
-
-    <div class="shead"><h2>Sector trend · 20 sessions</h2><span>swipe →</span></div>
-    <div class="ribWrap"><div class="ribs" id="ribs"></div></div>
-
-    <div class="shead"><h2>What changed since yesterday</h2><span id="chgN"></span></div>
-    <div class="g pad"><div class="rows" id="changes"></div></div>
-
-    <div class="shead"><h2>21-session range</h2><span>history, not a forecast</span></div>
-    <div class="g pad" id="rng"></div>
-    <p class="note">Market data and descriptions only. Not investment advice.</p>
-  </section>
-
-  <!-- ══════════ MARKET ══════════ -->
-  <section class="page" id="p-market">
-    <div class="shead"><h2>Breadth</h2><span id="brN"></span></div>
-    <div class="tiles" id="breadthTiles"></div>
-
-    <div class="shead"><h2>Top movers · last session</h2><span>F&O universe</span></div>
-    <div class="g pad"><div class="rows" id="movers"></div></div>
-
-    <div class="shead"><h2>Put-call ratio</h2><span id="pcrDate"></span></div>
-    <div class="g pad" id="pcrBox"></div>
-    <p class="note">PCR is published as a null result on the site: it has not beaten its own baseline.</p>
-  </section>
-
-  <!-- ══════════ SECTORS ══════════ -->
-  <section class="page" id="p-sectors">
-    <div class="shead"><h2>All sectors</h2><span id="secN"></span></div>
-    <div id="secList"></div>
-    <p class="note">A sector can rise on one large stock — the breadth bar sits beside the median so you can see when that happens.</p>
-  </section>
-
-  <!-- ══════════ F&O ══════════ -->
-  <section class="page" id="p-fno">
-    <div class="shead"><h2>Nifty expiries</h2><span id="spotTxt"></span></div>
-    <div class="g pad"><div class="chain" id="chain"></div></div>
-    <p class="note">Max pain is arithmetic on open interest — the strike where option buyers collectively lose least. It is where sellers are positioned, not where price will go.</p>
-  </section>
-
-  <!-- ══════════ METALS ══════════ -->
-  <section class="page" id="p-metals">
-    <div class="shead"><h2>Gold</h2><span>per gram</span></div>
-    <div id="goldCards"></div>
-    <div class="shead"><h2>Silver</h2><span>per gram</span></div>
-    <div id="silverCards"></div>
-    <p class="note">International spot converted at USD/INR. This is not the jeweller's rate — local retail adds import duty, GST and a dealer premium, so it usually sits 10–15% above this.</p>
-  </section>
-
-  <!-- ══════════ NEWS ══════════ -->
-  <section class="page" id="p-news">
-    <div class="tabs">
-      <div class="tab on"><svg viewBox="0 0 24 24"><path d="M12 2s4 4.5 4 9a4 4 0 1 1-8 0c0-4.5 4-9 4-9z"/></svg>Live News</div>
-      <div class="tab"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>Events</div>
-    </div>
-    <div class="search">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="q" placeholder="Search by stock, company, category or keyword…">
-    </div>
-    <div class="cWrap"><div class="cnts" id="cnts"></div></div>
-    <div id="newsList"></div>
-    <p class="note">Headlines and links belong to the publishers named on each item.<br>
-      Categories are keyword tags on the headline, not editorial judgement.</p>
-  </section>
-
-</div>
+<div class="wrap" id="wrap"></div>
 
 <nav id="nav">
   <div class="nv on" data-p="home"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/></svg><span>Home</span></div>
   <div class="nv" data-p="market"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg><span>Market</span></div>
   <div class="nv" data-p="sectors"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Sectors</span></div>
   <div class="nv" data-p="fno"><svg viewBox="0 0 24 24"><path d="M4 20V8M10 20V4M16 20v-7M22 20V6"/></svg><span>F&amp;O</span></div>
-  <div class="nv" data-p="metals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h4"/></svg><span>Metals</span></div>
+  <div class="nv" data-p="stocks"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Stocks</span></div>
   <div class="nv" data-p="news"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h6"/></svg><span>News</span></div>
 </nav>
 
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer"></div>
+
 <script>
-const D = {"indices":[{"n":"NIFTY 50","lvl":25247.25,"chg":-140.15,"pct":-0.55,"spark":[24252,24219,24335,24208,24091,24176,24080,24056,23914,23873,23898,23779,23635,23432,23478,23398,23119,23218,23271,23346,23414,23329,23447,23063,23140,22780,22716,22620,22422,22556,22776,22603,22232,22520,22363,22722,22623,22997,23146,22889,22811,22688,22600,22753,22750,22699,22937,23053,23441,23811,23961,24537,25030,25045,25255,25299,25144,25291,25387,25247]},{"n":"BANK NIFTY","lvl":62122.95,"chg":-150.3,"pct":-0.24,"spark":[57762,57526,57514,57784,57510,57496,58025,57410,57172,57381,57370,57088,56778,56296,56472,56607,55795,56292,56056,56359,56471,56216,56549,55438,55580,54472,54260,54633,54451,54714,55128,55056,54515,55257,54918,55481,55316,55810,55844,55488,54977,54926,54287,54367,53975,54267,54910,54687,55002,55540,55914,57774,59086,59741,60792,61518,61034,61576,62273,62123]},{"n":"SENSEX","lvl":82042.83,"chg":-489.36,"pct":-0.59,"spark":[77541,77369,77656,77473,76934,77265,76957,76944,76570,76153,76515,76133,75578,74764,74903,74782,74004,74336,74315,74295,74859,74529,74828,73581,73896,72772,72529,72480,71910,72382,73068,72639,71593,72472,71925,73034,72782,74316,74729,73853,73710,73249,73124,73607,73599,73246,74151,74460,75693,76918,77301,79310,81028,81107,81879,81911,81592,82105,82532,82043]}],"range":{"p5":-5.6,"p50":1.2,"p95":7.7,"n":2446,"from":"2016","to":"2026"},"sectors":[{"s":"Healthcare","m":1.75,"b":13.0,"u":18,"d":45,"n":161,"lead":[{"symbol":"APLLTD","chg_20d":33.9,"from_52w_high":7.5},{"symbol":"SAILIFE","chg_20d":29.57,"from_52w_high":6.08},{"symbol":"EMCURE","chg_20d":28.46,"from_52w_high":11.33}],"lag":[{"symbol":"CONCORDBIO","chg_20d":-56.61,"from_52w_high":-64.02},{"symbol":"SUPRIYA","chg_20d":-29.76,"from_52w_high":-42.58},{"symbol":"VALIANTLAB","chg_20d":-23.6,"from_52w_high":-27.24}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Financial Services","m":1.18,"b":15.0,"u":30,"d":108,"n":234,"lead":[{"symbol":"ONELIFECAP","chg_20d":31.91,"from_52w_high":26.62},{"symbol":"PNB","chg_20d":24.33,"from_52w_high":10.1},{"symbol":"MANCREDIT","chg_20d":22.02,"from_52w_high":-7.56}],"lag":[{"symbol":"APTUS","chg_20d":-20.93,"from_52w_high":-44.6},{"symbol":"EQUITASBNK","chg_20d":-18.83,"from_52w_high":-31.92},{"symbol":"IITL","chg_20d":-17.67,"from_52w_high":-48.02}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Utilities","m":0.84,"b":0.0,"u":0,"d":28,"n":38,"lead":[{"symbol":"DPSCLTD","chg_20d":12.12,"from_52w_high":-45.16},{"symbol":"GAIL","chg_20d":11.24,"from_52w_high":2.83},{"symbol":"ADANIGREEN","chg_20d":8.03,"from_52w_high":-13.78}],"lag":[{"symbol":"CEWATER","chg_20d":-14.97,"from_52w_high":-56.32},{"symbol":"GKENERGY","chg_20d":-9.75,"from_52w_high":-59.38},{"symbol":"PTC","chg_20d":-8.66,"from_52w_high":-30.28}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Real Estate","m":0.15,"b":11.1,"u":3,"d":41,"n":81,"lead":[{"symbol":"DSKULKARNI","chg_20d":48.21,"from_52w_high":8.18},{"symbol":"AGIIL","chg_20d":27.03,"from_52w_high":-26.8},{"symbol":"ALEMBICLTD","chg_20d":17.29,"from_52w_high":-3.0}],"lag":[{"symbol":"NILASPACES","chg_20d":-15.75,"from_52w_high":-52.86},{"symbol":"OMAXE","chg_20d":-14.52,"from_52w_high":-29.87},{"symbol":"FMNL","chg_20d":-13.91,"from_52w_high":-48.31}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Consumer Cyclical","m":-1.47,"b":14.6,"u":40,"d":183,"n":425,"lead":[{"symbol":"FLEXITUFF","chg_20d":57.63,"from_52w_high":-78.94},{"symbol":"RUSHIL","chg_20d":36.55,"from_52w_high":-21.34},{"symbol":"SSWL","chg_20d":36.47,"from_52w_high":31.47}],"lag":[{"symbol":"PASHUPATI","chg_20d":-60.81,"from_52w_high":-71.8},{"symbol":"SHANTIGOLD","chg_20d":-39.81,"from_52w_high":-41.77},{"symbol":"UFBL","chg_20d":-25.65,"from_52w_high":-40.88}],"note":"breadth and the median move point the same way"},{"s":"Consumer Defensive","m":-2.16,"b":12.7,"u":15,"d":76,"n":158,"lead":[{"symbol":"TREEHOUSE","chg_20d":27.13,"from_52w_high":-34.82},{"symbol":"PARAGMILK","chg_20d":24.55,"from_52w_high":-8.33},{"symbol":"SAKUMA","chg_20d":22.97,"from_52w_high":-41.29}],"lag":[{"symbol":"UGARSUGAR","chg_20d":-24.85,"from_52w_high":-36.99},{"symbol":"VERANDA","chg_20d":-22.66,"from_52w_high":-88.74},{"symbol":"RENUKA","chg_20d":-18.01,"from_52w_high":-41.08}],"note":"breadth and the median move point the same way"},{"s":"Industrials","m":-2.51,"b":14.5,"u":43,"d":201,"n":461,"lead":[{"symbol":"HILINFRA","chg_20d":46.36,"from_52w_high":-7.22},{"symbol":"RAMKY","chg_20d":43.56,"from_52w_high":-41.01},{"symbol":"JYOTISTRUC","chg_20d":42.71,"from_52w_high":-15.3}],"lag":[{"symbol":"KMEW","chg_20d":-78.71,"from_52w_high":-79.1},{"symbol":"MODISONLTD","chg_20d":-31.41,"from_52w_high":-36.69},{"symbol":"MBECL","chg_20d":-28.03,"from_52w_high":-41.14}],"note":"breadth and the median move point the same way"},{"s":"Communication Services","m":-2.83,"b":16.4,"u":6,"d":40,"n":73,"lead":[{"symbol":"SAREGAMA","chg_20d":32.94,"from_52w_high":16.62},{"symbol":"HMVL","chg_20d":19.55,"from_52w_high":-14.46},{"symbol":"PVRINOX","chg_20d":17.02,"from_52w_high":12.44}],"lag":[{"symbol":"AQYLON","chg_20d":-39.68,"from_52w_high":-99.39},{"symbol":"SUYOG","chg_20d":-15.95,"from_52w_high":-43.93},{"symbol":"NEXTMEDIA","chg_20d":-13.83,"from_52w_high":-64.74}],"note":"breadth and the median move point the same way"},{"s":"Technology","m":-3.32,"b":23.9,"u":23,"d":78,"n":180,"lead":[{"symbol":"QUINTEGRA","chg_20d":81.69,"from_52w_high":50.58},{"symbol":"TERASOFT","chg_20d":38.83,"from_52w_high":-46.89},{"symbol":"TANLA","chg_20d":25.29,"from_52w_high":-1.48}],"lag":[{"symbol":"EMUDHRA","chg_20d":-36.47,"from_52w_high":-48.56},{"symbol":"RPTECH","chg_20d":-25.32,"from_52w_high":-35.61},{"symbol":"GENESYS","chg_20d":-24.01,"from_52w_high":-70.5}],"note":"breadth and the median move point the same way"},{"s":"Basic Materials","m":-4.28,"b":12.7,"u":35,"d":170,"n":369,"lead":[{"symbol":"BHAGYANGR","chg_20d":55.05,"from_52w_high":-81.68},{"symbol":"IGIL","chg_20d":32.75,"from_52w_high":12.54},{"symbol":"NAVKARURB","chg_20d":25.88,"from_52w_high":-58.2}],"lag":[{"symbol":"JSWDULUX","chg_20d":-90.73,"from_52w_high":-23.47},{"symbol":"TIKONA","chg_20d":-30.78,"from_52w_high":-33.13},{"symbol":"PAUSHAKLTD","chg_20d":-29.68,"from_52w_high":-34.11}],"note":"breadth and the median move point the same way"},{"s":"Energy","m":-5.62,"b":16.2,"u":6,"d":11,"n":37,"lead":[{"symbol":"HINDOILEXP","chg_20d":27.78,"from_52w_high":5.57},{"symbol":"HINDPETRO","chg_20d":11.84,"from_52w_high":-19.98},{"symbol":"PETRONET","chg_20d":11.26,"from_52w_high":1.03}],"lag":[{"symbol":"TRUALT","chg_20d":-23.08,"from_52w_high":-37.36},{"symbol":"OILCOUNTUB","chg_20d":-20.2,"from_52w_high":-28.34},{"symbol":"CONFIPET","chg_20d":-18.76,"from_52w_high":-28.84}],"note":"breadth and the median move point the same way"}],"metals":{"ok":true,"gold":[{"k":"24K","g":11344.54,"g10":113445.0,"c":-329.14,"p":-2.82},{"k":"22K","g":10399.16,"g10":103992.0,"c":-301.72,"p":-2.82},{"k":"18K","g":8508.41,"g10":85084.0,"c":-246.86,"p":-2.82}],"silver":[{"k":"999","g":137.83,"g10":1378.0,"c":-4.88,"p":-3.42},{"k":"958","g":132.18,"g10":1322.0,"c":-4.68,"p":-3.42},{"k":"925","g":127.62,"g10":1276.0,"c":-4.52,"p":-3.42},{"k":"800","g":110.38,"g10":1104.0,"c":-3.91,"p":-3.42}],"fx":93.373,"fxc":-0.63,"etf":{"goldbees":{"price":107.76,"chg_pct":-2.09},"silverbees":{"price":155.94,"chg_pct":-2.91}}},"breadth":{"a50":36.5,"a200":45.8,"n":2219},"pcr":{"v":1.031,"d":"2026-11-16","band":"high (1.00-1.20)"},"changes":[{"field":"index.nifty.close","status":"changed","from":25107.25,"to":25247.25,"delta":140.0,"pct":0.56,"unit":"points","since":"2026-11-17"},{"field":"index.banknifty.close","status":"changed","from":61982.95,"to":62122.95,"delta":140.0,"pct":0.23,"unit":"points","since":"2026-11-17"},{"field":"breadth.above_50","status":"changed","from":38.9,"to":36.5,"delta":-2.4,"pct":-6.17,"unit":"%","since":"2026-11-17"},{"field":"metal.gold.per_gram","status":"changed","from":11673.58,"to":11368.58,"delta":-305.0,"pct":-2.61,"unit":"rupees","since":"2026-11-17"}],"news":[{"title":"Interest in Trump's meme coin dinner fades as $TRUMP sinks to record lows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/interest-in-trumps-meme-coin-dinner-fades-as-trump-sinks-to-record-lows/articleshow/135899741.cms","published":"Mon, 16 Nov 2026 23:57:28 +0530","category":"global","cue":"trump","company":null},{"title":"Trump Media faces possible $1 billion debt repayment as stock nears record lows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/trump-media-faces-possible-1-billion-debt-repayment-as-stock-nears-record-lows/articleshow/135898089.cms","published":"Mon, 16 Nov 2026 23:14:02 +0530","category":"global","cue":"trump","company":null},{"title":"Nvidia earnings spotlight shifts to leadership, AI financing after Huang exit","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nvidia-set-to-deliver-first-life-after-huang-briefing/articleshow/135896160.cms","published":"Mon, 16 Nov 2026 22:13:54 +0530","category":"results","cue":"earnings","company":null},{"title":"Barclays lowers 2027 year-end target for S&amp;P 500 index to 8,700","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/barclays-lowers-2027-year-end-target-for-sp-500-index-to-8700/articleshow/135894874.cms","published":"Mon, 16 Nov 2026 21:20:17 +0530","category":"global","cue":"s&p","company":null},{"title":"US stocks: Summit shares drop after US FDA declines to approve lung cancer drug","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-summit-shares-drop-after-us-fda-declines-to-approve-lung-cancer-drug/articleshow/135894815.cms","published":"Mon, 16 Nov 2026 21:18:04 +0530","category":"global","cue":"us","company":null},{"title":"US stocks: Nasdaq slides over 1% as AI selloff deepens ahead of Nvidia earnings","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nasdaq-falls-1-at-open-as-nvidia-woes-weigh-on-sentiment-ahead-of-earnings/articleshow/135894333.cms","published":"Mon, 16 Nov 2026 21:04:11 +0530","category":"results","cue":"earnings","company":null},{"title":"Dalal Street becomes best-performing stock market in a month. Can it rally more?","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/dalal-street-becomes-best-performing-stock-market-in-a-month-can-it-rally-more/videoshow/135891640.cms","published":"Mon, 16 Nov 2026 19:18:06 +0530","category":"general","cue":"","company":null},{"title":"Nasdaq tumbles over 2%, Dow drops 700 pts as AI selloff deepens: Stock Market Highlights","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-coreweave-nebius-nvidia-earnings-anthropic-ipo-treasury-yield-news-16th-november-2026/liveblog/135890877.cms","published":"Mon, 16 Nov 2026 18:44:29 +0530","category":"global","cue":"nasdaq","company":null},{"title":"Sebi sets up sub-group under PMAC to review key IPO norms; NSE's Chauhan to head panel","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-sets-up-sub-group-under-pmac-to-review-key-ipo-norms-nses-chauhan-to-head-panel/articleshow/135890467.cms","published":"Mon, 16 Nov 2026 18:37:52 +0530","category":"policy","cue":"sebi","company":null},{"title":"Retain capital gains tax on equities, economists tell FM Sitharaman ahead of Budget 2027-28","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/retain-capital-gains-tax-on-equities-economists-tell-fm-sitharaman-ahead-of-budget-2027-28/articleshow/135890410.cms","published":"Mon, 16 Nov 2026 18:35:46 +0530","category":"policy","cue":"tax","company":null},{"title":"Blackstone REIT to buy majority stake in $5 billion Amazon data center portfolio","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/blackstone-reit-to-buy-majority-stake-in-5-billion-amazon-data-center-portfolio/articleshow/135890381.cms","published":"Mon, 16 Nov 2026 18:34:02 +0530","category":"general","cue":"","company":null},{"title":"Warren Buffett donates $5.47 billion in Berkshire Hathaway shares to charities, confidence in successors remains 'strong as ever'","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/warren-buffett-donates-more-berkshire-shares-confidence-in-successors-as-strong-as-ever/articleshow/135890059.cms","published":"Mon, 16 Nov 2026 18:25:53 +0530","category":"general","cue":"","company":null},{"title":"Sebi forms panel to simplify capital-raising rules","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-forms-panel-to-simplify-capital-raising-rules/articleshow/135889803.cms","published":"Mon, 16 Nov 2026 18:14:54 +0530","category":"policy","cue":"sebi","company":null},{"title":"S&amp;P 500, Nasdaq futures slide as Nvidia earnings, Anthropic debut loom","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/sp-500-nasdaq-futures-slide-as-nvidia-earnings-anthropic-debut-loom/articleshow/135888956.cms","published":"Mon, 16 Nov 2026 17:49:06 +0530","category":"results","cue":"earnings","company":null},{"title":"India's investments in US Treasuries jump USD 38.4 bn in Jun-Aug amid FCNR flows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/indias-investments-in-us-treasuries-jump-usd-38-4-bn-in-jun-aug-amid-fcnr-flows/articleshow/135888824.cms","published":"Mon, 16 Nov 2026 17:47:29 +0530","category":"global","cue":"us","company":null},{"title":"PNB among 4 stocks hitting 52-week highs; stock rallies up to 24% in a month","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/pnb-among-4-stocks-hitting-52-week-highs-stock-rallies-up-to-24-in-a-month/slideshow/135888569.cms","published":"Mon, 16 Nov 2026 17:33:47 +0530","category":"general","cue":"","company":null},{"title":"Hong Kong debuts offshore yuan bond index to promote RMB assets","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/bonds/hong-kong-debuts-offshore-yuan-bond-index-to-promote-rmb-assets/articleshow/135888402.cms","published":"Mon, 16 Nov 2026 17:32:10 +0530","category":"general","cue":"","company":null},{"title":"India bonds dip as elevated inflation fuels rate hike expectations","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/bonds/india-bonds-dip-as-elevated-inflation-fuels-rate-hike-expectations/articleshow/135888382.cms","published":"Mon, 16 Nov 2026 17:30:15 +0530","category":"general","cue":"","company":null},{"title":"Nvidia's AI financing machine may survive Huang, but with less risk appetite","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/nvidias-ai-financing-machine-may-survive-huang-but-with-less-risk-appetite/articleshow/135888314.cms","published":"Mon, 16 Nov 2026 17:29:00 +0530","category":"general","cue":"","company":null},{"title":"Morgan Stanley turns bullish on global stocks, targets S&amp;P 500 at 8,700","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/morgan-stanley-raises-global-equities-to-maximum-overweight-on-cheap-valuations-earnings-strength/articleshow/135888237.cms","published":"Mon, 16 Nov 2026 17:27:08 +0530","category":"global","cue":"global","company":null},{"title":"Sebi may propose raising FPI beneficial ownership threshold to 25%; plans consultation paper","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-may-propose-raising-fpi-beneficial-ownership-threshold-to-25-plans-consultation-paper/articleshow/135883637.cms","published":"Mon, 16 Nov 2026 15:51:12 +0530","category":"policy","cue":"sebi","company":null},{"title":"Rupee rises, volatility ebbs as equity inflows blunt global headwinds","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-volatility-ebbs-as-equity-inflows-blunt-global-headwinds/articleshow/135883543.cms","published":"Mon, 16 Nov 2026 15:49:15 +0530","category":"global","cue":"global","company":null},{"title":"Swiggy among 10 midcap stocks that dropped up to 50% in CY26","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/swiggy-among-10-midcap-stocks-that-dropped-up-to-50-in-cy26/slideshow/135883464.cms","published":"Mon, 16 Nov 2026 15:40:54 +0530","category":"general","cue":"","company":"SWIGGY"},{"title":"UPL Share Price Highlights: UPL Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/upl-stock-price-live-updates-16-nov-2026/liveblog/135872604.cms","published":"Mon, 16 Nov 2026 09:47:59 +0530","category":"general","cue":"","company":null},{"title":"Technical picks:  ABB India among 5 stocks to buy this week for healthy returns","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/tech-picks-abb-india-among-5-stocks-to-buy-this-week-for-healthy-returns/slideshow/135872688.cms","published":"Mon, 16 Nov 2026 09:43:24 +0530","category":"general","cue":"","company":null},{"title":"Sun Pharma Share Price Highlights: Sun Pharma Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sun-pharma-share-price-today-live-updates-16-nov-2026/liveblog/135871948.cms","published":"Mon, 16 Nov 2026 09:20:11 +0530","category":"general","cue":"","company":null},{"title":"Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-16-nov-2026/liveblog/135871604.cms","published":"Mon, 16 Nov 2026 09:05:24 +0530","category":"general","cue":"","company":"MARUTI"},{"title":"BPCL Share Price Highlights: BPCL Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bpcl-stock-price-live-updates-16-nov-2026/liveblog/135871462.cms","published":"Mon, 16 Nov 2026 09:01:16 +0530","category":"general","cue":"","company":null},{"title":"Coal India Share Price Highlights: Coal India Ltd Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/coal-india-ltd-stock-price-livestock-price-today-live-updates-16-nov-2026/liveblog/135871357.cms","published":"Mon, 16 Nov 2026 08:55:08 +0530","category":"general","cue":"","company":null},{"title":"Tech Mahindra Share Price Highlights: Tech Mahindra Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tech-mahindra-share-price-live-16-nov-2026/liveblog/135871297.cms","published":"Mon, 16 Nov 2026 08:51:15 +0530","category":"general","cue":"","company":"TECHM"}],"newsCounts":{"global":8,"results":3,"general":15,"policy":4},"chain":{"spot":25387.4,"exps":[{"e":"2026-11-17","d":0,"pcr":1.0,"mp":25400.0,"cw":25400.0,"pw":25350.0},{"e":"2026-11-23","d":6,"pcr":1.08,"mp":25000.0,"cw":26000.0,"pw":25000.0},{"e":"2026-12-01","d":14,"pcr":0.83,"mp":25500.0,"cw":26400.0,"pw":25500.0},{"e":"2026-12-08","d":21,"pcr":1.29,"mp":25300.0,"cw":26000.0,"pw":25300.0},{"e":"2026-12-15","d":28,"pcr":0.87,"mp":25500.0,"cw":26500.0,"pw":25000.0},{"e":"2026-12-29","d":42,"pcr":1.27,"mp":24500.0,"cw":27000.0,"pw":24000.0}]},"movers":{"up":[{"s":"YATRA","c":19.99,"px":93.75},{"s":"DELPHIFX","c":19.87,"px":7.24},{"s":"TVSSCS","c":12.23,"px":137.2},{"s":"KILITCH","c":10.9,"px":238.56},{"s":"HINDOILEXP","c":10.53,"px":212.66},{"s":"AARTISURF","c":9.99,"px":582.75}],"dn":[{"s":"DCAL","c":-19.48,"px":139.23},{"s":"PRICOLLTD","c":-17.76,"px":615.0},{"s":"V2RETAIL","c":-14.91,"px":139.64},{"s":"KAYNES","c":-13.12,"px":2980.0},{"s":"MAHLOG","c":-12.95,"px":374.1},{"s":"UNIDT","c":-12.79,"px":164.33}]},"roll":[]};
+const D = {"indices":[{"n":"NIFTY 50","lvl":25247.25,"chg":-140.15,"pct":-0.55,"spark":[24252,24219,24335,24208,24091,24176,24080,24056,23914,23873,23898,23779,23635,23432,23478,23398,23119,23218,23271,23346,23414,23329,23447,23063,23140,22780,22716,22620,22422,22556,22776,22603,22232,22520,22363,22722,22623,22997,23146,22889,22811,22688,22600,22753,22750,22699,22937,23053,23441,23811,23961,24537,25030,25045,25255,25299,25144,25291,25387,25247]},{"n":"BANK NIFTY","lvl":62122.95,"chg":-150.3,"pct":-0.24,"spark":[57762,57526,57514,57784,57510,57496,58025,57410,57172,57381,57370,57088,56778,56296,56472,56607,55795,56292,56056,56359,56471,56216,56549,55438,55580,54472,54260,54633,54451,54714,55128,55056,54515,55257,54918,55481,55316,55810,55844,55488,54977,54926,54287,54367,53975,54267,54910,54687,55002,55540,55914,57774,59086,59741,60792,61518,61034,61576,62273,62123]},{"n":"SENSEX","lvl":82042.83,"chg":-489.36,"pct":-0.59,"spark":[77541,77369,77656,77473,76934,77265,76957,76944,76570,76153,76515,76133,75578,74764,74903,74782,74004,74336,74315,74295,74859,74529,74828,73581,73896,72772,72529,72480,71910,72382,73068,72639,71593,72472,71925,73034,72782,74316,74729,73853,73710,73249,73124,73607,73599,73246,74151,74460,75693,76918,77301,79310,81028,81107,81879,81911,81592,82105,82532,82043]}],"range":{"p5":-5.6,"p50":1.2,"p95":7.7,"n":2446,"from":"2016","to":"2026"},"sectors":[{"s":"Healthcare","m":1.75,"b":13.0,"u":18,"d":45,"n":161,"lead":[{"symbol":"APLLTD","chg_20d":33.9,"from_52w_high":7.5},{"symbol":"SAILIFE","chg_20d":29.57,"from_52w_high":6.08},{"symbol":"EMCURE","chg_20d":28.46,"from_52w_high":11.33}],"lag":[{"symbol":"CONCORDBIO","chg_20d":-56.61,"from_52w_high":-64.02},{"symbol":"SUPRIYA","chg_20d":-29.76,"from_52w_high":-42.58},{"symbol":"VALIANTLAB","chg_20d":-23.6,"from_52w_high":-27.24}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Financial Services","m":1.18,"b":15.0,"u":30,"d":108,"n":234,"lead":[{"symbol":"ONELIFECAP","chg_20d":31.91,"from_52w_high":26.62},{"symbol":"PNB","chg_20d":24.33,"from_52w_high":10.1},{"symbol":"MANCREDIT","chg_20d":22.02,"from_52w_high":-7.56}],"lag":[{"symbol":"APTUS","chg_20d":-20.93,"from_52w_high":-44.6},{"symbol":"EQUITASBNK","chg_20d":-18.83,"from_52w_high":-31.92},{"symbol":"IITL","chg_20d":-17.67,"from_52w_high":-48.02}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Utilities","m":0.84,"b":0.0,"u":0,"d":28,"n":38,"lead":[{"symbol":"DPSCLTD","chg_20d":12.12,"from_52w_high":-45.16},{"symbol":"GAIL","chg_20d":11.24,"from_52w_high":2.83},{"symbol":"ADANIGREEN","chg_20d":8.03,"from_52w_high":-13.78}],"lag":[{"symbol":"CEWATER","chg_20d":-14.97,"from_52w_high":-56.32},{"symbol":"GKENERGY","chg_20d":-9.75,"from_52w_high":-59.38},{"symbol":"PTC","chg_20d":-8.66,"from_52w_high":-30.28}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Real Estate","m":0.15,"b":11.1,"u":3,"d":41,"n":81,"lead":[{"symbol":"DSKULKARNI","chg_20d":48.21,"from_52w_high":8.18},{"symbol":"AGIIL","chg_20d":27.03,"from_52w_high":-26.8},{"symbol":"ALEMBICLTD","chg_20d":17.29,"from_52w_high":-3.0}],"lag":[{"symbol":"NILASPACES","chg_20d":-15.75,"from_52w_high":-52.86},{"symbol":"OMAXE","chg_20d":-14.52,"from_52w_high":-29.87},{"symbol":"FMNL","chg_20d":-13.91,"from_52w_high":-48.31}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Consumer Cyclical","m":-1.47,"b":14.6,"u":40,"d":183,"n":425,"lead":[{"symbol":"FLEXITUFF","chg_20d":57.63,"from_52w_high":-78.94},{"symbol":"RUSHIL","chg_20d":36.55,"from_52w_high":-21.34},{"symbol":"SSWL","chg_20d":36.47,"from_52w_high":31.47}],"lag":[{"symbol":"PASHUPATI","chg_20d":-60.81,"from_52w_high":-71.8},{"symbol":"SHANTIGOLD","chg_20d":-39.81,"from_52w_high":-41.77},{"symbol":"UFBL","chg_20d":-25.65,"from_52w_high":-40.88}],"note":"breadth and the median move point the same way"},{"s":"Consumer Defensive","m":-2.16,"b":12.7,"u":15,"d":76,"n":158,"lead":[{"symbol":"TREEHOUSE","chg_20d":27.13,"from_52w_high":-34.82},{"symbol":"PARAGMILK","chg_20d":24.55,"from_52w_high":-8.33},{"symbol":"SAKUMA","chg_20d":22.97,"from_52w_high":-41.29}],"lag":[{"symbol":"UGARSUGAR","chg_20d":-24.85,"from_52w_high":-36.99},{"symbol":"VERANDA","chg_20d":-22.66,"from_52w_high":-88.74},{"symbol":"RENUKA","chg_20d":-18.01,"from_52w_high":-41.08}],"note":"breadth and the median move point the same way"},{"s":"Industrials","m":-2.51,"b":14.5,"u":43,"d":201,"n":461,"lead":[{"symbol":"HILINFRA","chg_20d":46.36,"from_52w_high":-7.22},{"symbol":"RAMKY","chg_20d":43.56,"from_52w_high":-41.01},{"symbol":"JYOTISTRUC","chg_20d":42.71,"from_52w_high":-15.3}],"lag":[{"symbol":"KMEW","chg_20d":-78.71,"from_52w_high":-79.1},{"symbol":"MODISONLTD","chg_20d":-31.41,"from_52w_high":-36.69},{"symbol":"MBECL","chg_20d":-28.03,"from_52w_high":-41.14}],"note":"breadth and the median move point the same way"},{"s":"Communication Services","m":-2.83,"b":16.4,"u":6,"d":40,"n":73,"lead":[{"symbol":"SAREGAMA","chg_20d":32.94,"from_52w_high":16.62},{"symbol":"HMVL","chg_20d":19.55,"from_52w_high":-14.46},{"symbol":"PVRINOX","chg_20d":17.02,"from_52w_high":12.44}],"lag":[{"symbol":"AQYLON","chg_20d":-39.68,"from_52w_high":-99.39},{"symbol":"SUYOG","chg_20d":-15.95,"from_52w_high":-43.93},{"symbol":"NEXTMEDIA","chg_20d":-13.83,"from_52w_high":-64.74}],"note":"breadth and the median move point the same way"},{"s":"Technology","m":-3.32,"b":23.9,"u":23,"d":78,"n":180,"lead":[{"symbol":"QUINTEGRA","chg_20d":81.69,"from_52w_high":50.58},{"symbol":"TERASOFT","chg_20d":38.83,"from_52w_high":-46.89},{"symbol":"TANLA","chg_20d":25.29,"from_52w_high":-1.48}],"lag":[{"symbol":"EMUDHRA","chg_20d":-36.47,"from_52w_high":-48.56},{"symbol":"RPTECH","chg_20d":-25.32,"from_52w_high":-35.61},{"symbol":"GENESYS","chg_20d":-24.01,"from_52w_high":-70.5}],"note":"breadth and the median move point the same way"},{"s":"Basic Materials","m":-4.28,"b":12.7,"u":35,"d":170,"n":369,"lead":[{"symbol":"BHAGYANGR","chg_20d":55.05,"from_52w_high":-81.68},{"symbol":"IGIL","chg_20d":32.75,"from_52w_high":12.54},{"symbol":"NAVKARURB","chg_20d":25.88,"from_52w_high":-58.2}],"lag":[{"symbol":"JSWDULUX","chg_20d":-90.73,"from_52w_high":-23.47},{"symbol":"TIKONA","chg_20d":-30.78,"from_52w_high":-33.13},{"symbol":"PAUSHAKLTD","chg_20d":-29.68,"from_52w_high":-34.11}],"note":"breadth and the median move point the same way"},{"s":"Energy","m":-5.62,"b":16.2,"u":6,"d":11,"n":37,"lead":[{"symbol":"HINDOILEXP","chg_20d":27.78,"from_52w_high":5.57},{"symbol":"HINDPETRO","chg_20d":11.84,"from_52w_high":-19.98},{"symbol":"PETRONET","chg_20d":11.26,"from_52w_high":1.03}],"lag":[{"symbol":"TRUALT","chg_20d":-23.08,"from_52w_high":-37.36},{"symbol":"OILCOUNTUB","chg_20d":-20.2,"from_52w_high":-28.34},{"symbol":"CONFIPET","chg_20d":-18.76,"from_52w_high":-28.84}],"note":"breadth and the median move point the same way"}],"metals":{"ok":true,"gold":[{"k":"24K","g":11344.54,"g10":113445.0,"c":-329.14,"p":-2.82},{"k":"22K","g":10399.16,"g10":103992.0,"c":-301.72,"p":-2.82},{"k":"18K","g":8508.41,"g10":85084.0,"c":-246.86,"p":-2.82}],"silver":[{"k":"999","g":137.83,"g10":1378.0,"c":-4.88,"p":-3.42},{"k":"958","g":132.18,"g10":1322.0,"c":-4.68,"p":-3.42},{"k":"925","g":127.62,"g10":1276.0,"c":-4.52,"p":-3.42},{"k":"800","g":110.38,"g10":1104.0,"c":-3.91,"p":-3.42}],"fx":93.373,"fxc":-0.63,"etf":{"goldbees":{"price":107.76,"chg_pct":-2.09},"silverbees":{"price":155.94,"chg_pct":-2.91}}},"breadth":{"a50":36.5,"a200":45.8,"n":2219},"pcr":{"v":1.031,"d":"2026-11-16","band":"high (1.00-1.20)"},"changes":[{"field":"index.nifty.close","status":"changed","from":25107.25,"to":25247.25,"delta":140.0,"pct":0.56,"unit":"points","since":"2026-11-17"},{"field":"index.banknifty.close","status":"changed","from":61982.95,"to":62122.95,"delta":140.0,"pct":0.23,"unit":"points","since":"2026-11-17"},{"field":"breadth.above_50","status":"changed","from":38.9,"to":36.5,"delta":-2.4,"pct":-6.17,"unit":"%","since":"2026-11-17"},{"field":"metal.gold.per_gram","status":"changed","from":11673.58,"to":11368.58,"delta":-305.0,"pct":-2.61,"unit":"rupees","since":"2026-11-17"}],"news":[{"title":"Interest in Trump's meme coin dinner fades as $TRUMP sinks to record lows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/interest-in-trumps-meme-coin-dinner-fades-as-trump-sinks-to-record-lows/articleshow/135899741.cms","published":"Mon, 16 Nov 2026 23:57:28 +0530","category":"global","cue":"trump","company":null},{"title":"Trump Media faces possible $1 billion debt repayment as stock nears record lows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/trump-media-faces-possible-1-billion-debt-repayment-as-stock-nears-record-lows/articleshow/135898089.cms","published":"Mon, 16 Nov 2026 23:14:02 +0530","category":"global","cue":"trump","company":null},{"title":"Nvidia earnings spotlight shifts to leadership, AI financing after Huang exit","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nvidia-set-to-deliver-first-life-after-huang-briefing/articleshow/135896160.cms","published":"Mon, 16 Nov 2026 22:13:54 +0530","category":"results","cue":"earnings","company":null},{"title":"Barclays lowers 2027 year-end target for S&amp;P 500 index to 8,700","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/barclays-lowers-2027-year-end-target-for-sp-500-index-to-8700/articleshow/135894874.cms","published":"Mon, 16 Nov 2026 21:20:17 +0530","category":"global","cue":"s&p","company":null},{"title":"US stocks: Summit shares drop after US FDA declines to approve lung cancer drug","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-summit-shares-drop-after-us-fda-declines-to-approve-lung-cancer-drug/articleshow/135894815.cms","published":"Mon, 16 Nov 2026 21:18:04 +0530","category":"global","cue":"us","company":null},{"title":"US stocks: Nasdaq slides over 1% as AI selloff deepens ahead of Nvidia earnings","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nasdaq-falls-1-at-open-as-nvidia-woes-weigh-on-sentiment-ahead-of-earnings/articleshow/135894333.cms","published":"Mon, 16 Nov 2026 21:04:11 +0530","category":"results","cue":"earnings","company":null},{"title":"Dalal Street becomes best-performing stock market in a month. Can it rally more?","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/dalal-street-becomes-best-performing-stock-market-in-a-month-can-it-rally-more/videoshow/135891640.cms","published":"Mon, 16 Nov 2026 19:18:06 +0530","category":"general","cue":"","company":null},{"title":"Nasdaq tumbles over 2%, Dow drops 700 pts as AI selloff deepens: Stock Market Highlights","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-coreweave-nebius-nvidia-earnings-anthropic-ipo-treasury-yield-news-16th-november-2026/liveblog/135890877.cms","published":"Mon, 16 Nov 2026 18:44:29 +0530","category":"global","cue":"nasdaq","company":null},{"title":"Sebi sets up sub-group under PMAC to review key IPO norms; NSE's Chauhan to head panel","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-sets-up-sub-group-under-pmac-to-review-key-ipo-norms-nses-chauhan-to-head-panel/articleshow/135890467.cms","published":"Mon, 16 Nov 2026 18:37:52 +0530","category":"policy","cue":"sebi","company":null},{"title":"Retain capital gains tax on equities, economists tell FM Sitharaman ahead of Budget 2027-28","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/retain-capital-gains-tax-on-equities-economists-tell-fm-sitharaman-ahead-of-budget-2027-28/articleshow/135890410.cms","published":"Mon, 16 Nov 2026 18:35:46 +0530","category":"policy","cue":"tax","company":null},{"title":"Blackstone REIT to buy majority stake in $5 billion Amazon data center portfolio","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/blackstone-reit-to-buy-majority-stake-in-5-billion-amazon-data-center-portfolio/articleshow/135890381.cms","published":"Mon, 16 Nov 2026 18:34:02 +0530","category":"general","cue":"","company":null},{"title":"Warren Buffett donates $5.47 billion in Berkshire Hathaway shares to charities, confidence in successors remains 'strong as ever'","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/warren-buffett-donates-more-berkshire-shares-confidence-in-successors-as-strong-as-ever/articleshow/135890059.cms","published":"Mon, 16 Nov 2026 18:25:53 +0530","category":"general","cue":"","company":null},{"title":"Sebi forms panel to simplify capital-raising rules","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-forms-panel-to-simplify-capital-raising-rules/articleshow/135889803.cms","published":"Mon, 16 Nov 2026 18:14:54 +0530","category":"policy","cue":"sebi","company":null},{"title":"S&amp;P 500, Nasdaq futures slide as Nvidia earnings, Anthropic debut loom","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/sp-500-nasdaq-futures-slide-as-nvidia-earnings-anthropic-debut-loom/articleshow/135888956.cms","published":"Mon, 16 Nov 2026 17:49:06 +0530","category":"results","cue":"earnings","company":null},{"title":"India's investments in US Treasuries jump USD 38.4 bn in Jun-Aug amid FCNR flows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/indias-investments-in-us-treasuries-jump-usd-38-4-bn-in-jun-aug-amid-fcnr-flows/articleshow/135888824.cms","published":"Mon, 16 Nov 2026 17:47:29 +0530","category":"global","cue":"us","company":null},{"title":"PNB among 4 stocks hitting 52-week highs; stock rallies up to 24% in a month","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/pnb-among-4-stocks-hitting-52-week-highs-stock-rallies-up-to-24-in-a-month/slideshow/135888569.cms","published":"Mon, 16 Nov 2026 17:33:47 +0530","category":"general","cue":"","company":null},{"title":"Hong Kong debuts offshore yuan bond index to promote RMB assets","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/bonds/hong-kong-debuts-offshore-yuan-bond-index-to-promote-rmb-assets/articleshow/135888402.cms","published":"Mon, 16 Nov 2026 17:32:10 +0530","category":"general","cue":"","company":null},{"title":"India bonds dip as elevated inflation fuels rate hike expectations","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/bonds/india-bonds-dip-as-elevated-inflation-fuels-rate-hike-expectations/articleshow/135888382.cms","published":"Mon, 16 Nov 2026 17:30:15 +0530","category":"general","cue":"","company":null},{"title":"Nvidia's AI financing machine may survive Huang, but with less risk appetite","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/nvidias-ai-financing-machine-may-survive-huang-but-with-less-risk-appetite/articleshow/135888314.cms","published":"Mon, 16 Nov 2026 17:29:00 +0530","category":"general","cue":"","company":null},{"title":"Morgan Stanley turns bullish on global stocks, targets S&amp;P 500 at 8,700","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/morgan-stanley-raises-global-equities-to-maximum-overweight-on-cheap-valuations-earnings-strength/articleshow/135888237.cms","published":"Mon, 16 Nov 2026 17:27:08 +0530","category":"global","cue":"global","company":null},{"title":"Sebi may propose raising FPI beneficial ownership threshold to 25%; plans consultation paper","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-may-propose-raising-fpi-beneficial-ownership-threshold-to-25-plans-consultation-paper/articleshow/135883637.cms","published":"Mon, 16 Nov 2026 15:51:12 +0530","category":"policy","cue":"sebi","company":null},{"title":"Rupee rises, volatility ebbs as equity inflows blunt global headwinds","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-volatility-ebbs-as-equity-inflows-blunt-global-headwinds/articleshow/135883543.cms","published":"Mon, 16 Nov 2026 15:49:15 +0530","category":"global","cue":"global","company":null},{"title":"Swiggy among 10 midcap stocks that dropped up to 50% in CY26","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/swiggy-among-10-midcap-stocks-that-dropped-up-to-50-in-cy26/slideshow/135883464.cms","published":"Mon, 16 Nov 2026 15:40:54 +0530","category":"general","cue":"","company":"SWIGGY"},{"title":"UPL Share Price Highlights: UPL Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/upl-stock-price-live-updates-16-nov-2026/liveblog/135872604.cms","published":"Mon, 16 Nov 2026 09:47:59 +0530","category":"general","cue":"","company":null},{"title":"Technical picks:  ABB India among 5 stocks to buy this week for healthy returns","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/tech-picks-abb-india-among-5-stocks-to-buy-this-week-for-healthy-returns/slideshow/135872688.cms","published":"Mon, 16 Nov 2026 09:43:24 +0530","category":"general","cue":"","company":null},{"title":"Sun Pharma Share Price Highlights: Sun Pharma Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sun-pharma-share-price-today-live-updates-16-nov-2026/liveblog/135871948.cms","published":"Mon, 16 Nov 2026 09:20:11 +0530","category":"general","cue":"","company":null},{"title":"Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-16-nov-2026/liveblog/135871604.cms","published":"Mon, 16 Nov 2026 09:05:24 +0530","category":"general","cue":"","company":"MARUTI"},{"title":"BPCL Share Price Highlights: BPCL Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bpcl-stock-price-live-updates-16-nov-2026/liveblog/135871462.cms","published":"Mon, 16 Nov 2026 09:01:16 +0530","category":"general","cue":"","company":null},{"title":"Coal India Share Price Highlights: Coal India Ltd Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/coal-india-ltd-stock-price-livestock-price-today-live-updates-16-nov-2026/liveblog/135871357.cms","published":"Mon, 16 Nov 2026 08:55:08 +0530","category":"general","cue":"","company":null},{"title":"Tech Mahindra Share Price Highlights: Tech Mahindra Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tech-mahindra-share-price-live-16-nov-2026/liveblog/135871297.cms","published":"Mon, 16 Nov 2026 08:51:15 +0530","category":"general","cue":"","company":"TECHM"}],"newsCounts":{"global":8,"results":3,"general":15,"policy":4},"chain":{"spot":25387.4,"exps":[{"e":"2026-11-17","d":0,"pcr":1.0,"mp":25400.0,"cw":25400.0,"pw":25350.0},{"e":"2026-11-23","d":6,"pcr":1.08,"mp":25000.0,"cw":26000.0,"pw":25000.0},{"e":"2026-12-01","d":14,"pcr":0.83,"mp":25500.0,"cw":26400.0,"pw":25500.0},{"e":"2026-12-08","d":21,"pcr":1.29,"mp":25300.0,"cw":26000.0,"pw":25300.0},{"e":"2026-12-15","d":28,"pcr":0.87,"mp":25500.0,"cw":26500.0,"pw":25000.0},{"e":"2026-12-29","d":42,"pcr":1.27,"mp":24500.0,"cw":27000.0,"pw":24000.0}]},"movers":{"up":[{"s":"YATRA","c":19.99,"px":93.75},{"s":"DELPHIFX","c":19.87,"px":7.24},{"s":"TVSSCS","c":12.23,"px":137.2},{"s":"KILITCH","c":10.9,"px":238.56},{"s":"HINDOILEXP","c":10.53,"px":212.66},{"s":"AARTISURF","c":9.99,"px":582.75}],"dn":[{"s":"DCAL","c":-19.48,"px":139.23},{"s":"PRICOLLTD","c":-17.76,"px":615.0},{"s":"V2RETAIL","c":-14.91,"px":139.64},{"s":"KAYNES","c":-13.12,"px":2980.0},{"s":"MAHLOG","c":-12.95,"px":374.1},{"s":"UNIDT","c":-12.79,"px":164.33}]},"roll":[],"stocks":[{"s":"CMICABLES","n":"CMI Limited","px":2.05,"c1":4.59,"c20":null,"rsi":14.3,"tr":"down","hi":-65.95},{"s":"CEREBRAINT","n":"Cerebra Integrated Technolog","px":2.04,"c1":-4.67,"c20":null,"rsi":13.2,"tr":"down","hi":-79.23},{"s":"SKIL","n":"SKIL Infrastructure Limited","px":1.01,"c1":-4.72,"c20":null,"rsi":97.1,"tr":"mixed","hi":-27.34},{"s":"NAGAFERT","n":"Nagarjuna Fertilizers and Ch","px":1.33,"c1":4.72,"c20":null,"rsi":0.0,"tr":"down","hi":-76.63},{"s":"LASA","n":"Lasa Supergenerics Limited","px":4.01,"c1":-4.98,"c20":null,"rsi":5.3,"tr":"down","hi":-67.87},{"s":"PASHUPATI","n":"Pashupati Cotspin Limited","px":31.69,"c1":-4.98,"c20":-64.6,"rsi":67.8,"tr":"mixed","hi":-73.21},{"s":"EDUCOMP","n":"Educomp Solutions Limited","px":0.89,"c1":-2.2,"c20":null,"rsi":29.9,"tr":"down","hi":-42.58},{"s":"LAL","n":"Lorenzini Apparels Limited","px":9.05,"c1":-1.95,"c20":6.85,"rsi":41.7,"tr":"mixed","hi":-17.88},{"s":"DCAL","n":"Dishman Carbogen Amcis Limit","px":130.34,"c1":-6.39,"c20":-10.6,"rsi":27.5,"tr":"down","hi":-56.98},{"s":"TRANSWORLD","n":"Transworld Shipping Lines Li","px":194.78,"c1":-4.79,"c20":21.34,"rsi":65.9,"tr":"up","hi":-24.5},{"s":"SUPREMEINF","n":"Supreme Infrastructure India","px":60.06,"c1":-4.7,"c20":6.79,"rsi":29.0,"tr":"down","hi":-44.9},{"s":"ARSHIYA","n":"Arshiya Limited","px":0.97,"c1":-4.9,"c20":12.79,"rsi":54.4,"tr":"mixed","hi":-48.13},{"s":"SINTERCOM","n":"Sintercom India Limited","px":70.03,"c1":-4.84,"c20":-6.0,"rsi":52.4,"tr":"down","hi":-44.85},{"s":"GATECH","n":"GACM Technologies Limited","px":0.52,"c1":-3.7,"c20":-8.77,"rsi":34.7,"tr":"mixed","hi":-53.15},{"s":"BIRLACABLE","n":"Birla Cable Limited","px":294.3,"c1":-4.76,"c20":-10.51,"rsi":34.2,"tr":"mixed","hi":-29.73},{"s":"PAGEIND","n":"Page Industries Limited","px":31105.0,"c1":-1.14,"c20":-13.04,"rsi":30.7,"tr":"mixed","hi":-28.68},{"s":"CAPTRUST","n":"Capital Trust Limited","px":20.14,"c1":-4.64,"c20":-6.76,"rsi":48.7,"tr":"up","hi":-32.3},{"s":"FMNL","n":"Future Market Networks Limit","px":7.03,"c1":2.33,"c20":-14.06,"rsi":42.1,"tr":"down","hi":-47.1},{"s":"KPEL","n":"K.P. Energy Limited","px":175.48,"c1":2.95,"c20":-6.97,"rsi":16.5,"tr":"down","hi":-62.03},{"s":"LOKESHMACH","n":"Lokesh Machines Limited","px":350.65,"c1":-2.12,"c20":-10.14,"rsi":41.8,"tr":"mixed","hi":-28.15},{"s":"V2RETAIL","n":"V2 Retail Limited","px":145.14,"c1":3.94,"c20":-16.97,"rsi":36.9,"tr":"down","hi":-44.02},{"s":"TIKONA","n":"Tikona Communication Limited","px":30.66,"c1":-4.99,"c20":-35.21,"rsi":74.1,"tr":"up","hi":-36.47},{"s":"CROWN","n":"Crown Lifters Limited","px":94.19,"c1":-5.14,"c20":-14.6,"rsi":37.8,"tr":"down","hi":-40.61},{"s":"SATIA","n":"Satia Industries Limited","px":57.61,"c1":-1.37,"c20":-11.0,"rsi":34.2,"tr":"mixed","hi":-27.1},{"s":"UNIDT","n":"United Drilling Tools Limite","px":161.83,"c1":-1.52,"c20":-17.15,"rsi":29.6,"tr":"mixed","hi":-40.5},{"s":"GANGAFORGE","n":"Ganga Forging Limited","px":1.16,"c1":-3.33,"c20":-21.62,"rsi":41.1,"tr":"down","hi":-72.05},{"s":"PRICOLLTD","n":"Pricol Limited","px":618.65,"c1":0.59,"c20":-6.65,"rsi":30.2,"tr":"mixed","hi":-24.83},{"s":"KAYNES","n":"Kaynes Technology India Limi","px":2858.0,"c1":-4.09,"c20":-12.06,"rsi":44.3,"tr":"down","hi":-59.77},{"s":"MAHSEAMLES","n":"Maharashtra Seamless Limited","px":504.15,"c1":-4.35,"c20":-12.33,"rsi":24.5,"tr":"mixed","hi":-34.36},{"s":"MTEDUCARE","n":"MT Educare Limited","px":1.48,"c1":-4.52,"c20":-7.5,"rsi":36.0,"tr":"mixed","hi":-41.5},{"s":"LAKPRE","n":"Lakshmi Precision Screws Lim","px":4.14,"c1":0.0,"c20":-17.2,"rsi":52.1,"tr":"mixed","hi":-37.93},{"s":"TVVISION","n":"TV Vision Limited","px":2.48,"c1":-4.98,"c20":-3.5,"rsi":36.7,"tr":"down","hi":-80.0},{"s":"BIL","n":"Bhartiya International Ltd.","px":981.9,"c1":-5.42,"c20":-7.16,"rsi":45.2,"tr":"up","hi":-14.62},{"s":"MAHLOG","n":"Mahindra Logistics Limited","px":379.15,"c1":1.35,"c20":-4.62,"rsi":38.7,"tr":"mixed","hi":-15.2},{"s":"TMPV","n":"Tata Motors Passenger Vehicl","px":259.2,"c1":-1.22,"c20":-6.76,"rsi":36.2,"tr":"down","hi":-37.62},{"s":"SHEKHAWATI","n":"Shekhawati Industries Limite","px":19.51,"c1":-0.41,"c20":-17.23,"rsi":43.0,"tr":"mixed","hi":-41.34},{"s":"WANBURY","n":"Wanbury Limited","px":177.21,"c1":-0.46,"c20":-4.76,"rsi":31.3,"tr":"down","hi":-50.62},{"s":"LANCORHOL","n":"Lancor Holdings Limited","px":29.11,"c1":-3.61,"c20":-6.22,"rsi":35.6,"tr":"mixed","hi":-29.67},{"s":"TTL","n":"T.T. Limited","px":6.4,"c1":-6.57,"c20":-1.08,"rsi":35.0,"tr":"down","hi":-38.28},{"s":"OSWALAGRO","n":"Oswal Agro Mills Limited","px":34.61,"c1":-4.21,"c20":-8.39,"rsi":57.8,"tr":"mixed","hi":-57.27},{"s":"JAIPURKURT","n":"Nandani Creation Limited","px":28.14,"c1":2.59,"c20":-3.33,"rsi":48.2,"tr":"mixed","hi":-34.16},{"s":"MUNJALAU","n":"Munjal Auto Industries Limit","px":93.41,"c1":-2.52,"c20":-7.94,"rsi":31.9,"tr":"mixed","hi":-27.85},{"s":"AQYLON","n":"Aqylon Nexus Limited","px":10.97,"c1":4.88,"c20":-35.39,"rsi":39.2,"tr":"down","hi":-99.36},{"s":"BANKA","n":"Banka BioLoo Limited","px":77.76,"c1":-4.0,"c20":16.29,"rsi":33.1,"tr":"mixed","hi":-19.49},{"s":"COCHINSHIP","n":"Cochin Shipyard Limited","px":1147.0,"c1":-0.95,"c20":-6.48,"rsi":27.9,"tr":"down","hi":-38.11},{"s":"STALLION","n":"Stallion India Fluorochemica","px":178.52,"c1":0.42,"c20":-13.48,"rsi":34.1,"tr":"mixed","hi":-57.88},{"s":"RADAAN","n":"Radaan Mediaworks India Limi","px":2.45,"c1":-2.0,"c20":-7.89,"rsi":41.5,"tr":"down","hi":-38.6},{"s":"INDIAGLYCO","n":"India Glycols Limited","px":275.05,"c1":-5.95,"c20":-13.86,"rsi":35.0,"tr":"down","hi":-77.44},{"s":"SHRINGARMS","n":"Shringar House of Mangalsutr","px":284.4,"c1":-4.66,"c20":-10.9,"rsi":66.3,"tr":"up","hi":-15.23},{"s":"FCL","n":"Fineotex Chemical Limited","px":47.11,"c1":-4.73,"c20":-15.59,"rsi":44.0,"tr":"up","hi":-24.5},{"s":"IL&FSTRANS","n":"IL&FS Transportation Network","px":1.58,"c1":-2.47,"c20":-16.84,"rsi":43.3,"tr":"down","hi":-50.31},{"s":"AARVI","n":"Aarvi Encon Limited","px":127.47,"c1":0.13,"c20":-6.87,"rsi":28.5,"tr":"mixed","hi":-23.32},{"s":"AIROLAM","n":"Airo Lam Limited","px":95.05,"c1":-6.55,"c20":9.71,"rsi":62.6,"tr":"mixed","hi":-14.97},{"s":"INOXWIND","n":"Inox Wind Limited","px":59.7,"c1":0.34,"c20":-8.0,"rsi":33.6,"tr":"down","hi":-62.52},{"s":"TREJHARA","n":"Trejhara Solutions Limited","px":118.04,"c1":-0.45,"c20":-1.32,"rsi":35.1,"tr":"down","hi":-58.56},{"s":"CORONA","n":"CORONA Remedies Limited","px":2275.6,"c1":-0.58,"c20":13.21,"rsi":47.1,"tr":"mixed","hi":-0.73},{"s":"SUPREME","n":"Supreme Holdings & Hospitali","px":28.59,"c1":-4.83,"c20":-0.59,"rsi":18.2,"tr":"down","hi":-68.88},{"s":"MFML","n":"Mahalaxmi Fabric Mills Limit","px":18.54,"c1":3.11,"c20":-4.38,"rsi":62.1,"tr":"mixed","hi":-40.77},{"s":"CAPLIPOINT","n":"Caplin Point Laboratories Li","px":2247.1,"c1":-4.25,"c20":-0.52,"rsi":26.0,"tr":"mixed","hi":-24.85},{"s":"ONWARDTEC","n":"Onward Technologies Limited","px":345.2,"c1":-5.0,"c20":-23.86,"rsi":82.5,"tr":"up","hi":-30.35}],"stocksTotal":2226,"global":[{"c":"South Korea","s":"005930.KS","n":"Samsung Electronics Co., L","px":198900.0,"c1":4.52,"tr":"down"},{"c":"South Korea","s":"000660.KS","n":"SK hynix Inc.","px":1164000.0,"c1":6.01,"tr":"down"},{"c":"South Korea","s":"373220.KS","n":"LG Energy Solution, Ltd.","px":309500.0,"c1":1.31,"tr":"down"},{"c":"South Korea","s":"005380.KS","n":"Hyundai Motor Company","px":261250.0,"c1":0.87,"tr":"down"},{"c":"South Korea","s":"207940.KS","n":"Samsung Biologics Co.,Ltd.","px":1385500.0,"c1":-2.02,"tr":"down"},{"c":"South Korea","s":"068270.KS","n":"Celltrion, Inc.","px":211000.0,"c1":-0.94,"tr":"mixed"},{"c":"Japan","s":"7203.T","n":"Toyota Motor Corporation","px":3388.0,"c1":-0.76,"tr":"mixed"},{"c":"Japan","s":"8306.T","n":"Mitsubishi UFJ Financial G","px":3267.0,"c1":-0.61,"tr":"mixed"},{"c":"South Korea","s":"000270.KS","n":"Kia Corporation","px":91800.0,"c1":-0.33,"tr":"down"},{"c":"South Korea","s":"035420.KS","n":"NAVER Corporation","px":171600.0,"c1":0.94,"tr":"down"},{"c":"Japan","s":"6758.T","n":"Sony Group Corporation","px":4224.0,"c1":-1.1,"tr":"up"},{"c":"Japan","s":"6098.T","n":"Recruit Holdings Co., Ltd.","px":17430.0,"c1":-4.2,"tr":"up"},{"c":"Japan","s":"6501.T","n":"Hitachi, Ltd.","px":4870.0,"c1":1.23,"tr":"mixed"},{"c":"Japan","s":"8035.T","n":"Tokyo Electron Limited","px":8946.0,"c1":3.34,"tr":"down"},{"c":"South Korea","s":"005490.KS","n":"POSCO Holdings Inc.","px":265000.0,"c1":1.34,"tr":"down"},{"c":"Japan","s":"9984.T","n":"SoftBank Group Corp.","px":3501.0,"c1":6.71,"tr":"down"},{"c":"Japan","s":"8058.T","n":"Mitsubishi Corporation","px":5168.0,"c1":0.16,"tr":"up"},{"c":"Japan","s":"6861.T","n":"Keyence Corporation","px":73160.0,"c1":0.9,"tr":"mixed"},{"c":"South Korea","s":"051910.KS","n":"LG Chem, Ltd.","px":215000.0,"c1":0.23,"tr":"down"},{"c":"Japan","s":"8031.T","n":"Mitsui & Co., Ltd.","px":4847.0,"c1":-0.41,"tr":"down"},{"c":"Japan","s":"9432.T","n":"NTT, Inc.","px":167.8,"c1":-1.24,"tr":"mixed"},{"c":"India (NSE)","s":"BHARTIARTL.NS","n":"Bharti Airtel Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"India (NSE)","s":"HDFCBANK.NS","n":"HDFC Bank Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"India (NSE)","s":"ICICIBANK.NS","n":"ICICI Bank Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"Japan","s":"4502.T","n":"Takeda Pharmaceutical Comp","px":6763.0,"c1":-2.42,"tr":"up"},{"c":"India (NSE)","s":"SBIN.NS","n":"State Bank of India","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"Japan","s":"7974.T","n":"Nintendo Co., Ltd.","px":8823.0,"c1":-1.15,"tr":"up"},{"c":"Japan","s":"4063.T","n":"Shin-Etsu Chemical Co., Lt","px":5585.0,"c1":0.2,"tr":"down"},{"c":"India (NSE)","s":"LT.NS","n":"Larsen & Toubro Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"United States","s":"AAPL","n":"Apple Inc.","px":351.91,"c1":-0.25,"tr":"up"},{"c":"Japan","s":"6902.T","n":"DENSO Corporation","px":1917.0,"c1":-1.29,"tr":"mixed"},{"c":"India (NSE)","s":"HINDUNILVR.NS","n":"Hindustan Unilever Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"India (NSE)","s":"INFY.NS","n":"Infosys Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"United States","s":"MSFT","n":"Microsoft Corporation","px":506.24,"c1":-2.27,"tr":"mixed"},{"c":"United States","s":"NVDA","n":"NVIDIA Corporation","px":155.46,"c1":-0.44,"tr":"mixed"},{"c":"India (NSE)","s":"ITC.NS","n":"ITC Limited","px":NaN,"c1":NaN,"tr":"n/a"},{"c":"United States","s":"GOOGL","n":"Alphabet Inc.","px":280.2,"c1":-1.24,"tr":"down"},{"c":"Hong Kong","s":"0700.HK","n":"Tencent Holdings Limited","px":376.0,"c1":-3.69,"tr":"down"},{"c":"China (mainland)","s":"601398.SS","n":"Industrial and Commercial ","px":9.06,"c1":0.11,"tr":"up"},{"c":"United States","s":"AMZN","n":"Amazon.com, Inc.","px":257.89,"c1":0.05,"tr":"up"}],"globalN":175,"crypto":[{"s":"BTC","n":"Bitcoin","px":64775.96875,"c1":-0.12,"tr":"mixed"},{"s":"ETH","n":"Ethereum","px":1819.630005,"c1":0.02,"tr":"mixed"},{"s":"USDT","n":"Tether","px":0.9989,"c1":-0.01,"tr":"down"},{"s":"BNB","n":"BNB","px":596.830017,"c1":1.04,"tr":"mixed"},{"s":"USDC","n":"USDC","px":0.999749,"c1":-0.01,"tr":"down"},{"s":"XRP","n":"XRP","px":0.9837,"c1":3.04,"tr":"mixed"},{"s":"SOL","n":"Solana","px":75.279999,"c1":5.28,"tr":"mixed"},{"s":"TRX","n":"TRON","px":0.307604,"c1":0.86,"tr":"down"},{"s":"ZEC","n":"Zcash","px":965.75,"c1":6.73,"tr":"mixed"},{"s":"XMR","n":"Monero","px":509.21106,"c1":3.29,"tr":"mixed"},{"s":"DOGE","n":"Dogecoin","px":0.05993,"c1":1.8,"tr":"down"},{"s":"LEO","n":"LEO Token","px":9.294384,"c1":1.13,"tr":"mixed"},{"s":"WBT","n":"WhiteBIT Coin","px":62.53965,"c1":-0.21,"tr":"mixed"},{"s":"LINK","n":"Chainlink","px":9.283,"c1":1.75,"tr":"mixed"},{"s":"ADA","n":"Cardano","px":0.1548,"c1":1.24,"tr":"mixed"},{"s":"XLM","n":"Stellar","px":0.141934,"c1":3.09,"tr":"down"},{"s":"NEAR","n":"NEAR Protocol","px":3.3986,"c1":7.63,"tr":"mixed"},{"s":"DAI","n":"Dai","px":0.999594,"c1":-0.0,"tr":"mixed"},{"s":"BCH","n":"Bitcoin Cash","px":211.710007,"c1":1.61,"tr":"mixed"},{"s":"LTC","n":"Litecoin","px":45.129002,"c1":1.56,"tr":"mixed"},{"s":"AVAX","n":"Avalanche","px":7.273,"c1":2.33,"tr":"mixed"},{"s":"XAUT","n":"Tether Gold","px":3819.262695,"c1":-0.72,"tr":"down"},{"s":"GRAM","n":"Gram (prev. Toncoin)","px":1.072394,"c1":1.89,"tr":"mixed"},{"s":"RLUSD","n":"Ripple USD","px":0.99996,"c1":0.01,"tr":"mixed"},{"s":"USDG","n":"Global Dollar","px":5.197537,"c1":-0.01,"tr":"down"},{"s":"HBAR","n":"Hedera","px":0.05816,"c1":1.45,"tr":"mixed"},{"s":"PYUSD","n":"PayPal USD","px":0.999728,"c1":0.01,"tr":"mixed"},{"s":"CRO","n":"Cronos","px":0.04425,"c1":1.99,"tr":"down"},{"s":"SHIB","n":"Shiba Inu","px":4e-06,"c1":-3.0,"tr":"mixed"},{"s":"QNT","n":"Quant","px":154.960007,"c1":0.72,"tr":"mixed"}],"etf":[{"s":"NIFTYBEES","n":"NIPINDETFNIFTYBEES","px":258.33,"c1":-1.1,"u":"Nifty 50"},{"s":"JUNIORBEES","n":"NIP IND ETF JUNIOR BEES","px":727.07,"c1":-2.37,"u":"Nippon India ETF Nifty Next 50 Junior BeES"},{"s":"LIQUIDBEES","n":"NIPINDETFLIQUIDBEES","px":1000.0,"c1":0.0,"u":"Government Securities"},{"s":"BANKBEES","n":"NIPINDETFBANKBEES","px":567.77,"c1":-1.43,"u":"Nifty Bank"},{"s":"GOLDBEES","n":"NIPINDETFGOLDBEES","px":117.28,"c1":-2.13,"u":"Gold"},{"s":"GOLDBETA","n":"UTIAMC -UTIGOLDBETA","px":119.55,"c1":-0.66,"u":"Gold"},{"s":"GOLD1","n":"KotakMutualFund-Gold","px":118.4,"c1":-0.64,"u":"Gold"},{"s":"PSUBNKBEES","n":"NIPINDETFPSUBANKBEES","px":91.3,"c1":-1.18,"u":"Nifty PSU Bank"},{"s":"PSUBANK","n":"KotakMahindraMutualFun","px":82.0,"c1":-1.03,"u":"Nifty PSU Bank"},{"s":"QGOLDHALF","n":"Quantum Gold ETF","px":117.63,"c1":-2.17,"u":"Gold"},{"s":"QNIFTY","n":"QuantumNiftyETF","px":249.8,"c1":-1.02,"u":"Nifty 50"},{"s":"SHARIABEES","n":"NIPINDETFSHARIAHBEES","px":436.16,"c1":-0.31,"u":"Shariah"},{"s":"NIFTY1","n":"KotakNiftyETF","px":251.84,"c1":-1.13,"u":"Nifty 50"},{"s":"HNGSNGBEES","n":"NIPINDETFHANGSENGBEES","px":442.85,"c1":-2.59,"u":"Hang Seng Index"},{"s":"IVZINGOLD","n":"InvescoIndiaGoldETF","px":123.5,"c1":-2.33,"u":"Gold"},{"s":"MOM50","n":"MotilalOswalM50ETF","px":237.59,"c1":-0.79,"u":"Nifty 50"},{"s":"HDFCGOLD","n":"HDFCGoldETF","px":121.21,"c1":-0.74,"u":"Gold"},{"s":"GOLDIETF","n":"ICICIPrudGoldETF","px":121.59,"c1":-0.6,"u":"Gold"},{"s":"INFRABEES","n":"NIPINDETFINFRABEES","px":889.87,"c1":0.03,"u":"Nifty Infra"},{"s":"GOLDAXIS","n":"AXISAMC-GOLDAXIS","px":118.16,"c1":-2.11,"u":"Gold"},{"s":"MOM100","n":"MotilalOsMidcap100ETF","px":61.55,"c1":-2.46,"u":"Nifty Midcap 100"},{"s":"MON100","n":"MotilalOsNASDAQ100ETF","px":304.61,"c1":-2.19,"u":"Nasdaq100"},{"s":"BSLGOLDETF","n":"ABSLGoldETF-GO","px":124.9,"c1":-2.02,"u":"Gold"},{"s":"IVZINNIFTY","n":"InvescoMF-NiftyETF","px":259.6,"c1":-1.39,"u":"Nifty 50"},{"s":"BSLNIFTY","n":"ABSLNiftyETF-GO","px":26.68,"c1":-0.85,"u":"Nifty 50"},{"s":"LICMFGOLD","n":"LICMF LICGoldETF","px":127.9,"c1":-2.07,"u":"Gold"},{"s":"NIFTYIETF","n":"ICICIPruNiftyETF","px":257.99,"c1":-0.11,"u":"Nifty 50"},{"s":"NIF100BEES","n":"NIPINDETFNIFTY100","px":250.23,"c1":-0.78,"u":"Nifty 100 TRI"},{"s":"NIF100IETF","n":"ICICIPruNifty100ETF","px":26.43,"c1":-1.05,"u":"Nifty 100"},{"s":"CPSEETF","n":"CPSEETF","px":86.53,"c1":-1.67,"u":"CPSE ETF"}],"etfN":332,"mf":[{"n":"SBI HEALTHCARE OPPORTUNITIES FUND - Regular Pl","h":"SBI Mutual Fund","c":"Equity Scheme - Sectoral/ Thematic","nav":338.7111},{"n":"Nippon India Power & Infra Fund - Regular Plan","h":"Nippon India Mutual Fund","c":"Equity Schemes - Sectoral Fund","nav":367.3313},{"n":"Nippon India Power & Infra Fund - Regular Plan","h":"Nippon India Mutual Fund","c":"Equity Schemes - Sectoral Fund","nav":367.3313},{"n":"HDFC Flexi Cap Fund - Regular Plan - Growth Op","h":"HDFC Mutual Fund","c":"Equity Scheme - Flexi Cap Fund","nav":2157.382},{"n":"Quant Multi Asset Allocation Fund - Regular Pl","h":"quant Mutual Fund","c":"Hybrid Scheme - Multi Asset Allocation","nav":164.3839},{"n":"UTI - Healthcare Fund - Regular Plan - IDCW","h":"UTI Mutual Fund","c":"Equity Scheme - Sectoral/ Thematic","nav":269.4323},{"n":"UTI - Healthcare Fund - Regular Plan - Growth","h":"UTI Mutual Fund","c":"Equity Scheme - Sectoral/ Thematic","nav":348.617},{"n":"Quant Multi Asset Allocation Fund - Regular Pl","h":"quant Mutual Fund","c":"Hybrid Scheme - Multi Asset Allocation","nav":150.6893},{"n":"Quant Small Cap Fund - Regular Plan - IDCW Opt","h":"quant Mutual Fund","c":"Equity Scheme - Small Cap Fund","nav":225.2454},{"n":"Quant Small Cap Fund - Regular Plan - Growth O","h":"quant Mutual Fund","c":"Equity Scheme - Small Cap Fund","nav":283.2364},{"n":"Nippon India Growth Mid Cap Fund - Regular Pla","h":"Nippon India Mutual Fund","c":"Equity Scheme - Mid Cap Fund","nav":742.3915},{"n":"Nippon India Growth Mid Cap Fund - Regular Pla","h":"Nippon India Mutual Fund","c":"Equity Scheme - Mid Cap Fund","nav":4459.5849},{"n":"Sundaram Mid Cap Fund - Regular Plan - GROWTH","h":"Sundaram Mutual Fund","c":"Equity Scheme - Mid Cap Fund","nav":1468.2336},{"n":"Nippon India Multi Cap Fund - Regular Plan - G","h":"Nippon India Mutual Fund","c":"Equity Schemes - Multi Cap Fund","nav":301.701},{"n":"Nippon India Multi Cap Fund - Regular Plan - B","h":"Nippon India Mutual Fund","c":"Equity Schemes - Multi Cap Fund","nav":301.701},{"n":"ICICI Prudential Multi Asset Allocation Fund -","h":"ICICI Prudential Mutual Fund","c":"Hybrid Schemes - Multi Asset Allocation Fund","nav":808.1121},{"n":"HDFC Balanced Advantage Fund - Regular Plan - ","h":"HDFC Mutual Fund","c":"Hybrid Scheme - Dynamic Asset Allocation or Balanced Advantage","nav":535.698},{"n":"HDFC ELSS - Tax Saver Fund - Regular Plan - Gr","h":"HDFC Mutual Fund","c":"Equity Schemes - ELSS- Tax Saver Fund","nav":1429.813},{"n":"Sundaram Small Cap Fund - Regular Plan - GROWT","h":"Sundaram Mutual Fund","c":"Equity Scheme - Small Cap Fund","nav":286.557},{"n":"Tata Infrastructure Fund - Regular Plan - Grow","h":"Tata Mutual Fund","c":"Equity Scheme - Sectoral/ Thematic","nav":177.0002},{"n":"ICICI Prudential Aggressive Hybrid Fund - Regu","h":"ICICI Prudential Mutual Fund","c":"Hybrid Schemes - Aggressive Hybrid Fund","nav":413.25},{"n":"SBI CONTRA FUND - Regular Plan - IDCW","h":"SBI Mutual Fund","c":"Equity Scheme - Contra Fund","nav":66.3974},{"n":"Quant ELSS Tax Saver Fund - Regular Plan - IDC","h":"quant Mutual Fund","c":"Equity Scheme - ELSS","nav":57.8722},{"n":"Quant ELSS Tax Saver Fund - Regular Plan - Gro","h":"quant Mutual Fund","c":"Equity Scheme - ELSS","nav":416.7614},{"n":"ICICI Prudential Large & Mid Cap Fund - Regula","h":"ICICI Prudential Mutual Fund","c":"Equity Scheme - Large & Mid Cap Fund","nav":1010.15},{"n":"Quant Mid Cap Fund - Regular Plan - IDCW Optio","h":"quant Mutual Fund","c":"Equity Scheme - Mid Cap Fund","nav":77.6589},{"n":"UTI Large & Mid Cap Fund - Regular Plan - IDCW","h":"UTI Mutual Fund","c":"Equity Scheme - Large & Mid Cap Fund","nav":91.4259},{"n":"UTI Large & Mid Cap Fund - Regular Plan - Grow","h":"UTI Mutual Fund","c":"Equity Scheme - Large & Mid Cap Fund","nav":187.6726},{"n":"Nippon India Banking & Financial Services Fund","h":"Nippon India Mutual Fund","c":"Equity Schemes - Sectoral Fund","nav":669.1261},{"n":"Nippon India Banking & Financial Services Fund","h":"Nippon India Mutual Fund","c":"Equity Schemes - Sectoral Fund","nav":669.1261}],"mfN":400,"levels":[{"s":"20MICRONS","px":174.94,"p":179.25,"r1":182.08,"s1":175.2},{"s":"21STCENMGM","px":48.05,"p":51.03,"r1":52.95,"s1":48.64},{"s":"360ONE","px":997.1,"p":1041.8,"r1":1059.0,"s1":1029.8},{"s":"3BBLACKBIO","px":1334.4,"p":1338.0,"r1":1385.5,"s1":1301.8},{"s":"3IINFOLTD","px":26.93,"p":27.34,"r1":27.93,"s1":26.88},{"s":"3MINDIA","px":28815.0,"p":29906.67,"r1":30103.33,"s1":29573.33},{"s":"3PLAND","px":31.3,"p":31.53,"r1":31.95,"s1":31.15},{"s":"5PAISA","px":321.35,"p":327.9,"r1":333.75,"s1":320.8},{"s":"63MOONS","px":859.95,"p":876.63,"r1":892.62,"s1":851.27},{"s":"A2ZINFRA","px":12.52,"p":13.18,"r1":13.55,"s1":12.76},{"s":"AAATECH","px":102.24,"p":103.46,"r1":110.93,"s1":98.93},{"s":"AADHARHFC","px":440.1,"p":454.8,"r1":467.35,"s1":446.75},{"s":"AAKASH","px":7.79,"p":7.95,"r1":8.21,"s1":7.69},{"s":"AAREYDRUGS","px":106.73,"p":110.81,"r1":113.6,"s1":107.61},{"s":"AARNAV","px":33.71,"p":35.03,"r1":36.06,"s1":33.17},{"s":"AARON","px":121.9,"p":122.71,"r1":125.42,"s1":118.45},{"s":"AARTECH","px":40.5,"p":45.98,"r1":47.72,"s1":44.47},{"s":"AARTIDRUGS","px":374.9,"p":380.1,"r1":389.2,"s1":370.95},{"s":"AARTIIND","px":427.55,"p":448.0,"r1":458.4,"s1":430.9},{"s":"AARTIPHARM","px":820.85,"p":831.27,"r1":841.53,"s1":818.53},{"s":"AARTISURF","px":658.55,"p":631.27,"r1":664.48,"s1":612.63},{"s":"AARVI","px":128.66,"p":132.61,"r1":133.83,"s1":130.55},{"s":"AASTHA","px":22.42,"p":23.82,"r1":24.06,"s1":23.36},{"s":"AAVAS","px":1114.1,"p":1164.7,"r1":1178.4,"s1":1148.6},{"s":"ABANSENT","px":29.52,"p":31.71,"r1":32.35,"s1":30.43},{"s":"ABB","px":6140.0,"p":6483.67,"r1":6574.33,"s1":6373.83},{"s":"ABBOTINDIA","px":25030.0,"p":25476.67,"r1":25678.33,"s1":25158.33},{"s":"ABCAPITAL","px":347.25,"p":359.53,"r1":363.67,"s1":353.07},{"s":"ABCOTS","px":169.19,"p":175.6,"r1":181.19,"s1":169.2},{"s":"ABDL","px":672.65,"p":698.08,"r1":704.12,"s1":692.87},{"s":"ABFRL","px":39.77,"p":41.81,"r1":42.53,"s1":40.63},{"s":"ABGSEC","px":112.67,"p":111.87,"r1":112.04,"s1":111.53},{"s":"ABINFRA","px":12.63,"p":13.56,"r1":14.22,"s1":12.68},{"s":"ABLBL","px":70.65,"p":72.14,"r1":73.85,"s1":71.09},{"s":"ABMINTLLTD","px":56.2,"p":65.89,"r1":69.35,"s1":58.99},{"s":"ABMKNO","px":133.2,"p":138.18,"r1":154.05,"s1":124.37},{"s":"ABREL","px":1042.4,"p":1083.37,"r1":1099.33,"s1":1069.13},{"s":"ABSL10BANK","px":161.19,"p":164.1,"r1":165.69,"s1":161.31},{"s":"ABSLAMC","px":889.05,"p":909.2,"r1":926.4,"s1":886.95},{"s":"ABSLBANETF","px":55.53,"p":56.57,"r1":57.14,"s1":55.74}],"gaps":{"up":76.1,"dn":80.5,"s":{"up":5914,"down":4999,"window":10}},"vix":{"v":15.68,"pct":75,"lo":9.15,"hi":27.89,"series":[11,11,11,12,11,11,11,11,11,11,12,11,11,11,11,12,12,12,13,13,12,11,11,11,10,13,12,14,13,13,14,15,14,14,15,14,15,14,15,14,14,15,16,16,17,17,16,16,15,15,16,16,15,16,17,17,18,17,16,16]},"markets":{"cols":["symbol","close","chg_pct","date"],"rows":[["^NSEBANK",61575.8984,0.89,"2026-11-16"],["^BSESN",82104.7891,0.63,"2026-11-16"],["^NSEI",25291.0996,0.58,"2026-11-16"]]},"commodities":{"cols":["symbol","close","chg_pct","date"],"rows":[["GC=F",3852.2,-0.02,"2026-11-17"]]},"indicators":{"cols":["symbol","date","close","rsi_14","sma_20","sma_50","sma_200","ema_21","macd","macd_signal","bb_pctb","atr_pct"],"rows":[["1003ISFL28","2026-11-17","1005.01","44.263664717215974","1008.8219999999999","","","1009.8373514963944","0.45554770732837824","0.41343955924805287","0.28425550922264936","0.005682204053689759","43.854531950879064","33.39999999999994","1016.8338960330001","-1.0","1761.0","1009.4299436772271"],["1003SFIL28","2026-11-17","425.0","47.75154492529618","418.2195","","","424.2241174936948","-5.29798571264206","-7.243615212736493","0.6028783879701675","0.03110445790009767","56.87939321939839","89.77505112474438","442.18543550000004","-1.0","-835.0","417.3318675595238"],["1015ECL29","2026-11-17","1006.48","28.32003917384405","1020.2599999999999","","","1020.6937615373749","-0.899943055301037","-0.010408257417886535","-0.22035228862747974","0.00474745278313287","49.54769925934624","21.600000000000062","1029.2536365075591","-1.0","-14076.0","1012.9514078110808"],["1065NFL27","2026-11-17","1003.0","57.17971297245325","1005.1370000000001","","","1005.3784525902793","-0.24893481311346477","-0.035122666119320856","0.3203873500243366","0.004197213348606127","40.263210523126496","27.272727272727273","999.0389054407094","1.0","2487.0","1004.9294083178503"],["10IIFL28","2026-11-17","1020.1","55.405316493204744","1018.2270000000001","","","1018.8238305067357","2.5313942439494213","2.193899427154912","0.5965245410450873","0.0037631403753093603","46.03785661297092","45.064138315672125","1014.5219078387903","1.0","2439.0","1017.2273469574781"],["20MICRONS","2026-11-17","181.96","94.0750981499527","178.4375","","","166.29142702748112","21.066809059974048","25.706102796367816","0.6031202981893057","0.05316166417605383","60.343205251603145","66.79035250463824","159.95440850437345","1.0","-314728.0","174.0170936079347"],["21STCENMGM","2026-11-17","50.16","84.78757426717327","54.1865","","","50.196941834334105","5.187770681993499","7.095008542117294","0.262627541550416","0.06003754115792694","62.95736741736452","5.443037974683541","60.12443422497361","-1.0","228201.0","54.30792401304286"],["360ONE","2026-11-17","1202.85","75.47406514666318","1082.5700000000002","","","1112.480676713796","38.09218167138397","23.131373698989634","0.8783436516857032","0.028531072667875104","60.02695065765503","92.60268231349535","1087.7610959393432","1.0","6226429.0","1078.2446271530823"],["3BBLACKBIO","2026-11-17","1348.2","44.72803336574207","1330.1399999999999","","","1344.742174837912","-24.338256523537893","-31.44330082962986","0.6466829859555","0.05410188645165424","32.11200512607172","67.5431388660641","1176.05","1.0","-126982.0","1361.3397921661065"],["3IINFOLTD","2026-11-17","19.34","32.16067580142858","19.788999999999998","","","20.116664324096504","-0.565461961815398","-0.7125427752083515","0.353554715631763","0.04364230054461895","63.81640958727004","24.024024024024033","21.241635678610592","-1.0","-1642406.0","20.288091998253265"],["3MINDIA","2026-11-17","27905.0","89.2095366245309","28772.5","","","28015.944345903394","622.4660355780761","938.4773509569161","0.13757074203585531","0.028588803318704666","41.77573624196632","45.92933947772657","30519.401407609508","-1.0","-50388.0","28547.832367059276"],["3PLAND","2026-11-17","31.7","95.53480488090445","31.219","","","29.158629375864066","3.258702295686632","3.9311747119094003","0.6949023312797789","0.04805469987135123","70.52848200571931","72.41379310344823","27.372836800492593","1.0","-15203.0","30.997563500850422"],["5PAISA","2026-11-17","350.05","92.22616631297258","333.3075","","","324.48283479675433","20.540147628006707","23.565188111483398","0.9096177115195296","0.04823014466889286","62.62716327205238","72.88629737609331","300.39540550867855","1.0","-242821.0","343.50362531447433"],["610GS2031","2026-11-17","101.0","49.49579397617854","104.05699999999999","","","102.93172450813097","0.37193001975404627","0.8458571034542566","0.3306611708192668","0.02069200283009638","43.35823196624555","29.71246006389779","98.91970636624995","1.0","-730.0","98.54342965061376"],["63MOONS","2026-11-17","958.9","96.32479425765149","915.9375","","","839.7746373597834","114.72348794729726","141.19864632744626","0.8846282239014812","0.05073396789185619","76.49164778075766","77.68595041322311","792.6463264881647","1.0","3400046.0","903.0770619485119"],["668GS2040","2026-11-17","97.8","63.355196429675594","96.949","","","97.20904660102897","0.4350131157287933","0.35726646555308644","0.7167446778219779","0.011072612034066412","31.472669342521698","69.8412698412698","94.95094956758135","1.0","88660.0","97.03687181283354"],["676GS2061","2026-11-17","89.55","29.7541039366769","89.033","","","89.37407827911008","0.1736077978940216","0.08257766471251954","0.663926908062446","0.01300968007859558","35.9741677784324","64.85623003194871","86.5426254890173","1.0","-833113.0","89.5052055371572"],["690GS2065","2026-11-17","89.79","55.26769428660836","89.435","","","89.68120628438282","0.41237173663655824","0.40953780070591395","0.579693908087634","0.00844162516245599","52.14557485986584","48.328267477203866","88.76791394500091","1.0","-185424.0","89.25778101381329"],["694GS2036","2026-11-17","98.49","31.13814015263212","99.95849999999999","","","100.09779621662874","-0.5591754152717243","-0.4463766065888626","0.071062014285534","0.013496901210304262","59.73863908999684","28.385899814471262","102.28735071231097","-1.0","13165.0","100.36544729149432"],["695GS2061","2026-11-17","94.0","56.68380390727983","92.93299999999999","","","93.10463280729986","0.22512987621581715","0.07712556392751957","0.7966103307416402","0.010609631406622223","39.756456646181746","90.90909090909105","90.73421174630002","1.0","-10891.0","92.94130284790485"]]},"brain":{"videos":499,"window":["2026-05-15","2026-11-17"],"chanN":10,"views":13174977,"syms":[{"symbol":"NIFTY50","mentions":108,"channels":5},{"symbol":"SENSEX","mentions":50,"channels":4},{"symbol":"BANKNIFTY","mentions":49,"channels":4},{"symbol":"RELIANCE","mentions":26,"channels":7},{"symbol":"ADANIENT","mentions":15,"channels":4},{"symbol":"WIPRO","mentions":5,"channels":4},{"symbol":"ITC","mentions":4,"channels":4},{"symbol":"INDIGO","mentions":4,"channels":4},{"symbol":"BSE","mentions":4,"channels":4},{"symbol":"INFY","mentions":4,"channels":3}],"themes":[{"theme":"Beginner/Education","videos":129},{"theme":"MF/SIP","videos":122},{"theme":"Earnings/Results","videos":109},{"theme":"Options/F&O","videos":105},{"theme":"IPO","videos":98},{"theme":"Budget/Policy","videos":75}]}};
 const inr=n=>Number(n).toLocaleString('en-IN');
 const pc=(v,d=2)=>(v>0?'+':'')+Number(v).toFixed(d)+'%';
 const col=v=>v>0.005?'var(--up)':(v<-0.005?'var(--down)':'var(--flat)');
+const num=(v,d=2)=>v==null?'—':Number(v).toFixed(d);
 
-/* ---------- HOME ---------- */
-(function(){
-  const el=document.getElementById('strip');
-  if(!D.indices||!D.indices.length){el.innerHTML='<div class="pad">No index data.</div>';return}
-  const items=D.indices.map(x=>`
-    <div class="sItem">
-      <div class="sName">${x.n}</div>
-      <div class="sLvl">${inr(x.lvl)}</div>
-      <div class="sChg" style="color:${col(x.pct)}">${x.chg>0?'+':''}${inr(x.chg)} · ${pc(x.pct)}</div>
-    </div>`).join('<div class="sDiv"></div>');
-  el.innerHTML=`<div class="stripRow">${items}</div>
-    <div class="stripFoot"><span>Last close</span>
-      <span>${D.breadth&&D.breadth.n?inr(D.breadth.n)+' stocks measured':''}</span></div>`;
+/* ---------- page definitions ---------- */
+const PAGES=[
+  {id:'home',   label:'Home',      grp:'Overview'},
+  {id:'market', label:'Market',    grp:'Overview'},
+  {id:'sectors',label:'Sectors',   grp:'Overview'},
+  {id:'stocks', label:'Stocks',    grp:'Stocks'},
+  {id:'levels', label:'Levels',    grp:'Stocks'},
+  {id:'fno',    label:'F&O',       grp:'Derivatives'},
+  {id:'metals', label:'Gold & silver', grp:'Commodities'},
+  {id:'global', label:'Global',    grp:'World'},
+  {id:'crypto', label:'Crypto',    grp:'World'},
+  {id:'etf',    label:'ETFs',      grp:'Funds'},
+  {id:'mf',     label:'Mutual funds', grp:'Funds'},
+  {id:'news',   label:'News',      grp:'Reading'},
+  {id:'brain',  label:'Channels',  grp:'Reading'},
+  {id:'learn',  label:'How to read this', grp:'Reading'}
+];
 
-  const t=document.getElementById('tiles');
-  const tr=(D.sectors||[]).filter(s=>s.u!=null).reduce((a,s)=>a+s.u,0);
-  const tn=(D.sectors||[]).reduce((a,s)=>a+s.n,0);
-  t.innerHTML=`
-    <div class="tile"><div class="k">Breadth</div>
-      <div class="v">${D.breadth&&D.breadth.a50!=null?D.breadth.a50+'%':'—'}</div>
-      <div class="d">above 50-day</div></div>
-    <div class="tile"><div class="k">Trending up</div>
-      <div class="v">${inr(tr)}</div><div class="d">of ${inr(tn)} stocks</div></div>`;
+/* ---------- builders ---------- */
+const B={};
 
-  document.getElementById('ribs').innerHTML=(D.sectors||[]).map(s=>`
-    <div class="rib" data-s="${s.s}">
-      <div class="n">${s.s}</div>
-      <div class="m" style="color:${col(s.m)}">${s.m>0?'+':''}${Number(s.m).toFixed(2)}%</div>
-      <div class="bb"><i style="width:${Math.max(3,s.b||0)}%"></i></div>
-      <div class="bt">${s.b}% above 50d · ${s.u}/${s.n} up</div>
-    </div>`).join('');
-  document.querySelectorAll('.rib').forEach(r=>r.onclick=()=>go('sectors'));
+B.home=()=>`
+  <div class="g strip" id="strip"></div>
+  <div class="tiles" id="tiles"></div>
+  <div class="shead"><h2>Sector trend · 20 sessions</h2><span>swipe →</span></div>
+  <div class="ribWrap"><div class="ribs" id="ribs"></div></div>
+  <div class="shead"><h2>What changed since yesterday</h2><span id="chgN"></span></div>
+  <div class="g pad"><div class="rows" id="changes"></div></div>
+  <div class="shead"><h2>21-session range</h2><span>history, not a forecast</span></div>
+  <div class="g pad" id="rng"></div>
+  <p class="note">Market data and descriptions only. Not investment advice.</p>`;
 
-  const ch=D.changes||[];
-  document.getElementById('chgN').textContent=ch.length+' fields';
-  document.getElementById('changes').innerHTML=ch.length?ch.map(c=>`
-    <div class="rw"><span class="dot" style="background:${col(c.pct)}"></span>
-      <span class="rl">${lbl(c.field)}</span>
-      <span class="rv">${fmtv(c)}</span>
-      <span class="rp" style="color:${col(c.pct)}">${c.pct!=null?pc(c.pct):''}</span>
-    </div>`).join(''):'<div class="rw"><span class="rl">First snapshot stored — tomorrow this fills in.</span></div>';
+B.market=()=>`
+  <div class="shead"><h2>Breadth</h2><span id="brN"></span></div>
+  <div class="tiles" id="breadthTiles"></div>
+  <div class="shead"><h2>Volatility · VIX</h2><span id="vixPct"></span></div>
+  <div class="g pad" id="vixBox"></div>
+  <div class="shead"><h2>Top movers · last session</h2><span>F&amp;O universe</span></div>
+  <div class="g pad"><div class="rows" id="movers"></div></div>
+  <div class="shead"><h2>Put-call ratio</h2><span id="pcrDate"></span></div>
+  <div class="g pad" id="pcrBox"></div>
+  <div class="shead"><h2>Gap behaviour</h2><span>measured</span></div>
+  <div class="g pad" id="gapBox"></div>`;
 
-  const R=D.range;
-  document.getElementById('rng').innerHTML=R?`
-    <div style="font-size:15px;font-weight:640;line-height:1.5">
-      90% of 21-session Nifty moves fell between
-      <span style="color:var(--down)">${R.p5}%</span> and
-      <span style="color:var(--up)">+${R.p95}%</span></div>
-    <div style="font-size:11.5px;color:var(--faint);margin-top:6px">
-      median ${R.p50>0?'+':''}${R.p50}% · n=${inr(R.n)} windows · ${R.from}–${R.to}</div>
-    <div style="font-size:11px;color:var(--faint);margin-top:8px">
-      This is history, not a forecast.</div>`:'<div>No history.</div>';
-})();
+B.sectors=()=>`
+  <div class="shead"><h2>All sectors</h2><span id="secN"></span></div>
+  <div id="secList"></div>
+  <p class="note">A sector can rise on one large stock — the breadth bar sits beside the median so you can see when that happens.</p>`;
 
-function lbl(f){
-  return ({'index.nifty.close':'Nifty','index.banknifty.close':'Bank Nifty','index.sensex.close':'Sensex',
-   'breadth.above_50':'Stocks above 50-day','breadth.above_200':'Stocks above 200-day',
-   'pcr.nifty':'Nifty PCR','flow.fii_cr':'FII net','flow.dii_cr':'DII net',
-   'metal.gold.per_gram':'Gold per gram','metal.silver.per_gram':'Silver per gram',
-   'fx.usdinr':'USD/INR'})[f]||f;
-}
-function fmtv(c){
-  const u=c.unit||'';
+B.stocks=()=>`
+  <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="sq" placeholder="Filter by symbol or name…"></div>
+  <div class="shead"><h2>Stocks</h2><span id="stN"></span></div>
+  <div class="g pad"><div class="rows" id="stList"></div></div>`;
+
+B.levels=()=>`
+  <div class="shead"><h2>Pivot levels</h2><span id="lvN"></span></div>
+  <div class="g pad"><div class="rows" id="lvList"></div></div>
+  <p class="note">Pivot, R1 and S1 are arithmetic on the previous session's range — not a forecast.</p>`;
+
+B.fno=()=>`
+  <div class="shead"><h2>Nifty expiries</h2><span id="spotTxt"></span></div>
+  <div class="g pad"><div class="chain" id="chain"></div></div>
+  <p class="note">Max pain is arithmetic on open interest — the strike where option buyers collectively lose least. It is where sellers are positioned, not where price will go.</p>`;
+
+B.metals=()=>`
+  <div class="shead"><h2>Gold</h2><span>per gram</span></div>
+  <div id="goldCards"></div>
+  <div class="shead"><h2>Silver</h2><span>per gram</span></div>
+  <div id="silverCards"></div>
+  <p class="note">International spot converted at USD/INR. This is not the jeweller's rate — local retail adds import duty, GST and a dealer premium, so it usually sits 10–15% above this.</p>`;
+
+B.global=()=>`
+  <div class="shead"><h2>Global markets</h2><span id="glN"></span></div>
+  <div class="g pad"><div class="rows" id="glList"></div></div>
+  <p class="note">Overnight closes from the exchanges the pipeline collects.</p>`;
+
+B.crypto=()=>`
+  <div class="shead"><h2>Crypto</h2><span id="crN"></span></div>
+  <div class="g pad"><div class="rows" id="crList"></div></div>`;
+
+B.etf=()=>`
+  <div class="shead"><h2>ETFs</h2><span id="etfN"></span></div>
+  <div class="g pad"><div class="rows" id="etfList"></div></div>`;
+
+B.mf=()=>`
+  <div class="shead"><h2>Mutual funds</h2><span id="mfN"></span></div>
+  <div class="g pad"><div class="rows" id="mfList"></div></div>`;
+
+B.news=()=>`
+  <div class="tabs"><div class="tab on">Live News</div><div class="tab">Events</div></div>
+  <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" placeholder="Search by stock, company, category or keyword…"></div>
+  <div class="cWrap"><div class="cnts" id="cnts"></div></div>
+  <div id="newsList"></div>
+  <p class="note">Headlines and links belong to the publishers named on each item. Categories are keyword tags, not editorial judgement.</p>`;
+
+B.brain=()=>`
+  <div class="shead"><h2>YouTube channels tracked</h2><span id="brN"></span></div>
+  <div class="g pad" id="brBox"></div>
+  <div class="shead"><h2>Most-mentioned symbols</h2><span>all channels</span></div>
+  <div class="g pad"><div class="rows" id="brSyms"></div></div>
+  <div class="shead"><h2>What they cover</h2><span>themes</span></div>
+  <div class="g pad"><div class="rows" id="brThemes"></div></div>
+  <p class="note">A mention is not a prediction, and nothing here scores a channel's accuracy.</p>`;
+
+B.learn=()=>`
+  <div class="shead"><h2>How to read this site</h2><span>plain words</span></div>
+  <div id="learnBox"></div>`;
+
+/* ---------- fillers ---------- */
+function fill(id, fn){ const e=document.getElementById(id); if(e) fn(e); }
+
+const LBL={'index.nifty.close':'Nifty','index.banknifty.close':'Bank Nifty','index.sensex.close':'Sensex',
+ 'breadth.above_50':'Stocks above 50-day','breadth.above_200':'Stocks above 200-day','pcr.nifty':'Nifty PCR',
+ 'flow.fii_cr':'FII net','flow.dii_cr':'DII net','metal.gold.per_gram':'Gold per gram',
+ 'metal.silver.per_gram':'Silver per gram','fx.usdinr':'USD/INR'};
+function fmtv(c){const u=c.unit||'';
   if(u==='%')return Number(c.to).toFixed(1)+'%';
   if(u==='crore')return '₹'+inr(Math.round(c.to))+' cr';
   if(u==='rupees')return '₹'+inr(Math.round(c.to));
   if(u==='ratio')return Number(c.to).toFixed(2);
-  return inr(Math.round(c.to));
-}
+  return inr(Math.round(c.to));}
 
-/* ---------- MARKET ---------- */
-(function(){
-  const b=D.breadth||{};
-  document.getElementById('brN').textContent=b.n?inr(b.n)+' stocks':'';
-  document.getElementById('breadthTiles').innerHTML=`
-    <div class="tile"><div class="k">Above 50-day</div>
-      <div class="v">${b.a50!=null?b.a50+'%':'—'}</div><div class="d">of ${inr(b.n||0)}</div></div>
-    <div class="tile"><div class="k">Above 200-day</div>
-      <div class="v">${b.a200!=null?b.a200+'%':'—'}</div><div class="d">long-term trend</div></div>`;
+const AFTER={
+ home(){
+  fill('strip',e=>{
+    e.innerHTML=`<div class="stripRow">${(D.indices||[]).map(x=>`
+      <div class="sItem"><div class="sName">${x.n}</div>
+        <div class="sLvl">${inr(x.lvl)}</div>
+        <div class="sChg" style="color:${col(x.pct)}">${x.chg>0?'+':''}${inr(x.chg)} · ${pc(x.pct)}</div>
+      </div>`).join('<div class="sDiv"></div>')}</div>
+      <div class="stripFoot"><span>Last close</span><span>${D.breadth&&D.breadth.n?inr(D.breadth.n)+' stocks':''}</span></div>`;
+  });
+  fill('tiles',e=>{
+    const up=(D.sectors||[]).reduce((a,s)=>a+(s.u||0),0);
+    const n=(D.sectors||[]).reduce((a,s)=>a+(s.n||0),0);
+    e.innerHTML=`<div class="tile"><div class="k">Breadth</div>
+        <div class="v">${D.breadth&&D.breadth.a50!=null?D.breadth.a50+'%':'—'}</div>
+        <div class="d">above 50-day</div></div>
+      <div class="tile"><div class="k">Trending up</div><div class="v">${inr(up)}</div>
+        <div class="d">of ${inr(n)} stocks</div></div>`;
+  });
+  fill('ribs',e=>{
+    e.innerHTML=(D.sectors||[]).map(s=>`<div class="rib" data-s="${s.s}">
+      <div class="n">${s.s}</div>
+      <div class="m" style="color:${col(s.m)}">${s.m>0?'+':''}${Number(s.m).toFixed(2)}%</div>
+      <div class="bb"><i style="width:${Math.max(3,s.b||0)}%"></i></div>
+      <div class="bt">${s.b}% above 50d · ${s.u}/${s.n} up</div></div>`).join('');
+    e.querySelectorAll('.rib').forEach(r=>r.onclick=()=>go('sectors'));
+  });
+  fill('changes',e=>{
+    const ch=D.changes||[]; const nEl=document.getElementById('chgN');
+    if(nEl)nEl.textContent=ch.length+' fields';
+    e.innerHTML=ch.length?ch.map(c=>`<div class="rw">
+      <span class="dot" style="background:${col(c.pct)}"></span>
+      <span class="rl">${LBL[c.field]||c.field}</span>
+      <span class="rv">${fmtv(c)}</span>
+      <span class="rp" style="color:${col(c.pct)}">${c.pct!=null?pc(c.pct):''}</span></div>`).join('')
+      :'<div class="rw"><span class="rl">First snapshot stored — tomorrow this fills in.</span></div>';
+  });
+  fill('rng',e=>{const R=D.range;
+    e.innerHTML=R?`<div style="font-size:14.5px;font-weight:640;line-height:1.5">
+      90% of 21-session Nifty moves fell between
+      <span style="color:var(--down)">${R.p5}%</span> and <span style="color:var(--up)">+${R.p95}%</span></div>
+      <div style="font-size:11px;color:var(--faint);margin-top:6px">median ${R.p50>0?'+':''}${R.p50}% ·
+        n=${inr(R.n)} windows · ${R.from}–${R.to}</div>
+      <div style="font-size:10.5px;color:var(--faint);margin-top:7px">This is history, not a forecast.</div>`
+      :'<div>No history.</div>';});
+ },
 
-  const m=D.movers||{up:[],dn:[]};
-  const rows=[...(m.up||[]).map(x=>({...x,dir:1})),...(m.dn||[]).map(x=>({...x,dir:-1}))];
-  document.getElementById('movers').innerHTML=rows.map(x=>`
-    <div class="rw"><span class="dot" style="background:${col(x.c)}"></span>
+ market(){
+  fill('breadthTiles',e=>{const b=D.breadth||{};
+    const nEl=document.getElementById('brN'); if(nEl)nEl.textContent=b.n?inr(b.n)+' stocks':'';
+    e.innerHTML=`<div class="tile"><div class="k">Above 50-day</div>
+        <div class="v">${b.a50!=null?b.a50+'%':'—'}</div><div class="d">of ${inr(b.n||0)}</div></div>
+      <div class="tile"><div class="k">Above 200-day</div>
+        <div class="v">${b.a200!=null?b.a200+'%':'—'}</div><div class="d">long-term trend</div></div>`;});
+  fill('vixBox',e=>{const v=D.vix||{};
+    const pEl=document.getElementById('vixPct'); if(pEl)pEl.textContent=v.pct!=null?v.pct+'th percentile':'';
+    e.innerHTML=v.v!=null?`<div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-size:26px;font-weight:680;letter-spacing:-.9px">${num(v.v)}</div>
+      <div style="font-size:10.5px;color:var(--faint);text-align:right">2y range<br>${num(v.lo)} – ${num(v.hi)}</div>
+      </div><div style="font-size:11px;color:var(--faint);margin-top:8px">
+      VIX is the market's expected 30-day move. A low reading means options are cheap, not that
+      the market is safe.</div>`:'<div>No VIX.</div>';});
+  fill('movers',e=>{const m=D.movers||{up:[],dn:[]};
+    const rows=[...(m.up||[]),...(m.dn||[])];
+    e.innerHTML=rows.map(x=>`<div class="rw">
+      <span class="dot" style="background:${col(x.c)}"></span>
       <span class="rl">${x.s}</span>
-      <span class="rv">${x.px?('₹'+inr(Math.round(x.px))):''}</span>
-      <span class="rp" style="color:${col(x.c)}">${pc(x.c)}</span></div>`).join('')||'<div class="rw">No movers.</div>';
-
-  const p=D.pcr||{};
-  document.getElementById('pcrDate').textContent=p.d||'';
-  document.getElementById('pcrBox').innerHTML=p.v!=null?`
-    <div style="font-size:26px;font-weight:680;letter-spacing:-.9px">${Number(p.v).toFixed(2)}</div>
-    <div style="font-size:12px;color:var(--muted);margin-top:3px">band: ${p.band||'—'}</div>
-    <div style="font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.55">
+      <span class="rv">${x.px?'₹'+inr(Math.round(x.px)):''}</span>
+      <span class="rp" style="color:${col(x.c)}">${pc(x.c)}</span></div>`).join('')
+      ||'<div class="rw"><span class="rl">No movers.</span></div>';});
+  fill('pcrBox',e=>{const p=D.pcr||{};
+    const dEl=document.getElementById('pcrDate'); if(dEl)dEl.textContent=p.d||'';
+    e.innerHTML=p.v!=null?`<div style="font-size:26px;font-weight:680;letter-spacing:-.9px">${num(p.v)}</div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:3px">band: ${p.band||'—'}</div>
+      <div style="font-size:11px;color:var(--faint);margin-top:8px;line-height:1.55">
       Published as a null result: when PCR sat in this band, the next 21 sessions did no better
-      than a random session.</div>`:'<div>No PCR.</div>';
-})();
+      than a random session.</div>`:'<div>No PCR.</div>';});
+  fill('gapBox',e=>{const g=D.gaps||{}; const s=g.s||{};
+    e.innerHTML=`<div class="rw"><span class="dot" style="background:var(--up)"></span>
+        <span class="rl">Gap-ups filled within 10 sessions</span>
+        <span class="rv">${g.up!=null?Number(g.up).toFixed(1)+'%':'—'}</span>
+        <span class="rp">n=${inr(s.up||0)}</span></div>
+      <div class="rw"><span class="dot" style="background:var(--down)"></span>
+        <span class="rl">Gap-downs filled within 10 sessions</span>
+        <span class="rv">${g.dn!=null?Number(g.dn).toFixed(1)+'%':'—'}</span>
+        <span class="rp">n=${inr(s.down||0)}</span></div>`;});
+ },
 
-/* ---------- SECTORS ---------- */
-(function(){
-  const s=D.sectors||[];
-  document.getElementById('secN').textContent=s.length+' sectors';
-  document.getElementById('secList').innerHTML=s.map(x=>{
-    const narrow=(x.note||'').indexOf('narrow')===0;
-    return `<div class="g pad" style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
-        <div>
-          <div style="font-size:14px;font-weight:660">${x.s}</div>
-          <div style="font-size:11px;color:var(--faint);margin-top:2px">${x.u} up · ${x.d} down · ${x.n} stocks</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:18px;font-weight:680;letter-spacing:-.5px;color:${col(x.m)}">${x.m>0?'+':''}${Number(x.m).toFixed(2)}%</div>
-          <div style="font-size:10px;color:var(--faint)">20 sessions</div>
-        </div>
-      </div>
-      <div style="height:5px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:11px;overflow:hidden">
-        <i style="display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a8ccf8,#3f7fd6);width:${Math.max(2,x.b||0)}%"></i></div>
-      <div style="font-size:10.5px;color:var(--faint);margin-top:5px">${x.b}% above their 50-day average</div>
-      ${narrow?`<div style="display:inline-block;margin-top:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(255,238,205,.85);border:1px solid rgba(220,180,110,.4);color:#8a6420">narrow move</div>`:''}
-      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-        ${(x.lead||[]).map(l=>`<span class="tier" style="color:var(--up)">${l.symbol} ${pc(l.chg_20d)}</span>`).join('')}
-        ${(x.lag||[]).map(l=>`<span class="tier" style="color:var(--down)">${l.symbol} ${pc(l.chg_20d)}</span>`).join('')}
-      </div>
-    </div>`;
-  }).join('');
-})();
+ sectors(){
+  fill('secList',e=>{const s=D.sectors||[];
+    const nEl=document.getElementById('secN'); if(nEl)nEl.textContent=s.length+' sectors';
+    e.innerHTML=s.map(x=>{const narrow=(x.note||'').indexOf('narrow')===0;
+      return `<div class="g pad" style="margin-bottom:9px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+          <div><div style="font-size:13.5px;font-weight:660">${x.s}</div>
+            <div style="font-size:10.5px;color:var(--faint);margin-top:2px">${x.u} up · ${x.d} down · ${x.n} stocks</div></div>
+          <div style="text-align:right">
+            <div style="font-size:17px;font-weight:680;letter-spacing:-.5px;color:${col(x.m)}">${x.m>0?'+':''}${Number(x.m).toFixed(2)}%</div>
+            <div style="font-size:9.5px;color:var(--faint)">20 sessions</div></div></div>
+        <div style="height:5px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:10px;overflow:hidden">
+          <i style="display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a8ccf8,#3f7fd6);width:${Math.max(2,x.b||0)}%"></i></div>
+        <div style="font-size:10px;color:var(--faint);margin-top:5px">${x.b}% above their 50-day average</div>
+        ${narrow?`<div style="display:inline-block;margin-top:7px;font-size:9.5px;padding:3px 8px;border-radius:99px;background:rgba(255,238,205,.85);border:1px solid rgba(220,180,110,.4);color:#8a6420">narrow move</div>`:''}
+        <div style="display:flex;gap:5px;margin-top:9px;flex-wrap:wrap">
+          ${(x.lead||[]).map(l=>`<span class="tier" style="color:var(--up)">${l.symbol} ${pc(l.chg_20d)}</span>`).join('')}
+          ${(x.lag||[]).map(l=>`<span class="tier" style="color:var(--down)">${l.symbol} ${pc(l.chg_20d)}</span>`).join('')}
+        </div></div>`;}).join('');});
+ },
 
-/* ---------- F&O ---------- */
-(function(){
-  const c=D.chain||{};
-  document.getElementById('spotTxt').textContent=c.spot?('spot '+inr(Math.round(c.spot))):'';
-  document.getElementById('chain').innerHTML=(c.exps||[]).map(x=>`
-    <div class="cx">
-      <div class="cxe">
-        <div class="cxd">${x.e}</div>
-        <div class="cxs">${x.d===0?'expires today':x.d+' day(s) away'}${x.d<0?' · settled':''}</div>
-      </div>
-      <div class="cxr">
-        <b>${x.pcr!=null?Number(x.pcr).toFixed(2):'—'}</b> PCR<br>
-        <span style="color:var(--faint)">max pain ${x.mp?inr(x.mp):'—'}</span>
-      </div>
-    </div>`).join('')||'<div class="cx">No chain.</div>';
-})();
-
-/* ---------- METALS ---------- */
-(function(){
-  const M=D.metals||{};
-  const card=(title,rows,unit)=>{
-    if(!rows||!rows.length)return '';
-    return rows.map(r=>`
-      <div class="g mcard">
-        <div class="t">${title} · ${r.k}</div>
-        <div class="p" style="color:${col(r.p||0)}">₹${r.g>=1000?inr(Math.round(r.g)):Number(r.g).toFixed(2)}</div>
-        <div class="u">per gram${r.c!=null?` · ${r.c>0?'+':''}₹${Math.abs(r.c)>=1?inr(Math.round(Math.abs(r.c))):Math.abs(r.c).toFixed(2)} (${pc(r.p)})`:''}</div>
-        <div class="tiers"><span class="tier">10g ₹${inr(Math.round(r.g10))}</span></div>
-      </div>`).join('');
+ stocks(){
+  const render=(q)=>{
+    const rows=(D.stocks||[]).filter(r=>!q||
+      (r.s+' '+r.n).toLowerCase().indexOf(q.toLowerCase())>=0);
+    fill('stList',e=>{
+      const nEl=document.getElementById('stN'); if(nEl)nEl.textContent=inr(D.stocksTotal||0)+' stocks';
+      e.innerHTML=rows.slice(0,80).map(r=>`<div class="rw">
+        <span class="dot" style="background:${col(r.c1)}"></span>
+        <span class="rl">${r.s}<small>${r.n||''}</small></span>
+        <span class="rv">${r.px?'₹'+inr(Math.round(r.px)):''}</span>
+        <span class="rp" style="color:${col(r.c1)}">${r.c1!=null?pc(r.c1):''}</span></div>`).join('')
+        ||'<div class="rw"><span class="rl">No match.</span></div>';});
   };
-  document.getElementById('goldCards').innerHTML=card('Gold',M.gold);
-  document.getElementById('silverCards').innerHTML=card('Silver',M.silver);
-})();
+  render('');
+  const q=document.getElementById('sq'); if(q)q.oninput=()=>render(q.value.trim());
+ },
 
-/* ---------- NEWS ---------- */
+ levels(){
+  fill('lvList',e=>{
+    const nEl=document.getElementById('lvN'); if(nEl)nEl.textContent=(D.levels||[]).length+' shown';
+    e.innerHTML=(D.levels||[]).map(r=>`<div class="rw">
+      <span class="rl">${r.s}<small>R1 ${r.r1!=null?inr(r.r1):'—'} · S1 ${r.s1!=null?inr(r.s1):'—'}</small></span>
+      <span class="rv">${r.px?'₹'+inr(Math.round(r.px)):''}</span>
+      <span class="rp">pivot ${r.p!=null?inr(r.p):'—'}</span></div>`).join('');});
+ },
+
+ fno(){
+  fill('chain',e=>{const c=D.chain||{};
+    const s=document.getElementById('spotTxt'); if(s)s.textContent=c.spot?('spot '+inr(Math.round(c.spot))):'';
+    e.innerHTML=(c.exps||[]).map(x=>`<div class="cx">
+      <div class="cxe"><div class="cxd">${x.e}</div>
+        <div class="cxs">${x.d===0?'expires today':(x.d<0?'settled':x.d+' day(s) away')}</div></div>
+      <div class="cxr"><b>${x.pcr!=null?num(x.pcr):'—'}</b> PCR<br>
+        <span style="color:var(--faint)">max pain ${x.mp?inr(x.mp):'—'}</span></div></div>`).join('')
+      ||'<div class="cx">No chain.</div>';});
+ },
+
+ metals(){
+  const card=(title,rows)=>!rows||!rows.length?'':rows.map(r=>`
+    <div class="g mcard"><div class="t">${title} · ${r.k}</div>
+      <div class="p" style="color:${col(r.p||0)}">₹${r.g>=1000?inr(Math.round(r.g)):Number(r.g).toFixed(2)}</div>
+      <div class="u">per gram${r.c!=null?` · ${r.c>0?'+':''}₹${Math.abs(r.c)>=1?inr(Math.round(Math.abs(r.c))):Math.abs(r.c).toFixed(2)} (${pc(r.p)})`:''}</div>
+      <div class="tiers"><span class="tier">10g ₹${inr(Math.round(r.g10))}</span></div></div>`).join('');
+  fill('goldCards',e=>e.innerHTML=card('Gold',(D.metals||{}).gold));
+  fill('silverCards',e=>e.innerHTML=card('Silver',(D.metals||{}).silver));
+ },
+
+ global(){
+  fill('glList',e=>{
+    const n=document.getElementById('glN'); if(n)n.textContent=inr(D.globalN||0)+' tracked';
+    e.innerHTML=(D.global||[]).map(r=>`<div class="rw">
+      <span class="dot" style="background:${col(r.c1)}"></span>
+      <span class="rl">${r.s}<small>${r.c||''} · ${r.n||''}</small></span>
+      <span class="rv">${r.px!=null?inr(Math.round(r.px)):''}</span>
+      <span class="rp" style="color:${col(r.c1)}">${r.c1!=null?pc(r.c1):''}</span></div>`).join('');});
+ },
+
+ crypto(){
+  fill('crList',e=>{
+    const n=document.getElementById('crN'); if(n)n.textContent=(D.crypto||[]).length+' coins';
+    e.innerHTML=(D.crypto||[]).map(r=>`<div class="rw">
+      <span class="dot" style="background:${col(r.c1)}"></span>
+      <span class="rl">${r.s}<small>${r.n||''}</small></span>
+      <span class="rv">${r.px!=null?inr(Math.round(r.px*100)/100):''}</span>
+      <span class="rp" style="color:${col(r.c1)}">${r.c1!=null?pc(r.c1):''}</span></div>`).join('');});
+ },
+
+ etf(){
+  fill('etfList',e=>{
+    const n=document.getElementById('etfN'); if(n)n.textContent=inr(D.etfN||0)+' listed';
+    e.innerHTML=(D.etf||[]).map(r=>`<div class="rw">
+      <span class="dot" style="background:${col(r.c1)}"></span>
+      <span class="rl">${r.s}<small>${r.u||r.n||''}</small></span>
+      <span class="rv">${r.px?'₹'+inr(Math.round(r.px*100)/100):''}</span>
+      <span class="rp" style="color:${col(r.c1)}">${r.c1!=null?pc(r.c1):''}</span></div>`).join('');});
+ },
+
+ mf(){
+  fill('mfList',e=>{
+    const n=document.getElementById('mfN'); if(n)n.textContent=inr(D.mfN||0)+' schemes';
+    e.innerHTML=(D.mf||[]).map(r=>`<div class="rw">
+      <span class="rl">${r.n}<small>${r.h||''}</small></span>
+      <span class="rv">${r.nav!=null?'₹'+num(r.nav):''}</span></div>`).join('');});
+ },
+
+ news(){ renderNews(); },
+
+ brain(){
+  fill('brBox',e=>{const b=D.brain||{};
+    const n=document.getElementById('brN'); if(n)n.textContent=(b.chanN||0)+' channels';
+    e.innerHTML=`<div class="rw"><span class="dot" style="background:var(--blue)"></span>
+        <span class="rl">Videos collected</span><span class="rv">${inr(b.videos||0)}</span></div>
+      <div class="rw"><span class="dot" style="background:var(--blue)"></span>
+        <span class="rl">Total views</span><span class="rv">${inr(b.views||0)}</span></div>
+      <div class="rw"><span class="dot" style="background:var(--blue)"></span>
+        <span class="rl">Window</span><span class="rv" style="font-size:11px">${(b.window||[]).join(' → ')}</span></div>`;});
+  fill('brSyms',e=>e.innerHTML=(D.brain&&D.brain.syms||[]).map(s=>`<div class="rw">
+      <span class="rl">${s.symbol||s.name}</span>
+      <span class="rv">${inr(s.mentions||s.n||0)}</span>
+      <span class="rp">${s.channels||''} ch</span></div>`).join(''));
+  fill('brThemes',e=>e.innerHTML=(D.brain&&D.brain.themes||[]).map(t=>`<div class="rw">
+      <span class="rl">${t.theme||t.name}</span>
+      <span class="rv">${inr(t.videos||t.n||0)}</span>
+      <span class="rp">videos</span></div>`).join(''));
+ },
+
+ learn(){
+  const items=[
+   ['Breadth','The share of stocks above their own moving average. A rising index on falling breadth means a few large stocks are carrying it.'],
+   ['PCR','Total put open interest divided by call open interest. A description of positioning, not a prediction — ours has not beaten its baseline.'],
+   ['Max pain','The strike where option buyers collectively lose least. Arithmetic on open interest, not a target.'],
+   ['21-session range','What Nifty has actually done over 21 sessions in the past ten years. History, not a forecast.'],
+   ['Gap','A jump at the open. "Filled" means price traded back through it.'],
+   ['Lot size','How many shares one derivative contract covers. A ₹2 premium on a 65 lot costs ₹130, not ₹2.'],
+   ['Pivot','Arithmetic on the previous session\'s high, low and close. A reference level, not a forecast.'],
+   ['Narrow move','A sector whose median is up while most of its stocks are below trend. One or two names carrying the rest.']
+  ];
+  fill('learnBox',e=>e.innerHTML=items.map(([t,d])=>`
+    <div class="g pad" style="margin-bottom:9px">
+      <div style="font-size:13px;font-weight:660;margin-bottom:4px">${t}</div>
+      <div style="font-size:11.5px;color:var(--ink2);line-height:1.6">${d}</div></div>`).join('')
+    +`<p class="note">Market data and descriptions only. Not investment advice.</p>`);
+ }
+};
+
+/* ---------- news ---------- */
 let NCAT='all',NQ='';
 const CL={all:'All',results:'Results',general:'General',global:'Global',policy:'Policy'};
 const CC={general:'#2f6fd0',results:'#0b7a5c',global:'#7b58c9',policy:'#b0752a'};
-function when(p){
-  if(!p)return'';
-  const d=new Date(p); if(isNaN(d))return String(p).slice(0,16);
-  return d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
-}
+function when(p){if(!p)return'';const d=new Date(p);if(isNaN(d))return String(p).slice(0,16);
+  return d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});}
 function renderNews(){
   const items=(D.news||[]).filter(it=>{
     if(NCAT!=='all'&&it.category!==NCAT)return false;
-    if(NQ){const s=(it.title+' '+(it.company||'')+' '+it.source+' '+it.category).toLowerCase();
-      if(s.indexOf(NQ.toLowerCase())<0)return false;}
-    return true;});
+    if(NQ){const s=(it.title+' '+(it.company||'')+' '+it.source).toLowerCase();
+      if(s.indexOf(NQ.toLowerCase())<0)return false;}return true;});
   const counts={all:(D.news||[]).length};
   (D.news||[]).forEach(i=>counts[i.category]=(counts[i.category]||0)+1);
-  document.getElementById('cnts').innerHTML=Object.keys(CL).filter(k=>counts[k]).map(k=>`
+  fill('cnts',e=>{e.innerHTML=Object.keys(CL).filter(k=>counts[k]).map(k=>`
     <span class="cc ${NCAT===k?'on':''}" data-c="${k}">
       ${k!=='all'?`<span class="d" style="background:${CC[k]}"></span>`:''}
       ${CL[k]} <span class="n">${counts[k]}</span></span>`).join('');
-  document.querySelectorAll('.cc').forEach(c=>c.onclick=()=>{NCAT=c.dataset.c;renderNews()});
-  document.getElementById('newsList').innerHTML=items.length?items.map(it=>`
+    e.querySelectorAll('.cc').forEach(c=>c.onclick=()=>{NCAT=c.dataset.c;renderNews()});});
+  fill('newsList',e=>{e.innerHTML=items.length?items.map(it=>`
     <a class="item" href="${it.link}" target="_blank" rel="noopener">
       <div class="meta">
         <span class="pill p-${it.category}"><span class="d"></span>${CL[it.category]||it.category}</span>
         ${it.company?`<span class="co"><span class="av">${it.company.slice(0,2)}</span>${it.company}</span>`:''}
         <span class="src">${it.source}</span>
-        <span class="tm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${when(it.published)}</span>
-      </div>
-      <h3>${it.title.replace(/</g,'&lt;')}</h3>
-    </a>`).join(''):`<div class="g pad" style="text-align:center;color:var(--muted);font-size:13px">Nothing matches.</div>`;
+        <span class="tm">${when(it.published)}</span></div>
+      <h3>${it.title.replace(/</g,'&lt;')}</h3></a>`).join('')
+    :`<div class="g pad" style="text-align:center;color:var(--muted);font-size:12.5px">Nothing matches.</div>`;});
+  const q=document.getElementById('q'); if(q&&!q._w){q._w=1;q.oninput=()=>{NQ=q.value.trim();renderNews()}};
 }
-document.getElementById('q').addEventListener('input',e=>{NQ=e.target.value.trim();renderNews()});
-renderNews();
 
-/* ---------- navigation ---------- */
+/* ---------- nav ---------- */
+let CUR='home';
 function go(p){
-  document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
+  if(!B[p])p='home';
+  CUR=p;
+  const w=document.getElementById('wrap');
+  w.innerHTML=`<section class="page on" id="p-${p}">${B[p]()}</section>`;
+  if(AFTER[p])AFTER[p]();
   document.querySelectorAll('.nv').forEach(n=>n.classList.toggle('on',n.dataset.p===p));
-  scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.dIt').forEach(n=>n.classList.toggle('on',n.dataset.p===p));
+  scrollTo({top:0,behavior:'instant'});
+  closeDrawer();
 }
 document.querySelectorAll('.nv').forEach(n=>n.onclick=()=>go(n.dataset.p));
 
-/* ---------- header hides on scroll ---------- */
+/* drawer */
+const drawer=document.getElementById('drawer'), scrim=document.getElementById('scrim');
+(function buildDrawer(){
+  const groups={};
+  PAGES.forEach(p=>{(groups[p.grp]=groups[p.grp]||[]).push(p)});
+  drawer.innerHTML=`<div class="dHead"><div class="mark"></div>
+      <div class="wm" style="font-size:15px">ArthaSaar</div></div>`+
+    Object.keys(groups).map(g=>`<div class="dGrp">${g}</div>`+
+      groups[g].map(p=>`<div class="dIt" data-p="${p.id}">${p.label}</div>`).join('')).join('')+
+    `<p class="note" style="text-align:left;margin-top:20px;padding-left:10px">
+       Market data and descriptions only.<br>Not investment advice.</p>`;
+  drawer.querySelectorAll('.dIt').forEach(d=>d.onclick=()=>go(d.dataset.p));
+})();
+function openDrawer(){drawer.classList.add('open');scrim.classList.add('on');}
+function closeDrawer(){drawer.classList.remove('open');scrim.classList.remove('on');}
+document.getElementById('burger').onclick=openDrawer;
+scrim.onclick=closeDrawer;
+
+/* header hide */
 let ly=0;
 addEventListener('scroll',()=>{const y=scrollY,hd=document.getElementById('hd');
   if(y>ly&&y>70)hd.classList.add('hide');else hd.classList.remove('hide');ly=y;},{passive:true});
+
+go('home');
 </script>
 </body>
 </html>

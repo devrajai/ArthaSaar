@@ -1,14 +1,14 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-18T09:35:53Z  |  10 channels, 502 videos, window 2026-05-15 to 2026-11-18.
+Generated 2026-11-18T18:32:16Z  |  10 channels, 508 videos, window 2026-05-15 to 2026-11-18.
 
-**Total views across the window:** 13,193,073  |  **net bull-bear keyword score:** 284
+**Total views across the window:** 13,220,015  |  **net bull-bear keyword score:** 291
 
 ## Most-talked-about symbols
 
 | Symbol | Mentions | Channels |
 |---|---|---|
-| NIFTY50 | 108 | 5 |
+| NIFTY50 | 109 | 5 |
 | SENSEX | 50 | 4 |
 | BANKNIFTY | 49 | 4 |
 | RELIANCE | 26 | 7 |
@@ -23,12 +23,12 @@ Generated 2026-11-18T09:35:53Z  |  10 channels, 502 videos, window 2026-05-15 to
 
 | Theme | Videos |
 |---|---|
-| Beginner/Education | 129 |
-| MF/SIP | 124 |
-| Earnings/Results | 111 |
+| Beginner/Education | 134 |
+| MF/SIP | 125 |
+| Earnings/Results | 114 |
 | Options/F&O | 106 |
-| IPO | 99 |
-| Budget/Policy | 75 |
+| IPO | 100 |
+| Budget/Policy | 76 |
 
 ## Channels by reach
 
@@ -39,10 +39,10 @@ Generated 2026-11-18T09:35:53Z  |  10 channels, 502 videos, window 2026-05-15 to
 | Moneytalks by Groww | 26 | 49,836 | 2026-11-15 |
 | WAY2LAABH | 26 | 30,431 | 2026-11-17 |
 | Ghanshyam Tech | 36 | 26,340 | 2026-11-17 |
-| Groww Edge | 69 | 22,021 | 2026-11-17 |
-| Groww | 57 | 14,543 | 2026-11-17 |
+| Groww Edge | 71 | 21,691 | 2026-11-18 |
 | Markets by Zerodha | 53 | 14,450 | 2026-11-18 |
+| Groww | 58 | 14,352 | 2026-11-18 |
 | Markets by Zerodha Hindi | 44 | 13,245 | 2026-11-18 |
-| Upstox | 132 | 1,323 | 2026-11-18 |
+| Upstox | 135 | 1,315 | 2026-11-18 |
 
 _Keyword-based analysis. Not investment advice._

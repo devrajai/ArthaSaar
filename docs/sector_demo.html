@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ArthaSaar — Sector trend</title>
+<style>
+:root{
+  --ink:#0f2137; --ink2:#3b5473; --muted:#6b83a0;
+  --glass:rgba(255,255,255,.62); --line:rgba(140,180,225,.34);
+  --up:#0e7a5f; --down:#b03a4a; --flat:#7b8ba1;
+  --accent:#2f6fd0; --accent2:#7fb2f0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 600px at 12% -8%, #dceaff 0%, transparent 58%),
+    radial-gradient(900px 520px at 92% 4%, #e6f1ff 0%, transparent 52%),
+    radial-gradient(760px 480px at 50% 110%, #d3e6ff 0%, transparent 60%),
+    linear-gradient(170deg,#f4f9ff 0%,#eaf3ff 52%,#e3eeff 100%);
+  background-attachment:fixed;
+  min-height:100vh;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 16px 64px}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px;padding:6px 2px 18px}
+.logo{width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(145deg,#cfe4ff,#8fbcff 60%,#5f9bf0);
+  box-shadow:0 6px 16px rgba(80,140,220,.30),inset 0 1px 0 rgba(255,255,255,.9)}
+.brand{font-weight:650;letter-spacing:-.2px;font-size:16px}
+.brand span{color:var(--muted);font-weight:500;font-size:13px;margin-left:6px}
+
+/* glass card */
+.card{
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:14px;
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 10px 34px rgba(70,120,190,.12), inset 0 1px 0 rgba(255,255,255,.86);
+}
+h2{margin:0 0 4px;font-size:15px;font-weight:640;letter-spacing:-.1px}
+.sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+
+/* the one-line answer */
+.answer{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pill{
+  font-size:12.5px;padding:7px 12px;border-radius:999px;
+  background:rgba(255,255,255,.75);border:1px solid var(--line);
+  color:var(--ink2);white-space:nowrap;
+}
+.pill b{color:var(--ink)}
+
+/* sector rows */
+.row{
+  display:grid;grid-template-columns:1fr 82px 96px 46px;
+  gap:10px;align-items:center;
+  padding:11px 12px;border-radius:13px;cursor:pointer;
+  border:1px solid transparent;transition:background .16s,border-color .16s;
+}
+.row:hover{background:rgba(255,255,255,.66);border-color:var(--line)}
+.row.on{background:rgba(255,255,255,.85);border-color:rgba(120,170,230,.5)}
+.sname{font-weight:600;font-size:13.5px;letter-spacing:-.1px}
+.smeta{font-size:11.5px;color:var(--muted);margin-top:2px}
+.chg{text-align:right;font-variant-numeric:tabular-nums;font-weight:640;font-size:13.5px}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
+
+/* breadth bar */
+.bar{height:6px;border-radius:99px;background:rgba(150,180,215,.28);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#8fc0f5,#3f7fd6)}
+.bnum{font-size:11px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+
+.flag{
+  display:inline-block;margin-top:5px;font-size:11px;padding:3px 9px;border-radius:99px;
+  background:rgba(255,238,205,.85);border:1px solid rgba(220,180,110,.4);color:#8a6420;
+}
+.flag.ok{background:rgba(214,242,230,.85);border-color:rgba(120,190,160,.42);color:#1c6b52}
+
+/* stock detail */
+.detail{display:none}
+.detail.show{display:block}
+.members{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.mem{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.7);
+  border:1px solid var(--line);font-size:12.5px}
+.mem .s{font-weight:620;font-size:13px}
+.mem .n{color:var(--muted);font-size:11px;margin-top:1px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem .v{float:right;font-variant-numeric:tabular-nums;font-weight:640}
+
+.note{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.55}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{font-size:12.5px;padding:7px 13px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink2)}
+.tab.on{background:linear-gradient(145deg,#e9f3ff,#cfe4ff);border-color:rgba(120,170,230,.55);
+  color:#1d4e91;font-weight:620}
+@media(max-width:560px){
+  .row{grid-template-columns:1fr 66px 74px;gap:8px}
+  .bnum{display:none}
+  .members{grid-template-columns:1fr}
+  .wrap{padding:14px 12px 48px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo"></div>
+    <div class="brand">ArthaSaar <span>sector trend</span></div>
+  </div>
+
+  <div class="card">
+    <h2>Where the money went, last 20 sessions</h2>
+    <p class="sub">Every sector, its median 20-session move, and how many of its stocks are actually trending up.</p>
+    <div id="answer" class="answer"></div>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <div class="tab on" data-sort="chg">By move</div>
+      <div class="tab" data-sort="breadth">By breadth</div>
+      <div class="tab" data-sort="up">By stocks up</div>
+    </div>
+    <div id="sectors"></div>
+  </div>
+
+  <div class="card detail" id="detail">
+    <h2 id="dname">—</h2>
+    <p class="sub" id="dsub">—</p>
+    <div id="dstats" class="answer"></div>
+    <div class="members" id="dmembers"></div>
+  </div>
+
+  <div class="card">
+    <h2>What this does not say</h2>
+    <p class="note">
+      No sector call, no rotation advice, no "buy FMCG". This describes where money already went.
+      A sector can rise on one large stock — that is why the breadth figure sits beside the median
+      instead of behind it. Sectors with fewer than 8 stocks are left out: a handful of names is a
+      sample, not a sector.
+    </p>
+    <p class="note" style="margin-top:10px">
+      Market data and descriptions only. Not investment advice.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const fmtPct = v => (v>0?'+':'') + v.toFixed(2) + '%';
+const cls = v => v>0.05?'up':(v<-0.05?'down':'flat');
+
+let DATA=null, SORT='chg', OPEN=null;
+
+function renderAnswer(){
+  if(!DATA) return;
+  const s=DATA.sectors||[];
+  const best=[...s].sort((a,b)=>(b.median_chg_20d||-999)-(a.median_chg_20d||-999))[0];
+  const worst=[...s].sort((a,b)=>(a.median_chg_20d||999)-(b.median_chg_20d||999))[0];
+  const totalUp=s.reduce((t,x)=>t+x.up,0), totalN=s.reduce((t,x)=>t+x.n,0);
+  document.getElementById('answer').innerHTML=
+    `<span class="pill">Strongest <b>${best.sector}</b> <span class="${cls(best.median_chg_20d)}">${fmtPct(best.median_chg_20d)}</span></span>`+
+    `<span class="pill">Weakest <b>${worst.sector}</b> <span class="${cls(worst.median_chg_20d)}">${fmtPct(worst.median_chg_20d)}</span></span>`+
+    `<span class="pill">Trending up <b>${totalUp}</b> of ${totalN} stocks</span>`;
+}
+
+function renderSectors(){
+  const box=document.getElementById('sectors');
+  if(!DATA){box.innerHTML='<p class="sub">Loading…</p>';return}
+  let s=[...(DATA.sectors||[])];
+  if(SORT==='chg') s.sort((a,b)=>(b.median_chg_20d||-999)-(a.median_chg_20d||-999));
+  if(SORT==='breadth') s.sort((a,b)=>(b.breadth_above_50||0)-(a.breadth_above_50||0));
+  if(SORT==='up') s.sort((a,b)=>(b.up_pct||0)-(a.up_pct||0));
+
+  box.innerHTML=s.map(x=>{
+    const narrow=(x.breadth_note||'').indexOf('narrow')===0;
+    return `<div class="row ${OPEN===x.sector?'on':''}" data-sec="${x.sector}">
+      <div>
+        <div class="sname">${x.sector}</div>
+        <div class="smeta">${x.up} up · ${x.down} down · ${x.n} stocks</div>
+        <span class="flag ${narrow?'':'ok'}">${narrow?'narrow move':'broad'}</span>
+      </div>
+      <div class="chg ${cls(x.median_chg_20d||0)}">${fmtPct(x.median_chg_20d||0)}</div>
+      <div>
+        <div class="bar"><i style="width:${Math.max(2,Math.min(100,x.breadth_above_50||0))}%"></i></div>
+        <div class="bnum">${(x.breadth_above_50==null?'—':x.breadth_above_50+'%')} above 50d</div>
+      </div>
+      <div class="chg ${cls(x.up_pct-50)}" style="font-size:12px">${Math.round(x.up_pct)}%</div>
+    </div>`;
+  }).join('');
+
+  box.querySelectorAll('.row').forEach(el=>{
+    el.onclick=()=>{ OPEN = OPEN===el.dataset.sec?null:el.dataset.sec; renderSectors(); renderDetail(); };
+  });
+}
+
+function renderDetail(){
+  const d=document.getElementById('detail');
+  if(!OPEN||!DATA){d.classList.remove('show');return}
+  const x=(DATA.sectors||[]).find(v=>v.sector===OPEN);
+  if(!x){d.classList.remove('show');return}
+  d.classList.add('show');
+  document.getElementById('dname').textContent=x.sector;
+  document.getElementById('dsub').textContent=
+    `${x.n} stocks · median 20-session move ${fmtPct(x.median_chg_20d||0)} · ${x.breadth_above_50}% above their 50-day average`;
+  document.getElementById('dstats').innerHTML=
+    `<span class="pill">Trending up <b>${x.up}</b></span>`+
+    `<span class="pill">Down <b>${x.down}</b></span>`+
+    `<span class="pill">Mixed <b>${x.mixed}</b></span>`+
+    (x.breadth_note?`<span class="pill">${x.breadth_note}</span>`:'');
+  const mk=(list,label)=>list.map(m=>
+    `<div class="mem"><span class="v ${cls(m.chg_20d||0)}">${fmtPct(m.chg_20d||0)}</span>
+      <div class="s">${m.symbol}</div>
+      <div class="n">${label} · ${m.from_52w_high==null?'':m.from_52w_high.toFixed(1)+'% from 52w high'}</div>
+    </div>`).join('');
+  document.getElementById('dmembers').innerHTML=
+    mk(x.leaders||[],'leader')+mk(x.laggards||[],'laggard');
+  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(z=>z.classList.remove('on'));
+    t.classList.add('on'); SORT=t.dataset.sort; renderSectors();
+  };
+});
+
+(async()=>{
+  try{
+    const r=await fetch('sector_trend.json',{cache:'no-store'});
+    DATA=await r.json();
+  }catch(e){
+    document.getElementById('sectors').innerHTML=
+      '<p class="sub">Could not load sector_trend.json. This page expects it in the same folder.</p>';
+    return;
+  }
+  renderAnswer(); renderSectors();
+})();
+</script>
+</body>
+</html>

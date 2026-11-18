@@ -1282,6 +1282,65 @@ header .searchwrap, .top .searchwrap{
   cursor:pointer;
 }
 #tabs .settingsrow button:active{ transform:scale(.98); }
+
+/* ============================================================================
+   NEW UI SHELL - drawer menu and bottom nav, ported from the new.html demo.
+   The horizontal tab bar is replaced; SECTIONS, show() and every builder are
+   untouched, so no section or figure changes behaviour.
+   ============================================================================ */
+nav.tabs{display:none !important}
+
+#dshell{position:fixed;inset:0;z-index:120;pointer-events:none}
+#dscrim{position:absolute;inset:0;background:rgba(0,0,0,.58);opacity:0;
+  transition:opacity .26s;pointer-events:none}
+#dscrim.on{opacity:1;pointer-events:auto}
+#drawer{position:absolute;top:0;left:0;bottom:0;width:min(85vw,330px);
+  background:#1b1f25;backdrop-filter:blur(30px) saturate(140%);
+  -webkit-backdrop-filter:blur(30px) saturate(140%);
+  border-right:1px solid rgba(255,255,255,.14);
+  box-shadow:6px 0 50px rgba(0,0,0,.6);
+  transform:translateX(-102%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  overflow-y:auto;padding:18px 14px 30px;pointer-events:auto}
+#drawer.open{transform:translateX(0)}
+#drawer .dhead{display:flex;align-items:center;gap:9px;margin-bottom:16px;padding-left:6px}
+#drawer .dlogo{width:26px;height:26px;border-radius:8px;
+  background:linear-gradient(150deg,#5b6570,#39424c 60%,#262d34);
+  box-shadow:0 4px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16);
+  display:grid;place-items:center;font-size:10px;font-weight:800;color:#cfd6de}
+#drawer .dname{font-size:15px;font-weight:660;color:#e8eaed;letter-spacing:-.3px}
+#drawer .dgrp{font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;
+  color:#646c76;font-weight:700;margin:15px 0 6px;padding-left:10px}
+#drawer .dit{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:11px;
+  font-size:13.5px;color:#b6bcc4;font-weight:560;cursor:pointer;border:0;
+  background:none;width:100%;text-align:left;font-family:inherit}
+#drawer .dit:hover{background:rgba(255,255,255,.05)}
+#drawer .dit.active{background:rgba(255,255,255,.09);color:#e8eaed;font-weight:660}
+#drawer .dit .nm{margin-left:auto;font-size:9px;color:#646c76}
+#drawer .dfoot{font-size:10.5px;color:#646c76;line-height:1.65;margin-top:20px;
+  padding:0 10px;text-align:left}
+
+/* bottom nav */
+#bnav{position:fixed;left:0;right:0;bottom:0;z-index:110;display:flex;
+  justify-content:space-around;align-items:center;
+  padding:7px 6px calc(7px + env(safe-area-inset-bottom));
+  background:rgba(20,23,27,.93);backdrop-filter:blur(26px) saturate(140%);
+  -webkit-backdrop-filter:blur(26px) saturate(140%);
+  border-top:1px solid rgba(255,255,255,.10);
+  box-shadow:0 -6px 30px rgba(0,0,0,.5)}
+#bnav .bi{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 6px;
+  border-radius:12px;cursor:pointer;color:#646c76;flex:1;max-width:76px;
+  border:0;background:none;font-family:inherit;transition:color .16s,background .16s}
+#bnav .bi svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.85;
+  stroke-linecap:round;stroke-linejoin:round}
+#bnav .bi span{font-size:9px;font-weight:600}
+#bnav .bi.active{color:#e8eaed;background:rgba(255,255,255,.09)}
+body{padding-bottom:76px}
+
+/* card language from the demo: softer, larger radius */
+.card{border-radius:18px !important;border-color:rgba(255,255,255,.085) !important}
+.kpi{border-radius:15px !important}
+header{border-bottom-color:rgba(255,255,255,.09) !important}
+
 </style>
 </head>
 <body>
@@ -1310,6 +1369,11 @@ header .searchwrap, .top .searchwrap{
 
 </header>
 
+<div id="dshell">
+  <div id="dscrim"></div>
+  <aside id="drawer"><div id="drawerItems"></div></aside>
+</div>
+<nav id="bnav"></nav>
 <nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
 <div id="glossPop"></div>
@@ -2228,28 +2292,75 @@ function buildLevelBar(){
   // The page now shows one curated Overview, and the deeper material lives in its own tab.
   return;
 }
+var DGROUPS=[
+  ["Overview",["overview","market","sectors","indices","breadth"]],
+  ["Charts & levels",["charts","levels","gaps","patterns","seasonality","correlation"]],
+  ["Stocks",["stocks","rs","promoter","watchlists"]],
+  ["Derivatives",["fno","forecast","backtest","watchlist"]],
+  ["World",["global","crypto"]],
+  ["Funds",["etf","mf"]],
+  ["Company",["corporate","deals","calendar","ipo","regulator"]],
+  ["More",["tools","charges","learn","history"]]
+];
+var BOTTOM=[["overview","Home","M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5"],
+            ["market","Market","M3 17l5-6 4 3 5-7 4 4"],
+            ["sectors","Sectors","M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"],
+            ["fno","F&O","M4 20V8M10 20V4M16 20v-7M22 20V6"],
+            ["stocks","Stocks","M4 6h16M4 12h16M4 18h10"],
+            ["news","News","M3 4h18v16H3zM7 9h10M7 13h10M7 17h6"]];
+
 function renderTabs(){
-  var nav=$("#tabs");nav.innerHTML="";
-  SECTIONS.forEach(function(s){
-    var lbl = (LANG==="hi" && STR.hi[s.id]) ? STR.hi[s.id] : s.label;
-    var ext = EXTERNAL[s.id];
-    var isNew = NEW_TABS[s.id];
-    var b=el("button","",esc(lbl)+
-      (isNew?'<span class="newmark" title="added this week"></span>':"")+
-      (ext?'<span class="extmark" title="opens another site"> \u2197</span>':""));
-    b.setAttribute("data-go",s.id);
-    if(ext){
-      b.setAttribute("data-external",ext);
-      b.addEventListener("click",function(){ window.location.href=ext; });
-    }else{
-      b.addEventListener("click",function(){show(s.id);});
-    }
-    nav.appendChild(b);
+  /* the drawer replaces the horizontal tab bar; every entry still calls show(id) */
+  var byId={};SECTIONS.forEach(function(s){byId[s.id]=s});
+  var html='<div class="dhead"><div class="dlogo">AS</div>'+
+           '<div class="dname">ArthaSaar</div></div>';
+  DGROUPS.forEach(function(g){
+    var items=g[1].filter(function(id){return byId[id]});
+    if(!items.length)return;
+    html+='<div class="dgrp">'+esc(g[0])+'</div>';
+    items.forEach(function(id){
+      var s=byId[id];
+      var lbl=(LANG==="hi"&&STR.hi[id])?STR.hi[id]:s.label;
+      var ext=EXTERNAL[id];
+      html+='<button class="dit" data-go="'+id+'"'+(ext?' data-external="'+esc(ext)+'"':'')+'>'+
+            esc(lbl)+(ext?'<span class="nm">↗</span>':'')+'</button>';
+    });
   });
+  html+='<div class="dfoot">Market data and descriptions only.<br>Not investment advice.</div>';
+  var d=document.getElementById("drawerItems");
+  if(d){
+    d.innerHTML=html;
+    d.querySelectorAll(".dit").forEach(function(b){
+      b.addEventListener("click",function(){
+        var ext=b.getAttribute("data-external");
+        if(ext){window.location.href=ext;return;}
+        show(b.getAttribute("data-go"));
+        closeDrawer();
+      });
+    });
+  }
+  var bn=document.getElementById("bnav");
+  if(bn){
+    bn.innerHTML=BOTTOM.filter(function(x){return byId[x[0]]}).map(function(x){
+      return '<button class="bi" data-go="'+x[0]+'">'+
+        '<svg viewBox="0 0 24 24"><path d="'+x[2]+'"/></svg><span>'+esc(x[1])+'</span></button>';
+    }).join("");
+    bn.querySelectorAll(".bi").forEach(function(b){
+      b.addEventListener("click",function(){show(b.getAttribute("data-go"));});
+    });
+  }
 }
+function openDrawer(){document.getElementById("drawer").classList.add("open");
+  document.getElementById("dscrim").classList.add("on");}
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");
+  document.getElementById("dscrim").classList.remove("on");}
+
 function show(id){
   $$("#tabs button").forEach(function(b){b.className=(b.getAttribute("data-go")===id?"active":"");});
+  $$("#drawerItems .dit").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-go")===id);});
+  $$("#bnav .bi").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-go")===id);});
   $$(".section").forEach(function(s){s.className=(s.id==="sec-"+id?"section on":"section");});
+  window.scrollTo({top:0,behavior:"instant"});
 }
 
 function build(d){
@@ -8545,5 +8656,18 @@ show = function(id){
 
 
 <script src="cards-20261111d.js"></script>
+<script>
+(function(){
+  function wire(){
+    var b=document.getElementById("burger");
+    if(b&&!b._wired){b._wired=1;b.addEventListener("click",function(e){e.preventDefault();openDrawer();});}
+    var sc=document.getElementById("dscrim");
+    if(sc&&!sc._wired){sc._wired=1;sc.addEventListener("click",closeDrawer);}
+  }
+  if(document.readyState!=="loading")wire();
+  else document.addEventListener("DOMContentLoaded",wire);
+  setTimeout(wire,600);setTimeout(wire,1800);
+})();
+</script>
 </body>
 </html>

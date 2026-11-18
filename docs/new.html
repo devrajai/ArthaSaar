@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ArthaSaar</title>
+<style>
+:root{
+  --ink:#0d1f33;--ink2:#3a5372;--muted:#6d86a3;--faint:#8fa6c0;
+  --glass:rgba(255,255,255,.58);--glass2:rgba(255,255,255,.76);
+  --line:rgba(138,178,224,.30);--line2:rgba(138,178,224,.55);
+  --up:#0b7a5c;--down:#b23a4b;--flat:#7b8ba1;
+  --blue:#2f6fd0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:var(--ink);-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1200px 640px at 10% -10%,#dbe9ff 0%,transparent 56%),
+    radial-gradient(980px 560px at 94% 2%,#e8f2ff 0%,transparent 50%),
+    radial-gradient(820px 520px at 46% 108%,#cfe3ff 0%,transparent 58%),
+    linear-gradient(168deg,#f6faff 0%,#ecf4ff 50%,#e2eeff 100%);
+  background-attachment:fixed;min-height:100vh;
+}
+header{position:sticky;top:0;z-index:60;padding:13px 16px 11px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:linear-gradient(180deg,rgba(246,250,255,.92),rgba(246,250,255,0));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s}
+header.hide{transform:translateY(-108%);opacity:0}
+.mark{width:26px;height:26px;border-radius:8px;flex:0 0 auto;
+  background:linear-gradient(150deg,#d8e9ff,#8fbcff 58%,#4f8ce8);
+  box-shadow:0 5px 14px rgba(70,130,215,.32),inset 0 1px 0 rgba(255,255,255,.92)}
+.wm{font-size:16.5px;font-weight:660;letter-spacing:-.35px}
+.wm em{font-style:normal;color:var(--muted);font-weight:520;font-size:12px;margin-left:7px}
+
+.wrap{max-width:760px;margin:0 auto;padding:2px 16px 108px}
+.g{background:var(--glass);border:1px solid var(--line);border-radius:20px;
+  backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%);
+  box-shadow:0 12px 38px rgba(66,118,188,.10),inset 0 1px 0 rgba(255,255,255,.88)}
+.pad{padding:17px}
+section.page{display:none}
+section.page.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:20px 4px 10px}
+.shead h2{margin:0;font-size:13.5px;font-weight:660;letter-spacing:-.1px}
+.shead span{font-size:11.5px;color:var(--faint)}
+
+/* index strip */
+.strip{padding:16px 18px 13px;margin-bottom:12px}
+.stripRow{display:flex}
+.sItem{flex:1;min-width:0;text-align:center}
+.sDiv{width:1px;background:rgba(138,178,224,.30);margin:2px 5px}
+.sName{font-size:9.5px;letter-spacing:.45px;color:var(--muted);font-weight:620;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sLvl{font-size:18px;font-weight:670;letter-spacing:-.6px;margin-top:3px;font-variant-numeric:tabular-nums}
+.sChg{font-size:11px;font-weight:600;margin-top:1px;font-variant-numeric:tabular-nums}
+.stripFoot{display:flex;justify-content:space-between;gap:10px;margin-top:11px;padding-top:9px;
+  border-top:1px solid rgba(138,178,224,.22);font-size:10px;color:var(--faint)}
+
+/* mini tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{padding:13px 14px;border-radius:16px;background:var(--glass2);border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(66,118,188,.07),inset 0 1px 0 rgba(255,255,255,.9)}
+.tile .k{font-size:9.5px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase;font-weight:620}
+.tile .v{font-size:20px;font-weight:670;letter-spacing:-.6px;margin-top:4px}
+.tile .d{font-size:10.5px;color:var(--faint);margin-top:1px}
+
+/* ribbons */
+.ribWrap{position:relative;margin:0 -16px}
+.ribs{display:flex;gap:9px;overflow-x:auto;padding:2px 16px 10px;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ribs::-webkit-scrollbar{display:none}
+.ribWrap::after{content:"";position:absolute;top:0;right:0;bottom:10px;width:48px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(236,244,255,0),rgba(236,244,255,.93))}
+.rib{flex:0 0 156px;scroll-snap-align:start;border-radius:17px;padding:13px 14px;
+  background:var(--glass2);border:1px solid var(--line);cursor:pointer;
+  box-shadow:0 8px 22px rgba(66,118,188,.08),inset 0 1px 0 rgba(255,255,255,.9)}
+.rib .n{font-size:11.5px;font-weight:620;color:var(--ink2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rib .m{font-size:20px;font-weight:680;letter-spacing:-.6px;margin-top:4px}
+.rib .bb{height:4px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:8px;overflow:hidden}
+.rib .bb i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a8ccf8,#3f7fd6)}
+.rib .bt{font-size:10px;color:var(--faint);margin-top:4px}
+
+/* rows */
+.rows{display:flex;flex-direction:column}
+.rw{display:flex;align-items:center;gap:11px;padding:12px 2px;
+  border-bottom:1px solid rgba(138,178,224,.20)}
+.rw:last-child{border-bottom:none}
+.dot{width:7px;height:7px;border-radius:99px;flex:0 0 auto}
+.rl{flex:1;font-size:13px;color:var(--ink2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv{font-variant-numeric:tabular-nums;font-weight:640;font-size:13px}
+.rp{font-size:11px;color:var(--faint);width:58px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* metals */
+.mcard{padding:15px;margin-bottom:10px}
+.mcard .t{font-size:10px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);font-weight:620}
+.mcard .p{font-size:26px;font-weight:680;letter-spacing:-1px;margin-top:4px}
+.mcard .u{font-size:11px;color:var(--faint)}
+.tiers{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tier{font-size:10.5px;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.8);
+  border:1px solid var(--line);color:var(--ink2);font-variant-numeric:tabular-nums;font-weight:560}
+
+/* chain table */
+.chain{display:flex;flex-direction:column}
+.cx{display:flex;align-items:center;gap:10px;padding:12px 2px;
+  border-bottom:1px solid rgba(138,178,224,.20)}
+.cx:last-child{border-bottom:none}
+.cxe{flex:1}
+.cxd{font-size:12.5px;font-weight:640}
+.cxs{font-size:10.5px;color:var(--faint)}
+.cxr{text-align:right;font-size:11.5px;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1.5}
+.cxr b{font-weight:640}
+
+/* news */
+.tabs{display:flex;gap:7px;margin:2px 0 12px}
+.tab{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:13px;font-size:12.5px;
+  font-weight:600;color:var(--ink2);cursor:pointer;background:rgba(255,255,255,.6);
+  border:1px solid var(--line)}
+.tab.on{background:linear-gradient(150deg,rgba(226,239,255,.95),rgba(200,224,255,.9));
+  border-color:rgba(120,170,230,.6);color:#17427e;
+  box-shadow:0 6px 18px rgba(70,130,210,.16),inset 0 1px 0 rgba(255,255,255,.9)}
+.tab svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+.search{display:flex;align-items:center;gap:9px;margin-bottom:11px;padding:11px 14px;
+  border-radius:14px;background:rgba(255,255,255,.72);border:1px solid var(--line)}
+.search svg{width:15px;height:15px;fill:none;stroke:var(--faint);stroke-width:2;flex:0 0 auto}
+.search input{border:0;outline:0;background:transparent;flex:1;font-size:13px;color:var(--ink)}
+.search input::placeholder{color:var(--faint)}
+.cWrap{position:relative;margin:0 -16px}
+.cnts{display:flex;gap:7px;overflow-x:auto;padding:0 16px 11px;scrollbar-width:none}
+.cnts::-webkit-scrollbar{display:none}
+.cWrap::after{content:"";position:absolute;top:0;right:0;bottom:11px;width:42px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(236,244,255,0),rgba(236,244,255,.93))}
+.cc{flex:0 0 auto;font-size:11.5px;padding:7px 12px;border-radius:99px;cursor:pointer;
+  background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--ink2);
+  display:flex;align-items:center;gap:5px;font-weight:560}
+.cc.on{background:#0d1f33;color:#fff;border-color:#0d1f33}
+.cc .d{width:6px;height:6px;border-radius:99px}
+.cc .n{opacity:.7;font-weight:500}
+.item{padding:13px 14px;margin-bottom:9px;border-radius:16px;background:var(--glass2);
+  border:1px solid var(--line);text-decoration:none;color:inherit;display:block;
+  box-shadow:0 8px 24px rgba(66,118,188,.07),inset 0 1px 0 rgba(255,255,255,.9)}
+.meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pill{font-size:10px;padding:4px 9px;border-radius:99px;font-weight:620;display:flex;
+  align-items:center;gap:5px;border:1px solid transparent}
+.pill .d{width:5px;height:5px;border-radius:99px;background:currentColor}
+.p-general{background:rgba(47,111,208,.1);color:#1f5cb8;border-color:rgba(47,111,208,.2)}
+.p-results{background:rgba(11,122,92,.1);color:#0b6b52;border-color:rgba(11,122,92,.2)}
+.p-global{background:rgba(123,88,201,.1);color:#6544b0;border-color:rgba(123,88,201,.2)}
+.p-policy{background:rgba(176,117,42,.1);color:#8f5f1e;border-color:rgba(176,117,42,.2)}
+.co{font-size:10px;padding:4px 8px;border-radius:99px;background:rgba(255,255,255,.9);
+  border:1px solid var(--line);color:var(--ink2);display:flex;align-items:center;gap:4px;font-weight:600}
+.co .av{width:11px;height:11px;border-radius:99px;background:linear-gradient(145deg,#cfe4ff,#7fb2f0);
+  display:grid;place-items:center;font-size:6px;color:#fff;font-weight:700}
+.src{font-size:10px;color:var(--faint)}
+.tm{margin-left:auto;font-size:10px;color:var(--faint);display:flex;align-items:center;gap:3px;white-space:nowrap}
+.tm svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2}
+.item h3{margin:0;font-size:13px;font-weight:640;line-height:1.45;letter-spacing:-.1px}
+
+/* bottom nav */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:70;padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  display:flex;justify-content:space-around;align-items:center;
+  background:rgba(250,253,255,.86);backdrop-filter:blur(26px) saturate(160%);
+  -webkit-backdrop-filter:blur(26px) saturate(160%);
+  border-top:1px solid var(--line2);box-shadow:0 -6px 30px rgba(60,110,180,.10)}
+.nv{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border-radius:13px;
+  cursor:pointer;color:var(--faint);transition:color .16s,background .16s;flex:1;max-width:78px}
+.nv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.85;
+  stroke-linecap:round;stroke-linejoin:round}
+.nv span{font-size:9.5px;font-weight:600;letter-spacing:.1px}
+.nv.on{color:var(--blue);background:rgba(47,111,208,.09)}
+
+.note{font-size:11px;color:var(--faint);line-height:1.6;margin-top:12px;text-align:center}
+@media(max-width:520px){
+  .wrap{padding:2px 12px 104px}
+  .sLvl{font-size:16.5px}
+  .tile .v{font-size:18px}
+}
+@media(min-width:760px){ .wrap{max-width:820px} }
+</style>
+</head>
+<body>
+
+<header id="hd">
+  <div class="mark"></div>
+  <div class="wm">ArthaSaar <em>market, measured</em></div>
+</header>
+
+<div class="wrap">
+
+  <!-- ══════════ HOME ══════════ -->
+  <section class="page on" id="p-home">
+    <div class="g strip" id="strip"></div>
+    <div class="tiles" id="tiles"></div>
+
+    <div class="shead"><h2>Sector trend · 20 sessions</h2><span>swipe →</span></div>
+    <div class="ribWrap"><div class="ribs" id="ribs"></div></div>
+
+    <div class="shead"><h2>What changed since yesterday</h2><span id="chgN"></span></div>
+    <div class="g pad"><div class="rows" id="changes"></div></div>
+
+    <div class="shead"><h2>21-session range</h2><span>history, not a forecast</span></div>
+    <div class="g pad" id="rng"></div>
+    <p class="note">Market data and descriptions only. Not investment advice.</p>
+  </section>
+
+  <!-- ══════════ MARKET ══════════ -->
+  <section class="page" id="p-market">
+    <div class="shead"><h2>Breadth</h2><span id="brN"></span></div>
+    <div class="tiles" id="breadthTiles"></div>
+
+    <div class="shead"><h2>Top movers · last session</h2><span>F&O universe</span></div>
+    <div class="g pad"><div class="rows" id="movers"></div></div>
+
+    <div class="shead"><h2>Put-call ratio</h2><span id="pcrDate"></span></div>
+    <div class="g pad" id="pcrBox"></div>
+    <p class="note">PCR is published as a null result on the site: it has not beaten its own baseline.</p>
+  </section>
+
+  <!-- ══════════ SECTORS ══════════ -->
+  <section class="page" id="p-sectors">
+    <div class="shead"><h2>All sectors</h2><span id="secN"></span></div>
+    <div id="secList"></div>
+    <p class="note">A sector can rise on one large stock — the breadth bar sits beside the median so you can see when that happens.</p>
+  </section>
+
+  <!-- ══════════ F&O ══════════ -->
+  <section class="page" id="p-fno">
+    <div class="shead"><h2>Nifty expiries</h2><span id="spotTxt"></span></div>
+    <div class="g pad"><div class="chain" id="chain"></div></div>
+    <p class="note">Max pain is arithmetic on open interest — the strike where option buyers collectively lose least. It is where sellers are positioned, not where price will go.</p>
+  </section>
+
+  <!-- ══════════ METALS ══════════ -->
+  <section class="page" id="p-metals">
+    <div class="shead"><h2>Gold</h2><span>per gram</span></div>
+    <div id="goldCards"></div>
+    <div class="shead"><h2>Silver</h2><span>per gram</span></div>
+    <div id="silverCards"></div>
+    <p class="note">International spot converted at USD/INR. This is not the jeweller's rate — local retail adds import duty, GST and a dealer premium, so it usually sits 10–15% above this.</p>
+  </section>
+
+  <!-- ══════════ NEWS ══════════ -->
+  <section class="page" id="p-news">
+    <div class="tabs">
+      <div class="tab on"><svg viewBox="0 0 24 24"><path d="M12 2s4 4.5 4 9a4 4 0 1 1-8 0c0-4.5 4-9 4-9z"/></svg>Live News</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>Events</div>
+    </div>
+    <div class="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" placeholder="Search by stock, company, category or keyword…">
+    </div>
+    <div class="cWrap"><div class="cnts" id="cnts"></div></div>
+    <div id="newsList"></div>
+    <p class="note">Headlines and links belong to the publishers named on each item.<br>
+      Categories are keyword tags on the headline, not editorial judgement.</p>
+  </section>
+
+</div>
+
+<nav id="nav">
+  <div class="nv on" data-p="home"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/></svg><span>Home</span></div>
+  <div class="nv" data-p="market"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg><span>Market</span></div>
+  <div class="nv" data-p="sectors"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Sectors</span></div>
+  <div class="nv" data-p="fno"><svg viewBox="0 0 24 24"><path d="M4 20V8M10 20V4M16 20v-7M22 20V6"/></svg><span>F&amp;O</span></div>
+  <div class="nv" data-p="metals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h4"/></svg><span>Metals</span></div>
+  <div class="nv" data-p="news"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h6"/></svg><span>News</span></div>
+</nav>
+
+<script>
+const D = {"indices":[{"n":"NIFTY 50","lvl":25247.25,"chg":-140.15,"pct":-0.55,"spark":[24252,24219,24335,24208,24091,24176,24080,24056,23914,23873,23898,23779,23635,23432,23478,23398,23119,23218,23271,23346,23414,23329,23447,23063,23140,22780,22716,22620,22422,22556,22776,22603,22232,22520,22363,22722,22623,22997,23146,22889,22811,22688,22600,22753,22750,22699,22937,23053,23441,23811,23961,24537,25030,25045,25255,25299,25144,25291,25387,25247]},{"n":"BANK NIFTY","lvl":62122.95,"chg":-150.3,"pct":-0.24,"spark":[57762,57526,57514,57784,57510,57496,58025,57410,57172,57381,57370,57088,56778,56296,56472,56607,55795,56292,56056,56359,56471,56216,56549,55438,55580,54472,54260,54633,54451,54714,55128,55056,54515,55257,54918,55481,55316,55810,55844,55488,54977,54926,54287,54367,53975,54267,54910,54687,55002,55540,55914,57774,59086,59741,60792,61518,61034,61576,62273,62123]},{"n":"SENSEX","lvl":82042.83,"chg":-489.36,"pct":-0.59,"spark":[77541,77369,77656,77473,76934,77265,76957,76944,76570,76153,76515,76133,75578,74764,74903,74782,74004,74336,74315,74295,74859,74529,74828,73581,73896,72772,72529,72480,71910,72382,73068,72639,71593,72472,71925,73034,72782,74316,74729,73853,73710,73249,73124,73607,73599,73246,74151,74460,75693,76918,77301,79310,81028,81107,81879,81911,81592,82105,82532,82043]}],"range":{"p5":-5.6,"p50":1.2,"p95":7.7,"n":2446,"from":"2016","to":"2026"},"sectors":[{"s":"Healthcare","m":1.75,"b":13.0,"u":18,"d":45,"n":161,"lead":[{"symbol":"APLLTD","chg_20d":33.9,"from_52w_high":7.5},{"symbol":"SAILIFE","chg_20d":29.57,"from_52w_high":6.08},{"symbol":"EMCURE","chg_20d":28.46,"from_52w_high":11.33}],"lag":[{"symbol":"CONCORDBIO","chg_20d":-56.61,"from_52w_high":-64.02},{"symbol":"SUPRIYA","chg_20d":-29.76,"from_52w_high":-42.58},{"symbol":"VALIANTLAB","chg_20d":-23.6,"from_52w_high":-27.24}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Financial Services","m":1.18,"b":15.0,"u":30,"d":108,"n":234,"lead":[{"symbol":"ONELIFECAP","chg_20d":31.91,"from_52w_high":26.62},{"symbol":"PNB","chg_20d":24.33,"from_52w_high":10.1},{"symbol":"MANCREDIT","chg_20d":22.02,"from_52w_high":-7.56}],"lag":[{"symbol":"APTUS","chg_20d":-20.93,"from_52w_high":-44.6},{"symbol":"EQUITASBNK","chg_20d":-18.83,"from_52w_high":-31.92},{"symbol":"IITL","chg_20d":-17.67,"from_52w_high":-48.02}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Utilities","m":0.84,"b":0.0,"u":0,"d":28,"n":38,"lead":[{"symbol":"DPSCLTD","chg_20d":12.12,"from_52w_high":-45.16},{"symbol":"GAIL","chg_20d":11.24,"from_52w_high":2.83},{"symbol":"ADANIGREEN","chg_20d":8.03,"from_52w_high":-13.78}],"lag":[{"symbol":"CEWATER","chg_20d":-14.97,"from_52w_high":-56.32},{"symbol":"GKENERGY","chg_20d":-9.75,"from_52w_high":-59.38},{"symbol":"PTC","chg_20d":-8.66,"from_52w_high":-30.28}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Real Estate","m":0.15,"b":11.1,"u":3,"d":41,"n":81,"lead":[{"symbol":"DSKULKARNI","chg_20d":48.21,"from_52w_high":8.18},{"symbol":"AGIIL","chg_20d":27.03,"from_52w_high":-26.8},{"symbol":"ALEMBICLTD","chg_20d":17.29,"from_52w_high":-3.0}],"lag":[{"symbol":"NILASPACES","chg_20d":-15.75,"from_52w_high":-52.86},{"symbol":"OMAXE","chg_20d":-14.52,"from_52w_high":-29.87},{"symbol":"FMNL","chg_20d":-13.91,"from_52w_high":-48.31}],"note":"narrow rally - the median is up but fewer than 40% are above their 50-day"},{"s":"Consumer Cyclical","m":-1.47,"b":14.6,"u":40,"d":183,"n":425,"lead":[{"symbol":"FLEXITUFF","chg_20d":57.63,"from_52w_high":-78.94},{"symbol":"RUSHIL","chg_20d":36.55,"from_52w_high":-21.34},{"symbol":"SSWL","chg_20d":36.47,"from_52w_high":31.47}],"lag":[{"symbol":"PASHUPATI","chg_20d":-60.81,"from_52w_high":-71.8},{"symbol":"SHANTIGOLD","chg_20d":-39.81,"from_52w_high":-41.77},{"symbol":"UFBL","chg_20d":-25.65,"from_52w_high":-40.88}],"note":"breadth and the median move point the same way"},{"s":"Consumer Defensive","m":-2.16,"b":12.7,"u":15,"d":76,"n":158,"lead":[{"symbol":"TREEHOUSE","chg_20d":27.13,"from_52w_high":-34.82},{"symbol":"PARAGMILK","chg_20d":24.55,"from_52w_high":-8.33},{"symbol":"SAKUMA","chg_20d":22.97,"from_52w_high":-41.29}],"lag":[{"symbol":"UGARSUGAR","chg_20d":-24.85,"from_52w_high":-36.99},{"symbol":"VERANDA","chg_20d":-22.66,"from_52w_high":-88.74},{"symbol":"RENUKA","chg_20d":-18.01,"from_52w_high":-41.08}],"note":"breadth and the median move point the same way"},{"s":"Industrials","m":-2.51,"b":14.5,"u":43,"d":201,"n":461,"lead":[{"symbol":"HILINFRA","chg_20d":46.36,"from_52w_high":-7.22},{"symbol":"RAMKY","chg_20d":43.56,"from_52w_high":-41.01},{"symbol":"JYOTISTRUC","chg_20d":42.71,"from_52w_high":-15.3}],"lag":[{"symbol":"KMEW","chg_20d":-78.71,"from_52w_high":-79.1},{"symbol":"MODISONLTD","chg_20d":-31.41,"from_52w_high":-36.69},{"symbol":"MBECL","chg_20d":-28.03,"from_52w_high":-41.14}],"note":"breadth and the median move point the same way"},{"s":"Communication Services","m":-2.83,"b":16.4,"u":6,"d":40,"n":73,"lead":[{"symbol":"SAREGAMA","chg_20d":32.94,"from_52w_high":16.62},{"symbol":"HMVL","chg_20d":19.55,"from_52w_high":-14.46},{"symbol":"PVRINOX","chg_20d":17.02,"from_52w_high":12.44}],"lag":[{"symbol":"AQYLON","chg_20d":-39.68,"from_52w_high":-99.39},{"symbol":"SUYOG","chg_20d":-15.95,"from_52w_high":-43.93},{"symbol":"NEXTMEDIA","chg_20d":-13.83,"from_52w_high":-64.74}],"note":"breadth and the median move point the same way"},{"s":"Technology","m":-3.32,"b":23.9,"u":23,"d":78,"n":180,"lead":[{"symbol":"QUINTEGRA","chg_20d":81.69,"from_52w_high":50.58},{"symbol":"TERASOFT","chg_20d":38.83,"from_52w_high":-46.89},{"symbol":"TANLA","chg_20d":25.29,"from_52w_high":-1.48}],"lag":[{"symbol":"EMUDHRA","chg_20d":-36.47,"from_52w_high":-48.56},{"symbol":"RPTECH","chg_20d":-25.32,"from_52w_high":-35.61},{"symbol":"GENESYS","chg_20d":-24.01,"from_52w_high":-70.5}],"note":"breadth and the median move point the same way"},{"s":"Basic Materials","m":-4.28,"b":12.7,"u":35,"d":170,"n":369,"lead":[{"symbol":"BHAGYANGR","chg_20d":55.05,"from_52w_high":-81.68},{"symbol":"IGIL","chg_20d":32.75,"from_52w_high":12.54},{"symbol":"NAVKARURB","chg_20d":25.88,"from_52w_high":-58.2}],"lag":[{"symbol":"JSWDULUX","chg_20d":-90.73,"from_52w_high":-23.47},{"symbol":"TIKONA","chg_20d":-30.78,"from_52w_high":-33.13},{"symbol":"PAUSHAKLTD","chg_20d":-29.68,"from_52w_high":-34.11}],"note":"breadth and the median move point the same way"},{"s":"Energy","m":-5.62,"b":16.2,"u":6,"d":11,"n":37,"lead":[{"symbol":"HINDOILEXP","chg_20d":27.78,"from_52w_high":5.57},{"symbol":"HINDPETRO","chg_20d":11.84,"from_52w_high":-19.98},{"symbol":"PETRONET","chg_20d":11.26,"from_52w_high":1.03}],"lag":[{"symbol":"TRUALT","chg_20d":-23.08,"from_52w_high":-37.36},{"symbol":"OILCOUNTUB","chg_20d":-20.2,"from_52w_high":-28.34},{"symbol":"CONFIPET","chg_20d":-18.76,"from_52w_high":-28.84}],"note":"breadth and the median move point the same way"}],"metals":{"ok":true,"gold":[{"k":"24K","g":11344.54,"g10":113445.0,"c":-329.14,"p":-2.82},{"k":"22K","g":10399.16,"g10":103992.0,"c":-301.72,"p":-2.82},{"k":"18K","g":8508.41,"g10":85084.0,"c":-246.86,"p":-2.82}],"silver":[{"k":"999","g":137.83,"g10":1378.0,"c":-4.88,"p":-3.42},{"k":"958","g":132.18,"g10":1322.0,"c":-4.68,"p":-3.42},{"k":"925","g":127.62,"g10":1276.0,"c":-4.52,"p":-3.42},{"k":"800","g":110.38,"g10":1104.0,"c":-3.91,"p":-3.42}],"fx":93.373,"fxc":-0.63,"etf":{"goldbees":{"price":107.76,"chg_pct":-2.09},"silverbees":{"price":155.94,"chg_pct":-2.91}}},"breadth":{"a50":36.5,"a200":45.8,"n":2219},"pcr":{"v":1.031,"d":"2026-11-16","band":"high (1.00-1.20)"},"changes":[{"field":"index.nifty.close","status":"changed","from":25107.25,"to":25247.25,"delta":140.0,"pct":0.56,"unit":"points","since":"2026-11-17"},{"field":"index.banknifty.close","status":"changed","from":61982.95,"to":62122.95,"delta":140.0,"pct":0.23,"unit":"points","since":"2026-11-17"},{"field":"breadth.above_50","status":"changed","from":38.9,"to":36.5,"delta":-2.4,"pct":-6.17,"unit":"%","since":"2026-11-17"},{"field":"metal.gold.per_gram","status":"changed","from":11673.58,"to":11368.58,"delta":-305.0,"pct":-2.61,"unit":"rupees","since":"2026-11-17"}],"news":[{"title":"Interest in Trump's meme coin dinner fades as $TRUMP sinks to record lows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/interest-in-trumps-meme-coin-dinner-fades-as-trump-sinks-to-record-lows/articleshow/135899741.cms","published":"Mon, 16 Nov 2026 23:57:28 +0530","category":"global","cue":"trump","company":null},{"title":"Trump Media faces possible $1 billion debt repayment as stock nears record lows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/trump-media-faces-possible-1-billion-debt-repayment-as-stock-nears-record-lows/articleshow/135898089.cms","published":"Mon, 16 Nov 2026 23:14:02 +0530","category":"global","cue":"trump","company":null},{"title":"Nvidia earnings spotlight shifts to leadership, AI financing after Huang exit","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nvidia-set-to-deliver-first-life-after-huang-briefing/articleshow/135896160.cms","published":"Mon, 16 Nov 2026 22:13:54 +0530","category":"results","cue":"earnings","company":null},{"title":"Barclays lowers 2027 year-end target for S&amp;P 500 index to 8,700","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/barclays-lowers-2027-year-end-target-for-sp-500-index-to-8700/articleshow/135894874.cms","published":"Mon, 16 Nov 2026 21:20:17 +0530","category":"global","cue":"s&p","company":null},{"title":"US stocks: Summit shares drop after US FDA declines to approve lung cancer drug","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-summit-shares-drop-after-us-fda-declines-to-approve-lung-cancer-drug/articleshow/135894815.cms","published":"Mon, 16 Nov 2026 21:18:04 +0530","category":"global","cue":"us","company":null},{"title":"US stocks: Nasdaq slides over 1% as AI selloff deepens ahead of Nvidia earnings","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nasdaq-falls-1-at-open-as-nvidia-woes-weigh-on-sentiment-ahead-of-earnings/articleshow/135894333.cms","published":"Mon, 16 Nov 2026 21:04:11 +0530","category":"results","cue":"earnings","company":null},{"title":"Dalal Street becomes best-performing stock market in a month. Can it rally more?","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/dalal-street-becomes-best-performing-stock-market-in-a-month-can-it-rally-more/videoshow/135891640.cms","published":"Mon, 16 Nov 2026 19:18:06 +0530","category":"general","cue":"","company":null},{"title":"Nasdaq tumbles over 2%, Dow drops 700 pts as AI selloff deepens: Stock Market Highlights","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-coreweave-nebius-nvidia-earnings-anthropic-ipo-treasury-yield-news-16th-november-2026/liveblog/135890877.cms","published":"Mon, 16 Nov 2026 18:44:29 +0530","category":"global","cue":"nasdaq","company":null},{"title":"Sebi sets up sub-group under PMAC to review key IPO norms; NSE's Chauhan to head panel","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-sets-up-sub-group-under-pmac-to-review-key-ipo-norms-nses-chauhan-to-head-panel/articleshow/135890467.cms","published":"Mon, 16 Nov 2026 18:37:52 +0530","category":"policy","cue":"sebi","company":null},{"title":"Retain capital gains tax on equities, economists tell FM Sitharaman ahead of Budget 2027-28","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/retain-capital-gains-tax-on-equities-economists-tell-fm-sitharaman-ahead-of-budget-2027-28/articleshow/135890410.cms","published":"Mon, 16 Nov 2026 18:35:46 +0530","category":"policy","cue":"tax","company":null},{"title":"Blackstone REIT to buy majority stake in $5 billion Amazon data center portfolio","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/blackstone-reit-to-buy-majority-stake-in-5-billion-amazon-data-center-portfolio/articleshow/135890381.cms","published":"Mon, 16 Nov 2026 18:34:02 +0530","category":"general","cue":"","company":null},{"title":"Warren Buffett donates $5.47 billion in Berkshire Hathaway shares to charities, confidence in successors remains 'strong as ever'","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/warren-buffett-donates-more-berkshire-shares-confidence-in-successors-as-strong-as-ever/articleshow/135890059.cms","published":"Mon, 16 Nov 2026 18:25:53 +0530","category":"general","cue":"","company":null},{"title":"Sebi forms panel to simplify capital-raising rules","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-forms-panel-to-simplify-capital-raising-rules/articleshow/135889803.cms","published":"Mon, 16 Nov 2026 18:14:54 +0530","category":"policy","cue":"sebi","company":null},{"title":"S&amp;P 500, Nasdaq futures slide as Nvidia earnings, Anthropic debut loom","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/sp-500-nasdaq-futures-slide-as-nvidia-earnings-anthropic-debut-loom/articleshow/135888956.cms","published":"Mon, 16 Nov 2026 17:49:06 +0530","category":"results","cue":"earnings","company":null},{"title":"India's investments in US Treasuries jump USD 38.4 bn in Jun-Aug amid FCNR flows","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/indias-investments-in-us-treasuries-jump-usd-38-4-bn-in-jun-aug-amid-fcnr-flows/articleshow/135888824.cms","published":"Mon, 16 Nov 2026 17:47:29 +0530","category":"global","cue":"us","company":null},{"title":"PNB among 4 stocks hitting 52-week highs; stock rallies up to 24% in a month","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/pnb-among-4-stocks-hitting-52-week-highs-stock-rallies-up-to-24-in-a-month/slideshow/135888569.cms","published":"Mon, 16 Nov 2026 17:33:47 +0530","category":"general","cue":"","company":null},{"title":"Hong Kong debuts offshore yuan bond index to promote RMB assets","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/bonds/hong-kong-debuts-offshore-yuan-bond-index-to-promote-rmb-assets/articleshow/135888402.cms","published":"Mon, 16 Nov 2026 17:32:10 +0530","category":"general","cue":"","company":null},{"title":"India bonds dip as elevated inflation fuels rate hike expectations","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/bonds/india-bonds-dip-as-elevated-inflation-fuels-rate-hike-expectations/articleshow/135888382.cms","published":"Mon, 16 Nov 2026 17:30:15 +0530","category":"general","cue":"","company":null},{"title":"Nvidia's AI financing machine may survive Huang, but with less risk appetite","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/news/nvidias-ai-financing-machine-may-survive-huang-but-with-less-risk-appetite/articleshow/135888314.cms","published":"Mon, 16 Nov 2026 17:29:00 +0530","category":"general","cue":"","company":null},{"title":"Morgan Stanley turns bullish on global stocks, targets S&amp;P 500 at 8,700","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/morgan-stanley-raises-global-equities-to-maximum-overweight-on-cheap-valuations-earnings-strength/articleshow/135888237.cms","published":"Mon, 16 Nov 2026 17:27:08 +0530","category":"global","cue":"global","company":null},{"title":"Sebi may propose raising FPI beneficial ownership threshold to 25%; plans consultation paper","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/sebi-may-propose-raising-fpi-beneficial-ownership-threshold-to-25-plans-consultation-paper/articleshow/135883637.cms","published":"Mon, 16 Nov 2026 15:51:12 +0530","category":"policy","cue":"sebi","company":null},{"title":"Rupee rises, volatility ebbs as equity inflows blunt global headwinds","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-rises-volatility-ebbs-as-equity-inflows-blunt-global-headwinds/articleshow/135883543.cms","published":"Mon, 16 Nov 2026 15:49:15 +0530","category":"global","cue":"global","company":null},{"title":"Swiggy among 10 midcap stocks that dropped up to 50% in CY26","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/swiggy-among-10-midcap-stocks-that-dropped-up-to-50-in-cy26/slideshow/135883464.cms","published":"Mon, 16 Nov 2026 15:40:54 +0530","category":"general","cue":"","company":"SWIGGY"},{"title":"UPL Share Price Highlights: UPL Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/upl-stock-price-live-updates-16-nov-2026/liveblog/135872604.cms","published":"Mon, 16 Nov 2026 09:47:59 +0530","category":"general","cue":"","company":null},{"title":"Technical picks:  ABB India among 5 stocks to buy this week for healthy returns","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/news/tech-picks-abb-india-among-5-stocks-to-buy-this-week-for-healthy-returns/slideshow/135872688.cms","published":"Mon, 16 Nov 2026 09:43:24 +0530","category":"general","cue":"","company":null},{"title":"Sun Pharma Share Price Highlights: Sun Pharma Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sun-pharma-share-price-today-live-updates-16-nov-2026/liveblog/135871948.cms","published":"Mon, 16 Nov 2026 09:20:11 +0530","category":"general","cue":"","company":null},{"title":"Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-16-nov-2026/liveblog/135871604.cms","published":"Mon, 16 Nov 2026 09:05:24 +0530","category":"general","cue":"","company":"MARUTI"},{"title":"BPCL Share Price Highlights: BPCL Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bpcl-stock-price-live-updates-16-nov-2026/liveblog/135871462.cms","published":"Mon, 16 Nov 2026 09:01:16 +0530","category":"general","cue":"","company":null},{"title":"Coal India Share Price Highlights: Coal India Ltd Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/coal-india-ltd-stock-price-livestock-price-today-live-updates-16-nov-2026/liveblog/135871357.cms","published":"Mon, 16 Nov 2026 08:55:08 +0530","category":"general","cue":"","company":null},{"title":"Tech Mahindra Share Price Highlights: Tech Mahindra Stock Price History","source":"ET Markets","link":"https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tech-mahindra-share-price-live-16-nov-2026/liveblog/135871297.cms","published":"Mon, 16 Nov 2026 08:51:15 +0530","category":"general","cue":"","company":"TECHM"}],"newsCounts":{"global":8,"results":3,"general":15,"policy":4},"chain":{"spot":25387.4,"exps":[{"e":"2026-11-17","d":0,"pcr":1.0,"mp":25400.0,"cw":25400.0,"pw":25350.0},{"e":"2026-11-23","d":6,"pcr":1.08,"mp":25000.0,"cw":26000.0,"pw":25000.0},{"e":"2026-12-01","d":14,"pcr":0.83,"mp":25500.0,"cw":26400.0,"pw":25500.0},{"e":"2026-12-08","d":21,"pcr":1.29,"mp":25300.0,"cw":26000.0,"pw":25300.0},{"e":"2026-12-15","d":28,"pcr":0.87,"mp":25500.0,"cw":26500.0,"pw":25000.0},{"e":"2026-12-29","d":42,"pcr":1.27,"mp":24500.0,"cw":27000.0,"pw":24000.0}]},"movers":{"up":[{"s":"YATRA","c":19.99,"px":93.75},{"s":"DELPHIFX","c":19.87,"px":7.24},{"s":"TVSSCS","c":12.23,"px":137.2},{"s":"KILITCH","c":10.9,"px":238.56},{"s":"HINDOILEXP","c":10.53,"px":212.66},{"s":"AARTISURF","c":9.99,"px":582.75}],"dn":[{"s":"DCAL","c":-19.48,"px":139.23},{"s":"PRICOLLTD","c":-17.76,"px":615.0},{"s":"V2RETAIL","c":-14.91,"px":139.64},{"s":"KAYNES","c":-13.12,"px":2980.0},{"s":"MAHLOG","c":-12.95,"px":374.1},{"s":"UNIDT","c":-12.79,"px":164.33}]},"roll":[]};
+const inr=n=>Number(n).toLocaleString('en-IN');
+const pc=(v,d=2)=>(v>0?'+':'')+Number(v).toFixed(d)+'%';
+const col=v=>v>0.005?'var(--up)':(v<-0.005?'var(--down)':'var(--flat)');
+
+/* ---------- HOME ---------- */
+(function(){
+  const el=document.getElementById('strip');
+  if(!D.indices||!D.indices.length){el.innerHTML='<div class="pad">No index data.</div>';return}
+  const items=D.indices.map(x=>`
+    <div class="sItem">
+      <div class="sName">${x.n}</div>
+      <div class="sLvl">${inr(x.lvl)}</div>
+      <div class="sChg" style="color:${col(x.pct)}">${x.chg>0?'+':''}${inr(x.chg)} · ${pc(x.pct)}</div>
+    </div>`).join('<div class="sDiv"></div>');
+  el.innerHTML=`<div class="stripRow">${items}</div>
+    <div class="stripFoot"><span>Last close</span>
+      <span>${D.breadth&&D.breadth.n?inr(D.breadth.n)+' stocks measured':''}</span></div>`;
+
+  const t=document.getElementById('tiles');
+  const tr=(D.sectors||[]).filter(s=>s.u!=null).reduce((a,s)=>a+s.u,0);
+  const tn=(D.sectors||[]).reduce((a,s)=>a+s.n,0);
+  t.innerHTML=`
+    <div class="tile"><div class="k">Breadth</div>
+      <div class="v">${D.breadth&&D.breadth.a50!=null?D.breadth.a50+'%':'—'}</div>
+      <div class="d">above 50-day</div></div>
+    <div class="tile"><div class="k">Trending up</div>
+      <div class="v">${inr(tr)}</div><div class="d">of ${inr(tn)} stocks</div></div>`;
+
+  document.getElementById('ribs').innerHTML=(D.sectors||[]).map(s=>`
+    <div class="rib" data-s="${s.s}">
+      <div class="n">${s.s}</div>
+      <div class="m" style="color:${col(s.m)}">${s.m>0?'+':''}${Number(s.m).toFixed(2)}%</div>
+      <div class="bb"><i style="width:${Math.max(3,s.b||0)}%"></i></div>
+      <div class="bt">${s.b}% above 50d · ${s.u}/${s.n} up</div>
+    </div>`).join('');
+  document.querySelectorAll('.rib').forEach(r=>r.onclick=()=>go('sectors'));
+
+  const ch=D.changes||[];
+  document.getElementById('chgN').textContent=ch.length+' fields';
+  document.getElementById('changes').innerHTML=ch.length?ch.map(c=>`
+    <div class="rw"><span class="dot" style="background:${col(c.pct)}"></span>
+      <span class="rl">${lbl(c.field)}</span>
+      <span class="rv">${fmtv(c)}</span>
+      <span class="rp" style="color:${col(c.pct)}">${c.pct!=null?pc(c.pct):''}</span>
+    </div>`).join(''):'<div class="rw"><span class="rl">First snapshot stored — tomorrow this fills in.</span></div>';
+
+  const R=D.range;
+  document.getElementById('rng').innerHTML=R?`
+    <div style="font-size:15px;font-weight:640;line-height:1.5">
+      90% of 21-session Nifty moves fell between
+      <span style="color:var(--down)">${R.p5}%</span> and
+      <span style="color:var(--up)">+${R.p95}%</span></div>
+    <div style="font-size:11.5px;color:var(--faint);margin-top:6px">
+      median ${R.p50>0?'+':''}${R.p50}% · n=${inr(R.n)} windows · ${R.from}–${R.to}</div>
+    <div style="font-size:11px;color:var(--faint);margin-top:8px">
+      This is history, not a forecast.</div>`:'<div>No history.</div>';
+})();
+
+function lbl(f){
+  return ({'index.nifty.close':'Nifty','index.banknifty.close':'Bank Nifty','index.sensex.close':'Sensex',
+   'breadth.above_50':'Stocks above 50-day','breadth.above_200':'Stocks above 200-day',
+   'pcr.nifty':'Nifty PCR','flow.fii_cr':'FII net','flow.dii_cr':'DII net',
+   'metal.gold.per_gram':'Gold per gram','metal.silver.per_gram':'Silver per gram',
+   'fx.usdinr':'USD/INR'})[f]||f;
+}
+function fmtv(c){
+  const u=c.unit||'';
+  if(u==='%')return Number(c.to).toFixed(1)+'%';
+  if(u==='crore')return '₹'+inr(Math.round(c.to))+' cr';
+  if(u==='rupees')return '₹'+inr(Math.round(c.to));
+  if(u==='ratio')return Number(c.to).toFixed(2);
+  return inr(Math.round(c.to));
+}
+
+/* ---------- MARKET ---------- */
+(function(){
+  const b=D.breadth||{};
+  document.getElementById('brN').textContent=b.n?inr(b.n)+' stocks':'';
+  document.getElementById('breadthTiles').innerHTML=`
+    <div class="tile"><div class="k">Above 50-day</div>
+      <div class="v">${b.a50!=null?b.a50+'%':'—'}</div><div class="d">of ${inr(b.n||0)}</div></div>
+    <div class="tile"><div class="k">Above 200-day</div>
+      <div class="v">${b.a200!=null?b.a200+'%':'—'}</div><div class="d">long-term trend</div></div>`;
+
+  const m=D.movers||{up:[],dn:[]};
+  const rows=[...(m.up||[]).map(x=>({...x,dir:1})),...(m.dn||[]).map(x=>({...x,dir:-1}))];
+  document.getElementById('movers').innerHTML=rows.map(x=>`
+    <div class="rw"><span class="dot" style="background:${col(x.c)}"></span>
+      <span class="rl">${x.s}</span>
+      <span class="rv">${x.px?('₹'+inr(Math.round(x.px))):''}</span>
+      <span class="rp" style="color:${col(x.c)}">${pc(x.c)}</span></div>`).join('')||'<div class="rw">No movers.</div>';
+
+  const p=D.pcr||{};
+  document.getElementById('pcrDate').textContent=p.d||'';
+  document.getElementById('pcrBox').innerHTML=p.v!=null?`
+    <div style="font-size:26px;font-weight:680;letter-spacing:-.9px">${Number(p.v).toFixed(2)}</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:3px">band: ${p.band||'—'}</div>
+    <div style="font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.55">
+      Published as a null result: when PCR sat in this band, the next 21 sessions did no better
+      than a random session.</div>`:'<div>No PCR.</div>';
+})();
+
+/* ---------- SECTORS ---------- */
+(function(){
+  const s=D.sectors||[];
+  document.getElementById('secN').textContent=s.length+' sectors';
+  document.getElementById('secList').innerHTML=s.map(x=>{
+    const narrow=(x.note||'').indexOf('narrow')===0;
+    return `<div class="g pad" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+        <div>
+          <div style="font-size:14px;font-weight:660">${x.s}</div>
+          <div style="font-size:11px;color:var(--faint);margin-top:2px">${x.u} up · ${x.d} down · ${x.n} stocks</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:680;letter-spacing:-.5px;color:${col(x.m)}">${x.m>0?'+':''}${Number(x.m).toFixed(2)}%</div>
+          <div style="font-size:10px;color:var(--faint)">20 sessions</div>
+        </div>
+      </div>
+      <div style="height:5px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:11px;overflow:hidden">
+        <i style="display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a8ccf8,#3f7fd6);width:${Math.max(2,x.b||0)}%"></i></div>
+      <div style="font-size:10.5px;color:var(--faint);margin-top:5px">${x.b}% above their 50-day average</div>
+      ${narrow?`<div style="display:inline-block;margin-top:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(255,238,205,.85);border:1px solid rgba(220,180,110,.4);color:#8a6420">narrow move</div>`:''}
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        ${(x.lead||[]).map(l=>`<span class="tier" style="color:var(--up)">${l.symbol} ${pc(l.chg_20d)}</span>`).join('')}
+        ${(x.lag||[]).map(l=>`<span class="tier" style="color:var(--down)">${l.symbol} ${pc(l.chg_20d)}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+})();
+
+/* ---------- F&O ---------- */
+(function(){
+  const c=D.chain||{};
+  document.getElementById('spotTxt').textContent=c.spot?('spot '+inr(Math.round(c.spot))):'';
+  document.getElementById('chain').innerHTML=(c.exps||[]).map(x=>`
+    <div class="cx">
+      <div class="cxe">
+        <div class="cxd">${x.e}</div>
+        <div class="cxs">${x.d===0?'expires today':x.d+' day(s) away'}${x.d<0?' · settled':''}</div>
+      </div>
+      <div class="cxr">
+        <b>${x.pcr!=null?Number(x.pcr).toFixed(2):'—'}</b> PCR<br>
+        <span style="color:var(--faint)">max pain ${x.mp?inr(x.mp):'—'}</span>
+      </div>
+    </div>`).join('')||'<div class="cx">No chain.</div>';
+})();
+
+/* ---------- METALS ---------- */
+(function(){
+  const M=D.metals||{};
+  const card=(title,rows,unit)=>{
+    if(!rows||!rows.length)return '';
+    return rows.map(r=>`
+      <div class="g mcard">
+        <div class="t">${title} · ${r.k}</div>
+        <div class="p" style="color:${col(r.p||0)}">₹${r.g>=1000?inr(Math.round(r.g)):Number(r.g).toFixed(2)}</div>
+        <div class="u">per gram${r.c!=null?` · ${r.c>0?'+':''}₹${Math.abs(r.c)>=1?inr(Math.round(Math.abs(r.c))):Math.abs(r.c).toFixed(2)} (${pc(r.p)})`:''}</div>
+        <div class="tiers"><span class="tier">10g ₹${inr(Math.round(r.g10))}</span></div>
+      </div>`).join('');
+  };
+  document.getElementById('goldCards').innerHTML=card('Gold',M.gold);
+  document.getElementById('silverCards').innerHTML=card('Silver',M.silver);
+})();
+
+/* ---------- NEWS ---------- */
+let NCAT='all',NQ='';
+const CL={all:'All',results:'Results',general:'General',global:'Global',policy:'Policy'};
+const CC={general:'#2f6fd0',results:'#0b7a5c',global:'#7b58c9',policy:'#b0752a'};
+function when(p){
+  if(!p)return'';
+  const d=new Date(p); if(isNaN(d))return String(p).slice(0,16);
+  return d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+}
+function renderNews(){
+  const items=(D.news||[]).filter(it=>{
+    if(NCAT!=='all'&&it.category!==NCAT)return false;
+    if(NQ){const s=(it.title+' '+(it.company||'')+' '+it.source+' '+it.category).toLowerCase();
+      if(s.indexOf(NQ.toLowerCase())<0)return false;}
+    return true;});
+  const counts={all:(D.news||[]).length};
+  (D.news||[]).forEach(i=>counts[i.category]=(counts[i.category]||0)+1);
+  document.getElementById('cnts').innerHTML=Object.keys(CL).filter(k=>counts[k]).map(k=>`
+    <span class="cc ${NCAT===k?'on':''}" data-c="${k}">
+      ${k!=='all'?`<span class="d" style="background:${CC[k]}"></span>`:''}
+      ${CL[k]} <span class="n">${counts[k]}</span></span>`).join('');
+  document.querySelectorAll('.cc').forEach(c=>c.onclick=()=>{NCAT=c.dataset.c;renderNews()});
+  document.getElementById('newsList').innerHTML=items.length?items.map(it=>`
+    <a class="item" href="${it.link}" target="_blank" rel="noopener">
+      <div class="meta">
+        <span class="pill p-${it.category}"><span class="d"></span>${CL[it.category]||it.category}</span>
+        ${it.company?`<span class="co"><span class="av">${it.company.slice(0,2)}</span>${it.company}</span>`:''}
+        <span class="src">${it.source}</span>
+        <span class="tm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${when(it.published)}</span>
+      </div>
+      <h3>${it.title.replace(/</g,'&lt;')}</h3>
+    </a>`).join(''):`<div class="g pad" style="text-align:center;color:var(--muted);font-size:13px">Nothing matches.</div>`;
+}
+document.getElementById('q').addEventListener('input',e=>{NQ=e.target.value.trim();renderNews()});
+renderNews();
+
+/* ---------- navigation ---------- */
+function go(p){
+  document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
+  document.querySelectorAll('.nv').forEach(n=>n.classList.toggle('on',n.dataset.p===p));
+  scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nv').forEach(n=>n.onclick=()=>go(n.dataset.p));
+
+/* ---------- header hides on scroll ---------- */
+let ly=0;
+addEventListener('scroll',()=>{const y=scrollY,hd=document.getElementById('hd');
+  if(y>ly&&y>70)hd.classList.add('hide');else hd.classList.remove('hide');ly=y;},{passive:true});
+</script>
+</body>
+</html>

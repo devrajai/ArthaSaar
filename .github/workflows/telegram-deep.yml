@@ -61,6 +61,7 @@ jobs:
             DOW=$(date -u +%u)      # 1=Mon .. 7=Sun
             DOM=$(date -u +%d)
             if [ "$DOW" = "7" ]; then MODE=weekly
+            elif [ "$DOW" = "6" ]; then MODE=scorecard
             elif [ "$DOM" = "01" ]; then MODE=positioning
             else MODE=expiry; fi
           fi

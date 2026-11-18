@@ -134,8 +134,10 @@ def build():
             except Exception:
                 pass
 
-    # ---------- cheap options ----------
-    if aff and aff.get("buckets"):
+    # ---------- cheap options: PAUSED ----------
+    # This listed named strikes with premiums, which reads as a pick. Replaced below with the
+    # cost of one lot and what a 1% index move means in rupees - no names, no ranking.
+    if False and aff and aff.get("buckets"):   # PAUSED: named strikes with prices
         br = aff.get("base_rates") or {}
         exp = aff.get("nearest_expiry")
         lines.append("")
@@ -157,6 +159,33 @@ def build():
                          % (br.get("sessions"), br.get("needed")))
         else:
             lines.append("<i>A cheap premium is not a discount.</i>")
+
+    # ---------- what one lot costs, without naming a strike ----------
+    # This replaced a list of named strikes with premiums. That list read as a pick; a lot-size
+    # calculation does not. No names, no ranking, no "cheapest".
+    try:
+        aff2 = jload("docs/affordable.json") or {}
+        lot = None
+        for b in (aff2.get("buckets") or []):
+            if b.get("min_cost") == 0:
+                for row in (b.get("rows") or []):
+                    if str(row.get("symbol")) == "NIFTY" and row.get("lot"):
+                        lot = row
+                        break
+            if lot:
+                break
+        if lot:
+            lotn = float(lot.get("lot") or 0)
+            prem = float(lot.get("premium") or 0)
+            lines.append("")
+            lines.append("<b>What a lot costs</b>")
+            lines.append("One Nifty lot is <b>%s</b> shares. At a premium of Rs %s that is "
+                         "<b>Rs %s</b> leaving your account, not Rs %s."
+                         % (int(lotn), prem, "{:,.0f}".format(prem * lotn), prem))
+            lines.append("<i>Options can lose the whole premium. A low price is not a discount "
+                         "- it is the market's estimate of expiring worthless.</i>")
+    except Exception as _e:
+        print("lot-cost section skipped: %s: %s" % (type(_e).__name__, str(_e)[:90]))
 
     # ---------- the line that makes it honest ----------
     lines.append("")

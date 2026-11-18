@@ -247,6 +247,17 @@ def build_weekly():
 
 # ---------------------------------------------------------------- holding review
 def build_review(sym):
+    """PAUSED. A named stock under a 'holding' label reads as a view on that security, which
+    is a research service under the RA Regulations whatever disclaimer sits under it. Kept so
+    the logic is not lost; returns the paused notice instead of a review until a compliance
+    check clears it."""
+    return ("<b>Holding review — paused</b>\n\n"
+            "This message named a single stock and is paused pending a compliance check. "
+            "The same facts are on the site as a neutral stock page: price, 1-month change, "
+            "52-week position, open interest. Market data and descriptions only.")
+
+
+def _build_review_old(sym):
     sym = (sym or "").upper().strip()
     if not sym:
         return "<b>Holding review</b>\n\nGive a symbol: review TATAMOTORS"
@@ -309,6 +320,235 @@ def build_review(sym):
     return "\n".join(L)
 
 
+
+
+# ---------------------------------------------------------------- glossary
+GLOSSARY = [
+    ("PCR", "put-call ratio",
+     "Total put open interest divided by total call open interest. Read it as: how much "
+     "bearish positioning exists against bullish. It is a description, not a prediction."),
+    ("OI", "open interest",
+     "The number of contracts currently open. It rises when a new position is created and "
+     "falls when one is closed. It is not the same as volume, which counts trades."),
+    ("Max pain", "the strike where buyers lose least",
+     "The strike at which the total value of expiring options is smallest. It is arithmetic "
+     "on open interest, and it is where option sellers are positioned - not a target."),
+    ("FII", "foreign institutional investor",
+     "Overseas funds buying and selling Indian shares, reported in crore rupees for the cash "
+     "market. NSE publishes the figure the same evening, provisional."),
+    ("Lot size", "contract size",
+     "How many shares one derivative contract covers. A Rs 2 premium on a 65 lot costs Rs 130, "
+     "not Rs 2. Always multiply before deciding anything is cheap."),
+    ("Rollover", "positions carried to the next expiry",
+     "The share of a stock's futures open interest already sitting in the next series. High "
+     "rollover means holders chose to stay; low means they squared off."),
+    ("Gap", "a jump at the open",
+     "When the market opens above yesterday's high or below yesterday's low. The gap is "
+     "'filled' when price trades back through it."),
+    ("Breadth", "how many stocks are participating",
+     "The share of listed stocks above their own moving average. A rising index on falling "
+     "breadth means a few large stocks are carrying it."),
+]
+
+
+def build_glossary():
+    now = ist()
+    idx = (now.timetuple().tm_yday) % len(GLOSSARY)
+    short, full, explain = GLOSSARY[idx]
+    L = ["<b>ArthaSaar — one term a day</b>", now.strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+    L.append("")
+    L.append("<b>%s</b> — %s" % (esc(short), esc(full)))
+    L.append(esc(explain))
+    # today's real number as the example, when the file has one
+    try:
+        if short == "PCR":
+            pcr = jload("docs/pcr_signal.json") or {}
+            cur = (pcr.get("current") or {})
+            if cur.get("pcr") is not None:
+                L.append("")
+                L.append("Today: Nifty PCR <b>%.2f</b> (%s)." % (float(cur["pcr"]),
+                                                                esc(str(cur.get("band") or ""))))
+        elif short == "Max pain":
+            d = jload("docs/oi_by_expiry.json") or {}
+            nif = ((d.get("indices") or {}).get("NIFTY")) or {}
+            for e in (nif.get("expiries") or []):
+                if e.get("max_pain"):
+                    L.append("")
+                    L.append("Today: Nifty max pain <b>%s</b> for the %s expiry."
+                             % (n(e["max_pain"]), esc(str(e.get("expiry")))))
+                    break
+        elif short == "Breadth":
+            br = jload("docs/breadth.json") or {}
+            if br.get("above_50") is not None:
+                L.append("")
+                L.append("Today: <b>%.1f%%</b> of %s stocks are above their 50-day average."
+                         % (float(br["above_50"]), n(br.get("total"))))
+        elif short == "FII":
+            asof = jload("docs/data_asof.json") or {}
+            L.append("")
+            L.append("Reported session: %s." % esc(str(asof.get("session") or "latest")))
+        elif short == "Gap":
+            g = jload("docs/gaps.json") or {}
+            if g.get("fill_rate_up") is not None:
+                L.append("")
+                L.append("Measured: gap-ups filled within %s sessions %.1f%% of the time (n=%s)."
+                         % (esc(str((g.get("samples") or {}).get("window"))),
+                            float(g["fill_rate_up"]), n((g.get("samples") or {}).get("up"))))
+    except Exception:
+        pass
+    L.append("")
+    L.append("<i>Term %d of %d. One a day, with the number it refers to.</i>"
+             % (idx + 1, len(GLOSSARY)))
+    return "\n".join(L)
+
+
+# ---------------------------------------------------------------- calendar
+def build_calendar():
+    now = ist()
+    L = ["<b>ArthaSaar — dates ahead</b>", now.strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+
+    d = jload("docs/oi_by_expiry.json") or {}
+    nif = ((d.get("indices") or {}).get("NIFTY")) or {}
+    exps = sorted([e for e in (nif.get("expiries") or [])
+                   if e.get("expiry") and str(e.get("expiry")) >= now.strftime("%Y-%m-%d")],
+                  key=lambda e: str(e.get("expiry")))
+    if exps:
+        L.append("")
+        L.append("<b>Nifty expiries</b>")
+        for e in exps[:4]:
+            L.append("%s · %s day(s) away" % (esc(str(e.get("expiry"))),
+                                              e.get("days_out") if e.get("days_out") is not None else "?"))
+
+    # special sessions the exchange has announced
+    try:
+        ss = jload("config/special_sessions.json") or {}
+        ahead = [s for s in (ss.get("sessions") or [])
+                 if str(s.get("date")) >= now.strftime("%Y-%m-%d")]
+        L.append("")
+        L.append("<b>Special sessions</b>")
+        if ahead:
+            for s in ahead[:4]:
+                L.append("%s · %s (%s-%s IST)" % (esc(str(s.get("date"))), esc(str(s.get("label"))),
+                                                  esc(str(s.get("open"))), esc(str(s.get("close")))))
+        else:
+            L.append("None announced.")
+    except Exception:
+        pass
+
+    # scheduled macro events
+    try:
+        ev = jload("config/event_days.json") or {}
+        soon = [e for e in (ev.get("events") or [])
+                if now.strftime("%Y-%m-%d") <= str(e.get("date")) <=
+                (now + timedelta(days=45)).strftime("%Y-%m-%d")]
+        L.append("")
+        L.append("<b>Scheduled events</b>")
+        if soon:
+            for e in soon[:5]:
+                L.append("%s · %s" % (esc(str(e.get("date"))), esc(str(e.get("label")))))
+        else:
+            L.append("Nothing scheduled in the next 45 days in our file.")
+        L.append("<i>NSE trading holidays are not in this repository. Check nseindia.com "
+                 "before assuming a session.</i>")
+    except Exception:
+        pass
+    return "\n".join(L)
+
+
+# ---------------------------------------------------------------- scorecard
+def build_scorecard():
+    """Every statistic the site publishes, and whether it beat its own baseline."""
+    now = ist()
+    L = ["<b>ArthaSaar — weekly scorecard</b>", now.strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+    L.append("")
+    L.append("<i>Each row is a statistic we publish, the baseline it should be judged against, "
+             "and the verdict.</i>")
+
+    rows = []
+    try:
+        pcr = jload("docs/pcr_signal.json") or {}
+        for b in (pcr.get("bands") or []):
+            h = next((x for x in (b.get("horizons") or []) if x.get("h") == 21), None)
+            if not h or (h.get("n") or 0) < MIN_CASES:
+                continue
+            # "56.4% up", NOT "+56.40% up". pc() adds a sign because it formats a CHANGE;
+            # this is the share of times something happened, and a leading + reads as a move.
+            up = h.get("up_pct")
+            up_s = ("%.1f%% up" % float(up)) if up is not None else "—"
+            rows.append((esc(str(b.get("band"))), up_s,
+                         "n=%s" % n(h.get("n")), esc(str(h.get("edge") or "-"))))
+    except Exception as _e:
+        print("scorecard: PCR rows skipped: %s: %s" % (type(_e).__name__, str(_e)[:90]))
+
+    try:
+        g = jload("docs/gaps.json") or {}
+        sm = g.get("samples") or {}
+        if g.get("fill_rate_up") is not None:
+            rows.append(("Gap-up fills", "%.1f%%" % float(g["fill_rate_up"]),
+                         "n=%s" % n(sm.get("up")), "describes fills, not direction"))
+    except Exception:
+        pass
+
+    if rows:
+        L.append("")
+        for r in rows[:6]:
+            L.append("<b>%s</b> — %s (%s) · %s" % r)
+    else:
+        L.append("")
+        L.append("No statistics met the sample threshold this week.")
+
+    L.append("")
+    L.append("<i>A statistic that matches its baseline has no edge, and is reported that way. "
+             "We do not publish one that fails to beat it.</i>")
+    return "\n".join(L)
+
+
+# ---------------------------------------------------------------- monthly
+def build_monthly():
+    now = ist()
+    ih = jload("docs/index_history.json") or {}
+    br = jload("docs/breadth.json") or {}
+    L = ["<b>ArthaSaar — month so far</b>", now.strftime("%b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+
+    for ix in (ih.get("indices") or []):
+        if ix.get("symbol") != "^NSEI":
+            continue
+        daily = ix.get("daily") or []
+        if not daily:
+            continue
+        ym = now.strftime("%Y-%m")
+        month = [r for r in daily if str(r[0]).startswith(ym)]
+        if not month:
+            continue
+        o = month[0][1]; hi = max(r[2] for r in month); lo = min(r[3] for r in month)
+        c = month[-1][4]
+        L.append("")
+        L.append("<b>Nifty %s</b>" % now.strftime("%b"))
+        L.append("Open %s · high %s · low %s · now %s" % (n(o), n(hi), n(lo), n(c)))
+        if o:
+            L.append("%s on the month · range %s (%s of price)"
+                     % (pc((c / o - 1) * 100), n(hi - lo), pc((hi - lo) / lo * 100, 1)))
+
+    if br.get("above_50") is not None:
+        L.append("")
+        L.append("Breadth: %.1f%% of %s stocks above their 50-day average."
+                 % (float(br["above_50"]), n(br.get("total"))))
+
+    d = jload("docs/oi_by_expiry.json") or {}
+    nif = ((d.get("indices") or {}).get("NIFTY")) or {}
+    exps = sorted([e for e in (nif.get("expiries") or [])
+                   if e.get("expiry") and str(e.get("expiry")) >= now.strftime("%Y-%m-%d")],
+                  key=lambda e: str(e.get("expiry")))
+    if exps:
+        L.append("")
+        L.append("Next expiries: " + " · ".join(esc(str(e.get("expiry"))) for e in exps[:3]))
+    return "\n".join(L)
+
+
 # ---------------------------------------------------------------- send
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -321,8 +561,16 @@ def main():
         msg = build_weekly()
     elif mode == "review":
         msg = build_review(args[1] if len(args) > 1 else "")
+    elif mode == "glossary":
+        msg = build_glossary()
+    elif mode == "calendar":
+        msg = build_calendar()
+    elif mode == "scorecard":
+        msg = build_scorecard()
+    elif mode == "monthly":
+        msg = build_monthly()
     else:
-        print("unknown mode %r - use expiry | positioning | weekly | review SYMBOL" % mode)
+        print("unknown mode %r - use expiry | positioning | weekly | review SYMBOL | glossary | calendar | scorecard | monthly" % mode)
         return 2
 
     print("mode=%s len=%d chats=%d" % (mode, len(msg), len(CHATS)))

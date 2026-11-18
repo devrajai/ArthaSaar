@@ -625,6 +625,12 @@ jobs:
       - name: "7t. Claim ledger"
         run: python scripts/build_claim_ledger.py
 
+      - name: "7u. Daily snapshot"
+        run: python scripts/build_snapshot.py
+
+      - name: "7v2. Gold and silver"
+        run: python scripts/build_metals.py
+
       - name: Commit
         run: |
           git config user.name "data-bot"

@@ -60,12 +60,17 @@ jobs:
           else
             DOW=$(date -u +%u)      # 1=Mon .. 7=Sun
             DOM=$(date -u +%d)
-            if [ "$DOW" = "7" ]; then MODE=weekly
+            HOUR=$(date -u +%H)
+            if [ "$HOUR" = "15" ]; then MODE=metals; SLOT=night
+            elif [ "$HOUR" = "03" ] && [ "$DOW" != "7" ] && [ "$DOM" != "01" ]; then
+              MODE=metals; SLOT=morning
+            elif [ "$DOW" = "7" ]; then MODE=weekly
             elif [ "$DOW" = "6" ]; then MODE=scorecard
             elif [ "$DOM" = "15" ]; then MODE=corrections
             elif [ "$DOM" = "01" ]; then MODE=positioning
             else MODE=expiry; fi
           fi
+          echo "slot=${SLOT:-}" >> "$GITHUB_OUTPUT"
           echo "mode=$MODE" >> "$GITHUB_OUTPUT"
           echo "chosen: $MODE"
 
@@ -75,7 +80,9 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID || secrets.TELEGRAM_CHAT }}
         run: |
           MODE="${{ steps.pick.outputs.mode }}"
-          if [ "$MODE" = "review" ]; then
+          if [ "$MODE" = "metals" ]; then
+            python scripts/telegram_deep.py metals "${{ steps.pick.outputs.slot }}"
+          elif [ "$MODE" = "review" ]; then
             python scripts/telegram_deep.py review "${{ github.event.inputs.symbol }}"
           else
             python scripts/telegram_deep.py "$MODE"

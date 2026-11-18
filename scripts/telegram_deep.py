@@ -619,6 +619,142 @@ def build_ledger():
     return "\n".join(L)
 
 
+
+
+# ---------------------------------------------------------------- gold & silver
+def build_metals(slot="night"):
+    d = jload("docs/metals.json") or {}
+    now = ist()
+    head = "morning" if slot == "morning" else "night"
+    L = ["<b>ArthaSaar — gold &amp; silver</b> · %s" % head, now.strftime("%d %b %Y, %H:%M IST")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+
+    if not d.get("available"):
+        L.append("")
+        L.append("No rate published. " + esc(str(d.get("reason") or "the feed did not return.")))
+        L.append("<i>A stale or invented rate would be worse than none.</i>")
+        return "\n".join(L)
+
+    for key, label in (("gold", "Gold"), ("silver", "Silver")):
+        b = d.get(key) or {}
+        if not b.get("per_gram"):
+            continue
+        L.append("")
+        L.append("<b>%s</b>" % label)
+        chg = b.get("chg_per_gram")
+        pct = b.get("chg_pct")
+        arrow = "\u25B2" if (chg or 0) > 0 else ("\u25BC" if (chg or 0) < 0 else "\u2022")
+        # rupees per gram, with the change in rupees and in percent
+        line = "%s 1 g <b>Rs %s</b>" % (arrow, "{:,.0f}".format(b["per_gram"]))
+        if chg is not None:
+            line += " (%s%s, %s%s%%)" % ("+" if chg >= 0 else "-", "{:,.0f}".format(abs(chg)),
+                                          "+" if pct >= 0 else "-", "{:.2f}".format(abs(pct)))
+        L.append(line)
+        L.append("10 g <b>Rs %s</b>%s" % ("{:,.0f}".format(b["per_10g"]),
+                 (" (%sRs %s)" % ("+" if (b.get("chg_per_10g") or 0) >= 0 else "-",
+                                  "{:,.0f}".format(abs(b.get("chg_per_10g") or 0))))
+                 if b.get("chg_per_10g") is not None else ""))
+        L.append("12 g <b>Rs %s</b>%s" % ("{:,.0f}".format(b["per_12g"]),
+                 (" (%sRs %s)" % ("+" if (b.get("chg_per_12g") or 0) >= 0 else "-",
+                                  "{:,.0f}".format(abs(b.get("chg_per_12g") or 0))))
+                 if b.get("chg_per_12g") is not None else ""))
+
+    if d.get("usdinr"):
+        L.append("")
+        L.append("USD/INR <b>%.2f</b>%s" % (float(d["usdinr"]),
+                 (" (%+.2f%%)" % d["usdinr_chg_pct"]) if d.get("usdinr_chg_pct") is not None else ""))
+
+    etfs = d.get("etf_cross_check") or {}
+    if etfs:
+        L.append("")
+        bits = []
+        for k, lbl in (("goldbees", "GOLDBEES"), ("silverbees", "SILVERBEES")):
+            e = etfs.get(k)
+            if e and e.get("price"):
+                bits.append("%s Rs %.2f (%+.2f%%)" % (lbl, e["price"], e.get("chg_pct") or 0))
+        if bits:
+            L.append("Domestic ETFs: " + " · ".join(bits))
+
+    L.append("")
+    L.append("<i>International spot converted at the live USD/INR rate. This is NOT your "
+             "jeweller's rate - local retail adds import duty, GST and a dealer premium, so it "
+             "usually sits 10-15% above this.</i>")
+    L.append("<i>Data health: %s.</i>" % esc(str(d.get("as_of_ist") or "")))
+    return "\n".join(L)
+
+
+
+
+# ---------------------------------------------------------------- what changed
+LABELS = {
+    "index.nifty.close": "Nifty", "index.banknifty.close": "Bank Nifty",
+    "index.sensex.close": "Sensex", "breadth.above_50": "Stocks above 50-day",
+    "breadth.above_200": "Stocks above 200-day", "breadth.total": "Stocks covered",
+    "pcr.nifty": "Nifty PCR", "flow.fii_cr": "FII net", "flow.dii_cr": "DII net",
+    "metal.gold.per_gram": "Gold per gram", "metal.silver.per_gram": "Silver per gram",
+    "fx.usdinr": "USD/INR",
+}
+
+
+def build_changed():
+    d = jload("docs/snapshot.json") or {}
+    L = ["<b>ArthaSaar — what changed</b>", ist().strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+
+    since = d.get("compared_with")
+    if not since:
+        L.append("")
+        L.append("No comparison yet. The first snapshot was stored today (%s); tomorrow's "
+                 "message will show what moved." % esc(str(d.get("date"))))
+        L.append("<i>This is the one message that cannot be built retroactively - every day "
+                 "without a snapshot is a day that can never be compared.</i>")
+        return "\n".join(L)
+
+    moved = [c for c in (d.get("changes") or []) if c.get("status") == "changed"]
+    if not moved:
+        L.append("")
+        L.append("Nothing moved between %s and %s." % (esc(str(since)), esc(str(d.get("date")))))
+        return "\n".join(L)
+
+    L.append("")
+    L.append("Compared with <b>%s</b> · %d field(s) moved" % (esc(str(since)), len(moved)))
+
+    def fmt(c):
+        lab = LABELS.get(c["field"], c["field"])
+        unit = c.get("unit") or ""
+        delta = c.get("delta") or 0
+        pct = c.get("pct")
+        if unit == "%":
+            return "%s <b>%.1f%%</b> (%+.1f pts)" % (lab, c["to"], delta)
+        if unit == "crore":
+            return "%s <b>Rs %s cr</b> (%s)" % (lab, "{:,.0f}".format(c["to"]),
+                                                ("%+.2f%%" % pct) if pct is not None else "-")
+        if unit == "rupees":
+            return "%s <b>Rs %s</b> (%s)" % (lab, "{:,.0f}".format(c["to"]),
+                                             ("%+.2f%%" % pct) if pct is not None else "-")
+        if unit == "ratio":
+            return "%s <b>%.2f</b> (%+.2f)" % (lab, c["to"], delta)
+        return "%s <b>%s</b>%s" % (lab, "{:,.0f}".format(c["to"]),
+                                   (" (%+.2f%%)" % pct) if pct is not None else "")
+
+    # index first, then everything else
+    idx = [c for c in moved if c["field"].startswith("index.")]
+    rest = [c for c in moved if not c["field"].startswith("index.")]
+    if idx:
+        L.append("")
+        for c in idx:
+            L.append(fmt(c))
+    if rest:
+        L.append("")
+        for c in rest[:8]:
+            L.append(fmt(c))
+
+    L.append("")
+    L.append("<i>Only fields present in both snapshots are compared. A field missing from "
+             "either side is reported as not comparable, never as zero.</i>")
+    return "\n".join(L)
+
+
 # ---------------------------------------------------------------- send
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -643,6 +779,10 @@ def main():
         msg = build_corrections()
     elif mode == "ledger":
         msg = build_ledger()
+    elif mode == "metals":
+        msg = build_metals(args[1] if len(args) > 1 else "night")
+    elif mode == "changed":
+        msg = build_changed()
     else:
         print("unknown mode %r - use expiry | positioning | weekly | review SYMBOL | glossary | calendar | scorecard | monthly" % mode)
         return 2

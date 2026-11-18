@@ -177,6 +177,29 @@ def build():
         lines.append("")
         lines.append("Next Nifty expiry: <b>%s</b> · %d day(s) away" % (esc(str(nx[1])), nx[0]))
 
+    # gold and silver, per gram and per 10/12 grams, in rupees
+    try:
+        mt = jload("docs/metals.json") or {}
+        if mt.get("available"):
+            lines.append("")
+            lines.append("<b>Gold &amp; silver</b> (spot, converted)")
+            for k, lbl in (("gold", "Gold"), ("silver", "Silver")):
+                b = mt.get(k) or {}
+                if not b.get("per_gram"):
+                    continue
+                ch = b.get("chg_per_gram")
+                pc2 = b.get("chg_pct")
+                lines.append("%s 1 g <b>Rs %s</b>%s · 10 g Rs %s · 12 g Rs %s"
+                             % (lbl, "{:,.0f}".format(b["per_gram"]),
+                                (" (%sRs %s, %s%.2f%%)" % ("+" if (ch or 0) >= 0 else "-",
+                                 "{:,.0f}".format(abs(ch or 0)), "+" if (pc2 or 0) >= 0 else "-",
+                                 abs(pc2 or 0))) if ch is not None else "",
+                                "{:,.0f}".format(b["per_10g"]), "{:,.0f}".format(b["per_12g"])))
+            lines.append("<i>International spot converted at USD/INR, not the jeweller's rate - "
+                         "local retail adds duty and GST.</i>")
+    except Exception as _e:
+        print("metals in brief skipped: %s" % type(_e).__name__)
+
     ov = _overnight()
     if ov:
         lines.append("")

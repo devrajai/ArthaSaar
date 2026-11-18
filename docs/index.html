@@ -1408,7 +1408,7 @@ h1,h2,h3{letter-spacing:-.02em}
     <div class="logo">AS</div>
     <div>
       <h1>ArthaSaar</h1>
-      <div class="tag" id="stamp">Loading…</div><span class="buildtag" style="font-size:9px;color:#646c76;margin-left:6px">UI 18 Nov</span><span id="mkt" title=""></span>
+      <div class="tag" id="stamp">Loading…</div><span id="mkt" title=""></span>
     </div>
     <button id="searchDot" type="button" aria-label="Search" aria-expanded="false">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
@@ -2413,13 +2413,13 @@ function openDrawer(){document.getElementById("drawer").classList.add("open");
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");
   document.getElementById("dscrim").classList.remove("on");}
 
-function show(id){
+window.show = function show(id){
   $$("#tabs button").forEach(function(b){b.className=(b.getAttribute("data-go")===id?"active":"");});
   $$("#drawerItems .dit").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-go")===id);});
   $$("#bnav .bi").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-go")===id);});
   $$(".section").forEach(function(s){s.className=(s.id==="sec-"+id?"section on":"section");});
   window.scrollTo({top:0,behavior:"instant"});
-}
+};
 
 function build(d){
   var app=$("#app");app.innerHTML="";
@@ -2485,11 +2485,11 @@ function build(d){
         // A LANDING PAGE IS A PREVIEW. Showing all 29 sectors pushed everything else off the
         // first screen. The top six by move are enough to say which way money is flowing; the
         // full list lives on the Sectors tab, one tap away.
-        var TOPN=6;
+        var TOPN=4;
         var shown=sorted.slice(0,TOPN);
         var head=el("div","nhHead");
-        head.innerHTML='<h2>Sector trend</h2>'+
-          '<span class="nhMore" role="button" tabindex="0">See all '+secs.length+' →</span>';
+        head.innerHTML='<h2>Top sectors</h2>'+
+          '<span class="nhMore" role="button" tabindex="0">'+(secs.length-TOPN)+' more →</span>';
         wrap.appendChild(head);
         var rw=el("div","nhRibWrap");
         var rb=el("div","nhRibs");
@@ -8818,6 +8818,29 @@ show = function(id){
   else document.addEventListener("DOMContentLoaded",wire);
   setTimeout(wire,600);setTimeout(wire,1800);
 })();
+</script>
+<script>
+/* ============================================================================
+   NAV DELEGATION. One handler on document catches every tap on a bottom-nav
+   button or a drawer item. Attaching listeners per-button failed whenever the
+   nav was rebuilt (renderTabs runs again on language change and on cards.js
+   injecting) - the new buttons had no handler and the tab appeared dead.
+   ============================================================================ */
+document.addEventListener("click", function(e){
+  var t=e.target;
+  while(t && t!==document.body){
+    if(t.getAttribute && t.getAttribute("data-go")){
+      var id=t.getAttribute("data-go");
+      var ext=t.getAttribute("data-external");
+      if(ext){ window.location.href=ext; return; }
+      try{ show(id); }catch(err){ console.error("show failed",id,err); }
+      try{ closeDrawer(); }catch(_){}
+      e.preventDefault();
+      return;
+    }
+    t=t.parentNode;
+  }
+}, true);
 </script>
 </body>
 </html>

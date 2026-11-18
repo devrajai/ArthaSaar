@@ -1397,6 +1397,8 @@ h1,h2,h3{letter-spacing:-.02em}
 @media(max-width:520px){
   .datanote.oneline{font-size:10px !important;padding:4px 8px !important}
 }
+.nhMore{color:var(--accent);cursor:pointer;font-weight:650}
+.nhMore:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -2480,12 +2482,18 @@ function build(d){
       var secs=(SECTORS&&SECTORS.sectors)||[];
       if(secs.length){
         var sorted=secs.slice().sort(function(a,b){return (b.avg_chg||0)-(a.avg_chg||0);});
+        // A LANDING PAGE IS A PREVIEW. Showing all 29 sectors pushed everything else off the
+        // first screen. The top six by move are enough to say which way money is flowing; the
+        // full list lives on the Sectors tab, one tap away.
+        var TOPN=6;
+        var shown=sorted.slice(0,TOPN);
         var head=el("div","nhHead");
-        head.innerHTML='<h2>Sector trend</h2><span>all '+secs.length+' sectors</span>';
+        head.innerHTML='<h2>Sector trend</h2>'+
+          '<span class="nhMore" role="button" tabindex="0">See all '+secs.length+' →</span>';
         wrap.appendChild(head);
         var rw=el("div","nhRibWrap");
         var rb=el("div","nhRibs");
-        rb.innerHTML=sorted.map(function(s){
+        rb.innerHTML=shown.map(function(s){
           var c=(s.avg_chg||0);
           var cl=c>0?"#4ec9a0":(c<0?"#f0736a":"#8b939d");
           var tot=(s.count||0);
@@ -2496,6 +2504,13 @@ function build(d){
             '<div class="nhRb">'+pct+'% up · '+(s.advances||0)+'/'+tot+'</div></div>';
         }).join("");
         rw.appendChild(rb); wrap.appendChild(rw);
+        var more=head.querySelector(".nhMore");
+        if(more){
+          more.addEventListener("click",function(){ show("sectors"); });
+          more.addEventListener("keydown",function(e){
+            if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show("sectors"); }
+          });
+        }
       }
 
       v.appendChild(wrap);

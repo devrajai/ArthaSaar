@@ -556,6 +556,69 @@ def build_monthly():
     return "\n".join(L)
 
 
+
+
+# ---------------------------------------------------------------- corrections
+def build_corrections():
+    d = jload("docs/corrections.json") or {}
+    rows = d.get("corrections") or []
+    L = ["<b>ArthaSaar — corrections log</b>", ist().strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+    L.append("")
+    L.append("<i>Every figure we published that turned out wrong, with the date and what was "
+             "actually true. A site that publishes statistics should publish the ones it got "
+             "wrong too.</i>")
+    if not rows:
+        L.append("")
+        L.append("No corrections recorded.")
+        return "\n".join(L)
+    recent = sorted(rows, key=lambda r: str(r.get("date")), reverse=True)[:5]
+    for r in recent:
+        L.append("")
+        L.append("<b>%s</b> — %s" % (esc(str(r.get("date"))), esc(str(r.get("what_showed")))))
+        L.append("<i>What was true:</i> " + esc(str(r.get("what_was_right"))))
+        L.append("<i>Fixed:</i> " + esc(str(r.get("fixed"))))
+    L.append("")
+    L.append("<i>%d corrections on record. The full list is on the site.</i>" % len(rows))
+    return "\n".join(L)
+
+
+# ---------------------------------------------------------------- claim ledger
+def build_ledger():
+    d = jload("docs/claim_ledger.json") or {}
+    rows = d.get("claims") or []
+    L = ["<b>ArthaSaar — did last week's numbers hold?</b>", ist().strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
+    L.append("")
+    L.append("<i>Every statistic we publish, re-measured. This checks OUR numbers, not the "
+             "market's behaviour.</i>")
+    if not rows:
+        L.append("")
+        L.append("No claims recorded yet.")
+        return "\n".join(L)
+
+    held = [r for r in rows if r.get("status") == "held"]
+    moved = [r for r in rows if r.get("status") == "moved"]
+    few = [r for r in rows if r.get("status") == "too few"]
+
+    L.append("")
+    L.append("Held: <b>%d</b> · moved: <b>%d</b> · too few cases: <b>%d</b>"
+             % (len(held), len(moved), len(few)))
+    for r in moved[:4]:
+        L.append("")
+        L.append("<b>Moved</b> — %s" % esc(str(r.get("claim"))))
+        L.append(esc(str(r.get("detail"))))
+    for r in few[:3]:
+        L.append("")
+        L.append("<b>Too few</b> — %s" % esc(str(r.get("claim"))))
+        L.append(esc(str(r.get("detail"))))
+    if not moved and not few:
+        L.append("")
+        L.append("Every published statistic held within %s points."
+                 % esc(str(d.get("tolerance_points"))))
+    return "\n".join(L)
+
+
 # ---------------------------------------------------------------- send
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -576,6 +639,10 @@ def main():
         msg = build_scorecard()
     elif mode == "monthly":
         msg = build_monthly()
+    elif mode == "corrections":
+        msg = build_corrections()
+    elif mode == "ledger":
+        msg = build_ledger()
     else:
         print("unknown mode %r - use expiry | positioning | weekly | review SYMBOL | glossary | calendar | scorecard | monthly" % mode)
         return 2

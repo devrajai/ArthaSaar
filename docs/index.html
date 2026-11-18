@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#eef6ff">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#111316">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>ArthaSaar — market data</title>
 <link rel="alternate" type="application/rss+xml" title="ArthaSaar daily brief" href="feed.xml">
 <meta property="og:type" content="website">
@@ -244,26 +244,37 @@
    The palette is pinned to html:root AND html[data-theme="dark"] AND body.dark, so no saved
    theme can ever switch the text colour out from under a hardcoded light background.
    ============================================================================ */
+/* ============================================================
+   DARK GRAY PALETTE - one theme, applied everywhere.
+
+   This replaces the light glass palette. Only CSS variables change here: every section,
+   every builder and all 93 data files are untouched, so no figure or feature can be lost
+   by a re-theme.
+
+   The selectors are kept as they were (html:root plus the dark ones) because the theme
+   switcher still writes data-theme; all three now resolve to the same values, so a reader
+   cannot land on a half-light page.
+   ============================================================ */
 html:root,
 html[data-theme="dark"],
+html[data-theme="light"],
 body.dark{
-  color-scheme:light;                     /* stop the browser darkening form controls */
-  --bg:#eaf4ff; --text:#0b2239; --muted:#5a7391;
-  --card:rgba(255,255,255,.62); --line:rgba(140,185,240,.40);
-  --accent:#1d4ed8; --accent-text:#fff;
-  --up:#0b7a52; --down:#c02b2b;
-  --head:rgba(255,255,255,.7); --info:rgba(255,255,255,.82); --infoline:rgba(124,178,255,.55);
-  --glass:rgba(255,255,255,.60);
-  --glass-line:rgba(255,255,255,.85);
-  --glass-inner:rgba(255,255,255,.95);
-  --blue:#1d4ed8; --blue-dk:#173fa8; --blue-soft:#eaf3ff; --blue-line:#c3ddff;
-  --shadow:0 8px 26px rgba(29,78,216,.12), 0 2px 5px rgba(29,78,216,.06);
+  color-scheme:dark;                      /* form controls and scrollbars follow the theme */
+  --bg:#111316; --text:#e8eaed; --muted:#8b939d;
+  --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.085);
+  --accent:#8fb8ee; --accent-text:#0b1220;
+  --up:#4ec9a0; --down:#f0736a;
+  --head:rgba(255,255,255,.062); --info:rgba(255,255,255,.05); --infoline:rgba(255,255,255,.13);
+  --glass:rgba(255,255,255,.045);
+  --glass-line:rgba(255,255,255,.10);
+  --glass-inner:rgba(255,255,255,.06);
+  --blue:#8fb8ee; --blue-dk:#6d9bd4; --blue-soft:rgba(143,184,238,.13); --blue-line:rgba(143,184,238,.24);
+  --shadow:0 8px 26px rgba(0,0,0,.42), 0 2px 5px rgba(0,0,0,.28);
   --bg-grad:
-    radial-gradient(760px 520px at 8% -4%, #9fcdff 0%, rgba(159,205,255,0) 60%),
-    radial-gradient(620px 480px at 98% 6%, #bcdcff 0%, rgba(188,220,255,0) 56%),
-    radial-gradient(700px 620px at 46% 112%, #a9d4ff 0%, rgba(169,212,255,0) 58%),
-    radial-gradient(420px 380px at 78% 46%, #d6ecff 0%, rgba(214,236,255,0) 60%),
-    linear-gradient(180deg,#eaf4ff 0%,#dcecff 52%,#eef7ff 100%);
+    radial-gradient(900px 560px at 10% -10%, #1c2127 0%, rgba(28,33,39,0) 58%),
+    radial-gradient(760px 500px at 96% 4%, #191e24 0%, rgba(25,30,36,0) 54%),
+    radial-gradient(700px 560px at 48% 110%, #161a1f 0%, rgba(22,26,31,0) 58%),
+    linear-gradient(178deg,#111316 0%,#14171b 52%,#0f1114 100%);
 }
 
 body{
@@ -274,7 +285,7 @@ body{
    wide tables instead of letting .tablewrap scroll them */
 .card,.kpi{
   background:
-    linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.12) 44%,rgba(255,255,255,0) 70%),
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012) 44%,rgba(255,255,255,0) 70%),
     var(--glass);
 }
 @supports not ((backdrop-filter:blur(4px)) or (-webkit-backdrop-filter:blur(4px))){
@@ -424,7 +435,7 @@ input,select,textarea{color:var(--text)}
 /* ---- skeleton ---- */
 .skel{padding:6px 0}
 .skel i{display:block;height:13px;border-radius:7px;
-  background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,255,255,.9),rgba(255,255,255,.5));
+  background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.10),rgba(255,255,255,.04));
   background-size:200% 100%;animation:shimmer 1.3s linear infinite;margin-bottom:9px}
 .skel i:nth-child(1){width:46%;height:19px}
 .skel i:nth-child(2){width:78%}
@@ -981,8 +992,8 @@ header .searchwrap, .top .searchwrap, body.scrolled header .searchwrap{
   flex:1 1 auto !important; max-width:560px !important; width:auto !important;
   position:relative !important; margin:8px 0 4px !important;
   padding:0 !important; gap:0 !important;
-  background:linear-gradient(180deg,#f7fafe 0%,#eef4fc 100%) !important;
-  background-image:linear-gradient(180deg,#f7fafe 0%,#eef4fc 100%) !important;
+  background:linear-gradient(180deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.02) 100%) !important;
+  background-image:linear-gradient(180deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.02) 100%) !important;
   border:0 !important; border-radius:999px !important;
   box-shadow:0 2px 10px rgba(23,58,120,.10), inset 0 1px 0 #fff !important;
   -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
@@ -1063,7 +1074,7 @@ header .searchwrap::before, .top .searchwrap::before{
   position:absolute;
   inset:1.5px;
   border-radius:999px;
-  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(240,247,255,.93));
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
   -webkit-backdrop-filter:blur(8px);
   backdrop-filter:blur(8px);
   pointer-events:none;
@@ -1182,7 +1193,7 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
   padding:0;
   cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(180deg,#ffffff,#f1f7ff);
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.04));
   box-shadow:0 6px 20px rgba(23,58,120,.22), inset 0 1px 0 #fff;
   order:0;
   margin:0;
@@ -1265,7 +1276,7 @@ header .searchwrap, .top .searchwrap{
   padding:11px 12px;
   border-radius:11px;
   border:1px solid var(--line);
-  background:#fff;
+  background:rgba(255,255,255,.055);
   color:var(--navy);
   font:600 13px system-ui,-apple-system,sans-serif;
   cursor:pointer;

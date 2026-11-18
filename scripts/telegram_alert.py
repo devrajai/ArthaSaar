@@ -323,31 +323,38 @@ except Exception as _e:
     # invisible either. A bare `pass` here hid a NameError that removed the whole section.
     print("option-chain section skipped: %s: %s" % (type(_e).__name__, str(_e)[:120]))
 
-# ---- the forecast model, with its own error --------------------------------------------
-# The model's band is wide and its scored record is empty. Saying both is the point: a
-# forecast shown without its error is a horoscope.
+# ---- what a 21-session move has actually been --------------------------------------------
+# This replaced the model band, which said "-17.0% to +26.9%" - a range so wide it told a
+# reader nothing, and a number nobody could act on. The distribution of what Nifty has ACTUALLY
+# done over 21 sessions is more useful and needs no model.
 try:
-    tf = jload("data/timesfm_forecasts.json") or {}
-    sc = jload("docs/timesfm_score.json") or {}
-    nf = tf.get("nifty") or {}
-    if nf.get("median_chg_pct") is not None:
-        L.append("")
-        L.append("\U0001F52E <b>%s-day outlook</b> (model)" % tf.get("horizon_days", 21))
-        L.append("Nifty median %+.2f%% · band %+.1f%% to %+.1f%%"
-                 % (float(nf["median_chg_pct"]), float(nf.get("low10_chg_pct") or 0),
-                    float(nf.get("high90_chg_pct") or 0)))
-        if nf.get("band_pct") is not None:
-            L.append("Band width %.1f%% of price · direction %s"
-                     % (float(nf["band_pct"]), esc(str(nf.get("direction") or "-"))))
-        # the scored record, or the honest absence of one
-        ov = sc.get("overall") or {}
-        if sc.get("scored"):
-            L.append("Scored so far: %s runs, median miss %s%%"
-                     % (sc.get("scored"), ov.get("median_abs_error_pct", "-")))
-        else:
-            L.append("<i>No scored record yet — no logged forecast has reached its horizon.</i>")
+    ih = jload("docs/index_history.json") or {}
+    nif = None
+    for ix in (ih.get("indices") or []):
+        if ix.get("symbol") == "^NSEI":
+            nif = ix
+            break
+    if nif and len(nif.get("daily") or []) > 200:
+        closes = [r[4] for r in nif["daily"]]
+        H = 21
+        moves = sorted((closes[i + H] / closes[i] - 1.0) * 100.0
+                       for i in range(len(closes) - H) if closes[i])
+        if len(moves) >= 200:
+            n = len(moves)
+            p5 = moves[int(n * 0.05)]
+            p50 = moves[int(n * 0.50)]
+            p95 = moves[min(n - 1, int(n * 0.95))]
+            first = nif["daily"][0][0][:4]
+            last = nif["daily"][-1][0][:4]
+            L.append("")
+            L.append("\U0001F4CF <b>21-session range</b>")
+            L.append("90%% of 21-session Nifty moves fell between <b>%+.1f%%</b> and <b>%+.1f%%</b>"
+                     % (p5, p95))
+            L.append("median %+.1f%% · n=%s windows · %s–%s" % (p50, f"{n:,}", first, last))
+            L.append("<i>This is history, not a forecast. It says how far the index has "
+                     "travelled in 21 sessions, not where it will go.</i>")
 except Exception as _e:
-    print("forecast section skipped: %s: %s" % (type(_e).__name__, str(_e)[:120]))
+    print("range section skipped: %s: %s" % (type(_e).__name__, str(_e)[:120]))
 
 L.append("")
 

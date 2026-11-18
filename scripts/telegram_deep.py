@@ -204,40 +204,29 @@ def build_weekly():
     ih = jload("docs/index_history.json") or {}
 
     L = ["<b>ArthaSaar — weekly read</b>", ist().strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
 
-    # what the channels named, and what the data did
-    top = (vc.get("top") or [])[:5]
-    if top:
-        L.append("")
-        L.append("<b>Channels this week</b>")
-        for g in top:
-            ch = g.get("chain") or {}
-            bit = "%s · named %d× · %s" % (esc(str(g.get("symbol"))), g.get("mentions"),
-                                           pc(g.get("chg_1d")))
-            if ch:
-                bit += " · %s %s" % (esc(str(ch.get("side"))), esc(str(ch.get("action"))))
-            L.append(bit)
-        L.append("<i>%d videos scanned, %d mentions. Not a score of any channel — a mention is "
-                 "not a prediction.</i>" % (vc.get("videos_in_window") or 0,
-                                            vc.get("mentions") or 0))
+    # THE CHANNEL SECTION WAS REMOVED. It named stocks and attached a "call writing" label to
+    # them, which reads as a view on a named security - the thing this bot is not allowed to
+    # publish. The collection still runs and docs/telegram_vs_chain.json still exists for
+    # research; it is simply not broadcast.
 
     # PCR extremes with the baseline beside them
     pe = (st.get("pcr_extremes") or {}).get("NIFTY") or {}
     if pe:
         base = (pe.get("baseline") or {}).get("20") or [None, 0]
         low = (pe.get("low") or {}).get("20") or [None, 0]
-        high = (pe.get("high") or {}).get("20") or [None, 0]
         L.append("")
-        L.append("<b>PCR extremes · 20 sessions ahead</b>")
-        if low[0] is not None and (low[1] or 0) >= MIN_CASES:
-            L.append("Below %.3f: %s average (n=%s)" % (pe.get("low_cut"), pc(low[0]), n(low[1])))
-        if high[0] is not None and (high[1] or 0) >= MIN_CASES:
-            L.append("Above %.3f: %s average (n=%s)" % (pe.get("high_cut"), pc(high[0]), n(high[1])))
-        else:
-            L.append("Above %.3f: only %s cases — not enough to publish."
-                     % (pe.get("high_cut"), n(high[1] or 0)))
-        if base[0] is not None:
-            L.append("Any random 20 sessions: %s (n=%s)" % (pc(base[0]), n(base[1])))
+        L.append("<b>Does PCR predict anything? Tested, and the answer is no.</b>")
+        if low[0] is not None and (low[1] or 0) >= MIN_CASES and base[0] is not None:
+            gap = float(low[0]) - float(base[0])
+            L.append("When Nifty PCR was below %.2f, the next 20 sessions averaged %s (n=%s)."
+                     % (pe.get("low_cut"), pc(low[0]), n(low[1])))
+            L.append("On any other day: %s (n=%s)." % (pc(base[0]), n(base[1])))
+            L.append("The gap is <b>%.2f points</b> — inside normal noise for a 20-session "
+                     "window. <b>We do not use PCR as a signal.</b>" % gap)
+        L.append("<i>Published as a null result. A statistic that cannot beat its own baseline "
+                 "should be reported as failing, not shown as an edge.</i>")
 
     # the month so far
     for ix in (ih.get("indices") or []):

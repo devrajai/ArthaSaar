@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ArthaSaar — UI demo</title>
+<style>
+:root{
+  --ink:#0d1f33; --ink2:#3a5372; --muted:#6d86a3; --faint:#8fa6c0;
+  --glass:rgba(255,255,255,.58); --glass2:rgba(255,255,255,.74);
+  --line:rgba(138,178,224,.30); --line2:rgba(138,178,224,.52);
+  --up:#0b7a5c; --down:#b23a4b; --flat:#7b8ba1;
+  --blue:#2f6fd0; --sky:#8fbcff;
+  --r:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:var(--ink); -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1200px 640px at 10% -10%, #dbe9ff 0%, transparent 56%),
+    radial-gradient(980px 560px at 94% 2%, #e8f2ff 0%, transparent 50%),
+    radial-gradient(820px 520px at 46% 108%, #cfe3ff 0%, transparent 58%),
+    linear-gradient(168deg,#f6faff 0%,#ecf4ff 50%,#e2eeff 100%);
+  background-attachment:fixed; min-height:100vh;
+}
+
+/* ───────── header: centred lockup, hides on scroll down ───────── */
+header{
+  position:sticky;top:0;z-index:60;
+  padding:14px 16px 12px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:transform .28s cubic-bezier(.4,0,.2,1), opacity .28s;
+  background:linear-gradient(180deg,rgba(246,250,255,.86),rgba(246,250,255,0));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+header.hide{transform:translateY(-108%);opacity:0}
+.mark{
+  width:26px;height:26px;border-radius:8px;flex:0 0 auto;
+  background:linear-gradient(150deg,#d8e9ff,#8fbcff 58%,#4f8ce8);
+  box-shadow:0 5px 14px rgba(70,130,215,.32),inset 0 1px 0 rgba(255,255,255,.92);
+}
+.wordmark{font-size:16.5px;font-weight:660;letter-spacing:-.35px}
+.wordmark em{font-style:normal;color:var(--muted);font-weight:520;font-size:12px;
+  letter-spacing:0;margin-left:7px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:4px 16px 120px}
+
+/* ───────── shared glass ───────── */
+.g{
+  background:var(--glass);border:1px solid var(--line);border-radius:var(--r);
+  backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%);
+  box-shadow:0 12px 38px rgba(66,118,188,.11), inset 0 1px 0 rgba(255,255,255,.88);
+}
+.pad{padding:18px}
+
+/* ───────── hero ───────── */
+.hero{position:relative;overflow:hidden;padding:22px 20px 18px;margin-bottom:14px}
+.hero::after{
+  content:"";position:absolute;inset:-40% -20% auto auto;width:60%;height:180%;
+  background:radial-gradient(closest-side,rgba(160,200,255,.34),transparent 72%);
+  pointer-events:none;
+}
+.heroTop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  position:relative;z-index:1}
+.idxName{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.3px;
+  text-transform:uppercase}
+.idxLevel{font-size:38px;font-weight:680;letter-spacing:-1.6px;line-height:1.05;margin-top:2px}
+.idxChg{font-size:14.5px;font-weight:620;margin-top:4px}
+.spark{position:relative;z-index:1;margin-top:12px;height:74px}
+.spark svg{width:100%;height:100%;display:block;overflow:visible}
+
+.heroRow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;
+  position:relative;z-index:1}
+.mini{background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:15px;
+  padding:10px 12px}
+.mini .k{font-size:10.5px;color:var(--muted);letter-spacing:.35px;text-transform:uppercase}
+.mini .v{font-size:16px;font-weight:660;margin-top:3px;letter-spacing:-.4px}
+.mini .d{font-size:11.5px;margin-top:1px}
+
+/* ───────── section head ───────── */
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  margin:22px 4px 10px}
+.shead h2{margin:0;font-size:13.5px;font-weight:660;letter-spacing:-.1px}
+.shead span{font-size:11.5px;color:var(--faint)}
+
+/* ───────── sector ribbons ───────── */
+.ribbons{display:flex;gap:9px;overflow-x:auto;padding:2px 2px 10px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.ribbons::-webkit-scrollbar{display:none}
+.rib{
+  flex:0 0 158px;scroll-snap-align:start;border-radius:17px;padding:13px 14px;
+  background:var(--glass2);border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(66,118,188,.08),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.rib .n{font-size:12px;font-weight:620;color:var(--ink2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rib .m{font-size:21px;font-weight:680;letter-spacing:-.7px;margin-top:5px}
+.rib .bbar{height:4px;border-radius:99px;background:rgba(150,180,215,.26);margin-top:9px;
+  overflow:hidden}
+.rib .bbar i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#a8ccf8,#3f7fd6)}
+.rib .bt{font-size:10.5px;color:var(--faint);margin-top:5px}
+
+/* ───────── metals strip ───────── */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.metal{padding:16px}
+.metal .t{font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+.metal .p{font-size:25px;font-weight:680;letter-spacing:-1px;margin-top:5px}
+.metal .u{font-size:11.5px;color:var(--faint)}
+.metal .c{font-size:12.5px;font-weight:620;margin-top:7px}
+.tiers{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap}
+.tier{font-size:10.5px;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.72);
+  border:1px solid var(--line);color:var(--ink2);font-variant-numeric:tabular-nums}
+
+/* ───────── what changed list ───────── */
+.chg{display:flex;flex-direction:column}
+.crow{display:flex;align-items:center;gap:12px;padding:12px 2px;
+  border-bottom:1px solid rgba(138,178,224,.22)}
+.crow:last-child{border-bottom:none}
+.cdot{width:7px;height:7px;border-radius:99px;flex:0 0 auto}
+.clab{flex:1;font-size:13.5px;color:var(--ink2)}
+.cval{font-variant-numeric:tabular-nums;font-weight:650;font-size:13.5px}
+.cpct{font-size:11.5px;color:var(--faint);width:62px;text-align:right;
+  font-variant-numeric:tabular-nums}
+
+/* ───────── floating search dot ───────── */
+.fab{
+  position:fixed;right:16px;bottom:22px;z-index:80;
+  width:52px;height:52px;border-radius:99px;border:1px solid var(--line2);
+  background:linear-gradient(150deg,rgba(255,255,255,.94),rgba(214,233,255,.9));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 12px 30px rgba(60,115,190,.26),inset 0 1px 0 rgba(255,255,255,.95);
+  display:grid;place-items:center;cursor:pointer;
+  transition:transform .2s, box-shadow .2s;
+}
+.fab:active{transform:scale(.94)}
+.fab svg{width:21px;height:21px;stroke:#2f6fd0;fill:none;stroke-width:2.1;stroke-linecap:round}
+
+.sheet{
+  position:fixed;left:12px;right:12px;bottom:12px;z-index:90;
+  border-radius:26px;padding:16px;
+  background:rgba(250,253,255,.92);
+  backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);
+  border:1px solid var(--line2);
+  box-shadow:0 -6px 60px rgba(50,100,170,.22),inset 0 1px 0 #fff;
+  transform:translateY(130%);transition:transform .34s cubic-bezier(.32,.72,0,1);
+}
+.sheet.open{transform:translateY(0)}
+.sheet .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.sheet .h b{font-size:13px;font-weight:660}
+.sheet .x{font-size:12px;color:var(--muted);cursor:pointer;padding:4px 8px}
+.field{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:15px;
+  background:rgba(255,255,255,.9);border:1px solid var(--line2)}
+.field input{border:0;outline:0;background:transparent;flex:1;font-size:14.5px;color:var(--ink)}
+.field input::placeholder{color:var(--faint)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.chip{font-size:12px;padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.8);
+  border:1px solid var(--line);color:var(--ink2);cursor:pointer}
+.chip:active{background:#eaf3ff}
+
+.scrim{position:fixed;inset:0;background:rgba(20,45,80,.16);z-index:85;opacity:0;
+  pointer-events:none;transition:opacity .3s}
+.scrim.on{opacity:1;pointer-events:auto}
+
+.foot{margin-top:26px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7}
+
+@media(min-width:820px){
+  .idxLevel{font-size:46px}
+  .spark{height:96px}
+  .rib{flex:0 0 176px}
+}
+@media(max-width:520px){
+  .wrap{padding:2px 12px 110px}
+  .idxLevel{font-size:33px;letter-spacing:-1.2px}
+  .heroRow{grid-template-columns:1fr 1fr}
+  .heroRow .mini:last-child{display:none}
+  .duo{grid-template-columns:1fr}
+  .metal .p{font-size:23px}
+}
+</style>
+</head>
+<body>
+
+<header id="hd">
+  <div class="mark"></div>
+  <div class="wordmark">ArthaSaar <em>market, measured</em></div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="g hero">
+    <div class="heroTop">
+      <div>
+        <div class="idxName">Nifty 50 · 18 Nov</div>
+        <div class="idxLevel" id="lv">25,247</div>
+        <div class="idxChg" id="ch"></div>
+      </div>
+      <div style="text-align:right">
+        <div class="idxName">21-session range</div>
+        <div style="font-size:15px;font-weight:650;margin-top:4px">−5.6% to +7.7%</div>
+        <div style="font-size:11px;color:var(--faint);margin-top:1px">90% of windows</div>
+      </div>
+    </div>
+    <div class="spark"><svg id="sp" viewBox="0 0 600 74" preserveAspectRatio="none"></svg></div>
+    <div class="heroRow">
+      <div class="mini">
+        <div class="k">Breadth</div>
+        <div class="v">36.5%</div>
+        <div class="d" style="color:var(--down)">2,219 stocks · above 50d</div>
+      </div>
+      <div class="mini">
+        <div class="k">PCR</div>
+        <div class="v">1.03</div>
+        <div class="d" style="color:var(--muted)">expiry 17 Nov</div>
+      </div>
+      <div class="mini">
+        <div class="k">Trending up</div>
+        <div class="v">223</div>
+        <div class="d" style="color:var(--muted)">of 2,231 stocks</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTORS -->
+  <div class="shead"><h2>Sector trend · 20 sessions</h2><span>swipe →</span></div>
+  <div class="ribbons" id="ribs"></div>
+
+  <!-- METALS -->
+  <div class="shead"><h2>Gold &amp; silver</h2><span>spot, converted</span></div>
+  <div class="duo">
+    <div class="g metal">
+      <div class="t">Gold · 24K</div>
+      <div class="p" style="color:var(--down)">₹11,345</div>
+      <div class="u">per gram · −₹329 (−2.82%)</div>
+      <div class="tiers">
+        <span class="tier">22K ₹10,399</span>
+        <span class="tier">18K ₹8,508</span>
+        <span class="tier">10g ₹1,13,445</span>
+      </div>
+    </div>
+    <div class="g metal">
+      <div class="t">Silver · 999</div>
+      <div class="p" style="color:var(--down)">₹137.83</div>
+      <div class="u">per gram · −₹4.88 (−3.42%)</div>
+      <div class="tiers">
+        <span class="tier">958 ₹132.18</span>
+        <span class="tier">925 ₹127.62</span>
+        <span class="tier">800 ₹110.38</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT CHANGED -->
+  <div class="shead"><h2>What changed since yesterday</h2><span>4 fields</span></div>
+  <section class="g pad">
+    <div class="chg" id="chg"></div>
+  </section>
+
+  <div class="foot">
+    Market data and descriptions only. Not investment advice.<br>
+    Session 17 Nov 2026 · built from NSE bhavcopy
+  </div>
+</div>
+
+<!-- FLOATING SEARCH -->
+<div class="fab" id="fab" aria-label="Search">
+  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="h"><b>Search anything</b><span class="x" id="x">Close</span></div>
+  <div class="field">
+    <svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#8fa6c0;fill:none;stroke-width:2">
+      <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" placeholder="top gainers · DABUR · gold · PCR">
+  </div>
+  <div class="chips">
+    <span class="chip">Top 5 gainers</span>
+    <span class="chip">DABUR</span>
+    <span class="chip">Weakest sector</span>
+    <span class="chip">Gold rate</span>
+  </div>
+</div>
+
+<script>
+/* ── data ───────────────────────────────────────────── */
+const NIFTY = 25247, PREV = 25387;
+const SPARK = [24252,24219,24335,24208,24091,24176,24080,24056,23914,23873,23898,23779,23635,23432,23478,23398,23119,23218,23271,23346,23414,23329,23447,23063,23140,22780,22716,22620,22422,22556,22776,22603,22232,22520,22363,22722,22623,22997,23146,22889,22811,22688,22600,22753,22750,22699,22937,23053,23441,23811,23961,24537,25030,25045,25255,25299,25144,25291,25387,25247];
+const SECTORS = [
+  {s:"Healthcare",m:1.75,b:13.0,u:18,n:161},
+  {s:"Financial Services",m:1.18,b:15.0,u:30,n:234},
+  {s:"Utilities",m:0.84,b:0.0,u:0,n:38},
+  {s:"Real Estate",m:0.15,b:11.1,u:3,n:81},
+  {s:"Consumer Cyclical",m:-1.47,b:14.6,u:40,n:425},
+  {s:"Consumer Defensive",m:-2.16,b:12.7,u:15,n:158},
+  {s:"Industrials",m:-2.51,b:14.5,u:43,n:461},
+  {s:"Communication Services",m:-2.83,b:16.4,u:6,n:73},
+  {s:"Technology",m:-3.32,b:23.9,u:23,n:180},
+  {s:"Basic Materials",m:-4.28,b:12.7,u:35,n:369},
+  {s:"Energy",m:-5.62,b:16.2,u:6,n:37}
+];
+const CHANGES = [
+  {l:"Nifty",v:"25,247",p:0.56,c:"up"},
+  {l:"Bank Nifty",v:"62,123",p:0.23,c:"up"},
+  {l:"Stocks above 50-day",v:"36.5%",p:-2.4,c:"down"},
+  {l:"Gold per gram",v:"₹11,345",p:-2.61,c:"down"}
+];
+
+/* ── helpers ────────────────────────────────────────── */
+const inr = n => n.toLocaleString('en-IN');
+const sgn = v => (v>0?'+':'') + v.toFixed(2) + '%';
+const col = v => v>0.05?'var(--up)':(v<-0.05?'var(--down)':'var(--flat)');
+
+/* ── hero ───────────────────────────────────────────── */
+const d = NIFTY - PREV, dp = (NIFTY/PREV - 1) * 100;
+document.getElementById('ch').innerHTML =
+  `<span style="color:${col(d)}">${d>0?'+':''}${inr(d)} pts · ${sgn(dp)}</span>`;
+document.getElementById('lv').style.color = 'var(--ink)';
+
+/* sparkline */
+(function(){
+  const w=600,h=74,min=Math.min(...SPARK),max=Math.max(...SPARK),pad=6;
+  const x=i=>i/(SPARK.length-1)*w;
+  const y=v=>h-pad-(v-min)/(max-min)*(h-pad*2);
+  let line='M'+SPARK.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('L');
+  const area=line+`L${w},${h}L0,${h}Z`;
+  const up=SPARK[SPARK.length-1]>=SPARK[0];
+  const stroke=up?'#2f8f6f':'#b23a4b';
+  const fill=up?'rgba(47,143,111,.13)':'rgba(178,58,75,.11)';
+  const last=`<circle cx="${x(SPARK.length-1)}" cy="${y(SPARK[SPARK.length-1])}" r="3.4" fill="${stroke}"/>`;
+  document.getElementById('sp').innerHTML =
+    `<defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0%" stop-color="${stroke}" stop-opacity=".22"/>
+       <stop offset="100%" stop-color="${stroke}" stop-opacity="0"/>
+     </linearGradient></defs>
+     <path d="${area}" fill="url(#gr)"/>
+     <path d="${line}" fill="none" stroke="${stroke}" stroke-width="2.1"
+       stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>${last}`;
+})();
+
+/* ── sector ribbons ─────────────────────────────────── */
+document.getElementById('ribs').innerHTML = SECTORS.map(x=>`
+  <div class="rib">
+    <div class="n">${x.s}</div>
+    <div class="m" style="color:${col(x.m)}">${x.m>0?'+':''}${x.m.toFixed(2)}%</div>
+    <div class="bbar"><i style="width:${Math.max(3,x.b)}%"></i></div>
+    <div class="bt">${x.b}% above 50d · ${x.u}/${x.n} up</div>
+  </div>`).join('');
+
+/* ── what changed ───────────────────────────────────── */
+document.getElementById('chg').innerHTML = CHANGES.map(c=>`
+  <div class="crow">
+    <span class="cdot" style="background:${col(c.p)}"></span>
+    <span class="clab">${c.l}</span>
+    <span class="cval">${c.v}</span>
+    <span class="cpct" style="color:${col(c.p)}">${sgn(c.p)}</span>
+  </div>`).join('');
+
+/* ── hide header on scroll down ─────────────────────── */
+let lastY = 0;
+addEventListener('scroll', ()=>{
+  const y = scrollY;
+  const hd = document.getElementById('hd');
+  if (y > lastY && y > 70) hd.classList.add('hide');
+  else hd.classList.remove('hide');
+  lastY = y;
+}, {passive:true});
+
+/* ── search sheet ───────────────────────────────────── */
+const sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
+const open =()=>{sheet.classList.add('open');scrim.classList.add('on');setTimeout(()=>document.getElementById('q').focus(),240)};
+const close=()=>{sheet.classList.remove('open');scrim.classList.remove('on')};
+document.getElementById('fab').onclick=open;
+document.getElementById('x').onclick=close;
+scrim.onclick=close;
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.getElementById('q').value=c.textContent;});
+</script>
+</body>
+</html>

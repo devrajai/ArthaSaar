@@ -622,10 +622,16 @@ def build_ledger():
 
 
 # ---------------------------------------------------------------- gold & silver
-def build_metals(slot="night"):
+def build_metals(slot=None):
     d = jload("docs/metals.json") or {}
     now = ist()
-    head = "morning" if slot == "morning" else "night"
+    # THE SLOT COMES FROM THE CLOCK WHEN NOBODY SAID WHICH.
+    # A manual dispatch passed no slot, so every run fell back to "night" - two messages in a
+    # row both headed "night", and no morning one at all. Before noon IST it is the morning
+    # send; after it, the night one. An explicit argument still wins.
+    if not slot:
+        slot = "morning" if now.hour < 12 else "night"
+    head = "morning" if str(slot).lower().startswith("morn") else "night"
     L = ["<b>ArthaSaar — gold &amp; silver</b> · %s" % head, now.strftime("%d %b %Y, %H:%M IST")]
     L.append("<i>Market data and descriptions only. Not investment advice.</i>")
 
@@ -794,7 +800,7 @@ def main():
     elif mode == "ledger":
         msg = build_ledger()
     elif mode == "metals":
-        msg = build_metals(args[1] if len(args) > 1 else "night")
+        msg = build_metals(args[1] if len(args) > 1 else None)
     elif mode == "changed":
         msg = build_changed()
     else:

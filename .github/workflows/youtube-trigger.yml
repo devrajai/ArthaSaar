@@ -45,13 +45,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas pyarrow
 
+      # COMMAND INJECTION FIX. A YouTube video title was interpolated straight into the shell:
+      #     echo "title    : ${{ github.event.client_payload.title }}"
+      # GitHub substitutes the payload text before bash sees it, so a title containing
+      # $(...) or backticks runs as a command - in a job that has contents:write. Anyone who
+      # can make a video appear on a tracked channel controls that string.
+      # Values now arrive through env:, which the shell does NOT re-parse.
       - name: Show what triggered this
+        env:
+          EV_NAME: ${{ github.event_name }}
+          EV_VIDEO: ${{ github.event.client_payload.video_id }}
+          EV_CHANNEL: ${{ github.event.client_payload.channel_id }}
+          EV_TITLE: ${{ github.event.client_payload.title }}
         run: |
-          echo "event: ${{ github.event_name }}"
-          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
-            echo "video_id : ${{ github.event.client_payload.video_id }}"
-            echo "channel  : ${{ github.event.client_payload.channel_id }}"
-            echo "title    : ${{ github.event.client_payload.title }}"
+          echo "event: $EV_NAME"
+          if [ "$EV_NAME" = "repository_dispatch" ]; then
+            echo "video_id : $EV_VIDEO"
+            echo "channel  : $EV_CHANNEL"
+            printf 'title    : %s\n' "$EV_TITLE"
           fi
 
       - name: Collect uploads

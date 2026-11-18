@@ -145,16 +145,28 @@ if isinstance(live, list) and fii_today == 0 and dii_today == 0:
 if isinstance(live, list):
     for r in live:
         try:
+            # NOT / 1e7. NSE's fiidiiTradeReact returns netValue ALREADY IN CRORE. Dividing
+            # again turned 7,831 crore into 0.0008, which printed as "Buy Rs 0 Cr" on every
+            # close message. A missing value must stay missing rather than becoming a zero.
             if r.get("category") == "FII/FPI":
-                fii_today = float(r.get("netValue", 0)) / 1e7
+                v = r.get("netValue")
+                fii_today = float(v) if v not in (None, "") else None
             elif r.get("category") == "DII":
-                dii_today = float(r.get("netValue", 0)) / 1e7
+                v = r.get("netValue")
+                dii_today = float(v) if v not in (None, "") else None
         except Exception:
             pass
 
 L = []
-if mode == "open":
+# "Open" only while the exchange is actually open. The mode is chosen by clock hour, so a
+# run at 00:45 IST printed "Market Open" with the market shut for ten hours.
+_now_ist = now  # already IST in this script
+_mins = _now_ist.hour * 60 + _now_ist.minute
+_open_now = _now_ist.weekday() < 5 and (555 <= _mins <= 930)      # 09:15 - 15:30 IST
+if mode == "open" and _open_now:
     L.append("\U0001F305 <b>ArthaSaar — Market Open</b>")
+elif mode == "open":
+    L.append("\U0001F4CA <b>ArthaSaar — pre-open note</b>")
 else:
     L.append("\U0001F4CA <b>ArthaSaar — Day Analysis Close</b>")
 L.append(esc(now.strftime("%A, %d %b %Y")))
@@ -198,11 +210,17 @@ if pcr.get("nifty_pcr_oi") is not None:
     # "25000.0" reads like a price. A strike is a round number - print it as one.
     _mp = pcr.get("nifty_max_pain")
     _mps = ("{:,}".format(int(round(_mp))) if isinstance(_mp, (int, float)) else (str(_mp) if _mp else "\u2014"))
-    L.append("\U0001F3AF Nifty PCR %s | Max Pain %s" % (pcr.get("nifty_pcr_oi"), _mps))
+    # ONE PCR PER MESSAGE, and this is not it.
+    #
+    # pcr["nifty_pcr_oi"] is summed across ALL expiries; the chain section lower down reports
+    # a single expiry. Printing both gave "PCR 1.03" and "PCR 0.77" in the same message for
+    # what a reader assumes is the same thing. The chain figure is the one with a stated
+    # basis, so PCR lives there and this line carries only max pain.
+    L.append("\U0001F3AF Max Pain %s" % _mps)
 
 if up:
     L.append("")
-    L.append("\U0001F534 <b>Top movers (live F&O):</b>")
+    L.append("\U0001F534 <b>Top movers (last session):</b>")
     L.append("\u25B2 " + " \u00b7 ".join("%s %s%.1f%%" % (m[0], sgn(m[1]), m[1]) for m in up))
     L.append("\u25BC " + " \u00b7 ".join("%s %s%.1f%%" % (m[0], sgn(m[1]), m[1]) for m in dn))
 
@@ -259,10 +277,25 @@ try:
     nif = ix.get("NIFTY") if isinstance(ix, dict) else None
     if nif and nif.get("strikes"):
         L.append("")
-        L.append("\U0001F9FE <b>Option chain</b> · %s expiry" % esc(str(nif.get("expiry") or "")))
+        # A settled expiry is not current positioning. The chain file can still hold the
+        # expiry that ended yesterday, and showing it unlabelled reads as today's.
+        _exp = str(nif.get("expiry") or "")
+        _settled = False
+        try:
+            _settled = _exp < now.strftime("%Y-%m-%d")
+        except Exception:
+            pass
+        L.append("\U0001F9FE <b>Option chain</b> · %s expiry%s"
+                 % (esc(_exp), " <i>(settled — this is not current positioning)</i>"
+                    if _settled else ""))
+        # ONE PCR PER MESSAGE. The close summary printed "Nifty PCR 1.03" near the top and
+        # "Nifty PCR 0.77" lower down - same index, same message, two numbers, because they
+        # came from different files with different expiry bases. The chain figure is the one
+        # with a stated expiry, so it is the one shown, and the top line now says so too.
         if nif.get("pcr") is not None:
-            L.append("Nifty PCR %.2f · spot %s" % (float(nif["pcr"]),
-                                                   _inr(float(nif.get("spot") or 0))))
+            L.append("Nifty PCR %.2f (expiry %s) · spot %s"
+                     % (float(nif["pcr"]), esc(str(nif.get("expiry") or "?")),
+                        _inr(float(nif.get("spot") or 0))))
         # largest OI CHANGE, not largest OI - the biggest pile is often months old and says
         # nothing about today
         best_ce = best_pe = None

@@ -119,10 +119,34 @@ def build_futures(fo: pd.DataFrame) -> dict:
         ce_oi, pe_oi = ce["oi"].sum(), pe["oi"].sum()
         if ce_oi and ce_oi > 0:
             pcr["nifty_pcr_oi"] = round(float(pe_oi) / float(ce_oi), 2)
-        # max pain ~ strike with the largest total option OI
+        # MAX PAIN IS NOT THE LARGEST-OI STRIKE. That is what this used to publish, and the
+        # two are different numbers - the label was wrong on every close message.
+        #
+        # Max pain is the strike where option BUYERS collectively lose least: for a candidate
+        # strike k, add call OI below k times its distance and put OI above k times its
+        # distance, then pick the k that minimises the total.
+        ce_by = ce.groupby("strike")["oi"].sum()
+        pe_by = pe.groupby("strike")["oi"].sum()
+        strikes = sorted(set(ce_by.index) | set(pe_by.index))
+        if strikes:
+            best_k, best_v = None, None
+            for k in strikes:
+                tot = 0.0
+                for st in strikes:
+                    c = float(ce_by.get(st, 0) or 0)
+                    q = float(pe_by.get(st, 0) or 0)
+                    if c and st < k:
+                        tot += c * (k - st)
+                    if q and st > k:
+                        tot += q * (st - k)
+                if best_v is None or tot < best_v:
+                    best_k, best_v = k, tot
+            if best_k is not None:
+                pcr["nifty_max_pain"] = float(best_k)
+        # keep the largest-OI strike too, under its own name, because it is a different fact
         tot = pd.concat([ce, pe]).groupby("strike")["oi"].sum()
         if not tot.empty:
-            pcr["nifty_max_pain"] = float(tot.idxmax())
+            pcr["nifty_largest_oi_strike"] = float(tot.idxmax())
 
     return {"date": str(fo["date"].iloc[0]) if "date" in fo.columns and len(fo) else None,
             "source": "nse-bhavcopy-fo", "stocks": stocks,

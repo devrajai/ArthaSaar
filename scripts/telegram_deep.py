@@ -40,6 +40,7 @@ CHATS = [c.strip() for c in (os.environ.get("TG_CHAT_ID") or os.environ.get("TEL
 DRY = "--dry" in sys.argv
 
 MIN_CASES = 60
+MIN_OI_SHARE = 5.0   # percent of total open interest before an expiry is worth quoting
 
 
 def jload(p):
@@ -139,7 +140,18 @@ def build_positioning():
             continue
         total_all = sum(float(e.get("total_ce_oi") or 0) + float(e.get("total_pe_oi") or 0)
                         for e in exps)
-        far = [e for e in exps[1:] if (e.get("days_out") or 0) >= 14]
+        # A PCR computed on an expiry holding 0.0% of open interest is noise, not positioning.
+        # BANKNIFTY 2027-06-29 was published with PCR 2.12 on 0.0% of OI - a number with
+        # nothing behind it. Only expiries above MIN_OI_SHARE are shown.
+        far = []
+        for e in exps[1:]:
+            dte = e.get("days_out")
+            if dte is None or dte < 14:
+                continue
+            sh = oi_share(e, total_all)
+            if sh is not None and sh < MIN_OI_SHARE:
+                continue
+            far.append(e)
         if not far:
             continue
         any_row = True

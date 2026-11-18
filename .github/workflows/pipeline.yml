@@ -620,6 +620,11 @@ jobs:
       - name: "7s. Telegram channels vs the chain"
         run: python scripts/build_telegram_vs_chain.py
 
+      # Every statistic we publish, recorded with its sample size, compared with last
+      # week. A base rate that quietly drifts is worse than one that is wrong.
+      - name: "7t. Claim ledger"
+        run: python scripts/build_claim_ledger.py
+
       - name: Commit
         run: |
           git config user.name "data-bot"

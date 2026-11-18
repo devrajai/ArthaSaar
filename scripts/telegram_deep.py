@@ -88,6 +88,7 @@ def build_expiry():
     idx = d.get("indices") or {}
     today = ist().strftime("%Y-%m-%d")
     L = ["<b>ArthaSaar — expiry note</b>", ist().strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
     found = False
     for sym in ("NIFTY", "BANKNIFTY"):
         v = idx.get(sym) or {}
@@ -131,6 +132,7 @@ def build_positioning():
     by_sym = {str(r.get("symbol")): r for r in (scr.get("rows") or [])}
 
     L = ["<b>ArthaSaar — positioning beyond this month</b>", ist().strftime("%d %b %Y")]
+    L.append("<i>Market data and descriptions only. Not investment advice.</i>")
     any_row = False
     for sym in ("NIFTY", "BANKNIFTY"):
         v = idx.get(sym) or {}
@@ -143,22 +145,27 @@ def build_positioning():
         # A PCR computed on an expiry holding 0.0% of open interest is noise, not positioning.
         # BANKNIFTY 2027-06-29 was published with PCR 2.12 on 0.0% of OI - a number with
         # nothing behind it. Only expiries above MIN_OI_SHARE are shown.
+        # RANKED BY SHARE, NOT CUT AT 5%. A hard 5% cut left one line per index and a message
+        # with almost nothing in it. The share is printed on every line instead, so a thin
+        # expiry is visibly thin rather than silently absent.
         far = []
         for e in exps[1:]:
             dte = e.get("days_out")
             if dte is None or dte < 14:
                 continue
-            sh = oi_share(e, total_all)
-            if sh is not None and sh < MIN_OI_SHARE:
-                continue
+            e["_share"] = oi_share(e, total_all)
             far.append(e)
+        far.sort(key=lambda e: -(e.get("_share") or 0))
+        # A floor of 0.5% removes the absurdity of quoting "PCR 2.12" on an expiry holding
+        # 0.0% of open interest. Above the floor the share is printed, so thin is visible.
+        far = [e for e in far if (e.get("_share") or 0) >= 0.5][:4]
         if not far:
             continue
         any_row = True
         L.append("")
         L.append("<b>%s</b>" % sym)
         for e in far[:4]:
-            share = oi_share(e, total_all)
+            share = e.get("_share")
             L.append("%s · PCR %s · call %s / put %s%s"
                      % (esc(str(e.get("expiry"))), n(e.get("pcr"), 2),
                         n(e.get("call_wall")), n(e.get("put_wall")),

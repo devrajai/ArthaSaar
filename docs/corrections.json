@@ -1,0 +1,77 @@
+{
+  "_comment": "Every correction we have made to a published figure, with the date. A site that publishes statistics should also publish the ones it got wrong. Hand-maintained: each entry is added when a bug is fixed, not generated.",
+  "corrections": [
+    {
+      "date": "2026-11-18",
+      "what_showed": "FII and DII showed 'Rs 0 Cr' on every close message",
+      "what_was_right": "NSE's netValue is already in crore; the code divided by 1e7 again, turning 7,831 crore into 0.0008. A missing value also printed as zero.",
+      "fixed": "Removed the second division; a missing value now stays missing and the line is skipped."
+    },
+    {
+      "date": "2026-11-18",
+      "what_showed": "'Max Pain' on the close message",
+      "what_was_right": "The number shown was the largest open-interest strike, not max pain. The two are different figures.",
+      "fixed": "Max pain is now computed as the strike where option buyers collectively lose least. The largest-OI strike is kept separately under its own name."
+    },
+    {
+      "date": "2026-11-18",
+      "what_showed": "Two different PCRs in one close message - 1.03 near the top, 0.77 lower down",
+      "what_was_right": "The first was summed across all expiries, the second was one expiry. Both were correct; showing both without saying so was not.",
+      "fixed": "One PCR per message, with its expiry stated."
+    },
+    {
+      "date": "2026-11-18",
+      "what_showed": "'Market Open' on a message sent at 00:45 IST",
+      "what_was_right": "The market had been shut for ten hours. The label was chosen by clock hour, not by the session.",
+      "fixed": "The label checks the session window (09:15-15:30 IST, weekdays) and falls back to 'pre-open note'."
+    },
+    {
+      "date": "2026-11-18",
+      "what_showed": "A market ticker across the top of the site showing Nifty, Sensex, VIX, FII and DII",
+      "what_was_right": "The figures came from the last pipeline run, not a live feed, but sat in the position and style of a live tape.",
+      "fixed": "Ticker removed. The same figures appear on the Today card with their date."
+    },
+    {
+      "date": "2026-11-18",
+      "what_showed": "An option-chain section headed '2026-11-17 expiry' on 18 November",
+      "what_was_right": "That expiry had settled the previous day. Showing it unlabelled read as current positioning.",
+      "fixed": "A settled expiry is now marked '(settled - this is not current positioning)'."
+    },
+    {
+      "date": "2026-11-18",
+      "what_showed": "PCR 2.12 quoted for an expiry holding 0.0% of open interest",
+      "what_was_right": "A ratio computed on almost no open interest is noise, not positioning.",
+      "fixed": "Expiries are ranked by open-interest share, the share is printed on each line, and anything under 0.5% is dropped."
+    },
+    {
+      "date": "2026-11-17",
+      "what_showed": "A put-call ratio on the site dated 2026-10-28",
+      "what_was_right": "Nothing converted the nightly F&O bhavcopy into the open-interest history the PCR is built from. The chain froze at 28 October while fresh files kept arriving.",
+      "fixed": "scripts/aggregate_oi_history.py closes the gap; PCR now tracks the latest session."
+    },
+    {
+      "date": "2026-11-17",
+      "what_showed": "A '21-day outlook' band of -17.0% to +26.9%",
+      "what_was_right": "A range that wide tells a reader nothing, and 'direction flat' beside it is worse than silence.",
+      "fixed": "Replaced with what Nifty has actually done: 90% of 21-session moves fell between -5.6% and +7.7% (n=2,446, 2016-2026). No model, no direction claim."
+    },
+    {
+      "date": "2026-11-16",
+      "what_showed": "A momentum ranking card with no stocks in it",
+      "what_was_right": "The builder was never scheduled. It had been run by hand once, so its history held a single day and it had nothing to compare.",
+      "fixed": "Added to the nightly pipeline. It fills in as history accumulates."
+    },
+    {
+      "date": "2026-11-16",
+      "what_showed": "A 'Promoter' card where every value was an em dash",
+      "what_was_right": "The card read fields that do not exist in the file. The data was there; the labels pointed at nothing.",
+      "fixed": "Reads the real fields. The pledge column was removed rather than left empty, because no free source reports it."
+    },
+    {
+      "date": "2026-11-15",
+      "what_showed": "The site loaded cards.js twice",
+      "what_was_right": "A guard that restores the script tag compared against an exact string; once the tag carried a version it added a second, unversioned copy. Two sets of observers fought over the same section, which caused the visible flicker.",
+      "fixed": "The guard now matches any cards.js tag and collapses duplicates instead of adding one."
+    }
+  ]
+}

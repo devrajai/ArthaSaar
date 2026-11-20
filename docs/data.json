@@ -1,158 +1,158 @@
 {
-  "generated_utc": "2026-11-20T08:35:54Z",
+  "generated_utc": "2026-11-20T17:20:32Z",
   "fno": {
-    "date": "2026-11-19",
+    "date": "2026-11-20",
     "pcr": {
-      "nifty_pcr_oi": 1.34,
-      "nifty_max_pain": 25300.0,
+      "nifty_pcr_oi": 1.43,
+      "nifty_max_pain": 25500.0,
       "nifty_largest_oi_strike": 25500.0
     },
     "index_futures": [
       {
         "symbol": "BANKNIFTY",
-        "oi": 2519490
+        "oi": 2466930
       },
       {
         "symbol": "FINNIFTY",
-        "oi": 28140
+        "oi": 29820
       },
       {
         "symbol": "MIDCPNIFTY",
-        "oi": 2415360
+        "oi": 2493840
       },
       {
         "symbol": "NIFTY",
-        "oi": 14537770
+        "oi": 15131350
       },
       {
         "symbol": "NIFTYFPI",
-        "oi": 16500
+        "oi": 19800
       },
       {
         "symbol": "NIFTYNXT50",
-        "oi": 17000
+        "oi": 16450
       }
     ],
     "top_oi": [
       {
         "symbol": "IDEA",
-        "oi": 6362773025,
-        "oi_chg": 10282450,
-        "chg": 0.0
+        "oi": 6385680500,
+        "oi_chg": 22907475,
+        "chg": 0.25
       },
       {
         "symbol": "YESBANK",
-        "oi": 1302716800,
-        "oi_chg": -16140900,
-        "chg": 1.13
+        "oi": 1293449000,
+        "oi_chg": -9267800,
+        "chg": 0.44
       },
       {
         "symbol": "SUZLON",
-        "oi": 490245400,
-        "oi_chg": -43421300,
-        "chg": 2.32
+        "oi": 461454500,
+        "oi_chg": -28790900,
+        "chg": -0.21
       },
       {
         "symbol": "NMDC",
-        "oi": 366707250,
-        "oi_chg": 2281500,
-        "chg": -0.07
+        "oi": 364277250,
+        "oi_chg": -2430000,
+        "chg": 0.35
       },
       {
         "symbol": "IDFCFIRSTB",
-        "oi": 363876800,
-        "oi_chg": -1419075,
-        "chg": 4.69
-      },
-      {
-        "symbol": "CANBK",
-        "oi": 347341500,
-        "oi_chg": 1532250,
-        "chg": 2.49
+        "oi": 359953475,
+        "oi_chg": -3923325,
+        "chg": 0.5
       },
       {
         "symbol": "TATASTEEL",
-        "oi": 342963500,
-        "oi_chg": -1474000,
-        "chg": 1.04
+        "oi": 353603250,
+        "oi_chg": 10639750,
+        "chg": -1.62
+      },
+      {
+        "symbol": "CANBK",
+        "oi": 343359000,
+        "oi_chg": -3982500,
+        "chg": 1.52
       },
       {
         "symbol": "HDFCBANK",
-        "oi": 306980250,
-        "oi_chg": 748350,
-        "chg": 1.88
-      },
-      {
-        "symbol": "JIOFIN",
-        "oi": 233770950,
-        "oi_chg": -3139600,
-        "chg": 1.46
+        "oi": 301336500,
+        "oi_chg": -5643750,
+        "chg": 2.68
       },
       {
         "symbol": "ITC",
-        "oi": 230640425,
-        "oi_chg": 2670750,
-        "chg": 1.1
+        "oi": 234671350,
+        "oi_chg": 4030925,
+        "chg": -0.67
+      },
+      {
+        "symbol": "JIOFIN",
+        "oi": 229801800,
+        "oi_chg": -3969150,
+        "chg": -0.76
       },
       {
         "symbol": "ADANIPOWER",
-        "oi": 220547300,
-        "oi_chg": -475700,
-        "chg": 2.26
+        "oi": 218410200,
+        "oi_chg": -2137100,
+        "chg": 1.13
       },
       {
         "symbol": "PNB",
-        "oi": 206288000,
-        "oi_chg": -6616000,
-        "chg": 3.37
+        "oi": 200408000,
+        "oi_chg": -5880000,
+        "chg": -0.47
       },
       {
         "symbol": "RELIANCE",
-        "oi": 188685000,
-        "oi_chg": 2253500,
-        "chg": 0.59
+        "oi": 200227500,
+        "oi_chg": 11542500,
+        "chg": 0.14
       },
       {
         "symbol": "SAIL",
-        "oi": 178694000,
-        "oi_chg": 451200,
-        "chg": 0.58
+        "oi": 177848000,
+        "oi_chg": -846000,
+        "chg": 0.06
       },
       {
         "symbol": "MOTHERSON",
-        "oi": 160428900,
-        "oi_chg": -3118050,
-        "chg": 4.72
-      },
-      {
-        "symbol": "WIPRO",
-        "oi": 152499000,
-        "oi_chg": -4803000,
-        "chg": -0.85
+        "oi": 158743800,
+        "oi_chg": -1685100,
+        "chg": 0.3
       },
       {
         "symbol": "ASHOKLEY",
-        "oi": 151680000,
-        "oi_chg": -665000,
-        "chg": 3.2
+        "oi": 151930000,
+        "oi_chg": 250000,
+        "chg": -0.94
+      },
+      {
+        "symbol": "WIPRO",
+        "oi": 151173000,
+        "oi_chg": -1326000,
+        "chg": 0.39
       },
       {
         "symbol": "KOTAKBANK",
-        "oi": 145220000,
-        "oi_chg": -2446000,
-        "chg": 1.29
+        "oi": 147072000,
+        "oi_chg": 1852000,
+        "chg": 2.23
       },
       {
-        "symbol": "BANKBARODA",
-        "oi": 131358825,
-        "oi_chg": -2512575,
-        "chg": 4.06
+        "symbol": "BANDHANBNK",
+        "oi": 129924000,
+        "oi_chg": 1483200,
+        "chg": 0.04
       },
       {
         "symbol": "ETERNAL",
-        "oi": 129912100,
-        "oi_chg": 3698125,
-        "chg": 0.12
+        "oi": 128323725,
+        "oi_chg": -1588375,
+        "chg": -1.2
       }
     ],
     "stock_futures": 218
@@ -170,183 +170,183 @@
       ],
       "rows": [
         [
-          "2026-11-19",
-          "TIINDIA",
-          "1124400",
-          "-1747000",
-          "-155.37",
-          "2.31",
+          "2026-11-20",
+          "HDFCAMC",
+          "452700",
+          "-2001900",
+          "-442.21",
+          "0.81",
           "unwind"
         ],
         [
-          "2026-11-19",
-          "JSWENERGY",
-          "10043725",
-          "-10469425",
-          "-104.24",
-          "0.59",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "ADANIENSOL",
-          "5736150",
-          "-5790825",
-          "-100.95",
-          "-0.42",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "DABUR",
-          "8021250",
-          "-8077500",
-          "-100.7",
-          "2.97",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "ALKEM",
-          "651500",
-          "-646000",
-          "-99.16",
-          "-1.22",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "KARURVYSYA",
-          "992000",
-          "-947050",
-          "-95.47",
-          "-0.19",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "SRF",
-          "1341400",
-          "-1244400",
-          "-92.77",
-          "2.97",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "HEROMOTOCO",
-          "1190100",
-          "-1093650",
-          "-91.9",
-          "5.43",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "DLF",
-          "12027950",
-          "-11003850",
-          "-91.49",
-          "0.04",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "HINDALCO",
-          "19966800",
-          "-18237100",
-          "-91.34",
-          "0.88",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "GAIL",
-          "20416050",
-          "-18623300",
-          "-91.22",
-          "1.05",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "SIEMENS",
-          "1387400",
-          "-1261575",
-          "-90.93",
-          "3.04",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
-          "JSWSTEEL",
-          "11866500",
-          "-10766250",
-          "-90.73",
-          "1.4",
-          "unwind"
-        ],
-        [
-          "2026-11-19",
+          "2026-11-20",
           "PETRONET",
-          "9541800",
-          "-8646900",
-          "-90.62",
-          "0.9",
+          "1985500",
+          "-7556300",
+          "-380.57",
+          "-0.5",
           "unwind"
         ],
         [
-          "2026-11-19",
+          "2026-11-20",
+          "LICHSGFIN",
+          "3783000",
+          "-12711000",
+          "-336.0",
+          "0.16",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "NTPC",
+          "9184500",
+          "-29257500",
+          "-318.55",
+          "-0.93",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "NMDC",
+          "42282000",
+          "-130045500",
+          "-307.57",
+          "0.18",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "TATAELXSI",
+          "164625",
+          "-481500",
+          "-292.48",
+          "3.76",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "ULTRACEMCO",
+          "173500",
+          "-505200",
+          "-291.18",
+          "2.05",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "MFSL",
+          "733200",
+          "-2111600",
+          "-288.0",
+          "1.81",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "CIPLA",
+          "1238025",
+          "-3383000",
+          "-273.26",
+          "-0.47",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "UNOMINDA",
+          "735900",
+          "-1990450",
+          "-270.48",
+          "-0.89",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "SAGILITY",
+          "18576000",
+          "-46080000",
+          "-248.06",
+          "0.98",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
           "AMBUJACEM",
-          "38157600",
-          "-34364400",
-          "-90.06",
-          "3.19",
+          "11049600",
+          "-27108000",
+          "-245.33",
+          "0.81",
           "unwind"
         ],
         [
-          "2026-11-19",
-          "NESTLEIND",
-          "3288500",
-          "-2925500",
-          "-88.96",
-          "1.51",
+          "2026-11-20",
+          "FORTIS",
+          "1466300",
+          "-3461150",
+          "-236.05",
+          "1.81",
           "unwind"
         ],
         [
-          "2026-11-19",
-          "AXISBANK",
-          "28021250",
-          "-24865625",
-          "-88.74",
-          "1.29",
+          "2026-11-20",
+          "HINDPETRO",
+          "4912650",
+          "-11591100",
+          "-235.94",
+          "1.72",
           "unwind"
         ],
         [
-          "2026-11-19",
-          "PRESTIGE",
-          "1685250",
-          "-1495350",
-          "-88.73",
+          "2026-11-20",
+          "PIDILITIND",
+          "777500",
+          "-1804000",
+          "-232.03",
+          "1.65",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "VOLTAS",
+          "1659375",
+          "-3844875",
+          "-231.71",
           "-0.3",
           "unwind"
         ],
         [
-          "2026-11-19",
-          "UNITDSPR",
-          "2616800",
-          "-2300800",
-          "-87.92",
-          "1.39",
+          "2026-11-20",
+          "SBICARD",
+          "2672800",
+          "-6013600",
+          "-224.99",
+          "1.18",
           "unwind"
         ],
         [
-          "2026-11-19",
-          "LTM",
-          "1068300",
-          "-934800",
-          "-87.5",
-          "0.16",
+          "2026-11-20",
+          "ZYDUSLIFE",
+          "1537650",
+          "-3431250",
+          "-223.15",
+          "-0.19",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "VBL",
+          "7836150",
+          "-17368050",
+          "-221.64",
+          "1.51",
+          "unwind"
+        ],
+        [
+          "2026-11-20",
+          "SAIL",
+          "24858300",
+          "-54397800",
+          "-218.83",
+          "0.06",
           "unwind"
         ]
       ],
@@ -454,21 +454,21 @@
           "11.49"
         ],
         [
-          "SELMC",
-          "2026-09-09",
-          "29.25",
-          "1.53",
-          "335077.0",
-          "29672.05",
-          "11.29"
-        ],
-        [
           "ICICICONSU",
           "2023-12-19",
           "94.74",
           "0.41",
           "503747.0",
           "44635.2",
+          "11.29"
+        ],
+        [
+          "SELMC",
+          "2026-09-09",
+          "29.25",
+          "1.53",
+          "335077.0",
+          "29672.05",
           "11.29"
         ],
         [
@@ -575,6 +575,12 @@
           "BF Investment Limited"
         ],
         [
+          "FUSIONCX",
+          "Dividend - Re 0.75 Per Share",
+          "2026-11-27",
+          "Fusion CX Limited"
+        ],
+        [
           "JAMNAAUTO",
           "Interim Dividend - Re 1 Per Share",
           "2026-11-20",
@@ -641,7 +647,7 @@
           "Vraj Iron and Steel Limited"
         ]
       ],
-      "total": 14
+      "total": 15
     },
     "split": {
       "columns": [
@@ -652,19 +658,13 @@
       ],
       "rows": [
         [
-          "INTERARCH",
-          "Face Value Split (Sub-Division) - From Rs 10/- Per Share To Rs 2/- Per Share",
-          "2026-11-30",
-          "Interarch Building Solutions Limited"
-        ],
-        [
           "VGL",
           "Face Value Split (Sub-Division) - From Rs 5/- Per Share To Rs 2/- Per Share",
           "2026-11-27",
           "VARVEE GLOBAL LIMITED"
         ]
       ],
-      "total": 2
+      "total": 1
     },
     "rights": {
       "columns": [
@@ -723,20 +723,20 @@
     "rows": [
       [
         "^NSEBANK",
-        64432.9492,
-        2.17,
+        64635.1992,
+        2.49,
         "2026-11-20"
       ],
       [
         "^NSEI",
-        25738.5508,
-        0.88,
+        25800.5996,
+        1.12,
         "2026-11-20"
       ],
       [
         "^BSESN",
-        83672.2578,
-        0.78,
+        83919.7109,
+        1.08,
         "2026-11-20"
       ]
     ],
@@ -752,8 +752,8 @@
     "rows": [
       [
         "GC=F",
-        3572.3999,
-        -3.07,
+        3544.3,
+        -3.83,
         "2026-11-20"
       ]
     ],
@@ -768,63 +768,63 @@
     ],
     "rows": [
       [
-        "BNB-USD",
-        571.6,
-        -1.38,
-        "2026-11-20"
-      ],
-      [
-        "LINK-USD",
-        8.867,
-        -1.37,
-        "2026-11-20"
-      ],
-      [
         "ADA-USD",
-        0.1497,
-        -1.27,
-        "2026-11-20"
-      ],
-      [
-        "AVAX-USD",
-        6.905,
-        -1.1,
+        0.1407,
+        -7.24,
         "2026-11-20"
       ],
       [
         "DOGE-USD",
-        0.0575,
-        -1.03,
+        0.054,
+        -7.0,
         "2026-11-20"
       ],
       [
-        "SOL-USD",
-        72.6,
-        -0.64,
+        "AVAX-USD",
+        6.504,
+        -6.84,
         "2026-11-20"
       ],
       [
-        "XRP-USD",
-        0.9647,
-        0.51,
-        "2026-11-20"
-      ],
-      [
-        "TRX-USD",
-        0.3092,
-        -0.29,
+        "LINK-USD",
+        8.381,
+        -6.77,
         "2026-11-20"
       ],
       [
         "ETH-USD",
-        1750.8,
-        -0.25,
+        1639.35,
+        -6.6,
+        "2026-11-20"
+      ],
+      [
+        "BNB-USD",
+        546.93,
+        -5.64,
+        "2026-11-20"
+      ],
+      [
+        "SOL-USD",
+        69.24,
+        -5.24,
+        "2026-11-20"
+      ],
+      [
+        "XRP-USD",
+        0.9128,
+        -4.9,
         "2026-11-20"
       ],
       [
         "BTC-USD",
-        61786.3984,
-        -0.19,
+        59343.8711,
+        -4.13,
+        "2026-11-20"
+      ],
+      [
+        "TRX-USD",
+        0.3027,
+        -2.4,
         "2026-11-20"
       ]
     ],
@@ -841,242 +841,224 @@
     "rows": [
       [
         "ET Markets",
+        "Sebi proposes limiting tenure of chief executives, independent directors at exchanges",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-proposes-limiting-tenure-of-chief-executives-independent-directors-at-exchanges/articleshow/136031465.cms",
+        "Fri, 20 Nov 2026 20:39:36 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Nasdaq tumbles 2% as Anthropic retreat deepens AI trade concerns",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-nasdaq-falls-1-at-open-as-anthropic-fails-to-steady-ai-trade/articleshow/136030779.cms",
+        "Fri, 20 Nov 2026 20:29:06 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Nasdaq tumbles 650 pts as Anthropic fails to rekindle AI optimism: Stock Market Live Updates",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-meta-tesla-anthropic-claude-nvidia-micron-meta-ai-stocks-fed-rate-hike-inflation-treasury-yield-news-20th-november-2026/liveblog/136028991.cms",
+        "Fri, 20 Nov 2026 18:39:00 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee climbs past 93/USD as investors seek shelter in Indian stocks, shorts unwind",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-climbs-past-93/usd-as-investors-seek-shelter-in-indian-stocks-shorts-unwind/articleshow/136023536.cms",
+        "Fri, 20 Nov 2026 16:15:31 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Anthropic's debut rally fades as shares crack 7% in US pre-market trade",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/anthropics-debut-rally-fades-as-shares-crack-7-in-pre-market-trade-on-day-2/articleshow/136021174.cms",
+        "Fri, 20 Nov 2026 15:06:25 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Sharp rupee appreciation may cut IT firms' FY27 earnings by up to 13%: Report",
+        "https://economictimes.indiatimes.com/markets/forex/sharp-rupee-appreciation-may-cut-it-firms-fy27-earnings-by-up-to-13-report/articleshow/136021296.cms",
+        "Fri, 20 Nov 2026 15:06:14 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi plans consultation paper to remove FPI constraints absent in other markets",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-plans-consultation-paper-to-remove-fpi-constraints-absent-in-other-markets/articleshow/136020808.cms",
+        "Fri, 20 Nov 2026 14:49:53 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
         "Indian finance hub eyes dual share model to kickstart public offers: Report",
         "https://economictimes.indiatimes.com/markets/stocks/news/indian-finance-hub-eyes-dual-share-model-to-kickstart-public-offers-report/articleshow/136017941.cms",
         "Fri, 20 Nov 2026 13:02:59 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
         "Who is Roaring Kitty? The man behind GameStop's meme rally",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/who-is-roaring-kitty-the-man-behind-gamestops-meme-rally/slideshow/136017912.cms",
         "Fri, 20 Nov 2026 12:20:28 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Sun Pharma Share Price Live Updates: Sun Pharma Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sun-pharma-stock-price-livestock-price-today-live-updates-20-nov-2026/liveblog/136016959.cms",
+        "Fri, 20 Nov 2026 12:19:25 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "M&amp;M Share Price Live Updates: M&amp;M Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/mm-share-price-today-live-20-nov-2026/liveblog/136016893.cms",
+        "Fri, 20 Nov 2026 12:17:54 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "Eicher Motors Share Price Live Updates: Eicher Motors Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/eicher-motors-share-price-live-20-nov-2026/liveblog/136016875.cms",
+        "Fri, 20 Nov 2026 12:17:28 +0530",
+        "2026-11-20T16:43:23Z"
+      ],
+      [
+        "ET Markets",
+        "NTPC Share Price Live Updates: NTPC Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ntpc-stock-price-today-live-20-nov-2026/liveblog/136016873.cms",
+        "Fri, 20 Nov 2026 12:17:28 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
         "Treasury rally spills over to Indian bonds, debt supply slows move",
         "https://economictimes.indiatimes.com/markets/bonds/treasury-rally-spills-over-to-indian-bonds-debt-supply-slows-move/articleshow/136014379.cms",
         "Fri, 20 Nov 2026 10:49:20 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
         "Rupee rises past 93 vs USD as portfolio inflows, bear retreat fuel rally",
         "https://economictimes.indiatimes.com/markets/forex/rupee-rises-past-93-vs-usd-as-portfolio-inflows-bear-retreat-fuel-rally/articleshow/136014185.cms",
         "Fri, 20 Nov 2026 10:38:53 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
         "Rupee strengthens 17 paise to 93.15 against US dollar in early trade",
         "https://economictimes.indiatimes.com/markets/forex/rupee-strengthens-17-paise-to-93-15-against-us-dollar-in-early-trade/articleshow/136013858.cms",
         "Fri, 20 Nov 2026 10:24:03 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
         "Anthropic shares close 17% higher on first day of trading amid protest, arrests outside Nasdaq",
         "https://economictimes.indiatimes.com/markets/stocks/news/anthropic-shares-close-17-higher-on-first-day-of-trading-amid-protest-arrests-outside-nasdaq/videoshow/136013757.cms",
         "Fri, 20 Nov 2026 10:18:04 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
         "SELLAS Life Sciences shares plunge 19%: What triggered the sharp sell-off?",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/sellas-life-sciences-shares-plunge-19-what-triggered-the-sharp-sell-off/slideshow/136013890.cms",
         "Fri, 20 Nov 2026 10:17:39 +0530",
-        "2026-11-20T08:00:20Z"
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "IndiGo, Tata Motors PV among 10 Nifty stocks facing earnings downgrades",
-        "https://economictimes.indiatimes.com/markets/stocks/news/indigo-tata-motors-pv-among-10-nifty-stocks-facing-earnings-downgrades/slideshow/136012225.cms",
-        "Fri, 20 Nov 2026 09:11:57 +0530",
-        "2026-11-20T08:00:20Z"
+        "Adani Ent Share Price Highlights: Adani Ent. Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/adani-ent-stock-price-today-live-20-nov-2026/liveblog/136013496.cms",
+        "Fri, 20 Nov 2026 10:04:57 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Axis Direct names 35 top stocks to buy; ICICI Bank, HUL and  Maruti Suzuki feature in list",
-        "https://economictimes.indiatimes.com/markets/stocks/news/axis-direct-names-35-top-stocks-to-buy-icici-bank-hul-and-maruti-suzuki-feature-in-list/slideshow/136011903.cms",
-        "Fri, 20 Nov 2026 09:01:23 +0530",
-        "2026-11-20T08:00:20Z"
+        "HUL Share Price Highlights: HUL Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hul-share-price-today-live-20-nov-2026/liveblog/136013489.cms",
+        "Fri, 20 Nov 2026 10:04:44 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Gold Rate Live Updates: Gold plunges Rs 6,000/10g, silver sheds Rs 9,900/kg amid Fed rate hike bets; Buy the dip or wait?",
-        "https://economictimes.indiatimes.com/markets/stocks/live-blog/live-updates-gold-rate-today-20th-november-24k-22k-20k-18-carat-mcx-gold-silver-price-in-delhi-hyderabad-chennai-bengaluru-citywise/liveblog/136011549.cms",
-        "Fri, 20 Nov 2026 08:57:40 +0530",
-        "2026-11-20T08:00:20Z"
+        "Adani Ports SEZ Share Price Highlights: Adani Ports SEZ Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/adani-ports-sez-share-price-today-live-20-nov-2026/liveblog/136013481.cms",
+        "Fri, 20 Nov 2026 10:04:32 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "TVS Motor Company among 4 stocks that close above VWAP",
-        "https://economictimes.indiatimes.com/markets/stocks/news/tvs-motor-company-among-4-stocks-that-close-above-vwap/slideshow/136011430.cms",
-        "Fri, 20 Nov 2026 08:46:04 +0530",
-        "2026-11-20T08:00:20Z"
+        "Infosys Share Price Highlights: Infosys Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/infosys-share-price-today-live-updates-20-nov-2026/liveblog/136013468.cms",
+        "Fri, 20 Nov 2026 10:04:19 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Tata Technologies among 4 stocks showing RSI trending up",
-        "https://economictimes.indiatimes.com/markets/stocks/news/tata-technologies-among-4-stocks-showing-rsi-trending-up/slideshow/136011353.cms",
-        "Fri, 20 Nov 2026 08:40:26 +0530",
-        "2026-11-20T08:00:20Z"
+        "Axis Bank Share Price Highlights: Axis Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/axis-bank-stock-price-livestock-price-today-live-updates-20-nov-2026/liveblog/136013459.cms",
+        "Fri, 20 Nov 2026 10:04:07 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Maruti Suzuki among 6 stocks flashing White Marubozu pattern",
-        "https://economictimes.indiatimes.com/markets/stocks/news/maruti-suzuki-among-6-stocks-flashing-white-marubozu-pattern/slideshow/136011413.cms",
-        "Fri, 20 Nov 2026 08:39:49 +0530",
-        "2026-11-20T08:00:20Z"
+        "Tata Motors PV Share Price Highlights: Tata Motors PV Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-motors-pv-share-price-today-live-20-nov-2026/liveblog/136013458.cms",
+        "Fri, 20 Nov 2026 10:04:07 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "D-Street\u2019s stellar rally faces valuation test as bond allure grows",
-        "https://economictimes.indiatimes.com/markets/bonds/indias-stock-rally-faces-valuation-test-as-bond-allure-grows/articleshow/136010605.cms",
-        "Fri, 20 Nov 2026 08:17:28 +0530",
-        "2026-11-20T08:00:20Z"
+        "LTIMindtree Share Price Highlights: LTIMindtree Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ltimindtree-share-price-live-20-nov-2026/liveblog/136013457.cms",
+        "Fri, 20 Nov 2026 10:04:04 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Oil prices edge higher as Houthi attacks on Riyadh raise supply concerns",
-        "https://economictimes.indiatimes.com/markets/commodities/news/oil-prices-edge-higher-as-houthi-attacks-on-riyadh-raise-supply-concerns/articleshow/136010331.cms",
-        "Fri, 20 Nov 2026 07:49:44 +0530",
-        "2026-11-20T08:00:20Z"
+        "Grasim Inds Share Price Highlights: Grasim Inds. Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/grasim-inds-stock-price-today-live-20-nov-2026/liveblog/136013447.cms",
+        "Fri, 20 Nov 2026 10:03:53 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "IMF chief sees more correction in markets due to AI",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/imf-chief-sees-more-correction-in-markets-due-to-ai/articleshow/136010135.cms",
-        "Fri, 20 Nov 2026 07:38:53 +0530",
-        "2026-11-20T08:00:20Z"
+        "Bajaj Auto Share Price Highlights: Bajaj Auto Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-auto-share-price-live-updates-20-nov-2026/liveblog/136013446.cms",
+        "Fri, 20 Nov 2026 10:03:52 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Dollar near 19-month peak as AI jitters sap risk appetite",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/dollar-near-19-month-peak-as-ai-jitters-sap-risk-appetite/articleshow/136009931.cms",
-        "Fri, 20 Nov 2026 07:26:39 +0530",
-        "2026-11-20T08:00:20Z"
+        "Apollo Hospital Share Price Highlights: Apollo Hospital Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/apollo-hospital-share-price-live-updates-20-nov-2026/liveblog/136013439.cms",
+        "Fri, 20 Nov 2026 10:03:34 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Positive Breakout: These 5 stocks cross above their 200 DMAs",
-        "https://economictimes.indiatimes.com/markets/stocks/news/positive-breakout-these-5-stocks-cross-above-their-200-dmas/slideshow/136009858.cms",
-        "Fri, 20 Nov 2026 07:16:28 +0530",
-        "2026-11-20T08:00:20Z"
+        "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-live-updates-20-nov-2026/liveblog/136013436.cms",
+        "Fri, 20 Nov 2026 10:03:30 +0530",
+        "2026-11-20T16:43:23Z"
       ],
       [
         "ET Markets",
-        "Gold set for worst week since March as rate-hike expectations grow",
-        "https://economictimes.indiatimes.com/markets/commodities/news/gold-set-for-worst-week-since-march-as-rate-hike-expectations-grow/articleshow/136009768.cms",
-        "Fri, 20 Nov 2026 07:15:04 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Stock Market Live Updates: Sensex bucks Asia's trend, zooms over 650 pts; Nifty Bank hits fresh high",
-        "https://economictimes.indiatimes.com/markets/stocks/live-blog/bse-sensex-today-nifty50-stock-market-live-updates-gift-nifty-paytm-coal-india-share-price-20-november-2026/liveblog/136009816.cms",
-        "Fri, 20 Nov 2026 07:12:55 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market Today: Asian stocks slide as AI fears trigger selloff",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-asian-stocks-slide-as-ai-fears-trigger-selloff/articleshow/136009259.cms",
-        "Fri, 20 Nov 2026 06:32:17 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic shares surge 34% in Nasdaq debut, valuation hits $2 trillion",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/2-trillion-anthropic-soars-34-on-wall-street-debut/articleshow/136009222.cms",
-        "Fri, 20 Nov 2026 06:27:11 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Anthropic's historic debut to put AI's promise and peril on Wall Street trial",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/anthropics-historic-debut-to-put-ais-promise-and-peril-on-wall-street-trial/articleshow/136009180.cms",
-        "Fri, 20 Nov 2026 06:18:29 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "AMD shares slide 8% as report says China links could invite US scrutiny",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/amd-shares-slide-8-as-report-says-china-links-could-invite-us-scrutiny/articleshow/136002141.cms",
-        "Thu, 19 Nov 2026 23:43:12 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Amundi CIO says not bearish on France bonds, AI at the start of repricing",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/amundi-cio-says-not-bearish-on-france-bonds-ai-at-the-start-of-repricing/articleshow/135998168.cms",
-        "Thu, 19 Nov 2026 21:31:26 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Sebi roadmap focuses on faster IPOs, easier foreign investor access: Official",
-        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-roadmap-focuses-on-faster-ipos-easier-foreign-investor-access-official/articleshow/135998128.cms",
-        "Thu, 19 Nov 2026 21:29:26 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Six listed REIT firms distribute Rs 3,234 cr in Q2 to over 5.25 lakh unitholders",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/six-listed-reit-firms-distribute-rs-3234-cr-in-q2-to-over-5-25-lakh-unitholders/articleshow/135998101.cms",
-        "Thu, 19 Nov 2026 21:27:34 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Keystone Realtors to launch Rs 5,000 cr worth housing properties in MMR by Mar: CMD",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/keystone-realtors-to-launch-rs-5000-cr-worth-housing-properties-in-mmr-by-mar-cmd/articleshow/135997982.cms",
-        "Thu, 19 Nov 2026 21:26:22 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Signature Global acquires 10-acre land parcels in Gurugram to build realty projects",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/signature-global-acquires-10-acre-land-parcels-in-gurugram-to-build-realty-projects/articleshow/135997924.cms",
-        "Thu, 19 Nov 2026 21:23:49 +0530",
-        "2026-11-20T08:00:20Z"
-      ],
-      [
-        "ET Markets",
-        "Walmart raises its outlook for the year for the 3rd time after a solid quarter",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/walmart-raises-its-outlook-for-the-year-for-the-3rd-time-after-a-solid-quarter/articleshow/135997871.cms",
-        "Thu, 19 Nov 2026 21:22:19 +0530",
-        "2026-11-20T08:00:20Z"
+        "SBI Life Share Price Highlights: SBI Life Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sbi-life-stock-price-today-live-20-nov-2026/liveblog/136013423.cms",
+        "Fri, 20 Nov 2026 10:03:20 +0530",
+        "2026-11-20T16:43:23Z"
       ]
     ],
-    "total": 165
+    "total": 147
   },
   "archive": {
-    "files": 51,
-    "dates": 27,
+    "files": 53,
+    "dates": 28,
     "symbols_max": 3777,
     "first": "2019-06-14",
-    "last": "2026-11-19",
+    "last": "2026-11-20",
     "recent": [
-      {
-        "date": "2026-11-12",
-        "segment": "cm",
-        "rows": "3727",
-        "symbols": "3726",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-12.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-12.csv"
-      },
-      {
-        "date": "2026-11-12",
-        "segment": "fo",
-        "rows": "42967",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-12.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-12.csv"
-      },
       {
         "date": "2026-11-13",
         "segment": "cm",
@@ -1166,33 +1148,51 @@
         "era": "udiff",
         "file_parquet": "data/parquet/fo/fo_2026-11-19.parquet",
         "file_csv": "data/csv/fo/fo_2026-11-19.csv"
+      },
+      {
+        "date": "2026-11-20",
+        "segment": "cm",
+        "rows": "3742",
+        "symbols": "3740",
+        "era": "udiff",
+        "file_parquet": "data/parquet/cm/cm_2026-11-20.parquet",
+        "file_csv": "data/csv/cm/cm_2026-11-20.csv"
+      },
+      {
+        "date": "2026-11-20",
+        "segment": "fo",
+        "rows": "45082",
+        "symbols": "224",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-11-20.parquet",
+        "file_csv": "data/csv/fo/fo_2026-11-20.csv"
       }
     ]
   },
   "brain": {
     "channels": 10,
-    "videos": 534,
+    "videos": 544,
     "window": [
       "2026-05-15",
       "2026-11-20"
     ],
-    "total_views": 13330662,
-    "net_sentiment": 316,
+    "total_views": 13357315,
+    "net_sentiment": 321,
     "top_symbols": [
       {
         "symbol": "NIFTY50",
-        "mentions": 112,
+        "mentions": 113,
+        "channels": 5
+      },
+      {
+        "symbol": "BANKNIFTY",
+        "mentions": 52,
         "channels": 5
       },
       {
         "symbol": "SENSEX",
         "mentions": 52,
         "channels": 4
-      },
-      {
-        "symbol": "BANKNIFTY",
-        "mentions": 51,
-        "channels": 5
       },
       {
         "symbol": "RELIANCE",
@@ -1220,40 +1220,40 @@
         "channels": 4
       },
       {
+        "symbol": "TCS",
+        "mentions": 5,
+        "channels": 3
+      },
+      {
         "symbol": "BSE",
         "mentions": 4,
         "channels": 4
-      },
-      {
-        "symbol": "INFY",
-        "mentions": 4,
-        "channels": 3
       }
     ],
     "top_themes": [
       {
         "theme": "Beginner/Education",
-        "videos": 141
+        "videos": 145
       },
       {
         "theme": "MF/SIP",
-        "videos": 135
+        "videos": 136
       },
       {
         "theme": "Earnings/Results",
-        "videos": 119
+        "videos": 121
       },
       {
         "theme": "Options/F&O",
-        "videos": 115
+        "videos": 117
       },
       {
         "theme": "IPO",
-        "videos": 107
+        "videos": 109
       },
       {
         "theme": "Budget/Policy",
-        "videos": 79
+        "videos": 82
       }
     ]
   },
@@ -1281,11 +1281,11 @@
       ],
       [
         "Abhishek Kar",
-        "37",
-        "2026-11-19",
+        "38",
+        "2026-11-20",
         "2026-09-29",
-        "76858",
-        "21029",
+        "75265",
+        "19563",
         "Stock Market CRASH nifty sensex me kya kare?",
         "474041"
       ],
@@ -1301,11 +1301,11 @@
       ],
       [
         "WAY2LAABH",
-        "26",
-        "2026-11-17",
+        "27",
+        "2026-11-20",
         "2026-09-27",
-        "30431",
-        "20580",
+        "29357",
+        "20175",
         "Volume Trading Strategy \ud83d\udd25 | \u092f\u0947 Secret \u0938\u092e\u091d \u0932\u093f\u092f\u093e \u0924\u094b Trading \u0906\u0938\u093e\u0928! #short",
         "131929"
       ],
@@ -1321,33 +1321,33 @@
       ],
       [
         "Groww Edge",
-        "73",
-        "2026-11-19",
+        "75",
+        "2026-11-20",
         "2026-10-09",
-        "21508",
-        "4997",
+        "20982",
+        "4931",
         "Is the Oil in Your Samosa the Same Oil Planes Want?",
         "255474"
       ],
       [
-        "Groww",
-        "60",
-        "2026-11-19",
-        "2026-10-06",
-        "14128",
-        "6722",
-        "How to Buy US Stocks from India? Complete Guide",
-        "165710"
-      ],
-      [
         "Markets by Zerodha",
-        "56",
+        "57",
         "2026-11-20",
         "2026-10-05",
-        "14011",
-        "9556",
+        "13770",
+        "9462",
         "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
         "85869"
+      ],
+      [
+        "Groww",
+        "62",
+        "2026-11-20",
+        "2026-10-06",
+        "13729",
+        "6351",
+        "How to Buy US Stocks from India? Complete Guide",
+        "165710"
       ],
       [
         "Markets by Zerodha Hindi",
@@ -1361,11 +1361,11 @@
       ],
       [
         "Upstox",
-        "149",
+        "152",
         "2026-11-20",
         "2026-10-15",
-        "1242",
-        "251",
+        "1228",
+        "292",
         "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
         "10837"
       ]
@@ -1387,6 +1387,19 @@
       "first_seen"
     ],
     "rows": [
+      [
+        "1m71Jhk22tw",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "Gold Price Crash: \u20b91,20,000 \u0924\u0915 \u0917\u093f\u0930\u0947\u0917\u093e \u0938\u094b\u0928\u093e? (Don't Buy Yet)",
+        "2026-11-20T14:14:00+00:00",
+        "2026-11-20T15:32:27+00:00",
+        "https://www.youtube.com/watch?v=1m71Jhk22tw",
+        "https://i2.ytimg.com/vi/1m71Jhk22tw/hqdefault.jpg",
+        "16351",
+        "Gold prices have crashed massively in November 2026! From the January all-time high of $5,625 on COMEX and \u20b91.93 lakh on MCX, gold has plunged to \u20b91,21,770 per 10 grams\u2014leaving Diwali buyers in a \u20b915,000+ loss. Meanwhile, MCX Silver has witnessed a brutal 28% bloodbath in just 30 days!\n\nIn this video, we do a complete postmortem of the 2026 Gold and Silver crash. We break down the 3 real macroeconomic reasons behind this sell-off: the US Federal Reserve's hawkish interest rate stance, US Treasur",
+        "2026-11-20T16:37:56Z"
+      ],
       [
         "TWKnKBjo-B0",
         "Abhishek Kar",
@@ -1568,22 +1581,9 @@
         "12805",
         "Get discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nWe dont give any paid tips or services like PMS. Several fake accounts do that on our name on telegram,instagrammfacebook etc. Kindly dont pay scammers a single ruppee and prefer to see our announcements via official channels.\n\n20 minutes mein $6.3 Billion (lagbhag \u20b952,000 Crore) ek hi jhatke mein gayab! Kya Binance par hua yeh crypto history ka ",
         "2026-10-30T21:17:18Z"
-      ],
-      [
-        "vnJ6LzTD970",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "35 crore missing from PNB accounts",
-        "2026-10-29T15:15:32+00:00",
-        "2026-10-29T15:15:46+00:00",
-        "https://www.youtube.com/shorts/vnJ6LzTD970",
-        "https://i3.ytimg.com/vi/vnJ6LzTD970/hqdefault.jpg",
-        "12379",
-        "",
-        "2026-10-29T19:59:59Z"
       ]
     ],
-    "total": 534
+    "total": 544
   },
   "indicators": {
     "columns": [
@@ -1603,143 +1603,143 @@
     "rows": [
       [
         "0SCL27",
-        "2026-11-19",
-        "1277.72",
-        "64.32812547378151",
-        "1270.9905",
+        "2026-11-20",
+        "1278.1",
+        "64.8891614880153",
+        "1271.558",
         "",
         "",
-        "1271.5882563860728",
-        "2.115955999517837",
-        "1.4916793048610615",
-        "0.9883878760559857",
-        "0.002432138699379139",
-        "63.04433689428086",
+        "1272.180233078248",
+        "2.356334506977646",
+        "1.6646103452843786",
+        "0.9506276433107093",
+        "0.002278979923693606",
+        "62.46063050202576",
         "100.0",
-        "1266.4411210900262",
+        "1267.8350089810235",
         "1.0",
-        "787.0",
-        "1270.0259403886057"
+        "812.0",
+        "1270.1385807291665"
       ],
       [
         "1003ISFL28",
-        "2026-11-19",
-        "1013.0",
-        "51.06878772317895",
-        "1009.7575",
+        "2026-11-20",
+        "1011.99",
+        "50.18630409547263",
+        "1010.257",
         "",
         "",
-        "1010.4680590879292",
-        "0.8505990826432708",
-        "0.5508769923311583",
-        "0.6877365993206531",
-        "0.005518582662246855",
-        "41.406508449724946",
-        "86.66666666666667",
+        "1010.6064173526629",
+        "0.8579764919270474",
+        "0.6122968922503361",
+        "0.6095698690096674",
+        "0.005764753115793692",
+        "41.24655247200255",
+        "79.9333333333334",
         "1016.8338960330001",
         "-1.0",
-        "1853.0",
-        "1009.5098042657304"
+        "1696.0",
+        "1009.5135564549605"
       ],
       [
         "1003SFIL28",
-        "2026-11-19",
-        "430.0",
-        "50.11838718080356",
-        "417.06949999999995",
+        "2026-11-20",
+        "432.8",
+        "51.44487613380121",
+        "416.0595",
         "",
         "",
-        "424.74919772154067",
-        "-4.193057145325383",
-        "-6.633503599254271",
-        "0.7196356679014405",
-        "0.029377430215621204",
-        "54.64910276993812",
-        "100.00000000000001",
+        "425.4810888377643",
+        "-3.056226419988036",
+        "-5.918048163401024",
+        "0.8273773052435525",
+        "0.027564667762299072",
+        "52.330790250017785",
+        "100.0",
         "442.18543550000004",
         "-1.0",
-        "-665.0",
-        "418.4295141012572"
+        "-655.0",
+        "418.5023867478026"
       ],
       [
         "1015ECL29",
-        "2026-11-19",
-        "1012.0",
-        "37.12901654199653",
-        "1019.4395000000001",
+        "2026-11-20",
+        "1016.99",
+        "44.27139754803376",
+        "1019.3889999999999",
         "",
         "",
-        "1019.1535219317149",
-        "-1.9261740414543738",
-        "-0.632207714583856",
-        "0.156612226685708",
-        "0.005197217829118536",
-        "47.64165507533138",
-        "40.0",
+        "1018.9568381197408",
+        "-1.8385317784992594",
+        "-0.8734725273669367",
+        "0.389632504429962",
+        "0.005223720261323222",
+        "46.257145245582876",
+        "56.63333333333336",
         "1029.2536365075591",
         "-1.0",
-        "-11099.0",
-        "1012.7662233121287"
+        "-11071.0",
+        "1012.771469699174"
       ],
       [
         "1065NFL27",
-        "2026-11-19",
-        "1004.0",
-        "57.299265702032336",
-        "1005.1424999999999",
+        "2026-11-20",
+        "1003.01",
+        "55.90209036275121",
+        "1005.1275000000002",
         "",
         "",
-        "1005.303679826677",
-        "-0.2605275048280191",
-        "-0.10138329417608016",
-        "0.4044948142647037",
-        "0.004615807398376794",
-        "39.64365566406873",
-        "23.980649619903392",
+        "1005.0951634787973",
+        "-0.40942117850079285",
+        "-0.16299087104102272",
+        "0.32357487802025875",
+        "0.004367960878015313",
+        "39.02310079979995",
+        "17.138908085694634",
         "999.0389054407094",
         "1.0",
-        "2540.0",
-        "1004.9615528706564"
+        "2460.0",
+        "1004.9439010836342"
       ],
       [
         "10IIFL28",
-        "2026-11-19",
-        "1025.01",
-        "60.281830197963124",
-        "1019.5115000000002",
+        "2026-11-20",
+        "1023.2",
+        "57.753318211084476",
+        "1019.722",
         "",
         "",
-        "1019.5396119890377",
-        "2.526115349648535",
-        "2.2852826659616365",
-        "0.8265872943809593",
-        "0.0036374644377196222",
-        "46.91503750451601",
-        "66.95652173913017",
+        "1019.8723745354887",
+        "2.4910988224271478",
+        "2.3264458972547386",
+        "0.7030427524423625",
+        "0.0037103266016273047",
+        "46.05811278531845",
+        "54.849498327759335",
         "1014.5219078387903",
         "1.0",
-        "2790.0",
-        "1017.4736109384711"
+        "2384.0",
+        "1017.6488422315537"
       ],
       [
         "10IIFL28A",
-        "2026-11-19",
-        "1064.8",
-        "75.40880527199897",
-        "1062.1305",
+        "2026-11-20",
+        "1060.1",
+        "71.63305305967621",
+        "1062.62",
         "",
         "",
-        "1061.1343802191898",
-        "2.8344787694145452",
-        "3.0238003415644736",
-        "0.6339485825909451",
-        "0.00563127427969606",
-        "50.607931364191316",
-        "74.07407407407378",
+        "1061.0403456538088",
+        "2.3921662958316574",
+        "2.8974735324179104",
+        "0.35069186726121676",
+        "0.005649760203839586",
+        "47.61230389233242",
+        "50.55055055055005",
         "1053.815645119504",
         "1.0",
-        "6209.0",
-        "1061.3833809204432"
+        "5898.0",
+        "1061.4031522143653"
       ],
       [
         "12AFIL28",
@@ -1763,183 +1763,183 @@
       ],
       [
         "20MICRONS",
-        "2026-11-19",
-        "180.3",
-        "93.25737431539055",
-        "178.4335",
+        "2026-11-20",
+        "179.49",
+        "93.05859151182581",
+        "178.661",
         "",
         "",
-        "168.53093142767034",
-        "18.090079052195506",
-        "23.176810407526332",
-        "0.5546426222643069",
-        "0.051097578125947514",
-        "56.767069342298655",
-        "57.6291430277695",
+        "169.52721038879122",
+        "16.778871888109762",
+        "21.897222703643017",
+        "0.5243708467147759",
+        "0.04927358204174064",
+        "55.019579843890895",
+        "51.566031643525996",
         "159.95440850437345",
         "1.0",
-        "-306059.0",
-        "174.1462084272202"
+        "-340511.0",
+        "174.19209261822766"
       ],
       [
         "21STCENMGM",
-        "2026-11-19",
-        "48.51",
-        "82.66069891530842",
-        "53.935",
+        "2026-11-20",
+        "46.09",
+        "80.03041536008398",
+        "53.837",
         "",
         "",
-        "49.8537535820943",
-        "3.7401803172942607",
-        "5.989127119846332",
-        "0.19900841789458437",
-        "0.06127714440294165",
-        "54.8308649739166",
-        "15.140664961636837",
-        "56.46984172222864",
+        "49.51159416554027",
+        "3.0057444459261404",
+        "5.392450585062294",
+        "0.08365759541876482",
+        "0.06363823199148728",
+        "50.93277935435582",
+        "2.7621483375959404",
+        "55.70835755000577",
         "-1.0",
-        "236356.0",
-        "54.11864307684383"
+        "230107.0",
+        "54.02171277045022"
       ],
       [
         "360ONE",
-        "2026-11-19",
-        "1197.9",
-        "72.22724746449923",
-        "1098.7675",
+        "2026-11-20",
+        "1208.1",
+        "73.40446951260283",
+        "1109.3175",
         "",
         "",
-        "1128.39229480479",
-        "41.46674059736483",
-        "29.63077157217826",
-        "0.7884447994877525",
-        "0.02702856498956316",
-        "61.48295956824704",
-        "90.5280804694049",
-        "1107.340237710868",
+        "1135.6384498225364",
+        "42.304065986074875",
+        "32.16543045495759",
+        "0.788020773828345",
+        "0.0268401228619302",
+        "62.12810064929497",
+        "91.8958742632613",
+        "1109.3887139397812",
         "1.0",
-        "7189687.0",
-        "1088.5061921316537"
+        "8323335.0",
+        "1093.7766056225566"
       ],
       [
         "3BBLACKBIO",
-        "2026-11-19",
-        "1316.6",
-        "40.54270411324138",
-        "1328.6399999999999",
+        "2026-11-20",
+        "1305.1",
+        "39.02017666325118",
+        "1327.175",
         "",
         "",
-        "1340.2712188743074",
-        "-22.407760500252607",
-        "-28.31411208556321",
-        "0.4014749955452595",
-        "0.053955796780538315",
-        "30.357044385611715",
-        "43.3962264150943",
+        "1337.0738353402794",
+        "-22.464517004700838",
+        "-27.144193069390738",
+        "0.32162668789711146",
+        "0.051730936137150824",
+        "29.48277035885714",
+        "36.8867924528301",
         "1176.05",
         "1.0",
-        "-156481.0",
-        "1359.060007876257"
+        "-162322.0",
+        "1358.3689869201098"
       ],
       [
         "3IINFOLTD",
-        "2026-11-19",
-        "18.7",
-        "28.462269646746677",
-        "19.5155",
+        "2026-11-20",
+        "18.52",
+        "27.462202402257944",
+        "19.43",
         "",
         "",
-        "19.891458119088018",
-        "-0.6197753711940699",
-        "-0.6741414715395815",
-        "0.11462626271971936",
-        "0.04319903788007892",
-        "55.4909531437116",
-        "4.804804804804807",
-        "21.240159461807956",
+        "19.766780108261834",
+        "-0.6515796673823502",
+        "-0.6696291107081352",
+        "0.08226280235426232",
+        "0.04204599702502001",
+        "52.047930260180614",
+        "3.4582132564841763",
+        "20.938643515627163",
         "-1.0",
-        "-1888683.0",
-        "20.20393189872542"
+        "-2065458.0",
+        "20.133640519245063"
       ],
       [
         "3MINDIA",
-        "2026-11-19",
-        "28000.0",
-        "88.66537816447465",
-        "28558.25",
+        "2026-11-20",
+        "28255.0",
+        "88.80544349185561",
+        "28530.25",
         "",
         "",
-        "27990.44987264743",
-        "467.8374640765942",
-        "778.4860159936239",
-        "0.21478819456694206",
-        "0.026711593306637887",
-        "38.1404608921325",
-        "48.8479262672811",
+        "28014.499884224937",
+        "436.6275697878518",
+        "710.1143267524695",
+        "0.3595257134399977",
+        "0.026273529245433656",
+        "35.74136489372704",
+        "56.68202764976959",
         "30058.711266848557",
         "-1.0",
-        "-50844.0",
-        "28524.12458593033"
+        "-48046.0",
+        "28517.649398580274"
       ],
       [
         "3PLAND",
-        "2026-11-19",
-        "30.77",
-        "93.06913114179285",
-        "31.1045",
+        "2026-11-20",
+        "30.56",
+        "92.70373588168107",
+        "31.067500000000003",
         "",
         "",
-        "29.380437500714102",
-        "2.6981184691085005",
-        "3.5246643104651723",
-        "0.37271626836018185",
-        "0.051551578137463264",
-        "63.61551627514033",
-        "42.33333333333332",
+        "29.487670455194635",
+        "2.4675308006548704",
+        "3.3132376085031123",
+        "0.3094180828320488",
+        "0.05154063848814202",
+        "60.42142242861095",
+        "35.33333333333329",
         "27.372836800492593",
         "1.0",
-        "-28033.0",
-        "30.936059516738013"
+        "-29408.0",
+        "30.93014303941074"
       ],
       [
         "5PAISA",
-        "2026-11-19",
-        "340.85",
-        "90.17666657127711",
-        "334.485",
+        "2026-11-20",
+        "340.05",
+        "89.9790605887359",
+        "335.41999999999996",
         "",
         "",
-        "327.52589652624323",
-        "18.264069464370152",
-        "21.854233057135502",
-        "0.6526743134185549",
-        "0.04706003002528888",
-        "60.40817285325313",
-        "55.00485908649177",
+        "328.66445138749384",
+        "17.025267637879153",
+        "20.888439973284232",
+        "0.6153603936962153",
+        "0.044841167484520404",
+        "59.155153691344964",
+        "45.0688073394496",
         "300.39540550867855",
         "1.0",
-        "-272262.0",
-        "343.518863131465"
+        "-281639.0",
+        "343.4922843135501"
       ],
       [
         "610GS2031",
-        "2026-11-19",
-        "101.08",
-        "49.66196042721584",
-        "104.21849999999999",
+        "2026-11-20",
+        "106.0",
+        "58.66847958275363",
+        "104.55350000000001",
         "",
         "",
-        "102.60373926291815",
-        "0.030885163776773084",
-        "0.576048137916048",
-        "0.3204930304127771",
-        "0.01788398542208006",
-        "38.286744175577546",
-        "30.223642172523977",
-        "98.91970636624995",
+        "102.9124902390165",
+        "0.3075425175894395",
+        "0.5223470138507263",
+        "0.5853722433946128",
+        "0.0191511268221227",
+        "36.51915321342203",
+        "96.01990049751238",
+        "99.67993082098624",
         "1.0",
-        "-729.0",
-        "98.54625542350497"
+        "-728.0",
+        "98.55047134238308"
       ],
       [
         "620GS2029",
@@ -1963,83 +1963,83 @@
       ],
       [
         "63MOONS",
-        "2026-11-19",
-        "952.45",
-        "94.92336988941281",
-        "922.7625",
+        "2026-11-20",
+        "925.7",
+        "93.55477382831381",
+        "926.05",
         "",
         "",
-        "857.2265598014739",
-        "102.93525309392203",
-        "128.18032781085122",
-        "0.801366657258468",
-        "0.05115565285522328",
-        "74.1750468578559",
-        "71.41468157510941",
-        "792.6463264881647",
+        "863.4514180013398",
+        "95.92391228132647",
+        "121.72904470494628",
+        "0.49561876187863635",
+        "0.051891357914894236",
+        "73.13931787380723",
+        "51.5452538631347",
+        "797.9009720098721",
         "1.0",
-        "3451720.0",
-        "904.9214454052409"
+        "3194236.0",
+        "905.6465917143997"
       ],
       [
         "667GS2050",
-        "2026-11-19",
-        "91.9",
-        "66.57408380045062",
-        "91.7165",
+        "2026-11-20",
+        "91.5",
+        "63.432348703871874",
+        "91.7415",
         "",
         "",
-        "91.68676776694235",
-        "0.21564174006444148",
-        "0.19793610797621242",
-        "0.551874661629225",
-        "0.010339631111122407",
-        "69.67296082602968",
-        "73.30097087378658",
+        "91.66978887903849",
+        "0.172892050319561",
+        "0.19292729644488216",
+        "0.4306589771882324",
+        "0.01061885814867911",
+        "66.86720809184878",
+        "63.59223300970878",
         "93.237725",
         "-1.0",
-        "-7049.0",
-        "91.96162653313829"
+        "-11174.0",
+        "91.9531576784328"
       ],
       [
         "668GS2040",
-        "2026-11-19",
-        "95.75",
-        "43.89992098538357",
-        "97.006",
+        "2026-11-20",
+        "96.41",
+        "49.501014770667254",
+        "96.98949999999999",
         "",
         "",
-        "97.03020380250327",
-        "0.17783212736796372",
-        "0.31752826465755535",
-        "0.15412208852398895",
-        "0.013113995109578324",
-        "30.241711400307935",
-        "31.034482758620598",
+        "96.97382163863934",
+        "0.10673157901378261",
+        "0.2753689275288008",
+        "0.3417507330145544",
+        "0.013575685252454265",
+        "30.498000235697837",
+        "46.206896551723986",
         "94.95094956758135",
         "1.0",
-        "70048.0",
-        "97.01170805245344"
+        "72209.0",
+        "97.00704423023394"
       ],
       [
         "676GS2061",
-        "2026-11-19",
-        "89.49",
-        "30.037315572390284",
-        "89.15799999999999",
+        "2026-11-20",
+        "89.5",
+        "30.1589236151149",
+        "89.228",
         "",
         "",
-        "89.38758535463643",
-        "0.1398487757428768",
-        "0.10515105277207636",
-        "0.6114926913021106",
-        "0.012329951803157902",
-        "32.06855986310937",
-        "58.71886120996406",
-        "86.94405158334425",
+        "89.3978048678513",
+        "0.12947582451695894",
+        "0.11001600712105288",
+        "0.5962458615325413",
+        "0.011839023167789158",
+        "30.183313135682216",
+        "59.07473309608524",
+        "86.99564642500982",
         "1.0",
-        "-834452.0",
-        "89.50528603156722"
+        "-834302.0",
+        "89.50529275534981"
       ],
       [
         "68GS2060",
@@ -2063,43 +2063,43 @@
       ],
       [
         "690GS2065",
-        "2026-11-19",
+        "2026-11-20",
         "89.9",
         "55.086297627583335",
-        "89.608",
+        "89.708",
         "",
         "",
-        "89.75141015238249",
-        "0.3675325080539835",
-        "0.4007749739087556",
-        "0.5683795821812002",
-        "0.009128483203783115",
-        "47.20697281769054",
+        "89.76491832034772",
+        "0.3322054530597285",
+        "0.3870610697389502",
+        "0.5482880279149314",
+        "0.008826043477086704",
+        "45.93035494856555",
         "47.17607973421947",
         "88.76791394500091",
         "1.0",
         "-270983.0",
-        "89.31454208315424"
+        "89.31970191534725"
       ],
       [
         "694GS2036",
-        "2026-11-19",
-        "97.95",
-        "29.056168696221818",
-        "99.7235",
+        "2026-11-20",
+        "98.38",
+        "32.908166120122445",
+        "99.6625",
         "",
         "",
-        "99.7688398484535",
-        "-0.6955098839096507",
-        "-0.5233186213208626",
-        "0.03616450238833456",
-        "0.013295171226171427",
-        "58.9077894141093",
-        "24.65753424657535",
+        "99.64258168041226",
+        "-0.7156953197671072",
+        "-0.5617939610101116",
+        "0.1792930087945275",
+        "0.013162813493484006",
+        "58.90057654973921",
+        "32.02054794520537",
         "101.79345407697187",
         "-1.0",
-        "-39048.0",
-        "100.12143762506236"
+        "-31873.0",
+        "100.09077914675048"
       ],
       [
         "695GS2061",
@@ -2143,66 +2143,66 @@
       ],
       [
         "706GS2028",
-        "2026-11-19",
-        "100.81",
-        "62.2506428636984",
-        "100.7855",
+        "2026-11-20",
+        "101.3",
+        "65.91820908109969",
+        "100.801",
         "",
         "",
-        "100.7758354788107",
-        "0.10962786661305302",
-        "0.09279525917830796",
-        "0.5194385926877418",
-        "0.00594227580474195",
-        "37.40922594772345",
-        "34.821428571428626",
+        "100.82348679891882",
+        "0.13724629003330335",
+        "0.10168546534930704",
+        "0.8758126836635542",
+        "0.005836645543920789",
+        "37.843932571610296",
+        "49.40476190476181",
         "99.86617899128187",
         "1.0",
-        "46264.0",
-        "100.71825514751508"
+        "64416.0",
+        "100.7744086005731"
       ],
       [
         "706GS2041",
-        "2026-11-19",
-        "98.6",
-        "48.983544014627476",
-        "98.82149999999999",
+        "2026-11-20",
+        "98.51",
+        "48.39858222457755",
+        "98.8",
         "",
         "",
-        "98.91426646419724",
-        "0.4213079472843333",
-        "0.4861640847991734",
-        "0.45262961710412275",
-        "0.014584850667611553",
-        "42.41013865300674",
-        "50.460829493087466",
+        "98.87751496745203",
+        "0.33525042583804066",
+        "0.45598135300694687",
+        "0.43806359055635047",
+        "0.01427328740065873",
+        "40.103677424330535",
+        "48.38709677419371",
         "95.96572398580177",
         "1.0",
-        "54035.0",
-        "99.0268015414258"
+        "52770.0",
+        "99.02570557297365"
       ],
       [
         "709GS2054",
-        "2026-11-19",
-        "95.99",
-        "58.98107612561094",
-        "94.90599999999999",
+        "2026-11-20",
+        "94.7",
+        "46.58966288663183",
+        "94.966",
         "",
         "",
-        "95.04921600715349",
-        "0.39261038573782514",
-        "0.3329519769569366",
-        "0.816239823156382",
-        "0.02351100723564077",
-        "34.219055002352924",
-        "64.30107526881702",
+        "95.01746909741226",
+        "0.3134685868341762",
+        "0.32905529893238455",
+        "0.41648482960156985",
+        "0.023630020062708586",
+        "33.56632250459427",
+        "36.559139784946254",
         "90.1541638059709",
         "1.0",
-        "-242906.0",
-        "95.11589251159741"
+        "-248447.0",
+        "95.11307314344603"
       ]
     ],
-    "total": 3474
+    "total": 3502
   },
   "screens": {
     "oversold": {
@@ -2221,14 +2221,14 @@
       "rows": [
         [
           "3IINFOLTD",
-          "2026-11-19",
-          "18.7",
-          "28.462269646746677",
+          "2026-11-20",
+          "18.52",
+          "27.462202402257944",
           "",
           "",
-          "55.4909531437116",
-          "0.04319903788007892",
-          "0.10843317339534239",
+          "52.047930260180614",
+          "0.04204599702502001",
+          "0.11211544440713762",
           "-1.0"
         ],
         [
@@ -2244,163 +2244,163 @@
           "1.0"
         ],
         [
-          "694GS2036",
-          "2026-11-19",
-          "97.95",
-          "29.056168696221818",
-          "",
-          "",
-          "58.9077894141093",
-          "0.013295171226171427",
-          "0.03834155283624969",
-          "-1.0"
-        ],
-        [
           "717GS2030",
-          "2026-11-19",
-          "100.84",
-          "17.5967787554482",
+          "2026-11-20",
+          "100.86",
+          "17.688458899826102",
           "",
           "",
-          "36.449546663510205",
-          "0.007048741281437593",
-          "0.040190859731565554",
+          "33.89027684939848",
+          "0.006558125775942726",
+          "0.03972828393679539",
           "1.0"
         ],
         [
+          "754GS2036",
+          "2026-11-20",
+          "102.36",
+          "23.641525228964156",
+          "",
+          "",
+          "60.646454087730106",
+          "0.007580471836992122",
+          "0.04154530127935036",
+          "-1.0"
+        ],
+        [
           "771GS2066",
-          "2026-11-19",
-          "100.0",
-          "29.02266024771086",
+          "2026-11-20",
+          "100.1",
+          "29.94007533543622",
           "",
           "",
-          "44.4340954889496",
-          "0.013591797255417853",
-          "0.04899972287804719",
+          "42.32861851174709",
+          "0.013964133318141298",
+          "0.05272438968647826",
           "-1.0"
         ],
         [
           "79NHIT35",
-          "2026-11-19",
-          "305.2",
-          "26.96174367936034",
+          "2026-11-20",
+          "305.6",
+          "28.864583454959302",
           "",
           "",
-          "37.52322066782252",
-          "0.007979466720302425",
-          "0.012931780494751946",
+          "35.337275354775116",
+          "0.008042570156944628",
+          "0.01321328359151763",
           "1.0"
         ],
         [
           "871REC28",
-          "2026-11-19",
-          "1053.49",
-          "17.634482381165128",
+          "2026-11-20",
+          "1048.53",
+          "16.77221383148141",
           "",
           "",
-          "58.0708038129621",
-          "0.011359744438321022",
-          "0.12049987504992797",
+          "55.9557169183163",
+          "0.011075090377429665",
+          "0.1337898846054953",
           "-1.0"
         ],
         [
           "892PFCL33",
-          "2026-11-19",
-          "1220.5",
-          "18.943980926618977",
+          "2026-11-20",
+          "1221.45",
+          "19.854626608545217",
           "",
           "",
-          "60.136000740519734",
-          "0.007854134216386146",
-          "0.128631833711248",
+          "57.438579538084745",
+          "0.007492127070536235",
+          "0.12401019547257587",
           "-1.0"
         ],
         [
           "A2ZINFRA",
-          "2026-11-19",
-          "12.57",
-          "23.060127442780754",
+          "2026-11-20",
+          "12.25",
+          "21.90621592839142",
           "",
           "",
-          "42.88462691162453",
-          "0.06023624811524805",
-          "0.16496424874318236",
+          "43.08921361119605",
+          "0.0602519259738349",
+          "0.17067416165269014",
           "-1.0"
         ],
         [
           "AARTIDRUGS",
-          "2026-11-19",
-          "498.9",
-          "20.32858803328901",
+          "2026-11-20",
+          "484.5",
+          "19.593941571515316",
           "",
           "",
-          "51.56570911189229",
-          "0.04973070395896229",
-          "0.35120004822554857",
+          "49.62619506651836",
+          "0.050846001277700385",
+          "0.3049614915945292",
           "1.0"
         ],
         [
           "AARTIIND",
-          "2026-11-19",
-          "456.85",
-          "1.3616462142969823",
+          "2026-11-20",
+          "449.5",
+          "1.3578600575042827",
           "",
           "",
-          "83.74073130557544",
-          "0.07588554054759679",
-          "0.1637344464546868",
+          "82.78566571265331",
+          "0.07365136176532729",
+          "0.15608108608679666",
+          "-1.0"
+        ],
+        [
+          "AASTHA",
+          "2026-11-20",
+          "23.1",
+          "29.37548830070672",
+          "",
+          "",
+          "36.851908326226706",
+          "0.050277687664793444",
+          "0.203652563033703",
           "-1.0"
         ],
         [
           "AAVAS",
-          "2026-11-19",
-          "1119.7",
-          "9.753733942826202",
+          "2026-11-20",
+          "1107.1",
+          "9.562097933840576",
           "",
           "",
-          "65.47991365600058",
-          "0.030921494067932938",
-          "0.0625218215599559",
+          "63.14205957654829",
+          "0.03135581763179471",
+          "0.06328726025164784",
           "-1.0"
         ],
         [
           "ABAN",
-          "2026-11-19",
-          "13.87",
-          "1.383515586859204",
+          "2026-11-20",
+          "13.63",
+          "1.377216129478441",
           "",
           "",
-          "87.08973162225013",
-          "0.06766642268024198",
-          "0.07049050859557544",
+          "86.4944187389194",
+          "0.06671697240055777",
+          "0.07694273197385605",
           "-1.0"
         ],
         [
           "ABANSENT",
-          "2026-11-19",
-          "26.51",
-          "20.630058951703774",
+          "2026-11-20",
+          "26.93",
+          "23.6356618945227",
           "",
           "",
-          "67.9382872291208",
-          "0.06549990119291282",
-          "0.118039399835481",
-          "-1.0"
-        ],
-        [
-          "ABFRL",
-          "2026-11-19",
-          "36.62",
-          "0.5928056856310633",
-          "",
-          "",
-          "92.93772129582787",
-          "0.1137731531857483",
-          "0.12627784756247715",
+          "65.96006547918381",
+          "0.06215381398364423",
+          "0.09389542010077784",
           "-1.0"
         ]
       ],
-      "total": 670
+      "total": 702
     }
   },
   "fm3": {
@@ -2659,11 +2659,11 @@
     "total": 1431
   },
   "quality": {
-    "rows": 97919,
-    "symbols": 4919,
+    "rows": 101659,
+    "symbols": 4930,
     "window": [
       "2019-06-14",
-      "2026-11-19"
+      "2026-11-20"
     ],
     "errors": [],
     "warnings": [
@@ -2681,18 +2681,18 @@
     ],
     "rows": [
       [
-        "17651.5",
+        "18492.63",
         "DII",
-        "19-Nov-2026",
-        "-1356.57",
-        "19008.07"
+        "20-Nov-2026",
+        "-4859.8",
+        "23352.43"
       ],
       [
-        "20706.95",
+        "23596.4",
         "FII/FPI",
-        "19-Nov-2026",
-        "7411.41",
-        "13295.54"
+        "20-Nov-2026",
+        "10308.42",
+        "13287.98"
       ]
     ],
     "total": 2
@@ -2725,15 +2725,15 @@
     "niftysmallcap50": 50
   },
   "daily": {
-    "as_of": "2026-11-20T08:35:54Z",
+    "as_of": "2026-11-20T17:20:32Z",
     "items": [
-      "Bhavcopy archive through 2026-11-19 (51 files, 27 days)",
-      "Nifty PCR 1.34 \u00b7 max pain 25300.0",
+      "Bhavcopy archive through 2026-11-20 (53 files, 28 days)",
+      "Nifty PCR 1.43 \u00b7 max pain 25500.0",
       "25 OI spikes in stock futures",
       "25 volume spikes vs their own average",
-      "Corporate actions: 14 dividends, 2 splits",
-      "534 videos across 10 channels",
-      "165 news headlines"
+      "Corporate actions: 15 dividends, 1 split",
+      "544 videos across 10 channels",
+      "147 news headlines"
     ]
   },
   "relative_strength": {

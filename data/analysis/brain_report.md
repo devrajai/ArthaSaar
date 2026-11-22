@@ -1,6 +1,6 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-22T20:12:24Z  |  10 channels, 559 videos, window 2026-05-15 to 2026-11-22.
+Generated 2026-11-22T22:42:30Z  |  10 channels, 559 videos, window 2026-05-15 to 2026-11-22.
 
 **Total views across the window:** 13,462,311  |  **net bull-bear keyword score:** 335
 

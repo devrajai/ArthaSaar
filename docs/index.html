@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-arthasaar-css="new-ui-drawer-2026-11-18">
+<html lang="en" data-arthasaar-css="searchbar-final-2026-11-09">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111316">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#eef6ff">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ArthaSaar — market data</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="alternate" type="application/rss+xml" title="ArthaSaar daily brief" href="feed.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ArthaSaar">
@@ -247,37 +244,26 @@
    The palette is pinned to html:root AND html[data-theme="dark"] AND body.dark, so no saved
    theme can ever switch the text colour out from under a hardcoded light background.
    ============================================================================ */
-/* ============================================================
-   DARK GRAY PALETTE - one theme, applied everywhere.
-
-   This replaces the light glass palette. Only CSS variables change here: every section,
-   every builder and all 93 data files are untouched, so no figure or feature can be lost
-   by a re-theme.
-
-   The selectors are kept as they were (html:root plus the dark ones) because the theme
-   switcher still writes data-theme; all three now resolve to the same values, so a reader
-   cannot land on a half-light page.
-   ============================================================ */
 html:root,
 html[data-theme="dark"],
-html[data-theme="light"],
 body.dark{
-  color-scheme:dark;                      /* form controls and scrollbars follow the theme */
-  --bg:#111316; --text:#e8eaed; --muted:#8b939d;
-  --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.085);
-  --accent:#8fb8ee; --accent-text:#0b1220;
-  --up:#4ec9a0; --down:#f0736a;
-  --head:rgba(255,255,255,.062); --info:rgba(255,255,255,.05); --infoline:rgba(255,255,255,.13);
-  --glass:rgba(255,255,255,.045);
-  --glass-line:rgba(255,255,255,.10);
-  --glass-inner:rgba(255,255,255,.06);
-  --blue:#8fb8ee; --blue-dk:#6d9bd4; --blue-soft:rgba(143,184,238,.13); --blue-line:rgba(143,184,238,.24);
-  --shadow:0 8px 26px rgba(0,0,0,.42), 0 2px 5px rgba(0,0,0,.28);
+  color-scheme:light;                     /* stop the browser darkening form controls */
+  --bg:#eaf4ff; --text:#0b2239; --muted:#5a7391;
+  --card:rgba(255,255,255,.62); --line:rgba(140,185,240,.40);
+  --accent:#1d4ed8; --accent-text:#fff;
+  --up:#0b7a52; --down:#c02b2b;
+  --head:rgba(255,255,255,.7); --info:rgba(255,255,255,.82); --infoline:rgba(124,178,255,.55);
+  --glass:rgba(255,255,255,.60);
+  --glass-line:rgba(255,255,255,.85);
+  --glass-inner:rgba(255,255,255,.95);
+  --blue:#1d4ed8; --blue-dk:#173fa8; --blue-soft:#eaf3ff; --blue-line:#c3ddff;
+  --shadow:0 8px 26px rgba(29,78,216,.12), 0 2px 5px rgba(29,78,216,.06);
   --bg-grad:
-    radial-gradient(900px 560px at 10% -10%, #1c2127 0%, rgba(28,33,39,0) 58%),
-    radial-gradient(760px 500px at 96% 4%, #191e24 0%, rgba(25,30,36,0) 54%),
-    radial-gradient(700px 560px at 48% 110%, #161a1f 0%, rgba(22,26,31,0) 58%),
-    linear-gradient(178deg,#111316 0%,#14171b 52%,#0f1114 100%);
+    radial-gradient(760px 520px at 8% -4%, #9fcdff 0%, rgba(159,205,255,0) 60%),
+    radial-gradient(620px 480px at 98% 6%, #bcdcff 0%, rgba(188,220,255,0) 56%),
+    radial-gradient(700px 620px at 46% 112%, #a9d4ff 0%, rgba(169,212,255,0) 58%),
+    radial-gradient(420px 380px at 78% 46%, #d6ecff 0%, rgba(214,236,255,0) 60%),
+    linear-gradient(180deg,#eaf4ff 0%,#dcecff 52%,#eef7ff 100%);
 }
 
 body{
@@ -288,7 +274,7 @@ body{
    wide tables instead of letting .tablewrap scroll them */
 .card,.kpi{
   background:
-    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012) 44%,rgba(255,255,255,0) 70%),
+    linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.12) 44%,rgba(255,255,255,0) 70%),
     var(--glass);
 }
 @supports not ((backdrop-filter:blur(4px)) or (-webkit-backdrop-filter:blur(4px))){
@@ -438,7 +424,7 @@ input,select,textarea{color:var(--text)}
 /* ---- skeleton ---- */
 .skel{padding:6px 0}
 .skel i{display:block;height:13px;border-radius:7px;
-  background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.10),rgba(255,255,255,.04));
+  background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,255,255,.9),rgba(255,255,255,.5));
   background-size:200% 100%;animation:shimmer 1.3s linear infinite;margin-bottom:9px}
 .skel i:nth-child(1){width:46%;height:19px}
 .skel i:nth-child(2){width:78%}
@@ -995,8 +981,8 @@ header .searchwrap, .top .searchwrap, body.scrolled header .searchwrap{
   flex:1 1 auto !important; max-width:560px !important; width:auto !important;
   position:relative !important; margin:8px 0 4px !important;
   padding:0 !important; gap:0 !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.02) 100%) !important;
-  background-image:linear-gradient(180deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.02) 100%) !important;
+  background:linear-gradient(180deg,#f7fafe 0%,#eef4fc 100%) !important;
+  background-image:linear-gradient(180deg,#f7fafe 0%,#eef4fc 100%) !important;
   border:0 !important; border-radius:999px !important;
   box-shadow:0 2px 10px rgba(23,58,120,.10), inset 0 1px 0 #fff !important;
   -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
@@ -1077,7 +1063,7 @@ header .searchwrap::before, .top .searchwrap::before{
   position:absolute;
   inset:1.5px;
   border-radius:999px;
-  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(240,247,255,.93));
   -webkit-backdrop-filter:blur(8px);
   backdrop-filter:blur(8px);
   pointer-events:none;
@@ -1196,7 +1182,7 @@ header .searchwrap input::-webkit-search-cancel-button{ display:none !important;
   padding:0;
   cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.04));
+  background:linear-gradient(180deg,#ffffff,#f1f7ff);
   box-shadow:0 6px 20px rgba(23,58,120,.22), inset 0 1px 0 #fff;
   order:0;
   margin:0;
@@ -1279,126 +1265,12 @@ header .searchwrap, .top .searchwrap{
   padding:11px 12px;
   border-radius:11px;
   border:1px solid var(--line);
-  background:rgba(255,255,255,.055);
+  background:#fff;
   color:var(--navy);
   font:600 13px system-ui,-apple-system,sans-serif;
   cursor:pointer;
 }
 #tabs .settingsrow button:active{ transform:scale(.98); }
-
-/* ============================================================================
-   NEW UI SHELL - drawer menu and bottom nav, ported from the new.html demo.
-   The horizontal tab bar is replaced; SECTIONS, show() and every builder are
-   untouched, so no section or figure changes behaviour.
-   ============================================================================ */
-nav.tabs{display:none !important}
-
-#dshell{position:fixed;inset:0;z-index:120;pointer-events:none}
-#dscrim{position:absolute;inset:0;background:rgba(0,0,0,.58);opacity:0;
-  transition:opacity .26s;pointer-events:none}
-#dscrim.on{opacity:1;pointer-events:auto}
-#drawer{position:absolute;top:0;left:0;bottom:0;width:min(85vw,330px);
-  background:#1b1f25;backdrop-filter:blur(30px) saturate(140%);
-  -webkit-backdrop-filter:blur(30px) saturate(140%);
-  border-right:1px solid rgba(255,255,255,.14);
-  box-shadow:6px 0 50px rgba(0,0,0,.6);
-  transform:translateX(-102%);transition:transform .3s cubic-bezier(.32,.72,0,1);
-  overflow-y:auto;padding:18px 14px 30px;pointer-events:auto}
-#drawer.open{transform:translateX(0)}
-#drawer .dhead{display:flex;align-items:center;gap:9px;margin-bottom:16px;padding-left:6px}
-#drawer .dlogo{width:26px;height:26px;border-radius:8px;
-  background:linear-gradient(150deg,#5b6570,#39424c 60%,#262d34);
-  box-shadow:0 4px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16);
-  display:grid;place-items:center;font-size:10px;font-weight:800;color:#cfd6de}
-#drawer .dname{font-size:15px;font-weight:660;color:#e8eaed;letter-spacing:-.3px}
-#drawer .dgrp{font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;
-  color:#646c76;font-weight:700;margin:15px 0 6px;padding-left:10px}
-#drawer .dit{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:11px;
-  font-size:13.5px;color:#b6bcc4;font-weight:560;cursor:pointer;border:0;
-  background:none;width:100%;text-align:left;font-family:inherit}
-#drawer .dit:hover{background:rgba(255,255,255,.05)}
-#drawer .dit.active{background:rgba(255,255,255,.09);color:#e8eaed;font-weight:660}
-#drawer .dit .nm{margin-left:auto;font-size:9px;color:#646c76}
-#drawer .dfoot{font-size:10.5px;color:#646c76;line-height:1.65;margin-top:20px;
-  padding:0 10px;text-align:left}
-
-/* bottom nav */
-#bnav{position:fixed;left:0;right:0;bottom:0;z-index:110;display:flex;
-  justify-content:space-around;align-items:center;
-  padding:7px 6px calc(7px + env(safe-area-inset-bottom));
-  background:rgba(20,23,27,.93);backdrop-filter:blur(26px) saturate(140%);
-  -webkit-backdrop-filter:blur(26px) saturate(140%);
-  border-top:1px solid rgba(255,255,255,.10);
-  box-shadow:0 -6px 30px rgba(0,0,0,.5)}
-#bnav .bi{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 6px;
-  border-radius:12px;cursor:pointer;color:#646c76;flex:1;max-width:76px;
-  border:0;background:none;font-family:inherit;transition:color .16s,background .16s}
-#bnav .bi svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.85;
-  stroke-linecap:round;stroke-linejoin:round}
-#bnav .bi span{font-size:9px;font-weight:600}
-#bnav .bi.active{color:#e8eaed;background:rgba(255,255,255,.09)}
-body{padding-bottom:76px}
-
-/* card language from the demo: softer, larger radius */
-.card{border-radius:18px !important;border-color:rgba(255,255,255,.085) !important}
-.kpi{border-radius:15px !important}
-header{border-bottom-color:rgba(255,255,255,.09) !important}
-
-
-/* ---- new.html landing block ---- */
-.newhome{margin:0 0 18px}
-.nhStrip{background:var(--card);border:1px solid var(--line);border-radius:18px;
-  padding:16px 18px 13px;margin-bottom:12px}
-.nhStrip{display:block}
-.nhRow{display:flex;align-items:stretch}
-.nhItem{flex:1;min-width:0;text-align:center}
-.nhDiv{width:1px;background:var(--line);margin:2px 6px}
-.nhName{font-size:9.5px;letter-spacing:.45px;color:var(--muted);font-weight:700;
-  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nhLvl{font-size:19px;font-weight:700;letter-spacing:-.6px;margin-top:3px;
-  font-variant-numeric:tabular-nums;color:var(--text)}
-.nhChg{font-size:11px;font-weight:600;margin-top:1px;font-variant-numeric:tabular-nums}
-.nhFoot{display:flex;justify-content:space-between;gap:10px;margin-top:11px;padding-top:9px;
-  border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
-.nhTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
-.nhTile{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px 14px}
-.nhK{font-size:9.5px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase;font-weight:700}
-.nhV{font-size:21px;font-weight:700;letter-spacing:-.6px;margin-top:4px;color:var(--text)}
-.nhD{font-size:10.5px;color:var(--muted);margin-top:1px}
-.nhHead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:18px 2px 10px}
-.nhHead h2{margin:0;font-size:14px;font-weight:700;color:var(--text)}
-.nhHead span{font-size:11px;color:var(--muted)}
-.nhRibWrap{position:relative;margin:0}
-.nhRibs{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:2px 0 4px}
-
-
-.nhRib{border-radius:16px;padding:12px 13px;
-  background:var(--card);border:1px solid var(--line)}
-.nhRn{font-size:11px;font-weight:650;color:var(--muted);white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
-.nhRm{font-size:19px;font-weight:700;letter-spacing:-.6px;margin-top:4px}
-.nhBar{height:4px;border-radius:99px;background:rgba(255,255,255,.10);margin-top:8px;overflow:hidden}
-.nhBar i{display:block;height:100%;border-radius:99px;background:var(--up);opacity:.75}
-.nhRb{font-size:9.5px;color:var(--muted);margin-top:4px}
-@media(max-width:520px){ .nhLvl{font-size:17px} .nhV{font-size:19px} }
-
-#searchDot{display:none !important}
-/* ---------- site font ---------- */
-body,button,input,select,textarea,h1,h2,h3,h4,h5,h6,table,th,td,.kpi,.card{
-  font-family:"Manrope","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
-    "Helvetica Neue",Arial,sans-serif !important}
-body{letter-spacing:-.005em}
-h1,h2,h3{letter-spacing:-.02em}
-/* the data note becomes one compact line under the header, not three */
-.datanote.oneline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  font-size:11px !important;padding:5px 10px !important;margin:0 0 8px !important;
-  line-height:1.35 !important;border-radius:9px}
-.datanote.oneline b{font-weight:650}
-@media(max-width:520px){
-  .datanote.oneline{font-size:10px !important;padding:4px 8px !important}
-}
-.nhMore{color:var(--accent);cursor:pointer;font-weight:650}
-.nhMore:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1422,16 +1294,11 @@ h1,h2,h3{letter-spacing:-.02em}
       <button id="themeBtn" class="small">Dark mode</button>
     </div>
   </div>
-  <div class="wrap"><div class="datanote oneline" id="datanote"><span class="pip"></span><span><b>Not a live feed.</b> These figures are the last completed session, cleaned and reconciled overnight. Prices may have moved since.</span></div></div>
+  <div class="wrap"><div class="datanote" id="datanote"><span class="pip"></span><span><b>Not a live feed.</b> These figures are the last completed session, cleaned and reconciled overnight. Prices may have moved since.</span></div></div>
 
 
 </header>
 
-<div id="dshell">
-  <div id="dscrim"></div>
-  <aside id="drawer"><div id="drawerItems"></div></aside>
-</div>
-<nav id="bnav"></nav>
 <nav class="tabs"><div class="wrap tabsrow" id="tabs"></div></nav>
 
 <div id="glossPop"></div>
@@ -2350,76 +2217,29 @@ function buildLevelBar(){
   // The page now shows one curated Overview, and the deeper material lives in its own tab.
   return;
 }
-var DGROUPS=[
-  ["Overview",["overview","market","sectors","indices","breadth"]],
-  ["Charts & levels",["charts","levels","gaps","patterns","seasonality","correlation"]],
-  ["Stocks",["stocks","rs","promoter","watchlists"]],
-  ["Derivatives",["fno","forecast","backtest","watchlist"]],
-  ["World",["global","crypto"]],
-  ["Funds",["etf","mf"]],
-  ["Company",["corporate","deals","calendar","ipo","regulator"]],
-  ["More",["tools","charges","learn","history"]]
-];
-var BOTTOM=[["overview","Home","M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5"],
-            ["market","Market","M3 17l5-6 4 3 5-7 4 4"],
-            ["sectors","Sectors","M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"],
-            ["fno","F&O","M4 20V8M10 20V4M16 20v-7M22 20V6"],
-            ["stocks","Stocks","M4 6h16M4 12h16M4 18h10"],
-            ["news","News","M3 4h18v16H3zM7 9h10M7 13h10M7 17h6"]];
-
 function renderTabs(){
-  /* the drawer replaces the horizontal tab bar; every entry still calls show(id) */
-  var byId={};SECTIONS.forEach(function(s){byId[s.id]=s});
-  var html='<div class="dhead"><div class="dlogo">AS</div>'+
-           '<div class="dname">ArthaSaar</div></div>';
-  DGROUPS.forEach(function(g){
-    var items=g[1].filter(function(id){return byId[id]});
-    if(!items.length)return;
-    html+='<div class="dgrp">'+esc(g[0])+'</div>';
-    items.forEach(function(id){
-      var s=byId[id];
-      var lbl=(LANG==="hi"&&STR.hi[id])?STR.hi[id]:s.label;
-      var ext=EXTERNAL[id];
-      html+='<button class="dit" data-go="'+id+'"'+(ext?' data-external="'+esc(ext)+'"':'')+'>'+
-            esc(lbl)+(ext?'<span class="nm">↗</span>':'')+'</button>';
-    });
+  var nav=$("#tabs");nav.innerHTML="";
+  SECTIONS.forEach(function(s){
+    var lbl = (LANG==="hi" && STR.hi[s.id]) ? STR.hi[s.id] : s.label;
+    var ext = EXTERNAL[s.id];
+    var isNew = NEW_TABS[s.id];
+    var b=el("button","",esc(lbl)+
+      (isNew?'<span class="newmark" title="added this week"></span>':"")+
+      (ext?'<span class="extmark" title="opens another site"> \u2197</span>':""));
+    b.setAttribute("data-go",s.id);
+    if(ext){
+      b.setAttribute("data-external",ext);
+      b.addEventListener("click",function(){ window.location.href=ext; });
+    }else{
+      b.addEventListener("click",function(){show(s.id);});
+    }
+    nav.appendChild(b);
   });
-  html+='<div class="dfoot">Market data and descriptions only.<br>Not investment advice.</div>';
-  var d=document.getElementById("drawerItems");
-  if(d){
-    d.innerHTML=html;
-    d.querySelectorAll(".dit").forEach(function(b){
-      b.addEventListener("click",function(){
-        var ext=b.getAttribute("data-external");
-        if(ext){window.location.href=ext;return;}
-        show(b.getAttribute("data-go"));
-        closeDrawer();
-      });
-    });
-  }
-  var bn=document.getElementById("bnav");
-  if(bn){
-    bn.innerHTML=BOTTOM.filter(function(x){return byId[x[0]]}).map(function(x){
-      return '<button class="bi" data-go="'+x[0]+'">'+
-        '<svg viewBox="0 0 24 24"><path d="'+x[2]+'"/></svg><span>'+esc(x[1])+'</span></button>';
-    }).join("");
-    bn.querySelectorAll(".bi").forEach(function(b){
-      b.addEventListener("click",function(){show(b.getAttribute("data-go"));});
-    });
-  }
 }
-function openDrawer(){document.getElementById("drawer").classList.add("open");
-  document.getElementById("dscrim").classList.add("on");}
-function closeDrawer(){document.getElementById("drawer").classList.remove("open");
-  document.getElementById("dscrim").classList.remove("on");}
-
-window.show = function show(id){
+function show(id){
   $$("#tabs button").forEach(function(b){b.className=(b.getAttribute("data-go")===id?"active":"");});
-  $$("#drawerItems .dit").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-go")===id);});
-  $$("#bnav .bi").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-go")===id);});
   $$(".section").forEach(function(s){s.className=(s.id==="sec-"+id?"section on":"section");});
-  window.scrollTo({top:0,behavior:"instant"});
-};
+}
 
 function build(d){
   var app=$("#app");app.innerHTML="";
@@ -2430,94 +2250,6 @@ function build(d){
   /* ---------- OVERVIEW ---------- */
   (function(){
     var v=sec("overview");
-    /* ==================================================================================
-       LANDING BLOCK - the new.html home design.
-       Placed ABOVE the existing overview cards, so the landing page leads with the market
-       strip, breadth and sector ribbons, and every card that was already here still follows
-       underneath. Nothing is removed.
-       ================================================================================== */
-    (function(){
-     try{
-      var wrap=el("div"); wrap.className="newhome";
-
-      /* ---- 1. index strip ---- */
-      var want=[["nifty50","NIFTY 50"],["niftybank","BANK NIFTY"],["sensex","SENSEX"]];
-      var idxMap={};
-      ((INDICES&&INDICES.indices)||[]).forEach(function(x){ if(x&&x.id) idxMap[x.id]=x; });
-      var cells=want.map(function(w){
-        var x=idxMap[w[0]];
-        if(!x||x.level==null) return "";
-        var up=(x.chg_pct||0)>=0;
-        var cl=up?"#4ec9a0":"#f0736a";   // explicit: var(--up) resolved to the accent blue here
-        var pts=(x.points==null?"":(up?"+":"")+Math.abs(x.points).toFixed(2)+" · ");
-        return '<div class="nhItem"><div class="nhName">'+w[1]+'</div>'+
-               '<div class="nhLvl">'+x.level.toLocaleString("en-IN",{maximumFractionDigits:2})+'</div>'+
-               '<div class="nhChg" style="color:'+cl+'">'+pts+
-               (up?"+":"")+(x.chg_pct||0).toFixed(2)+'%</div></div>';
-      }).filter(Boolean);
-      if(cells.length){
-        var strip=el("div","nhStrip");
-        // the cells must sit in their own flex row; without the wrapper the first item
-        // became the flex container and the strip collapsed to one line.
-        strip.innerHTML='<div class="nhRow">'+cells.join('<div class="nhDiv"></div>')+'</div>'+
-          '<div class="nhFoot"><span>Last close</span><span>'+
-          (BREADTH&&BREADTH.total?BREADTH.total.toLocaleString("en-IN")+" stocks":"")+'</span></div>';
-        wrap.appendChild(strip);
-      }
-
-      /* ---- 2. breadth tiles ---- */
-      if(BREADTH){
-        var tiles=el("div","nhTiles");
-        tiles.innerHTML=
-          '<div class="nhTile"><div class="nhK">Breadth</div><div class="nhV">'+
-            (BREADTH.above_50!=null?BREADTH.above_50+"%":"—")+'</div>'+
-            '<div class="nhD">above 50-day</div></div>'+
-          '<div class="nhTile"><div class="nhK">Long-term</div><div class="nhV">'+
-            (BREADTH.above_200!=null?BREADTH.above_200+"%":"—")+'</div>'+
-            '<div class="nhD">above 200-day</div></div>';
-        wrap.appendChild(tiles);
-      }
-
-      /* ---- 3. sector ribbons ---- */
-      var secs=(SECTORS&&SECTORS.sectors)||[];
-      if(secs.length){
-        var sorted=secs.slice().sort(function(a,b){return (b.avg_chg||0)-(a.avg_chg||0);});
-        // A LANDING PAGE IS A PREVIEW. Showing all 29 sectors pushed everything else off the
-        // first screen. The top six by move are enough to say which way money is flowing; the
-        // full list lives on the Sectors tab, one tap away.
-        var TOPN=4;
-        var shown=sorted.slice(0,TOPN);
-        var head=el("div","nhHead");
-        head.innerHTML='<h2>Top sectors</h2>'+
-          '<span class="nhMore" role="button" tabindex="0">'+(secs.length-TOPN)+' more →</span>';
-        wrap.appendChild(head);
-        var rw=el("div","nhRibWrap");
-        var rb=el("div","nhRibs");
-        rb.innerHTML=shown.map(function(s){
-          var c=(s.avg_chg||0);
-          var cl=c>0?"#4ec9a0":(c<0?"#f0736a":"#8b939d");
-          var tot=(s.count||0);
-          var pct=tot?Math.round((s.advances||0)/tot*100):0;
-          return '<div class="nhRib"><div class="nhRn">'+esc(s.name||"")+'</div>'+
-            '<div class="nhRm" style="color:'+cl+'">'+(c>0?"+":"")+c.toFixed(2)+'%</div>'+
-            '<div class="nhBar"><i style="width:'+Math.max(3,pct)+'%"></i></div>'+
-            '<div class="nhRb">'+pct+'% up · '+(s.advances||0)+'/'+tot+'</div></div>';
-        }).join("");
-        rw.appendChild(rb); wrap.appendChild(rw);
-        var more=head.querySelector(".nhMore");
-        if(more){
-          more.addEventListener("click",function(){ show("sectors"); });
-          more.addEventListener("keydown",function(e){
-            if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show("sectors"); }
-          });
-        }
-      }
-
-      v.appendChild(wrap);
-     }catch(e){ console.warn("newhome:",e); }
-    })();
-
-
     // ---- WIKIPEDIA ATTENTION ------------------------------------------------------------
     // The Wikimedia pageview API is official, free and needs no key. For a listed company it
     // is a proxy for public attention: a sudden run of lookups usually means something
@@ -8684,10 +8416,6 @@ var OV_ORDER = [
     var cards=[].slice.call(ov.children);
     if(cards.length<2) return;
     function rank(c){
-      // The new landing block has no card title, so it ranked last and reorder() pushed it to
-      // the bottom of the overview - which is why the landing page still looked unchanged.
-      // It is pinned first instead.
-      if(c.classList && c.classList.contains("newhome")) return -1;
       var h2=c.querySelector(".cardhead h2");
       var t=h2?((h2.childNodes[0]&&h2.childNodes[0].textContent)||"").trim():"";
       for(var i=0;i<OV_ORDER.length;i++){
@@ -8806,41 +8534,5 @@ show = function(id){
 
 
 <script src="cards-20261111d.js"></script>
-<script>
-(function(){
-  function wire(){
-    var b=document.getElementById("burger");
-    if(b&&!b._wired){b._wired=1;b.addEventListener("click",function(e){e.preventDefault();openDrawer();});}
-    var sc=document.getElementById("dscrim");
-    if(sc&&!sc._wired){sc._wired=1;sc.addEventListener("click",closeDrawer);}
-  }
-  if(document.readyState!=="loading")wire();
-  else document.addEventListener("DOMContentLoaded",wire);
-  setTimeout(wire,600);setTimeout(wire,1800);
-})();
-</script>
-<script>
-/* ============================================================================
-   NAV DELEGATION. One handler on document catches every tap on a bottom-nav
-   button or a drawer item. Attaching listeners per-button failed whenever the
-   nav was rebuilt (renderTabs runs again on language change and on cards.js
-   injecting) - the new buttons had no handler and the tab appeared dead.
-   ============================================================================ */
-document.addEventListener("click", function(e){
-  var t=e.target;
-  while(t && t!==document.body){
-    if(t.getAttribute && t.getAttribute("data-go")){
-      var id=t.getAttribute("data-go");
-      var ext=t.getAttribute("data-external");
-      if(ext){ window.location.href=ext; return; }
-      try{ show(id); }catch(err){ console.error("show failed",id,err); }
-      try{ closeDrawer(); }catch(_){}
-      e.preventDefault();
-      return;
-    }
-    t=t.parentNode;
-  }
-}, true);
-</script>
 </body>
 </html>

@@ -87,6 +87,13 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
+          echo "--- raw API check ---"
+          # Ask Vercel directly so the real error is visible. The CLI reports "not valid" for
+          # any rejected credential, which does not distinguish a wrong token type from an
+          # expired one.
+          curl -s -o /tmp/api.json -w "http %{http_code}\n" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" https://api.vercel.com/v2/user || true
+          head -c 300 /tmp/api.json 2>/dev/null; echo
           echo "--- whoami ---"
           npx vercel whoami --token "$VERCEL_TOKEN" 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
           echo "--- project ---"

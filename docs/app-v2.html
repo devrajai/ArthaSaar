@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ArthaSaar — market data</title>
+<meta name="theme-color" content="#22252a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#22252a;--card:#2b2f36;--card2:#353a42;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.2);
+  --ink:#eef1f6;--dim:#aab1bc;--dimmer:#7f8794;
+  --accent:#6ea8fe;--accent-dim:rgba(110,168,254,.16);
+  --up:#4fc98a;--down:#ea6b62;
+  --sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
+  --u:clamp(1px, 0.2326vw, 2.3px);
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:calc(15.5 * var(--u));
+  line-height:1.55;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(900px 420px at 85% -8%,rgba(110,168,254,.13),transparent 62%)}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.up{color:var(--up)}.down{color:var(--down)}.flat,.dim{color:var(--dim)}
+.wrap{max-width:calc(430 * var(--u));margin:0 auto;padding:0 calc(12 * var(--u))}
+
+/* bar */
+.bar{position:sticky;top:0;z-index:50;background:rgba(35,38,44,.98);backdrop-filter:blur(16px)}
+.brow{display:flex;align-items:center;gap:calc(10 * var(--u));padding:0 calc(14 * var(--u));
+  height:calc(64 * var(--u));max-width:calc(430 * var(--u));margin:0 auto}
+.ico{width:calc(32 * var(--u));height:calc(28 * var(--u));border:calc(1 * var(--u)) solid var(--line2);
+  background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;gap:calc(4 * var(--u));border-radius:calc(7 * var(--u))}
+.ico span{display:block;width:calc(12 * var(--u));height:calc(1.5 * var(--u));background:var(--ink)}
+.brand{display:flex;align-items:center;gap:calc(7 * var(--u));font-size:calc(15 * var(--u));font-weight:600}
+.brand i{width:calc(8 * var(--u));height:calc(8 * var(--u));border-radius:calc(2 * var(--u));background:var(--accent)}
+.date{margin-left:auto;font:500 calc(9 * var(--u))/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);border:calc(1 * var(--u)) solid var(--line);border-radius:999px;padding:calc(5 * var(--u)) calc(8 * var(--u));white-space:nowrap}
+.newsbtn{display:flex;align-items:center;gap:calc(6 * var(--u));background:var(--accent);color:#0f1720;border:0;
+  border-radius:999px;padding:calc(7 * var(--u)) calc(11 * var(--u));cursor:pointer;
+  font:600 calc(10 * var(--u))/1 var(--sans);letter-spacing:.06em;text-transform:uppercase}
+.newsbtn b{font:600 calc(9 * var(--u))/1 var(--mono);background:rgba(0,0,0,.18);border-radius:999px;padding:calc(2 * var(--u)) calc(5 * var(--u))}
+
+/* content */
+main{padding:calc(12 * var(--u)) 0 calc(40 * var(--u))}
+.card{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(16 * var(--u));
+  padding:calc(15 * var(--u));margin-bottom:calc(11 * var(--u));min-width:0}
+.ch{display:flex;align-items:baseline;gap:calc(8 * var(--u));margin-bottom:calc(10 * var(--u));flex-wrap:wrap}
+.ch h1,.ch h2{margin:0;font-size:calc(17 * var(--u));font-weight:600;letter-spacing:-.015em}
+.ch .tag{margin-left:auto;font:500 calc(9.5 * var(--u))/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dimmer);border:calc(1 * var(--u)) solid var(--line);border-radius:999px;padding:calc(4 * var(--u)) calc(7 * var(--u))}
+.note{margin:calc(10 * var(--u)) 0 0;font:400 calc(11 * var(--u))/1.6 var(--mono);color:var(--dim)}
+.hero .lab{font:500 calc(9 * var(--u))/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--dimmer)}
+.hero .big{font-size:calc(44 * var(--u));font-weight:700;letter-spacing:-.045em;line-height:1;margin-top:calc(6 * var(--u));
+  font-variant-numeric:tabular-nums}
+.hero .row1{display:flex;align-items:baseline;gap:calc(10 * var(--u))}
+.chip{font:500 calc(12 * var(--u))/1 var(--mono);padding:calc(5 * var(--u)) calc(7 * var(--u));border-radius:calc(7 * var(--u))}
+.chip.up{background:rgba(79,201,138,.16)}.chip.down{background:rgba(234,107,98,.16)}
+.hmeta{margin-top:calc(8 * var(--u));font:400 calc(11 * var(--u))/1.6 var(--mono);color:var(--dim)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:calc(8 * var(--u));margin-top:calc(12 * var(--u))}
+.tiles>div{background:var(--card2);border-radius:calc(11 * var(--u));padding:calc(10 * var(--u))}
+.tiles span{display:block;font:500 calc(9 * var(--u))/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.tiles b span{font:inherit;letter-spacing:inherit}
+.tiles b{display:block;font:700 calc(18 * var(--u))/1.2 var(--sans);margin-top:calc(6 * var(--u));font-variant-numeric:tabular-nums}
+.tiles i{display:block;font:400 calc(9.5 * var(--u))/1.35 var(--mono);font-style:normal;color:var(--dimmer);margin-top:calc(4 * var(--u))}
+svg.spark{display:block;width:100%;height:calc(70 * var(--u));margin-top:calc(12 * var(--u))}
+
+/* tables */
+.tbar{display:flex;align-items:center;gap:calc(8 * var(--u));margin-bottom:calc(8 * var(--u))}
+.q{flex:1;min-width:0;background:var(--card2);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(10 * var(--u));
+  padding:calc(9 * var(--u)) calc(11 * var(--u));color:var(--ink);font:400 calc(13 * var(--u))/1.3 var(--sans);outline:none}
+.q::placeholder{color:var(--dimmer)}
+.cnt{font:500 calc(10 * var(--u))/1 var(--mono);color:var(--dimmer);white-space:nowrap}
+.tbl{overflow-x:auto;border-top:calc(1 * var(--u)) solid var(--line2)}
+table{width:100%;min-width:max-content;border-collapse:collapse;font-size:clamp(11px, 1.5vw, 15px)}
+th{position:sticky;top:0;background:var(--card);text-align:left;font:500 clamp(9px, 1.15vw, 12px)/1 var(--mono);
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dimmer);padding:calc(9 * var(--u)) calc(8 * var(--u));
+  border-bottom:calc(1 * var(--u)) solid var(--line2);white-space:nowrap;cursor:pointer;user-select:none}
+th.r{text-align:right}
+th:hover{color:var(--ink)}
+td{padding:calc(9 * var(--u)) calc(8 * var(--u));border-bottom:calc(1 * var(--u)) solid var(--line);
+  vertical-align:top;overflow-wrap:anywhere}
+td.r{text-align:right;font-family:var(--mono);font-size:clamp(10px, 1.35vw, 13.5px);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody tr:hover td{background:rgba(255,255,255,.03)}
+.more{display:block;width:100%;margin-top:calc(10 * var(--u));background:var(--card2);border:calc(1 * var(--u)) solid var(--line2);
+  color:var(--accent);border-radius:calc(10 * var(--u));padding:calc(10 * var(--u));cursor:pointer;font:600 calc(12 * var(--u))/1 var(--sans)}
+.empty{color:var(--dim);font-size:calc(13.5 * var(--u));padding:calc(20 * var(--u)) 0;text-align:center}
+.err{color:var(--down);font-size:calc(13 * var(--u))}
+
+/* drawer */
+.drawer{position:fixed;top:0;left:0;bottom:0;width:calc(322 * var(--u));max-width:86%;background:#20242a;
+  border-right:calc(1 * var(--u)) solid var(--line2);z-index:80;transform:translateX(-100%);
+  transition:transform .24s ease;overflow-y:auto;padding-bottom:calc(30 * var(--u))}
+.drawer.on{transform:translateX(0)}
+.dh{display:flex;align-items:center;gap:calc(10 * var(--u));padding:calc(16 * var(--u));
+  border-bottom:calc(1 * var(--u)) solid var(--line2);position:sticky;top:0;background:#20242a}
+.dh .as{width:calc(30 * var(--u));height:calc(30 * var(--u));border-radius:calc(8 * var(--u));background:var(--accent-dim);
+  color:var(--accent);display:grid;place-items:center;font:600 calc(10 * var(--u))/1 var(--mono)}
+.dh b{font-size:calc(14 * var(--u));font-weight:600}
+.dh button{margin-left:auto;background:none;border:0;color:var(--ink);font-size:calc(20 * var(--u));cursor:pointer}
+.dg{padding:calc(12 * var(--u)) calc(16 * var(--u)) calc(4 * var(--u))}
+.dg h4{margin:0 0 calc(2 * var(--u));font:600 calc(9.5 * var(--u))/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer)}
+.dg a{display:block;padding:calc(10 * var(--u)) 0;font-size:calc(15 * var(--u));color:#e7ecdf;
+  border-bottom:calc(1 * var(--u)) solid rgba(255,255,255,.05)}
+.dg a.on{color:var(--accent)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.62);opacity:0;pointer-events:none;transition:.2s;z-index:75}
+.scrim.on{opacity:1;pointer-events:auto}
+.loading{color:var(--dim);font:400 calc(12 * var(--u))/1.6 var(--mono);padding:calc(16 * var(--u)) 0}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="brow">
+    <button class="ico" id="menuBtn" aria-label="Sections"><span></span><span></span><span></span></button>
+    <span class="brand"><i></i>ArthaSaar</span>
+    <span class="date">NSE EOD</span>
+    <button class="newsbtn" id="newsBtn">News</button>
+  </div>
+</header>
+
+<div class="wrap"><main id="main"></main></div>
+
+<aside class="drawer" id="drawer">
+  <div class="dh"><span class="as">AS</span><b>All sections</b><button id="dclose">×</button></div>
+  <div id="drawerItems"></div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<script>
+const FILES = ["_guard_report.json", "affordable.json", "attention.json", "audit.json", "backtest.json", "behaviour.json", "breadth.json", "breakers.json", "brief.json", "calendar.json", "cases.json", "charges.json", "charts.json", "checklist.json", "circuits.json", "claim_ledger.json", "claim_vs_base.json", "claims.json", "commodities.json", "config.json", "corp_actions.json", "corrections.json", "correlation.json", "crypto.json", "crypto_history.json", "data.json", "data_asof.json", "data_errors.json", "data_gaps.json", "data_health.json", "deals.json", "deals_followup.json", "delivery.json", "earlymove.json", "etf.json", "etf_premium.json", "events.json", "feed_history.json", "fii_dii.json", "fo_ban.json", "forecast.json", "fundamentals.json", "gann_fib.json", "gaps.json", "global.json", "global_market.json", "gti.json", "health.json", "history.json", "home_facts.json", "index_history.json", "indices.json", "insider.json", "ipo.json", "ipo_doc.json", "leadlag.json", "learn.json", "levels.json", "listings.json", "macro.json", "manifest.json", "market_stats.json", "market_status.json", "metals.json", "mf.json", "money_radar.json", "muhurat.json", "news_feed.json", "oi_by_expiry.json", "oi_history.json", "oi_stats.json", "oi_strikes.json", "oi_walls.json", "option_chain.json", "patterns.json", "patterns_reference.json", "pcr_signal.json", "premium_base_rates.json", "premium_movers.json", "presentations.json", "ranges.json", "rank_momentum.json", "rebalance.json", "recap.json", "report_cards.json", "rollover.json", "rs.json", "scenarios.json", "scoreboard.json", "scorecard.json", "screener.json", "search.json", "seasonality.json", "sebi.json", "sector_fund.json", "sector_rotation.json", "sector_trend.json", "sectors.json", "series.json", "setup_history.json", "shareholding.json", "snapshot.json", "stocks.json", "story.json", "strategies.json", "telegram.json", "telegram_accuracy.json", "telegram_pcr.json", "telegram_vs_chain.json", "timemachine.json", "timesfm_score.json", "universe.json", "unusual.json", "version.json", "video_vs_chain.json", "vix.json", "volume_profile.json", "vrp.json", "watchlists.json", "weekday.json", "whatif.json"];
+const $ = s => document.querySelector(s);
+const cache = {};
+async function J(p){
+  if (cache[p]) return cache[p];
+  const r = await fetch(p, {cache:'no-store'});
+  if (!r.ok) throw new Error(p + ' → HTTP ' + r.status);
+  const d = await r.json();
+  cache[p] = d;
+  return d;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function num(v, d){
+  if (v === null || v === undefined || v === '') return '—';
+  const n = Number(v);
+  if (!isFinite(n)) return esc(v);
+  d = (d === undefined) ? (Math.abs(n) >= 100 ? 2 : 2) : d;
+  return n.toLocaleString('en-IN', {minimumFractionDigits:d, maximumFractionDigits:d});
+}
+function pct(v, d){
+  if (v === null || v === undefined || v === '') return '—';
+  const n = Number(v);
+  if (!isFinite(n)) return esc(v);
+  const c = n > 0 ? 'up' : (n < 0 ? 'down' : 'flat');
+  const s = n > 0 ? '+' : (n < 0 ? '−' : '');
+  return '<span class="' + c + '">' + s + Math.abs(n).toFixed(d === undefined ? 2 : d) + '%</span>';
+}
+function label(k){
+  return String(k).replace(/[_-]/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2')
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+function isNum(v){ return typeof v === 'number' || (typeof v === 'string' && v !== '' && isFinite(v)); }
+function cellHTML(v){
+  if (v === null || v === undefined || v === '') return '—';
+  if (typeof v === 'object') return esc(JSON.stringify(v).slice(0, 80));
+  if (typeof v === 'boolean') return v ? 'yes' : 'no';
+  if (isNum(v)) {
+    const n = Number(v);
+    if (Math.abs(n) >= 1000) return num(n, 2);
+    return String(v);
+  }
+  return esc(v);
+}
+
+/* ---------- generic table ---------- */
+function makeTable(records, cols, opt){
+  opt = opt || {};
+  const wrap = document.createElement('div');
+  const bar = document.createElement('div'); bar.className = 'tbar';
+  const q = document.createElement('input'); q.className = 'q';
+  q.placeholder = opt.placeholder || 'Search…';
+  const cnt = document.createElement('span'); cnt.className = 'cnt';
+  bar.append(q, cnt); wrap.append(bar);
+  const tblBox = document.createElement('div'); tblBox.className = 'tbl'; wrap.append(tblBox);
+
+  let limit = opt.limit || 120, sortKey = null, dir = 1, term = '';
+
+  function rowsFiltered(){
+    let rs = records;
+    if (term){
+      rs = rs.filter(r => JSON.stringify(r).toLowerCase().includes(term));
+    }
+    if (sortKey){
+      rs = rs.slice().sort((a,b) => {
+        const x = a[sortKey], y = b[sortKey];
+        const nx = Number(x), ny = Number(y);
+        if (isFinite(nx) && isFinite(ny)) return (nx - ny) * dir;
+        return String(x).localeCompare(String(y)) * dir;
+      });
+    }
+    return rs;
+  }
+  function draw(){
+    const rs = rowsFiltered();
+    cnt.textContent = rs.length.toLocaleString('en-IN') + ' rows';
+    const t = document.createElement('table');
+    const thead = document.createElement('thead'); const tr = document.createElement('tr');
+    cols.forEach(c => {
+      const th = document.createElement('th');
+      th.textContent = c.label;
+      if (c.r) th.className = 'r';
+      th.onclick = () => { if (sortKey === c.k) dir = -dir; else { sortKey = c.k; dir = 1; } draw(); };
+      tr.append(th);
+    });
+    thead.append(tr); t.append(thead);
+    const tb = document.createElement('tbody');
+    rs.slice(0, limit).forEach(r => {
+      const row = document.createElement('tr');
+      cols.forEach(c => {
+        const td = document.createElement('td');
+        if (c.r) td.className = 'r';
+        td.innerHTML = c.html ? c.html(r[c.k], r) : cellHTML(r[c.k]);
+        row.append(td);
+      });
+      tb.append(row);
+    });
+    t.append(tb);
+    tblBox.innerHTML = '';
+    tblBox.append(t);
+    if (!rs.length){
+      const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'No rows match that search.';
+      tblBox.append(p);
+    }
+    if (rs.length > limit){
+      const b = document.createElement('button'); b.className = 'more';
+      b.textContent = 'Show ' + Math.min(200, rs.length - limit) + ' more of ' + rs.length.toLocaleString('en-IN');
+      b.onclick = () => { limit += 200; draw(); };
+      wrap.append(b);
+    } else {
+      const old = wrap.querySelector('.more'); if (old) old.remove();
+    }
+  }
+  q.oninput = () => { term = q.value.trim().toLowerCase(); limit = opt.limit || 120; draw(); };
+  draw();
+  return wrap;
+}
+
+/* ---------- helpers ---------- */
+function card(title, tag, bodyNode, note){
+  const c = document.createElement('section'); c.className = 'card';
+  const h = document.createElement('div'); h.className = 'ch';
+  h.innerHTML = '<h2>' + esc(title) + '</h2>' + (tag ? '<span class="tag">' + esc(tag) + '</span>' : '');
+  c.append(h);
+  if (bodyNode) c.append(bodyNode);
+  if (note){ const p = document.createElement('p'); p.className = 'note'; p.innerHTML = note; c.append(p); }
+  return c;
+}
+function tiles(items){
+  const d = document.createElement('div'); d.className = 'tiles';
+  d.innerHTML = items.map(t => '<div><span>' + esc(t[0]) + '</span><b>' + t[1] + '</b><i>' + esc(t[2] || '') + '</i></div>').join('');
+  return d;
+}
+function arrOf(data){
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.rows)) return data.rows;
+  for (const k of ['items','sectors','indices','bulk','block','up','down','orders','asm','gsm','rows',
+                   'series','days','upcoming','open','closed','listed','strategies','sections','glossary',
+                   'months','rows','strikes','constituents','files']){
+    if (data && Array.isArray(data[k])) return data[k];
+  }
+  return null;
+}
+function recordsFrom(data){
+  const a = arrOf(data);
+  if (!a) return null;
+  if (!a.length) return [];
+  const first = a[0];
+  if (Array.isArray(first)){
+    const cols = (data && data.columns && data.columns.length) ? data.columns : first.map((_, i) => 'col ' + (i+1));
+    return a.map(r => { const o = {}; cols.forEach((c, i) => o[c] = r[i]); return o; });
+  }
+  if (typeof first === 'object') return a;
+  return a.map((v, i) => ({'#': i + 1, value: v}));
+}
+function autoCols(records, max){
+  if (!records.length) return [];
+  const keys = Object.keys(records[0]).slice(0, max || 9);
+  return keys.map(k => ({k, label: label(k), r: records.some(r => isNum(r[k]))}));
+}
+
+/* ---------- sections ---------- */
+const SECTIONS = [
+  ['Overview', 'overview', 'What happened'], ['Market', 'market', 'What happened'],
+  ['Indices', 'indices', 'What happened'], ['Breadth', 'breadth', 'What happened'],
+  ['News', 'news', 'What happened'], ['Events', 'events', "What's coming"],
+  ['Corporate', 'corporate', "What's coming"], ['IPOs', 'ipo', "What's coming"],
+  ['Surveillance', 'watchlists', "What's coming"], ['Screener', 'stocks', 'Which stock'],
+  ['Sectors', 'sectors', 'Which stock'], ['Rel. strength', 'rs', 'Which stock'],
+  ['Levels', 'levels', 'Which stock'], ['Patterns', 'patterns', 'Which stock'],
+  ['Gaps', 'gaps', 'Which stock'], ['Seasonality', 'seasonality', 'Which stock'],
+  ['Correlation', 'correlation', 'Levels & derivatives'], ['F&O', 'fno', 'Levels & derivatives'],
+  ['Forecast', 'forecast', 'Levels & derivatives'], ['Deals', 'deals', "Who's moving"],
+  ['Promoter', 'insider', "Who's moving"], ['Regulator', 'sebi', "Who's moving"],
+  ['Mutual Funds', 'mf', 'Funds & the world'], ['ETFs', 'etf', 'Funds & the world'],
+  ['Global', 'global', 'Funds & the world'], ['Crypto', 'crypto', 'Funds & the world'],
+  ['History', 'history', 'Does any of it work'], ['Charges', 'charges', 'Does any of it work'],
+  ['Learn', 'learn', 'Does any of it work'], ['Backtester', 'backtest', 'Does any of it work'],
+  ['Data library', 'library', 'Every file']
+];
+
+async function renderOverview(main){
+  const [facts, hist, br] = await Promise.all([J('home_facts.json'), J('history.json'), J('breadth.json')]);
+  const F = facts.facts;
+  const closes = hist.rows.slice(-30).map(r => r.c);
+  const lo = Math.min(...closes), hi = Math.max(...closes);
+  const W = 340, H = 70, PAD = 7;
+  const pts = closes.map((v, i) => [i/(closes.length-1)*W, H-PAD-(v-lo)/((hi-lo)||1)*(H-2*PAD)]);
+  const line = pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const area = 'M' + pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' L') + ' L' + W + ',' + H + ' L0,' + H + ' Z';
+  const s30 = (closes[closes.length-1]/closes[0]-1)*100;
+
+  const hero = document.createElement('section'); hero.className = 'card hero';
+  hero.innerHTML =
+    '<div class="lab">Nifty 50</div>' +
+    '<div class="row1"><span class="big">' + num(F.nifty.v) + '</span>' +
+      '<span class="chip ' + (F.nifty.chg_pct >= 0 ? 'up' : 'down') + '">' + pct(F.nifty.chg_pct) + '</span></div>' +
+    '<div class="hmeta">prev close <b>' + num(F.nifty.v/(1+F.nifty.chg_pct/100)) + '</b> · 30 sessions <b class="' +
+      (s30>=0?'up':'down') + '">' + (s30>=0?'+':'−') + Math.abs(s30).toFixed(1) + '%</b> · VIX <b>' + num(F.vix.v) + '</b></div>' +
+    '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#6ea8fe" stop-opacity=".3"/><stop offset="100%" stop-color="#6ea8fe" stop-opacity="0"/></linearGradient></defs>' +
+      '<path d="' + area + '" fill="url(#g)"/>' +
+      '<polyline points="' + line + '" fill="none" stroke="#6ea8fe" stroke-width="1.8"/></svg>';
+  hero.append(tiles([
+    ['PCR', num(F.pcr.v), 'nearest expiry ' + F.pcr.expiry],
+    ['Max pain', num(F.max_pain.v, 0), 'spot ' + num(F.spot.v)],
+    ['Breadth', num(br.above_50, 1) + '%', 'above 50-DMA'],
+    ['FII net', '<span class="' + (F.fii.v>=0?'up':'down') + '">' + (F.fii.v>=0?'+':'−') + num(Math.abs(F.fii.v), 0) + '</span>', '₹ crore']
+  ]));
+  const note = document.createElement('p'); note.className = 'note';
+  note.textContent = 'Session ' + facts.asof + ' · ' + FILES.length + ' data files · green up, red down · not a live feed';
+  hero.append(note);
+  main.append(hero);
+
+  const hist2 = hist.rows.slice(-12).reverse().map(r => ({date: r.d, close: r.c, change: r.chg, vix: r.vix, pcr: r.pcr}));
+  main.append(card('Last 12 sessions', hist.count + ' in archive',
+    makeTable(hist2, [{k:'date',label:'Date'},{k:'close',label:'Close',r:1,html:v=>num(v)},
+      {k:'change',label:'Change',r:1,html:v=>pct(v)},{k:'vix',label:'VIX',r:1,html:v=>num(v)},
+      {k:'pcr',label:'PCR',r:1,html:v=>num(v,3)}], {limit:12}),
+    'history.json · the archive behind every base rate on the site.'));
+}
+
+async function renderMarket(main){
+  const [idx, d, vix] = await Promise.all([J('indices.json'), J('data.json'), J('vix.json')]);
+  const rows = idx.indices.map(i => ({name: i.name, category: i.category, stocks: i.count,
+    advances: i.advances, declines: i.declines, avg_chg: i.avg_chg_pct}));
+  main.append(card('Indices', idx.count + ' tracked',
+    makeTable(rows, [{k:'name',label:'Index'},{k:'category',label:'Type'},
+      {k:'advances',label:'Adv',r:1},{k:'declines',label:'Dec',r:1},{k:'stocks',label:'Stocks',r:1},
+      {k:'avg_chg',label:'Avg change',r:1,html:v=>pct(v)}], {limit:30}),
+    'indices.json · average change across each index\'s constituents.'));
+  const m = d.markets.rows.map(r => ({symbol: r[0], close: r[1], change: r[2], date: r[3]}));
+  main.append(card('Index closes', 'data.json',
+    makeTable(m, [{k:'symbol',label:'Symbol'},{k:'close',label:'Close',r:1,html:v=>num(v)},
+      {k:'change',label:'Change',r:1,html:v=>pct(v)},{k:'date',label:'Date'}], {limit:10})));
+  main.append(card('India VIX', vix.latest ? num(vix.latest) : '', 
+    makeTable(vix.series.slice(-30).reverse().map(s => ({date: s[0], vix: s[1]})),
+      [{k:'date',label:'Date'},{k:'vix',label:'VIX',r:1,html:v=>num(v)}], {limit:30}),
+    'vix.json · ' + vix.count + ' sessions since ' + vix.series[0][0] + '.'));
+}
+
+async function renderSectors(main){
+  const s = await J('sectors.json');
+  const rows = s.sectors.map(x => ({name: x.name, stocks: x.count, advances: x.advances,
+    declines: x.declines, avg_chg: x.avg_chg, best: x.best, worst: x.worst}));
+  main.append(card('Sectors', s.count + ' sectors',
+    makeTable(rows, [{k:'name',label:'Sector'},{k:'advances',label:'Adv',r:1},{k:'declines',label:'Dec',r:1},
+      {k:'avg_chg',label:'Avg change',r:1,html:v=>pct(v)},{k:'best',label:'Best'},{k:'worst',label:'Worst'}], {limit:40}),
+    'sectors.json · every sector, unweighted average.'));
+  const big = s.sectors.slice().sort((a,b)=>b.count-a.count)[0];
+  const cons = big.constituents || big.stocks || [];
+  if (cons.length){
+    main.append(card(big.name + ' constituents', cons.length + ' stocks',
+      makeTable(cons, [{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},
+        {k:'close',label:'Close',r:1,html:v=>num(v)},{k:'chg_pct',label:'Change',r:1,html:v=>pct(v)}], {limit:40})));
+  }
+}
+
+async function renderStocks(main){
+  const s = await J('screener.json');
+  const rows = s.rows.map(r => ({symbol:r.symbol, name:r.name, close:r.close, chg_1d:r.chg_1d,
+    chg_5d:r.chg_5d, chg_20d:r.chg_20d, rsi:r.rsi, vol_x:r.vol_x, trend:r.trend,
+    from_52w_high:r.from_52w_high, suspect:r.suspect_move}));
+  main.append(card('Screener', s.count + ' stocks',
+    makeTable(rows, [{k:'symbol',label:'Symbol'},
+      {k:'close',label:'Close',r:1,html:v=>num(v)},{k:'chg_1d',label:'1D',r:1,html:v=>pct(v)},
+      {k:'chg_5d',label:'5D',r:1,html:v=>pct(v)},{k:'rsi',label:'RSI',r:1,html:v=>num(v,1)},
+      {k:'trend',label:'Trend'}], {limit:150, placeholder:'Search symbol, name, trend…'}),
+    'screener.json · all ' + s.count.toLocaleString('en-IN') + ' stocks. Click a column to sort, type to filter.'));
+}
+
+async function renderFno(main){
+  const [exp, walls, roll, stats] = await Promise.all([
+    J('oi_by_expiry.json'), J('oi_walls.json'), J('rollover.json'), J('oi_stats.json')]);
+  const rows = [];
+  Object.keys(exp.indices || {}).forEach(k => {
+    (exp.indices[k].expiries || []).forEach(e => rows.push({
+      index: k, expiry: e.expiry, pcr: e.pcr, max_pain: e.max_pain,
+      call_wall: e.call_wall, put_wall: e.put_wall, spot: e.spot}));
+  });
+  main.append(card('Open interest by expiry', exp.date || '',
+    makeTable(rows, [{k:'index',label:'Index'},{k:'expiry',label:'Expiry'},
+      {k:'pcr',label:'PCR',r:1,html:v=>num(v)},{k:'max_pain',label:'Max pain',r:1,html:v=>num(v,0)},
+      {k:'call_wall',label:'Call wall',r:1,html:v=>num(v,0)},{k:'put_wall',label:'Put wall',r:1,html:v=>num(v,0)},
+      {k:'spot',label:'Spot',r:1,html:v=>num(v)}], {limit:40}),
+    'oi_by_expiry.json · nearest expiry first.'));
+  main.append(card('Rollover', roll.count + ' stock futures',
+    makeTable(roll.items.map(r => ({symbol:r.s, near:r.near, next:r.next, roll:r.roll, expiry:r.exp})),
+      [{k:'symbol',label:'Symbol'},{k:'roll',label:'Roll %',r:1,html:v=>num(v,1)},
+       {k:'near',label:'Near OI',r:1,html:v=>num(v,1)},{k:'next',label:'Next OI',r:1,html:v=>num(v,1)},
+       {k:'expiry',label:'Expiry'}], {limit:60}), 'rollover.json'));
+  const w = walls.ladder || {};
+  const wr = Object.keys(w).map(k => ({index:k, expiry:w[k].expiry, pcr:w[k].pcr,
+    call_wall:w[k].call_wall, put_wall:w[k].put_wall, ce_oi:w[k].total_ce_oi, pe_oi:w[k].total_pe_oi}));
+  if (wr.length) main.append(card('Walls', walls.count + ' indices',
+    makeTable(wr, [{k:'index',label:'Index'},{k:'expiry',label:'Expiry'},{k:'pcr',label:'PCR',r:1,html:v=>num(v)},
+      {k:'call_wall',label:'Call wall',r:1,html:v=>num(v,0)},{k:'put_wall',label:'Put wall',r:1,html:v=>num(v,0)},
+      {k:'ce_oi',label:'Call OI',r:1,html:v=>num(v,0)},{k:'pe_oi',label:'Put OI',r:1,html:v=>num(v,0)}], {limit:10}),
+    'oi_walls.json'));
+  const st = recordsFrom(stats);
+  if (st && st.length) main.append(card('OI stats', stats.count || '',
+    makeTable(st, autoCols(st, 8), {limit:60}), 'oi_stats.json'));
+}
+
+async function renderDeals(main){
+  const d = await J('deals.json');
+  const mk = (arr, kind) => arr.map(r => ({date:r[0], symbol:r[1], client:r[2], side:r[3],
+    qty:r[4], price:r[5], kind:kind, value: (Number(r[4])*Number(r[5])/1e7)}));
+  const rows = mk(d.bulk, 'bulk').concat(mk(d.block, 'block'));
+  main.append(card('Bulk and block deals', rows.length + ' rows',
+    makeTable(rows, [{k:'symbol',label:'Symbol'},
+      {k:'client',label:'Client',html:v=>'<span style="display:block;max-width:calc(160 * var(--u))">'+esc(v)+'</span>'},
+      {k:'side',label:'Side'},{k:'qty',label:'Qty',r:1,html:v=>num(v,0)},
+      {k:'price',label:'Price',r:1,html:v=>num(v)},{k:'value',label:'₹Cr',r:1,html:v=>num(v)}],
+      {limit:80, placeholder:'Search client, symbol…'}),
+    'deals.json · value is quantity × price, not a recommendation.'));
+}
+
+async function renderForecast(main){
+  const d = await J('data.json');
+  const f = d.fm3;
+  const n = f.nifty;
+  const body = tiles([
+    ['Median', '<span class="' + (n.median_chg_pct>=0?'up':'down') + '">' + (n.median_chg_pct>=0?'+':'−') + Math.abs(n.median_chg_pct).toFixed(2) + '%</span>', '21 sessions'],
+    ['10th pct', pct(n.low10_chg_pct), 'band low'],
+    ['90th pct', pct(n.high90_chg_pct), 'band high'],
+    ['Model', 'TimesFM', f.model]
+  ]);
+  main.append(card('Nifty 21-day forecast', 'zero-shot', body,
+    'Updated ' + f.updated + ' · ' + f.rows + ' rows across ' + f.total + ' symbols. Not a price target.'));
+  const rows = (f.rows || []).slice(0, 400);
+  if (Array.isArray(f.rows) && typeof f.rows[0] === 'object'){
+    main.append(card('Forecast rows', f.total + ' symbols',
+      makeTable(f.rows, autoCols(f.rows, 8), {limit:80}), 'data.json · fm3.rows'));
+  }
+}
+
+async function renderNews(main){
+  const n = await J('news_feed.json');
+  const rows = n.items.map(i => ({title:i.title, source:i.source, category:i.category, published:i.published, company:i.company}));
+  main.append(card('News', n.count + ' headlines',
+    makeTable(rows, [{k:'published',label:'When'},{k:'source',label:'Source'},
+      {k:'category',label:'Category'},{k:'title',label:'Headline'},{k:'company',label:'Company'}],
+      {limit:60, placeholder:'Search headlines…'}),
+    'news_feed.json · publisher RSS. ' + (n.counts ? JSON.stringify(n.counts) : '')));
+}
+
+async function renderEvents(main){
+  const [cal, corp] = await Promise.all([J('calendar.json'), J('corp_actions.json')]);
+  const rows = [];
+  (cal.days || []).forEach(d => (d.events || []).forEach(e => rows.push({
+    date: e.date, symbol: e.symbol, type: e.type, detail: e.detail})));
+  main.append(card('Calendar', rows.length + ' events',
+    makeTable(rows, [{k:'date',label:'Date'},{k:'symbol',label:'Symbol'},{k:'type',label:'Type'},
+      {k:'detail',label:'Detail'}], {limit:80}), 'calendar.json · corporate events ahead.'));
+  const c2 = corp.items.map(i => ({symbol:i.s, date:i.d, kind:i.k, value:i.v}));
+  main.append(card('Corporate actions', corp.count + ' items',
+    makeTable(c2, [{k:'date',label:'Date'},{k:'symbol',label:'Symbol'},{k:'kind',label:'Type'},
+      {k:'value',label:'Value',r:1,html:v=>num(v)}], {limit:80}), 'corp_actions.json'));
+}
+
+/* generic section: one or more json files rendered as tables */
+async function renderGeneric(main, files, title){
+  for (const f of files){
+    try {
+      const d = await J(f);
+      const recs = recordsFrom(d);
+      if (recs && recs.length){
+        main.append(card(title || label(f.replace('.json','')), recs.length + ' rows',
+          makeTable(recs, autoCols(recs, 9), {limit:100}), f));
+      } else if (d && typeof d === 'object'){
+        const flat = {}, long = [];
+        Object.keys(d).forEach(k => {
+          if (Array.isArray(d[k]) || typeof d[k] === 'object') return;
+          const v = String(d[k]);
+          if (v.length > 44) long.push([k, v]); else flat[k] = d[k];
+        });
+        const body = document.createElement('div');
+        const tilesHTML = Object.keys(flat).length
+          ? '<div class="tiles">' + Object.keys(flat).map(k =>
+              '<div><span>' + esc(label(k)) + '</span><b>' + esc(String(flat[k]).slice(0,28)) + '</b></div>').join('') + '</div>'
+          : '';
+        const longHTML = long.map(p =>
+          '<p class="note"><b style="color:var(--dim)">' + esc(label(p[0])) + ':</b> ' + esc(p[1]) + '</p>').join('');
+        body.innerHTML = (tilesHTML + longHTML) || '<p class="empty">No table rows in this file.</p>';
+        main.append(card(title || label(f.replace('.json','')), '', body, f));
+      }
+    } catch (e){
+      const p = document.createElement('p'); p.className = 'err'; p.textContent = e.message;
+      main.append(p);
+    }
+  }
+}
+
+const MAP = {
+  indices:['indices.json'], breadth:['breadth.json'],
+  corporate:['corp_actions.json'], ipo:['ipo.json'], watchlists:['watchlists.json','fo_ban.json'],
+  rs:['rs.json'], levels:['levels.json'], patterns:['patterns.json'], gaps:['gaps.json'],
+  seasonality:['seasonality.json'], correlation:['correlation.json'],
+  insider:['insider.json'], sebi:['sebi.json'],
+  mf:['mf.json'], etf:['etf.json'], global:['global.json'], crypto:['crypto.json','crypto_history.json'],
+  history:['history.json'], charges:['charges.json'], learn:['learn.json'], backtest:['backtest.json']
+};
+
+async function route(){
+  const id = (location.hash.replace('#/','') || 'overview');
+  const main = $('#main');
+  main.innerHTML = '<p class="loading">Loading ' + esc(id) + '…</p>';
+  main.innerHTML = '';
+  try {
+    if (id === 'overview') await renderOverview(main);
+    else if (id === 'market') await renderMarket(main);
+    else if (id === 'sectors') await renderSectors(main);
+    else if (id === 'stocks') await renderStocks(main);
+    else if (id === 'fno') await renderFno(main);
+    else if (id === 'deals') await renderDeals(main);
+    else if (id === 'forecast') await renderForecast(main);
+    else if (id === 'news') await renderNews(main);
+    else if (id === 'events') await renderEvents(main);
+    else if (id === 'library') await renderGeneric(main, FILES, '');
+    else if (MAP[id]) await renderGeneric(main, MAP[id], null);
+    else await renderGeneric(main, ['data.json'], id);
+  } catch (e){
+    main.innerHTML = '<p class="err">Could not load ' + esc(id) + ': ' + esc(e.message) + '</p>';
+  }
+  document.querySelectorAll('.dg a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#/' + id));
+  window.scrollTo(0, 0);
+}
+
+function buildDrawer(){
+  const box = $('#drawerItems');
+  const groups = {};
+  SECTIONS.forEach(s => { (groups[s[2]] = groups[s[2]] || []).push(s); });
+  box.innerHTML = Object.keys(groups).map(g =>
+    '<div class="dg"><h4>' + esc(g) + '</h4>' +
+    groups[g].map(s => '<a href="#/' + s[1] + '">' + esc(s[0]) + '</a>').join('') + '</div>').join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildDrawer();
+  const drawer = $('#drawer'), scrim = $('#scrim');
+  const open = () => { drawer.classList.add('on'); scrim.classList.add('on'); };
+  const close = () => { drawer.classList.remove('on'); scrim.classList.remove('on'); };
+  $('#menuBtn').onclick = open;
+  $('#dclose').onclick = close;
+  scrim.onclick = close;
+  drawer.addEventListener('click', e => { if (e.target.tagName === 'A') close(); });
+  $('#newsBtn').onclick = () => { location.hash = '#/news'; };
+  window.addEventListener('hashchange', route);
+  route();
+});
+</script>
+</body>
+</html>

@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-24T06:38:43Z",
+  "generated_at": "2026-11-24T18:31:28Z",
   "channels": 10,
-  "videos": 572,
+  "videos": 578,
   "window_start": "2026-05-15",
-  "window_end": "2026-11-23",
-  "total_views": 14097774,
+  "window_end": "2026-11-24",
+  "total_views": 14475312,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 118,
+      "mentions": 120,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
-      "mentions": 55,
+      "mentions": 56,
       "channels": 5
     },
     {
@@ -32,6 +32,11 @@
       "channels": 4
     },
     {
+      "symbol": "TCS",
+      "mentions": 6,
+      "channels": 4
+    },
+    {
       "symbol": "ITC",
       "mentions": 5,
       "channels": 4
@@ -47,11 +52,6 @@
       "channels": 4
     },
     {
-      "symbol": "TCS",
-      "mentions": 5,
-      "channels": 3
-    },
-    {
       "symbol": "ICICIBANK",
       "mentions": 4,
       "channels": 4
@@ -60,7 +60,7 @@
   "top_themes": [
     {
       "theme": "Beginner/Education",
-      "videos": 155
+      "videos": 156
     },
     {
       "theme": "MF/SIP",
@@ -68,7 +68,7 @@
     },
     {
       "theme": "Earnings/Results",
-      "videos": 126
+      "videos": 128
     },
     {
       "theme": "Options/F&O",
@@ -76,12 +76,12 @@
     },
     {
       "theme": "IPO",
-      "videos": 114
+      "videos": 115
     },
     {
       "theme": "Budget/Policy",
-      "videos": 88
+      "videos": 90
     }
   ],
-  "net_sentiment": 331
+  "net_sentiment": 332
 }

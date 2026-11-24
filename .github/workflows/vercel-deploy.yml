@@ -1,0 +1,66 @@
+name: Deploy to Vercel
+
+# Vercel's own GitHub integration stopped posting a status on any commit after 23 Nov, so
+# arthasaar.vercel.app froze on an old build while GitHub Pages kept updating. This deploys
+# explicitly on every push instead of relying on that integration being healthy.
+#
+# Needs a repository secret named VERCEL_TOKEN (vercel.com/account/tokens) and optionally
+# VERCEL_PROJECT_ID. If the token is absent this fails loudly rather than silently skipping,
+# because a silent skip is exactly the failure mode that hid this for a day.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "vercel.json"
+      - ".github/workflows/vercel-deploy.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+        with:
+          node-version: "20"
+
+      - name: Check the token is present
+        env:
+          TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::VERCEL_TOKEN is not set. Add it at Settings > Secrets and variables > Actions, then re-run this workflow."
+            exit 1
+          fi
+          echo "token present"
+
+      - name: Deploy docs/ to production
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
+          echo "--- whoami ---"
+          npx vercel whoami --token "$VERCEL_TOKEN" || true
+          echo "--- deploy ---"
+          npx vercel deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/v.log
+          URL=$(grep -oE 'https://[a-z0-9.-]+\.vercel\.app' /tmp/v.log | tail -1)
+          echo "deployed: ${URL:-see log above}"
+          {
+            echo "### Vercel deploy"
+            echo ""
+            echo "- commit: \`${{ github.sha }}\`"
+            echo "- url: ${URL:-not reported}"
+          } >> "$GITHUB_STEP_SUMMARY"

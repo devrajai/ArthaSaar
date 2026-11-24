@@ -25,12 +25,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
 .up{color:var(--up)}.down{color:var(--down)}.flat,.dim{color:var(--dim)}
-.wrap{max-width:calc(430 * var(--u));margin:0 auto;padding:0 calc(12 * var(--u))}
+.wrap{max-width:min(100%, calc(430 * var(--u)));margin:0 auto;padding:0 calc(12 * var(--u))}
 
 /* bar */
 .bar{position:sticky;top:0;z-index:50;background:rgba(35,38,44,.98);backdrop-filter:blur(16px)}
 .brow{display:flex;align-items:center;gap:calc(10 * var(--u));padding:0 calc(14 * var(--u));
-  height:calc(64 * var(--u));max-width:calc(430 * var(--u));margin:0 auto}
+  height:calc(64 * var(--u));max-width:min(100%, calc(430 * var(--u)));margin:0 auto}
 .ico{width:calc(32 * var(--u));height:calc(28 * var(--u));border:calc(1 * var(--u)) solid var(--line2);
   background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;justify-content:center;
   align-items:center;gap:calc(4 * var(--u));border-radius:calc(7 * var(--u))}
@@ -109,6 +109,76 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.62);opacity:0;pointer-events:none;transition:.2s;z-index:75}
 .scrim.on{opacity:1;pointer-events:auto}
 .loading{color:var(--dim);font:400 calc(12 * var(--u))/1.6 var(--mono);padding:calc(16 * var(--u)) 0}
+
+/* ---------- news screen ---------- */
+.ntabs2{display:flex;gap:calc(8 * var(--u));margin-bottom:calc(11 * var(--u))}
+.ntabs2 button{flex:1;background:var(--card);border:calc(1 * var(--u)) solid var(--line);color:var(--dim);
+  border-radius:calc(11 * var(--u));padding:calc(11 * var(--u)) calc(8 * var(--u));cursor:pointer;
+  font:600 clamp(11px,1.45vw,15px)/1 var(--sans)}
+.ntabs2 button.on{background:var(--accent-dim);border-color:rgba(110,168,254,.45);color:var(--accent)}
+.npane{display:none}.npane.on{display:block}
+.nhero{display:flex;gap:calc(11 * var(--u));align-items:flex-start;background:var(--card);
+  border:calc(1 * var(--u)) solid var(--line);border-radius:calc(15 * var(--u));padding:calc(13 * var(--u));
+  margin-bottom:calc(10 * var(--u))}
+.nic{flex:0 0 auto;width:calc(40 * var(--u));height:calc(40 * var(--u));border-radius:calc(11 * var(--u));
+  display:grid;place-items:center;background:var(--accent-dim);color:var(--accent)}
+.nic svg{width:calc(20 * var(--u));height:calc(20 * var(--u));fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nhero b{display:block;font-size:clamp(13px,1.7vw,17px);font-weight:700}
+.nhero span{display:block;margin-top:calc(3 * var(--u));font-size:clamp(11px,1.35vw,13px);color:var(--dim);line-height:1.45}
+.nalert{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(13 * var(--u));
+  padding:calc(11 * var(--u));margin-bottom:calc(10 * var(--u))}
+.narow{display:flex;align-items:center;gap:calc(7 * var(--u));font-size:clamp(11px,1.4vw,14px)}
+.narow em{margin-left:auto;font-style:normal;font-size:clamp(9.5px,1.2vw,11.5px);color:var(--dimmer)}
+.nmini{display:flex;gap:calc(6 * var(--u));margin-top:calc(9 * var(--u))}
+.nmini button{flex:1;background:var(--card2);border:calc(1 * var(--u)) solid var(--line);color:var(--dim);
+  border-radius:calc(9 * var(--u));padding:calc(8 * var(--u));font:500 clamp(10px,1.3vw,12.5px)/1 var(--sans);cursor:pointer}
+.nsearch{display:flex;align-items:center;gap:calc(8 * var(--u));background:var(--card);
+  border:calc(1 * var(--u)) solid var(--line);border-radius:calc(11 * var(--u));
+  padding:calc(10 * var(--u)) calc(12 * var(--u));margin-bottom:calc(10 * var(--u));color:var(--dimmer)}
+.nsearch svg{width:calc(15 * var(--u));height:calc(15 * var(--u));fill:none;stroke:currentColor;stroke-width:1.8;flex:0 0 auto}
+.nsearch input{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--ink);
+  font:400 clamp(11.5px,1.45vw,14px)/1.3 var(--sans)}
+.nsearch input::placeholder{color:var(--dimmer)}
+.nchips{display:flex;gap:calc(7 * var(--u));margin-bottom:calc(11 * var(--u));overflow-x:auto;scrollbar-width:none}
+.nchips::-webkit-scrollbar{display:none}
+.nchips button{flex:0 0 auto;display:inline-flex;align-items:center;gap:calc(6 * var(--u));background:var(--card);
+  border:calc(1 * var(--u)) solid var(--line);color:var(--dim);border-radius:999px;
+  padding:calc(8 * var(--u)) calc(12 * var(--u));font:500 clamp(10.5px,1.3vw,12.5px)/1 var(--sans);cursor:pointer}
+.nchips button.on{background:var(--accent-dim);border-color:rgba(110,168,254,.45);color:var(--accent)}
+.d{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;display:inline-block;flex:0 0 auto}
+.d.blue{background:#6ea8fe}.d.green{background:#4fc98a}.d.red{background:#ea6b62}.d.amber{background:#e2b04a}
+.nlist{list-style:none;margin:0;padding:0}
+.nlist li{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(12 * var(--u));
+  padding:calc(12 * var(--u));margin-bottom:calc(8 * var(--u))}
+.nlist .ns{display:block;font:500 clamp(9px,1.15vw,10.5px)/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dimmer);margin-bottom:calc(6 * var(--u))}
+.nlist .nt{font-size:clamp(12px,1.55vw,14.5px);line-height:1.45;color:var(--ink)}
+.nempty{text-align:center;color:var(--dim);font-size:clamp(12px,1.5vw,14px);padding:calc(28 * var(--u)) 0}
+.nrange{display:flex;gap:calc(6 * var(--u));margin-bottom:calc(10 * var(--u))}
+.nrange button{flex:1;background:var(--card);border:calc(1 * var(--u)) solid var(--line);color:var(--dim);
+  border-radius:calc(9 * var(--u));padding:calc(9 * var(--u)) calc(3 * var(--u));
+  font:500 clamp(9.5px,1.2vw,11.5px)/1 var(--sans);cursor:pointer}
+.nrange button.on{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+.nsum{display:flex;align-items:baseline;gap:calc(10 * var(--u));font-size:clamp(11px,1.35vw,13px);
+  color:var(--dim);margin-bottom:calc(10 * var(--u))}
+.nsum b{color:var(--ink);font-weight:600}
+.nsum button{margin-left:auto;background:none;border:0;color:var(--accent);
+  font:600 clamp(10.5px,1.3vw,12.5px)/1 var(--sans);cursor:pointer}
+.nac details{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(13 * var(--u));
+  margin-bottom:calc(9 * var(--u));overflow:hidden}
+.nac summary{list-style:none;display:flex;align-items:center;gap:calc(9 * var(--u));padding:calc(12 * var(--u));
+  cursor:pointer;font:600 clamp(11.5px,1.45vw,14px)/1 var(--sans)}
+.nac summary::-webkit-details-marker{display:none}
+.nac summary em{margin-left:auto;font-style:normal;font:500 clamp(9.5px,1.2vw,11px)/1 var(--mono);
+  color:var(--dimmer);border:calc(1 * var(--u)) solid var(--line);border-radius:999px;
+  padding:calc(3 * var(--u)) calc(7 * var(--u))}
+.nac ul{list-style:none;margin:0;padding:0 calc(12 * var(--u)) calc(6 * var(--u))}
+.nac li{display:flex;align-items:baseline;gap:calc(10 * var(--u));padding:calc(9 * var(--u)) 0;
+  border-top:calc(1 * var(--u)) solid var(--line);font-size:clamp(11px,1.4vw,13.5px)}
+.nac li b{font-weight:600;min-width:calc(90 * var(--u))}
+.nac li span{flex:1;min-width:0;color:var(--dim);font-size:clamp(10px,1.3vw,12.5px);line-height:1.35}
+.nac li i{font-style:normal;font:500 clamp(9.5px,1.2vw,11.5px)/1 var(--mono);color:var(--dimmer);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -147,6 +217,8 @@ async function J(p){
   cache[p] = d;
   return d;
 }
+const unesc = s => String(s).replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+const dshort = iso => { const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const p=String(iso).split('-'); return p.length===3 ? (parseInt(p[2],10)+' '+M[parseInt(p[1],10)-1]+' '+p[0].slice(2)) : iso; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function num(v, d){
   if (v === null || v === undefined || v === '') return '—';
@@ -474,13 +546,96 @@ async function renderForecast(main){
 }
 
 async function renderNews(main){
-  const n = await J('news_feed.json');
-  const rows = n.items.map(i => ({title:i.title, source:i.source, category:i.category, published:i.published, company:i.company}));
-  main.append(card('News', n.count + ' headlines',
-    makeTable(rows, [{k:'published',label:'When'},{k:'source',label:'Source'},
-      {k:'category',label:'Category'},{k:'title',label:'Headline'},{k:'company',label:'Company'}],
-      {limit:60, placeholder:'Search headlines…'}),
-    'news_feed.json · publisher RSS. ' + (n.counts ? JSON.stringify(n.counts) : '')));
+  const [n, cal] = await Promise.all([J('news_feed.json'), J('calendar.json')]);
+
+  const tabs = document.createElement('div'); tabs.className = 'ntabs2';
+  tabs.innerHTML = '<button class="on" data-tab="live">Live News</button><button data-tab="events">Events Calendar</button>';
+  main.append(tabs);
+
+  /* ---- live pane ---- */
+  const live = document.createElement('section'); live.className = 'npane on'; live.dataset.pane = 'live';
+  live.innerHTML =
+    '<div class="nhero"><span class="nic"><svg viewBox="0 0 24 24"><path d="M4 18l5-5 3 3 6-7"/><path d="M15 9h4v4"/></svg></span>' +
+    '<div><b>Live Market News</b><span>Corporate filings and market intelligence, ' + n.count + ' headlines.</span></div></div>' +
+    '<div class="nalert"><div class="narow"><b>News alerts</b><em>All off</em></div>' +
+    '<div class="nmini"><button>All</button><button>Results</button><button>General</button></div></div>' +
+    '<label class="nsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4"/></svg>' +
+    '<input id="nq" type="search" placeholder="Search by stock, company or keyword…"></label>' +
+    '<div class="nchips" id="nchips">' +
+      '<button class="on" data-cat="all">All ' + n.count + '</button>' +
+      '<button data-cat="results"><i class="d blue"></i>Results ' + (n.counts.results||0) + '</button>' +
+      '<button data-cat="general"><i class="d amber"></i>General ' + (n.counts.general||0) + '</button>' +
+      '<button data-cat="global"><i class="d green"></i>Global ' + (n.counts.global||0) + '</button>' +
+      '<button data-cat="policy"><i class="d red"></i>Policy ' + (n.counts.policy||0) + '</button>' +
+    '</div><ul class="nlist" id="nlist"></ul><p class="nempty" id="nempty" hidden>No updates matching your criteria.</p>';
+
+  const ul = live.querySelector('#nlist');
+  n.items.forEach(it => {
+    const li = document.createElement('li');
+    li.dataset.cat = it.category;
+    li.innerHTML = '<span class="ns">' + esc(it.source) + ' · ' + esc(dshort(String(it.published).slice(0,10))) + '</span>' +
+                   '<span class="nt">' + esc(unesc(it.title)) + '</span>';
+    ul.append(li);
+  });
+
+  const chips = live.querySelector('#nchips'), q = live.querySelector('#nq'), empty = live.querySelector('#nempty');
+  let cat = 'all';
+  function apply(){
+    const term = q.value.trim().toLowerCase(); let shown = 0;
+    [].forEach.call(ul.children, li => {
+      const ok = (cat === 'all' || li.dataset.cat === cat) && (!term || li.textContent.toLowerCase().includes(term));
+      li.style.display = ok ? '' : 'none'; if (ok) shown++;
+    });
+    empty.hidden = shown > 0;
+  }
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(chips.querySelectorAll('button'), x => x.classList.remove('on'));
+    b.classList.add('on'); cat = b.dataset.cat || 'all'; apply();
+  });
+  q.addEventListener('input', apply);
+
+  /* ---- events pane ---- */
+  const ev = document.createElement('section'); ev.className = 'npane'; ev.dataset.pane = 'events';
+  const rows = [];
+  (cal.days || []).forEach(d => (d.events || []).forEach(e => rows.push(e)));
+  const LABEL = {results:'Financial results', split:'Stock split', dividend:'Dividend', other:'Buy back / other'};
+  const DOT = {results:'blue', split:'amber', dividend:'green', other:'red'};
+  const groups = {};
+  rows.forEach(e => (groups[e.type] = groups[e.type] || []).push(e));
+  const order = Object.keys(groups).sort((a,b) => groups[b].length - groups[a].length);
+  const dates = rows.map(r => r.date).sort();
+
+  ev.innerHTML =
+    '<div class="nhero"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/>' +
+    '<path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg></span>' +
+    '<div><b>Events Calendar</b><span>Results, dividends, splits and buybacks ahead.</span></div></div>' +
+    '<div class="nrange"><button class="on">This week</button><button>1 month</button><button>3 months</button><button>Past week</button></div>' +
+    '<div class="nsum"><span>Showing <b>' + rows.length + '</b> events for <b>' + dshort(dates[0]||'') + ' – ' + dshort(dates[dates.length-1]||'') + '</b></span>' +
+    '<button id="collapseAll">Collapse all</button></div>' +
+    '<div class="nchips">' + order.map(k =>
+      '<button><i class="d ' + DOT[k] + '"></i>' + LABEL[k] + ' ' + groups[k].length + '</button>').join('') + '</div>' +
+    '<div class="nac">' + order.map(k =>
+      '<details open><summary><span class="d ' + DOT[k] + '"></span>' + LABEL[k] + '<em>' + groups[k].length + '</em></summary><ul>' +
+      groups[k].map(e => '<li><b>' + esc(e.symbol) + '</b><span>' + esc(String(e.detail || e.type)) + '</span><i>' + esc(dshort(e.date)) + '</i></li>').join('') +
+      '</ul></details>').join('') + '</div>';
+
+  const ca = ev.querySelector('#collapseAll');
+  ca.addEventListener('click', () => {
+    const boxes = ev.querySelectorAll('details');
+    const anyOpen = [].some.call(boxes, d => d.open);
+    [].forEach.call(boxes, d => d.open = !anyOpen);
+    ca.textContent = anyOpen ? 'Expand all' : 'Collapse all';
+  });
+
+  main.append(live, ev);
+
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(tabs.querySelectorAll('button'), x => x.classList.remove('on'));
+    b.classList.add('on');
+    main.querySelectorAll('.npane').forEach(p => p.classList.toggle('on', p.dataset.pane === b.dataset.tab));
+  });
 }
 
 async function renderEvents(main){

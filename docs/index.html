@@ -25,12 +25,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
 .up{color:var(--up)}.down{color:var(--down)}.flat,.dim{color:var(--dim)}
-.wrap{max-width:calc(430 * var(--u));margin:0 auto;padding:0 calc(12 * var(--u))}
+.wrap{max-width:min(100%, calc(430 * var(--u)));margin:0 auto;padding:0 calc(12 * var(--u))}
 
 /* bar */
 .bar{position:sticky;top:0;z-index:50;background:rgba(35,38,44,.98);backdrop-filter:blur(16px)}
 .brow{display:flex;align-items:center;gap:calc(10 * var(--u));padding:0 calc(14 * var(--u));
-  height:calc(64 * var(--u));max-width:calc(430 * var(--u));margin:0 auto}
+  height:calc(64 * var(--u));max-width:min(100%, calc(430 * var(--u)));margin:0 auto}
 .ico{width:calc(32 * var(--u));height:calc(28 * var(--u));border:calc(1 * var(--u)) solid var(--line2);
   background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;justify-content:center;
   align-items:center;gap:calc(4 * var(--u));border-radius:calc(7 * var(--u))}
@@ -110,29 +110,75 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .scrim.on{opacity:1;pointer-events:auto}
 .loading{color:var(--dim);font:400 calc(12 * var(--u))/1.6 var(--mono);padding:calc(16 * var(--u)) 0}
 
-/* ---------- stock sheet: tap a symbol anywhere and the whole picture opens ---------- */
-#sheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(8,10,14,.72);
-  backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
-#sheet.on{display:flex}
-#sheetBox{width:100%;max-width:640px;max-height:88vh;overflow:auto;background:var(--card);
-  border:1px solid rgba(255,255,255,.10);border-radius:16px 16px 0 0;padding:18px 18px 26px;
-  box-shadow:0 -12px 40px rgba(0,0,0,.45)}
-@media(min-width:700px){#sheet{align-items:center}#sheetBox{border-radius:16px;margin:20px}}
-#sheetBox h3{margin:0 0 2px;font-size:19px;letter-spacing:-.3px}
-#sheetBox .sub{font-size:12px;opacity:.6;margin-bottom:14px}
-#sheetBox .x{position:absolute;right:22px;margin-top:-6px;background:none;border:0;
-  color:inherit;font-size:26px;line-height:1;opacity:.55;cursor:pointer}
-#sheetBox .px{font-size:32px;font-weight:700;letter-spacing:-1px;margin:2px 0 4px}
-#sheetBox .up{color:#4ec9a0}#sheetBox .dn{color:#f0736a}
-#sheetBox h5{margin:16px 0 7px;font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;opacity:.55}
-#sheetBox .kv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.07);
-  border-radius:10px;overflow:hidden}
-#sheetBox .kv>div{background:var(--card);padding:9px 11px;display:flex;justify-content:space-between;gap:8px;font-size:12.5px}
-#sheetBox .kv span:first-child{opacity:.6}
-#sheetBox .kv span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
-#sheetBox .na{opacity:.35}
-td.sym{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
-  text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3)}
+/* ---------- news screen ---------- */
+.ntabs2{display:flex;gap:calc(8 * var(--u));margin-bottom:calc(11 * var(--u))}
+.ntabs2 button{flex:1;background:var(--card);border:calc(1 * var(--u)) solid var(--line);color:var(--dim);
+  border-radius:calc(11 * var(--u));padding:calc(11 * var(--u)) calc(8 * var(--u));cursor:pointer;
+  font:600 clamp(11px,1.45vw,15px)/1 var(--sans)}
+.ntabs2 button.on{background:var(--accent-dim);border-color:rgba(110,168,254,.45);color:var(--accent)}
+.npane{display:none}.npane.on{display:block}
+.nhero{display:flex;gap:calc(11 * var(--u));align-items:flex-start;background:var(--card);
+  border:calc(1 * var(--u)) solid var(--line);border-radius:calc(15 * var(--u));padding:calc(13 * var(--u));
+  margin-bottom:calc(10 * var(--u))}
+.nic{flex:0 0 auto;width:calc(40 * var(--u));height:calc(40 * var(--u));border-radius:calc(11 * var(--u));
+  display:grid;place-items:center;background:var(--accent-dim);color:var(--accent)}
+.nic svg{width:calc(20 * var(--u));height:calc(20 * var(--u));fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nhero b{display:block;font-size:clamp(13px,1.7vw,17px);font-weight:700}
+.nhero span{display:block;margin-top:calc(3 * var(--u));font-size:clamp(11px,1.35vw,13px);color:var(--dim);line-height:1.45}
+.nalert{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(13 * var(--u));
+  padding:calc(11 * var(--u));margin-bottom:calc(10 * var(--u))}
+.narow{display:flex;align-items:center;gap:calc(7 * var(--u));font-size:clamp(11px,1.4vw,14px)}
+.narow em{margin-left:auto;font-style:normal;font-size:clamp(9.5px,1.2vw,11.5px);color:var(--dimmer)}
+.nmini{display:flex;gap:calc(6 * var(--u));margin-top:calc(9 * var(--u))}
+.nmini button{flex:1;background:var(--card2);border:calc(1 * var(--u)) solid var(--line);color:var(--dim);
+  border-radius:calc(9 * var(--u));padding:calc(8 * var(--u));font:500 clamp(10px,1.3vw,12.5px)/1 var(--sans);cursor:pointer}
+.nsearch{display:flex;align-items:center;gap:calc(8 * var(--u));background:var(--card);
+  border:calc(1 * var(--u)) solid var(--line);border-radius:calc(11 * var(--u));
+  padding:calc(10 * var(--u)) calc(12 * var(--u));margin-bottom:calc(10 * var(--u));color:var(--dimmer)}
+.nsearch svg{width:calc(15 * var(--u));height:calc(15 * var(--u));fill:none;stroke:currentColor;stroke-width:1.8;flex:0 0 auto}
+.nsearch input{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--ink);
+  font:400 clamp(11.5px,1.45vw,14px)/1.3 var(--sans)}
+.nsearch input::placeholder{color:var(--dimmer)}
+.nchips{display:flex;gap:calc(7 * var(--u));margin-bottom:calc(11 * var(--u));overflow-x:auto;scrollbar-width:none}
+.nchips::-webkit-scrollbar{display:none}
+.nchips button{flex:0 0 auto;display:inline-flex;align-items:center;gap:calc(6 * var(--u));background:var(--card);
+  border:calc(1 * var(--u)) solid var(--line);color:var(--dim);border-radius:999px;
+  padding:calc(8 * var(--u)) calc(12 * var(--u));font:500 clamp(10.5px,1.3vw,12.5px)/1 var(--sans);cursor:pointer}
+.nchips button.on{background:var(--accent-dim);border-color:rgba(110,168,254,.45);color:var(--accent)}
+.d{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;display:inline-block;flex:0 0 auto}
+.d.blue{background:#6ea8fe}.d.green{background:#4fc98a}.d.red{background:#ea6b62}.d.amber{background:#e2b04a}
+.nlist{list-style:none;margin:0;padding:0}
+.nlist li{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(12 * var(--u));
+  padding:calc(12 * var(--u));margin-bottom:calc(8 * var(--u))}
+.nlist .ns{display:block;font:500 clamp(9px,1.15vw,10.5px)/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dimmer);margin-bottom:calc(6 * var(--u))}
+.nlist .nt{font-size:clamp(12px,1.55vw,14.5px);line-height:1.45;color:var(--ink)}
+.nempty{text-align:center;color:var(--dim);font-size:clamp(12px,1.5vw,14px);padding:calc(28 * var(--u)) 0}
+.nrange{display:flex;gap:calc(6 * var(--u));margin-bottom:calc(10 * var(--u))}
+.nrange button{flex:1;background:var(--card);border:calc(1 * var(--u)) solid var(--line);color:var(--dim);
+  border-radius:calc(9 * var(--u));padding:calc(9 * var(--u)) calc(3 * var(--u));
+  font:500 clamp(9.5px,1.2vw,11.5px)/1 var(--sans);cursor:pointer}
+.nrange button.on{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+.nsum{display:flex;align-items:baseline;gap:calc(10 * var(--u));font-size:clamp(11px,1.35vw,13px);
+  color:var(--dim);margin-bottom:calc(10 * var(--u))}
+.nsum b{color:var(--ink);font-weight:600}
+.nsum button{margin-left:auto;background:none;border:0;color:var(--accent);
+  font:600 clamp(10.5px,1.3vw,12.5px)/1 var(--sans);cursor:pointer}
+.nac details{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(13 * var(--u));
+  margin-bottom:calc(9 * var(--u));overflow:hidden}
+.nac summary{list-style:none;display:flex;align-items:center;gap:calc(9 * var(--u));padding:calc(12 * var(--u));
+  cursor:pointer;font:600 clamp(11.5px,1.45vw,14px)/1 var(--sans)}
+.nac summary::-webkit-details-marker{display:none}
+.nac summary em{margin-left:auto;font-style:normal;font:500 clamp(9.5px,1.2vw,11px)/1 var(--mono);
+  color:var(--dimmer);border:calc(1 * var(--u)) solid var(--line);border-radius:999px;
+  padding:calc(3 * var(--u)) calc(7 * var(--u))}
+.nac ul{list-style:none;margin:0;padding:0 calc(12 * var(--u)) calc(6 * var(--u))}
+.nac li{display:flex;align-items:baseline;gap:calc(10 * var(--u));padding:calc(9 * var(--u)) 0;
+  border-top:calc(1 * var(--u)) solid var(--line);font-size:clamp(11px,1.4vw,13.5px)}
+.nac li b{font-weight:600;min-width:calc(90 * var(--u))}
+.nac li span{flex:1;min-width:0;color:var(--dim);font-size:clamp(10px,1.3vw,12.5px);line-height:1.35}
+.nac li i{font-style:normal;font:500 clamp(9.5px,1.2vw,11.5px)/1 var(--mono);color:var(--dimmer);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -150,11 +196,8 @@ td.sym{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
 <aside class="drawer" id="drawer">
   <div class="dh"><span class="as">AS</span><b>All sections</b><button id="dclose">×</button></div>
   <div id="drawerItems"></div>
-  
 </aside>
 <div class="scrim" id="scrim"></div>
-
-<div id="sheet" aria-hidden="true"><div id="sheetBox"><button class="x" id="sheetX" aria-label="Close">&times;</button><div id="sheetBody"></div></div></div>
 
 <script>
 const FILES = ["_guard_report.json", "affordable.json", "attention.json", "audit.json", "backtest.json", "behaviour.json", "breadth.json", "breakers.json", "brief.json", "calendar.json", "cases.json", "charges.json", "charts.json", "checklist.json", "circuits.json", "claim_ledger.json", "claim_vs_base.json", "claims.json", "commodities.json", "config.json", "corp_actions.json", "corrections.json", "correlation.json", "crypto.json", "crypto_history.json", "data.json", "data_asof.json", "data_errors.json", "data_gaps.json", "data_health.json", "deals.json", "deals_followup.json", "delivery.json", "earlymove.json", "etf.json", "etf_premium.json", "events.json", "feed_history.json", "fii_dii.json", "fo_ban.json", "forecast.json", "fundamentals.json", "gann_fib.json", "gaps.json", "global.json", "global_market.json", "gti.json", "health.json", "history.json", "home_facts.json", "index_history.json", "indices.json", "insider.json", "ipo.json", "ipo_doc.json", "leadlag.json", "learn.json", "levels.json", "listings.json", "macro.json", "manifest.json", "market_stats.json", "market_status.json", "metals.json", "mf.json", "money_radar.json", "muhurat.json", "news_feed.json", "oi_by_expiry.json", "oi_history.json", "oi_stats.json", "oi_strikes.json", "oi_walls.json", "option_chain.json", "patterns.json", "patterns_reference.json", "pcr_signal.json", "premium_base_rates.json", "premium_movers.json", "presentations.json", "ranges.json", "rank_momentum.json", "rebalance.json", "recap.json", "report_cards.json", "rollover.json", "rs.json", "scenarios.json", "scoreboard.json", "scorecard.json", "screener.json", "search.json", "seasonality.json", "sebi.json", "sector_fund.json", "sector_rotation.json", "sector_trend.json", "sectors.json", "series.json", "setup_history.json", "shareholding.json", "snapshot.json", "stocks.json", "story.json", "strategies.json", "telegram.json", "telegram_accuracy.json", "telegram_pcr.json", "telegram_vs_chain.json", "timemachine.json", "timesfm_score.json", "universe.json", "unusual.json", "version.json", "video_vs_chain.json", "vix.json", "volume_profile.json", "vrp.json", "watchlists.json", "weekday.json", "whatif.json"];
@@ -174,6 +217,8 @@ async function J(p){
   cache[p] = d;
   return d;
 }
+const unesc = s => String(s).replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+const dshort = iso => { const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const p=String(iso).split('-'); return p.length===3 ? (parseInt(p[2],10)+' '+M[parseInt(p[1],10)-1]+' '+p[0].slice(2)) : iso; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function num(v, d){
   if (v === null || v === undefined || v === '') return '—';
@@ -493,36 +538,6 @@ async function renderForecast(main){
   ]);
   main.append(card('Nifty 21-day forecast', 'zero-shot', body,
     'Updated ' + f.updated + ' · ' + f.total + ' symbols · horizon ' + f.horizon_days + ' sessions. Not a price target.'));
-  // The forecast is worthless to a reader unless they can see whether it has ever been
-  // right. This card was only on the classic build; without it the app shows a cone and
-  // no record. Scored 0 today because a 21-session call needs 21 sessions to mature.
-  try {
-    const S = await J('timesfm_score.json');
-    const o = (S && S.overall) || {};
-    if (!o.n){
-      main.append(card('Has the model been right?', 'nothing settled yet',
-        tiles([
-          ['Runs logged', String(S.runs_logged || 0), 'nightly since 6 Nov'],
-          ['Scored', '0', 'none matured yet'],
-          ['Horizon', '21', 'sessions per call'],
-          ['First scores', '~5 Dec', '21 sessions after 6 Nov']
-        ]),
-        'TimesFM has logged a 21-session forecast every night since 6 November 2026, and not '
-        + 'one has reached its horizon yet, so there is nothing honest to score. The first '
-        + 'results land around 5 December 2026. Grading a 21-day call on day two would flatter '
-        + 'it. A forecast is only counted once its horizon has actually elapsed.'));
-    } else {
-      main.append(card('Has the model been right?', o.n + ' settled',
-        tiles([
-          ['Scored', String(o.n), 'forecasts settled'],
-          ['Median miss', o.median_abs_error_pct + '%', 'call vs what happened'],
-          ['Band hit', o.band_hit_pct + '%', 'realised inside the 10-90'],
-          ['Direction', o.direction_hit_pct + '%', 'sign was right']
-        ]),
-        'Settled forecasts only. Nothing is scored early and nothing is dropped.'));
-    }
-  } catch (_) { /* scoreboard missing - the cone above still stands */ }
-
   const recs = recordsFrom(f);
   if (recs && recs.length){
     main.append(card('Forecast rows', f.total + ' symbols',
@@ -530,63 +545,97 @@ async function renderForecast(main){
   }
 }
 
-async function renderBacktest(main){
-  // The pair-trading audit lived only on the classic build. It is the one section that
-  // answers "does any of this work", so it belongs in the app.
-  main.append(card('Pair trading: does the dashboard survive a check?', '289 pairs, recomputed',
-    tiles([
-      ['Claimed hit rate', '81.65%', '485 of 594 closed'],
-      ['Open book', '−55.25 lakh', 'excluded from that figure'],
-      ['Pairs never traded', '104 of 289', 'no trade in a full year'],
-      ['Our reproduction', '2 of 15', 'correlations within 5 points']
-    ]),
-    'A paid pair-trading dashboard publishes 289 pairs with an 81.65% hit rate. We pulled the '
-    + 'page apart and recomputed what we could. The method - trade the spread between two '
-    + 'co-moving stocks back to its mean - is standard and testable. What follows is whether '
-    + 'this page shows it working.'));
-
-  main.append(card('What breaks the headline', 'the number, not the method', null,
-    'The 81.65% counts closed trades only. Beside it sits an open book of about −55.25 lakh; '
-    + 'count the open losses and the rate falls by roughly a third. 104 of the 289 pairs never '
-    + 'traded once in the year, and the rest carry one to eleven trades - cards showing 6 wins '
-    + 'from 6, 9 from 9 and 11 from 11 are the signature of a rule that never books a loss. '
-    + '140 of 289 pairs are Financial Services and one stock leg appears on 16 cards, so these '
-    + 'are not 289 independent tests. And 18 of 277 correlations are negative, down to −89.3%; '
-    + 'a hedge between legs that move opposite produces a more volatile spread, so a negative '
-    + 'value cannot be a co-movement screen.'));
-
-  main.append(card('What we could reproduce', 'our own NSE series', null,
-    'We recomputed 15 published correlations from our 120-session NSE price series: 2 matched '
-    + 'within 5 points on price levels, and none on daily returns. CGPOWER/DATAPATTNS is '
-    + 'published at 94.8% and recomputes at 50.7%; HDFCBANK/SBICARD 90.4% against 8.5%; '
-    + 'KFINTECH/MAHABANK −72.5% against +10.2% - a sign flip no window choice explains. They '
-    + 'are also unstable: BSE/MAHABANK ranges from −16.8% to +17.2% depending on which 60 '
-    + 'sessions you take.'));
-
-  main.append(card('Our own backtest of their 21 elite pairs', 'their rules, our data', null,
-    'Enter at |z| >= 2.0, exit when z crosses zero, stop at |z| >= 3.5, 25-session maximum, '
-    + '60-session OLS window: 25 trades, 22 wins, 88%. That number should not be trusted yet. '
-    + 'Twenty-five trades is not a sample. It is measured in spread standard deviations, not '
-    + 'rupees - no brokerage, no STT, no slippage, no lot rounding. A pair trade has four legs, '
-    + 'and costs on four legs will eat most of a 2.5 z-unit win. Real returns would be far '
-    + 'lower, possibly negative. Not a recommendation.'));
-
-  main.append(card('What stays unverified', 'flagged, not resolved', null,
-    'The source is 21 phone screenshots with no text layer: 140 cells across 14 cards could '
-    + 'not be read at all. Closed P&L disagrees across the page itself - 1.84, 1.85 and 1.86 '
-    + 'crore in different places - and the readable cards sum to 578 trades against a header of '
-    + '594. The page never states its entry, exit, stop or cost assumptions and gives no '
-    + 'out-of-sample test, so the traded year was very likely in-sample.'));
-}
-
 async function renderNews(main){
-  const n = await J('news_feed.json');
-  const rows = n.items.map(i => ({title:i.title, source:i.source, category:i.category, published:i.published, company:i.company}));
-  main.append(card('News', n.count + ' headlines',
-    makeTable(rows, [{k:'published',label:'When'},{k:'source',label:'Source'},
-      {k:'category',label:'Category'},{k:'title',label:'Headline'},{k:'company',label:'Company'}],
-      {limit:60, placeholder:'Search headlines…'}),
-    'news_feed.json · publisher RSS. ' + (n.counts ? JSON.stringify(n.counts) : '')));
+  const [n, cal] = await Promise.all([J('news_feed.json'), J('calendar.json')]);
+
+  const tabs = document.createElement('div'); tabs.className = 'ntabs2';
+  tabs.innerHTML = '<button class="on" data-tab="live">Live News</button><button data-tab="events">Events Calendar</button>';
+  main.append(tabs);
+
+  /* ---- live pane ---- */
+  const live = document.createElement('section'); live.className = 'npane on'; live.dataset.pane = 'live';
+  live.innerHTML =
+    '<div class="nhero"><span class="nic"><svg viewBox="0 0 24 24"><path d="M4 18l5-5 3 3 6-7"/><path d="M15 9h4v4"/></svg></span>' +
+    '<div><b>Live Market News</b><span>Corporate filings and market intelligence, ' + n.count + ' headlines.</span></div></div>' +
+    '<div class="nalert"><div class="narow"><b>News alerts</b><em>All off</em></div>' +
+    '<div class="nmini"><button>All</button><button>Results</button><button>General</button></div></div>' +
+    '<label class="nsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4"/></svg>' +
+    '<input id="nq" type="search" placeholder="Search by stock, company or keyword…"></label>' +
+    '<div class="nchips" id="nchips">' +
+      '<button class="on" data-cat="all">All ' + n.count + '</button>' +
+      '<button data-cat="results"><i class="d blue"></i>Results ' + (n.counts.results||0) + '</button>' +
+      '<button data-cat="general"><i class="d amber"></i>General ' + (n.counts.general||0) + '</button>' +
+      '<button data-cat="global"><i class="d green"></i>Global ' + (n.counts.global||0) + '</button>' +
+      '<button data-cat="policy"><i class="d red"></i>Policy ' + (n.counts.policy||0) + '</button>' +
+    '</div><ul class="nlist" id="nlist"></ul><p class="nempty" id="nempty" hidden>No updates matching your criteria.</p>';
+
+  const ul = live.querySelector('#nlist');
+  n.items.forEach(it => {
+    const li = document.createElement('li');
+    li.dataset.cat = it.category;
+    li.innerHTML = '<span class="ns">' + esc(it.source) + ' · ' + esc(dshort(String(it.published).slice(0,10))) + '</span>' +
+                   '<span class="nt">' + esc(unesc(it.title)) + '</span>';
+    ul.append(li);
+  });
+
+  const chips = live.querySelector('#nchips'), q = live.querySelector('#nq'), empty = live.querySelector('#nempty');
+  let cat = 'all';
+  function apply(){
+    const term = q.value.trim().toLowerCase(); let shown = 0;
+    [].forEach.call(ul.children, li => {
+      const ok = (cat === 'all' || li.dataset.cat === cat) && (!term || li.textContent.toLowerCase().includes(term));
+      li.style.display = ok ? '' : 'none'; if (ok) shown++;
+    });
+    empty.hidden = shown > 0;
+  }
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(chips.querySelectorAll('button'), x => x.classList.remove('on'));
+    b.classList.add('on'); cat = b.dataset.cat || 'all'; apply();
+  });
+  q.addEventListener('input', apply);
+
+  /* ---- events pane ---- */
+  const ev = document.createElement('section'); ev.className = 'npane'; ev.dataset.pane = 'events';
+  const rows = [];
+  (cal.days || []).forEach(d => (d.events || []).forEach(e => rows.push(e)));
+  const LABEL = {results:'Financial results', split:'Stock split', dividend:'Dividend', other:'Buy back / other'};
+  const DOT = {results:'blue', split:'amber', dividend:'green', other:'red'};
+  const groups = {};
+  rows.forEach(e => (groups[e.type] = groups[e.type] || []).push(e));
+  const order = Object.keys(groups).sort((a,b) => groups[b].length - groups[a].length);
+  const dates = rows.map(r => r.date).sort();
+
+  ev.innerHTML =
+    '<div class="nhero"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/>' +
+    '<path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg></span>' +
+    '<div><b>Events Calendar</b><span>Results, dividends, splits and buybacks ahead.</span></div></div>' +
+    '<div class="nrange"><button class="on">This week</button><button>1 month</button><button>3 months</button><button>Past week</button></div>' +
+    '<div class="nsum"><span>Showing <b>' + rows.length + '</b> events for <b>' + dshort(dates[0]||'') + ' – ' + dshort(dates[dates.length-1]||'') + '</b></span>' +
+    '<button id="collapseAll">Collapse all</button></div>' +
+    '<div class="nchips">' + order.map(k =>
+      '<button><i class="d ' + DOT[k] + '"></i>' + LABEL[k] + ' ' + groups[k].length + '</button>').join('') + '</div>' +
+    '<div class="nac">' + order.map(k =>
+      '<details open><summary><span class="d ' + DOT[k] + '"></span>' + LABEL[k] + '<em>' + groups[k].length + '</em></summary><ul>' +
+      groups[k].map(e => '<li><b>' + esc(e.symbol) + '</b><span>' + esc(String(e.detail || e.type)) + '</span><i>' + esc(dshort(e.date)) + '</i></li>').join('') +
+      '</ul></details>').join('') + '</div>';
+
+  const ca = ev.querySelector('#collapseAll');
+  ca.addEventListener('click', () => {
+    const boxes = ev.querySelectorAll('details');
+    const anyOpen = [].some.call(boxes, d => d.open);
+    [].forEach.call(boxes, d => d.open = !anyOpen);
+    ca.textContent = anyOpen ? 'Expand all' : 'Collapse all';
+  });
+
+  main.append(live, ev);
+
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(tabs.querySelectorAll('button'), x => x.classList.remove('on'));
+    b.classList.add('on');
+    main.querySelectorAll('.npane').forEach(p => p.classList.toggle('on', p.dataset.pane === b.dataset.tab));
+  });
 }
 
 async function renderEvents(main){
@@ -660,7 +709,6 @@ async function route(){
     else if (id === 'deals') await renderDeals(main);
     else if (id === 'forecast') await renderForecast(main);
     else if (id === 'news') await renderNews(main);
-    else if (id === 'backtest') await renderBacktest(main);
     else if (id === 'events') await renderEvents(main);
     else if (id === 'library') await renderGeneric(main, FILES, '');
     else if (MAP[id]) await renderGeneric(main, MAP[id], null);
@@ -681,110 +729,6 @@ function buildDrawer(){
     groups[g].map(s => '<a href="#/' + s[1] + '">' + esc(s[0]) + '</a>').join('') + '</div>').join('');
 }
 
-/* =====================================================================================
-   STOCK SHEET - the drill-down the app was missing.
-   The classic site let you open any stock and read its full picture. The rewrite dropped
-   it, so every table became a dead end: you could see RELIANCE in a screener and had no
-   way to ask what it actually looks like. Any table cell whose text is a known symbol now
-   opens this.
-   ===================================================================================== */
-let SDB = null;
-async function stockDB(){
-  if (SDB) return SDB;
-  const [st, fu] = await Promise.all([
-    J('stocks.json').catch(() => ({stocks:{}})),
-    J('fundamentals.json').catch(() => ({companies:[]}))
-  ]);
-  const bySym = {};
-  Object.keys(st.stocks || {}).forEach(k => {
-    const r = st.stocks[k];
-    if (r && r.symbol) bySym[r.symbol] = r;
-  });
-  const fund = {};
-  (fu.companies || []).forEach(c => { if (c && c.symbol) fund[c.symbol] = c; });
-  SDB = {bySym, fund};
-  return SDB;
-}
-const fmt = (v, d) => (v == null || v === '' || (typeof v === 'number' && !isFinite(v)))
-  ? '<span class="na">-</span>'
-  : (typeof v === 'number' ? v.toFixed(d == null ? 2 : d) : String(v));
-
-function rowKV(pairs){
-  return '<div class="kv">' + pairs.map(p =>
-    '<div><span>' + esc(p[0]) + '</span><span>' + p[1] + '</span></div>').join('') + '</div>';
-}
-
-async function openStock(sym){
-  const box = $('#sheet'), body = $('#sheetBody');
-  box.classList.add('on'); box.setAttribute('aria-hidden','false');
-  body.innerHTML = '<p class="loading">Loading ' + esc(sym) + '…</p>';
-  let db;
-  try { db = await stockDB(); }
-  catch (e) { body.innerHTML = '<p class="err">Could not load stock data: ' + esc(e.message) + '</p>'; return; }
-  const s = db.bySym[sym], f = db.fund[sym];
-  if (!s && !f){
-    body.innerHTML = '<h3>' + esc(sym) + '</h3><p class="sub">No record for this symbol in '
-      + 'stocks.json or fundamentals.json.</p>';
-    return;
-  }
-  const t = (s && s.tech) || {}, fd = (s && s.fund) || {};
-  const chg = s ? s.chg_pct : null;
-  let out = '<h3>' + esc((s && s.name) || sym) + '</h3>'
-    + '<div class="sub">' + esc(sym) + (s && s.sector ? ' · ' + esc(s.sector) : '') + '</div>';
-  if (s){
-    out += '<div class="px ' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '">'
-      + fmt(s.close) + '</div>'
-      + '<div class="' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '" style="font-size:13px">'
-      + (chg > 0 ? '+' : '') + fmt(chg) + '% today</div>';
-  }
-  if (Object.keys(t).length){
-    out += '<h5>Technicals</h5>' + rowKV([
-      ['RSI 14', fmt(t.rsi_14, 1)],
-      ['Trend', fmt(t.trend)],
-      ['SMA 20', fmt(t.sma_20)],
-      ['SMA 50', fmt(t.sma_50)],
-      ['SMA 200', fmt(t.sma_200)],
-      ['ADX', fmt(t.adx, 1)],
-      ['MACD hist', fmt(t.macd_hist, 3)],
-      ['Bollinger %B', fmt(t.bb_pctb, 2)],
-      ['Volume x', fmt(t.vol_x, 2) + 'x'],
-      ['ATR %', t.atr_pct == null ? '-' : fmt(t.atr_pct * 100, 2) + '%'],
-      ['52w high', fmt(t.high_52w)],
-      ['52w low', fmt(t.low_52w)]
-    ]);
-  }
-  if (Object.keys(fd).length){
-    out += '<h5>Fundamentals</h5>' + rowKV([
-      ['P/E', fmt(fd.pe)],
-      ['P/B', fmt(fd.pb)],
-      ['EPS', fmt(fd.eps)],
-      ['Div yield', fd.div_yield == null ? '-' : fmt(fd.div_yield) + '%'],
-      ['Beta', fmt(fd.beta)],
-      ['ROE', fd.roe == null ? '-' : fmt(fd.roe) + '%'],
-      ['Market cap', fd.mcap == null ? '-' : fmt(fd.mcap, 0) + ' cr'],
-      ['52w high', fmt(fd.high_52w)],
-      ['52w low', fmt(fd.low_52w)]
-    ]);
-  }
-  if (f){
-    out += '<h5>Reported results · ' + esc(f.latest_period || '-') + '</h5>' + rowKV([
-      ['Revenue', f.revenue_cr == null ? '-' : '\u20b9' + fmt(f.revenue_cr, 1) + ' cr'],
-      ['Profit', f.profit_cr == null ? '-' : '\u20b9' + fmt(f.profit_cr, 1) + ' cr'],
-      ['Margin', f.margin_pct == null ? '-' : fmt(f.margin_pct, 2) + '%'],
-      ['Revenue YoY', f.revenue_yoy_pct == null ? '-' : fmt(f.revenue_yoy_pct, 1) + '%'],
-      ['Profit YoY', f.profit_yoy_pct == null ? '-' : fmt(f.profit_yoy_pct, 1) + '%'],
-      ['Margin chg', f.margin_change_pp == null ? '-' : fmt(f.margin_change_pp, 2) + ' pp']
-    ]);
-    out += '<p class="sub" style="margin-top:10px">Year-ago period ' + esc(f.year_ago_period || '-') + '.</p>';
-  }
-  out += '<p class="sub" style="margin-top:14px">stocks.json · fundamentals.json. '
-    + 'Prices and fundamentals can be delayed, wrong or missing. Not a recommendation.</p>';
-  body.innerHTML = out;
-}
-function closeSheet(){
-  const b = $('#sheet'); b.classList.remove('on'); b.setAttribute('aria-hidden','true');
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   buildDrawer();
   const drawer = $('#drawer'), scrim = $('#scrim');
@@ -795,23 +739,6 @@ document.addEventListener('DOMContentLoaded', () => {
   scrim.onclick = close;
   drawer.addEventListener('click', e => { if (e.target.tagName === 'A') close(); });
   $('#newsBtn').onclick = () => { location.hash = '#/news'; };
-
-  // stock sheet: close handlers + a delegated tap on any symbol-looking cell
-  $('#sheetX').onclick = closeSheet;
-  $('#sheet').onclick = e => { if (e.target.id === 'sheet') closeSheet(); };
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
-  document.addEventListener('click', async e => {
-    const td = e.target.closest && e.target.closest('td');
-    if (!td || td.classList.contains('sym')) return;
-    const txt = (td.textContent || '').trim();
-    if (!/^[A-Z0-9&.\-]{2,20}$/.test(txt)) return;
-    try {
-      const db = await stockDB();
-      if (!db.bySym[txt] && !db.fund[txt]) return;
-      td.classList.add('sym');
-      openStock(txt);
-    } catch (_) { /* no stock data - leave the cell alone */ }
-  });
   window.addEventListener('hashchange', route);
   route();
 });

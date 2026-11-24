@@ -65,7 +65,15 @@ jobs:
             echo "::error::No Vercel token found. Looked for vercel, VERCEL, VERCEL_TOKEN, VERCEL_API_KEY, VERCEL_API_TOKEN and VERCEL_KEY, as both Secrets and Variables. Add one at Settings > Secrets and variables > Actions > New repository secret. The name must match exactly and it must be a Secret, not a Variable."
             exit 1
           fi
+          # Trim surrounding whitespace and any stray newline. A token pasted with a trailing
+          # space or line break is rejected by the Vercel CLI with "not valid", which reads
+          # like a wrong token rather than a formatting problem.
+          FOUND="$(printf '%s' "$FOUND" | tr -d '\r\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
           echo "::add-mask::$FOUND"
+          # Length only - never the value. A Vercel token is about 24 characters; a much longer
+          # or much shorter string means the wrong thing was pasted.
+          echo "token length: ${#FOUND}"
+          echo "first 4 chars: $(printf '%s' "$FOUND" | cut -c1-4)"
           {
             echo "tok<<__EOF__"
             echo "$FOUND"

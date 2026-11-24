@@ -944,5 +944,39 @@ document.addEventListener('DOMContentLoaded', () => {
   route();
 });
 </script>
+<script>
+/* ---------------------------------------------------------------------------------------
+   ONE LINK. arthasaar.vercel.app is meant to be the only address, with github.io forwarding
+   to it. But forwarding blindly is worse than not forwarding: Vercel has not deployed since
+   23 Nov, so a hard redirect would send every visitor to an older build.
+
+   So the forward is conditional. github.io asks Vercel how fresh its data is and only
+   redirects when Vercel is actually serving current data. Until then github.io keeps working
+   normally, and the moment Vercel catches up the forward switches itself on with no further
+   change needed here.
+
+   If the probe fails for any reason - offline, blocked, slow - nothing happens and the page
+   stays put. A redirect must never be the reason a site appears broken.
+   --------------------------------------------------------------------------------------- */
+(function(){
+  if (location.hostname !== 'devrajai.github.io') return;   // already on the canonical host
+  var MAX_AGE_H = 36;                                       // a weekend of slack
+  var target = 'https://arthasaar.vercel.app' + location.pathname.replace(/^\/ArthaSaar/, '') + location.search + location.hash;
+  try {
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = ctl ? setTimeout(function(){ ctl.abort(); }, 2500) : null;
+    fetch('https://arthasaar.vercel.app/data_asof.json', {cache:'no-store', signal: ctl ? ctl.signal : undefined})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (timer) clearTimeout(timer);
+        if (!d || !d.updated) return;
+        var age = (Date.now() - Date.parse(d.updated)) / 3600000;
+        if (!isFinite(age) || age < 0 || age > MAX_AGE_H) return;   // Vercel is stale - stay
+        location.replace(target);
+      })
+      .catch(function(){ if (timer) clearTimeout(timer); });
+  } catch (e) { /* never let this break the page */ }
+})();
+</script>
 </body>
 </html>

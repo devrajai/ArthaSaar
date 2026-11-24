@@ -143,7 +143,7 @@ jobs:
           # works. The org is pinned to the team the token belongs to - a bare deploy otherwise
           # has to guess, and this account has several projects.
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
-          VERCEL_ORG_ID: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID || 'team_BOHDpEGftIUHCaDQbn1xsxoo' }}
+          VERCEL_ORG_ID: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ steps.proj.outputs.pid }}
         run: |
           npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
@@ -158,6 +158,10 @@ jobs:
           npx vercel whoami 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
           echo "--- project ---"
           echo "org=${VERCEL_ORG_ID:-unset} project=${VERCEL_PROJECT_ID:-unset}"
+          if [ -z "${VERCEL_PROJECT_ID:-}" ]; then
+            echo "::error::Could not determine the Vercel project. The token could not list projects (it may be a 'limited' token - create an unrestricted one at vercel.com/account/tokens), or no project matched. Set a repository secret VERCEL_PROJECT_ID to skip discovery entirely."
+            exit 1
+          fi
           echo "--- deploy ---"
           set +e
           npx vercel deploy --prod --yes 2>&1 | tee /tmp/v.log

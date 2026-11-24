@@ -82,8 +82,13 @@ jobs:
 
       - name: Deploy docs/ to production
         env:
+          # The CLI reads VERCEL_TOKEN from the environment. Passing the same value via
+          # --token made it answer "not valid" for this credential even though
+          # https://api.vercel.com/v2/user returns 200 for it, so the env var is the path that
+          # works. The org is pinned to the team the token belongs to - a bare deploy otherwise
+          # has to guess, and this account has several projects.
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID || 'team_BOHDpEGftIUHCaDQbn1xsxoo' }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
@@ -95,12 +100,12 @@ jobs:
             -H "Authorization: Bearer $VERCEL_TOKEN" https://api.vercel.com/v2/user || true
           head -c 300 /tmp/api.json 2>/dev/null; echo
           echo "--- whoami ---"
-          npx vercel whoami --token "$VERCEL_TOKEN" 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
+          npx vercel whoami 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
           echo "--- project ---"
           echo "org=${VERCEL_ORG_ID:-unset} project=${VERCEL_PROJECT_ID:-unset}"
           echo "--- deploy ---"
           set +e
-          npx vercel deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/v.log
+          npx vercel deploy --prod --yes 2>&1 | tee /tmp/v.log
           RC=${PIPESTATUS[0]}
           set -e
           URL=$(grep -oE 'https://[a-z0-9.-]+\.vercel\.app' /tmp/v.log | tail -1)

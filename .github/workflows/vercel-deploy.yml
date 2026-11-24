@@ -260,13 +260,16 @@ jobs:
           PY
 
       - name: Wait for the deployment to go live
-        if: steps.hook.outputs.used != '1'
         run: |
           for i in $(seq 1 20); do
             CODE=$(curl -s -o /tmp/live.html -w "%{http_code}" -m 15 https://arthasaar.vercel.app/ || echo 000)
             HAS=$(grep -c "openStock" /tmp/live.html 2>/dev/null || echo 0)
-            echo "[$i] http=$CODE hasStockSheet=$HAS"
-            if [ "$CODE" = "200" ] && [ "$HAS" -gt 0 ]; then echo "LIVE and current"; exit 0; fi
+            FM3=$(grep -c "Has the model been right" /tmp/live.html 2>/dev/null || echo 0)
+            echo "[$i] http=$CODE stockSheet=$HAS fm3Card=$FM3"
+            if [ "$CODE" = "200" ] && [ "$HAS" -gt 0 ]; then
+              echo "LIVE and current on arthasaar.vercel.app"
+              exit 0
+            fi
             sleep 15
           done
           echo "::warning::deployment did not appear within 5 minutes"

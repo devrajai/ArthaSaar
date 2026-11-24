@@ -1,8 +1,4 @@
 # Vercel deploy trigger
 
-This file exists only to fire .github/workflows/vercel-deploy.yml, which watches docs/.
-The GitHub API will not let this session re-run a workflow (403, actions:write is not
-granted), so a push is the only way to start it. Safe to delete once Vercel deploys on
-its own again.
-
-Last touched: 2026-11-24T13:45:36Z
+Fires .github/workflows/vercel-deploy.yml, which watches docs/.
+Touched: 2026-11-24T13:47:12Z

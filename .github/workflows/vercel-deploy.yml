@@ -4,9 +4,10 @@ name: Deploy to Vercel
 # arthasaar.vercel.app froze on an old build while GitHub Pages kept updating. This deploys
 # explicitly on every push instead of relying on that integration being healthy.
 #
-# Needs a repository secret named VERCEL_TOKEN (vercel.com/account/tokens) and optionally
-# VERCEL_PROJECT_ID. If the token is absent this fails loudly rather than silently skipping,
-# because a silent skip is exactly the failure mode that hid this for a day.
+# The token can live under any of the usual names - VERCEL_TOKEN, VERCEL_API_KEY,
+# VERCEL_API_TOKEN or VERCEL_KEY. A secret whose name does not match the workflow reads as
+# empty and fails here, which is exactly what happened on the first two runs, so the check
+# below names every name it looked for instead of just one.
 
 on:
   push:
@@ -35,32 +36,52 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Check the token is present
+      - name: Find the token
+        id: tok
         env:
-          TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          T1: ${{ secrets.VERCEL_TOKEN }}
+          T2: ${{ secrets.VERCEL_API_KEY }}
+          T3: ${{ secrets.VERCEL_API_TOKEN }}
+          T4: ${{ secrets.VERCEL_KEY }}
         run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::error::VERCEL_TOKEN is not set. Add it at Settings > Secrets and variables > Actions, then re-run this workflow."
+          FOUND=""
+          for NAME in T1 T2 T3 T4; do
+            eval "V=\$$NAME"
+            if [ -n "$V" ]; then FOUND="$V"; echo "using $NAME"; break; fi
+          done
+          if [ -z "$FOUND" ]; then
+            echo "::error::No Vercel token found. Looked for secrets named VERCEL_TOKEN, VERCEL_API_KEY, VERCEL_API_TOKEN and VERCEL_KEY. Add one at Settings > Secrets and variables > Actions > New repository secret. The name must match exactly and it must be a Secret, not a Variable."
             exit 1
           fi
-          echo "token present"
+          echo "::add-mask::$FOUND"
+          {
+            echo "tok<<__EOF__"
+            echo "$FOUND"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Deploy docs/ to production
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
           echo "--- whoami ---"
-          npx vercel whoami --token "$VERCEL_TOKEN" || true
+          npx vercel whoami --token "$VERCEL_TOKEN" 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
+          echo "--- project ---"
+          echo "org=${VERCEL_ORG_ID:-unset} project=${VERCEL_PROJECT_ID:-unset}"
           echo "--- deploy ---"
+          set +e
           npx vercel deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/v.log
+          RC=${PIPESTATUS[0]}
+          set -e
           URL=$(grep -oE 'https://[a-z0-9.-]+\.vercel\.app' /tmp/v.log | tail -1)
-          echo "deployed: ${URL:-see log above}"
           {
             echo "### Vercel deploy"
             echo ""
             echo "- commit: \`${{ github.sha }}\`"
             echo "- url: ${URL:-not reported}"
+            echo "- exit: $RC"
           } >> "$GITHUB_STEP_SUMMARY"
+          exit $RC

@@ -189,65 +189,74 @@ jobs:
           TEAM: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID }}
           PROJECT: ${{ steps.proj.outputs.pid || secrets.VERCEL_PROJECT_ID }}
         run: |
-          # The Vercel CLI 66.x rejects a vck_ token with "not valid" even though
-          # https://api.vercel.com/v2/user returns 200 for it. The REST API accepts it, so the
-          # deploy goes through /v13/deployments directly and skips the CLI entirely.
+          # Sending every file inside the deployment JSON hits Vercel's 10 MB request limit -
+          # docs/ is 23.7 MB across 2,376 files. So upload each file first via /v2/files
+          # (keyed by its sha1) and then send the deployment as a manifest of hashes. That is
+          # the documented flow for larger sites and has no total-size ceiling.
           python3 - <<'PY'
-          import base64, json, os, sys, urllib.request, urllib.error
+          import base64, hashlib, json, os, sys, urllib.request, urllib.error
+          from concurrent.futures import ThreadPoolExecutor
           from pathlib import Path
 
           TOK = os.environ["VERCEL_TOKEN"]
           TEAM = os.environ.get("TEAM") or ""
           PROJ = os.environ.get("PROJECT") or ""
           NAME = "arthasaar"
+          Q = ("?teamId=" + TEAM) if TEAM else ""
 
-          def call(path, payload=None, method=None):
-              url = "https://api.vercel.com" + path
-              data = json.dumps(payload).encode() if payload is not None else None
-              req = urllib.request.Request(url, data=data, method=method or ("POST" if data else "GET"))
+          def post_file(path, blob):
+              sha = hashlib.sha1(blob).hexdigest()
+              req = urllib.request.Request("https://api.vercel.com/v2/files" + Q, data=blob, method="POST")
               req.add_header("Authorization", "Bearer " + TOK)
-              if data: req.add_header("Content-Type", "application/json")
+              req.add_header("x-vercel-digest", sha)
+              req.add_header("Content-Type", "application/octet-stream")
               try:
-                  with urllib.request.urlopen(req, timeout=180) as r:
-                      return r.status, json.loads(r.read() or b"{}")
+                  with urllib.request.urlopen(req, timeout=120) as r:
+                      r.read()
+                  return (path, sha, len(blob), None)
               except urllib.error.HTTPError as e:
-                  body = e.read().decode("utf-8", "replace")[:400]
-                  return e.code, {"error": body}
+                  return (path, sha, len(blob), "%s %s" % (e.code, e.read().decode("utf-8","replace")[:160]))
 
           root = Path("docs")
-          files, total = [], 0
-          for f in sorted(root.rglob("*")):
-              if not f.is_file(): continue
-              rel = str(f.relative_to(root)).replace(os.sep, "/")
-              b = f.read_bytes(); total += len(b)
-              files.append({"file": rel, "data": base64.b64encode(b).decode()})
-          print("files: %d, %.1f MB" % (len(files), total/1024/1024))
-          if not files:
-              print("::error::docs/ is empty"); sys.exit(1)
+          items = [(str(f.relative_to(root)).replace(os.sep,"/"), f.read_bytes())
+                   for f in sorted(root.rglob("*")) if f.is_file()]
+          total = sum(len(b) for _, b in items)
+          print("files: %d, %.1f MB" % (len(items), total/1024/1024))
 
-          payload = {
-              "name": NAME,
-              "files": files,
-              "target": "production",
-              "projectSettings": {"framework": None, "buildCommand": None,
-                                  "installCommand": None, "outputDirectory": None},
-          }
-          q = "?teamId=" + TEAM if TEAM else ""
-          if PROJ:
-              q += ("&" if q else "?") + "projectId=" + PROJ
-          code, resp = call("/v13/deployments" + q, payload)
+          manifest, errors = [], []
+          with ThreadPoolExecutor(max_workers=8) as ex:
+              for path, sha, size, err in ex.map(lambda it: post_file(*it), items):
+                  if err: errors.append((path, err))
+                  manifest.append({"file": path, "sha": sha, "size": size})
+          print("uploaded: %d, errors: %d" % (len(manifest)-len(errors), len(errors)))
+          for p_, e_ in errors[:5]: print("  upload error", p_, e_)
+          if len(errors) > len(items) * 0.02:
+              print("::error::too many upload failures (%d of %d)" % (len(errors), len(items)))
+              sys.exit(1)
+
+          payload = {"name": NAME, "files": manifest, "target": "production",
+                     "projectSettings": {"framework": None, "buildCommand": None,
+                                         "installCommand": None, "outputDirectory": None}}
+          q = Q + (("&" if Q else "?") + "projectId=" + PROJ if PROJ else "")
+          req = urllib.request.Request("https://api.vercel.com/v13/deployments" + q,
+                                       data=json.dumps(payload).encode(), method="POST")
+          req.add_header("Authorization", "Bearer " + TOK)
+          req.add_header("Content-Type", "application/json")
+          try:
+              with urllib.request.urlopen(req, timeout=300) as r:
+                  code, resp = r.status, json.loads(r.read() or b"{}")
+          except urllib.error.HTTPError as e:
+              code = e.code; resp = {"error": e.read().decode("utf-8","replace")[:400]}
           print("POST /v13/deployments ->", code)
           if code not in (200, 201):
               print(json.dumps(resp)[:600])
               print("::error::Vercel rejected the deployment (http %s)" % code)
               sys.exit(1)
-          url = resp.get("url") or (resp.get("alias") or [None])[0] or "not reported"
-          print("deployment:", url)
-          print("id:", resp.get("id"))
-          print("ready:", resp.get("readyState"))
+          url = resp.get("url") or "not reported"
+          print("deployment:", url, "| state:", resp.get("readyState"), "| id:", resp.get("id"))
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as fh:
-              fh.write("### Vercel deploy\n\n- commit: `%s`\n- url: %s\n- state: %s\n"
-                       % (os.environ.get("GITHUB_SHA","")[:8], url, resp.get("readyState")))
+              fh.write("### Vercel deploy\n\n- commit: `%s`\n- url: %s\n- state: %s\n- files: %d (%.1f MB)\n"
+                       % (os.environ.get("GITHUB_SHA","")[:8], url, resp.get("readyState"), len(items), total/1024/1024))
           PY
 
       - name: Wait for the deployment to go live

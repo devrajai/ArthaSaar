@@ -84,42 +84,56 @@ jobs:
         id: proj
         env:
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
-          ORG: ${{ secrets.VERCEL_ORG_ID || 'team_BOHDpEGftIUHCaDQbn1xsxoo' }}
           PINNED: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           if [ -n "$PINNED" ]; then
             echo "using pinned VERCEL_PROJECT_ID"; echo "pid=$PINNED" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          curl -s -H "Authorization: Bearer $VERCEL_TOKEN" \
-            "https://api.vercel.com/v9/projects?teamId=$ORG&limit=100" -o /tmp/projects.json
-          python3 - <<'PY' >> "$GITHUB_OUTPUT"
-          import json, os
-          d = json.load(open("/tmp/projects.json"))
-          ps = d.get("projects") or []
-          print("# projects found: %d" % len(ps), file=__import__("sys").stderr)
-          for p in ps:
-              link = p.get("link") or {}
-              print("#   %s  repo=%s  id=%s" % (p.get("name"), link.get("repo"), p.get("id")),
-                    file=__import__("sys").stderr)
-          pick = None
-          # prefer a project whose linked repo is this one
-          for p in ps:
-              link = p.get("link") or {}
-              if (link.get("repo") or "").lower() == "arthasaar":
-                  pick = p; break
-          # else the name that looks like this site
-          if not pick:
-              for p in ps:
-                  if "arthasaar" in (p.get("name") or "").lower():
-                      pick = p; break
-          if not pick and ps:
-              pick = ps[0]
-          if pick:
-              print("pid=" + pick["id"])
-              print("# picked: %s" % pick.get("name"), file=__import__("sys").stderr)
+          python3 - <<'PY' > /tmp/pick.txt
+          import json, os, urllib.request
+
+          TOK = os.environ["VERCEL_TOKEN"]
+          def api(path):
+              req = urllib.request.Request("https://api.vercel.com" + path,
+                                           headers={"Authorization": "Bearer " + TOK})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      return json.load(r)
+              except Exception as e:
+                  print("# api %s failed: %s" % (path, e))
+                  return {}
+
+          # The token's defaultTeamId returned zero projects, so the site is somewhere else -
+          # a different team, or the personal scope. Look in every scope the token can see and
+          # log all of them, so a wrong pick is obvious.
+          scopes = [("personal", None)]
+          for t in (api("/v2/teams").get("teams") or []):
+              scopes.append((t.get("slug") or t.get("name"), t.get("id")))
+
+          best = None
+          for name, tid in scopes:
+              q = "/v9/projects?limit=100" + (("&teamId=" + tid) if tid else "")
+              d = api(q)
+              ps = d.get("projects") or []
+              print("# scope %-22s %d project(s)" % (name, len(ps)))
+              for pr in ps:
+                  link = pr.get("link") or {}
+                  print("#    %-28s repo=%s id=%s" % (pr.get("name"), link.get("repo"), pr.get("id")))
+                  repo = (link.get("repo") or "").lower()
+                  nm = (pr.get("name") or "").lower()
+                  if best is None and (repo == "arthasaar" or "arthasaar" in nm):
+                      best = (pr.get("id"), tid, name, pr.get("name"))
+          if best:
+              print("# picked %s in %s" % (best[3], best[2]))
+              print("pid=" + best[0])
+              if best[1]:
+                  print("tid=" + best[1])
           else:
-              print("# no projects found for this token", file=__import__("sys").stderr)
+              print("# nothing matched arthasaar")
           PY
+          cat /tmp/pick.txt
+          grep '^pid=' /tmp/pick.txt >> "$GITHUB_OUTPUT" || true
+          grep '^tid=' /tmp/pick.txt >> "$GITHUB_OUTPUT" || true
 
       - name: Deploy docs/ to production
         env:
@@ -129,7 +143,7 @@ jobs:
           # works. The org is pinned to the team the token belongs to - a bare deploy otherwise
           # has to guess, and this account has several projects.
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID || 'team_BOHDpEGftIUHCaDQbn1xsxoo' }}
+          VERCEL_ORG_ID: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID || 'team_BOHDpEGftIUHCaDQbn1xsxoo' }}
           VERCEL_PROJECT_ID: ${{ steps.proj.outputs.pid }}
         run: |
           npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest

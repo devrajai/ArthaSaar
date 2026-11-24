@@ -42,6 +42,7 @@ for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXP
 
 import argparse
 import gc
+import json
 import sys
 from pathlib import Path
 
@@ -147,15 +148,41 @@ def main() -> int:
     if not args.infile:
         args.infile = pick_candles()
     src = Path(args.infile) if args.infile else None
-    if src is None or not src.exists():
-        print("no candle archive found - skipping")
-        return 0
 
-    df = pd.read_parquet(src)
-    if not {"symbol", "close"}.issubset(df.columns):
-        print("candles need symbol + close - skipping")
-        return 0
-    sortcol = "ts" if "ts" in df.columns else "date"
+    # FALLBACK WHEN THE CANDLE ARCHIVE IS ABSENT.
+    # cm_daily_adj.parquet lives on Google Drive and is not in the repository, so this step
+    # produced nothing on every run for two weeks. It exited 0, build_forecast_page.py then
+    # wrote "skipped (no accuracy.csv)", and the site check kept the previous forecast.json -
+    # so the forecast tab showed 13-day-old numbers while every run reported success.
+    # docs/series.json holds 120 daily closes for ~2,200 symbols and IS committed, which is
+    # enough history for every model here.
+    if src is None or not src.exists():
+        sj = Path("docs/series.json")
+        if not sj.exists():
+            print("no candle archive and no docs/series.json - skipping")
+            return 0
+        raw = json.loads(sj.read_text())
+        ser = raw.get("series") or raw
+        rows = []
+        for sym, vals in ser.items():
+            if not isinstance(vals, list):
+                continue
+            for i, v in enumerate(vals):
+                if v is None:
+                    continue
+                rows.append({"symbol": str(sym).split(".")[0], "close": float(v), "date": i})
+        if not rows:
+            print("docs/series.json held no usable closes - skipping")
+            return 0
+        df = pd.DataFrame(rows)
+        sortcol = "date"
+        print(f"forecast from {sj} (candle archive absent) | {len(ser)} symbols")
+    else:
+        df = pd.read_parquet(src)
+        if not {"symbol", "close"}.issubset(df.columns):
+            print("candles need symbol + close - skipping")
+            return 0
+        sortcol = "ts" if "ts" in df.columns else "date"
     wanted = [m.strip() for m in args.models.split(",") if m.strip() in MODELS]
 
     out = Path(args.out)

@@ -179,6 +179,30 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .nac li b{font-weight:600;min-width:calc(90 * var(--u))}
 .nac li span{flex:1;min-width:0;color:var(--dim);font-size:clamp(10px,1.3vw,12.5px);line-height:1.35}
 .nac li i{font-style:normal;font:500 clamp(9.5px,1.2vw,11.5px)/1 var(--mono);color:var(--dimmer);white-space:nowrap}
+
+/* ---------- stock sheet: tap a symbol anywhere and the whole picture opens ---------- */
+#sheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(8,10,14,.72);
+  backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
+#sheet.on{display:flex}
+#sheetBox{width:100%;max-width:640px;max-height:88vh;overflow:auto;background:var(--card);
+  border:1px solid rgba(255,255,255,.10);border-radius:16px 16px 0 0;padding:18px 18px 26px;
+  box-shadow:0 -12px 40px rgba(0,0,0,.45);position:relative}
+@media(min-width:700px){#sheet{align-items:center}#sheetBox{border-radius:16px;margin:20px}}
+#sheetBox h3{margin:0 0 2px;font-size:19px;letter-spacing:-.3px}
+#sheetBox .sub{font-size:12px;opacity:.6;margin-bottom:14px}
+#sheetBox .x{position:absolute;right:16px;top:12px;background:none;border:0;
+  color:inherit;font-size:26px;line-height:1;opacity:.55;cursor:pointer}
+#sheetBox .px{font-size:32px;font-weight:700;letter-spacing:-1px;margin:2px 0 4px}
+#sheetBox .up{color:#4ec9a0}#sheetBox .dn{color:#f0736a}
+#sheetBox h5{margin:16px 0 7px;font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;opacity:.55}
+#sheetBox .kv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.07);
+  border-radius:10px;overflow:hidden}
+#sheetBox .kv>div{background:var(--card);padding:9px 11px;display:flex;justify-content:space-between;gap:8px;font-size:12.5px}
+#sheetBox .kv span:first-child{opacity:.6}
+#sheetBox .kv span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+#sheetBox .na{opacity:.35}
+td.sym{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
+  text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3)}
 </style>
 </head>
 <body>
@@ -198,6 +222,8 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
   <div id="drawerItems"></div>
 </aside>
 <div class="scrim" id="scrim"></div>
+
+<div id="sheet" aria-hidden="true"><div id="sheetBox"><button class="x" id="sheetX" aria-label="Close">&times;</button><div id="sheetBody"></div></div></div>
 
 <script>
 const FILES = ["_guard_report.json", "affordable.json", "attention.json", "audit.json", "backtest.json", "behaviour.json", "breadth.json", "breakers.json", "brief.json", "calendar.json", "cases.json", "charges.json", "charts.json", "checklist.json", "circuits.json", "claim_ledger.json", "claim_vs_base.json", "claims.json", "commodities.json", "config.json", "corp_actions.json", "corrections.json", "correlation.json", "crypto.json", "crypto_history.json", "data.json", "data_asof.json", "data_errors.json", "data_gaps.json", "data_health.json", "deals.json", "deals_followup.json", "delivery.json", "earlymove.json", "etf.json", "etf_premium.json", "events.json", "feed_history.json", "fii_dii.json", "fo_ban.json", "forecast.json", "fundamentals.json", "gann_fib.json", "gaps.json", "global.json", "global_market.json", "gti.json", "health.json", "history.json", "home_facts.json", "index_history.json", "indices.json", "insider.json", "ipo.json", "ipo_doc.json", "leadlag.json", "learn.json", "levels.json", "listings.json", "macro.json", "manifest.json", "market_stats.json", "market_status.json", "metals.json", "mf.json", "money_radar.json", "muhurat.json", "news_feed.json", "oi_by_expiry.json", "oi_history.json", "oi_stats.json", "oi_strikes.json", "oi_walls.json", "option_chain.json", "patterns.json", "patterns_reference.json", "pcr_signal.json", "premium_base_rates.json", "premium_movers.json", "presentations.json", "ranges.json", "rank_momentum.json", "rebalance.json", "recap.json", "report_cards.json", "rollover.json", "rs.json", "scenarios.json", "scoreboard.json", "scorecard.json", "screener.json", "search.json", "seasonality.json", "sebi.json", "sector_fund.json", "sector_rotation.json", "sector_trend.json", "sectors.json", "series.json", "setup_history.json", "shareholding.json", "snapshot.json", "stocks.json", "story.json", "strategies.json", "telegram.json", "telegram_accuracy.json", "telegram_pcr.json", "telegram_vs_chain.json", "timemachine.json", "timesfm_score.json", "universe.json", "unusual.json", "version.json", "video_vs_chain.json", "vix.json", "volume_profile.json", "vrp.json", "watchlists.json", "weekday.json", "whatif.json"];
@@ -538,11 +564,81 @@ async function renderForecast(main){
   ]);
   main.append(card('Nifty 21-day forecast', 'zero-shot', body,
     'Updated ' + f.updated + ' · ' + f.total + ' symbols · horizon ' + f.horizon_days + ' sessions. Not a price target.'));
+  try {
+    const S = await J('timesfm_score.json');
+    const o = (S && S.overall) || {};
+    if (!o.n){
+      main.append(card('Has the model been right?', 'nothing settled yet',
+        tiles([
+          ['Runs logged', String(S.runs_logged || 0), 'nightly since 6 Nov'],
+          ['Scored', '0', 'none matured yet'],
+          ['Horizon', '21', 'sessions per call'],
+          ['First scores', '~5 Dec', '21 sessions after 6 Nov']
+        ]),
+        'TimesFM has logged a 21-session forecast every night since 6 November 2026, and not '
+        + 'one has reached its horizon yet, so there is nothing honest to score. The first '
+        + 'results land around 5 December 2026. Grading a 21-day call on day two would flatter '
+        + 'it. A forecast is only counted once its horizon has actually elapsed.'));
+    } else {
+      main.append(card('Has the model been right?', o.n + ' settled',
+        tiles([
+          ['Scored', String(o.n), 'forecasts settled'],
+          ['Median miss', o.median_abs_error_pct + '%', 'call vs what happened'],
+          ['Band hit', o.band_hit_pct + '%', 'realised inside the 10-90'],
+          ['Direction', o.direction_hit_pct + '%', 'sign was right']
+        ]),
+        'Settled forecasts only. Nothing is scored early and nothing is dropped.'));
+    }
+  } catch (_) { /* scoreboard missing - the cone above still stands */ }
+
   const recs = recordsFrom(f);
   if (recs && recs.length){
     main.append(card('Forecast rows', f.total + ' symbols',
       makeTable(recs, autoCols(recs, 8), {limit:80, placeholder:'Search symbol…'}), 'data.json · fm3.rows'));
   }
+}
+
+async function renderBacktest(main){
+  main.append(card('Pair trading: does the dashboard survive a check?', '289 pairs, recomputed',
+    tiles([
+      ['Claimed hit rate', '81.65%', '485 of 594 closed'],
+      ['Open book', '\u221255.25 lakh', 'excluded from that figure'],
+      ['Pairs never traded', '104 of 289', 'no trade in a full year'],
+      ['Our reproduction', '2 of 15', 'correlations within 5 points']
+    ]),
+    'A paid pair-trading dashboard publishes 289 pairs with an 81.65% hit rate. We pulled the '
+    + 'page apart and recomputed what we could. The method - trade the spread between two '
+    + 'co-moving stocks back to its mean - is standard and testable. What follows is whether '
+    + 'this page shows it working.'));
+  main.append(card('What breaks the headline', 'the number, not the method', null,
+    'The 81.65% counts closed trades only. Beside it sits an open book of about \u221255.25 lakh; '
+    + 'count the open losses and the rate falls by roughly a third. 104 of the 289 pairs never '
+    + 'traded once in the year, and the rest carry one to eleven trades - cards showing 6 wins '
+    + 'from 6, 9 from 9 and 11 from 11 are the signature of a rule that never books a loss. '
+    + '140 of 289 pairs are Financial Services and one stock leg appears on 16 cards, so these '
+    + 'are not 289 independent tests. And 18 of 277 correlations are negative, down to \u221289.3%; '
+    + 'a hedge between legs that move opposite produces a more volatile spread, so a negative '
+    + 'value cannot be a co-movement screen.'));
+  main.append(card('What we could reproduce', 'our own NSE series', null,
+    'We recomputed 15 published correlations from our 120-session NSE price series: 2 matched '
+    + 'within 5 points on price levels, and none on daily returns. CGPOWER/DATAPATTNS is '
+    + 'published at 94.8% and recomputes at 50.7%; HDFCBANK/SBICARD 90.4% against 8.5%; '
+    + 'KFINTECH/MAHABANK \u221272.5% against +10.2% - a sign flip no window choice explains. They '
+    + 'are also unstable: BSE/MAHABANK ranges from \u221216.8% to +17.2% depending on which 60 '
+    + 'sessions you take.'));
+  main.append(card('Our own backtest of their 21 elite pairs', 'their rules, our data', null,
+    'Enter at |z| >= 2.0, exit when z crosses zero, stop at |z| >= 3.5, 25-session maximum, '
+    + '60-session OLS window: 25 trades, 22 wins, 88%. That number should not be trusted yet. '
+    + 'Twenty-five trades is not a sample. It is measured in spread standard deviations, not '
+    + 'rupees - no brokerage, no STT, no slippage, no lot rounding. A pair trade has four legs, '
+    + 'and costs on four legs will eat most of a 2.5 z-unit win. Real returns would be far '
+    + 'lower, possibly negative. Not a recommendation.'));
+  main.append(card('What stays unverified', 'flagged, not resolved', null,
+    'The source is 21 phone screenshots with no text layer: 140 cells across 14 cards could '
+    + 'not be read at all. Closed P&L disagrees across the page itself - 1.84, 1.85 and 1.86 '
+    + 'crore in different places - and the readable cards sum to 578 trades against a header of '
+    + '594. The page never states its entry, exit, stop or cost assumptions and gives no '
+    + 'out-of-sample test, so the traded year was very likely in-sample.'));
 }
 
 async function renderNews(main){
@@ -709,6 +805,7 @@ async function route(){
     else if (id === 'deals') await renderDeals(main);
     else if (id === 'forecast') await renderForecast(main);
     else if (id === 'news') await renderNews(main);
+    else if (id === 'backtest') await renderBacktest(main);
     else if (id === 'events') await renderEvents(main);
     else if (id === 'library') await renderGeneric(main, FILES, '');
     else if (MAP[id]) await renderGeneric(main, MAP[id], null);
@@ -729,6 +826,93 @@ function buildDrawer(){
     groups[g].map(s => '<a href="#/' + s[1] + '">' + esc(s[0]) + '</a>').join('') + '</div>').join('');
 }
 
+/* =====================================================================================
+   STOCK SHEET - the drill-down the rewrite dropped.
+   ===================================================================================== */
+let SDB = null;
+async function stockDB(){
+  if (SDB) return SDB;
+  const [st, fu] = await Promise.all([
+    J('stocks.json').catch(() => ({stocks:{}})),
+    J('fundamentals.json').catch(() => ({companies:[]}))
+  ]);
+  const bySym = {};
+  Object.keys(st.stocks || {}).forEach(k => {
+    const r = st.stocks[k];
+    if (r && r.symbol) bySym[r.symbol] = r;
+  });
+  const fund = {};
+  (fu.companies || []).forEach(c => { if (c && c.symbol) fund[c.symbol] = c; });
+  SDB = {bySym, fund};
+  return SDB;
+}
+const fmt = (v, d) => (v == null || v === '' || (typeof v === 'number' && !isFinite(v)))
+  ? '<span class="na">-</span>'
+  : (typeof v === 'number' ? v.toFixed(d == null ? 2 : d) : String(v));
+function rowKV(pairs){
+  return '<div class="kv">' + pairs.map(p =>
+    '<div><span>' + esc(p[0]) + '</span><span>' + p[1] + '</span></div>').join('') + '</div>';
+}
+async function openStock(sym){
+  const box = $('#sheet'), body = $('#sheetBody');
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  body.innerHTML = '<p class="loading">Loading ' + esc(sym) + '\u2026</p>';
+  let db;
+  try { db = await stockDB(); }
+  catch (e) { body.innerHTML = '<p class="err">Could not load stock data: ' + esc(e.message) + '</p>'; return; }
+  const s = db.bySym[sym], f = db.fund[sym];
+  if (!s && !f){
+    body.innerHTML = '<h3>' + esc(sym) + '</h3><p class="sub">No record for this symbol in '
+      + 'stocks.json or fundamentals.json.</p>';
+    return;
+  }
+  const t = (s && s.tech) || {}, fd = (s && s.fund) || {};
+  const chg = s ? s.chg_pct : null;
+  let out = '<h3>' + esc((s && s.name) || sym) + '</h3>'
+    + '<div class="sub">' + esc(sym) + (s && s.sector ? ' \u00b7 ' + esc(s.sector) : '') + '</div>';
+  if (s){
+    out += '<div class="px ' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '">' + fmt(s.close) + '</div>'
+      + '<div class="' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '" style="font-size:13px">'
+      + (chg > 0 ? '+' : '') + fmt(chg) + '% today</div>';
+  }
+  if (Object.keys(t).length){
+    out += '<h5>Technicals</h5>' + rowKV([
+      ['RSI 14', fmt(t.rsi_14, 1)], ['Trend', fmt(t.trend)],
+      ['SMA 20', fmt(t.sma_20)], ['SMA 50', fmt(t.sma_50)],
+      ['SMA 200', fmt(t.sma_200)], ['ADX', fmt(t.adx, 1)],
+      ['MACD hist', fmt(t.macd_hist, 3)], ['Bollinger %B', fmt(t.bb_pctb, 2)],
+      ['Volume x', fmt(t.vol_x, 2) + 'x'], ['ATR %', t.atr_pct == null ? '-' : fmt(t.atr_pct * 100, 2) + '%'],
+      ['52w high', fmt(t.high_52w)], ['52w low', fmt(t.low_52w)]
+    ]);
+  }
+  if (Object.keys(fd).length){
+    out += '<h5>Fundamentals</h5>' + rowKV([
+      ['P/E', fmt(fd.pe)], ['P/B', fmt(fd.pb)], ['EPS', fmt(fd.eps)],
+      ['Div yield', fd.div_yield == null ? '-' : fmt(fd.div_yield) + '%'],
+      ['Beta', fmt(fd.beta)], ['ROE', fd.roe == null ? '-' : fmt(fd.roe) + '%'],
+      ['Market cap', fd.mcap == null ? '-' : fmt(fd.mcap, 0) + ' cr'],
+      ['52w high', fmt(fd.high_52w)], ['52w low', fmt(fd.low_52w)]
+    ]);
+  }
+  if (f){
+    out += '<h5>Reported results \u00b7 ' + esc(f.latest_period || '-') + '</h5>' + rowKV([
+      ['Revenue', f.revenue_cr == null ? '-' : '\u20b9' + fmt(f.revenue_cr, 1) + ' cr'],
+      ['Profit', f.profit_cr == null ? '-' : '\u20b9' + fmt(f.profit_cr, 1) + ' cr'],
+      ['Margin', f.margin_pct == null ? '-' : fmt(f.margin_pct, 2) + '%'],
+      ['Revenue YoY', f.revenue_yoy_pct == null ? '-' : fmt(f.revenue_yoy_pct, 1) + '%'],
+      ['Profit YoY', f.profit_yoy_pct == null ? '-' : fmt(f.profit_yoy_pct, 1) + '%'],
+      ['Margin chg', f.margin_change_pp == null ? '-' : fmt(f.margin_change_pp, 2) + ' pp']
+    ]);
+    out += '<p class="sub" style="margin-top:10px">Year-ago period ' + esc(f.year_ago_period || '-') + '.</p>';
+  }
+  out += '<p class="sub" style="margin-top:14px">stocks.json \u00b7 fundamentals.json. Prices and '
+    + 'fundamentals can be delayed, wrong or missing. Not a recommendation.</p>';
+  body.innerHTML = out;
+}
+function closeSheet(){
+  const b = $('#sheet'); b.classList.remove('on'); b.setAttribute('aria-hidden','true');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildDrawer();
   const drawer = $('#drawer'), scrim = $('#scrim');
@@ -739,6 +923,23 @@ document.addEventListener('DOMContentLoaded', () => {
   scrim.onclick = close;
   drawer.addEventListener('click', e => { if (e.target.tagName === 'A') close(); });
   $('#newsBtn').onclick = () => { location.hash = '#/news'; };
+
+  // stock sheet: close handlers + a delegated tap on any symbol-looking cell
+  $('#sheetX').onclick = closeSheet;
+  $('#sheet').onclick = e => { if (e.target.id === 'sheet') closeSheet(); };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+  document.addEventListener('click', async e => {
+    const td = e.target.closest && e.target.closest('td');
+    if (!td || td.classList.contains('sym')) return;
+    const txt = (td.textContent || '').trim();
+    if (!/^[A-Z0-9&.\-]{2,20}$/.test(txt)) return;
+    try {
+      const db = await stockDB();
+      if (!db.bySym[txt] && !db.fund[txt]) return;
+      td.classList.add('sym');
+      openStock(txt);
+    } catch (_) { /* no stock data - leave the cell alone */ }
+  });
   window.addEventListener('hashchange', route);
   route();
 });

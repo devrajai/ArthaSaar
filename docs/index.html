@@ -6718,6 +6718,86 @@ var v=sec("learn");
   /* ---------- BACKTESTER (Task 14) ---------- */
   (function(){
     var v=sec("backtest");
+    /* ==================================================================================
+       PAIR TRADING - what a paid dashboard claims, and what it survives.
+       Every figure below was recomputed from the source workbook, the PDF, or our own NSE
+       price series. Where something could not be checked, the card says so instead of
+       repeating the claim.
+       ================================================================================== */
+    (function(){
+     try{
+      var kids=[];
+
+      kids.push(para("A paid pair-trading dashboard publishes 289 pairs with a headline hit rate "
+        +"of <b>81.65%</b> (485 wins from 594 closed trades). We pulled the page apart and "
+        +"recomputed what we could. The method - trade the spread between two co-moving stocks "
+        +"back to its mean - is standard and testable. What follows is whether this page shows "
+        +"it working.", false));
+
+      var g=el("div","kpis");
+      g.appendChild(kpi("Claimed hit rate","81.65%","485 of 594 closed"));
+      g.appendChild(kpi("Open book","-55.25 lakh","excluded from that figure"));
+      g.appendChild(kpi("Pairs never traded","104 of 289","no trade in a full year"));
+      g.appendChild(kpi("Our reproduction","2 of 15","correlations within 5 points"));
+      kids.push(g);
+
+      kids.push(el("p","big","What breaks the headline"));
+      kids.push(para("<b>The 81.65% counts closed trades only.</b> Sitting beside it is an open "
+        +"book of about <b>-55.25 lakh</b>. Count the open losses and the rate falls by roughly "
+        +"a third. A win rate that excludes what is still losing is not a win rate.", false));
+      kids.push(para("<b>104 of the 289 pairs never traded once in the year.</b> The rest carry "
+        +"between one and eleven trades. Cards showing 6 wins from 6, 9 from 9 and 11 from 11 "
+        +"are the signature of a rule that never books a loss, not evidence of skill.", false));
+      kids.push(para("<b>The list is one sector, not 289 independent tests.</b> 140 of 289 pairs "
+        +"are Financial Services, and one stock leg appears on 16 different cards. Overlapping "
+        +"pairs share their evidence, so the effective sample is far smaller than the count "
+        +"suggests.", false));
+      kids.push(para("<b>18 of 277 readable correlations are negative</b> - down to -89.3%. A "
+        +"hedge between two legs that move opposite produces a more volatile spread, not a less "
+        +"volatile one, so a negative value cannot be a co-movement screen.", false));
+
+      kids.push(el("p","big","What we could reproduce"));
+      kids.push(para("We recomputed 15 of the published correlations from our own 120-session NSE "
+        +"price series. <b>Two matched within 5 points on price levels, and none on daily "
+        +"returns.</b> The gaps are not small: CGPOWER/DATAPATTNS is published at 94.8% and "
+        +"recomputes at 50.7%; HDFCBANK/SBICARD 90.4% against 8.5%; KFINTECH/MAHABANK "
+        +"<b>-72.5%</b> against <b>+10.2%</b> - a sign flip. Window length can move a "
+        +"correlation, but it cannot turn -72.5% into +10.2%.", false));
+      kids.push(para("They are also unstable. BSE/MAHABANK ranges from -16.8% to +17.2% "
+        +"depending on which 60 sessions you take. A pair-trading system built on a correlation "
+        +"that swings 34 points in six months is not a system.", false));
+
+      kids.push(el("p","big","Our own backtest of their 21 elite pairs"));
+      kids.push(para("We applied the calculator's own rules - enter at |z| >= 2.0, exit when z "
+        +"crosses zero, stop at |z| >= 3.5, 25-session maximum, 60-session OLS window - to our "
+        +"NSE data. <b>25 trades, 22 wins, 88%.</b>", false));
+      kids.push(para("<b>That number should not be trusted yet.</b> Twenty-five trades is not a "
+        +"sample. It is measured in spread standard deviations, not rupees - no brokerage, no "
+        +"STT, no slippage, no lot rounding. A pair trade has four legs, and costs on four legs "
+        +"will eat most of a 2.5 z-unit win. Real returns would be far lower, possibly negative.", false));
+
+      kids.push(el("p","big","What stays unverified"));
+      kids.push(para("The source is 21 phone screenshots with no text layer. <b>140 cells across "
+        +"14 cards could not be read at all</b>, so a few values need checking against the "
+        +"images. Closed P&L disagrees across the page itself - 1.84, 1.85 and 1.86 crore in "
+        +"different places - and the readable cards sum to 578 trades against a header of 594. "
+        +"Those are flagged, not resolved.", false));
+      kids.push(para("The page never states its entry, exit, stop or cost assumptions, and gives "
+        +"no out-of-sample test. The cointegration labels sit beside trade P&L from the same "
+        +"period, so the traded year was very likely in-sample. That is the central risk and it "
+        +"cannot be confirmed from screenshots.", false));
+
+      v.appendChild(card("Pair trading: does the dashboard survive a check?",
+        "289 pairs, one paid page, recomputed",
+        kids,
+        {what:"What a paid pair-trading dashboard claims, and what we could reproduce from the source workbook and our own NSE price series.",
+         source:"teztrader.com/pair-trading (21 screenshots), Pair_Trading_Master_Analysis.xlsx, Elite_21_Pair_Calculator.xlsx, docs/series.json",
+         updated:when,
+         note:"A hit rate that counts only closed trades, on a list where a third of the pairs never traded and one sector supplies half the rows, is not a track record. The method is sound; this page does not demonstrate it. Nothing here is a recommendation."}));
+     }catch(e){ console.warn("pair card:",e); }
+    })();
+
+
     // ---- does PCR or max pain actually predict anything? --------------------------------
     // Deliberately forward-looking. Max pain and the close on the SAME day come from the
     // same open interest, so a same-day "accuracy" figure is circular - it measures

@@ -3492,7 +3492,12 @@ function build(d){
         " ("+(n.median_chg_pct>0?"+":"")+n.median_chg_pct+"%) from "+num(n.last)+
         ". The band runs "+num(Math.round(n.last*(1+(n.low10_chg_pct||0)/100)))+" to "+
         num(Math.round(n.last*(1+(n.high90_chg_pct||0)/100)))+
-        ", and the direction call is "+esc(n.direction)+" at "+n.confidence+"/100 confidence.", true)],
+        ", and the direction call is "+esc(n.direction)+
+        // timesfm_forecasts.json carries no confidence field. Printing n.confidence gave
+        // "up at undefined/100 confidence" on the live page. State the direction and, where
+        // there is no confidence figure, say what actually backs the call instead of inventing one.
+        (n.confidence!=null ? (" at "+n.confidence+"/100 confidence")
+                            : (", which is simply the sign of the median - not a probability")), true)],
       {what:"The model's median path and its own 10th-to-90th percentile range, with the option market's walls and max pain drawn over it so you can see whether the two agree.",
        source:"data/timesfm_forecasts.json; docs/oi_strikes.json; NSE F&O bhavcopy for max pain.",
        updated:F.updated,
@@ -3512,12 +3517,37 @@ function build(d){
       }
       var o=S.overall||{};
       if(!o.n){
-        v.appendChild(card("Has the model been right?","nothing settled yet",
-          [para(num(S.runs_logged||0)+" run(s) logged, and every one of them still has its horizon in the future. The first scores appear 21 sessions after the first logged forecast - that is what scoring a 21-day call honestly costs. Grading it on day two would flatter it.", false)],
+        // "nothing settled yet" on its own tells a reader nothing. Give the date, the
+        // reason, and what the model is actually projecting right now.
+        var kids0=[];
+        kids0.push(para("TimesFM has been logging a 21-session forecast every night since "
+          +"6 November 2026, and " +num(S.runs_logged||0)+ " run(s) are on file. Not one of them "
+          +"has reached its horizon yet, so there is nothing honest to score. The first results "
+          +"land around <b>5 December 2026</b> - 21 sessions after the first logged call. "
+          +"Grading a 21-day forecast on day two would flatter it.", false));
+        var g0=el("div","kpis");
+        g0.appendChild(kpi("Runs logged", num(S.runs_logged||0), "nightly since 6 Nov"));
+        g0.appendChild(kpi("Scored", "0", "none matured yet"));
+        g0.appendChild(kpi("Horizon", "21", "sessions per call"));
+        g0.appendChild(kpi("First scores", "~5 Dec", "21 sessions after 6 Nov"));
+        kids0.push(g0);
+        if(F&&F.nifty){
+          var nn=F.nifty;
+          kids0.push(el("p","big","What it is projecting now"));
+          kids0.push(para("Nifty median <b>"+(nn.median_chg_pct>0?"+":"")+nn.median_chg_pct
+            +"%</b> over the next "+F.horizon_days+" sessions, inside a band of <b>"
+            +nn.low10_chg_pct+"% to +"+nn.high90_chg_pct+"%</b>. That band spans "
+            +nn.band_pct+"% of the index price, which is the model saying it does not know "
+            +"- published that way deliberately rather than dressed up as a point target.", false));
+          kids0.push(para("Coverage: "+num(F.series||0)+" series in the latest run. The first run "
+            +"on 6 Nov covered 3,100; every run since covers about 1,430 after the liquidity "
+            +"screen, so the model's reach is roughly half what it was on day one.", false));
+        }
+        v.appendChild(card("Has the model been right?","nothing settled yet", kids0,
           {what:"A running record of what TimesFM predicted against what the price then did.",
-           source:"scripts/timesfm_score.py over data/forecast_log.jsonl and the candle archive.",
+           source:"scripts/timesfm_score.py over data/forecast_log.jsonl; data/timesfm_forecasts.json",
            updated:S.updated,
-           note:"A forecast is only counted once its horizon has actually elapsed in the archive. Nothing is scored early and nothing is dropped."}));
+           note:"A forecast is only counted once its horizon has actually elapsed. Nothing is scored early and nothing is dropped. The switch to 'under review' fires automatically below a 70% band hit rate over at least 100 settled forecasts - it is not a manual setting."}));
         return;
       }
       var grid=el("div","kpis");

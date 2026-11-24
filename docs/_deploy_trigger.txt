@@ -1,5 +1,4 @@
 # Vercel deploy trigger
 
 Fires .github/workflows/vercel-deploy.yml, which watches docs/.
-Also a plain push to main, which is what Vercel's GitHub app reacts to once it can read this repo.
-Touched: 2026-11-24T16:44:31Z
+Touched: 2026-11-24T16:49:43Z

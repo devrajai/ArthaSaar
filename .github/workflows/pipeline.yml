@@ -631,6 +631,12 @@ jobs:
       - name: "7v2. Gold and silver"
         run: python scripts/build_metals.py
 
+      # The news page reads docs/news_feed.json. build_news_feed.py existed but was never
+      # in this pipeline, so the file froze on the day it was written - by 24 Nov it was
+      # six days stale and the News tab showed week-old headlines on a live site.
+      - name: "7w. News feed (category + company tags)"
+        run: python scripts/build_news_feed.py
+
       - name: Commit
         run: |
           git config user.name "data-bot"

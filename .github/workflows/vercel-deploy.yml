@@ -105,6 +105,27 @@ jobs:
             echo "__EOF__"
           } >> "$GITHUB_OUTPUT"
 
+      # The token may be scoped to a single project, in which case it can deploy to that
+      # project but cannot enumerate projects or teams. The deployed page itself often carries
+      # the project id in a meta tag or an insights script, so look there before giving up.
+      - name: Recover the project id from the live site
+        id: live
+        if: steps.hook.outputs.used != '1'
+        run: |
+          for HOST in https://arthasaar.vercel.app https://artha-saar.vercel.app; do
+            echo "--- $HOST ---"
+            curl -s -m 20 "$HOST" -o /tmp/page.html -w "http %{http_code}\n" || true
+            grep -oE 'prj_[A-Za-z0-9]{10,}' /tmp/page.html 2>/dev/null | sort -u | head -3
+            grep -oE 'team_[A-Za-z0-9]{10,}' /tmp/page.html 2>/dev/null | sort -u | head -3
+            grep -oE '/_vercel/[a-z]+' /tmp/page.html 2>/dev/null | sort -u | head -3
+          done
+          # Vercel exposes the project id on the deployment's own JSON metadata endpoint
+          for HOST in https://arthasaar.vercel.app https://artha-saar.vercel.app; do
+            echo "--- $HOST/_vercel/insights ---"
+            curl -s -m 15 "$HOST/_vercel/insights/script.js" -o /tmp/i.js -w "http %{http_code}\n" || true
+            grep -oE 'prj_[A-Za-z0-9]{10,}' /tmp/i.js 2>/dev/null | sort -u | head -3
+          done
+
       - name: Find the project
         id: proj
         if: steps.hook.outputs.used != '1'

@@ -182,58 +182,82 @@ jobs:
           grep '^pid=' /tmp/pick.txt >> "$GITHUB_OUTPUT" || true
           grep '^tid=' /tmp/pick.txt >> "$GITHUB_OUTPUT" || true
 
-      - name: Deploy docs/ to production
+      - name: Deploy docs/ to production (REST API)
         if: steps.hook.outputs.used != '1'
         env:
-          # The CLI reads VERCEL_TOKEN from the environment. Passing the same value via
-          # --token made it answer "not valid" for this credential even though
-          # https://api.vercel.com/v2/user returns 200 for it, so the env var is the path that
-          # works. The org is pinned to the team the token belongs to - a bare deploy otherwise
-          # has to guess, and this account has several projects.
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
-          # Left unset on purpose when discovery failed: the CLI then uses whatever
-          # .vercel/project.json the link step just wrote.
-          VERCEL_ORG_ID: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ steps.proj.outputs.pid || secrets.VERCEL_PROJECT_ID }}
+          TEAM: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID }}
+          PROJECT: ${{ steps.proj.outputs.pid || secrets.VERCEL_PROJECT_ID }}
         run: |
-          npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
-          echo "--- raw API check ---"
-          # Ask Vercel directly so the real error is visible. The CLI reports "not valid" for
-          # any rejected credential, which does not distinguish a wrong token type from an
-          # expired one.
-          curl -s -o /tmp/api.json -w "http %{http_code}\n" \
-            -H "Authorization: Bearer $VERCEL_TOKEN" https://api.vercel.com/v2/user || true
-          head -c 300 /tmp/api.json 2>/dev/null; echo
-          echo "--- whoami ---"
-          npx vercel whoami 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
-          echo "--- project ---"
-          echo "org=${VERCEL_ORG_ID:-unset} project=${VERCEL_PROJECT_ID:-unset}"
-          # A project-scoped token cannot list projects, but it can still link to one by name.
-          # Try that before giving up - it needs no project id and no team id.
-          if [ -z "${VERCEL_PROJECT_ID:-}" ]; then
-            echo "no project id discovered - trying to link by name"
-            for NAME in arthasaar artha-saar ArthaSaar; do
-              echo "--- link $NAME ---"
-              if npx vercel link --yes --project "$NAME" 2>&1 | tee /tmp/link.log; then
-                if [ -f .vercel/project.json ]; then
-                  echo "linked to $NAME"
-                  cat .vercel/project.json | sed 's/"[A-Za-z0-9]\{20,\}"/"***"/g'
-                  break
-                fi
-              fi
-            done
-          fi
-          echo "--- deploy ---"
-          set +e
-          npx vercel deploy --prod --yes 2>&1 | tee /tmp/v.log
-          RC=${PIPESTATUS[0]}
-          set -e
-          URL=$(grep -oE 'https://[a-z0-9.-]+\.vercel\.app' /tmp/v.log | tail -1)
-          {
-            echo "### Vercel deploy"
-            echo ""
-            echo "- commit: \`${{ github.sha }}\`"
-            echo "- url: ${URL:-not reported}"
-            echo "- exit: $RC"
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit $RC
+          # The Vercel CLI 66.x rejects a vck_ token with "not valid" even though
+          # https://api.vercel.com/v2/user returns 200 for it. The REST API accepts it, so the
+          # deploy goes through /v13/deployments directly and skips the CLI entirely.
+          python3 - <<'PY'
+          import base64, json, os, sys, urllib.request, urllib.error
+          from pathlib import Path
+
+          TOK = os.environ["VERCEL_TOKEN"]
+          TEAM = os.environ.get("TEAM") or ""
+          PROJ = os.environ.get("PROJECT") or ""
+          NAME = "arthasaar"
+
+          def call(path, payload=None, method=None):
+              url = "https://api.vercel.com" + path
+              data = json.dumps(payload).encode() if payload is not None else None
+              req = urllib.request.Request(url, data=data, method=method or ("POST" if data else "GET"))
+              req.add_header("Authorization", "Bearer " + TOK)
+              if data: req.add_header("Content-Type", "application/json")
+              try:
+                  with urllib.request.urlopen(req, timeout=180) as r:
+                      return r.status, json.loads(r.read() or b"{}")
+              except urllib.error.HTTPError as e:
+                  body = e.read().decode("utf-8", "replace")[:400]
+                  return e.code, {"error": body}
+
+          root = Path("docs")
+          files, total = [], 0
+          for f in sorted(root.rglob("*")):
+              if not f.is_file(): continue
+              rel = str(f.relative_to(root)).replace(os.sep, "/")
+              b = f.read_bytes(); total += len(b)
+              files.append({"file": rel, "data": base64.b64encode(b).decode()})
+          print("files: %d, %.1f MB" % (len(files), total/1024/1024))
+          if not files:
+              print("::error::docs/ is empty"); sys.exit(1)
+
+          payload = {
+              "name": NAME,
+              "files": files,
+              "target": "production",
+              "projectSettings": {"framework": None, "buildCommand": None,
+                                  "installCommand": None, "outputDirectory": None},
+          }
+          q = "?teamId=" + TEAM if TEAM else ""
+          if PROJ:
+              q += ("&" if q else "?") + "projectId=" + PROJ
+          code, resp = call("/v13/deployments" + q, payload)
+          print("POST /v13/deployments ->", code)
+          if code not in (200, 201):
+              print(json.dumps(resp)[:600])
+              print("::error::Vercel rejected the deployment (http %s)" % code)
+              sys.exit(1)
+          url = resp.get("url") or (resp.get("alias") or [None])[0] or "not reported"
+          print("deployment:", url)
+          print("id:", resp.get("id"))
+          print("ready:", resp.get("readyState"))
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as fh:
+              fh.write("### Vercel deploy\n\n- commit: `%s`\n- url: %s\n- state: %s\n"
+                       % (os.environ.get("GITHUB_SHA","")[:8], url, resp.get("readyState")))
+          PY
+
+      - name: Wait for the deployment to go live
+        if: steps.hook.outputs.used != '1'
+        run: |
+          for i in $(seq 1 20); do
+            CODE=$(curl -s -o /tmp/live.html -w "%{http_code}" -m 15 https://arthasaar.vercel.app/ || echo 000)
+            HAS=$(grep -c "openStock" /tmp/live.html 2>/dev/null || echo 0)
+            echo "[$i] http=$CODE hasStockSheet=$HAS"
+            if [ "$CODE" = "200" ] && [ "$HAS" -gt 0 ]; then echo "LIVE and current"; exit 0; fi
+            sleep 15
+          done
+          echo "::warning::deployment did not appear within 5 minutes"

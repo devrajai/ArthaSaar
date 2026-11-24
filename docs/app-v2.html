@@ -137,7 +137,13 @@ async function J(p){
   if (cache[p]) return cache[p];
   const r = await fetch(p, {cache:'no-store'});
   if (!r.ok) throw new Error(p + ' → HTTP ' + r.status);
-  const d = await r.json();
+  const txt = await r.text();
+  let d;
+  try { d = JSON.parse(txt); }
+  catch (_) {
+    // some pipeline files carry NaN / Infinity, which JSON.parse refuses
+    d = JSON.parse(txt.replace(/([:\[,]\s*)(-?Infinity|NaN)\b/g, '$1null'));
+  }
   cache[p] = d;
   return d;
 }
@@ -459,11 +465,11 @@ async function renderForecast(main){
     ['Model', 'TimesFM', f.model]
   ]);
   main.append(card('Nifty 21-day forecast', 'zero-shot', body,
-    'Updated ' + f.updated + ' · ' + f.rows + ' rows across ' + f.total + ' symbols. Not a price target.'));
-  const rows = (f.rows || []).slice(0, 400);
-  if (Array.isArray(f.rows) && typeof f.rows[0] === 'object'){
+    'Updated ' + f.updated + ' · ' + f.total + ' symbols · horizon ' + f.horizon_days + ' sessions. Not a price target.'));
+  const recs = recordsFrom(f);
+  if (recs && recs.length){
     main.append(card('Forecast rows', f.total + ' symbols',
-      makeTable(f.rows, autoCols(f.rows, 8), {limit:80}), 'data.json · fm3.rows'));
+      makeTable(recs, autoCols(recs, 8), {limit:80, placeholder:'Search symbol…'}), 'data.json · fm3.rows'));
   }
 }
 

@@ -39,18 +39,25 @@ jobs:
       - name: Find the token
         id: tok
         env:
+          # Secrets first, then Variables. GitHub puts both on the same settings page under
+          # two tabs, and a value added to the Variables tab is invisible to secrets.* - which
+          # reads as an empty string with no error at all.
           T1: ${{ secrets.VERCEL_TOKEN }}
           T2: ${{ secrets.VERCEL_API_KEY }}
           T3: ${{ secrets.VERCEL_API_TOKEN }}
           T4: ${{ secrets.VERCEL_KEY }}
+          T5: ${{ vars.VERCEL_TOKEN }}
+          T6: ${{ vars.VERCEL_API_KEY }}
+          T7: ${{ vars.VERCEL_API_TOKEN }}
+          T8: ${{ vars.VERCEL_KEY }}
         run: |
           FOUND=""
-          for NAME in T1 T2 T3 T4; do
+          for NAME in T1 T2 T3 T4 T5 T6 T7 T8; do
             eval "V=\$$NAME"
             if [ -n "$V" ]; then FOUND="$V"; echo "using $NAME"; break; fi
           done
           if [ -z "$FOUND" ]; then
-            echo "::error::No Vercel token found. Looked for secrets named VERCEL_TOKEN, VERCEL_API_KEY, VERCEL_API_TOKEN and VERCEL_KEY. Add one at Settings > Secrets and variables > Actions > New repository secret. The name must match exactly and it must be a Secret, not a Variable."
+            echo "::error::No Vercel token found. Looked for VERCEL_TOKEN, VERCEL_API_KEY, VERCEL_API_TOKEN and VERCEL_KEY as both Secrets and Variables. Add one at Settings > Secrets and variables > Actions > New repository secret. The name must match exactly and it must be a Secret, not a Variable."
             exit 1
           fi
           echo "::add-mask::$FOUND"

@@ -141,10 +141,6 @@ td.sym{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
     <button class="ico" id="menuBtn" aria-label="Sections"><span></span><span></span><span></span></button>
     <span class="brand"><i></i>ArthaSaar</span>
     <span class="date">NSE EOD</span>
-    <!-- The long-form site lives at /classic.html. It carries the full 33-section
-         build including the pair-trading audit and the FM3 scorecard. Without this
-         link those pages were unreachable from the app. -->
-    <a class="newsbtn" href="classic.html" title="Full site: all 33 sections, pair-trading audit, FM3 scorecard">Classic</a>
     <button class="newsbtn" id="newsBtn">News</button>
   </div>
 </header>
@@ -154,7 +150,7 @@ td.sym{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
 <aside class="drawer" id="drawer">
   <div class="dh"><span class="as">AS</span><b>All sections</b><button id="dclose">×</button></div>
   <div id="drawerItems"></div>
-  <a href="classic.html" style="display:block;margin:14px 16px 22px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.06);color:inherit;text-decoration:none;font-size:13.5px;line-height:1.4"><b>Full site (classic)</b><br><span style="opacity:.65">All 33 sections, the pair-trading audit and the FM3 scorecard</span></a>
+  
 </aside>
 <div class="scrim" id="scrim"></div>
 
@@ -497,11 +493,90 @@ async function renderForecast(main){
   ]);
   main.append(card('Nifty 21-day forecast', 'zero-shot', body,
     'Updated ' + f.updated + ' · ' + f.total + ' symbols · horizon ' + f.horizon_days + ' sessions. Not a price target.'));
+  // The forecast is worthless to a reader unless they can see whether it has ever been
+  // right. This card was only on the classic build; without it the app shows a cone and
+  // no record. Scored 0 today because a 21-session call needs 21 sessions to mature.
+  try {
+    const S = await J('timesfm_score.json');
+    const o = (S && S.overall) || {};
+    if (!o.n){
+      main.append(card('Has the model been right?', 'nothing settled yet',
+        tiles([
+          ['Runs logged', String(S.runs_logged || 0), 'nightly since 6 Nov'],
+          ['Scored', '0', 'none matured yet'],
+          ['Horizon', '21', 'sessions per call'],
+          ['First scores', '~5 Dec', '21 sessions after 6 Nov']
+        ]),
+        'TimesFM has logged a 21-session forecast every night since 6 November 2026, and not '
+        + 'one has reached its horizon yet, so there is nothing honest to score. The first '
+        + 'results land around 5 December 2026. Grading a 21-day call on day two would flatter '
+        + 'it. A forecast is only counted once its horizon has actually elapsed.'));
+    } else {
+      main.append(card('Has the model been right?', o.n + ' settled',
+        tiles([
+          ['Scored', String(o.n), 'forecasts settled'],
+          ['Median miss', o.median_abs_error_pct + '%', 'call vs what happened'],
+          ['Band hit', o.band_hit_pct + '%', 'realised inside the 10-90'],
+          ['Direction', o.direction_hit_pct + '%', 'sign was right']
+        ]),
+        'Settled forecasts only. Nothing is scored early and nothing is dropped.'));
+    }
+  } catch (_) { /* scoreboard missing - the cone above still stands */ }
+
   const recs = recordsFrom(f);
   if (recs && recs.length){
     main.append(card('Forecast rows', f.total + ' symbols',
       makeTable(recs, autoCols(recs, 8), {limit:80, placeholder:'Search symbol…'}), 'data.json · fm3.rows'));
   }
+}
+
+async function renderBacktest(main){
+  // The pair-trading audit lived only on the classic build. It is the one section that
+  // answers "does any of this work", so it belongs in the app.
+  main.append(card('Pair trading: does the dashboard survive a check?', '289 pairs, recomputed',
+    tiles([
+      ['Claimed hit rate', '81.65%', '485 of 594 closed'],
+      ['Open book', '−55.25 lakh', 'excluded from that figure'],
+      ['Pairs never traded', '104 of 289', 'no trade in a full year'],
+      ['Our reproduction', '2 of 15', 'correlations within 5 points']
+    ]),
+    'A paid pair-trading dashboard publishes 289 pairs with an 81.65% hit rate. We pulled the '
+    + 'page apart and recomputed what we could. The method - trade the spread between two '
+    + 'co-moving stocks back to its mean - is standard and testable. What follows is whether '
+    + 'this page shows it working.'));
+
+  main.append(card('What breaks the headline', 'the number, not the method', null,
+    'The 81.65% counts closed trades only. Beside it sits an open book of about −55.25 lakh; '
+    + 'count the open losses and the rate falls by roughly a third. 104 of the 289 pairs never '
+    + 'traded once in the year, and the rest carry one to eleven trades - cards showing 6 wins '
+    + 'from 6, 9 from 9 and 11 from 11 are the signature of a rule that never books a loss. '
+    + '140 of 289 pairs are Financial Services and one stock leg appears on 16 cards, so these '
+    + 'are not 289 independent tests. And 18 of 277 correlations are negative, down to −89.3%; '
+    + 'a hedge between legs that move opposite produces a more volatile spread, so a negative '
+    + 'value cannot be a co-movement screen.'));
+
+  main.append(card('What we could reproduce', 'our own NSE series', null,
+    'We recomputed 15 published correlations from our 120-session NSE price series: 2 matched '
+    + 'within 5 points on price levels, and none on daily returns. CGPOWER/DATAPATTNS is '
+    + 'published at 94.8% and recomputes at 50.7%; HDFCBANK/SBICARD 90.4% against 8.5%; '
+    + 'KFINTECH/MAHABANK −72.5% against +10.2% - a sign flip no window choice explains. They '
+    + 'are also unstable: BSE/MAHABANK ranges from −16.8% to +17.2% depending on which 60 '
+    + 'sessions you take.'));
+
+  main.append(card('Our own backtest of their 21 elite pairs', 'their rules, our data', null,
+    'Enter at |z| >= 2.0, exit when z crosses zero, stop at |z| >= 3.5, 25-session maximum, '
+    + '60-session OLS window: 25 trades, 22 wins, 88%. That number should not be trusted yet. '
+    + 'Twenty-five trades is not a sample. It is measured in spread standard deviations, not '
+    + 'rupees - no brokerage, no STT, no slippage, no lot rounding. A pair trade has four legs, '
+    + 'and costs on four legs will eat most of a 2.5 z-unit win. Real returns would be far '
+    + 'lower, possibly negative. Not a recommendation.'));
+
+  main.append(card('What stays unverified', 'flagged, not resolved', null,
+    'The source is 21 phone screenshots with no text layer: 140 cells across 14 cards could '
+    + 'not be read at all. Closed P&L disagrees across the page itself - 1.84, 1.85 and 1.86 '
+    + 'crore in different places - and the readable cards sum to 578 trades against a header of '
+    + '594. The page never states its entry, exit, stop or cost assumptions and gives no '
+    + 'out-of-sample test, so the traded year was very likely in-sample.'));
 }
 
 async function renderNews(main){
@@ -585,6 +660,7 @@ async function route(){
     else if (id === 'deals') await renderDeals(main);
     else if (id === 'forecast') await renderForecast(main);
     else if (id === 'news') await renderNews(main);
+    else if (id === 'backtest') await renderBacktest(main);
     else if (id === 'events') await renderEvents(main);
     else if (id === 'library') await renderGeneric(main, FILES, '');
     else if (MAP[id]) await renderGeneric(main, MAP[id], null);

@@ -41,7 +41,11 @@ def check(name: str, cond: bool, detail: str = ""):
 def monthly_series(years: float, annual: float, start_nav: float = 100.0, drop_at=None):
     """Monthly NAVs compounding at `annual`, newest-first like mfapi returns them."""
     n = int(years * 12)
-    start = datetime(2026, 10, 1)
+    # MUST be relative to today, not a fixed date. The fetcher drops any scheme whose
+    # newest NAV is older than --max-stale-days (45), so a hardcoded 1 Oct fixture went
+    # stale 54 days later and every scheme was skipped as 'closed' - which is why this
+    # test failed three runs in a row while the code was correct.
+    start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     rows = []
     for i in range(n):
         d = start - timedelta(days=int(i * 30.44))
@@ -59,7 +63,11 @@ def monthly_series(years: float, annual: float, start_nav: float = 100.0, drop_a
 def dense_series(years: float, annual: float, points: int):
     """`points` NAVs spread over `years`, newest-first - dense enough to clear the
     60-point floor while still covering less than the window being asked for."""
-    start = datetime(2026, 10, 1)
+    # MUST be relative to today, not a fixed date. The fetcher drops any scheme whose
+    # newest NAV is older than --max-stale-days (45), so a hardcoded 1 Oct fixture went
+    # stale 54 days later and every scheme was skipped as 'closed' - which is why this
+    # test failed three runs in a row while the code was correct.
+    start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     step = years * 365.25 / points
     rows = []
     for i in range(points):

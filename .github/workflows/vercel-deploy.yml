@@ -191,8 +191,10 @@ jobs:
           # works. The org is pinned to the team the token belongs to - a bare deploy otherwise
           # has to guess, and this account has several projects.
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
+          # Left unset on purpose when discovery failed: the CLI then uses whatever
+          # .vercel/project.json the link step just wrote.
           VERCEL_ORG_ID: ${{ steps.proj.outputs.tid || secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ steps.proj.outputs.pid }}
+          VERCEL_PROJECT_ID: ${{ steps.proj.outputs.pid || secrets.VERCEL_PROJECT_ID }}
         run: |
           npm install --silent vercel@latest >/dev/null 2>&1 || npm install vercel@latest
           echo "--- raw API check ---"
@@ -206,9 +208,20 @@ jobs:
           npx vercel whoami 2>&1 | sed 's/[A-Za-z0-9]\{20,\}/***/g' || true
           echo "--- project ---"
           echo "org=${VERCEL_ORG_ID:-unset} project=${VERCEL_PROJECT_ID:-unset}"
+          # A project-scoped token cannot list projects, but it can still link to one by name.
+          # Try that before giving up - it needs no project id and no team id.
           if [ -z "${VERCEL_PROJECT_ID:-}" ]; then
-            echo "::error::Could not determine the Vercel project. The token could not list projects (it may be a 'limited' token - create an unrestricted one at vercel.com/account/tokens), or no project matched. Set a repository secret VERCEL_PROJECT_ID to skip discovery entirely."
-            exit 1
+            echo "no project id discovered - trying to link by name"
+            for NAME in arthasaar artha-saar ArthaSaar; do
+              echo "--- link $NAME ---"
+              if npx vercel link --yes --project "$NAME" 2>&1 | tee /tmp/link.log; then
+                if [ -f .vercel/project.json ]; then
+                  echo "linked to $NAME"
+                  cat .vercel/project.json | sed 's/"[A-Za-z0-9]\{20,\}"/"***"/g'
+                  break
+                fi
+              fi
+            done
           fi
           echo "--- deploy ---"
           set +e

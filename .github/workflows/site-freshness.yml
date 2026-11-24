@@ -1,0 +1,55 @@
+name: site-freshness
+
+# Fails loudly when the published site is stale or unreachable.
+# Runs daily at 10:00 IST, after the nightly pipeline.
+# A failed run emails the repo owner (GitHub's default for failed workflows).
+
+on:
+  schedule:
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check data age on each published host
+        run: |
+          python3 - <<'PY'
+          import json, sys, urllib.request
+          from datetime import datetime, timezone
+
+          # Weekends: the pipeline may not run, so allow about 2.5 days.
+          MAX_AGE_HOURS = 60
+          HOSTS = {
+              "github-pages": "https://devrajai.github.io/ArthaSaar/data.json",
+              "vercel": "https://arthasaar.vercel.app/data.json",
+          }
+          # GitHub Pages is the canonical host and the only one that must be fresh.
+          # Vercel has posted no status on any commit since 23 Nov, so it is reported
+          # but never fails this check until it is reconnected and proven again.
+          REQUIRED = {"github-pages"}
+
+          failed = False
+          for name, url in HOSTS.items():
+              try:
+                  req = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      data = json.load(r)
+                  stamp = datetime.fromisoformat(data["generated_utc"].replace("Z", "+00:00"))
+                  age_h = (datetime.now(timezone.utc) - stamp).total_seconds() / 3600
+                  status = f"data age {age_h:.1f} h"
+                  bad = age_h > MAX_AGE_HOURS
+              except Exception as e:
+                  status = f"unreachable or unreadable: {e}"
+                  bad = True
+              print(f"{name}: {status}")
+              if bad and name in REQUIRED:
+                  failed = True
+
+          sys.exit(1 if failed else 0)
+          PY

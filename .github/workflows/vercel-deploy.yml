@@ -36,8 +36,33 @@ jobs:
         with:
           node-version: "20"
 
+      # DEPLOY HOOK PATH - no token, no scopes, no project lookup.
+      # A Vercel deploy hook is a URL you create once in the project settings. Hitting it
+      # starts a production deploy of that project. It carries the project id inside the URL,
+      # so it works even when the API token cannot list projects - which is exactly the
+      # situation here: the token reads /v2/user but sees zero projects in every scope.
+      - name: Deploy via hook (if configured)
+        id: hook
+        env:
+          HOOK: ${{ secrets.DEPLOY_HOOK || secrets.VERCEL_DEPLOY_HOOK || secrets.vercel_hook }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "no deploy hook configured"; echo "used=0" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "::add-mask::$HOOK"
+          CODE=$(curl -s -o /tmp/hook.json -w "%{http_code}" -X POST "$HOOK")
+          echo "hook responded http $CODE"
+          head -c 300 /tmp/hook.json 2>/dev/null; echo
+          echo "used=1" >> "$GITHUB_OUTPUT"
+          if [ "$CODE" != "200" ] && [ "$CODE" != "201" ]; then
+            echo "::error::Deploy hook returned HTTP $CODE"; exit 1
+          fi
+          echo "### Vercel deploy (hook)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- commit: \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- triggered via deploy hook, http $CODE" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Find the token
         id: tok
+        if: steps.hook.outputs.used != '1'
         env:
           # Secrets first, then Variables. GitHub puts both on the same settings page under
           # two tabs, and a value added to the Variables tab is invisible to secrets.* - which
@@ -82,6 +107,7 @@ jobs:
 
       - name: Find the project
         id: proj
+        if: steps.hook.outputs.used != '1'
         env:
           VERCEL_TOKEN: ${{ steps.tok.outputs.tok }}
           PINNED: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -136,6 +162,7 @@ jobs:
           grep '^tid=' /tmp/pick.txt >> "$GITHUB_OUTPUT" || true
 
       - name: Deploy docs/ to production
+        if: steps.hook.outputs.used != '1'
         env:
           # The CLI reads VERCEL_TOKEN from the environment. Passing the same value via
           # --token made it answer "not valid" for this credential even though

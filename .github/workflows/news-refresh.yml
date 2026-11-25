@@ -10,6 +10,15 @@ name: News refresh
 on:
   schedule:
     - cron: "15 3,9,13 * * *"   # 08:45, 15:15, 18:45 IST
+  # Also run when the news code or the feed config changes, so a fix to either proves itself
+  # on the push that makes it rather than at the next scheduled slot.
+  push:
+    branches: [main]
+    paths:
+      - "scripts/build_news_feed.py"
+      - "scripts/fetch_news.py"
+      - "config/news_feeds.json"
+      - ".github/workflows/news-refresh.yml"
   workflow_dispatch: {}
 
 permissions:

@@ -139,6 +139,11 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .nchips button.on{background:var(--accent-dim);border-color:rgba(110,168,254,.45);color:var(--accent)}
 .d{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;display:inline-block;flex:0 0 auto}
 .d.blue{background:#6ea8fe}.d.green{background:#4fc98a}.d.red{background:#ea6b62}.d.amber{background:#e2b04a}
+.nchips button:disabled{opacity:.38;cursor:default}
+.nchips button:disabled:hover{border-color:var(--line)}
+.nreset{background:var(--accent-dim);border:calc(1 * var(--u)) solid rgba(110,168,254,.45);
+  color:var(--accent);border-radius:999px;padding:calc(7 * var(--u)) calc(13 * var(--u));
+  font:600 clamp(10.5px,1.3vw,12.5px)/1 var(--sans);cursor:pointer;margin-left:calc(4 * var(--u))}
 .nlist{list-style:none;margin:0;padding:0}
 .nlist li{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:calc(12 * var(--u));
   padding:calc(12 * var(--u));margin-bottom:calc(8 * var(--u))}
@@ -645,11 +650,20 @@ async function renderNews(main){
     '<input id="nq" type="search" placeholder="Search by stock, company or keyword…"></label>' +
     '<div class="nchips" id="nchips">' +
       '<button class="on" data-cat="all">All ' + n.count + '</button>' +
-      '<button data-cat="results"><i class="d blue"></i>Results ' + (n.counts.results||0) + '</button>' +
-      '<button data-cat="general"><i class="d amber"></i>General ' + (n.counts.general||0) + '</button>' +
-      '<button data-cat="global"><i class="d green"></i>Global ' + (n.counts.global||0) + '</button>' +
-      '<button data-cat="policy"><i class="d red"></i>Policy ' + (n.counts.policy||0) + '</button>' +
+      chip('results','blue','Results',n.counts.results) +
+      chip('general','amber','General',n.counts.general) +
+      chip('global','green','Global',n.counts.global) +
+      chip('policy','red','Policy',n.counts.policy) +
     '</div><ul class="nlist" id="nlist"></ul><p class="nempty" id="nempty" hidden>No updates matching your criteria.</p>';
+
+  // A chip showing 0 used to be clickable, and tapping it produced "No updates matching your
+  // criteria" with no way back except guessing. A filter that can only ever return nothing is
+  // now disabled and dimmed instead.
+  function chip(cat, dot, label, count){
+    const c = count || 0;
+    return '<button data-cat="' + cat + '"' + (c ? '' : ' disabled') + '>' +
+      '<i class="d ' + dot + '"></i>' + label + ' ' + c + '</button>';
+  }
 
   const ul = live.querySelector('#nlist');
   n.items.forEach(it => {
@@ -669,11 +683,27 @@ async function renderNews(main){
       li.style.display = ok ? '' : 'none'; if (ok) shown++;
     });
     empty.hidden = shown > 0;
+    if (!shown){
+      const name = (cat === 'all') ? '' : (' ' + cat.charAt(0).toUpperCase() + cat.slice(1));
+      empty.innerHTML = term
+        ? ('Nothing matches \u201c' + esc(q.value.trim()) + '\u201d' +
+           (cat === 'all' ? '.' : ' in ' + esc(cat) + '.') +
+           ' <button class="nreset">Clear search</button>')
+        : ('No' + esc(name) + ' headlines today.' +
+           (cat === 'all' ? '' : ' <button class="nreset">Show all ' + n.count + '</button>'));
+    }
   }
   chips.addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
+    const b = e.target.closest('button'); if (!b || b.disabled) return;
     [].forEach.call(chips.querySelectorAll('button'), x => x.classList.remove('on'));
     b.classList.add('on'); cat = b.dataset.cat || 'all'; apply();
+  });
+  // the way back from an empty result
+  empty.addEventListener('click', e => {
+    if (!e.target.closest('.nreset')) return;
+    q.value = ''; cat = 'all';
+    [].forEach.call(chips.querySelectorAll('button'), x => x.classList.toggle('on', x.dataset.cat === 'all'));
+    apply();
   });
   q.addEventListener('input', apply);
 

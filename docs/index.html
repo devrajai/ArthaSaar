@@ -418,50 +418,102 @@ const SECTIONS = [
   ['Promoter', 'insider', "Who's moving"], ['Regulator', 'sebi', "Who's moving"],
   ['Mutual Funds', 'mf', 'Funds & the world'], ['ETFs', 'etf', 'Funds & the world'],
   ['Global', 'global', 'Funds & the world'], ['Crypto', 'crypto', 'Funds & the world'],
+  ['Commodities', 'commodities', 'Funds & the world'],
   ['History', 'history', 'Does any of it work'], ['Charges', 'charges', 'Does any of it work'],
   ['Learn', 'learn', 'Does any of it work'], ['Backtester', 'backtest', 'Does any of it work']
 ];
 
 async function renderOverview(main){
-  const [facts, hist, br] = await Promise.all([J('home_facts.json'), J('history.json'), J('breadth.json')]);
-  const F = facts.facts;
-  const closes = hist.rows.slice(-30).map(r => r.c);
-  const lo = Math.min(...closes), hi = Math.max(...closes);
-  const W = 340, H = 70, PAD = 7;
-  const pts = closes.map((v, i) => [i/(closes.length-1)*W, H-PAD-(v-lo)/((hi-lo)||1)*(H-2*PAD)]);
-  const line = pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-  const area = 'M' + pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' L') + ' L' + W + ',' + H + ' L0,' + H + ' Z';
-  const s30 = (closes[closes.length-1]/closes[0]-1)*100;
+  const [facts, hist, br, idx, circ, scr, secs, vix] = await Promise.all([
+    J('home_facts.json').catch(()=>({})), J('history.json').catch(()=>({})),
+    J('breadth.json').catch(()=>({})), J('indices.json').catch(()=>({})),
+    J('circuits.json').catch(()=>({})), J('screener.json').catch(()=>({})),
+    J('sectors.json').catch(()=>({})), J('vix.json').catch(()=>({}))
+  ]);
+  const F = facts.facts || {};
+  const nifty = F.nifty || {};
+  const closes = (hist.rows || []).slice(-30).map(r => r.c);
 
-  const hero = document.createElement('section'); hero.className = 'card hero';
-  hero.innerHTML =
-    '<div class="lab">Nifty 50</div>' +
-    '<div class="row1"><span class="big">' + num(F.nifty.v) + '</span>' +
-      '<span class="chip ' + (F.nifty.chg_pct >= 0 ? 'up' : 'down') + '">' + pct(F.nifty.chg_pct) + '</span></div>' +
-    '<div class="hmeta">prev close <b>' + num(F.nifty.v/(1+F.nifty.chg_pct/100)) + '</b> · 30 sessions <b class="' +
-      (s30>=0?'up':'down') + '">' + (s30>=0?'+':'−') + Math.abs(s30).toFixed(1) + '%</b> · VIX <b>' + num(F.vix.v) + '</b></div>' +
-    '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
-      '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="#6ea8fe" stop-opacity=".3"/><stop offset="100%" stop-color="#6ea8fe" stop-opacity="0"/></linearGradient></defs>' +
-      '<path d="' + area + '" fill="url(#g)"/>' +
-      '<polyline points="' + line + '" fill="none" stroke="#6ea8fe" stroke-width="1.8"/></svg>';
-  hero.append(tiles([
-    ['PCR', num(F.pcr.v), 'nearest expiry ' + F.pcr.expiry],
-    ['Max pain', num(F.max_pain.v, 0), 'spot ' + num(F.spot.v)],
-    ['Breadth', num(br.above_50, 1) + '%', 'above 50-DMA'],
-    ['FII net', '<span class="' + (F.fii.v>=0?'up':'down') + '">' + (F.fii.v>=0?'+':'−') + num(Math.abs(F.fii.v), 0) + '</span>', '₹ crore']
-  ]));
-  const note = document.createElement('p'); note.className = 'note';
-  note.textContent = 'Session ' + facts.asof + ' · ' + FILES.length + ' data files · green up, red down · not a live feed';
-  hero.append(note);
-  main.append(hero);
+  // ---- 1. where the index is ----
+  const head = document.createElement('div');
+  let hh = '<p class="big" style="margin:0 0 2px">' + num(nifty.v) +
+    ' <span class="' + (nifty.chg_pct >= 0 ? 'up' : 'down') + '" style="font-size:16px">' +
+    pct(nifty.chg_pct) + '</span></p>' +
+    '<p class="sub" style="margin:0 0 8px">Nifty 50' +
+    (nifty.d ? ' \u00b7 ' + esc(nifty.d) : '') + ' \u00b7 ' + esc(nifty.src || '') + '</p>';
+  head.innerHTML = hh;
+  if (closes.length > 2){ const sp = sparkline(closes, {h: 70}); if (sp) head.append(sp); }
+  main.append(card('Where the market is', 'Nifty 50', head,
+    'The line is the last 30 sessions. Breadth and circuits below say whether the index move is '
+    + 'being carried by the whole market or a handful of stocks.'));
 
-  const hist2 = hist.rows.slice(-12).reverse().map(r => ({date: r.d, close: r.c, change: r.chg, vix: r.vix, pcr: r.pcr}));
-  main.append(card('Last 12 sessions', hist.count + ' in archive',
-    makeTable(hist2, [{k:'date',label:'Date'},{k:'close',label:'Close',r:1,html:v=>num(v)},
-      {k:'change',label:'Change',r:1,html:v=>pct(v)},{k:'vix',label:'VIX',r:1,html:v=>num(v)},
-      {k:'pcr',label:'PCR',r:1,html:v=>num(v,3)}], {limit:12}),
-    'history.json · the archive behind every base rate on the site.'));
+  // ---- 2. breadth and risk, side by side ----
+  const tilesBox = tiles([
+    ['Above 50-day', (br.above_50 != null ? br.above_50 + '%' : '\u2014'), (br.total||0) + ' stocks'],
+    ['Above 200-day', (br.above_200 != null ? br.above_200 + '%' : '\u2014'), 'long-term'],
+    ['India VIX', (vix.latest != null ? num(vix.latest) : '\u2014'), 'fear gauge'],
+    ['Upper circuits', String(circ.n_uc || 0), 'locked up'],
+    ['Lower circuits', String(circ.n_lc || 0), 'locked down'],
+    ['Sectors', String((secs.sectors||[]).length), 'tracked']
+  ]);
+  main.append(card('Breadth and risk', 'one line per measure', tilesBox,
+    'A 28% reading on the 50-day means most stocks are below it, whatever the index did. That is '
+    + 'the difference between a market rising and an index rising.'));
+
+  // ---- 3. the index move against its own constituents ----
+  const ix = (idx.indices || []).find(x => x.id === 'nifty50');
+  if (ix){
+    const up = ix.advances || 0, dn = ix.declines || 0, tot = ix.count || (up + dn) || 1;
+    const bar = document.createElement('div');
+    bar.innerHTML =
+      '<div style="display:flex;height:10px;border-radius:6px;overflow:hidden;margin:2px 0 8px">' +
+      '<div style="width:' + (up/tot*100).toFixed(1) + '%;background:#4ec9a0"></div>' +
+      '<div style="width:' + (dn/tot*100).toFixed(1) + '%;background:#f0736a"></div></div>' +
+      '<p style="margin:0"><b>' + up + '</b> up \u00b7 <b>' + dn + '</b> down of ' + tot +
+      ' Nifty 50 stocks</p>';
+    main.append(card('Inside the index', 'Nifty 50 members', bar,
+      'The index can rise while most of its members fall, if a few heavyweights carry it. This bar '
+      + 'shows which happened.'));
+  }
+
+  // ---- 4. biggest movers ----
+  const srows = (scr.rows || []).filter(r => r && r.symbol);
+  if (srows.length){
+    const byChg = srows.slice().sort((a,b) => (b.chg_pct||0) - (a.chg_pct||0));
+    const fmt = r => ({symbol: r.symbol, name: r.name, close: r.close, chg_pct: r.chg_pct});
+    main.append(card('Biggest gainers', 'today',
+      makeTable(byChg.slice(0,8).map(fmt),
+        [{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'close',label:'Close',r:1},
+         {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)}],
+        {limit:8, placeholder:'Search\u2026', onRow: r => openStock(r.symbol)}),
+      'Tap a row for the full-screen detail.'));
+    main.append(card('Biggest losers', 'today',
+      makeTable(byChg.slice(-8).reverse().map(fmt),
+        [{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'close',label:'Close',r:1},
+         {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)}],
+        {limit:8, placeholder:'Search\u2026', onRow: r => openStock(r.symbol)}),
+      'Tap a row for the full-screen detail.'));
+  }
+
+  // ---- 5. sectors at a glance ----
+  const hs = (secs.sectors || []).map(s => ({name: s.name, chg_pct: s.avg_chg}))
+    .sort((a,b) => (b.chg_pct||0) - (a.chg_pct||0)).slice(0, 12);
+  if (hs.length) main.append(card('Sectors', 'top 12 by move', heatMap(hs),
+    'Colour is the average move across each sector. Full list under Sectors.'));
+
+  // ---- 6. what is locked ----
+  const uc = (circ.uc || []).slice(0,6), lc = (circ.lc || []).slice(0,6);
+  if (uc.length || lc.length){
+    const box = document.createElement('div');
+    const mk = (arr, cls, ttl) => '<p class="sub" style="margin:8px 0 4px">' + ttl + '</p>' +
+      '<p style="margin:0">' + arr.map(x => '<b>' + esc(x.s) + '</b> ' +
+        (x.p > 0 ? '+' : '') + (x.p||0).toFixed(2) + '%').join(' \u00b7 ') + '</p>';
+    box.innerHTML = mk(uc, 'up', 'Upper circuit \u00b7 buyers stuck') +
+                    mk(lc, 'down', 'Lower circuit \u00b7 sellers stuck');
+    main.append(card('Circuit radar', (circ.n_uc||0) + ' up \u00b7 ' + (circ.n_lc||0) + ' down', box,
+      'A stock locked at its upper circuit has more buyers than sellers and no price left to '
+      + 'clear them. Full list under F&O.'));
+  }
 }
 
 async function renderMarket(main){
@@ -489,6 +541,8 @@ async function renderMarket(main){
        }}),
     'indices.json \u00b7 average change across each index\'s constituents. Tap an index for its stocks, then a stock for its fundamentals.');
   main.append(idxCard, memberHost);
+  const radar = await circuitRadarCard();
+  if (radar) main.append(radar);
   const m = d.markets.rows.map(r => ({symbol: r[0], close: r[1], change: r[2], date: r[3]}));
   main.append(card('Index closes', 'data.json',
     makeTable(m, [{k:'symbol',label:'Symbol'},{k:'close',label:'Close',r:1,html:v=>num(v)},
@@ -497,6 +551,82 @@ async function renderMarket(main){
     makeTable(vix.series.slice(-30).reverse().map(s => ({date: s[0], vix: s[1]})),
       [{k:'date',label:'Date'},{k:'vix',label:'VIX',r:1,html:v=>num(v)}], {limit:30}),
     'vix.json · ' + vix.count + ' sessions since ' + vix.series[0][0] + '.'));
+}
+
+async function renderBreadth(main){
+  const [br, st, secs, scr] = await Promise.all([
+    J('breadth.json').catch(()=>({})), J('stocks.json').catch(()=>({})),
+    J('sectors.json').catch(()=>({})), J('screener.json').catch(()=>({}))
+  ]);
+
+  main.append(card('Breadth', (br.total||0) + ' stocks', tiles([
+    ['Above 50-day', (br.above_50 != null ? br.above_50 + '%' : '\u2014'), 'short-term trend'],
+    ['Above 200-day', (br.above_200 != null ? br.above_200 + '%' : '\u2014'), 'long-term trend'],
+    ['Below both', (br.above_50 != null && br.above_200 != null
+        ? Math.max(0, 100 - Math.max(br.above_50, br.above_200)).toFixed(1) + '%' : '\u2014'),
+     'weakest group'],
+    ['Stocks', String(br.total||0), 'in the screen']
+  ]), 'A breadth reading of 28% on the 50-day means seven in ten stocks are below their own '
+     + '50-day average, whatever the index did.'));
+
+  // where the universe sits against each average, computed from stocks.json
+  const S = st.stocks || {};
+  const rows = Object.keys(S).map(k => S[k]).filter(x => x && x.tech);
+  if (rows.length){
+    function bucket(field){
+      let above = 0, below = 0, na = 0;
+      rows.forEach(r => {
+        const v = r.close, m = r.tech[field];
+        if (v == null || m == null){ na++; return; }
+        if (v >= m) above++; else below++;
+      });
+      return {above, below, na, total: rows.length};
+    }
+    const b20 = bucket('sma_20'), b50 = bucket('sma_50'), b200 = bucket('sma_200');
+    function bars(label, b){
+      const pctA = (b.above / b.total * 100);
+      return '<p class="sub" style="margin:10px 0 4px">' + label + ' \u00b7 ' +
+        pctA.toFixed(1) + '% above (' + b.above + ' of ' + b.total + ')</p>' +
+        '<div style="display:flex;height:9px;border-radius:5px;overflow:hidden">' +
+        '<div style="width:' + pctA.toFixed(1) + '%;background:#4ec9a0"></div>' +
+        '<div style="width:' + (100-pctA).toFixed(1) + '%;background:#f0736a"></div></div>';
+    }
+    const box = document.createElement('div');
+    box.innerHTML = bars('Above 20-day average', b20) + bars('Above 50-day average', b50) +
+                    bars('Above 200-day average', b200);
+    main.append(card('Where the universe sits', rows.length + ' stocks with technicals', box,
+      'Computed from stocks.json rather than the summary file, so the counts are visible and the '
+      + 'percentages can be checked against them.'));
+  }
+
+  // sector breadth - which sectors are actually participating
+  const sec = (secs.sectors || []).slice().sort((a,b) => (b.advances||0)/(b.count||1) - (a.advances||0)/(a.count||1));
+  if (sec.length){
+    main.append(card('Sector participation', sec.length + ' sectors',
+      makeTable(sec.map(s => ({name: s.name, count: s.count, advances: s.advances,
+        declines: s.declines, adv_pct: s.count ? +(s.advances/s.count*100).toFixed(1) : null,
+        avg_chg: s.avg_chg})),
+        [{k:'name',label:'Sector'},{k:'count',label:'Stocks',r:1},{k:'advances',label:'Adv',r:1},
+         {k:'declines',label:'Dec',r:1},{k:'adv_pct',label:'% up',r:1,html:v=>v==null?'\u2014':v+'%'},
+         {k:'avg_chg',label:'Avg chg',r:1,html:v=>pct(v)}], {limit:40, placeholder:'Search sectors\u2026'}),
+      'A sector where most stocks rise is participating. One carried by a single heavyweight is not.'));
+  }
+
+  // extremes
+  const srows = (scr.rows || []).filter(r => r && r.symbol && r.chg_pct != null);
+  if (srows.length){
+    const sorted = srows.slice().sort((a,b) => b.chg_pct - a.chg_pct);
+    main.append(card('Strongest', 'top 10 today',
+      makeTable(sorted.slice(0,10).map(r=>({symbol:r.symbol,name:r.name,close:r.close,chg_pct:r.chg_pct})),
+        [{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'close',label:'Close',r:1},
+         {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)}],
+        {limit:10, onRow: r => openStock(r.symbol)}), 'Tap a row for the full-screen detail.'));
+    main.append(card('Weakest', 'bottom 10 today',
+      makeTable(sorted.slice(-10).reverse().map(r=>({symbol:r.symbol,name:r.name,close:r.close,chg_pct:r.chg_pct})),
+        [{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'close',label:'Close',r:1},
+         {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)}],
+        {limit:10, onRow: r => openStock(r.symbol)}), 'Tap a row for the full-screen detail.'));
+  }
 }
 
 async function renderSectors(main){
@@ -524,6 +654,8 @@ async function renderSectors(main){
 }
 
 async function renderStocks(main){
+  (async () => { const r = await circuitRadarCard(); if (r) main.append(r); })();
+
   const s = await J('screener.json');
   const rows = s.rows.map(r => ({symbol:r.symbol, name:r.name, close:r.close, chg_1d:r.chg_1d,
     chg_5d:r.chg_5d, chg_20d:r.chg_20d, rsi:r.rsi, vol_x:r.vol_x, trend:r.trend,
@@ -539,6 +671,10 @@ async function renderStocks(main){
 async function renderFno(main){
   const [exp, walls, roll, stats] = await Promise.all([
     J('oi_by_expiry.json'), J('oi_walls.json'), J('rollover.json'), J('oi_stats.json')]);
+  // circuit limits belong beside the F&O list: a stock locked at its band cannot be traded
+  // even if the futures say otherwise
+  (async () => { const r = await circuitRadarCard(); if (r) main.append(r); })();
+
   const rows = [];
   Object.keys(exp.indices || {}).forEach(k => {
     (exp.indices[k].expiries || []).forEach(e => rows.push({
@@ -695,6 +831,40 @@ function heatMap(items, onPick){
 
 /* One place that builds an index's member list, so Market and Indices behave identically.
    Rows open the full-screen stock detail through the same makeTable hook. */
+/* A price line from the 120 daily closes the repo already carries. Small enough to sit inside
+   a detail card, and it answers the question a table of numbers cannot: what has this thing
+   actually done lately. */
+function sparkline(vals, opts){
+  opts = opts || {};
+  const w = opts.w || 320, hgt = opts.h || 64, pad = 4;
+  const ys = (vals || []).map(Number).filter(v => isFinite(v));
+  if (ys.length < 2) return null;
+  const lo = Math.min(...ys), hi = Math.max(...ys);
+  const span = (hi - lo) || 1;
+  const x = i => pad + i * (w - pad * 2) / (ys.length - 1);
+  const y = v => hgt - pad - (v - lo) / span * (hgt - pad * 2);
+  const pts = ys.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' ');
+  const up = ys[ys.length - 1] >= ys[0];
+  const col = up ? '#4ec9a0' : '#f0736a';
+  const area = 'M' + x(0).toFixed(1) + ',' + (hgt - pad) + ' L' + pts.replace(/ /g, ' L') +
+               ' L' + x(ys.length - 1).toFixed(1) + ',' + (hgt - pad) + ' Z';
+  const svg = document.createElement('div');
+  svg.innerHTML =
+    '<svg viewBox="0 0 ' + w + ' ' + hgt + '" width="100%" height="' + hgt + '" ' +
+    'preserveAspectRatio="none" style="display:block;margin:2px 0 6px">' +
+    '<path d="' + area + '" fill="' + col + '" opacity=".13"/>' +
+    '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="1.8" ' +
+    'stroke-linejoin="round" stroke-linecap="round"/></svg>';
+  const box = document.createElement('div');
+  const rng = document.createElement('div');
+  rng.className = 'sub';
+  rng.style.margin = '0 0 4px';
+  rng.textContent = ys.length + ' sessions \u00b7 low ' + lo.toFixed(2) + ' \u00b7 high ' + hi.toFixed(2) +
+    ' \u00b7 ' + ((ys[ys.length-1] / ys[0] - 1) * 100).toFixed(1) + '% over the window';
+  box.append(svg.firstChild, rng);
+  return box;
+}
+
 function indexMembersCard(ix){
   const cons = (ix && ix.constituents) || [];
   const body = document.createElement('div');
@@ -713,6 +883,64 @@ function indexMembersCard(ix){
       onRow: r => openStock(r.symbol)}));
   return card(ix.name + ' members', cons.length + ' stocks', body,
     'Tap any row for the full-screen detail: technicals, fundamentals and reported results.');
+}
+
+/* Circuit radar - the same idea on every page that lists stocks: what is locked today, in which
+   direction, and on what band. NSE publishes it; the page showed it nowhere. */
+async function circuitRadarCard(){
+  let c;
+  try { c = await J('circuits.json'); } catch (_) { return null; }
+  if (!c || (!(c.uc||[]).length && !(c.lc||[]).length)) return null;
+  const body = document.createElement('div');
+  const mk = (arr, ttl, cls) => {
+    if (!arr.length) return '';
+    return '<p class="sub" style="margin:8px 0 4px">' + ttl + '</p>' +
+      '<div class="nchips" style="flex-wrap:wrap">' + arr.slice(0,14).map(x =>
+        '<button class="' + cls + '" disabled style="opacity:1;cursor:default">' +
+        esc(x.s) + ' ' + (x.p > 0 ? '+' : '') + (x.p||0).toFixed(1) + '%</button>').join('') + '</div>';
+  };
+  body.innerHTML = mk(c.uc||[], 'Upper circuit \u00b7 buyers stuck, no sellers', 'up') +
+                   mk(c.lc||[], 'Lower circuit \u00b7 sellers stuck, no buyers', 'down') +
+    '<p class="sub" style="margin-top:10px">' + esc(c.date || '') + ' \u00b7 band implied from the '
+    + 'day\'s move (5/10/20%). Source: NSE.</p>';
+  return card('Circuit radar', (c.n_uc||0) + ' up \u00b7 ' + (c.n_lc||0) + ' down', body,
+    'A stock locked at its upper circuit has more buyers than sellers and no price left to clear '
+    + 'them. It cannot be bought until the band lifts.');
+}
+
+async function renderCommodities(main){
+  const [cm, mt] = await Promise.all([
+    J('commodities.json').catch(()=>({})), J('metals.json').catch(()=>({}))
+  ]);
+  const rows = (cm.rows || []).map(r => ({symbol: r.symbol, label: r.label, unit: r.unit,
+    close: r.close, chg_1d: r.chg_1d, chg_1w: r.chg_1w, chg_1m: r.chg_1m, date: r.date}));
+  if (rows.length){
+    main.append(card('Commodities', rows.length + ' contracts',
+      makeTable(rows, [
+        {k:'label',label:'Contract'},{k:'unit',label:'Unit'},{k:'close',label:'Close',r:1},
+        {k:'chg_1d',label:'1 day',r:1,html:v=>pct(v)},{k:'chg_1w',label:'1 week',r:1,html:v=>pct(v)},
+        {k:'chg_1m',label:'1 month',r:1,html:v=>pct(v)},{k:'date',label:'Date'}
+      ], {limit:40, placeholder:'Search commodities\u2026'}),
+      'commodities.json \u00b7 free-source closes, not MCX tick data. ' + (cm.note || '')));
+  }
+  if (mt && mt.available !== false && mt.gold){
+    const g = mt.gold, s = mt.silver || {};
+    const box = tiles([
+      ['Gold 24K /g', '\u20b9' + num(g.per_gram), 'per gram'],
+      ['Gold 22K /g', g.k22_per_gram ? '\u20b9' + num(g.k22_per_gram) : '\u2014', 'per gram'],
+      ['Silver /g', s.per_gram ? '\u20b9' + num(s.per_gram) : '\u2014', 'per gram'],
+      ['USD/INR', mt.usdinr ? num(mt.usdinr) : '\u2014', (mt.usdinr_chg_pct||0).toFixed(2) + '%']
+    ]);
+    main.append(card('Gold and silver', mt.as_of_ist || '', box,
+      'metals.json \u00b7 converted from spot with the USD/INR rate above. Purity tiers on the '
+      + 'Metals card in the Telegram brief.'));
+  }
+  if (!rows.length && !(mt && mt.gold)){
+    main.append(card('Commodities', 'no data',
+      (() => { const p = document.createElement('p'); p.className = 'empty';
+        p.textContent = 'commodities.json and metals.json are both empty this run.'; return p; })(),
+      'The commodity pull is a free-source best effort; MCX itself blocks automated reads.'));
+  }
 }
 
 async function renderIndices(main){
@@ -748,6 +976,42 @@ async function renderFunds(main, file, title, opts){
   opts = opts || {};
   const d = await J(file);
   const rows = arrOf(d) || [];
+
+  // How many of these actually beat the index? The feed carries the flag; the page never showed
+  // it, so "best performer" was a column of numbers with nothing to measure them against.
+  if (rows.length && ('beats_nifty_5y' in rows[0] || 'beats_nifty_3y' in rows[0])){
+    const pctOf = k => {
+      const known = rows.filter(r => r[k] !== undefined && r[k] !== null);
+      if (!known.length) return null;
+      const yes = known.filter(r => r[k]).length;
+      return {yes, total: known.length, pct: +(yes / known.length * 100).toFixed(1)};
+    };
+    const b5 = pctOf('beats_nifty_5y'), b3 = pctOf('beats_nifty_3y'), b1 = pctOf('beats_nifty_1y');
+    const t = [];
+    if (b1) t.push(['Beat Nifty 1Y', b1.pct + '%', b1.yes + ' of ' + b1.total]);
+    if (b3) t.push(['Beat Nifty 3Y', b3.pct + '%', b3.yes + ' of ' + b3.total]);
+    if (b5) t.push(['Beat Nifty 5Y', b5.pct + '%', b5.yes + ' of ' + b5.total]);
+    if (t.length) main.append(card(title + ' vs the index', 'how many beat Nifty', tiles(t),
+      'Over a long enough window most active funds trail the index they are measured against. '
+      + 'This is the count, not a recommendation.'));
+  }
+
+  // best and worst by the longest return the feed carries
+  const rk = ['r5y','r3y','r1y'].find(k => rows.some(r => r[k] != null));
+  if (rk && rows.length > 6){
+    const withR = rows.filter(r => r[rk] != null).sort((a,b) => b[rk] - a[rk]);
+    const cols = [{k:'name',label:'Name'},{k:'fund_house',label:'House'},{k:rk,label:rk.toUpperCase()+' return',r:1,html:v=>pct(v)},
+                  {k:'nav',label:'NAV',r:1}];
+    main.append(card(title + ' \u00b7 best ' + rk.toUpperCase(),
+      withR.length + ' ranked',
+      makeTable(withR.slice(0,10), cols, {limit:10, onRow: r => openDetail(r, r.name, r.fund_house)}),
+      'Ranked on the longest return the feed carries, so a fund with a short record is not '
+      + 'flattered by a single good year.'));
+    main.append(card(title + ' \u00b7 worst ' + rk.toUpperCase(),
+      withR.length + ' ranked',
+      makeTable(withR.slice(-10).reverse(), cols, {limit:10, onRow: r => openDetail(r, r.name, r.fund_house)}),
+      'Shown deliberately: a list of winners alone is not a comparison.'));
+  }
   const cols = opts.cols || (rows[0] ? Object.keys(rows[0]).slice(0,8).map(k => ({k, label:label(k)})) : []);
   main.append(card(title, (d.count || rows.length) + ' rows',
     makeTable(rows, cols, {
@@ -760,17 +1024,15 @@ async function renderFunds(main, file, title, opts){
 }
 
 async function renderIpo(main){
-  // The IPO section used to render a stale list. ipobodh.vercel.app is kept current, so hand
-  // the reader over to it rather than showing numbers this repo no longer refreshes.
+  // Straight there. The hand-off card was one tap of friction for a page that only exists to
+  // send you somewhere else - you land on the IPO tab and expect IPOs, not an announcement
+  // that IPOs live elsewhere.
+  location.replace('https://ipobodh.vercel.app');
   const c = document.createElement('div');
-  c.innerHTML = '<p class="big">IPOs live at ipobodh.vercel.app</p>' +
-    '<p>This site no longer keeps its own IPO list - the one here had gone stale. Opening ' +
-    'ipobodh.vercel.app\u2026</p>' +
+  c.innerHTML = '<p class="big">Opening ipobodh.vercel.app\u2026</p>' +
     '<p><a class="newsbtn" href="https://ipobodh.vercel.app" style="display:inline-block;' +
-    'padding:11px 16px;text-decoration:none">Open ipobodh.vercel.app</a></p>';
-  main.append(card('IPOs', 'handed off', c,
-    'If the redirect does not happen, tap the button above.'));
-  setTimeout(() => { location.href = 'https://ipobodh.vercel.app'; }, 900);
+    'padding:11px 16px;text-decoration:none">Open it now</a></p>';
+  main.append(card('IPOs', 'handed off', c, 'If nothing happens, tap the button.'));
 }
 
 async function renderNews(main){
@@ -1018,6 +1280,7 @@ async function route(){
     else if (id === 'forecast') await renderForecast(main);
     else if (id === 'news') await renderNews(main);
     else if (id === 'indices') await renderIndices(main);
+    else if (id === 'breadth') await renderBreadth(main);
     else if (id === 'ipo') await renderIpo(main);
     else if (id === 'mf') await renderFunds(main, 'mf.json', 'Mutual funds',
       {cols:[{k:'name',label:'Fund'},{k:'fund_house',label:'House'},{k:'category',label:'Category'},
@@ -1029,6 +1292,7 @@ async function route(){
              {k:'close',label:'Close',r:1},{k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},
              {k:'rsi_14',label:'RSI',r:1},{k:'trend',label:'Trend'},
              {k:'vol_x',label:'Vol x',r:1}], placeholder:'Search ETFs…'});
+    else if (id === 'commodities') await renderCommodities(main);
     else if (id === 'crypto') await renderFunds(main, 'crypto.json', 'Crypto',
       {cols:[{k:'symbol',label:'Pair'},{k:'name',label:'Name'},{k:'close',label:'Price',r:1},
              {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},{k:'rsi_14',label:'RSI',r:1},
@@ -1118,7 +1382,7 @@ function fmtDetail(k, v){
   return String(v);
 }
 
-function openDetail(row, title, subtitle){
+async function openDetail(row, title, subtitle){
   const box = $('#sheet'), body = $('#sheetBody');
   box.classList.add('on'); box.setAttribute('aria-hidden','false');
   const keys = DETAIL_ORDER.filter(k => k in row)
@@ -1131,9 +1395,25 @@ function openDetail(row, title, subtitle){
   let out = '<h3>' + esc(title || row.name || row.symbol || row.code || 'Detail') + '</h3>';
   if (subtitle) out += '<div class="sub">' + esc(subtitle) + '</div>';
   out += rowKV(pairs);
+
+  // a line for anything we hold history for: ETFs and stocks by symbol, coins by base
+  const sym = String(row.symbol || row.base || '').toUpperCase();
+  let chartNode = null;
+  if (sym){
+    try {
+      const ser = await J('series.json');
+      const key = Object.keys(ser.series || {}).find(k => k.split('.')[0] === sym);
+      if (key) chartNode = sparkline(ser.series[key]);
+    } catch (_) {}
+  }
+  if (chartNode) out += '<div id="chartSlot"></div>';
   out += '<p class="sub" style="margin-top:14px">Straight from the feed - every field this row '
     + 'carries. Values can be delayed, wrong or missing. Not a recommendation.</p>';
   body.innerHTML = out;
+  if (chartNode){
+    const slot = body.querySelector('#chartSlot');
+    if (slot) slot.append(chartNode);
+  }
   box.scrollTop = 0;
 }
 
@@ -1159,6 +1439,17 @@ async function openStock(sym){
       + '<div class="' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '" style="font-size:13px">'
       + (chg > 0 ? '+' : '') + fmt(chg) + '% today</div>';
   }
+  // price line, drawn from series.json - the numbers below say where it is, this says how it got there.
+  // It goes into a slot inside `out`, so the header is rendered once rather than written to the
+  // body early and then written again with the rest of the card.
+  out += '<div id="chartSlot"></div>';
+  let chartNode = null;
+  try {
+    const ser = await J('series.json');
+    const key = Object.keys(ser.series || {}).find(k => k.split('.')[0] === sym);
+    if (key) chartNode = sparkline(ser.series[key]);
+  } catch (_) { /* no series - the card still works without a chart */ }
+
   if (Object.keys(t).length){
     out += '<h5>Technicals</h5>' + rowKV([
       ['RSI 14', fmt(t.rsi_14, 1)], ['Trend', fmt(t.trend)],
@@ -1192,6 +1483,11 @@ async function openStock(sym){
   out += '<p class="sub" style="margin-top:14px">stocks.json \u00b7 fundamentals.json. Prices and '
     + 'fundamentals can be delayed, wrong or missing. Not a recommendation.</p>';
   body.innerHTML = out;
+  if (chartNode){
+    const slot = body.querySelector('#chartSlot');
+    if (slot) slot.append(chartNode);
+  }
+  box.scrollTop = 0;
 }
 function closeSheet(){
   const b = $('#sheet'); b.classList.remove('on'); b.setAttribute('aria-hidden','true');

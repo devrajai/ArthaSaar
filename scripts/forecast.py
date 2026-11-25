@@ -218,6 +218,57 @@ def main() -> int:
             except Exception:
                 pass
 
+    # FALLBACK ON AN EMPTY RESULT, NOT JUST A MISSING FILE.
+    # The candle archive is rebuilt from bhavcopy each run and holds only the recent window,
+    # so symbols often carry fewer rows than --min-history (120). The archive therefore exists
+    # and looks fine, while every symbol is skipped and nothing is forecast - which is why this
+    # step exited 0 night after night and the site kept a two-week-old forecast.json.
+    # docs/series.json holds 120 closes per symbol and is always committed, so retry from it.
+    if not acc_rows and src is not None:
+        sj = Path("docs/series.json")
+        if sj.exists():
+            print(f"nothing usable in {src} (rows per symbol below --min-history={args.min_history})"
+                  f" - retrying from {sj}")
+            raw = json.loads(sj.read_text())
+            ser = raw.get("series") or raw
+            rows = []
+            for sym, vals in ser.items():
+                if not isinstance(vals, list):
+                    continue
+                for i, v in enumerate(vals):
+                    if v is None:
+                        continue
+                    rows.append({"symbol": str(sym).split(".")[0], "close": float(v), "date": i})
+            if rows:
+                df = pd.DataFrame(rows)
+                sortcol = "date"
+                src = sj
+                print(f"forecast from {sj} | {len(ser)} symbols")
+                symbols = args.symbols or sorted(df["symbol"].unique())
+                for sym in symbols:
+                    g = df[df["symbol"] == sym].sort_values(sortcol)
+                    y = pd.to_numeric(g["close"], errors="coerce").dropna().to_numpy(float)
+                    if len(y) < args.min_history:
+                        continue
+                    tr, te = y[: -args.horizon], y[-args.horizon:]
+                    for name in wanted:
+                        fn = MODELS[name]
+                        try:
+                            pred = np.asarray(fn(tr, args.horizon, args.season), float)
+                        except Exception:
+                            gc.collect()
+                            continue
+                        e = _err(te, pred)
+                        gc.collect()
+                        acc_rows.append({"symbol": sym, "model": name, "n_train": len(tr), **e})
+                        try:
+                            fut = np.asarray(fn(y, args.horizon, args.season), float)
+                            for step, val in enumerate(fut, 1):
+                                fc_rows.append({"symbol": sym, "model": name, "step": step,
+                                                "yhat": float(val)})
+                        except Exception:
+                            pass
+
     if not acc_rows:
         print("no model produced a forecast - see the errors above "
               "(either not enough history, or the model deps failed to load)")

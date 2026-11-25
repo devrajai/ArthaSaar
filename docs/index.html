@@ -177,13 +177,25 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .nac li i{font-style:normal;font:500 clamp(9.5px,1.2vw,11.5px)/1 var(--mono);color:var(--dimmer);white-space:nowrap}
 
 /* ---------- stock sheet: tap a symbol anywhere and the whole picture opens ---------- */
-#sheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(8,10,14,.72);
-  backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
-#sheet.on{display:flex}
-#sheetBox{width:100%;max-width:640px;max-height:88vh;overflow:auto;background:var(--card);
-  border:1px solid rgba(255,255,255,.10);border-radius:16px 16px 0 0;padding:18px 18px 26px;
-  box-shadow:0 -12px 40px rgba(0,0,0,.45);position:relative}
-@media(min-width:700px){#sheet{align-items:center}#sheetBox{border-radius:16px;margin:20px}}
+#sheet{position:fixed;inset:0;z-index:60;display:none;background:var(--bg)}
+#sheet.on{display:block}
+#sheetBox{width:100%;height:100%;overflow:auto;background:var(--bg);
+  padding:calc(14px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
+  position:relative;-webkit-overflow-scrolling:touch}
+@media(min-width:820px){#sheetBox{max-width:760px;margin:0 auto}}
+/* heat map: one tile per sector, colour and depth carry the size of the move */
+.heat{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}
+.heat a{display:block;text-decoration:none;color:inherit;border-radius:9px;padding:9px 8px;
+  border:1px solid rgba(255,255,255,.08);min-height:62px;cursor:pointer}
+.heat b{display:block;font-size:11px;font-weight:600;line-height:1.25;opacity:.95;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.heat i{display:block;font-style:normal;font-size:14px;font-weight:700;margin-top:5px;
+  font-variant-numeric:tabular-nums}
+.heat .up{background:rgba(78,201,160,.16);border-color:rgba(78,201,160,.34)}
+.heat .dn{background:rgba(240,115,106,.16);border-color:rgba(240,115,106,.34)}
+.heat .up.hot{background:rgba(78,201,160,.34);border-color:rgba(78,201,160,.55)}
+.heat .dn.hot{background:rgba(240,115,106,.34);border-color:rgba(240,115,106,.55)}
+.heat .flat{background:rgba(255,255,255,.05)}
 #sheetBox h3{margin:0 0 2px;font-size:19px;letter-spacing:-.3px}
 #sheetBox .sub{font-size:12px;opacity:.6;margin-bottom:14px}
 #sheetBox .x{position:absolute;right:16px;top:12px;background:none;border:0;
@@ -317,6 +329,8 @@ function makeTable(records, cols, opt){
     const tb = document.createElement('tbody');
     rs.slice(0, limit).forEach(r => {
       const row = document.createElement('tr');
+      if (opt.onRow){ row.style.cursor = 'pointer'; row.title = 'Tap for the full detail';
+        row.onclick = (ev) => { if (ev.target.closest('a')) return; opt.onRow(r); }; }
       cols.forEach(c => {
         const td = document.createElement('td');
         if (c.r) td.className = 'r';
@@ -405,8 +419,7 @@ const SECTIONS = [
   ['Mutual Funds', 'mf', 'Funds & the world'], ['ETFs', 'etf', 'Funds & the world'],
   ['Global', 'global', 'Funds & the world'], ['Crypto', 'crypto', 'Funds & the world'],
   ['History', 'history', 'Does any of it work'], ['Charges', 'charges', 'Does any of it work'],
-  ['Learn', 'learn', 'Does any of it work'], ['Backtester', 'backtest', 'Does any of it work'],
-  ['Data library', 'library', 'Every file']
+  ['Learn', 'learn', 'Does any of it work'], ['Backtester', 'backtest', 'Does any of it work']
 ];
 
 async function renderOverview(main){
@@ -474,6 +487,13 @@ async function renderSectors(main){
   const s = await J('sectors.json');
   const rows = s.sectors.map(x => ({name: x.name, stocks: x.count, advances: x.advances,
     declines: x.declines, avg_chg: x.avg_chg, best: x.best, worst: x.worst}));
+
+  // The heat map was missing from this page entirely - the numbers were in a table and the
+  // shape of the market was not visible at a glance. Built from the same rows, sorted by move.
+  const hm = rows.slice().sort((a,b) => Math.abs(b.avg_chg||0) - Math.abs(a.avg_chg||0))
+                   .map(r => ({name: r.name, chg_pct: r.avg_chg}));
+  main.append(card('Sector heat map', hm.length + ' sectors', heatMap(hm),
+    'Colour is the size of the average move across each sector. Deeper colour, bigger move.'));
   main.append(card('Sectors', s.count + ' sectors',
     makeTable(rows, [{k:'name',label:'Sector'},{k:'advances',label:'Adv',r:1},{k:'declines',label:'Dec',r:1},
       {k:'avg_chg',label:'Avg change',r:1,html:v=>pct(v)},{k:'best',label:'Best'},{k:'worst',label:'Worst'}], {limit:40}),
@@ -634,6 +654,94 @@ async function renderBacktest(main){
     + 'crore in different places - and the readable cards sum to 578 trades against a header of '
     + '594. The page never states its entry, exit, stop or cost assumptions and gives no '
     + 'out-of-sample test, so the traded year was very likely in-sample.'));
+}
+
+/* =====================================================================================
+   INDICES - a heat map you can walk down.
+   indices.json already carried a `heat` array and a `constituents` list per index; the page
+   rendered neither. Tap an index and its stocks open; tap a stock and the full-screen detail
+   opens on top of that.
+   ===================================================================================== */
+function heatMap(items, onPick){
+  const wrap = document.createElement('div'); wrap.className = 'heat';
+  items.forEach(x => {
+    const v = Number(x.chg_pct);
+    const a = document.createElement('a');
+    a.className = (isFinite(v) && v !== 0) ? (v > 0 ? 'up' : 'dn') : 'flat';
+    if (isFinite(v) && Math.abs(v) >= 1.5) a.classList.add('hot');
+    a.innerHTML = '<b>' + esc(x.name) + '</b><i>' +
+      (isFinite(v) ? (v > 0 ? '+' : '') + v.toFixed(2) + '%' : '\u2014') + '</i>';
+    if (onPick) a.onclick = () => onPick(x);
+    wrap.append(a);
+  });
+  return wrap;
+}
+
+async function renderIndices(main){
+  const d = await J('indices.json');
+  const heat = d.heat || [];
+  const list = d.indices || [];
+
+  const sectors = heat.filter(x => x.category === 'Sector');
+  const broad = heat.filter(x => x.category !== 'Sector');
+  if (sectors.length) main.append(card('Sector heat map', sectors.length + ' sectors',
+    heatMap(sectors, x => pickIndex(x.id)),
+    'Colour is the size of the move. Deeper colour means a bigger move. Tap a tile for its stocks.'));
+  if (broad.length) main.append(card('Broad indices', broad.length + ' indices',
+    heatMap(broad, x => pickIndex(x.id)), 'Tap a tile for its stocks.'));
+
+  const host = document.createElement('div'); host.id = 'ixBody';
+  main.append(card('Index members', 'tap an index', host,
+    'indices.json carries the constituents of each index. Tap a row for the full-screen detail.'));
+
+  function pickIndex(id){
+    const ix = list.find(x => x.id === id) || list.find(x => (x.name||'').toLowerCase() === String(id).toLowerCase());
+    if (!ix){ host.innerHTML = '<p class="empty">No constituents published for that index.</p>'; return; }
+    const cons = ix.constituents || [];
+    host.innerHTML = '';
+    const head = document.createElement('p'); head.className = 'big';
+    head.textContent = ix.name + ' \u00b7 ' + cons.length + ' stocks';
+    host.append(head);
+    host.append(makeTable(cons, [
+      {k:'symbol', label:'Symbol'}, {k:'name', label:'Name'},
+      {k:'industry', label:'Industry'}, {k:'close', label:'Close', r:1},
+      {k:'chg_pct', label:'Change', r:1, html:v=>pct(v)}
+    ], {limit:200, placeholder:'Search this index\u2026',
+        onRow: r => openStock(r.symbol)}));
+    host.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  const first = list.find(x => x.id === 'nifty50') || list[0];
+  if (first) pickIndex(first.id);
+}
+
+async function renderFunds(main, file, title, opts){
+  opts = opts || {};
+  const d = await J(file);
+  const rows = arrOf(d) || [];
+  const cols = opts.cols || (rows[0] ? Object.keys(rows[0]).slice(0,8).map(k => ({k, label:label(k)})) : []);
+  main.append(card(title, (d.count || rows.length) + ' rows',
+    makeTable(rows, cols, {
+      limit: 150,
+      placeholder: opts.placeholder || 'Search\u2026',
+      onRow: r => openDetail(r, r.name || r.symbol || r.code,
+                             r.fund_house || r.underlying || r.category || '')
+    }),
+    file + ' \u00b7 tap any row for the full detail. ' + (d.note || '')));
+}
+
+async function renderIpo(main){
+  // The IPO section used to render a stale list. ipobodh.vercel.app is kept current, so hand
+  // the reader over to it rather than showing numbers this repo no longer refreshes.
+  const c = document.createElement('div');
+  c.innerHTML = '<p class="big">IPOs live at ipobodh.vercel.app</p>' +
+    '<p>This site no longer keeps its own IPO list - the one here had gone stale. Opening ' +
+    'ipobodh.vercel.app\u2026</p>' +
+    '<p><a class="newsbtn" href="https://ipobodh.vercel.app" style="display:inline-block;' +
+    'padding:11px 16px;text-decoration:none">Open ipobodh.vercel.app</a></p>';
+  main.append(card('IPOs', 'handed off', c,
+    'If the redirect does not happen, tap the button above.'));
+  setTimeout(() => { location.href = 'https://ipobodh.vercel.app'; }, 900);
 }
 
 async function renderNews(main){
@@ -880,6 +988,23 @@ async function route(){
     else if (id === 'deals') await renderDeals(main);
     else if (id === 'forecast') await renderForecast(main);
     else if (id === 'news') await renderNews(main);
+    else if (id === 'indices') await renderIndices(main);
+    else if (id === 'ipo') await renderIpo(main);
+    else if (id === 'mf') await renderFunds(main, 'mf.json', 'Mutual funds',
+      {cols:[{k:'name',label:'Fund'},{k:'fund_house',label:'House'},{k:'category',label:'Category'},
+             {k:'nav',label:'NAV',r:1},{k:'r1y',label:'1Y',r:1,html:v=>pct(v)},
+             {k:'r3y',label:'3Y',r:1,html:v=>pct(v)},{k:'r5y',label:'5Y',r:1,html:v=>pct(v)},
+             {k:'years',label:'Yrs',r:1}], placeholder:'Search funds…'});
+    else if (id === 'etf') await renderFunds(main, 'etf.json', 'ETFs',
+      {cols:[{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'underlying',label:'Tracks'},
+             {k:'close',label:'Close',r:1},{k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},
+             {k:'rsi_14',label:'RSI',r:1},{k:'trend',label:'Trend'},
+             {k:'vol_x',label:'Vol x',r:1}], placeholder:'Search ETFs…'});
+    else if (id === 'crypto') await renderFunds(main, 'crypto.json', 'Crypto',
+      {cols:[{k:'symbol',label:'Pair'},{k:'name',label:'Name'},{k:'close',label:'Price',r:1},
+             {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},{k:'rsi_14',label:'RSI',r:1},
+             {k:'trend',label:'Trend'},{k:'mcap',label:'Mcap',r:1}],
+       placeholder:'Search coins…'});
     else if (id === 'backtest') await renderBacktest(main);
     else if (id === 'events') await renderEvents(main);
     else if (id === 'library') await renderGeneric(main, FILES, '');
@@ -928,6 +1053,61 @@ function rowKV(pairs){
   return '<div class="kv">' + pairs.map(p =>
     '<div><span>' + esc(p[0]) + '</span><span>' + p[1] + '</span></div>').join('') + '</div>';
 }
+/* =====================================================================================
+   FULL-SCREEN DETAIL for any row.
+   Mutual funds, ETFs and coins have no "symbol" the stock sheet understands, so tapping a row
+   there did nothing. This renders whatever fields the row actually carries, in the same
+   full-screen window the stock sheet uses.
+   ===================================================================================== */
+const DETAIL_LABEL = {
+  code:'Scheme code', name:'Name', fund_house:'Fund house', category:'Category', type:'Type',
+  nav:'NAV', nav_date:'NAV date', first_nav_date:'Inception', years:'Years', r1y:'1Y return',
+  r3y:'3Y return', r5y:'5Y return', r10y:'10Y return', since:'Since launch',
+  volatility:'Volatility', max_dd:'Max drawdown', expense:'Expense ratio', aum:'AUM',
+  benchmark:'Benchmark', beats_nifty:'Beat Nifty', symbol:'Symbol', underlying:'Tracks',
+  close:'Close', chg_pct:'Change today', rsi_14:'RSI 14', trend:'Trend', vol_x:'Volume x',
+  atr_pct:'ATR %', mcap:'Market cap', volume_24h:'24h volume', base:'Base', industry:'Industry',
+  points:'Points', volume:'Volume', deep:'Deep book', series:'Series', isin:'ISIN', face:'Face value'
+};
+const DETAIL_ORDER = ['name','symbol','code','fund_house','category','type','base','underlying',
+  'close','nav','chg_pct','r1y','r3y','r5y','r10y','since','years','nav_date','first_nav_date',
+  'expense','aum','benchmark','beats_nifty','mcap','volume_24h','volume','rsi_14','trend','vol_x',
+  'atr_pct','max_dd','volatility','industry','points','series','isin','face','deep'];
+
+function fmtDetail(k, v){
+  if (v === null || v === undefined || v === '') return null;
+  if (typeof v === 'boolean') return v ? 'Yes' : 'No';
+  if (typeof v === 'number'){
+    if (k === 'mcap' || k === 'aum' || k === 'volume_24h' || k === 'volume')
+      return v.toLocaleString('en-IN');
+    if (/^(r1y|r3y|r5y|r10y|since|chg_pct|volatility|max_dd|atr_pct)$/.test(k))
+      return (v > 0 ? '+' : '') + v.toFixed(2) + '%';
+    if (k === 'expense') return v.toFixed(2) + '%';
+    return (Math.abs(v) >= 1000) ? v.toLocaleString('en-IN') : String(Math.round(v * 100) / 100);
+  }
+  if (typeof v === 'object') return null;
+  return String(v);
+}
+
+function openDetail(row, title, subtitle){
+  const box = $('#sheet'), body = $('#sheetBody');
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  const keys = DETAIL_ORDER.filter(k => k in row)
+    .concat(Object.keys(row).filter(k => !DETAIL_ORDER.includes(k)));
+  const pairs = [];
+  keys.forEach(k => {
+    const v = fmtDetail(k, row[k]);
+    if (v !== null) pairs.push([DETAIL_LABEL[k] || label(k), v]);
+  });
+  let out = '<h3>' + esc(title || row.name || row.symbol || row.code || 'Detail') + '</h3>';
+  if (subtitle) out += '<div class="sub">' + esc(subtitle) + '</div>';
+  out += rowKV(pairs);
+  out += '<p class="sub" style="margin-top:14px">Straight from the feed - every field this row '
+    + 'carries. Values can be delayed, wrong or missing. Not a recommendation.</p>';
+  body.innerHTML = out;
+  box.scrollTop = 0;
+}
+
 async function openStock(sym){
   const box = $('#sheet'), body = $('#sheetBody');
   box.classList.add('on'); box.setAttribute('aria-hidden','false');

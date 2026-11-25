@@ -32,6 +32,8 @@ button{font-family:inherit}
 .brow{display:flex;align-items:center;gap:calc(10 * var(--u));padding:0 calc(14 * var(--u));
   height:calc(64 * var(--u));max-width:min(100%, calc(430 * var(--u)));margin:0 auto}
 .brand{margin-right:auto}
+.nhero b{display:block;font-size:clamp(13px,1.7vw,17px);font-weight:700}
+.nhero span{display:block;margin-top:calc(3 * var(--u));font-size:clamp(11px,1.35vw,13px);color:var(--dim);line-height:1.45}
 .ico{width:calc(32 * var(--u));height:calc(28 * var(--u));border:calc(1 * var(--u)) solid var(--line2);
   background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;justify-content:center;
   align-items:center;gap:calc(4 * var(--u));border-radius:calc(7 * var(--u))}
@@ -690,23 +692,82 @@ async function renderNews(main){
     '<div class="nhero"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/>' +
     '<path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg></span>' +
     '<div><b>Events Calendar</b><span>Results, dividends, splits and buybacks ahead.</span></div></div>' +
-    '<div class="nrange"><button class="on">This week</button><button>1 month</button><button>3 months</button><button>Past week</button></div>' +
-    '<div class="nsum"><span>Showing <b>' + rows.length + '</b> events for <b>' + dshort(dates[0]||'') + ' – ' + dshort(dates[dates.length-1]||'') + '</b></span>' +
-    '<button id="collapseAll">Collapse all</button></div>' +
-    '<div class="nchips">' + order.map(k =>
-      '<button><i class="d ' + DOT[k] + '"></i>' + LABEL[k] + ' ' + groups[k].length + '</button>').join('') + '</div>' +
-    '<div class="nac">' + order.map(k =>
-      '<details open><summary><span class="d ' + DOT[k] + '"></span>' + LABEL[k] + '<em>' + groups[k].length + '</em></summary><ul>' +
-      groups[k].map(e => '<li><b>' + esc(e.symbol) + '</b><span>' + esc(String(e.detail || e.type)) + '</span><i>' + esc(dshort(e.date)) + '</i></li>').join('') +
-      '</ul></details>').join('') + '</div>';
+    '<div class="nrange">' +
+      '<button class="on" data-range="week">This week</button>' +
+      '<button data-range="m1">1 month</button>' +
+      '<button data-range="m3">3 months</button>' +
+      '<button data-range="past">Past week</button>' +
+    '</div>' +
+    '<div id="evBody"></div>';
 
-  const ca = ev.querySelector('#collapseAll');
-  ca.addEventListener('click', () => {
-    const boxes = ev.querySelectorAll('details');
-    const anyOpen = [].some.call(boxes, d => d.open);
-    [].forEach.call(boxes, d => d.open = !anyOpen);
-    ca.textContent = anyOpen ? 'Expand all' : 'Collapse all';
+  /* The four range buttons were decoration: they highlighted but filtered nothing, because
+     nothing was wired to them. Each one now sets a real window over the event dates and
+     repaints. Past events live under cal.recent, which the pipeline writes separately - it is
+     empty today, so "Past week" says so rather than showing a blank list. */
+  function evWindow(key){
+    const now = new Date(); now.setHours(0,0,0,0);
+    const iso = d => d.toISOString().slice(0,10);
+    const plus = n => { const x = new Date(now); x.setDate(x.getDate()+n); return x; };
+    if (key === 'past'){
+      return {from: iso(plus(-7)), to: iso(now), src: (cal.recent || [])};
+    }
+    if (key === 'week'){
+      const dow = now.getDay();                       // 0 = Sunday
+      return {from: iso(now), to: iso(plus(dow === 0 ? 0 : 7 - dow)), src: rows};
+    }
+    if (key === 'm1') return {from: iso(now), to: iso(plus(30)), src: rows};
+    return {from: iso(now), to: iso(plus(90)), src: rows};
+  }
+
+  function paintEvents(key){
+    const box = ev.querySelector('#evBody');
+    const w = evWindow(key);
+    const sel = (w.src || []).filter(e => e && e.date && e.date >= w.from && e.date <= w.to);
+
+    if (!sel.length){
+      box.innerHTML = '<div class="nsum"><span>No events between <b>' + dshort(w.from) +
+        '</b> and <b>' + dshort(w.to) + '</b></span></div>' +
+        '<p class="empty">' +
+        (key === 'past'
+          ? 'The pipeline stores past events separately and that list is empty today, so there is nothing to show for the last seven days.'
+          : 'No events fall inside this window. Try a wider range.') +
+        '</p>';
+      return;
+    }
+
+    const g = {};
+    sel.forEach(e => (g[e.type] = g[e.type] || []).push(e));
+    const ord = Object.keys(g).sort((a,b) => g[b].length - g[a].length);
+    const ds = sel.map(e => e.date).sort();
+
+    box.innerHTML =
+      '<div class="nsum"><span>Showing <b>' + sel.length + '</b> event' + (sel.length===1?'':'s') +
+        ' for <b>' + dshort(ds[0]) + ' \u2013 ' + dshort(ds[ds.length-1]) + '</b></span>' +
+      '<button id="collapseAll">Collapse all</button></div>' +
+      '<div class="nchips">' + ord.map(k =>
+        '<button><i class="d ' + DOT[k] + '"></i>' + LABEL[k] + ' ' + g[k].length + '</button>').join('') + '</div>' +
+      '<div class="nac">' + ord.map(k =>
+        '<details open><summary><span class="d ' + DOT[k] + '"></span>' + LABEL[k] + '<em>' + g[k].length + '</em></summary><ul>' +
+        g[k].map(e => '<li><b>' + esc(e.symbol) + '</b><span>' + esc(String(e.detail || e.type)) + '</span><i>' + esc(dshort(e.date)) + '</i></li>').join('') +
+        '</ul></details>').join('') + '</div>';
+
+    const ca = box.querySelector('#collapseAll');
+    if (ca) ca.addEventListener('click', () => {
+      const boxes = box.querySelectorAll('details');
+      const anyOpen = [].some.call(boxes, d => d.open);
+      [].forEach.call(boxes, d => d.open = !anyOpen);
+      ca.textContent = anyOpen ? 'Expand all' : 'Collapse all';
+    });
+  }
+
+  ev.querySelector('.nrange').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(ev.querySelectorAll('.nrange button'), x => x.classList.remove('on'));
+    b.classList.add('on');
+    paintEvents(b.dataset.range);
   });
+
+  paintEvents('week');
 
   main.append(live, ev);
 

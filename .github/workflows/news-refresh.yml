@@ -1,0 +1,66 @@
+name: News refresh
+
+# The news page reads docs/news_feed.json, which the nightly pipeline rebuilds. That is once a
+# day at 23:00 IST, so headlines sat frozen all day and the Results chip showed 0 because the
+# builder only ever saw the 30 ET Markets rows in docs/data.json.
+#
+# This workflow refreshes the feed on its own, three times a day, and can be run by hand. It is
+# cheap: six RSS feeds, no API keys, about 40 seconds.
+
+on:
+  schedule:
+    - cron: "15 3,9,13 * * *"   # 08:45, 15:15, 18:45 IST
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install --quiet pandas
+
+      - name: Fetch the feeds
+        run: python scripts/fetch_news.py || true
+
+      - name: Rebuild the news feed
+        run: python scripts/build_news_feed.py
+
+      - name: Report what came back
+        run: |
+          python3 - <<'PY'
+          import json
+          d = json.load(open("docs/news_feed.json"))
+          print("headlines:", d["count"])
+          print("counts:", d["counts"])
+          import collections
+          print("sources:", dict(collections.Counter(i["source"] for i in d["items"])))
+          if not d["counts"].get("results"):
+              print("::warning::no results headlines in this pull - the chip will be disabled")
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add docs/news_feed.json
+          git commit -m "news: $(date -u +%FT%TZ)" || echo "no change"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash -X theirs || { git rebase --abort 2>/dev/null || true; git fetch origin main || true; git rebase origin/main -X theirs || true; }
+            if git push; then echo published; exit 0; fi
+            echo "push attempt $i failed; retrying"; sleep $((i*4))
+          done
+          echo "::error::could not push news_feed.json"; exit 1

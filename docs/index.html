@@ -293,7 +293,9 @@ function makeTable(records, cols, opt){
   const q = document.createElement('input'); q.className = 'q';
   q.placeholder = opt.placeholder || 'Search…';
   const cnt = document.createElement('span'); cnt.className = 'cnt';
-  bar.append(q, cnt); wrap.append(bar);
+  // a three-row table does not need a search box; leaving one in is noise
+  if (opt.noSearch) bar.append(cnt); else bar.append(q, cnt);
+  wrap.append(bar);
   const tblBox = document.createElement('div'); tblBox.className = 'tbl'; wrap.append(tblBox);
 
   let limit = opt.limit || 120, sortKey = null, dir = 1, term = '';
@@ -550,6 +552,123 @@ async function renderMarket(main){
     makeTable(vix.series.slice(-30).reverse().map(s => ({date: s[0], vix: s[1]})),
       [{k:'date',label:'Date'},{k:'vix',label:'VIX',r:1,html:v=>num(v)}], {limit:30}),
     'vix.json · ' + vix.count + ' sessions since ' + vix.series[0][0] + '.'));
+}
+
+async function renderLearn(main){
+  let l;
+  try { l = await J('learn.json'); } catch (e) {
+    const p = document.createElement('p'); p.className = 'err';
+    p.textContent = 'Could not load learn.json: ' + e.message;
+    main.append(card('Learn', 'unavailable', p, '')); return;
+  }
+
+  // Glossary first: it is the thing people come back for, and a wall of lessons pushes it down.
+  const gl = (l.glossary || []).map(g => Array.isArray(g)
+    ? {term: g[0], meaning: g[1]}
+    : {term: g.term || g.t, meaning: g.meaning || g.d || ''}).filter(x => x.term);
+  if (gl.length){
+    main.append(card('Glossary', gl.length + ' terms',
+      makeTable(gl, [{k:'term',label:'Term'},{k:'meaning',label:'What it means'}],
+        {limit:300, placeholder:'Search a term - RSI, P/E, drawdown, circuit\u2026'}),
+      l.glossary_note || 'Every term here is one this site actually uses.'));
+  }
+
+  // Then the lessons, one card per section so a phone is not one endless scroll.
+  (l.sections || []).forEach(sec => {
+    const ls = sec.lessons || [];
+    if (!ls.length) return;
+    const body = document.createElement('div');
+    body.innerHTML = ls.map(x =>
+      '<p class="big" style="margin:14px 0 4px">' + esc(x.q || x.title || '') + '</p>' +
+      '<p style="margin:0">' + esc(x.a || x.body || '') + '</p>').join('');
+    main.append(card(sec.title || sec.id, (sec.level || '') + ' \u00b7 ' + ls.length + ' lessons',
+      body, ''));
+  });
+}
+
+async function renderCharges(main){
+  let c;
+  try { c = await J('charges.json'); } catch (e) {
+    const p = document.createElement('p'); p.className = 'err';
+    p.textContent = 'Could not load charges.json: ' + e.message;
+    main.append(card('Charges', 'unavailable', p, 'The file is read on every build.'));
+    return;
+  }
+
+  // What the government, the exchanges and the regulator take, at the same rate for everyone.
+  const st = c.statutory || [];
+  if (st.length){
+    const rows = [];
+    st.forEach(s => (s.rates || []).forEach(r => rows.push({
+      name: s.name, who: s.who, when: s.when, on: r[0], rate: r[1], basis: r[2]
+    })));
+    main.append(card('Statutory charges', rows.length + ' rates',
+      makeTable(rows, [{k:'name',label:'Charge'},{k:'on',label:'On'},{k:'rate',label:'Rate',r:1},
+        {k:'basis',label:'Applies to'},{k:'when',label:'When'}],
+        {limit:60, placeholder:'Search a charge\u2026'}),
+      'These are the same at every broker. They are not what makes one broker cheaper than another.'));
+  }
+
+  // What the broker takes - the part that actually differs.
+  const bs = c.brokers || [];
+  if (bs.length){
+    main.append(card('Broker charges', bs.length + ' brokers',
+      makeTable(bs.map(b => ({name: b.name, type: b.type, opening: b.account_opening,
+        amc: b.amc, delivery: b.delivery, intraday: b.intraday, options: b.options, dp: b.dp})),
+        [{k:'name',label:'Broker'},{k:'type',label:'Type'},
+         {k:'opening',label:'Account opening',r:1},{k:'amc',label:'AMC'},
+         {k:'delivery',label:'Delivery'},{k:'intraday',label:'Intraday'},
+         {k:'options',label:'Options'},{k:'dp',label:'DP on sell'}],
+        {limit:40, placeholder:'Search brokers\u2026'}),
+      'A dash means the figure could not be confirmed from the broker\'s own pricing page, so it '
+      + 'is left blank rather than guessed. Read your tariff sheet before opening an account.'));
+  }
+
+  // The floor SEBI puts under small accounts.
+  if (c.bsda){
+    const b = c.bsda;
+    main.append(card('The BSDA floor', 'small accounts', tiles([
+      ['Nil AMC up to', b.nil_amc_up_to || '\u2014', 'holdings'],
+      ['Capped at', b.capped_amc || '\u2014', 'above that'],
+      ['Applies to', 'one account', 'sole or first holder'],
+      ['Default since', 'Sep 2024', 'unless you opt out']
+    ]), b.rule + ' ' + (b.note || '')));
+  }
+
+  // One trade, costed end to end.
+  const w = c.worked_example;
+  if (w){
+    const body = document.createElement('div');
+    let html = '<p class="sub" style="margin:0 0 6px">' + esc(w.setup || '') + '</p>';
+    if (w.assumption) html += '<p class="sub" style="margin:0 0 10px">' + esc(w.assumption) + '</p>';
+    const lines = w.lines || [];
+    if (lines.length){
+      html += '<div class="kv">' + lines.map(l =>
+        '<div><span>' + esc(l[0]) + '</span><span>' + esc(String(l[1])) + '</span></div>').join('') + '</div>';
+    }
+    if (w.total_cost != null) html += '<p style="margin:12px 0 0"><b>Total cost</b> \u20b9' + num(w.total_cost) + '</p>';
+    if (w.net_profit != null) html += '<p style="margin:2px 0 0"><b>Net profit</b> \u20b9' + num(w.net_profit) + '</p>';
+    if (w.lesson) html += '<p class="sub" style="margin-top:10px">' + esc(w.lesson) + '</p>';
+    body.innerHTML = html;
+    main.append(card(w.title || 'One trade, costed', 'end to end', body,
+      'Costs decide whether a strategy that looks profitable on a chart is profitable in an account.'));
+  }
+
+  // The lessons, as readable cards rather than a wall of text.
+  const ls = c.lessons || [];
+  if (ls.length){
+    const body = document.createElement('div');
+    body.innerHTML = ls.map(l => {
+      const t = l.q || l.title || l.t || '';
+      const a = l.a || l.body || l.detail || '';
+      return '<p class="big" style="margin:14px 0 4px">' + esc(t) + '</p><p style="margin:0">' + esc(a) + '</p>';
+    }).join('');
+    main.append(card('What the numbers mean', ls.length + ' notes', body,
+      c.verify_note || ''));
+  } else if (c.verify_note){
+    const p = document.createElement('p'); p.className = 'sub'; p.textContent = c.verify_note;
+    main.append(card('Before you use these', 'read this', p, ''));
+  }
 }
 
 async function renderBreadth(main){
@@ -907,6 +1026,105 @@ async function circuitRadarCard(){
     + 'them. It cannot be bought until the band lifts.');
 }
 
+/* What a commodity contract actually is, on tap: the quote, the move over three horizons, the
+   rupee conversion for the metals, and the purity tiers - which is the number a buyer in India
+   actually pays against. */
+async function openCommodity(row, cm, mt){
+  const box = $('#sheet'), body = $('#sheetBody');
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  const isGold = /gold/i.test(row.label || '');
+  const isSilver = /silver/i.test(row.label || '');
+
+  let tierTable = null;
+  let out = '<h3>' + esc(row.label || row.symbol) + '</h3>'
+    + '<div class="sub">' + esc(row.symbol || '') + ' \u00b7 ' + esc(row.unit || '') +
+    (row.date ? ' \u00b7 ' + esc(row.date) : '') + '</div>';
+
+  if (row.close != null){
+    const c = row.chg_1d;
+    out += '<div class="px ' + (c > 0 ? 'up' : c < 0 ? 'dn' : '') + '">' +
+      (row.unit && row.unit.indexOf('$') === 0 ? '$' : '') + num(row.close) + '</div>'
+      + '<div class="' + (c > 0 ? 'up' : c < 0 ? 'dn' : '') + '" style="font-size:13px">'
+      + (c > 0 ? '+' : '') + (c == null ? '-' : c.toFixed(2)) + '% today</div>';
+  }
+
+  out += '<h5>Momentum</h5>' + rowKV([
+    ['1 day', row.chg_1d == null ? '-' : pct(row.chg_1d)],
+    ['1 week', row.chg_1w == null ? '-' : pct(row.chg_1w)],
+    ['1 month', row.chg_1m == null ? '-' : pct(row.chg_1m)],
+    ['Quoted in', esc(row.unit || '-')]
+  ]);
+
+  // rupee conversion, which is the number an Indian buyer sees on a jeweller's board
+  if ((isGold || isSilver) && mt && mt.usdinr){
+    const perGram = isGold ? (mt.gold && mt.gold.per_gram) : (mt.silver && mt.silver.per_gram);
+    if (perGram) out += '<h5>In rupees</h5>' + rowKV([
+      ['Per gram', '\u20b9' + num(perGram)],
+      ['Per 10 g', '\u20b9' + num(perGram * 10)],
+      ['USD/INR', num(mt.usdinr) + ' (' + (mt.usdinr_chg_pct||0).toFixed(2) + '%)'],
+      ['As of', esc(mt.as_of_ist || '-')]
+    ]);
+    // purity tiers: what the same metal costs at each fineness. Both feeds are arrays of
+    // objects, not maps - rendering them as a map printed "[object Object]" on the page.
+    const tiers = isGold ? (mt.gold_purities || []) : (mt.silver_fineness || []);
+    if (Array.isArray(tiers) && tiers.length){
+      out += '<h5>' + (isGold ? 'Purity tiers' : 'Fineness') + '</h5>';
+      // makeTable returns a DOM node, not a string - putting it in a template literal printed
+      // "[object HTMLElement]". Render into a slot and append it after the HTML is set.
+      out += '<div id="tierSlot"></div>';
+      tierTable = makeTable(tiers.map(x => ({
+        label: x.label, per_gram: x.per_gram, per_10g: x.per_10g, per_12g: x.per_12g,
+        chg_pct: x.chg_pct
+      })), [
+        {k:'label',label:isGold ? 'Carat' : 'Fineness'},
+        {k:'per_gram',label:'Per gram',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)},
+        {k:'per_10g',label:'Per 10 g',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)},
+        {k:'per_12g',label:'Per 12 g',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)},
+        {k:'chg_pct',label:'Today',r:1,html:v=>pct(v)}
+      ], {limit:12, noSearch:true});
+    }
+  }
+
+  // what drives the price - the fundamental side, stated as the mechanism rather than a view
+  if (isGold || isSilver){
+    out += '<h5>What moves it</h5><p style="margin:0;line-height:1.55">' +
+      (isGold
+        ? 'Gold is priced in dollars and pays no yield, so it usually strengthens when real '
+          + 'interest rates fall, when the dollar weakens, and when investors want an asset that '
+          + 'is not someone else\'s promise. Central-bank buying and jewellery demand are the '
+          + 'physical side. In India the rupee matters as much as the metal: a flat dollar price '
+          + 'with a weaker rupee still means a higher local price.'
+        : 'Silver is part industrial metal and part store of value. Photovoltaics, electronics and '
+          + 'solar capacity drive real demand, so it moves with the industrial cycle as well as '
+          + 'with gold. That double role makes it far more volatile than gold - it can fall in a '
+          + 'recession that gold merely shrugs off.') +
+      '</p>';
+  }
+
+  // correlations arrive as a list of {metal, against, window, correlation} - also not a map
+  const corr = Array.isArray(cm && cm.correlations) ? cm.correlations : [];
+  const mine = corr.filter(x => !x.metal || (isGold ? /gold/i.test(x.metal) : isSilver ? /silver/i.test(x.metal) : true));
+  if (mine.length){
+    out += '<h5>What it moves with</h5>' + rowKV(mine.slice(0, 8).map(x => [
+      (x.against || '') + (x.window ? ' \u00b7 ' + x.window : ''),
+      typeof x.correlation === 'number' ? x.correlation.toFixed(2) : esc(String(x.correlation))
+    ]));
+    out += '<p class="sub" style="margin-top:8px">A correlation near +1 moves together, near -1 '
+      + 'moves opposite, near 0 is unrelated. Ten sessions is a short window - treat it as a '
+      + 'description of the recent past, not a rule.</p>';
+  }
+
+  out += '<p class="sub" style="margin-top:14px">commodities.json and metals.json \u00b7 free-source '
+    + 'closes, converted at the USD/INR rate above. Not MCX tick data, and not a recommendation.</p>';
+
+  body.innerHTML = out;
+  if (tierTable){
+    const slot = body.querySelector('#tierSlot');
+    if (slot) slot.append(tierTable);
+  }
+  box.scrollTop = 0;
+}
+
 async function renderCommodities(main){
   const [cm, mt] = await Promise.all([
     J('commodities.json').catch(()=>({})), J('metals.json').catch(()=>({}))
@@ -919,8 +1137,10 @@ async function renderCommodities(main){
         {k:'label',label:'Contract'},{k:'unit',label:'Unit'},{k:'close',label:'Close',r:1},
         {k:'chg_1d',label:'1 day',r:1,html:v=>pct(v)},{k:'chg_1w',label:'1 week',r:1,html:v=>pct(v)},
         {k:'chg_1m',label:'1 month',r:1,html:v=>pct(v)},{k:'date',label:'Date'}
-      ], {limit:40, placeholder:'Search commodities\u2026'}),
-      'commodities.json \u00b7 free-source closes, not MCX tick data. ' + (cm.note || '')));
+      ], {limit:40, placeholder:'Search commodities\u2026',
+         onRow: r => openCommodity(r, cm, mt)}),
+      'commodities.json \u00b7 free-source closes, not MCX tick data. Tap a contract for the full picture. '
+      + (cm.note || '')));
   }
   if (mt && mt.available !== false && mt.gold){
     const g = mt.gold, s = mt.silver || {};
@@ -1307,6 +1527,8 @@ async function route(){
     else if (id === 'events' || id === 'corporate') { location.replace('#/news'); return; }
     else if (id === 'indices') await renderIndices(main);
     else if (id === 'breadth') await renderBreadth(main);
+    else if (id === 'charges') await renderCharges(main);
+    else if (id === 'learn') await renderLearn(main);
     else if (id === 'ipo') await renderIpo(main);
     else if (id === 'mf') await renderFunds(main, 'mf.json', 'Mutual funds',
       {cols:[{k:'name',label:'Fund'},{k:'fund_house',label:'House'},{k:'category',label:'Category'},
@@ -1494,6 +1716,26 @@ async function openStock(sym){
       ['Market cap', fd.mcap == null ? '-' : fmt(fd.mcap, 0) + ' cr'],
       ['52w high', fmt(fd.high_52w)], ['52w low', fmt(fd.low_52w)]
     ]);
+    // plain-English read of the two or three numbers that actually place the stock
+    const notes = [];
+    if (fd.pe != null) notes.push(fd.pe < 15 ? 'P/E under 15 - priced for modest growth, or for trouble.'
+      : fd.pe > 40 ? 'P/E above 40 - the market is already paying for a lot of future growth.'
+      : 'P/E in the middle of the usual range.');
+    if (fd.roe != null) notes.push(fd.roe > 18 ? 'ROE above 18% - the business earns well on shareholders\' money.'
+      : fd.roe < 8 ? 'ROE under 8% - thin returns on the equity in the business.'
+      : 'ROE in a normal range.');
+    if (t.trend) notes.push('Trend reads ' + t.trend + ' on the 200-day average.');
+    if (notes.length) out += '<p class="sub" style="margin-top:10px">' + esc(notes.join(' ')) + '</p>';
+  }
+
+  // where it sits against its own year, and against its sector
+  if (s && s.close != null && t.high_52w && t.low_52w){
+    const pos = (s.close - t.low_52w) / ((t.high_52w - t.low_52w) || 1) * 100;
+    out += '<h5>Position in its 52-week range</h5>' +
+      '<div style="display:flex;height:9px;border-radius:5px;overflow:hidden;margin:2px 0 6px">' +
+      '<div style="width:' + Math.max(0, Math.min(100, pos)).toFixed(1) + '%;background:#4ec9a0"></div>' +
+      '<div style="width:' + Math.max(0, 100 - Math.min(100, pos)).toFixed(1) + '%;background:rgba(255,255,255,.12)"></div>' +
+      '</div><p class="sub" style="margin:0">' + pos.toFixed(0) + '% of the way from the 52-week low to the high.</p>';
   }
   if (f){
     out += '<h5>Reported results \u00b7 ' + esc(f.latest_period || '-') + '</h5>' + rowKV([

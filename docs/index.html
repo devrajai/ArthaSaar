@@ -407,8 +407,7 @@ function autoCols(records, max){
 const SECTIONS = [
   ['Overview', 'overview', 'What happened'], ['Market', 'market', 'What happened'],
   ['Indices', 'indices', 'What happened'], ['Breadth', 'breadth', 'What happened'],
-  ['News', 'news', 'What happened'], ['Events', 'events', "What's coming"],
-  ['Corporate', 'corporate', "What's coming"], ['IPOs', 'ipo', "What's coming"],
+  ['News', 'news', 'What happened'], ['IPOs', 'ipo', "What's coming"],
   ['Surveillance', 'watchlists', "What's coming"], ['Screener', 'stocks', 'Which stock'],
   ['Sectors', 'sectors', 'Which stock'], ['Rel. strength', 'rs', 'Which stock'],
   ['Levels', 'levels', 'Which stock'], ['Patterns', 'patterns', 'Which stock'],
@@ -1039,7 +1038,9 @@ async function renderNews(main){
   const [n, cal] = await Promise.all([J('news_feed.json'), J('calendar.json')]);
 
   const tabs = document.createElement('div'); tabs.className = 'ntabs2';
-  tabs.innerHTML = '<button class="on" data-tab="live">Live News</button><button data-tab="events">Events Calendar</button>';
+  tabs.innerHTML = '<button class="on" data-tab="live">Live News</button>' +
+    '<button data-tab="events">Events</button>' +
+    '<button data-tab="corporate">Corporate</button>';
   main.append(tabs);
 
   /* ---- live pane ---- */
@@ -1198,7 +1199,30 @@ async function renderNews(main){
 
   paintEvents('week');
 
-  main.append(live, ev);
+  /* ---- corporate pane ----
+     Events and Corporate were two menu entries reading two files that describe the same thing:
+     what a company is doing to its shares and when. They now sit as tabs on News, so there is
+     one place to look and two fewer rows in the menu. */
+  const co = document.createElement('section'); co.className = 'npane'; co.dataset.pane = 'corporate';
+  let corpRows = [];
+  try {
+    const c = await J('corp_actions.json');
+    corpRows = (c.items || []).map(i => ({symbol: i.s, date: i.d, kind: i.k, value: i.v}));
+  } catch (_) { corpRows = []; }
+  if (corpRows.length){
+    co.append(card('Corporate actions', corpRows.length + ' items',
+      makeTable(corpRows, [{k:'symbol',label:'Symbol'},{k:'date',label:'Date'},
+        {k:'kind',label:'Action'},{k:'value',label:'Detail'}],
+        {limit:200, placeholder:'Search company or action\u2026',
+         onRow: r => openStock(r.symbol)}),
+      'corp_actions.json \u00b7 splits, bonuses, dividends and buybacks. Tap a row for the stock.'));
+  } else {
+    const p0 = document.createElement('p'); p0.className = 'empty';
+    p0.textContent = 'No corporate actions in this pull.';
+    co.append(card('Corporate actions', 'empty', p0, 'corp_actions.json is empty this run.'));
+  }
+
+  main.append(live, ev, co);
 
   tabs.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
@@ -1279,6 +1303,8 @@ async function route(){
     else if (id === 'deals') await renderDeals(main);
     else if (id === 'forecast') await renderForecast(main);
     else if (id === 'news') await renderNews(main);
+    // Events and Corporate moved inside News. Old links still land somewhere useful.
+    else if (id === 'events' || id === 'corporate') { location.replace('#/news'); return; }
     else if (id === 'indices') await renderIndices(main);
     else if (id === 'breadth') await renderBreadth(main);
     else if (id === 'ipo') await renderIpo(main);

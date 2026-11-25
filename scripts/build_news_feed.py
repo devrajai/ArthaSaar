@@ -28,6 +28,7 @@ import os
 import re
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
 DATA = "docs/data.json"
 SCREENER = "docs/screener.json"
@@ -63,10 +64,35 @@ def classify(title):
 
 
 def main() -> int:
-    d = jload(DATA) or {}
-    news = d.get("news") or {}
-    cols = [str(c).strip().lower() for c in (news.get("columns") or [])]
-    rows = news.get("rows") or []
+    # READ THE FULL FEED, NOT THE 30 ROWS IN data.json.
+    #
+    # fetch_news.py pulls six RSS feeds and writes every unique headline to
+    # data/news/headlines.csv - around 160 on a normal day. But docs/data.json only carries the
+    # first 30 of them, and because ET Markets is fetched first all 30 are ET Markets. That is
+    # why the Results chip read 0: the earnings headlines exist, they were just never published.
+    # The CSV is written earlier in the same pipeline run, so read that when it is there.
+    csv_path = Path("data/news/headlines.csv")
+    rows, cols = [], []
+    if csv_path.exists():
+        try:
+            import csv as _csv
+            with csv_path.open(newline="", encoding="utf-8") as fh:
+                rd = _csv.DictReader(fh)
+                cols = [str(c).strip().lower() for c in (rd.fieldnames or [])]
+                for r in rd:
+                    rows.append([r.get("source", ""), r.get("title", ""),
+                                 r.get("link", ""), r.get("published", "")])
+            print(f"reading {len(rows)} headlines from {csv_path}")
+        except Exception as e:
+            print(f"{csv_path} unreadable ({type(e).__name__}) - falling back to data.json")
+            rows, cols = [], []
+
+    if not rows:
+        d = jload(DATA) or {}
+        news = d.get("news") or {}
+        cols = [str(c).strip().lower() for c in (news.get("columns") or [])]
+        rows = news.get("rows") or []
+        print(f"reading {len(rows)} headlines from {DATA}")
     if not rows:
         print("no news rows")
         return 0

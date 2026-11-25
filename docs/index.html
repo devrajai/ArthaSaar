@@ -466,13 +466,29 @@ async function renderOverview(main){
 
 async function renderMarket(main){
   const [idx, d, vix] = await Promise.all([J('indices.json'), J('data.json'), J('vix.json')]);
-  const rows = idx.indices.map(i => ({name: i.name, category: i.category, stocks: i.count,
-    advances: i.advances, declines: i.declines, avg_chg: i.avg_chg_pct}));
-  main.append(card('Indices', idx.count + ' tracked',
+  const byId = {};
+  idx.indices.forEach(i => { byId[i.id] = i; });
+  const rows = idx.indices.map(i => ({id: i.id, name: i.name, category: i.category,
+    stocks: i.count, advances: i.advances, declines: i.declines, avg_chg: i.avg_chg_pct}));
+
+  // Tapping an index name opens its members underneath. The members table was already
+  // reachable from the Indices tab, but Market is where you land first, and a row that does
+  // nothing when tapped reads as broken.
+  const memberHost = document.createElement('div');
+  const idxCard = card('Indices', idx.count + ' tracked',
     makeTable(rows, [{k:'name',label:'Index'},{k:'category',label:'Type'},
       {k:'advances',label:'Adv',r:1},{k:'declines',label:'Dec',r:1},{k:'stocks',label:'Stocks',r:1},
-      {k:'avg_chg',label:'Avg change',r:1,html:v=>pct(v)}], {limit:30}),
-    'indices.json · average change across each index\'s constituents.'));
+      {k:'avg_chg',label:'Avg change',r:1,html:v=>pct(v)}],
+      {limit:30, placeholder:'Search indices\u2026',
+       onRow: r => {
+         memberHost.innerHTML = '';
+         memberHost.append(indexMembersCard(byId[r.id]));
+         // the members land below the table, so bring them into view - otherwise the tap looks
+         // like it did nothing on a phone.
+         setTimeout(() => memberHost.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+       }}),
+    'indices.json \u00b7 average change across each index\'s constituents. Tap an index for its stocks, then a stock for its fundamentals.');
+  main.append(idxCard, memberHost);
   const m = d.markets.rows.map(r => ({symbol: r[0], close: r[1], change: r[2], date: r[3]}));
   main.append(card('Index closes', 'data.json',
     makeTable(m, [{k:'symbol',label:'Symbol'},{k:'close',label:'Close',r:1,html:v=>num(v)},
@@ -677,6 +693,28 @@ function heatMap(items, onPick){
   return wrap;
 }
 
+/* One place that builds an index's member list, so Market and Indices behave identically.
+   Rows open the full-screen stock detail through the same makeTable hook. */
+function indexMembersCard(ix){
+  const cons = (ix && ix.constituents) || [];
+  const body = document.createElement('div');
+  if (!cons.length){
+    const p = document.createElement('p'); p.className = 'empty';
+    p.textContent = 'No constituents published for this index.';
+    body.append(p);
+    return card((ix && ix.name) || 'Index', 'no members', body);
+  }
+  body.append(makeTable(cons, [
+    {k:'symbol', label:'Symbol'}, {k:'name', label:'Name'},
+    {k:'industry', label:'Industry'}, {k:'close', label:'Close', r:1},
+    {k:'chg_pct', label:'Change', r:1, html:v=>pct(v)},
+    {k:'points', label:'Points', r:1}
+  ], {limit:200, placeholder:'Search this index\u2026',
+      onRow: r => openStock(r.symbol)}));
+  return card(ix.name + ' members', cons.length + ' stocks', body,
+    'Tap any row for the full-screen detail: technicals, fundamentals and reported results.');
+}
+
 async function renderIndices(main){
   const d = await J('indices.json');
   const heat = d.heat || [];
@@ -697,17 +735,8 @@ async function renderIndices(main){
   function pickIndex(id){
     const ix = list.find(x => x.id === id) || list.find(x => (x.name||'').toLowerCase() === String(id).toLowerCase());
     if (!ix){ host.innerHTML = '<p class="empty">No constituents published for that index.</p>'; return; }
-    const cons = ix.constituents || [];
     host.innerHTML = '';
-    const head = document.createElement('p'); head.className = 'big';
-    head.textContent = ix.name + ' \u00b7 ' + cons.length + ' stocks';
-    host.append(head);
-    host.append(makeTable(cons, [
-      {k:'symbol', label:'Symbol'}, {k:'name', label:'Name'},
-      {k:'industry', label:'Industry'}, {k:'close', label:'Close', r:1},
-      {k:'chg_pct', label:'Change', r:1, html:v=>pct(v)}
-    ], {limit:200, placeholder:'Search this index\u2026',
-        onRow: r => openStock(r.symbol)}));
+    host.append(indexMembersCard(ix));
     host.scrollIntoView({behavior:'smooth', block:'start'});
   }
 

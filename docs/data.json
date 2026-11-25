@@ -1,158 +1,158 @@
 {
-  "generated_utc": "2026-11-25T12:43:10Z",
+  "generated_utc": "2026-11-25T21:49:09Z",
   "fno": {
-    "date": "2026-11-23",
+    "date": "2026-11-25",
     "pcr": {
-      "nifty_pcr_oi": 0.82,
-      "nifty_max_pain": 25400.0,
-      "nifty_largest_oi_strike": 25500.0
+      "nifty_pcr_oi": 1.02,
+      "nifty_max_pain": 25600.0,
+      "nifty_largest_oi_strike": 26000.0
     },
     "index_futures": [
       {
         "symbol": "BANKNIFTY",
-        "oi": 2285520
+        "oi": 1618290
       },
       {
         "symbol": "FINNIFTY",
-        "oi": 23520
+        "oi": 10260
       },
       {
         "symbol": "MIDCPNIFTY",
-        "oi": 2309160
+        "oi": 1840560
       },
       {
         "symbol": "NIFTY",
-        "oi": 16796130
+        "oi": 13013910
       },
       {
         "symbol": "NIFTYFPI",
-        "oi": 27500
+        "oi": 11000
       },
       {
         "symbol": "NIFTYNXT50",
-        "oi": 16150
+        "oi": 14275
       }
     ],
     "top_oi": [
       {
         "symbol": "IDEA",
-        "oi": 6436880100,
-        "oi_chg": 51199600,
-        "chg": -2.11
+        "oi": 6290154275,
+        "oi_chg": -5777125,
+        "chg": -1.4
       },
       {
         "symbol": "YESBANK",
-        "oi": 1279982700,
-        "oi_chg": -13466300,
-        "chg": -1.1
+        "oi": 1233830300,
+        "oi_chg": 9330000,
+        "chg": -0.11
       },
       {
         "symbol": "SUZLON",
-        "oi": 459282800,
-        "oi_chg": -2171700,
-        "chg": -2.87
-      },
-      {
-        "symbol": "TATASTEEL",
-        "oi": 385079750,
-        "oi_chg": 31476500,
-        "chg": -8.63
+        "oi": 445668400,
+        "oi_chg": 1765300,
+        "chg": 0.42
       },
       {
         "symbol": "NMDC",
-        "oi": 372802500,
-        "oi_chg": 8525250,
-        "chg": -1.55
+        "oi": 360848250,
+        "oi_chg": -1768500,
+        "chg": -1.25
+      },
+      {
+        "symbol": "TATASTEEL",
+        "oi": 356122250,
+        "oi_chg": 3561250,
+        "chg": -2.53
       },
       {
         "symbol": "IDFCFIRSTB",
-        "oi": 356169275,
-        "oi_chg": -3784200,
-        "chg": -1.7
+        "oi": 343230650,
+        "oi_chg": 3793475,
+        "chg": 2.02
       },
       {
         "symbol": "CANBK",
-        "oi": 346632750,
-        "oi_chg": 3273750,
-        "chg": -3.54
+        "oi": 333632250,
+        "oi_chg": 3037500,
+        "chg": -0.42
       },
       {
         "symbol": "HDFCBANK",
-        "oi": 299796400,
-        "oi_chg": -1540100,
-        "chg": -3.37
-      },
-      {
-        "symbol": "ITC",
-        "oi": 240187400,
-        "oi_chg": 5516050,
-        "chg": 0.18
+        "oi": 251103950,
+        "oi_chg": -7934850,
+        "chg": 3.7
       },
       {
         "symbol": "JIOFIN",
-        "oi": 230962700,
-        "oi_chg": 1160900,
-        "chg": -2.48
-      },
-      {
-        "symbol": "RELIANCE",
-        "oi": 217476500,
-        "oi_chg": 17249000,
-        "chg": -1.76
+        "oi": 216526650,
+        "oi_chg": -418300,
+        "chg": 1.92
       },
       {
         "symbol": "ADANIPOWER",
-        "oi": 214366750,
-        "oi_chg": -4043450,
-        "chg": -2.0
+        "oi": 202073100,
+        "oi_chg": 876850,
+        "chg": -1.05
       },
       {
-        "symbol": "PNB",
-        "oi": 202976000,
-        "oi_chg": 2568000,
-        "chg": -3.39
+        "symbol": "RELIANCE",
+        "oi": 195385000,
+        "oi_chg": 1312500,
+        "chg": 1.97
+      },
+      {
+        "symbol": "ITC",
+        "oi": 180858975,
+        "oi_chg": -6691775,
+        "chg": 2.14
       },
       {
         "symbol": "SAIL",
-        "oi": 177763400,
-        "oi_chg": -84600,
-        "chg": -1.37
+        "oi": 174393500,
+        "oi_chg": -883600,
+        "chg": -0.95
       },
       {
-        "symbol": "MOTHERSON",
-        "oi": 162286200,
-        "oi_chg": 3542400,
-        "chg": 0.45
+        "symbol": "PNB",
+        "oi": 169216000,
+        "oi_chg": 2224000,
+        "chg": -1.08
       },
       {
         "symbol": "ASHOKLEY",
-        "oi": 160990000,
-        "oi_chg": 9060000,
-        "chg": -2.67
+        "oi": 154545000,
+        "oi_chg": 3495000,
+        "chg": -0.47
+      },
+      {
+        "symbol": "MOTHERSON",
+        "oi": 147544650,
+        "oi_chg": 18450,
+        "chg": -0.12
       },
       {
         "symbol": "WIPRO",
-        "oi": 150645000,
-        "oi_chg": -528000,
-        "chg": 1.38
+        "oi": 145503000,
+        "oi_chg": 204000,
+        "chg": -0.28
       },
       {
         "symbol": "KOTAKBANK",
-        "oi": 145422000,
-        "oi_chg": -1650000,
-        "chg": -2.42
+        "oi": 126638000,
+        "oi_chg": 1408000,
+        "chg": 1.44
       },
       {
         "symbol": "BANDHANBNK",
-        "oi": 132498000,
-        "oi_chg": 2574000,
-        "chg": -2.2
+        "oi": 126345600,
+        "oi_chg": 759600,
+        "chg": -0.94
       },
       {
-        "symbol": "ETERNAL",
-        "oi": 131619300,
-        "oi_chg": 3295575,
-        "chg": -0.08
+        "symbol": "SAGILITY",
+        "oi": 118776000,
+        "oi_chg": 2304000,
+        "chg": -1.2
       }
     ],
     "stock_futures": 218
@@ -170,184 +170,184 @@
       ],
       "rows": [
         [
-          "2026-11-23",
-          "IDEA",
-          "140948700",
-          "-1462378500",
-          "-1037.53",
-          "-2.14",
-          "unwind"
+          "2026-11-25",
+          "TATASTEEL",
+          "1375000",
+          "1375000",
+          "100.0",
+          "-2.38",
+          "build-up"
         ],
         [
-          "2026-11-23",
-          "SAIL",
-          "2486300",
-          "-22372000",
-          "-899.81",
-          "-1.33",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "SUZLON",
-          "15379700",
-          "-95999300",
-          "-624.19",
-          "-2.87",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "NATIONALUM",
-          "1683750",
-          "-9590625",
-          "-569.6",
-          "-1.95",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "YESBANK",
-          "55482400",
-          "-274644100",
-          "-495.01",
-          "-1.22",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "HCLTECH",
-          "523600",
-          "-2509600",
-          "-479.3",
-          "1.41",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "CONCOR",
-          "1271250",
-          "-6073750",
-          "-477.78",
-          "-2.58",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "NBCC",
-          "4023500",
-          "-19214000",
-          "-477.54",
-          "-2.62",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "WIPRO",
-          "5346000",
-          "-24867000",
-          "-465.15",
-          "1.38",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "KPITTECH",
-          "457250",
-          "-1955325",
-          "-427.63",
-          "1.51",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "PGEL",
-          "463600",
-          "-1949400",
-          "-420.49",
-          "-0.59",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "INOXWIND",
-          "8268800",
-          "-31872000",
-          "-385.45",
-          "-3.21",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "BHARATFORG",
-          "541000",
-          "-1931500",
-          "-357.02",
-          "-1.39",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "ASHOKLEY",
-          "9940000",
-          "-32690000",
-          "-328.87",
-          "-2.67",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "CROMPTON",
-          "2556350",
-          "-8262450",
-          "-323.21",
-          "-1.68",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "NMDC",
-          "10185750",
-          "-32096250",
-          "-315.11",
-          "-1.53",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "GODFRYPHLP",
-          "144650",
-          "-453475",
-          "-313.5",
-          "-2.16",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "TORNTPHARM",
-          "144500",
-          "-447375",
-          "-309.6",
-          "2.51",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
-          "ASTRAL",
-          "430100",
-          "-1318350",
-          "-306.52",
-          "-1.73",
-          "unwind"
-        ],
-        [
-          "2026-11-23",
+          "2026-11-25",
           "JIOFIN",
-          "14017750",
-          "-42802900",
-          "-305.35",
-          "-2.48",
-          "unwind"
+          "157450",
+          "157450",
+          "100.0",
+          "1.92",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "YESBANK",
+          "1088500",
+          "1088500",
+          "100.0",
+          "-0.11",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "PNB",
+          "104000",
+          "104000",
+          "100.0",
+          "-1.14",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "NMDC",
+          "114750",
+          "114750",
+          "100.0",
+          "-0.95",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "TATAPOWER",
+          "143550",
+          "143550",
+          "100.0",
+          "-1.37",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "ASHOKLEY",
+          "130000",
+          "130000",
+          "100.0",
+          "-0.47",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "IDEA",
+          "3106750",
+          "3106750",
+          "100.0",
+          "-1.4",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "ITC",
+          "171825",
+          "171825",
+          "100.0",
+          "2.14",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "SAIL",
+          "112800",
+          "112800",
+          "100.0",
+          "-0.95",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "LAURUSLABS",
+          "125800",
+          "125800",
+          "100.0",
+          "3.78",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "RELIANCE",
+          "126000",
+          "126000",
+          "100.0",
+          "1.97",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "PFC",
+          "117425",
+          "117425",
+          "100.0",
+          "2.44",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "HDFCBANK",
+          "169500",
+          "169500",
+          "100.0",
+          "3.7",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "RVNL",
+          "219675",
+          "219675",
+          "100.0",
+          "0.03",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "SUZLON",
+          "177800",
+          "177800",
+          "100.0",
+          "0.88",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "RECLTD",
+          "284750",
+          "284750",
+          "100.0",
+          "1.31",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "IRFC",
+          "199950",
+          "199950",
+          "100.0",
+          "-0.66",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "TMPV",
+          "169750",
+          "169750",
+          "100.0",
+          "1.48",
+          "build-up"
+        ],
+        [
+          "2026-11-25",
+          "BHARTIARTL",
+          "792775",
+          "650750",
+          "82.09",
+          "-0.62",
+          "build-up"
         ]
       ],
       "total": 25
@@ -561,15 +561,9 @@
           "Dividend - Re 0.75 Per Share",
           "2026-11-27",
           "Fusion CX Limited"
-        ],
-        [
-          "VRAJ",
-          "Interim Dividend - Re 0.60 Per Share",
-          "2026-11-25",
-          "Vraj Iron and Steel Limited"
         ]
       ],
-      "total": 2
+      "total": 1
     },
     "split": {
       "columns": [
@@ -600,23 +594,6 @@
       ],
       "total": 3
     },
-    "rights": {
-      "columns": [
-        "symbol",
-        "subject",
-        "ex_date",
-        "company"
-      ],
-      "rows": [
-        [
-          "BONLON",
-          "Rights 1:1 @ Premium Rs 20/-",
-          "2026-11-25",
-          "Bonlon Industries Limited"
-        ]
-      ],
-      "total": 1
-    },
     "other": {
       "columns": [
         "symbol",
@@ -630,15 +607,9 @@
           "Interest Payment",
           "2026-11-27",
           "GOVERNMENT OF INDIA"
-        ],
-        [
-          "ZEEL",
-          "Buy Back",
-          "2026-11-25",
-          "Zee Entertainment Enterprises Limited"
         ]
       ],
-      "total": 2
+      "total": 1
     }
   },
   "markets": {
@@ -650,22 +621,22 @@
     ],
     "rows": [
       [
-        "^NSEI",
-        25819.25,
-        1.85,
-        "2026-11-25"
+        "^NSEBANK",
+        62585.3516,
+        -3.17,
+        "2026-11-23"
       ],
       [
         "^BSESN",
-        83938.2812,
-        1.82,
-        "2026-11-25"
+        82435.9922,
+        -1.77,
+        "2026-11-23"
       ],
       [
-        "^NSEBANK",
-        63703.25,
-        1.79,
-        "2026-11-25"
+        "^NSEI",
+        25349.6504,
+        -1.75,
+        "2026-11-23"
       ]
     ],
     "total": 3
@@ -680,8 +651,8 @@
     "rows": [
       [
         "GC=F",
-        3526.5,
-        -0.99,
+        3600.8999,
+        1.09,
         "2026-11-25"
       ]
     ],
@@ -696,63 +667,63 @@
     ],
     "rows": [
       [
-        "ADA-USD",
-        0.1395,
-        -3.38,
-        "2026-11-25"
-      ],
-      [
-        "DOGE-USD",
-        0.0536,
-        -3.07,
-        "2026-11-25"
-      ],
-      [
-        "SOL-USD",
-        67.54,
-        -3.01,
-        "2026-11-25"
-      ],
-      [
         "LINK-USD",
-        8.589,
-        -2.82,
-        "2026-11-25"
-      ],
-      [
-        "AVAX-USD",
-        6.396,
-        -2.57,
-        "2026-11-25"
-      ],
-      [
-        "ETH-USD",
-        1637.58,
-        -2.39,
-        "2026-11-25"
-      ],
-      [
-        "BTC-USD",
-        58436.8281,
-        -2.19,
+        9.069,
+        2.61,
         "2026-11-25"
       ],
       [
         "XRP-USD",
-        0.9061,
-        -1.98,
+        0.9438,
+        2.1,
         "2026-11-25"
       ],
       [
-        "BNB-USD",
-        537.61,
-        -1.85,
+        "ADA-USD",
+        0.1469,
+        1.79,
         "2026-11-25"
       ],
       [
         "TRX-USD",
-        0.3076,
-        -0.08,
+        0.303,
+        -1.56,
+        "2026-11-25"
+      ],
+      [
+        "DOGE-USD",
+        0.056,
+        1.29,
+        "2026-11-25"
+      ],
+      [
+        "SOL-USD",
+        70.43,
+        1.14,
+        "2026-11-25"
+      ],
+      [
+        "BNB-USD",
+        553.25,
+        1.01,
+        "2026-11-25"
+      ],
+      [
+        "BTC-USD",
+        60161.5898,
+        0.69,
+        "2026-11-25"
+      ],
+      [
+        "AVAX-USD",
+        6.609,
+        0.68,
+        "2026-11-25"
+      ],
+      [
+        "ETH-USD",
+        1685.05,
+        0.44,
         "2026-11-25"
       ]
     ],
@@ -769,233 +740,224 @@
     "rows": [
       [
         "ET Markets",
+        "Fed survey shows continued growth and sticky inflation in recent weeks",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/fed-survey-shows-continued-growth-and-sticky-inflation-in-recent-weeks/articleshow/136172166.cms",
+        "Thu, 26 Nov 2026 01:37:37 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Copper slumps to lowest in 11 months as investors flee",
+        "https://economictimes.indiatimes.com/markets/commodities/copper-slumps-to-lowest-in-11-months-as-investors-flee/articleshow/136172100.cms",
+        "Thu, 26 Nov 2026 01:23:49 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Carlyle pares 7.4% stake in Piramal Pharma for over Rs 2,211 crore",
+        "https://economictimes.indiatimes.com/markets/stocks/news/carlyle-pares-7-4-stake-in-piramal-pharma-for-over-rs-2211-crore/articleshow/136165837.cms",
+        "Wed, 25 Nov 2026 20:32:44 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "RBI raises share of domestically held gold reserves, data shows",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rbi-raises-share-of-domestically-held-gold-reserves-data-shows/articleshow/136165807.cms",
+        "Wed, 25 Nov 2026 20:30:14 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Two in five Indian family offices, UHNIs have engaged with crypto amid regulatory caution",
+        "https://economictimes.indiatimes.com/markets/cryptocurrency/crypto-news/two-in-five-indian-family-offices-uhnis-have-engaged-with-crypto-amid-regulatory-caution/articleshow/136163899.cms",
+        "Wed, 25 Nov 2026 19:19:47 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "RBI net buyer of dollars for fourth straight month in September, data shows",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/rbi-net-buyer-of-dollars-for-fourth-straight-month-in-september-data-shows/articleshow/136163192.cms",
+        "Wed, 25 Nov 2026 18:49:28 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "US markets pare early losses as AI selloff eases despite inflation, tariff concerns: Stock Market Live Updates",
+        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-nvidia-alphabet-amazon-anthropic-dell-inflation-fed-rate-hike-gold-treasury-yield-news-25th-november-2026/liveblog/136163404.cms",
+        "Wed, 25 Nov 2026 18:42:55 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "SEBI eases KYC norms, centralises supplementary client data to simplify onboarding",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-eases-kyc-norms-centralises-supplementary-client-data-to-simplify-onboarding/articleshow/136162936.cms",
+        "Wed, 25 Nov 2026 18:41:00 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Sebi mulls early payout of up to 80% of sale proceeds to FPOs in commodity derivatives market",
+        "https://economictimes.indiatimes.com/markets/stocks/news/sebi-mulls-early-payout-of-up-to-80-of-sale-proceeds-to-fpos-in-commodity-derivatives-market/articleshow/136162861.cms",
+        "Wed, 25 Nov 2026 18:39:04 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "RBI may opt for 25 bps rate hike as oil eases, inflation risks persist: Baroda BNP Paribas MF CIO",
+        "https://economictimes.indiatimes.com/markets/stocks/news/rbi-may-opt-for-25-bps-rate-hike-as-oil-eases-inflation-risks-persist-baroda-bnp-paribas-mf-cio/articleshow/136162711.cms",
+        "Wed, 25 Nov 2026 18:36:00 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "US Treasury gains lift India bonds ahead of RBI meet",
+        "https://economictimes.indiatimes.com/markets/bonds/us-treasury-gains-lift-india-bonds-ahead-of-rbi-meet/articleshow/136161527.cms",
+        "Wed, 25 Nov 2026 17:55:47 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
         "Fed policymakers at odds over causes of high inflation",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/fed-policymakers-at-odds-over-causes-of-high-inflation/articleshow/136160394.cms",
         "Wed, 25 Nov 2026 17:21:51 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
         "Shapoor Mistry lobbied Modi twice for Tata Sons IPO as battle over listing intensifies",
         "https://economictimes.indiatimes.com/markets/stocks/news/shapoor-mistry-lobbied-modi-twice-for-tata-sons-ipo-as-battle-over-listing-intensifies/articleshow/136160206.cms",
         "Wed, 25 Nov 2026 17:19:18 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
         "PhonePe resumes IPO process; targets February-March listing at $12-15 billion valuation",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/phonepe-resumes-ipo-process-targets-listing-in-feb-mar-at-usd-12-15-bn-valuation/articleshow/136160163.cms",
         "Wed, 25 Nov 2026 17:15:14 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
         "Rupee scales 8-month high after holiday as foreign flows to Indian equities persist",
         "https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-scales-8-month-high-after-holiday-as-foreign-flows-to-indian-equities-persist/articleshow/136158513.cms",
         "Wed, 25 Nov 2026 16:23:26 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Grasim Inds Share Price Live Updates: Grasim Inds. Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/grasim-inds-stock-price-today-live-25-nov-2026/liveblog/136151488.cms",
+        "Wed, 25 Nov 2026 12:19:20 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Coal India Share Price Live Updates: Coal India Ltd Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/coal-india-ltd-share-price-today-live-25-nov-2026/liveblog/136151420.cms",
+        "Wed, 25 Nov 2026 12:18:03 +0530",
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
         "Why are investors betting on Abercrombie's growth story?",
         "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/why-are-investors-betting-on-abercrombies-growth-story/slideshow/136151161.cms",
         "Wed, 25 Nov 2026 11:09:11 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
         "India bonds inch higher as oil steadies ahead of RBI verdict",
         "https://economictimes.indiatimes.com/markets/bonds/india-bonds-inch-higher-as-oil-steadies-ahead-of-rbi-verdict/articleshow/136149265.cms",
         "Wed, 25 Nov 2026 10:59:37 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
         "HPE shares crash 17%, stock suffers its worst-ever single-day fall. Here's why",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/hpe-shares-crash-17-stock-suffers-its-worst-ever-single-day-fall-heres-why/slideshow/136148964.cms",
         "Wed, 25 Nov 2026 10:08:14 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
-        "Maruti Suzuki Share Price Live Updates: Maruti Suzuki Bonus Updates",
+        "TCS Share Price Highlights: TCS Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tcs-share-price-today-live-updates-25-nov-2026/liveblog/136148285.cms",
+        "Wed, 25 Nov 2026 10:03:27 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-updates-25-nov-2026/liveblog/136148282.cms",
         "Wed, 25 Nov 2026 10:03:14 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
-        "Dr Reddy's Laboratories Share Price Live Updates: Announcement under Regulation 30 (LODR)-Allotment of ESOP / ESPS",
+        "Nestle India Share Price Highlights: Nestle India Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/nestle-india-stock-price-today-live-25-nov-2026/liveblog/136148275.cms",
+        "Wed, 25 Nov 2026 10:03:07 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Tata Steel Share Price Highlights: Tata Steel Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-steel-share-price-live-25-nov-2026/liveblog/136148274.cms",
+        "Wed, 25 Nov 2026 10:03:07 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Tata Motors PV Share Price Highlights: Tata Motors PV Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-motors-pv-stock-price-livestock-price-today-live-updates-25-nov-2026/liveblog/136148273.cms",
+        "Wed, 25 Nov 2026 10:03:02 +0530",
+        "2026-11-25T21:16:21Z"
+      ],
+      [
+        "ET Markets",
+        "Dr Reddys Share Price Highlights: Dr. Reddys Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/dr-reddys-share-price-today-live-25-nov-2026/liveblog/136148268.cms",
         "Wed, 25 Nov 2026 10:02:54 +0530",
-        "2026-11-25T12:10:07Z"
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
-        "Bajaj Finance Share Price Live Updates: Bajaj Finance Bonus Updates",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-finance-share-price-live-updates-25-nov-2026/liveblog/136148251.cms",
-        "Wed, 25 Nov 2026 10:02:29 +0530",
-        "2026-11-25T12:10:07Z"
+        "Kotak Bank Share Price Highlights: Kotak Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/kotak-bank-stock-price-livestock-price-today-live-updates-25-nov-2026/liveblog/136148267.cms",
+        "Wed, 25 Nov 2026 10:02:54 +0530",
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
-        "Infosys Share Price Live Updates: Infosys Bonus Updates",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/infosys-stock-price-livestock-price-today-live-updates-25-nov-2026/liveblog/136148216.cms",
-        "Wed, 25 Nov 2026 10:01:51 +0530",
-        "2026-11-25T12:10:07Z"
+        "Titan Company Share Price Highlights: Titan Company Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/titan-company-share-price-today-live-updates-25-nov-2026/liveblog/136148264.cms",
+        "Wed, 25 Nov 2026 10:02:49 +0530",
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
-        "L&amp;T Share Price Live Updates: L&amp;T Bonus Updates",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/lt-share-price-today-live-updates-25-nov-2026/liveblog/136148168.cms",
-        "Wed, 25 Nov 2026 10:00:55 +0530",
-        "2026-11-25T12:10:07Z"
+        "Axis Bank Share Price Highlights: Axis Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/axis-bank-stock-price-live-updates-25-nov-2026/liveblog/136148258.cms",
+        "Wed, 25 Nov 2026 10:02:42 +0530",
+        "2026-11-25T21:16:21Z"
       ],
       [
         "ET Markets",
-        "Rupee pares FY27 losses, climbs 56 paise to 92.29/USD",
-        "https://economictimes.indiatimes.com/markets/forex/rupee-jumps-23-paise-to-92-62-against-us-dollar-in-early-trade/articleshow/136147947.cms",
-        "Wed, 25 Nov 2026 10:00:22 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "APL Apollo Tubes among 4 Nifty500 stocks closing below VWAP",
-        "https://economictimes.indiatimes.com/markets/stocks/news/apl-apollo-tubes-among-4-nifty500-stocks-closing-below-vwap/slideshow/136147553.cms",
-        "Wed, 25 Nov 2026 09:26:10 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "PB Fintech among 3 Nifty500 stocks flashing RSI uptrend signal",
-        "https://economictimes.indiatimes.com/markets/stocks/news/pb-fintech-among-3-nifty500-stocks-flashing-rsi-uptrend-signal/slideshow/136147231.cms",
-        "Wed, 25 Nov 2026 09:07:48 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Negative Breakout: These 4 stocks dropped below their 200 DMAs",
-        "https://economictimes.indiatimes.com/markets/stocks/news/negative-breakout-these-4-stocks-dropped-below-their-200-dmas/slideshow/136147014.cms",
-        "Wed, 25 Nov 2026 09:02:00 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Gold Silver Rates Live Updates: Gold falls 1%, silver drops 2% on MCX. Check key levels and estimates",
-        "https://economictimes.indiatimes.com/markets/stocks/live-blog/live-updates-gold-rate-today-25th-november-24k-22k-20k-18-carat-mcx-gold-silver-price-in-delhi-hyderabad-chennai-bengaluru-citywise/liveblog/136146334.cms",
-        "Wed, 25 Nov 2026 08:19:04 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "India pension funds pivot to bonds as equity exposure nears cap",
-        "https://economictimes.indiatimes.com/markets/bonds/india-pension-funds-pivot-to-bonds-as-equity-exposure-nears-cap/articleshow/136146220.cms",
-        "Wed, 25 Nov 2026 08:12:38 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Dollar takes breather ahead of US data on Fed path; Aussie jumps on CPI",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/dollar-takes-breather-ahead-of-us-data-on-fed-path-aussie-jumps-on-cpi/articleshow/136145689.cms",
-        "Wed, 25 Nov 2026 07:28:10 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Gold ticks lower ahead of US inflation data",
-        "https://economictimes.indiatimes.com/markets/commodities/news/gold-ticks-lower-ahead-of-us-inflation-data/articleshow/136145643.cms",
-        "Wed, 25 Nov 2026 07:26:22 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Stock Market Highlights: Sensex soars 1,502 pts, Nifty ends above 25,800; bank, pharma indices jump up to 2%",
-        "https://economictimes.indiatimes.com/markets/stocks/live-blog/bse-sensex-today-nifty50-stock-market-live-updates-gift-nifty-tata-steel-hindalco-share-price-25-november-2026/liveblog/136145716.cms",
-        "Wed, 25 Nov 2026 07:11:52 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Market timers get schooled as S&amp;P 500 swings rip up playbooks",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/market-timers-get-schooled-with-swings/articleshow/136145370.cms",
-        "Wed, 25 Nov 2026 07:03:27 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Goldman Sachs, SocGen buy Rs 920 crore stake in Lenskart",
-        "https://economictimes.indiatimes.com/markets/stocks/news/goldman-sachs-socgen-buy-rs-920-crore-stake-in-lenskart/articleshow/136145273.cms",
-        "Wed, 25 Nov 2026 06:56:01 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Global Market Today: Asian stocks fall as AI trade doubts resurface",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-asian-stocks-fall-as-ai-trade-doubts-resurface/articleshow/136145030.cms",
-        "Wed, 25 Nov 2026 06:27:44 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Nasdaq, S&amp;P 500 end lower as investors assess Jensen Huang's return to Nvidia",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/nasdaq-sp-500-end-lower-as-investors-assess-jensen-huangs-return-to-nvidia/articleshow/136141893.cms",
-        "Wed, 25 Nov 2026 02:39:28 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "PE/VC investments in India surge to USD 8.7 billion in October, highest monthly level in five years: EY-IVCA report",
-        "https://economictimes.indiatimes.com/markets/stocks/news/pe/vc-investments-in-india-surge-to-usd-8-7-billion-in-october-highest-monthly-level-in-five-years-ey-ivca-report/articleshow/136132831.cms",
-        "Tue, 24 Nov 2026 19:17:50 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Nasdaq, S&amp;P 500 end lower as investors assess Jensen Huang's return to Nvidia: US Stock Market Highlights",
-        "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-nvidia-anthropic-iphone-google-meta-tesla-earnings-treasury-yield-news-24-nov-2026/liveblog/136131363.cms",
-        "Tue, 24 Nov 2026 18:30:48 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "Shift in pension and insurance money to equities dampens long-term G-sec demand: RBI DG",
-        "https://economictimes.indiatimes.com/markets/bonds/shift-in-pension-and-insurance-money-to-equities-dampens-long-term-g-sec-demand-rbi-dg/articleshow/136130860.cms",
-        "Tue, 24 Nov 2026 18:09:55 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "A 50 bps jumbo rate hike can lead to financial stability concerns, hurt growth: Report",
-        "https://economictimes.indiatimes.com/markets/stocks/news/a-50-bps-jumbo-rate-hike-can-lead-to-financial-stability-concerns-hurt-growth-report/articleshow/136130764.cms",
-        "Tue, 24 Nov 2026 18:08:23 +0530",
-        "2026-11-25T12:10:07Z"
-      ],
-      [
-        "ET Markets",
-        "AI boom looms over Warsh's Fed as inflation worries grow",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/ai-boom-looms-over-warshs-fed-as-inflation-worries-grow/articleshow/136129160.cms",
-        "Tue, 24 Nov 2026 17:09:37 +0530",
-        "2026-11-25T12:10:07Z"
+        "RIL Share Price Highlights: RIL Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ril-share-price-today-live-25-nov-2026/liveblog/136148257.cms",
+        "Wed, 25 Nov 2026 10:02:41 +0530",
+        "2026-11-25T21:16:21Z"
       ]
     ],
-    "total": 167
+    "total": 133
   },
   "archive": {
-    "files": 56,
+    "files": 57,
     "dates": 30,
     "symbols_max": 3777,
     "first": "2019-06-14",
     "last": "2026-11-25",
     "recent": [
-      {
-        "date": "2026-11-16",
-        "segment": "fo",
-        "rows": "43718",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-16.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-16.csv"
-      },
       {
         "date": "2026-11-17",
         "segment": "cm",
@@ -1094,22 +1056,31 @@
         "era": "udiff",
         "file_parquet": "data/parquet/cm/cm_2026-11-25.parquet",
         "file_csv": "data/csv/cm/cm_2026-11-25.csv"
+      },
+      {
+        "date": "2026-11-25",
+        "segment": "fo",
+        "rows": "38562",
+        "symbols": "224",
+        "era": "udiff",
+        "file_parquet": "data/parquet/fo/fo_2026-11-25.parquet",
+        "file_csv": "data/csv/fo/fo_2026-11-25.csv"
       }
     ]
   },
   "brain": {
     "channels": 10,
-    "videos": 584,
+    "videos": 591,
     "window": [
       "2026-05-15",
       "2026-11-25"
     ],
-    "total_views": 14481130,
-    "net_sentiment": 332,
+    "total_views": 14565712,
+    "net_sentiment": 339,
     "top_symbols": [
       {
         "symbol": "NIFTY50",
-        "mentions": 121,
+        "mentions": 122,
         "channels": 5
       },
       {
@@ -1161,7 +1132,7 @@
     "top_themes": [
       {
         "theme": "Beginner/Education",
-        "videos": 158
+        "videos": 160
       },
       {
         "theme": "MF/SIP",
@@ -1169,19 +1140,19 @@
       },
       {
         "theme": "Earnings/Results",
-        "videos": 128
+        "videos": 130
       },
       {
         "theme": "Options/F&O",
-        "videos": 125
+        "videos": 126
       },
       {
         "theme": "IPO",
-        "videos": 115
+        "videos": 116
       },
       {
         "theme": "Budget/Policy",
-        "videos": 90
+        "videos": 91
       }
     ]
   },
@@ -1209,11 +1180,11 @@
       ],
       [
         "Abhishek Kar",
-        "43",
+        "44",
         "2026-11-25",
         "2026-09-29",
-        "85624",
-        "21029",
+        "84466",
+        "22708",
         "Stock Market CRASH nifty sensex me kya kare?",
         "474041"
       ],
@@ -1249,33 +1220,33 @@
       ],
       [
         "Groww Edge",
-        "83",
-        "2026-11-24",
+        "85",
+        "2026-11-25",
         "2026-10-09",
-        "20616",
+        "20516",
         "4931",
         "Is the Oil in Your Samosa the Same Oil Planes Want?",
         "255474"
       ],
       [
-        "Markets by Zerodha",
-        "60",
-        "2026-11-25",
-        "2026-10-05",
-        "13360",
-        "8913",
-        "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
-        "85869"
-      ],
-      [
         "Groww",
-        "67",
-        "2026-11-24",
+        "68",
+        "2026-11-25",
         "2026-10-06",
-        "13268",
-        "6693",
+        "13221",
+        "6722",
         "How to Buy US Stocks from India? Complete Guide",
         "165710"
+      ],
+      [
+        "Markets by Zerodha",
+        "61",
+        "2026-11-25",
+        "2026-10-05",
+        "13158",
+        "8364",
+        "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
+        "85869"
       ],
       [
         "Markets by Zerodha Hindi",
@@ -1289,11 +1260,11 @@
       ],
       [
         "Upstox",
-        "160",
+        "162",
         "2026-11-25",
         "2026-10-15",
-        "1242",
-        "272",
+        "1264",
+        "292",
         "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
         "10837"
       ]
@@ -1315,6 +1286,19 @@
       "first_seen"
     ],
     "rows": [
+      [
+        "MtAoO_25hYQ",
+        "Abhishek Kar",
+        "UCcanCrgSWVYW7ZFNKQZso0g",
+        "648 Crore and Promoter buying stake at 21% premium",
+        "2026-11-25T14:31:03+00:00",
+        "2026-11-25T14:32:31+00:00",
+        "https://www.youtube.com/shorts/MtAoO_25hYQ",
+        "https://i2.ytimg.com/vi/MtAoO_25hYQ/hqdefault.jpg",
+        "34693",
+        "",
+        "2026-11-25T21:00:27Z"
+      ],
       [
         "Xd3RrckdH-0",
         "Abhishek Kar",
@@ -1496,22 +1480,9 @@
         "21029",
         "",
         "2026-11-08T13:59:27Z"
-      ],
-      [
-        "vpCPAcqU0Hs",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Samvat 2083: Ek Stock Andhaaza, Portfolio Plan!",
-        "2026-11-07T11:41:20+00:00",
-        "2026-11-07T11:41:22+00:00",
-        "https://www.youtube.com/watch?v=vpCPAcqU0Hs",
-        "https://i3.ytimg.com/vi/vpCPAcqU0Hs/hqdefault.jpg",
-        "13534",
-        "Confused about which stock to buy this Muhurat? Stop chasing single stock tips and build a smart, goal-driven investment plan instead!\n\n*Created smallcases (Applicable to first 100 users only)*\nLong term aggressive 2083 : https://go.smallcase.com/gIQT/6dq0cgic\n\nCore growth 2083: https://go.smallcase.com/gIQT/addrs7vv\n\nSteady 2083: https://go.smallcase.com/gIQT/3i5fg2k0\n\nCreate your own smallcase: https://go.smallcase.com/gIQT/306bmnvd\n\nIn this video, we break down why buying a single stock is ju",
-        "2026-11-07T16:41:55Z"
       ]
     ],
-    "total": 584
+    "total": 591
   },
   "indicators": {
     "columns": [
@@ -2638,18 +2609,18 @@
     ],
     "rows": [
       [
-        "16505.75",
+        "22379.82",
         "DII",
-        "23-Nov-2026",
-        "-2760.12",
-        "19265.87"
+        "25-Nov-2026",
+        "4018.72",
+        "18361.1"
       ],
       [
-        "23473.67",
+        "24309.87",
         "FII/FPI",
-        "23-Nov-2026",
-        "5672.99",
-        "17800.68"
+        "25-Nov-2026",
+        "4479.08",
+        "19830.79"
       ]
     ],
     "total": 2
@@ -2682,15 +2653,15 @@
     "niftysmallcap50": 50
   },
   "daily": {
-    "as_of": "2026-11-25T12:43:10Z",
+    "as_of": "2026-11-25T21:49:09Z",
     "items": [
-      "Bhavcopy archive through 2026-11-25 (56 files, 30 days)",
-      "Nifty PCR 0.82 \u00b7 max pain 25400.0",
+      "Bhavcopy archive through 2026-11-25 (57 files, 30 days)",
+      "Nifty PCR 1.02 \u00b7 max pain 25600.0",
       "25 OI spikes in stock futures",
       "25 volume spikes vs their own average",
-      "Corporate actions: 2 dividends, 3 splits",
-      "584 videos across 10 channels",
-      "167 news headlines"
+      "Corporate actions: 1 dividend, 3 splits",
+      "591 videos across 10 channels",
+      "133 news headlines"
     ]
   },
   "relative_strength": {

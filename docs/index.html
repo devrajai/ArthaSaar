@@ -365,13 +365,57 @@ function makeTable(records, cols, opt){
 }
 
 /* ---------- helpers ---------- */
+/* Cards used to end with the source filename and a repeated disclaimer:
+   "stocks.json . fundamentals.json. Prices and fundamentals can be delayed, wrong or missing.
+   Not a recommendation." Every card said it, so none of it was read, and it pushed the actual
+   content up the page.
+
+   The filename and the standing caveats are stripped here rather than at fifty call sites. What
+   survives is the part that explains something specific to that card - "colour is the size of the
+   move", "a z-score is not a signal" - and a card whose note was only boilerplate now has none. */
+const NOTE_BOILER = [
+  /\b[\w-]+\.json\b/gi,
+  /Prices and fundamentals can be delayed,? wrong or missing\.?/gi,
+  /Values can be delayed,? wrong or missing\.?/gi,
+  /can be delayed,? wrong or missing\.?/gi,
+  /[Ff]ree-source (closes|prices|data)[^.]*\.?/gi,
+  /[Nn]ot a recommendation( to buy or sell)?\.?/gi,
+  /[Nn]ot MCX tick data\.?/gi,
+  // the flourishes that sat beside the filename and said nothing
+  /every session the pipeline holds\.?/gi,
+  /A long line flatters nothing:?\s*the same chart shows the falls\.?/gi,
+  /from the exchange\.?/gi,
+  /\u00b7\s*delayed\b\.?/gi,
+  /\u00b7\s*from the feed\b\.?/gi
+];
+function cleanNote(note){
+  if (!note) return '';
+  let t = String(note);
+  NOTE_BOILER.forEach(rx => { t = t.replace(rx, ' '); });
+  // tidy what the removals leave behind
+  t = t.replace(/\s*·\s*(?=·|$)/g, ' ');
+  t = t.replace(/(·\s*){2,}/g, '· ');
+  t = t.replace(/^[\s·.,;:]+/, '');
+  t = t.replace(/[\s·.,;:]+$/, '');
+  t = t.replace(/\s{2,}/g, ' ').trim();
+  // a separator with only a word or two after it is a leftover, not a sentence
+  const parts = t.split('\u00b7').map(x => x.trim()).filter(Boolean);
+  const kept = parts.filter((x, i) => i === 0 || x.length >= 24);
+  t = kept.join(' \u00b7 ').replace(/[\s.,;:]+$/, '').trim();
+  // a fragment is not worth a line: after the filename is stripped, what is left of
+  // "sectors.json . every sector, unweighted average" is a lower-case tail with no sentence in it
+  if (!t.length || /^[a-z]/.test(t)) return '';
+  return t.length >= 18 ? t : '';
+}
+
 function card(title, tag, bodyNode, note){
   const c = document.createElement('section'); c.className = 'card';
   const h = document.createElement('div'); h.className = 'ch';
   h.innerHTML = '<h2>' + esc(title) + '</h2>' + (tag ? '<span class="tag">' + esc(tag) + '</span>' : '');
   c.append(h);
   if (bodyNode) c.append(bodyNode);
-  if (note){ const p = document.createElement('p'); p.className = 'note'; p.innerHTML = note; c.append(p); }
+  const n = cleanNote(note);
+  if (n){ const p = document.createElement('p'); p.className = 'note'; p.innerHTML = n; c.append(p); }
   return c;
 }
 function tiles(items){
@@ -1367,8 +1411,8 @@ async function openCommodity(row, cm, mt){
       + 'description of the recent past, not a rule.</p>';
   }
 
-  out += '<p class="sub" style="margin-top:14px">commodities.json and metals.json \u00b7 free-source '
-    + 'closes, converted at the USD/INR rate above. Not MCX tick data, and not a recommendation.</p>';
+  out += '<p class="sub" style="margin-top:14px">Converted at the USD/INR rate above. Not MCX '
+    + 'tick data.</p>';
 
   body.innerHTML = out;
   if (tierTable){
@@ -2136,8 +2180,7 @@ async function openDetail(row, title, subtitle){
     } catch (_) {}
   }
   if (chartNode) out += '<div id="chartSlot"></div>';
-  out += '<p class="sub" style="margin-top:14px">Straight from the feed - every field this row '
-    + 'carries. Values can be delayed, wrong or missing. Not a recommendation.</p>';
+
   body.innerHTML = out;
   if (chartNode){
     const slot = body.querySelector('#chartSlot');
@@ -2290,9 +2333,9 @@ async function openCrypto(row){
     }
   }
 
-  out += '<p class="sub" style="margin-top:14px">crypto.json \u00b7 free-source prices, delayed. '
-    + 'Crypto trades 24 hours and has no circuit limit, no closing price and no earnings - the '
-    + 'measures used on a share describe it far less well. Not a recommendation.</p>';
+  out += '<p class="sub" style="margin-top:14px">Crypto trades 24 hours and has no circuit limit, '
+    + 'no closing price and no earnings - the measures used on a share describe it far less '
+    + 'well.</p>';
 
   body.innerHTML = out;
 
@@ -2561,9 +2604,8 @@ async function openFund(row){
       + '-year rate, compounded monthly. Not a projection - the same rate rarely repeats.</p>';
   }
 
-  out += '<p class="sub" style="margin-top:14px">mf.json \u00b7 NAV from the AMFI feed. Returns are '
-    + 'annualised. A past return is not a promise, and nothing here is a recommendation to buy '
-    + 'or sell.</p>';
+  out += '<p class="sub" style="margin-top:14px">Returns are annualised. A past return is not a '
+    + 'promise.</p>';
 
   body.innerHTML = out;
 
@@ -2812,8 +2854,7 @@ async function openStock(sym){
     ]);
     out += '<p class="sub" style="margin-top:10px">Year-ago period ' + esc(f.year_ago_period || '-') + '.</p>';
   }
-  out += '<p class="sub" style="margin-top:14px">stocks.json \u00b7 fundamentals.json. Prices and '
-    + 'fundamentals can be delayed, wrong or missing. Not a recommendation.</p>';
+
   body.innerHTML = out;
   const slot = body.querySelector('#chartSlot');
   if (slot){

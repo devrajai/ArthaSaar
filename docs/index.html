@@ -205,10 +205,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 #sheetBox .px{font-size:32px;font-weight:700;letter-spacing:-1px;margin:2px 0 4px}
 #sheetBox .up{color:#4ec9a0}#sheetBox .dn{color:#f0736a}
 #sheetBox h5{margin:16px 0 7px;font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;opacity:.55}
-#sheetBox .kv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.07);
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.07);
   border-radius:10px;overflow:hidden}
-#sheetBox .kv>div{background:var(--card);padding:9px 11px;display:flex;justify-content:space-between;gap:8px;font-size:12.5px}
-#sheetBox .kv span:first-child{opacity:.6}
+.kv>div{background:var(--card);padding:9px 11px;display:flex;justify-content:space-between;gap:8px;font-size:12.5px}
+.kv span:first-child{opacity:.6}
 #sheetBox .kv span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
 #sheetBox .na{opacity:.35}
 td.sym{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
@@ -496,7 +496,7 @@ async function renderOverview(main){
   const tenY = (hist.rows || []).map(r => r.c).filter(v => v != null);
   if (tenY.length > 200){
     const box = document.createElement('div');
-    const tr = totalReturn(tenY), cg = cagrOf(tenY);
+    const tr = totalReturn(tenY), cg = cagrOf(tenY, 252);   // daily sessions
     box.innerHTML = rowKV([
       ['Sessions', String(tenY.length)],
       ['Over the whole file', tr == null ? '-' : (tr > 0 ? '+' : '') + tr.toFixed(1) + '%'],
@@ -737,21 +737,166 @@ async function renderCharges(main){
   }
 }
 
+/* =====================================================================================
+   CORRELATION.
+   correlation.json carries a 60x60 matrix and 40 pairs per window, and the generic renderer
+   showed only "updated" and "count" - two tiles and an empty page. A matrix is not a table of
+   records, so it needs its own view: the pairs worth knowing, a grid you can read, and the
+   caveats the file already writes.
+   ===================================================================================== */
+async function renderCorrelation(main){
+  let d;
+  try { d = await J('correlation.json'); } catch (e) {
+    const p0 = document.createElement('p'); p0.className = 'err';
+    p0.textContent = 'Could not load correlation.json: ' + e.message;
+    main.append(card('Correlation', 'unavailable', p0, '')); return;
+  }
+  const wins = d.windows || {};
+  const keys = Object.keys(wins);
+  if (!keys.length){
+    const p0 = document.createElement('p'); p0.className = 'empty';
+    p0.textContent = 'No windows in the file.';
+    main.append(card('Correlation', 'empty', p0, '')); return;
+  }
+
+  const sel = document.createElement('div');
+  sel.className = 'nchips';
+  sel.style.margin = '0 0 10px';
+  sel.innerHTML = keys.map((k, i) =>
+    '<button data-w="' + esc(k) + '"' + (i === 0 ? ' class="on"' : '') + '>' + esc(k) + '</button>').join('');
+  main.append(card('Correlation window', keys.length + ' windows', sel,
+    'Daily returns. A longer window says more about a lasting relationship, a shorter one about '
+    + 'what is happening now - and they often disagree.'));
+
+  const host = document.createElement('div');
+  main.append(host);
+
+  const paint = (wk) => {
+    const w = wins[wk] || {};
+    const pairs = w.pairs || [];
+    const st = w.stocks || {};
+    const syms = st.symbols || [];
+    const mat = st.matrix || [];
+    host.innerHTML = '';
+
+    // highest and lowest pairs - the two questions anyone actually asks of a matrix
+    if (pairs.length){
+      const sorted = pairs.slice().sort((a, b) => b.corr - a.corr);
+      const fmt = r => ({a: r.a, b: r.b, corr: r.corr});
+      host.append(card('Most alike', wk + ' \u00b7 ' + pairs.length + ' pairs',
+        makeTable(sorted.slice(0, 12).map(fmt), [
+          {k:'a', label:'A'}, {k:'b', label:'B'},
+          {k:'corr', label:'Correlation', r:1, html:v => v.toFixed(3)}
+        ], {limit:12, noSearch:true, onRow: r => openStock(r.a + '.NS')}),
+        'Two names that move together give you one position, not two. That is the opposite of '
+        + 'diversification, and it is easy to hold without noticing.'));
+
+      // If the lowest correlation is still positive, saying "these diversify best" would be
+      // wrong - nothing in this list moves opposite to anything else.
+      const minC = sorted[sorted.length - 1].corr;
+      const leastNote = minC > 0.2
+        ? 'Every pair here still moves in the same direction - the weakest link is ' + minC.toFixed(2)
+          + ', well above zero. Nothing in this list hedges anything else, so a portfolio of these '
+          + 'names is one bet, not many.'
+        : minC > 0
+        ? 'The weakest relationships in the list. They still lean the same way (weakest ' +
+          minC.toFixed(2) + '), so they soften a fall rather than offset it.'
+        : 'These move opposite to each other, which is what a hedge is meant to do.';
+      host.append(card('Least alike', wk + ' \u00b7 ' + pairs.length + ' pairs',
+        makeTable(sorted.slice(-12).reverse().map(fmt), [
+          {k:'a', label:'A'}, {k:'b', label:'B'},
+          {k:'corr', label:'Correlation', r:1, html:v => v.toFixed(3)}
+        ], {limit:12, noSearch:true, onRow: r => openStock(r.a + '.NS')}),
+        leastNote));
+    }
+
+    // the grid itself, as a compact heat square
+    if (syms.length && mat.length){
+      const box = document.createElement('div');
+      const n = syms.length;
+      const cell = Math.max(3, Math.floor(300 / n));
+      let svg = '<svg viewBox="0 0 ' + (n * cell) + ' ' + (n * cell) + '" width="100%" ' +
+        'style="display:block;max-width:340px;margin:0 auto">';
+      for (let i = 0; i < n && i < mat.length; i++){
+        const row = mat[i] || [];
+        for (let j = 0; j < n; j++){
+          const v = row[j];
+          if (v == null) continue;
+          // -1 blue, 0 neutral, +1 red - the same reading as the heat maps elsewhere
+          const t = Math.max(-1, Math.min(1, v));
+          const col = t >= 0
+            ? 'rgba(240,115,106,' + (0.10 + t * 0.78).toFixed(2) + ')'
+            : 'rgba(110,168,254,' + (0.10 + Math.abs(t) * 0.78).toFixed(2) + ')';
+          svg += '<rect x="' + (j * cell) + '" y="' + (i * cell) + '" width="' + (cell - 1) +
+            '" height="' + (cell - 1) + '" fill="' + col + '"/>';
+        }
+      }
+      svg += '</svg>';
+      box.innerHTML = svg;
+      const lg = document.createElement('p');
+      lg.className = 'sub'; lg.style.margin = '8px 0 0';
+      lg.textContent = n + ' x ' + n + ' grid, in the same order as the pair lists. Red means the '
+        + 'two move together, blue means they move apart, pale means little relationship either '
+        + 'way. The diagonal is a stock against itself and is always 1.';
+      box.append(lg);
+      host.append(card('The grid', n + ' stocks', box,
+        'Read a row: how one stock behaves against every other in the list.'));
+    }
+
+    if (!pairs.length && !mat.length){
+      const p0 = document.createElement('p'); p0.className = 'empty';
+      p0.textContent = 'No pairs or matrix for this window.';
+      host.append(card('Correlation', wk, p0, ''));
+    }
+  };
+
+  sel.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(sel.querySelectorAll('button'), x => x.classList.remove('on'));
+    b.classList.add('on'); paint(b.dataset.w);
+  });
+  paint(keys[0]);
+
+  const ca = d.cautions || {};
+  const vals = Object.keys(ca).map(k => ca[k]).filter(Boolean);
+  if (vals.length){
+    const box = document.createElement('div');
+    box.innerHTML = vals.map(v => '<p style="margin:0 0 8px;line-height:1.55">' + esc(v) + '</p>').join('');
+    main.append(card('What correlation does not tell you', vals.length + ' points', box, ''));
+  }
+}
+
 async function renderBreadth(main){
   const [br, st, secs, scr] = await Promise.all([
     J('breadth.json').catch(()=>({})), J('stocks.json').catch(()=>({})),
     J('sectors.json').catch(()=>({})), J('screener.json').catch(()=>({}))
   ]);
 
+  // "Below both" was 100 minus the larger of the two shares, which is the share below the
+  // HIGHER average - equal to "below both" only if one group contains the other, which it does
+  // not. It is computed per stock from stocks.json instead.
+  const _S = (st.stocks || {});
+  let _both = 0, _known = 0, _aboveEither = 0;
+  Object.keys(_S).forEach(k => {
+    const r = _S[k], tt = r && r.tech;
+    if (!r || !tt || r.close == null) return;
+    const a50 = tt.sma_50, a200 = tt.sma_200;
+    if (a50 == null || a200 == null) return;
+    _known++;
+    const above50 = r.close >= a50, above200 = r.close >= a200;
+    if (above50 || above200) _aboveEither++;
+    if (!above50 && !above200) _both++;
+  });
+  const _belowBoth = _known ? (_both / _known * 100).toFixed(1) + '%' : '\u2014';
+
   main.append(card('Breadth', (br.total||0) + ' stocks', tiles([
     ['Above 50-day', (br.above_50 != null ? br.above_50 + '%' : '\u2014'), 'short-term trend'],
     ['Above 200-day', (br.above_200 != null ? br.above_200 + '%' : '\u2014'), 'long-term trend'],
-    ['Below both', (br.above_50 != null && br.above_200 != null
-        ? Math.max(0, 100 - Math.max(br.above_50, br.above_200)).toFixed(1) + '%' : '\u2014'),
-     'weakest group'],
+    ['Below both', _belowBoth, _known ? 'of ' + _known.toLocaleString('en-IN') + ' stocks' : 'no data'],
     ['Stocks', String(br.total||0), 'in the screen']
   ]), 'A breadth reading of 28% on the 50-day means seven in ten stocks are below their own '
-     + '50-day average, whatever the index did.'));
+     + '50-day average, whatever the index did. "Below both" is counted per stock, not derived '
+     + 'from the other two tiles.'));
 
   // where the universe sits against each average, computed from stocks.json
   const S = st.stocks || {};
@@ -1095,11 +1240,15 @@ function longSeriesFor(sym){
   const k = Object.keys(LONGH.series).find(x => x.split('.')[0].toUpperCase() === want);
   return k ? LONGH.series[k] : null;
 }
-function cagrOf(closes){
+/* perYear is the number of observations in a year. It was hard-coded to 12, which is right for
+   the monthly long history and wrong by a factor of 21 for the daily sessions the overview
+   passes - a 9.99-year file covering +217.6% read as 0.6% a year instead of 12.3%. */
+function cagrOf(closes, perYear){
   if (!closes || closes.length < 2) return null;
   const a = closes[0], b = closes[closes.length - 1];
   if (!a || a <= 0) return null;
-  const years = (closes.length - 1) / 12;
+  const ppy = perYear || 12;
+  const years = (closes.length - 1) / ppy;
   if (years <= 0) return null;
   return (Math.pow(b / a, 1 / years) - 1) * 100;
 }
@@ -1607,6 +1756,18 @@ function plausible(rate, key){
   return rate <= cap && rate >= -60;
 }
 
+/* Two codes can carry the same scheme name - Nippon India Power & Infra appears as 101262 and
+   101263 with an identical 10-year return, because one is Regular-Growth and the other
+   Regular-IDCW and the name is cut before it says so. The plan column makes them distinguishable
+   instead of looking like a duplicate. */
+function fundPlan(n){
+  const s = String(n || '');
+  const plan = /direct/i.test(s) ? 'Direct' : /regular/i.test(s) ? 'Regular' : '\u2014';
+  const opt = /idcw|dividend|payout|bonus/i.test(s) ? 'IDCW'
+            : /growth/i.test(s) ? 'Growth' : '\u2014';
+  return plan + ' \u00b7 ' + opt;
+}
+
 function shortFund(n){
   const s = String(n || '');
   const cut = s.replace(/\s*-\s*(Regular|Direct)\s+Plan.*$/i, '')
@@ -1695,6 +1856,9 @@ async function renderFunds(main, file, title, opts){
 
   // rank by the longest return available, so the table opens on an ordering rather than on
   // whatever order the feed happened to write
+  // short name and plan, so a phone shows the fund rather than 70 characters and an ellipsis
+  rows.forEach(r => { r.short = shortFund(r.name); r.plan = fundPlan(r.name); });
+
   const rankKey = ['r10y','r5y','r3y','r1y'].find(k => rows.some(r => r[k] != null));
   if (rankKey){
     rows.sort((a,b) => {
@@ -2003,14 +2167,16 @@ async function route(){
     else if (id === 'events' || id === 'corporate') { location.replace('#/news'); return; }
     else if (id === 'indices') await renderIndices(main);
     else if (id === 'breadth') await renderBreadth(main);
+    else if (id === 'correlation') await renderCorrelation(main);
     else if (id === 'charges') await renderCharges(main);
     else if (id === 'learn') await renderLearn(main);
     else if (id === 'ipo') await renderIpo(main);
     else if (id === 'mf') await renderFunds(main, 'mf.json', 'Mutual funds',
-      {kind:'fund', cols:[{k:'name',label:'Fund'},{k:'fund_house',label:'House'},{k:'category',label:'Category'},
-             {k:'nav',label:'NAV',r:1},{k:'r1y',label:'1Y',r:1,html:v=>pct(v)},
+      {kind:'fund', cols:[{k:'short',label:'Fund',html:(v,r)=>'<span title="'+esc(r.name)+'">'+esc(v)+'</span>'},
+             {k:'plan',label:'Plan'},{k:'nav',label:'NAV',r:1},
+             {k:'r1y',label:'1Y',r:1,html:v=>pct(v)},
              {k:'r3y',label:'3Y',r:1,html:v=>pct(v)},{k:'r5y',label:'5Y',r:1,html:v=>pct(v)},
-             {k:'years',label:'Yrs',r:1}], placeholder:'Search funds…'});
+             {k:'r10y',label:'10Y',r:1,html:v=>pct(v)}], placeholder:'Search funds…'});
     else if (id === 'etf') await renderFunds(main, 'etf.json', 'ETFs',
       {kind:'etf', cols:[{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'underlying',label:'Tracks'},
              {k:'close',label:'Close',r:1},{k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},
@@ -2644,6 +2810,22 @@ async function companyBlocks(sym){
   const c = (COFIN.companies || {})[sym] || {};
   const out = [];
 
+  // ---- promoter holding - it was in shareholding.json and the page never read it ----
+  try {
+    const sh = await J('shareholding.json');
+    const row = (sh.rows || []).find(r => r.symbol === sym.split('.')[0]);
+    if (row && (row.promoter_pct != null || row.public_pct != null)){
+      const sb = document.createElement('div');
+      sb.innerHTML = rowKV([
+        ['Promoter', row.promoter_pct == null ? '-' : row.promoter_pct.toFixed(2) + '%'],
+        ['Public', row.public_pct == null ? '-' : row.public_pct.toFixed(2) + '%'],
+        ['Free float proxy', row.free_float_proxy_pct == null ? '-' : row.free_float_proxy_pct.toFixed(2) + '%'],
+        ['As of', esc(row.as_of || '-')]
+      ]);
+      out.push(['Who owns it', 'shareholding', sb]);
+    }
+  } catch (_) { /* no shareholding file - skip the block */ }
+
   // ---- founders, founding year, ownership - from Wikidata ----
   await companyOrigin();
   const o = (ORIGIN.companies || {})[sym];
@@ -2816,9 +2998,8 @@ async function openStock(sym){
       ['P/E', fmt(fd.pe)], ['P/B', fmt(fd.pb)], ['EPS', fmt(fd.eps)],
       ['Div yield', fd.div_yield == null ? '-' : fmt(fd.div_yield) + '%'],
       ['Beta', fmt(fd.beta)], ['ROE', fd.roe == null ? '-' : roePct(fd.roe)],
-      ['Market cap', mcapText(fd.mcap, sym)],
-      ['52w high', fmt(fd.high_52w)], ['52w low', fmt(fd.low_52w)]
-    ]);
+      ['Market cap', mcapText(fd.mcap, sym)]
+    ]);   // 52-week high and low live in the Technicals block; repeating them here wasted a row
     // plain-English read of the two or three numbers that actually place the stock
     const notes = [];
     if (fd.pe != null) notes.push(fd.pe < 15 ? 'P/E under 15 - priced for modest growth, or for trouble.'
@@ -2830,7 +3011,14 @@ async function openStock(sym){
         : rp < 8 ? 'ROE under 8% - thin returns on the equity in the business.'
         : 'ROE in a normal range.');
     }
-    if (t.trend) notes.push('Trend reads ' + t.trend + ' on the 200-day average.');
+    // the builder sets trend from close vs SMA50 vs SMA200, not from the 200-day alone
+    if (t.trend){
+      const rule = { up: 'close above the 50-day, and the 50-day above the 200-day',
+                     down: 'close below the 50-day, and the 50-day below the 200-day',
+                     mixed: 'the 50- and 200-day averages disagree' }[t.trend]
+        || 'the moving averages give no clear reading';
+      notes.push('Trend reads ' + t.trend + ' - ' + rule + '.');
+    }
     if (notes.length) out += '<p class="sub" style="margin-top:10px">' + esc(notes.join(' ')) + '</p>';
   }
 
@@ -2897,6 +3085,32 @@ async function openStock(sym){
     });
     paint('1d');
   }
+  // ---- base rates: how the next 5 and 20 sessions went the last times this stock looked like this ----
+  try {
+    const su = await J('setup_history.json');
+    const row = (su.symbols || {})[sym.split('.')[0]];
+    if (row && row.n){
+      const thin = row.n < 30;   // the builder accepts 8 cases, the note called anything under 30 thin
+      const bb = document.createElement('div');
+      bb.innerHTML = rowKV([
+        ['Setup', esc(row.bucket || '-')],
+        ['Times it happened', String(row.n) + (thin ? '  \u00b7 thin sample' : '')],
+        ['Next 5 sessions', row.fwd5_median == null ? '-' : (row.fwd5_median > 0 ? '+' : '') +
+          row.fwd5_median.toFixed(2) + '% median, ' + (row.fwd5_hit == null ? '-' : row.fwd5_hit.toFixed(0) + '% up')],
+        ['Next 20 sessions', row.fwd20_median == null ? '-' : (row.fwd20_median > 0 ? '+' : '') +
+          row.fwd20_median.toFixed(2) + '% median, ' + (row.fwd20_hit == null ? '-' : row.fwd20_hit.toFixed(0) + '% up')],
+        ['Data as of', esc((su.updated || '').slice(0, 10))]
+      ]);
+      const p1 = document.createElement('p');
+      p1.className = 'sub'; p1.style.margin = '8px 0 0';
+      p1.textContent = 'A base rate, not a forecast. It counts what happened after the same setup '
+        + 'before, on this stock alone.' + (thin ? ' ' + row.n + ' cases is a thin sample - treat '
+        + 'the percentages as a hint at best.' : '');
+      bb.append(p1);
+      body.append(card('Last times it looked like this', esc(row.bucket || ''), bb, ''));
+    }
+  } catch (_) { /* no setup file - skip */ }
+
   // company profile, management and the financial history, each block its own card
   try {
     const blocks = await companyBlocks(sym);

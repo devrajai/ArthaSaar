@@ -464,11 +464,112 @@ const SECTIONS = [
   ['Forecast', 'forecast', 'Levels & derivatives'], ['Deals', 'deals', "Who's moving"],
   ['Promoter', 'insider', "Who's moving"], ['Regulator', 'sebi', "Who's moving"],
   ['Mutual Funds', 'mf', 'Funds & the world'], ['ETFs', 'etf', 'Funds & the world'],
-  ['Global', 'global', 'Funds & the world'], ['Crypto', 'crypto', 'Funds & the world'],
+  ['Global', 'global', 'Funds & the world'], ['Economy', 'economy', 'Funds & the world'],
+  ['Crypto', 'crypto', 'Funds & the world'],
   ['Commodities', 'commodities', 'Funds & the world'],
   ['History', 'history', 'Does any of it work'], ['Charges', 'charges', 'Does any of it work'],
   ['Learn', 'learn', 'Does any of it work'], ['Backtester', 'backtest', 'Does any of it work']
 ];
+
+/* =====================================================================================
+   MARKET OPEN / CLOSED.
+   market_status.json has been built for a while - open 09:15, close 15:30, pre-open 09:00, the
+   holiday list and special sessions - and no card ever showed it. Worked out in the browser
+   against IST, so the answer is current without a rebuild.
+   ===================================================================================== */
+function istNow(){
+  // the browser's own clock, converted to Asia/Kolkata rather than trusted as local
+  const s = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+  return new Date(s);
+}
+function hhmm(d){
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function marketState(st){
+  const now = istNow();
+  const today = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0');
+  const mins = now.getHours() * 60 + now.getMinutes();
+
+  const holidays = (st.holidays || []).map(x => (typeof x === 'string' ? x : x.date));
+  const special = (st.special_sessions || []).find(x => x.date === today);
+
+  const toMin = t => {
+    const [a, b] = String(t || '0:0').split(':').map(Number);
+    return a * 60 + (b || 0);
+  };
+  const openM = special ? toMin(special.open) : toMin(st.open || '09:15');
+  const closeM = special ? toMin(special.close) : toMin(st.close || '15:30');
+  const preM = toMin(st.preopen || '09:00');
+
+  const isHoliday = holidays.indexOf(today) >= 0;
+  const wd = now.getDay();
+
+  if (isHoliday) return { state: 'Closed', why: 'holiday', detail: 'Market holiday', today };
+  if (wd === 0 || wd === 6) return { state: 'Closed', why: 'weekend', detail: 'Weekend', today };
+  if (mins >= openM && mins < closeM){
+    return { state: 'Open', why: 'open', detail: 'closes at ' + (special ? special.close : st.close), today,
+             left: closeM - mins };
+  }
+  if (mins >= preM && mins < openM){
+    return { state: 'Pre-open', why: 'pre', detail: 'opens at ' + (special ? special.open : st.open), today,
+             left: openM - mins };
+  }
+  if (mins < preM) return { state: 'Closed', why: 'before', detail: 'opens at ' + (special ? special.open : st.open), today, left: openM - mins };
+  return { state: 'Closed', why: 'after', detail: 'closed for the day', today };
+}
+async function marketStatusCard(){
+  let st;
+  try { st = await J('market_status.json'); } catch (_) { return null; }
+  const m = marketState(st);
+  const box = document.createElement('div');
+  const cls = m.state === 'Open' ? 'up' : m.state === 'Pre-open' ? '' : 'dn';
+  let html = '<p class="big" style="margin:0 0 2px"><span class="' + cls + '">' + m.state +
+    '</span> <span style="font-size:13px;opacity:.7">' + esc(m.detail) + '</span></p>';
+  if (m.left != null && m.left > 0){
+    const hh = Math.floor(m.left / 60), mm = m.left % 60;
+    html += '<p class="sub" style="margin:0 0 8px">' + (hh ? hh + 'h ' : '') + mm + 'm away</p>';
+  }
+  if (st.special_sessions && st.special_sessions.some(x => x.date === m.today)){
+    const sp = st.special_sessions.find(x => x.date === m.today);
+    html += '<p class="sub" style="margin:0 0 8px">' + esc(sp.label || 'Special session') + '</p>';
+  }
+  box.innerHTML = html + rowKV([
+    ['Session', (st.preopen || '09:00') + ' pre-open \u00b7 ' + (st.open || '09:15') + ' open \u00b7 ' + (st.close || '15:30') + ' close'],
+    ['Timezone', esc(st.timezone || 'Asia/Kolkata')],
+    ['Now (IST)', hhmm(istNow())],
+    ['Data as of', esc((st.updated || '').slice(0, 16).replace('T', ' '))]
+  ]);
+  return card('Market', m.state, box,
+    'Times are IST. The state is worked out in your browser against the exchange calendar, so it '
+    + 'is current without waiting for a rebuild.');
+}
+
+/* Today in one line - the brief already writes it, and the FII/DII flow gives the second half. */
+async function todayLineCard(){
+  let b, f;
+  try { b = await J('brief.json'); } catch (_) { return null; }
+  try { f = await J('fii_dii.json'); } catch (_) { f = null; }
+  const box = document.createElement('div');
+  let html = '<p style="margin:0 0 10px;line-height:1.55;font-size:15px">' +
+    esc(b.headline || 'No brief for today.') + '</p>';
+  const bul = (b.bullets || []).slice(0, 3);
+  if (bul.length){
+    html += '<ul style="margin:0;padding-left:18px;line-height:1.6">' +
+      bul.map(x => '<li>' + esc(typeof x === 'string' ? x : (x.text || '')) + '</li>').join('') + '</ul>';
+  }
+  box.innerHTML = html;
+  const lat = (f && f.latest) || [];
+  if (lat.length){
+    // rowKV returns an HTML string; append() would insert it as text and print the markup
+    box.insertAdjacentHTML('beforeend', rowKV(lat.slice(0, 4).map(x => [
+      (x.who || x.category || 'Flow') + ' ' + (x.date || ''),
+      (x.net == null ? '-' : (x.net > 0 ? '+' : '') + '\u20b9' + num(x.net) + ' cr')
+    ])));
+  }
+  return card('Today in one line', b.market_date || '', box,
+    'Describes what moved, not why. Generated from this hub\'s own files.');
+}
 
 async function renderOverview(main){
   const [facts, hist, br, idx, circ, scr, secs, vix] = await Promise.all([
@@ -480,6 +581,12 @@ async function renderOverview(main){
   const F = facts.facts || {};
   const nifty = F.nifty || {};
   const closes = (hist.rows || []).slice(-30).map(r => r.c);
+
+  // status first: open or closed is the first thing anyone wants to know
+  const ms = await marketStatusCard();
+  if (ms) main.append(ms);
+  const tl = await todayLineCard();
+  if (tl) main.append(tl);
 
   // ---- 1. where the index is ----
   const head = document.createElement('div');
@@ -567,6 +674,9 @@ async function renderOverview(main){
     .sort((a,b) => (b.chg_pct||0) - (a.chg_pct||0)).slice(0, 12);
   if (hs.length) main.append(card('Sectors', 'top 12 by move', heatMap(hs),
     'Colour is the average move across each sector. Full list under Sectors.'));
+
+  const mv = await moversRadarCard();
+  if (mv) main.append(mv);
 
   // ---- 6. what is locked ----
   const uc = (circ.uc || []).slice(0,6), lc = (circ.lc || []).slice(0,6);
@@ -744,6 +854,115 @@ async function renderCharges(main){
    records, so it needs its own view: the pairs worth knowing, a grid you can read, and the
    caveats the file already writes.
    ===================================================================================== */
+/* Movers radar - what actually happened today, described rather than prescribed. Same rule as
+   the circuit radar: state the event, do not suggest an action. */
+async function moversRadarCard(){
+  let st, cir;
+  try { st = await J('stocks.json'); } catch (_) { return null; }
+  try { cir = await J('circuits.json'); } catch (_) { cir = {}; }
+  const S = st.stocks || {};
+  const hi = [], lo = [], vol = [];
+  Object.keys(S).forEach(k => {
+    const r = S[k]; if (!r || !r.tech) return;
+    const t = r.tech, c = r.close;
+    if (c == null) return;
+    if (t.high_52w && c >= t.high_52w * 0.999) hi.push({symbol: r.symbol, close: c, chg_pct: r.chg_pct});
+    if (t.low_52w && c <= t.low_52w * 1.001) lo.push({symbol: r.symbol, close: c, chg_pct: r.chg_pct});
+    if (t.vol_x && t.vol_x >= 3) vol.push({symbol: r.symbol, close: c, chg_pct: r.chg_pct, vol_x: t.vol_x});
+  });
+  vol.sort((a, b) => b.vol_x - a.vol_x);
+  if (!hi.length && !lo.length && !vol.length) return null;
+
+  const box = document.createElement('div');
+  const tbl = (arr, label, extra) => {
+    if (!arr.length) return;
+    const sec = document.createElement('div');
+    const p0 = document.createElement('p');
+    p0.className = 'sub'; p0.style.margin = '10px 0 4px';
+    p0.textContent = label + ' (' + arr.length + ')';
+    sec.append(p0);
+    sec.append(makeTable(arr.slice(0, 8), [
+      {k:'symbol', label:'Symbol'}, {k:'close', label:'Close', r:1, html:v => num(v)},
+      {k:'chg_pct', label:'Change', r:1, html:v => pct(v)}
+    ].concat(extra || []), {limit:8, noSearch:true, onRow: r => openStock(r.symbol + '.NS')}));
+    box.append(sec);
+  };
+  tbl(hi, 'At a 52-week high today');
+  tbl(lo, 'At a 52-week low today');
+  tbl(vol, 'Volume at least 3x its usual', [{k:'vol_x', label:'Vol x', r:1, html:v => v.toFixed(1) + 'x'}]);
+
+  const uc = (cir.uc || []).length, lc = (cir.lc || []).length;
+  if (uc || lc){
+    const p1 = document.createElement('p');
+    p1.className = 'sub'; p1.style.margin = '10px 0 0';
+    p1.textContent = 'Plus ' + uc + ' at the upper circuit and ' + lc + ' at the lower. Full list '
+      + 'under F&O.';
+    box.append(p1);
+  }
+  return card('Movers today', (hi.length + lo.length + vol.length) + ' flagged', box,
+    'A volume spike or a fresh extreme is a description of the session, not a reason to act.');
+}
+
+async function renderEconomy(main){
+  const [ec, mac] = await Promise.all([
+    J('economy.json').catch(() => ({items:[]})),
+    J('macro.json').catch(() => ({events:[]}))
+  ]);
+
+  // ---- days until the next thing that matters ----
+  const ev = (mac.events || []).slice().sort((a, b) => (a.days_away || 999) - (b.days_away || 999));
+  if (ev.length){
+    const box = document.createElement('div');
+    box.append(tiles(ev.slice(0, 4).map(e => [
+      e.days_away === 0 ? 'Today' : e.days_away + ' days',
+      esc(e.label || ''),
+      (e.region || '') + ' \u00b7 ' + (e.date || '')
+    ])));
+    if (ev[0].note){
+      const p0 = document.createElement('p');
+      p0.className = 'sub'; p0.style.margin = '10px 0 0';
+      p0.textContent = ev[0].note;
+      box.append(p0);
+    }
+    main.append(card('Macro radar', ev.length + ' events', box,
+      'Only events already on the calendar. The nearest is first.'));
+  }
+
+  // ---- RBI releases ----
+  const items = ec.items || [];
+  if (items.length){
+    const cnt = ec.counts || {};
+    const summ = document.createElement('div');
+    summ.append(tiles(Object.keys(cnt).slice(0, 4).map(k => [k, String(cnt[k]), 'releases'])));
+    main.append(card('RBI releases', items.length + ' in the feed', summ,
+      'What the Reserve Bank has published, newest first. A repo auction notice is an operational '
+      + 'announcement, not a policy signal.'));
+
+    main.append(card('Latest releases', 'RBI',
+      makeTable(items.map(x => ({date: x.date, topic: x.topic, title: x.title, link: x.link})), [
+        {k:'date', label:'Date'}, {k:'topic', label:'Topic'},
+        {k:'title', label:'Release',
+         html:(v, r) => r.link ? '<a href="' + esc(r.link) + '" target="_blank" rel="noopener">' + esc(v) + '</a>' : esc(v)}
+      ], {limit:80, placeholder:'Search releases - repo, inflation, rupee\u2026'}),
+      'Source: the RBI\'s own press-release feed.'));
+  } else {
+    const p0 = document.createElement('p'); p0.className = 'empty';
+    p0.textContent = 'No RBI releases in the last pull.';
+    main.append(card('RBI releases', 'empty', p0, ''));
+  }
+
+  // ---- what is NOT here, said plainly ----
+  const gap = document.createElement('div');
+  gap.innerHTML = '<p style="margin:0 0 8px;line-height:1.55">This window carries the RBI\'s own '
+    + 'releases and the macro events already on the calendar. It does not carry a forward calendar '
+    + 'of Indian data releases.</p>'
+    + '<p style="margin:0;line-height:1.55">CPI, IIP and GDP dates come from MoSPI, whose portal '
+    + 'needs scraping; the Press Information Bureau feed returns Hindi-only items with no '
+    + 'publication date, so it cannot be placed on a timeline. Rather than guess at dates, the '
+    + 'window leaves them out.</p>';
+  main.append(card('What this does not cover', 'read this', gap, ''));
+}
+
 async function renderCorrelation(main){
   let d;
   try { d = await J('correlation.json'); } catch (e) {
@@ -2168,6 +2387,7 @@ async function route(){
     else if (id === 'indices') await renderIndices(main);
     else if (id === 'breadth') await renderBreadth(main);
     else if (id === 'correlation') await renderCorrelation(main);
+    else if (id === 'economy') await renderEconomy(main);
     else if (id === 'charges') await renderCharges(main);
     else if (id === 'learn') await renderLearn(main);
     else if (id === 'ipo') await renderIpo(main);

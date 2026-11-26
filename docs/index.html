@@ -794,7 +794,7 @@ async function renderSectors(main){
 }
 
 async function renderStocks(main){
-  (async () => { const r = await circuitRadarCard(); if (r) main.append(r); })();
+  const _rc = await circuitRadarCard(); if (_rc) main.append(_rc);
 
   const s = await J('screener.json');
   const rows = s.rows.map(r => ({symbol:r.symbol, name:r.name, close:r.close, chg_1d:r.chg_1d,
@@ -808,12 +808,74 @@ async function renderStocks(main){
     'screener.json · all ' + s.count.toLocaleString('en-IN') + ' stocks. Click a column to sort, type to filter.'));
 }
 
+/* =====================================================================================
+   PAIR SPREADS, in F&O where a spread trader looks.
+   The daily tracker writing to the Google Sheet was putting a new date on the previous run's
+   z-scores - BAJFINANCE/CHOLAFIN read 1.0877 on two different dates, and every other pair
+   repeated too. A new date with old numbers is worse than no update, because it looks like a
+   check. These come from docs/series.json, which the pipeline rebuilds nightly.
+   ===================================================================================== */
+async function pairsCard(){
+  let d;
+  try { d = await J('pairs.json'); } catch (_) { return null; }
+  if (!d || !(d.pairs || []).length) return null;
+
+  const c = d.counts || {};
+  // tiles() returns a DOM node, not a string - assigning it to innerHTML printed
+  // "[object HTMLDivElement]" where the summary should be
+  const box = document.createElement('div');
+  box.append(tiles([
+    ['At entry', String((c['BUY A / SELL B'] || 0) + (c['SELL A / BUY B'] || 0)), '|z| at or above ' + d.entry],
+    ['Watch', String(c['WATCH'] || 0), '|z| at or above ' + d.watch],
+    ['No signal', String(c['NO SIGNAL'] || 0), 'inside the band'],
+    ['Pairs', String(d.count || 0), (d.window || 60) + '-session window']
+  ]));
+  const host = document.createElement('div');
+  box.append(host);
+
+  const rows = (d.pairs || []).map(r => ({
+    pair: r.pair, z: r.z, state: r.state, ratio: r.ratio, mean: r.mean_ratio,
+    a: r.a, a_chg: r.a_chg, b_chg: r.b_chg
+  }));
+
+  host.append(makeTable(rows, [
+    {k:'pair', label:'Pair'},
+    {k:'z', label:'Z-score', r:1, html:v => {
+      if (v == null) return '\u2014';
+      const hot = Math.abs(v) >= (d.entry || 2);
+      return '<span class="' + (hot ? (v > 0 ? 'dn' : 'up') : '') + '">' +
+        (v > 0 ? '+' : '') + v.toFixed(2) + '</span>';
+    }},
+    {k:'state', label:'Read'},
+    {k:'ratio', label:'Ratio', r:1, html:v => v == null ? '\u2014' : v.toFixed(4)},
+    {k:'mean', label:'Mean', r:1, html:v => v == null ? '\u2014' : v.toFixed(4)},
+    {k:'a_chg', label:'A', r:1, html:v => pct(v)},
+    {k:'b_chg', label:'B', r:1, html:v => pct(v)}
+  ], {limit:40, placeholder:'Search a pair\u2026', onRow: r => openStock(r.a + '.NS')}));
+
+  const note = document.createElement('p');
+  note.className = 'sub';
+  note.style.margin = '10px 0 0';
+  note.textContent = 'The spread is ln(A) minus ln(B), so the ratio column is how many B one A '
+    + 'buys. A z-score says the ratio is unusual against its own ' + (d.window || 60) + '-session '
+    + 'past - not that it will revert. A broken pair can sit at three sigma for months, and '
+    + 'cointegration is not tested here. Tap a row for the first leg.';
+  box.append(note);
+
+  return card('Pair spreads', (d.updated || '').slice(0, 10), box,
+    'Computed from the same closes as the rest of the site. The pair list is from the '
+    + 'pair-trading workbook; this only measures where each spread sits today.');
+}
+
 async function renderFno(main){
   const [exp, walls, roll, stats] = await Promise.all([
     J('oi_by_expiry.json'), J('oi_walls.json'), J('rollover.json'), J('oi_stats.json')]);
-  // circuit limits belong beside the F&O list: a stock locked at its band cannot be traded
-  // even if the futures say otherwise
-  (async () => { const r = await circuitRadarCard(); if (r) main.append(r); })();
+  // Awaited, not fire-and-forget: appending inside an async IIFE made the order depend on
+  // which file happened to load first, so the radar and the pair spreads drifted below the
+  // open-interest tables on some runs.
+  const [radarCard, pCard] = await Promise.all([circuitRadarCard(), pairsCard()]);
+  if (radarCard) main.append(radarCard);
+  if (pCard) main.append(pCard);
 
   const rows = [];
   Object.keys(exp.indices || {}).forEach(k => {

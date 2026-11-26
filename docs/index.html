@@ -444,6 +444,26 @@ async function renderOverview(main){
     (nifty.d ? ' \u00b7 ' + esc(nifty.d) : '') + ' \u00b7 ' + esc(nifty.src || '') + '</p>';
   head.innerHTML = hh;
   if (closes.length > 2){ const sp = sparkline(closes, {h: 70}); if (sp) head.append(sp); }
+
+  // ten years of the index, from history.json - the same file the site already used for its
+  // session table and never drew
+  const tenY = (hist.rows || []).map(r => r.c).filter(v => v != null);
+  if (tenY.length > 200){
+    const box = document.createElement('div');
+    const tr = totalReturn(tenY), cg = cagrOf(tenY);
+    box.innerHTML = rowKV([
+      ['Sessions', String(tenY.length)],
+      ['Over the whole file', tr == null ? '-' : (tr > 0 ? '+' : '') + tr.toFixed(1) + '%'],
+      ['Per year (CAGR)', cg == null ? '-' : (cg > 0 ? '+' : '') + cg.toFixed(1) + '%'],
+      ['From', (hist.first || '-')],
+      ['To', (hist.last || '-')]
+    ]);
+    const lg = sparkline(tenY, {h: 80, unit: 'sessions'});
+    if (lg){ box.insertBefore(lg, box.firstChild); }
+    main.append(card('Nifty, the whole record', tenY.length + ' sessions', box,
+      'history.json \u00b7 every session the pipeline holds. A long line flatters nothing: the '
+      + 'same chart shows the falls.'));
+  }
   main.append(card('Where the market is', 'Nifty 50', head,
     'The line is the last 30 sessions. Breadth and circuits below say whether the index move is '
     + 'being carried by the whole market or a handful of stocks.'));
@@ -952,6 +972,44 @@ function heatMap(items, onPick){
 /* A price line from the 120 daily closes the repo already carries. Small enough to sit inside
    a detail card, and it answers the question a table of numbers cannot: what has this thing
    actually done lately. */
+/* Long history: 5 or 10 years of monthly closes from docs/long_history.json, plus the return
+   over that window so a line can be read as a number. */
+let LONGH = null;
+async function longHistory(){
+  if (LONGH !== null) return LONGH;
+  try { LONGH = await J('long_history.json'); } catch (_) { LONGH = {}; }
+  return LONGH;
+}
+function longSeriesFor(sym){
+  if (!LONGH || !LONGH.series) return null;
+  const want = String(sym || '').toUpperCase();
+  if (LONGH.series[want]) return LONGH.series[want];
+  const k = Object.keys(LONGH.series).find(x => x.split('.')[0].toUpperCase() === want);
+  return k ? LONGH.series[k] : null;
+}
+function cagrOf(closes){
+  if (!closes || closes.length < 2) return null;
+  const a = closes[0], b = closes[closes.length - 1];
+  if (!a || a <= 0) return null;
+  const years = (closes.length - 1) / 12;
+  if (years <= 0) return null;
+  return (Math.pow(b / a, 1 / years) - 1) * 100;
+}
+function totalReturn(closes){
+  if (!closes || closes.length < 2 || !closes[0]) return null;
+  return (closes[closes.length - 1] / closes[0] - 1) * 100;
+}
+
+/* How the thing did against the Nifty over the same window. Both are monthly closes, so the
+   comparison is like for like rather than a number against a guess. */
+function vsNifty(closes){
+  const nif = longSeriesFor('^NSEI');
+  if (!nif || !closes || closes.length < 2) return null;
+  const a = totalReturn(closes), nb = totalReturn(nif.c);
+  if (a == null || nb == null) return null;
+  return {stock: a, nifty: nb, diff: a - nb};
+}
+
 function sparkline(vals, opts){
   opts = opts || {};
   const w = opts.w || 320, hgt = opts.h || 64, pad = 4;
@@ -977,7 +1035,8 @@ function sparkline(vals, opts){
   const rng = document.createElement('div');
   rng.className = 'sub';
   rng.style.margin = '0 0 4px';
-  rng.textContent = ys.length + ' sessions \u00b7 low ' + lo.toFixed(2) + ' \u00b7 high ' + hi.toFixed(2) +
+  rng.textContent = ys.length + ' ' + (opts.unit || 'sessions') + ' \u00b7 low ' + lo.toFixed(2) +
+    ' \u00b7 high ' + hi.toFixed(2) +
     ' \u00b7 ' + ((ys[ys.length-1] / ys[0] - 1) * 100).toFixed(1) + '% over the window';
   box.append(svg.firstChild, rng);
   return box;
@@ -1142,6 +1201,31 @@ async function renderCommodities(main){
       'commodities.json \u00b7 free-source closes, not MCX tick data. Tap a contract for the full picture. '
       + (cm.note || '')));
   }
+  // gold/silver ratio: how many ounces of silver one ounce of gold buys, with its own history
+  const rt = (cm && cm.ratio) || null;
+  if (rt && Array.isArray(rt.history) && rt.history.length > 5){
+    const vals = rt.history.map(x => Number(x.ratio)).filter(v => isFinite(v));
+    const box = document.createElement('div');
+    let html = '<p class="big" style="margin:0 0 2px">' + num(rt.value) +
+      ' <span class="' + (rt.change_1w > 0 ? 'up' : 'down') + '" style="font-size:15px">' +
+      pct(rt.change_1w) + ' on the week</span></p>' +
+      '<p class="sub" style="margin:0 0 8px">One ounce of gold buys this many ounces of silver' +
+      (rt.date ? ' \u00b7 ' + esc(rt.date) : '') + '</p>';
+    box.innerHTML = html;
+    const sp = sparkline(vals, {h: 64});
+    if (sp) box.append(sp);
+    const note = document.createElement('p');
+    note.className = 'sub';
+    note.style.margin = '8px 0 0';
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    note.textContent = 'Over the window it has run between ' + lo.toFixed(1) + ' and ' +
+      hi.toFixed(1) + '. A high ratio means silver is cheap against gold; a low one means the '
+      + 'opposite. It is a relative measure, not a signal on either metal.';
+    box.append(note);
+    main.append(card('Gold to silver ratio', vals.length + ' readings', box,
+      'commodities.json \u00b7 the ratio traders watch when they rotate between the two metals.'));
+  }
+
   if (mt && mt.available !== false && mt.gold){
     const g = mt.gold, s = mt.silver || {};
     const box = tiles([
@@ -1191,6 +1275,29 @@ async function renderIndices(main){
   if (first) pickIndex(first.id);
 }
 
+/* Scheme names run to 70+ characters ("SBI HEALTHCARE OPPORTUNITIES FUND - Regular Plan -
+   IDCW"), which on a phone leaves no room for the numbers. Shorten to the part that identifies
+   the fund, keep the full name in the tooltip and in the detail window. */
+/* A 10-year annualised return above roughly 35% is not a great fund, it is a bad NAV point.
+   Two rows in the current feed carry 63.8% and 66.6% for overnight funds that actually return
+   about 5% a year, which put a 6.2 crore SIP projection at the top of the table. Anything
+   outside a believable band is kept in the list but flagged, never ranked first. */
+const RETURN_CAP = {r1y: 100, r3y: 60, r5y: 45, r10y: 35};
+function plausible(rate, key){
+  if (rate == null) return false;
+  const cap = RETURN_CAP[key] || 60;
+  return rate <= cap && rate >= -60;
+}
+
+function shortFund(n){
+  const s = String(n || '');
+  const cut = s.replace(/\s*-\s*(Regular|Direct)\s+Plan.*$/i, '')
+               .replace(/\s*-\s*(Growth|IDCW|Bonus|Payout).*$/i, '')
+               .replace(/\s+/g, ' ').trim();
+  const base = cut || s;
+  return base.length > 30 ? base.slice(0, 29) + '\u2026' : base;
+}
+
 async function renderFunds(main, file, title, opts){
   opts = opts || {};
   const d = await J(file);
@@ -1215,15 +1322,49 @@ async function renderFunds(main, file, title, opts){
       + 'This is the count, not a recommendation.'));
   }
 
+  // SIP: what a fixed monthly amount would have become at each fund's own 10-year rate.
+  // It is arithmetic on a past return, not a projection of the future, and it says so.
+  if (rows.some(r => r.r10y != null || r.r5y != null)){
+    const key = rows.some(r => r.r10y != null) ? 'r10y' : 'r5y';
+    const yrs = key === 'r10y' ? 10 : 5;
+    const monthly = 5000;
+    const fv = rate => {
+      const i = rate / 100 / 12, n = yrs * 12;
+      return i ? monthly * ((Math.pow(1 + i, n) - 1) / i) * (1 + i) : monthly * n;
+    };
+    const allWithR = rows.filter(r => r[key] != null);
+    const withR = allWithR.filter(r => plausible(r[key], key)).sort((a,b) => b[key] - a[key]);
+    const excluded = allWithR.length - withR.length;
+    if (withR.length){
+      main.append(card('SIP at \u20b9' + monthly.toLocaleString('en-IN') + ' a month',
+        'over ' + yrs + ' years, at each fund\'s own past rate',
+        makeTable(withR.slice(0, 12).map(r => ({
+          name: r.name, short: shortFund(r.name), rate: r[key], value: Math.round(fv(r[key]))
+        })), [
+          // the full scheme name is 70 characters and pushes the money columns off a phone
+          {k:'short',label:'Fund',html:(v,r)=>'<span title="'+esc(r.name)+'">'+esc(v)+'</span>'},
+          {k:'rate',label:'Past ' + yrs + 'Y',r:1,html:v=>pct(v)},
+          {k:'value',label:'Would be',r:1,html:v=>'\u20b9'+num(v)}
+        ], {limit:12, placeholder:'Search funds\u2026',
+           onRow: r => openDetail(r, r.name, '')}),
+        'Arithmetic on the past return, compounded monthly - not a projection. A fund that '
+        + 'returned 20% a year for ten years did so in conditions that may not repeat, and the '
+        + 'worst funds are shown further down for the same reason.'
+        + (excluded ? ' ' + excluded + ' fund(s) are left out because their published ' + yrs
+           + '-year return is above ' + (RETURN_CAP[key] || 60) + '% a year, which is a bad NAV '
+           + 'point rather than a real result.' : '')));
+    }
+  }
+
   // best and worst by the longest return the feed carries
-  const rk = ['r5y','r3y','r1y'].find(k => rows.some(r => r[k] != null));
+  const rk = ['r10y','r5y','r3y','r1y'].find(k => rows.some(r => r[k] != null));
   if (rk && rows.length > 6){
-    const withR = rows.filter(r => r[rk] != null).sort((a,b) => b[rk] - a[rk]);
+    const withR = rows.filter(r => r[rk] != null && plausible(r[rk], rk)).sort((a,b) => b[rk] - a[rk]);
     const cols = [{k:'name',label:'Name'},{k:'fund_house',label:'House'},{k:rk,label:rk.toUpperCase()+' return',r:1,html:v=>pct(v)},
                   {k:'nav',label:'NAV',r:1}];
     main.append(card(title + ' \u00b7 best ' + rk.toUpperCase(),
       withR.length + ' ranked',
-      makeTable(withR.slice(0,10), cols, {limit:10, onRow: r => openDetail(r, r.name, r.fund_house)}),
+      makeTable(withR.slice(0,10), cols.slice(0,4), {limit:10, onRow: r => openDetail(r, r.name, r.fund_house)}),
       'Ranked on the longest return the feed carries, so a fund with a short record is not '
       + 'flattered by a single good year.'));
     main.append(card(title + ' \u00b7 worst ' + rk.toUpperCase(),
@@ -1232,6 +1373,19 @@ async function renderFunds(main, file, title, opts){
       'Shown deliberately: a list of winners alone is not a comparison.'));
   }
   const cols = opts.cols || (rows[0] ? Object.keys(rows[0]).slice(0,8).map(k => ({k, label:label(k)})) : []);
+
+  // rank by the longest return available, so the table opens on an ordering rather than on
+  // whatever order the feed happened to write
+  const rankKey = ['r10y','r5y','r3y','r1y'].find(k => rows.some(r => r[k] != null));
+  if (rankKey){
+    rows.sort((a,b) => {
+      const pa = plausible(a[rankKey], rankKey), pb = plausible(b[rankKey], rankKey);
+      if (pa !== pb) return pa ? -1 : 1;            // plausible rows above suspect ones
+      return (b[rankKey] || -1e9) - (a[rankKey] || -1e9);
+    });
+    rows.forEach((r, i) => { r._rank = i + 1; });
+    cols.unshift({k:'_rank', label:'#'});
+  }
   main.append(card(title, (d.count || rows.length) + ' rows',
     makeTable(rows, cols, {
       limit: 150,
@@ -1687,9 +1841,7 @@ async function openStock(sym){
       + '<div class="' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '" style="font-size:13px">'
       + (chg > 0 ? '+' : '') + fmt(chg) + '% today</div>';
   }
-  // price line, drawn from series.json - the numbers below say where it is, this says how it got there.
-  // It goes into a slot inside `out`, so the header is rendered once rather than written to the
-  // body early and then written again with the rest of the card.
+  // short line from series.json, then the long one from long_history.json
   out += '<div id="chartSlot"></div>';
   let chartNode = null;
   try {
@@ -1697,6 +1849,22 @@ async function openStock(sym){
     const key = Object.keys(ser.series || {}).find(k => k.split('.')[0] === sym);
     if (key) chartNode = sparkline(ser.series[key]);
   } catch (_) { /* no series - the card still works without a chart */ }
+
+  await longHistory();
+  const longS = longSeriesFor(sym);
+  let longHTML = '';
+  if (longS && longS.c && longS.c.length >= 12){
+    const yrs = ((longS.c.length - 1) / 12).toFixed(1);
+    const cg = cagrOf(longS.c), tr = totalReturn(longS.c);
+    const cmp = vsNifty(longS.c);
+    longHTML = '<h5>Over ' + yrs + ' years</h5>';
+    longHTML += rowKV([
+      ['Total return', tr == null ? '-' : (tr > 0 ? '+' : '') + tr.toFixed(1) + '%'],
+      ['Per year (CAGR)', cg == null ? '-' : (cg > 0 ? '+' : '') + cg.toFixed(1) + '%'],
+      ['Nifty, same window', cmp ? ((cmp.nifty > 0 ? '+' : '') + cmp.nifty.toFixed(1) + '%') : '-'],
+      ['Ahead of Nifty by', cmp ? ((cmp.diff > 0 ? '+' : '') + cmp.diff.toFixed(1) + ' pp') : '-']
+    ]);
+  }
 
   if (Object.keys(t).length){
     out += '<h5>Technicals</h5>' + rowKV([
@@ -1754,6 +1922,20 @@ async function openStock(sym){
   if (chartNode){
     const slot = body.querySelector('#chartSlot');
     if (slot) slot.append(chartNode);
+  }
+  // the long line and its returns go last, so the card reads short-term first
+  if (longS && longS.c && longS.c.length >= 12){
+    const host = document.createElement('div');
+    host.innerHTML = longHTML;
+    const lg = sparkline(longS.c, {h: 80, unit: 'months'});
+    if (lg){
+      const lab = document.createElement('p');
+      lab.className = 'sub'; lab.style.margin = '0 0 2px';
+      lab.textContent = 'Monthly closes, ' + longS.c.length + ' months';
+      host.insertBefore(lab, host.firstChild);
+      host.insertBefore(lg, lab.nextSibling);
+    }
+    body.append(host);
   }
   box.scrollTop = 0;
 }

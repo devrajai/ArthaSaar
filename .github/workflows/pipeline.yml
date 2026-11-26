@@ -642,6 +642,12 @@ jobs:
       - name: "7x. Long history (5 and 10 year monthly closes)"
         run: python scripts/build_long_history.py || true
 
+      # 5-minute bars for the timeframe switch. Yahoo keeps them about 60 days, so this
+      # is a rolling window; || true because Yahoo rate-limits and a thin file is better
+      # than a failed run.
+      - name: "7y. Recent intraday bars (5 minute)"
+        run: python scripts/build_intraday.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

@@ -2318,11 +2318,50 @@ async function companyFinancials(){
 
 /* Company profile, management and the financial history the site did not have: revenue, profit,
    EBITDA, debt and equity by year, and revenue and profit by quarter, each drawn. */
+let ORIGIN = null;
+async function companyOrigin(){
+  if (ORIGIN !== null) return ORIGIN;
+  try { ORIGIN = await J('company_origin.json'); } catch (_) { ORIGIN = {companies:{}}; }
+  return ORIGIN;
+}
+
 async function companyBlocks(sym){
   await companyFinancials();
-  const c = (COFIN.companies || {})[sym];
-  if (!c) return [];
+  const c = (COFIN.companies || {})[sym] || {};
   const out = [];
+
+  // ---- founders, founding year, ownership - from Wikidata ----
+  await companyOrigin();
+  const o = (ORIGIN.companies || {})[sym];
+  if (o && (o.founders || o.inception || o.subsidiaries || o.parents || o.history)){
+    const box = document.createElement('div');
+    let html = '';
+    const facts = [];
+    if (o.founders && o.founders.length) facts.push(['Founded by', esc(o.founders.join(', '))]);
+    if (o.inception) facts.push(['Founded', esc(o.inception)]);
+    if (o.hq) facts.push(['Headquarters', esc(o.hq)]);
+    if (o.parents && o.parents.length) facts.push(['Owned by', esc(o.parents.join(', '))]);
+    if (facts.length) html += rowKV(facts);
+
+    // the acquisition side: what this company owns, and what it is owned by
+    if (o.subsidiaries && o.subsidiaries.length){
+      html += '<h5>Companies it owns</h5><p style="margin:0;line-height:1.6">' +
+        o.subsidiaries.map(esc).join(' \u00b7 ') + '</p>';
+    }
+    if (o.owns && o.owns.length){
+      html += '<h5>Also recorded as owning</h5><p style="margin:0;line-height:1.6">' +
+        o.owns.map(esc).join(' \u00b7 ') + '</p>';
+    }
+    if (o.history){
+      html += '<h5>History</h5><p style="margin:0;line-height:1.6">' + esc(o.history) + '</p>';
+    }
+    html += '<p class="sub" style="margin-top:10px">From Wikidata and Wikipedia, which are '
+      + 'community-edited - a founder, a date or a subsidiary can be missing, stale or wrong. '
+      + 'The subsidiary list is what editors recorded, not a complete list of acquisitions. '
+      + 'Current officers come from Yahoo, not from here.</p>';
+    box.innerHTML = html;
+    out.push(['Origin and ownership', o.inception ? o.inception.slice(0, 4) : 'Wikidata', box]);
+  }
 
   // what the business is
   const facts = [];

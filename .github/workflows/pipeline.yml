@@ -648,6 +648,11 @@ jobs:
       - name: "7y. Recent intraday bars (5 minute)"
         run: python scripts/build_intraday.py || true
 
+      # company profiles and financial history for the stock detail windows. Yahoo
+      # rate-limits, so || true keeps a thin file rather than failing the run.
+      - name: "7z. Company financials (profile, officers, history)"
+        run: python scripts/build_company_financials.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

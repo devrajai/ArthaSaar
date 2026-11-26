@@ -1089,6 +1089,60 @@ async function seriesForTimeframe(sym, tf){
   return {vals: slice, unit: 'months', label: tf === 'all' ? 'whole history' : tf};
 }
 
+/* A bar chart for things that come in periods - revenue by year, profit by quarter. A line
+   implies continuity between points; annual results are discrete events. */
+function barChart(labels, vals, opts){
+  opts = opts || {};
+  const w = 320, hgt = opts.h || 92, pad = 18, gap = 6;
+  const ys = (vals || []).map(v => (v == null || !isFinite(v)) ? null : Number(v));
+  const real = ys.filter(v => v !== null);
+  if (!real.length) return null;
+  const hi = Math.max(...real, 0), lo = Math.min(...real, 0);
+  const span = (hi - lo) || 1;
+  const n = ys.length;
+  const bw = (w - pad * 2 - gap * (n - 1)) / n;
+  const zeroY = hgt - pad - ((0 - lo) / span) * (hgt - pad * 2);
+  const col = opts.color || '#6ea8fe';
+
+  let bars = '', texts = '';
+  ys.forEach((v, i) => {
+    const x = pad + i * (bw + gap);
+    if (v === null){
+      texts += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (hgt - 4) +
+        '" font-size="8" fill="currentColor" opacity=".4" text-anchor="middle">\u2014</text>';
+    } else {
+      const y = hgt - pad - ((v - lo) / span) * (hgt - pad * 2);
+      const top = Math.min(y, zeroY), bh = Math.max(1.5, Math.abs(zeroY - y));
+      bars += '<rect x="' + x.toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + bw.toFixed(1) +
+        '" height="' + bh.toFixed(1) + '" rx="2" fill="' + (v >= 0 ? col : '#f0736a') + '" opacity=".85"/>';
+    }
+    texts += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (hgt - 4) +
+      '" font-size="8" fill="currentColor" opacity=".55" text-anchor="middle">' +
+      esc(String(labels[i] || '').slice(-4)) + '</text>';
+  });
+
+  const wrap = document.createElement('div');
+  wrap.innerHTML =
+    '<svg viewBox="0 0 ' + w + ' ' + hgt + '" width="100%" height="' + hgt + '" ' +
+    'preserveAspectRatio="none" style="display:block;margin:2px 0 2px">' +
+    '<line x1="' + pad + '" x2="' + (w - pad) + '" y1="' + zeroY.toFixed(1) + '" y2="' +
+    zeroY.toFixed(1) + '" stroke="currentColor" stroke-opacity=".18" stroke-width="1"/>' +
+    bars + texts + '</svg>';
+  return wrap;
+}
+
+/* Value labels above the bars would collide at this width, so the numbers go in a small table
+   under the chart instead - readable on a phone, which the chart is not. */
+function barTable(labels, vals, unit){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<div class="kv" style="margin-top:4px">' + labels.map((l, i) => {
+    const v = vals[i];
+    return '<div><span>' + esc(l) + '</span><span>' +
+      (v == null ? '\u2014' : (unit === '%' ? v.toFixed(1) + '%' : num(v))) + '</span></div>';
+  }).join('') + '</div>';
+  return wrap;
+}
+
 function sparkline(vals, opts){
   opts = opts || {};
   const w = opts.w || 320, hgt = opts.h || 64, pad = 4;
@@ -1498,14 +1552,15 @@ async function renderFunds(main, file, title, opts){
       main.append(card('SIP at \u20b9' + monthly.toLocaleString('en-IN') + ' a month',
         'over ' + yrs + ' years, at each fund\'s own past rate',
         makeTable(withR.slice(0, 12).map(r => ({
-          name: r.name, short: shortFund(r.name), rate: r[key], value: Math.round(fv(r[key]))
+          name: r.name, short: shortFund(r.name), rate: r[key], value: Math.round(fv(r[key])),
+          _fund: r
         })), [
           // the full scheme name is 70 characters and pushes the money columns off a phone
           {k:'short',label:'Fund',html:(v,r)=>'<span title="'+esc(r.name)+'">'+esc(v)+'</span>'},
           {k:'rate',label:'Past ' + yrs + 'Y',r:1,html:v=>pct(v)},
           {k:'value',label:'Would be',r:1,html:v=>'\u20b9'+num(v)}
         ], {limit:12, placeholder:'Search funds\u2026',
-           onRow: r => openDetail(r, r.name, '')}),
+           onRow: r => openFund(r._fund || r)}),
         'Arithmetic on the past return, compounded monthly - not a projection. A fund that '
         + 'returned 20% a year for ten years did so in conditions that may not repeat, and the '
         + 'worst funds are shown further down for the same reason.'
@@ -1549,8 +1604,10 @@ async function renderFunds(main, file, title, opts){
     makeTable(rows, cols, {
       limit: 150,
       placeholder: opts.placeholder || 'Search\u2026',
-      onRow: r => (opts.kind === 'fund' ? openFund(r) : openDetail(r, r.name || r.symbol || r.code,
-                             r.fund_house || r.underlying || r.category || ''))
+      onRow: r => opts.kind === 'fund' ? openFund(r)
+                 : opts.kind === 'etf' ? openEtf(r)
+                 : openDetail(r, r.name || r.symbol || r.code,
+                              r.fund_house || r.underlying || r.category || '')
     }),
     file + ' \u00b7 tap any row for the full detail. ' + (d.note || '')));
 }
@@ -1849,7 +1906,7 @@ async function route(){
              {k:'r3y',label:'3Y',r:1,html:v=>pct(v)},{k:'r5y',label:'5Y',r:1,html:v=>pct(v)},
              {k:'years',label:'Yrs',r:1}], placeholder:'Search funds…'});
     else if (id === 'etf') await renderFunds(main, 'etf.json', 'ETFs',
-      {cols:[{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'underlying',label:'Tracks'},
+      {kind:'etf', cols:[{k:'symbol',label:'Symbol'},{k:'name',label:'Name'},{k:'underlying',label:'Tracks'},
              {k:'close',label:'Close',r:1},{k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},
              {k:'rsi_14',label:'RSI',r:1},{k:'trend',label:'Trend'},
              {k:'vol_x',label:'Vol x',r:1}], placeholder:'Search ETFs…'});
@@ -2018,6 +2075,112 @@ async function openDetail(row, title, subtitle){
    ===================================================================================== */
 const MF_BENCH_LABEL = {nifty: 'Nifty 50', sensex: 'Sensex', gold: 'Gold'};
 
+/* =====================================================================================
+   ETF DETAIL.
+   etf.json carries a `pages` dict with 335 ETFs, each holding a 120-point series and the same
+   `tech` block a stock has - and the page showed a flat list of eight fields. An ETF now opens
+   with its own line, the timeframe switch, its technicals, and what it tracks.
+   ===================================================================================== */
+let ETFPAGES = null;
+async function etfPages(){
+  if (ETFPAGES !== null) return ETFPAGES;
+  try { const d = await J('etf.json'); ETFPAGES = d.pages || {}; } catch (_) { ETFPAGES = {}; }
+  return ETFPAGES;
+}
+
+async function openEtf(row){
+  const box = $('#sheet'), body = $('#sheetBody');
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  body.innerHTML = '<p class="loading">Loading ' + esc(row.symbol || 'ETF') + '\u2026</p>';
+
+  await etfPages();
+  const p = ETFPAGES[row.symbol] || row;
+  const t = p.tech || {};
+  const chg = p.chg_pct;
+
+  let out = '<h3>' + esc(p.symbol || row.symbol) + '</h3>'
+    + '<div class="sub">' + esc(p.name || row.name || '') +
+    (p.underlying ? ' \u00b7 tracks ' + esc(p.underlying) : '') + '</div>';
+
+  if (p.close != null){
+    out += '<div class="px ' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '">' + num(p.close) + '</div>'
+      + '<div class="' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '" style="font-size:13px">'
+      + (chg > 0 ? '+' : '') + (chg == null ? '-' : chg.toFixed(2)) + '% today</div>';
+  }
+
+  out += '<div id="chartSlot"></div>';
+
+  if (Object.keys(t).length){
+    out += '<h5>Technicals</h5>' + rowKV([
+      ['RSI 14', t.rsi_14 == null ? '-' : t.rsi_14.toFixed(1)],
+      ['Trend', esc(t.trend || '-')],
+      ['SMA 20', t.sma_20 == null ? '-' : num(t.sma_20)],
+      ['SMA 50', t.sma_50 == null ? '-' : num(t.sma_50)],
+      ['SMA 200', t.sma_200 == null ? '-' : num(t.sma_200)],
+      ['ADX', t.adx == null ? '-' : t.adx.toFixed(1)],
+      ['Volume x', t.vol_x == null ? '-' : t.vol_x.toFixed(2) + 'x'],
+      ['ATR %', t.atr_pct == null ? '-' : t.atr_pct.toFixed(2) + '%'],
+      ['52w high', t.high_52w == null ? '-' : num(t.high_52w)],
+      ['52w low', t.low_52w == null ? '-' : num(t.low_52w)]
+    ]);
+  }
+
+  out += '<h5>What it is</h5>' + rowKV([
+    ['Tracks', esc(p.underlying || row.underlying || '-')],
+    ['Exchange', 'NSE'],
+    ['Type', 'Exchange traded fund']
+  ]);
+  out += '<p class="sub" style="margin-top:10px">An ETF trades like a share and holds a basket. '
+    + 'Its price can drift from the value of what it holds, and the gap is widest in the '
+    + 'less-traded ones. etf.json \u00b7 delayed, not a recommendation.</p>';
+
+  body.innerHTML = out;
+
+  const slot = body.querySelector('#chartSlot');
+  if (slot){
+    const bar = document.createElement('div');
+    bar.className = 'nchips';
+    bar.style.margin = '2px 0 8px';
+    bar.innerHTML = TF_LIST.map(x =>
+      '<button data-tf="' + x[0] + '"' + (x[0] === '1d' ? ' class="on"' : '') + '>' +
+      esc(x[1]) + '</button>').join('');
+    slot.append(bar);
+    const host = document.createElement('div');
+    slot.append(host);
+
+    const paint = async (tf) => {
+      host.innerHTML = '<p class="loading">Loading\u2026</p>';
+      let vals = null, unit = 'sessions';
+      if (tf === '5m' || tf === '15m' || tf === '30m'){
+        await intradayData();
+        const s = intradayFor(p.symbol);
+        if (s){
+          const r = resampleBars(s, tf === '15m' ? 3 : tf === '30m' ? 6 : 1);
+          vals = r.c; unit = 'bars of ' + tf.replace('m', ' min');
+        }
+      } else if (Array.isArray(p.series) && p.series.length > 2){
+        vals = tf === '1m' ? p.series.slice(-21) : p.series;
+      }
+      host.innerHTML = '';
+      if (!vals || vals.length < 2){
+        const e = document.createElement('p'); e.className = 'empty';
+        e.textContent = 'No ' + tf + ' data for ' + p.symbol + '.';
+        host.append(e); return;
+      }
+      const sp = sparkline(vals, {h: 96, unit});
+      if (sp) host.append(sp);
+    };
+
+    bar.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(bar.querySelectorAll('button'), x => x.classList.remove('on'));
+      b.classList.add('on'); paint(b.dataset.tf);
+    });
+    paint('1d');
+  }
+  box.scrollTop = 0;
+}
+
 async function openFund(row){
   const box = $('#sheet'), body = $('#sheetBody');
   box.classList.add('on'); box.setAttribute('aria-hidden','false');
@@ -2144,6 +2307,104 @@ async function openFund(row){
     ], {limit:6, noSearch:true}));
   }
   box.scrollTop = 0;
+}
+
+let COFIN = null;
+async function companyFinancials(){
+  if (COFIN !== null) return COFIN;
+  try { COFIN = await J('company_financials.json'); } catch (_) { COFIN = {companies:{}}; }
+  return COFIN;
+}
+
+/* Company profile, management and the financial history the site did not have: revenue, profit,
+   EBITDA, debt and equity by year, and revenue and profit by quarter, each drawn. */
+async function companyBlocks(sym){
+  await companyFinancials();
+  const c = (COFIN.companies || {})[sym];
+  if (!c) return [];
+  const out = [];
+
+  // what the business is
+  const facts = [];
+  if (c.sector) facts.push(['Sector', esc(c.sector)]);
+  if (c.industry) facts.push(['Industry', esc(c.industry)]);
+  if (c.employees) facts.push(['Employees', Number(c.employees).toLocaleString('en-IN')]);
+  if (c.city || c.country) facts.push(['Based in', esc([c.city, c.country].filter(Boolean).join(', '))]);
+  if (c.insiders != null) facts.push(['Promoter / insider', (c.insiders * 100).toFixed(2) + '%']);
+  if (c.institutions != null) facts.push(['Institutions', (c.institutions * 100).toFixed(2) + '%']);
+
+  if (c.summary || facts.length){
+    const box = document.createElement('div');
+    let html = '';
+    if (c.summary) html += '<p style="margin:0 0 10px;line-height:1.55">' + esc(c.summary) + '</p>';
+    html += rowKV(facts);
+    if (c.website) html += '<p class="sub" style="margin-top:8px">' +
+      '<a href="' + esc(c.website) + '" target="_blank" rel="noopener">' + esc(c.website) + '</a></p>';
+    box.innerHTML = html;
+    out.push(['What the company does', c.name || sym, box]);
+  }
+
+  if (c.officers && c.officers.length){
+    const box = document.createElement('div');
+    box.innerHTML = rowKV(c.officers.map(o => [o.n, esc(o.t)]));
+    out.push(['Management', c.officers.length + ' officers', box]);
+  }
+
+  // annual results, drawn
+  const yrs = (c.annual_years || []).slice().reverse();   // oldest first
+  const rev = (c.revenue || []).slice(0, yrs.length).reverse();
+  const pro = (c.profit || []).slice(0, yrs.length).reverse();
+  const ebi = (c.ebitda || []).slice(0, yrs.length).reverse();
+  const dbt = (c.debt || []).slice(0, yrs.length).reverse();
+  const eqt = (c.equity || []).slice(0, yrs.length).reverse();
+
+  function yearCard(title, vals, colour, note){
+    if (!vals || !vals.some(v => v != null)) return;
+    const box = document.createElement('div');
+    const ch = barChart(yrs, vals, {color: colour});
+    if (ch) box.append(ch);
+    box.append(barTable(yrs, vals, 'cr'));
+    const first = vals.find(v => v != null), last = [...vals].reverse().find(v => v != null);
+    if (first && last && first !== 0){
+      const g = ((last / first) - 1) * 100;
+      const p0 = document.createElement('p');
+      p0.className = 'sub'; p0.style.margin = '8px 0 0';
+      p0.textContent = 'From ' + num(first) + ' to ' + num(last) + ' over ' + vals.length +
+        ' years: ' + (g > 0 ? '+' : '') + g.toFixed(1) + '%. ' + note;
+      box.append(p0);
+    }
+    out.push([title, '\u20b9 crore', box]);
+  }
+
+  yearCard('Revenue, by year', rev, '#6ea8fe',
+    'Revenue growing while profit does not is a company buying growth.');
+  yearCard('Net profit, by year', pro, '#4ec9a0',
+    'A falling profit line beside a rising revenue line is margin being squeezed.');
+  yearCard('EBITDA, by year', ebi, '#9b8cff', 'Profit before interest, tax and depreciation.');
+  yearCard('Total debt, by year', dbt, '#f0a35e',
+    'Debt rising faster than profit is the thing to watch in a rate-rising cycle.');
+  yearCard('Shareholders\' equity, by year', eqt, '#5ad0c8', 'What the owners actually have in it.');
+
+  // quarterly
+  const qp = (c.q_periods || []).slice().reverse();
+  const qr = (c.q_revenue || []).slice(0, qp.length).reverse();
+  const qn = (c.q_profit || []).slice(0, qp.length).reverse();
+  if (qp.length && qr.some(v => v != null)){
+    const box = document.createElement('div');
+    const ch = barChart(qp, qr, {color: '#6ea8fe'});
+    if (ch) box.append(ch);
+    box.append(barTable(qp, qr, 'cr'));
+    out.push(['Quarterly revenue', qp.length + ' quarters', box]);
+  }
+  if (qp.length && qn.some(v => v != null)){
+    const box = document.createElement('div');
+    const ch = barChart(qp, qn, {color: '#4ec9a0'});
+    if (ch) box.append(ch);
+    box.append(barTable(qp, qn, 'cr'));
+    out.push(['Quarterly profit', qp.length + ' quarters', box]);
+  }
+
+  return out;
 }
 
 async function openStock(sym){
@@ -2284,6 +2545,12 @@ async function openStock(sym){
     });
     paint('1d');
   }
+  // company profile, management and the financial history, each block its own card
+  try {
+    const blocks = await companyBlocks(sym);
+    blocks.forEach(b => body.append(card(b[0], b[1] || '', b[2], '')));
+  } catch (_) { /* a missing profile must not break the card */ }
+
   box.scrollTop = 0;
 }
 function closeSheet(){

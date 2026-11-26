@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-26T23:28:06Z",
+  "generated_utc": "2026-11-26T23:46:19Z",
   "fno": {
     "date": "2026-11-26",
     "pcr": {
@@ -629,345 +629,6 @@
       "total": 1
     }
   },
-  "markets": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "^NSEI",
-        25819.25,
-        1.85,
-        "2026-11-25"
-      ],
-      [
-        "^BSESN",
-        83938.2812,
-        1.82,
-        "2026-11-25"
-      ],
-      [
-        "^NSEBANK",
-        63703.25,
-        1.79,
-        "2026-11-25"
-      ]
-    ],
-    "total": 3
-  },
-  "commodities": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "GC=F",
-        3593.3999,
-        1.63,
-        "2026-11-26"
-      ]
-    ],
-    "total": 1
-  },
-  "crypto": {
-    "columns": [
-      "symbol",
-      "close",
-      "chg_pct",
-      "date"
-    ],
-    "rows": [
-      [
-        "LINK-USD",
-        9.326,
-        3.08,
-        "2026-11-26"
-      ],
-      [
-        "ADA-USD",
-        0.1491,
-        2.33,
-        "2026-11-26"
-      ],
-      [
-        "XRP-USD",
-        0.9475,
-        1.13,
-        "2026-11-26"
-      ],
-      [
-        "DOGE-USD",
-        0.0565,
-        1.0,
-        "2026-11-26"
-      ],
-      [
-        "SOL-USD",
-        71.08,
-        0.98,
-        "2026-11-26"
-      ],
-      [
-        "BTC-USD",
-        60567.8984,
-        0.31,
-        "2026-11-26"
-      ],
-      [
-        "AVAX-USD",
-        6.604,
-        -0.3,
-        "2026-11-26"
-      ],
-      [
-        "ETH-USD",
-        1694.83,
-        0.24,
-        "2026-11-26"
-      ],
-      [
-        "BNB-USD",
-        554.36,
-        0.14,
-        "2026-11-26"
-      ],
-      [
-        "TRX-USD",
-        0.3039,
-        0.09,
-        "2026-11-26"
-      ]
-    ],
-    "total": 10
-  },
-  "news": {
-    "columns": [
-      "source",
-      "title",
-      "link",
-      "published",
-      "fetched_utc"
-    ],
-    "rows": [
-      [
-        "ET Markets",
-        "Ashiana Housing JV buys 10-acre land in Chennai for senior living project, eyes Rs 1,100 cr revenue",
-        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ashiana-housing-jv-buys-10-acre-land-in-chennai-for-senior-living-project-eyes-rs-1100-cr-revenue/articleshow/136197134.cms",
-        "Thu, 26 Nov 2026 21:21:45 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Market Trading Guide: Tech Mahindra, Angel One among 5 stock recommendations for Friday",
-        "https://economictimes.indiatimes.com/markets/stocks/news/market-trading-guide-tech-mahindra-angel-one-among-5-stock-recommendations-for-friday/slideshow/136196068.cms",
-        "Thu, 26 Nov 2026 20:20:06 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "India bonds tumble as Brent tops $95 per barrel, RBI flags food inflation risks",
-        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-tumble-as-brent-tops-95-per-barrel-rbi-flags-food-inflation-risks/articleshow/136193320.cms",
-        "Thu, 26 Nov 2026 18:41:40 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "NSE among 6 stocks hitting 52-week highs; stock rallies up to 35% in a month",
-        "https://economictimes.indiatimes.com/markets/stocks/news/nse-among-6-stocks-hitting-52-week-highs-stock-rallies-up-to-35-in-a-month/slideshow/136192775.cms",
-        "Thu, 26 Nov 2026 17:58:07 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Spike in oil prices partly reverses rupee rally, forward premiums surge",
-        "https://economictimes.indiatimes.com/markets/forex/forex-news/spike-in-oil-prices-partly-reverses-rupee-rally-forward-premiums-surge/articleshow/136188127.cms",
-        "Thu, 26 Nov 2026 16:06:16 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "HDFC Bank Share Price Live Updates: HDFC Bank Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hdfc-bank-share-price-live-26-nov-2026/liveblog/136181934.cms",
-        "Thu, 26 Nov 2026 12:21:53 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "SBI Life Share Price Live Updates: SBI Life Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sbi-life-stock-price-live-updates-26-nov-2026/liveblog/136181870.cms",
-        "Thu, 26 Nov 2026 12:20:36 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Rupee falls 20 paise to 92.40 against US dollar in early trade",
-        "https://economictimes.indiatimes.com/markets/forex/rupee-falls-20-paise-to-92-40-against-us-dollar-in-early-trade/articleshow/136179591.cms",
-        "Thu, 26 Nov 2026 10:54:36 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Why is SanDisk stock falling despite surging profits?",
-        "https://economictimes.indiatimes.com/markets/us-stocks/news/why-is-sandisk-stock-falling-despite-surging-profits/slideshow/136179318.cms",
-        "Thu, 26 Nov 2026 10:32:15 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Adani firms plan public bond sale to raise at least Rs 2,000 crore",
-        "https://economictimes.indiatimes.com/markets/bonds/adani-firms-plan-public-bond-sale-to-raise-at-least-220-million/articleshow/136178950.cms",
-        "Thu, 26 Nov 2026 10:19:08 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "ITC Share Price Highlights: ITC Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/itc-stock-price-live-updates-26-nov-2026/liveblog/136178775.cms",
-        "Thu, 26 Nov 2026 10:07:02 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Adani Ent Share Price Highlights: Adani Ent. Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/adani-ent-stock-price-live-updates-26-nov-2026/liveblog/136178770.cms",
-        "Thu, 26 Nov 2026 10:06:55 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178767.cms",
-        "Thu, 26 Nov 2026 10:06:49 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Dr Reddys Share Price Highlights: Dr. Reddys Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/dr-reddys-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178766.cms",
-        "Thu, 26 Nov 2026 10:06:49 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Eternal, Adani Enterprises among 10 stocks with highest FII buying in Q2. How many do you have?",
-        "https://economictimes.indiatimes.com/markets/stocks/news/eternal-adani-enterprises-among-10-stocks-with-highest-fii-buying-in-q2-how-many-do-you-have/slideshow/136178864.cms",
-        "Thu, 26 Nov 2026 10:06:47 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Kotak Bank Share Price Highlights: Kotak Bank Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/kotak-bank-share-price-today-live-updates-26-nov-2026/liveblog/136178760.cms",
-        "Thu, 26 Nov 2026 10:06:39 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Bajaj Finance Share Price Highlights: Bajaj Finance Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-finance-stock-price-today-live-26-nov-2026/liveblog/136178758.cms",
-        "Thu, 26 Nov 2026 10:06:36 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Bajaj Auto Share Price Highlights: Bajaj Auto Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-auto-share-price-live-updates-26-nov-2026/liveblog/136178757.cms",
-        "Thu, 26 Nov 2026 10:06:34 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "RIL Share Price Highlights: RIL Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ril-share-price-today-live-updates-26-nov-2026/liveblog/136178752.cms",
-        "Thu, 26 Nov 2026 10:06:27 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Axis Bank Share Price Highlights: Axis Bank Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/axis-bank-share-price-live-updates-26-nov-2026/liveblog/136178746.cms",
-        "Thu, 26 Nov 2026 10:06:23 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Divis Labs Share Price Highlights: Divis Labs Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/divis-labs-share-price-today-live-26-nov-2026/liveblog/136178741.cms",
-        "Thu, 26 Nov 2026 10:06:21 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "M&amp;M Share Price Highlights: M&amp;M Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/mm-share-price-today-live-updates-26-nov-2026/liveblog/136178733.cms",
-        "Thu, 26 Nov 2026 10:06:14 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Grasim Inds Share Price Highlights: Grasim Inds. Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/grasim-inds-share-price-live-updates-26-nov-2026/liveblog/136178731.cms",
-        "Thu, 26 Nov 2026 10:06:10 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Cipla Share Price Highlights: Cipla Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/cipla-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178729.cms",
-        "Thu, 26 Nov 2026 10:06:08 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Bharti Airtel Share Price Highlights: Bharti Airtel Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bharti-airtel-share-price-today-live-updates-26-nov-2026/liveblog/136178724.cms",
-        "Thu, 26 Nov 2026 10:06:02 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "HCL Tech Share Price Highlights: HCL Tech Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hcl-tech-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178722.cms",
-        "Thu, 26 Nov 2026 10:05:57 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "ONGC Share Price Highlights: ONGC Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ongc-share-price-live-26-nov-2026/liveblog/136178720.cms",
-        "Thu, 26 Nov 2026 10:05:55 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "IndusInd Bank Share Price Highlights: IndusInd Bank Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/indusind-bank-share-price-live-26-nov-2026/liveblog/136178715.cms",
-        "Thu, 26 Nov 2026 10:05:51 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Hero MotoCorp Share Price Highlights: Hero MotoCorp Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hero-motocorp-share-price-today-live-updates-26-nov-2026/liveblog/136178712.cms",
-        "Thu, 26 Nov 2026 10:05:50 +0530",
-        "2026-11-26T22:55:18Z"
-      ],
-      [
-        "ET Markets",
-        "Infosys Share Price Highlights: Infosys Stock Price History",
-        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/infosys-share-price-today-live-26-nov-2026/liveblog/136178710.cms",
-        "Thu, 26 Nov 2026 10:05:49 +0530",
-        "2026-11-26T22:55:18Z"
-      ]
-    ],
-    "total": 126
-  },
   "archive": {
     "files": 59,
     "dates": 31,
@@ -1500,6 +1161,611 @@
       ]
     ],
     "total": 613
+  },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-11-26T23:46:15Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 25819.25,
+      "median_chg_pct": 1.79,
+      "low10_chg_pct": -17.0,
+      "high90_chg_pct": 30.76,
+      "band_pct": 47.75,
+      "day1_median_chg_pct": 0.19,
+      "day1_low10_chg_pct": -0.95,
+      "day1_high90_chg_pct": 1.45,
+      "direction": "up"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "20MICRONS",
+        174.94,
+        -9.72,
+        -46.47,
+        92.99,
+        null,
+        null
+      ],
+      [
+        "360ONE",
+        997.1,
+        -1.93,
+        -39.99,
+        54.48,
+        null,
+        null
+      ],
+      [
+        "3IINFOLTD",
+        26.93,
+        8.36,
+        -32.95,
+        122.55,
+        null,
+        null
+      ],
+      [
+        "5PAISA",
+        321.35,
+        -7.4,
+        -42.75,
+        73.51,
+        null,
+        null
+      ],
+      [
+        "63MOONS",
+        859.95,
+        -4.15,
+        -51.74,
+        122.83,
+        null,
+        null
+      ],
+      [
+        "A2ZINFRA",
+        12.52,
+        -9.9,
+        -52.93,
+        119.24,
+        null,
+        null
+      ],
+      [
+        "AAATECH",
+        102.24,
+        -2.45,
+        -55.94,
+        130.86,
+        null,
+        null
+      ],
+      [
+        "AAKASH",
+        7.79,
+        -10.92,
+        -40.32,
+        56.55,
+        null,
+        null
+      ],
+      [
+        "AAREYDRUGS",
+        106.73,
+        3.0,
+        -52.59,
+        152.37,
+        null,
+        null
+      ],
+      [
+        "AARTIDRUGS",
+        374.9,
+        -7.17,
+        -39.84,
+        62.08,
+        null,
+        null
+      ],
+      [
+        "AARTIIND",
+        427.55,
+        -1.52,
+        -51.19,
+        71.04,
+        null,
+        null
+      ],
+      [
+        "AARTIPHARM",
+        820.85,
+        -0.78,
+        -48.31,
+        98.62,
+        null,
+        null
+      ],
+      [
+        "AARTISURF",
+        658.55,
+        10.96,
+        -46.93,
+        244.0,
+        null,
+        null
+      ],
+      [
+        "AARVEEDEN",
+        38.05,
+        1.07,
+        -51.85,
+        171.24,
+        null,
+        null
+      ],
+      [
+        "AAVAS",
+        1114.1,
+        -6.67,
+        -42.03,
+        63.68,
+        null,
+        null
+      ],
+      [
+        "ABAN",
+        44.96,
+        -9.44,
+        -48.33,
+        103.45,
+        null,
+        null
+      ],
+      [
+        "ABB",
+        6140.0,
+        -1.14,
+        -42.48,
+        50.85,
+        null,
+        null
+      ],
+      [
+        "ABCAPITAL",
+        347.25,
+        -2.97,
+        -42.78,
+        70.22,
+        null,
+        null
+      ],
+      [
+        "ABFRL",
+        39.77,
+        -14.98,
+        -51.57,
+        70.58,
+        null,
+        null
+      ],
+      [
+        "ABSLAMC",
+        889.05,
+        -2.35,
+        -44.51,
+        80.96,
+        null,
+        null
+      ],
+      [
+        "ABSLBANETF",
+        55.53,
+        -1.4,
+        -20.1,
+        20.92,
+        null,
+        null
+      ],
+      [
+        "ACC",
+        1159.4,
+        -2.87,
+        -31.99,
+        37.87,
+        null,
+        null
+      ],
+      [
+        "ACCURACY",
+        3.92,
+        -9.17,
+        -51.42,
+        65.53,
+        null,
+        null
+      ],
+      [
+        "ACE",
+        1000.1,
+        -7.41,
+        -47.9,
+        78.0,
+        null,
+        null
+      ],
+      [
+        "ACI",
+        478.45,
+        -2.04,
+        -42.76,
+        69.19,
+        null,
+        null
+      ]
+    ],
+    "total": 1432
+  },
+  "daily": {
+    "as_of": "2026-11-26T23:46:19Z",
+    "items": [
+      "Bhavcopy archive through 2026-11-26 (59 files, 31 days)",
+      "Nifty PCR 1.09 \u00b7 max pain 25750.0",
+      "25 OI spikes in stock futures",
+      "25 volume spikes vs their own average",
+      "Corporate actions: 1 dividend, 3 splits, 1 bonus",
+      "613 videos across 10 channels"
+    ]
+  },
+  "markets": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "^NSEI",
+        25819.25,
+        1.85,
+        "2026-11-25"
+      ],
+      [
+        "^BSESN",
+        83938.2812,
+        1.82,
+        "2026-11-25"
+      ],
+      [
+        "^NSEBANK",
+        63703.25,
+        1.79,
+        "2026-11-25"
+      ]
+    ],
+    "total": 3
+  },
+  "commodities": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "GC=F",
+        3593.3999,
+        1.63,
+        "2026-11-26"
+      ]
+    ],
+    "total": 1
+  },
+  "crypto": {
+    "columns": [
+      "symbol",
+      "close",
+      "chg_pct",
+      "date"
+    ],
+    "rows": [
+      [
+        "LINK-USD",
+        9.326,
+        3.08,
+        "2026-11-26"
+      ],
+      [
+        "ADA-USD",
+        0.1491,
+        2.33,
+        "2026-11-26"
+      ],
+      [
+        "XRP-USD",
+        0.9475,
+        1.13,
+        "2026-11-26"
+      ],
+      [
+        "DOGE-USD",
+        0.0565,
+        1.0,
+        "2026-11-26"
+      ],
+      [
+        "SOL-USD",
+        71.08,
+        0.98,
+        "2026-11-26"
+      ],
+      [
+        "BTC-USD",
+        60567.8984,
+        0.31,
+        "2026-11-26"
+      ],
+      [
+        "AVAX-USD",
+        6.604,
+        -0.3,
+        "2026-11-26"
+      ],
+      [
+        "ETH-USD",
+        1694.83,
+        0.24,
+        "2026-11-26"
+      ],
+      [
+        "BNB-USD",
+        554.36,
+        0.14,
+        "2026-11-26"
+      ],
+      [
+        "TRX-USD",
+        0.3039,
+        0.09,
+        "2026-11-26"
+      ]
+    ],
+    "total": 10
+  },
+  "news": {
+    "columns": [
+      "source",
+      "title",
+      "link",
+      "published",
+      "fetched_utc"
+    ],
+    "rows": [
+      [
+        "ET Markets",
+        "Ashiana Housing JV buys 10-acre land in Chennai for senior living project, eyes Rs 1,100 cr revenue",
+        "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ashiana-housing-jv-buys-10-acre-land-in-chennai-for-senior-living-project-eyes-rs-1100-cr-revenue/articleshow/136197134.cms",
+        "Thu, 26 Nov 2026 21:21:45 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Market Trading Guide: Tech Mahindra, Angel One among 5 stock recommendations for Friday",
+        "https://economictimes.indiatimes.com/markets/stocks/news/market-trading-guide-tech-mahindra-angel-one-among-5-stock-recommendations-for-friday/slideshow/136196068.cms",
+        "Thu, 26 Nov 2026 20:20:06 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "India bonds tumble as Brent tops $95 per barrel, RBI flags food inflation risks",
+        "https://economictimes.indiatimes.com/markets/bonds/india-bonds-tumble-as-brent-tops-95-per-barrel-rbi-flags-food-inflation-risks/articleshow/136193320.cms",
+        "Thu, 26 Nov 2026 18:41:40 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "NSE among 6 stocks hitting 52-week highs; stock rallies up to 35% in a month",
+        "https://economictimes.indiatimes.com/markets/stocks/news/nse-among-6-stocks-hitting-52-week-highs-stock-rallies-up-to-35-in-a-month/slideshow/136192775.cms",
+        "Thu, 26 Nov 2026 17:58:07 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Spike in oil prices partly reverses rupee rally, forward premiums surge",
+        "https://economictimes.indiatimes.com/markets/forex/forex-news/spike-in-oil-prices-partly-reverses-rupee-rally-forward-premiums-surge/articleshow/136188127.cms",
+        "Thu, 26 Nov 2026 16:06:16 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "HDFC Bank Share Price Live Updates: HDFC Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hdfc-bank-share-price-live-26-nov-2026/liveblog/136181934.cms",
+        "Thu, 26 Nov 2026 12:21:53 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "SBI Life Share Price Live Updates: SBI Life Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/sbi-life-stock-price-live-updates-26-nov-2026/liveblog/136181870.cms",
+        "Thu, 26 Nov 2026 12:20:36 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Rupee falls 20 paise to 92.40 against US dollar in early trade",
+        "https://economictimes.indiatimes.com/markets/forex/rupee-falls-20-paise-to-92-40-against-us-dollar-in-early-trade/articleshow/136179591.cms",
+        "Thu, 26 Nov 2026 10:54:36 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Why is SanDisk stock falling despite surging profits?",
+        "https://economictimes.indiatimes.com/markets/us-stocks/news/why-is-sandisk-stock-falling-despite-surging-profits/slideshow/136179318.cms",
+        "Thu, 26 Nov 2026 10:32:15 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Adani firms plan public bond sale to raise at least Rs 2,000 crore",
+        "https://economictimes.indiatimes.com/markets/bonds/adani-firms-plan-public-bond-sale-to-raise-at-least-220-million/articleshow/136178950.cms",
+        "Thu, 26 Nov 2026 10:19:08 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "ITC Share Price Highlights: ITC Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/itc-stock-price-live-updates-26-nov-2026/liveblog/136178775.cms",
+        "Thu, 26 Nov 2026 10:07:02 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Adani Ent Share Price Highlights: Adani Ent. Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/adani-ent-stock-price-live-updates-26-nov-2026/liveblog/136178770.cms",
+        "Thu, 26 Nov 2026 10:06:55 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178767.cms",
+        "Thu, 26 Nov 2026 10:06:49 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Dr Reddys Share Price Highlights: Dr. Reddys Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/dr-reddys-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178766.cms",
+        "Thu, 26 Nov 2026 10:06:49 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Eternal, Adani Enterprises among 10 stocks with highest FII buying in Q2. How many do you have?",
+        "https://economictimes.indiatimes.com/markets/stocks/news/eternal-adani-enterprises-among-10-stocks-with-highest-fii-buying-in-q2-how-many-do-you-have/slideshow/136178864.cms",
+        "Thu, 26 Nov 2026 10:06:47 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Kotak Bank Share Price Highlights: Kotak Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/kotak-bank-share-price-today-live-updates-26-nov-2026/liveblog/136178760.cms",
+        "Thu, 26 Nov 2026 10:06:39 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Bajaj Finance Share Price Highlights: Bajaj Finance Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-finance-stock-price-today-live-26-nov-2026/liveblog/136178758.cms",
+        "Thu, 26 Nov 2026 10:06:36 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Bajaj Auto Share Price Highlights: Bajaj Auto Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-auto-share-price-live-updates-26-nov-2026/liveblog/136178757.cms",
+        "Thu, 26 Nov 2026 10:06:34 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "RIL Share Price Highlights: RIL Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ril-share-price-today-live-updates-26-nov-2026/liveblog/136178752.cms",
+        "Thu, 26 Nov 2026 10:06:27 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Axis Bank Share Price Highlights: Axis Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/axis-bank-share-price-live-updates-26-nov-2026/liveblog/136178746.cms",
+        "Thu, 26 Nov 2026 10:06:23 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Divis Labs Share Price Highlights: Divis Labs Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/divis-labs-share-price-today-live-26-nov-2026/liveblog/136178741.cms",
+        "Thu, 26 Nov 2026 10:06:21 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "M&amp;M Share Price Highlights: M&amp;M Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/mm-share-price-today-live-updates-26-nov-2026/liveblog/136178733.cms",
+        "Thu, 26 Nov 2026 10:06:14 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Grasim Inds Share Price Highlights: Grasim Inds. Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/grasim-inds-share-price-live-updates-26-nov-2026/liveblog/136178731.cms",
+        "Thu, 26 Nov 2026 10:06:10 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Cipla Share Price Highlights: Cipla Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/cipla-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178729.cms",
+        "Thu, 26 Nov 2026 10:06:08 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Bharti Airtel Share Price Highlights: Bharti Airtel Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bharti-airtel-share-price-today-live-updates-26-nov-2026/liveblog/136178724.cms",
+        "Thu, 26 Nov 2026 10:06:02 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "HCL Tech Share Price Highlights: HCL Tech Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hcl-tech-stock-price-livestock-price-today-live-updates-26-nov-2026/liveblog/136178722.cms",
+        "Thu, 26 Nov 2026 10:05:57 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "ONGC Share Price Highlights: ONGC Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ongc-share-price-live-26-nov-2026/liveblog/136178720.cms",
+        "Thu, 26 Nov 2026 10:05:55 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "IndusInd Bank Share Price Highlights: IndusInd Bank Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/indusind-bank-share-price-live-26-nov-2026/liveblog/136178715.cms",
+        "Thu, 26 Nov 2026 10:05:51 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Hero MotoCorp Share Price Highlights: Hero MotoCorp Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hero-motocorp-share-price-today-live-updates-26-nov-2026/liveblog/136178712.cms",
+        "Thu, 26 Nov 2026 10:05:50 +0530",
+        "2026-11-26T22:55:18Z"
+      ],
+      [
+        "ET Markets",
+        "Infosys Share Price Highlights: Infosys Stock Price History",
+        "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/infosys-share-price-today-live-26-nov-2026/liveblog/136178710.cms",
+        "Thu, 26 Nov 2026 10:05:49 +0530",
+        "2026-11-26T22:55:18Z"
+      ]
+    ],
+    "total": 126
   },
   "indicators": {
     "columns": [
@@ -2348,261 +2614,6 @@
     ],
     "rows": 13164
   },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-11-25T23:38:23Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 25349.65,
-      "median_chg_pct": 0.38,
-      "low10_chg_pct": -17.71,
-      "high90_chg_pct": 25.88,
-      "band_pct": 43.59,
-      "day1_median_chg_pct": -0.07,
-      "day1_low10_chg_pct": -1.06,
-      "day1_high90_chg_pct": 1.01,
-      "direction": "up"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "20MICRONS",
-        174.94,
-        -9.72,
-        -46.47,
-        92.99,
-        null,
-        null
-      ],
-      [
-        "360ONE",
-        997.1,
-        -1.93,
-        -39.99,
-        54.48,
-        null,
-        null
-      ],
-      [
-        "3IINFOLTD",
-        26.93,
-        8.36,
-        -32.95,
-        122.55,
-        null,
-        null
-      ],
-      [
-        "5PAISA",
-        321.35,
-        -7.4,
-        -42.75,
-        73.51,
-        null,
-        null
-      ],
-      [
-        "63MOONS",
-        859.95,
-        -4.15,
-        -51.74,
-        122.83,
-        null,
-        null
-      ],
-      [
-        "A2ZINFRA",
-        12.52,
-        -9.9,
-        -52.93,
-        119.24,
-        null,
-        null
-      ],
-      [
-        "AAATECH",
-        102.24,
-        -2.45,
-        -55.94,
-        130.86,
-        null,
-        null
-      ],
-      [
-        "AAKASH",
-        7.79,
-        -10.92,
-        -40.32,
-        56.55,
-        null,
-        null
-      ],
-      [
-        "AAREYDRUGS",
-        106.73,
-        3.0,
-        -52.59,
-        152.37,
-        null,
-        null
-      ],
-      [
-        "AARTIDRUGS",
-        374.9,
-        -7.17,
-        -39.84,
-        62.08,
-        null,
-        null
-      ],
-      [
-        "AARTIIND",
-        427.55,
-        -1.52,
-        -51.19,
-        71.04,
-        null,
-        null
-      ],
-      [
-        "AARTIPHARM",
-        820.85,
-        -0.78,
-        -48.31,
-        98.62,
-        null,
-        null
-      ],
-      [
-        "AARTISURF",
-        658.55,
-        10.96,
-        -46.93,
-        244.0,
-        null,
-        null
-      ],
-      [
-        "AARVEEDEN",
-        38.05,
-        1.07,
-        -51.85,
-        171.24,
-        null,
-        null
-      ],
-      [
-        "AAVAS",
-        1114.1,
-        -6.67,
-        -42.03,
-        63.68,
-        null,
-        null
-      ],
-      [
-        "ABAN",
-        44.96,
-        -9.44,
-        -48.33,
-        103.45,
-        null,
-        null
-      ],
-      [
-        "ABB",
-        6140.0,
-        -1.14,
-        -42.48,
-        50.85,
-        null,
-        null
-      ],
-      [
-        "ABCAPITAL",
-        347.25,
-        -2.97,
-        -42.78,
-        70.22,
-        null,
-        null
-      ],
-      [
-        "ABFRL",
-        39.77,
-        -14.98,
-        -51.57,
-        70.58,
-        null,
-        null
-      ],
-      [
-        "ABSLAMC",
-        889.05,
-        -2.35,
-        -44.51,
-        80.96,
-        null,
-        null
-      ],
-      [
-        "ABSLBANETF",
-        55.53,
-        -1.4,
-        -20.1,
-        20.92,
-        null,
-        null
-      ],
-      [
-        "ACC",
-        1159.4,
-        -2.87,
-        -31.99,
-        37.87,
-        null,
-        null
-      ],
-      [
-        "ACCURACY",
-        3.92,
-        -9.17,
-        -51.42,
-        65.53,
-        null,
-        null
-      ],
-      [
-        "ACE",
-        1000.1,
-        -7.41,
-        -47.9,
-        78.0,
-        null,
-        null
-      ],
-      [
-        "ACI",
-        478.45,
-        -2.04,
-        -42.76,
-        69.19,
-        null,
-        null
-      ]
-    ],
-    "total": 1432
-  },
   "quality": {
     "rows": 112877,
     "symbols": 4977,
@@ -2668,18 +2679,6 @@
     "niftyrealty": 10,
     "niftysmallcap250": 251,
     "niftysmallcap50": 50
-  },
-  "daily": {
-    "as_of": "2026-11-26T23:28:06Z",
-    "items": [
-      "Bhavcopy archive through 2026-11-26 (59 files, 31 days)",
-      "Nifty PCR 1.09 \u00b7 max pain 25750.0",
-      "25 OI spikes in stock futures",
-      "25 volume spikes vs their own average",
-      "Corporate actions: 1 dividend, 3 splits, 1 bonus",
-      "613 videos across 10 channels",
-      "126 news headlines"
-    ]
   },
   "relative_strength": {
     "columns": [

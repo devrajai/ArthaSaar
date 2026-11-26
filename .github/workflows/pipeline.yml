@@ -653,6 +653,10 @@ jobs:
       - name: "7z. Company financials (profile, officers, history)"
         run: python scripts/build_company_financials.py || true
 
+      # pair spreads, recomputed from the closes written earlier in this same run
+      - name: "7aa. Pair spreads (z-score of the log price ratio)"
+        run: python scripts/build_pairs.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

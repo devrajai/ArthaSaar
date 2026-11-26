@@ -637,6 +637,11 @@ jobs:
       - name: "7w. News feed (category + company tags)"
         run: python scripts/build_news_feed.py
 
+      # 5 and 10 year monthly closes for the detail windows. Yahoo rate-limits, so a
+      # failure here leaves the previous file in place rather than failing the run.
+      - name: "7x. Long history (5 and 10 year monthly closes)"
+        run: python scripts/build_long_history.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

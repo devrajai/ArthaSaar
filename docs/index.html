@@ -196,10 +196,11 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .heat .up.hot{background:rgba(78,201,160,.34);border-color:rgba(78,201,160,.55)}
 .heat .dn.hot{background:rgba(240,115,106,.34);border-color:rgba(240,115,106,.55)}
 .heat .flat{background:rgba(255,255,255,.05)}
-#sheetBox h3{margin:0 0 2px;font-size:19px;letter-spacing:-.3px}
+#sheetBox h3{margin:0 0 2px;font-size:19px;letter-spacing:-.3px;padding-right:46px;line-height:1.3}
 #sheetBox .sub{font-size:12px;opacity:.6;margin-bottom:14px}
-#sheetBox .x{position:absolute;right:16px;top:12px;background:none;border:0;
-  color:inherit;font-size:26px;line-height:1;opacity:.55;cursor:pointer}
+#sheetBox .x{position:absolute;right:10px;top:8px;background:var(--bg);border:0;
+  color:inherit;font-size:26px;line-height:1;opacity:.55;cursor:pointer;
+  width:34px;height:34px;border-radius:9px;z-index:2}
 #sheetBox .px{font-size:32px;font-weight:700;letter-spacing:-1px;margin:2px 0 4px}
 #sheetBox .up{color:#4ec9a0}#sheetBox .dn{color:#f0736a}
 #sheetBox h5{margin:16px 0 7px;font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;opacity:.55}
@@ -1458,8 +1459,8 @@ async function renderFunds(main, file, title, opts){
     makeTable(rows, cols, {
       limit: 150,
       placeholder: opts.placeholder || 'Search\u2026',
-      onRow: r => openDetail(r, r.name || r.symbol || r.code,
-                             r.fund_house || r.underlying || r.category || '')
+      onRow: r => (opts.kind === 'fund' ? openFund(r) : openDetail(r, r.name || r.symbol || r.code,
+                             r.fund_house || r.underlying || r.category || ''))
     }),
     file + ' \u00b7 tap any row for the full detail. ' + (d.note || '')));
 }
@@ -1753,7 +1754,7 @@ async function route(){
     else if (id === 'learn') await renderLearn(main);
     else if (id === 'ipo') await renderIpo(main);
     else if (id === 'mf') await renderFunds(main, 'mf.json', 'Mutual funds',
-      {cols:[{k:'name',label:'Fund'},{k:'fund_house',label:'House'},{k:'category',label:'Category'},
+      {kind:'fund', cols:[{k:'name',label:'Fund'},{k:'fund_house',label:'House'},{k:'category',label:'Category'},
              {k:'nav',label:'NAV',r:1},{k:'r1y',label:'1Y',r:1,html:v=>pct(v)},
              {k:'r3y',label:'3Y',r:1,html:v=>pct(v)},{k:'r5y',label:'5Y',r:1,html:v=>pct(v)},
              {k:'years',label:'Yrs',r:1}], placeholder:'Search funds…'});
@@ -1883,6 +1884,143 @@ async function openDetail(row, title, subtitle){
   if (chartNode){
     const slot = body.querySelector('#chartSlot');
     if (slot) slot.append(chartNode);
+  }
+  box.scrollTop = 0;
+}
+
+/* =====================================================================================
+   MUTUAL FUND DETAIL.
+   The generic row view printed every field and stopped there, which for a fund is the least
+   useful thing it could do: the numbers only mean something against the index and against the
+   fund's own category. This ranks the fund inside its category, puts each return beside Nifty,
+   Sensex and gold over the same window, and costs a SIP at the fund's own past rate.
+   ===================================================================================== */
+const MF_BENCH_LABEL = {nifty: 'Nifty 50', sensex: 'Sensex', gold: 'Gold'};
+
+async function openFund(row){
+  const box = $('#sheet'), body = $('#sheetBody');
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  body.innerHTML = '<p class="loading">Loading ' + esc(row.name || 'fund') + '\u2026</p>';
+
+  let all = [], bench = {};
+  try {
+    const d = await J('mf.json');
+    all = d.rows || [];
+    bench = d.benchmarks || {};
+  } catch (_) { all = [row]; }
+
+  const peers = all.filter(x => x.category === row.category);
+  const longest = ['r10y','r5y','r3y','r1y'].find(k => row[k] != null);
+  const years = longest === 'r10y' ? 10 : longest === 'r5y' ? 5 : longest === 'r3y' ? 3 : 1;
+
+  // rank inside the category, on the longest return this fund actually reports
+  let rankTxt = '-', catMedian = null;
+  if (longest && peers.length > 1){
+    const vals = peers.filter(x => x[longest] != null && plausible(x[longest], longest))
+                      .sort((a,b) => b[longest] - a[longest]);
+    const idx = vals.findIndex(x => x.code === row.code);
+    if (idx >= 0) rankTxt = (idx + 1) + ' of ' + vals.length;
+    const arr = vals.map(x => x[longest]).sort((a,b) => a - b);
+    if (arr.length) catMedian = arr[Math.floor(arr.length / 2)];
+  }
+
+  let out = '<h3>' + esc(row.name || '') + '</h3>'
+    + '<div class="sub">' + esc(row.fund_house || '') + ' \u00b7 ' + esc(row.category || '') +
+    ' \u00b7 ' + esc(row.type || '') + '</div>';
+
+  out += '<div class="px">\u20b9' + num(row.nav) + '</div>'
+    + '<div class="sub" style="margin:0 0 4px">NAV on ' + esc(row.nav_date || '-') +
+    ' \u00b7 since ' + esc(row.first_nav_date || '-') + ' (' + (row.years || 0) + ' years)</div>';
+
+  // ---- returns, each beside the index over the same window ----
+  out += '<h5>Returns, and what they beat</h5>';
+  const rk = [['r1y','1y'],['r3y','3y'],['r5y','5y'],['r10y','10y']];
+  const rowsR = [];
+  rk.forEach(([k, lbl]) => {
+    if (row[k] == null) return;
+    const b = bench.nifty || {};
+    const bn = b[lbl];
+    rowsR.push({
+      window: lbl,
+      fund: row[k],
+      nifty: bn == null ? null : bn,
+      diff: bn == null ? null : row[k] - bn,
+      verdict: bn == null ? '-' : (row[k] > bn ? 'ahead' : 'behind')
+    });
+  });
+  if (rowsR.length){
+    out += '<div id="retSlot"></div>';
+  }
+
+  // ---- risk ----
+  if (row.vol != null || row.max_dd != null){
+    out += '<h5>Risk</h5>' + rowKV([
+      ['Volatility', row.vol == null ? '-' : row.vol.toFixed(2) + '%'],
+      ['Worst fall', row.max_dd == null ? '-' : row.max_dd.toFixed(1) + '%'],
+      ['Return per unit of risk',
+        (row.vol && row[longest] != null) ? (row[longest] / row.vol).toFixed(2) : '-'],
+      ['Rank in category', rankTxt]
+    ]);
+    const notes = [];
+    if (row.vol != null) notes.push(row.vol < 12 ? 'Volatility under 12% - it moves less than most equity funds.'
+      : row.vol > 20 ? 'Volatility above 20% - it swings harder than most, so the entry date matters more.'
+      : 'Volatility in the usual range for an equity fund.');
+    if (row.max_dd != null && row.max_dd < -50) notes.push('It has fallen ' + Math.abs(row.max_dd).toFixed(0)
+      + '% from a peak before. That is the number to imagine living through, not the annual return.');
+    if (notes.length) out += '<p class="sub" style="margin-top:10px">' + esc(notes.join(' ')) + '</p>';
+  }
+
+  // ---- against the other benchmarks ----
+  const flags = [['Nifty', row.beats_nifty_5y, row.beats_nifty_10y],
+                 ['Sensex', row.beats_sensex_5y, row.beats_sensex_10y],
+                 ['Gold', row.beats_gold_5y, row.beats_gold_10y]];
+  if (flags.some(f => f[1] != null || f[2] != null)){
+    out += '<h5>Did it beat, over 5 and 10 years</h5>' + rowKV(flags.flatMap(f => [
+      [f[0] + ' \u00b7 5y', f[1] == null ? '-' : (f[1] ? 'Yes' : 'No')],
+      [f[0] + ' \u00b7 10y', f[2] == null ? '-' : (f[2] ? 'Yes' : 'No')]
+    ]));
+  }
+
+  // ---- category context ----
+  if (catMedian != null && row[longest] != null){
+    out += '<h5>Its category</h5>' + rowKV([
+      ['Funds in it', String(peers.length)],
+      ['Category median ' + years + 'y', catMedian.toFixed(2) + '%'],
+      ['This fund', row[longest].toFixed(2) + '%'],
+      ['Difference', (row[longest] - catMedian > 0 ? '+' : '') + (row[longest] - catMedian).toFixed(2) + ' pp']
+    ]);
+  }
+
+  // ---- SIP at its own past rate ----
+  if (longest && plausible(row[longest], longest)){
+    const monthly = 5000, n = years * 12, i = row[longest] / 100 / 12;
+    const fv = i ? monthly * ((Math.pow(1 + i, n) - 1) / i) * (1 + i) : monthly * n;
+    out += '<h5>If you had put \u20b9' + monthly.toLocaleString('en-IN') + ' a month in</h5>' + rowKV([
+      ['For', years + ' years'],
+      ['You would have put in', '\u20b9' + num(monthly * n)],
+      ['It would be about', '\u20b9' + num(Math.round(fv))],
+      ['Gain', '\u20b9' + num(Math.round(fv - monthly * n))]
+    ]);
+    out += '<p class="sub" style="margin-top:8px">Arithmetic at this fund\'s own ' + years
+      + '-year rate, compounded monthly. Not a projection - the same rate rarely repeats.</p>';
+  }
+
+  out += '<p class="sub" style="margin-top:14px">mf.json \u00b7 NAV from the AMFI feed. Returns are '
+    + 'annualised. A past return is not a promise, and nothing here is a recommendation to buy '
+    + 'or sell.</p>';
+
+  body.innerHTML = out;
+
+  // the returns table needs a real table, not a string
+  if (rowsR.length){
+    const slot = body.querySelector('#retSlot');
+    if (slot) slot.append(makeTable(rowsR, [
+      {k:'window',label:'Window'},
+      {k:'fund',label:'This fund',r:1,html:v=>pct(v)},
+      {k:'nifty',label:'Nifty',r:1,html:v=>pct(v)},
+      {k:'diff',label:'Gap',r:1,html:v=>(v>0?'+':'')+v.toFixed(2)+' pp'},
+      {k:'verdict',label:''}
+    ], {limit:6, noSearch:true}));
   }
   box.scrollTop = 0;
 }

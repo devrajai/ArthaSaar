@@ -139,6 +139,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03)}
 .nchips button.on{background:var(--accent-dim);border-color:rgba(110,168,254,.45);color:var(--accent)}
 .d{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;display:inline-block;flex:0 0 auto}
 .d.blue{background:#6ea8fe}.d.green{background:#4fc98a}.d.red{background:#ea6b62}.d.amber{background:#e2b04a}
+.nchips{flex-wrap:wrap}
 .nchips button:disabled{opacity:.38;cursor:default}
 .nchips button:disabled:hover{border-color:var(--line)}
 .nreset{background:var(--accent-dim);border:calc(1 * var(--u)) solid rgba(110,168,254,.45);
@@ -1063,7 +1064,16 @@ async function seriesForTimeframe(sym, tf){
     try {
       const ser = await J('series.json');
       const key = Object.keys(ser.series || {}).find(k => k.split('.')[0] === String(sym).toUpperCase());
-      if (!key) return null;
+      if (!key){
+        // global names are not in series.json; global.json carries its own 120 points
+        const db = await stockDB();
+        const rec = db.bySym[sym];
+        if (rec && Array.isArray(rec.series) && rec.series.length > 2){
+          const vals = tf === '1m' ? rec.series.slice(-21) : rec.series;
+          return {vals, unit: 'sessions', label: tf === '1m' ? 'about a month' : 'daily'};
+        }
+        return null;
+      }
       const all = ser.series[key];
       // "1 month" is about 21 sessions, which the daily file already holds - better than two
       // monthly bars, which is what the long file would give
@@ -1251,6 +1261,86 @@ async function openCommodity(row, cm, mt){
     if (slot) slot.append(tierTable);
   }
   box.scrollTop = 0;
+}
+
+async function renderGlobal(main){
+  let d, gm;
+  try {
+    d = await J('global.json');
+    gm = await J('global_market.json').catch(() => ({}));
+  } catch (e) {
+    const p0 = document.createElement('p'); p0.className = 'err';
+    p0.textContent = 'Could not load global.json: ' + e.message;
+    main.append(card('Global', 'unavailable', p0, '')); return;
+  }
+
+  // world indices first - the thing a reader opens this page for
+  const ix = (gm.indices || d.index || []).map(x => ({
+    name: x.name || x.symbol, symbol: x.symbol, close: x.close,
+    chg_1d: x.chg_1d != null ? x.chg_1d : x.chg_pct,
+    chg_1w: x.chg_1w, chg_1m: x.chg_1m
+  }));
+  if (ix.length){
+    main.append(card('World indices', ix.length + ' markets',
+      makeTable(ix, [
+        {k:'name',label:'Index'},{k:'symbol',label:'Symbol'},
+        {k:'close',label:'Close',r:1,html:v=>num(v)},
+        {k:'chg_1d',label:'1 day',r:1,html:v=>pct(v)},
+        {k:'chg_1w',label:'1 week',r:1,html:v=>pct(v)},
+        {k:'chg_1m',label:'1 month',r:1,html:v=>pct(v)}
+      ], {limit:30, placeholder:'Search markets\u2026'}),
+      'global_market.json \u00b7 free-source closes, delayed.'));
+  }
+
+  // the big US names
+  const mega = (gm.megacap || []).map(x => ({symbol: x.symbol, close: x.close,
+    chg_1d: x.chg_1d, chg_1w: x.chg_1w}));
+  if (mega.length){
+    main.append(card('US megacaps', mega.length + ' names',
+      makeTable(mega, [
+        {k:'symbol',label:'Symbol'},{k:'close',label:'Close',r:1,html:v=>num(v)},
+        {k:'chg_1d',label:'1 day',r:1,html:v=>pct(v)},
+        {k:'chg_1w',label:'1 week',r:1,html:v=>pct(v)}
+      ], {limit:20, placeholder:'Search\u2026', onRow: r => openStock(r.symbol)}),
+      'Tap a name for the full-screen detail.'));
+  }
+
+  // US sectors
+  const secs = (gm.sectors || []).map(x => ({name: x.name, symbol: x.symbol, style: x.style,
+    chg_1d: x.chg_1d, chg_1w: x.chg_1w, chg_1m: x.chg_1m}));
+  if (secs.length){
+    main.append(card('US sectors', secs.length + ' sectors',
+      makeTable(secs, [
+        {k:'name',label:'Sector'},{k:'style',label:'Style'},
+        {k:'chg_1d',label:'1 day',r:1,html:v=>pct(v)},
+        {k:'chg_1w',label:'1 week',r:1,html:v=>pct(v)},
+        {k:'chg_1m',label:'1 month',r:1,html:v=>pct(v)}
+      ], {limit:20, placeholder:'Search sectors\u2026'}),
+      'Sector ETFs, so a rotation shows up before it reaches the index.'));
+  }
+
+  // every global stock with its fundamentals - the thing that was missing
+  const rows = (d.rows || []).map(r => ({country: r.country, symbol: r.symbol, name: r.name,
+    close: r.close, chg_pct: r.chg_pct, pe: r.pe, div_yield: r.div_yield, mcap: r.mcap,
+    rsi_14: r.rsi_14, trend: r.trend}));
+  if (rows.length){
+    main.append(card('Global stocks', rows.length + ' names',
+      makeTable(rows, [
+        {k:'name',label:'Name'},{k:'symbol',label:'Symbol'},{k:'country',label:'Country'},
+        {k:'close',label:'Close',r:1,html:v=>num(v)},
+        {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},
+        {k:'pe',label:'P/E',r:1,html:v=>v==null?'\u2014':Number(v).toFixed(1)},
+        {k:'div_yield',label:'Div %',r:1,html:v=>v==null?'\u2014':Number(v).toFixed(2)}
+      ], {limit:200, placeholder:'Search a company, symbol or country\u2026',
+         onRow: r => openStock(r.symbol)}),
+      'global.json \u00b7 tap any row for the full-screen detail: price line, technicals, '
+      + 'fundamentals and the timeframe switch. Same window as an Indian stock.'));
+  }
+
+  if (gm.note){
+    const p1 = document.createElement('p'); p1.className = 'sub'; p1.textContent = gm.note;
+    main.append(card('About this data', 'read this', p1, ''));
+  }
 }
 
 async function renderCommodities(main){
@@ -1763,6 +1853,7 @@ async function route(){
              {k:'close',label:'Close',r:1},{k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},
              {k:'rsi_14',label:'RSI',r:1},{k:'trend',label:'Trend'},
              {k:'vol_x',label:'Vol x',r:1}], placeholder:'Search ETFs…'});
+    else if (id === 'global') await renderGlobal(main);
     else if (id === 'commodities') await renderCommodities(main);
     else if (id === 'crypto') await renderFunds(main, 'crypto.json', 'Crypto',
       {cols:[{k:'symbol',label:'Pair'},{k:'name',label:'Name'},{k:'close',label:'Price',r:1},
@@ -1796,14 +1887,22 @@ function buildDrawer(){
 let SDB = null;
 async function stockDB(){
   if (SDB) return SDB;
-  const [st, fu] = await Promise.all([
+  const [st, fu, gl] = await Promise.all([
     J('stocks.json').catch(() => ({stocks:{}})),
-    J('fundamentals.json').catch(() => ({companies:[]}))
+    J('fundamentals.json').catch(() => ({companies:[]})),
+    J('global.json').catch(() => ({pages:{}}))
   ]);
   const bySym = {};
   Object.keys(st.stocks || {}).forEach(k => {
     const r = st.stocks[k];
     if (r && r.symbol) bySym[r.symbol] = r;
+  });
+  // global.json carries the same {tech, fund, series} shape under `pages`, so a US or Korean
+  // name opens in exactly the same window as an Indian one. Indian symbols are added first and
+  // win on a clash.
+  Object.keys(gl.pages || {}).forEach(k => {
+    const r = gl.pages[k];
+    if (r && r.symbol && !bySym[r.symbol]) bySym[r.symbol] = r;
   });
   const fund = {};
   (fu.companies || []).forEach(c => { if (c && c.symbol) fund[c.symbol] = c; });
@@ -1837,6 +1936,28 @@ const DETAIL_ORDER = ['name','symbol','code','fund_house','category','type','bas
   'close','nav','chg_pct','r1y','r3y','r5y','r10y','since','years','nav_date','first_nav_date',
   'expense','aum','benchmark','beats_nifty','mcap','volume_24h','volume','rsi_14','trend','vol_x',
   'atr_pct','max_dd','volatility','industry','points','series','isin','face','deep'];
+
+/* ROE arrives as a ratio: HDFC Bank is 0.11, Apple is 1.4226. The page printed the raw value
+   with a % sign, so HDFC Bank showed 0.11% where its actual return on equity is 11%. Anything
+   at or below 3 is a ratio and gets multiplied; above that it is already a percentage. */
+function roePct(v){
+  if (v == null || !isFinite(v)) return '-';
+  const pct = Math.abs(v) <= 3 ? v * 100 : v;
+  return pct.toFixed(1) + '%';
+}
+
+/* Market cap is in the listing's own currency and unit. An Indian name is quoted in crore; a
+   US name is dollars and was being labelled "cr", which is a different number by a factor of
+   about 80. */
+function mcapText(v, sym){
+  if (v == null || !isFinite(v)) return '-';
+  const indian = /\.NS$|\.BO$/i.test(String(sym || ''));
+  if (indian) return '\u20b9' + num(v / 1e7) + ' cr';
+  if (v >= 1e12) return '$' + (v / 1e12).toFixed(2) + ' T';
+  if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + ' B';
+  if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + ' M';
+  return '$' + num(v);
+}
 
 function fmtDetail(k, v){
   if (v === null || v === undefined || v === '') return null;
@@ -2080,8 +2201,8 @@ async function openStock(sym){
     out += '<h5>Fundamentals</h5>' + rowKV([
       ['P/E', fmt(fd.pe)], ['P/B', fmt(fd.pb)], ['EPS', fmt(fd.eps)],
       ['Div yield', fd.div_yield == null ? '-' : fmt(fd.div_yield) + '%'],
-      ['Beta', fmt(fd.beta)], ['ROE', fd.roe == null ? '-' : fmt(fd.roe) + '%'],
-      ['Market cap', fd.mcap == null ? '-' : fmt(fd.mcap, 0) + ' cr'],
+      ['Beta', fmt(fd.beta)], ['ROE', fd.roe == null ? '-' : roePct(fd.roe)],
+      ['Market cap', mcapText(fd.mcap, sym)],
       ['52w high', fmt(fd.high_52w)], ['52w low', fmt(fd.low_52w)]
     ]);
     // plain-English read of the two or three numbers that actually place the stock
@@ -2089,9 +2210,12 @@ async function openStock(sym){
     if (fd.pe != null) notes.push(fd.pe < 15 ? 'P/E under 15 - priced for modest growth, or for trouble.'
       : fd.pe > 40 ? 'P/E above 40 - the market is already paying for a lot of future growth.'
       : 'P/E in the middle of the usual range.');
-    if (fd.roe != null) notes.push(fd.roe > 18 ? 'ROE above 18% - the business earns well on shareholders\' money.'
-      : fd.roe < 8 ? 'ROE under 8% - thin returns on the equity in the business.'
-      : 'ROE in a normal range.');
+    if (fd.roe != null){
+      const rp = Math.abs(fd.roe) <= 3 ? fd.roe * 100 : fd.roe;
+      notes.push(rp > 18 ? 'ROE above 18% - the business earns well on shareholders\' money.'
+        : rp < 8 ? 'ROE under 8% - thin returns on the equity in the business.'
+        : 'ROE in a normal range.');
+    }
     if (t.trend) notes.push('Trend reads ' + t.trend + ' on the 200-day average.');
     if (notes.length) out += '<p class="sub" style="margin-top:10px">' + esc(notes.join(' ')) + '</p>';
   }

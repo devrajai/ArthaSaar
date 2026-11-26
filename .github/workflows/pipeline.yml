@@ -657,6 +657,11 @@ jobs:
       - name: "7aa. Pair spreads (z-score of the log price ratio)"
         run: python scripts/build_pairs.py || true
 
+      # RBI releases for the economy window. || true - a blocked feed leaves the
+      # previous file rather than failing the run.
+      - name: "7ab. Economy (RBI releases)"
+        run: python scripts/build_economy.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

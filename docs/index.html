@@ -1271,8 +1271,7 @@ async function openCommodity(row, cm, mt){
         {k:'label',label:isGold ? 'Carat' : 'Fineness'},
         {k:'per_gram',label:'Per gram',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)},
         {k:'per_10g',label:'Per 10 g',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)},
-        {k:'per_12g',label:'Per 12 g',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)},
-        {k:'chg_pct',label:'Today',r:1,html:v=>pct(v)}
+        {k:'per_12g',label:'Per 12 g',r:1,html:v=>v==null?'\u2014':'\u20b9'+num(v)}
       ], {limit:12, noSearch:true});
     }
   }
@@ -1606,6 +1605,7 @@ async function renderFunds(main, file, title, opts){
       placeholder: opts.placeholder || 'Search\u2026',
       onRow: r => opts.kind === 'fund' ? openFund(r)
                  : opts.kind === 'etf' ? openEtf(r)
+                 : opts.kind === 'crypto' ? openCrypto(r)
                  : openDetail(r, r.name || r.symbol || r.code,
                               r.fund_house || r.underlying || r.category || '')
     }),
@@ -1913,7 +1913,7 @@ async function route(){
     else if (id === 'global') await renderGlobal(main);
     else if (id === 'commodities') await renderCommodities(main);
     else if (id === 'crypto') await renderFunds(main, 'crypto.json', 'Crypto',
-      {cols:[{k:'symbol',label:'Pair'},{k:'name',label:'Name'},{k:'close',label:'Price',r:1},
+      {kind:'crypto', cols:[{k:'symbol',label:'Pair'},{k:'name',label:'Name'},{k:'close',label:'Price',r:1},
              {k:'chg_pct',label:'Change',r:1,html:v=>pct(v)},{k:'rsi_14',label:'RSI',r:1},
              {k:'trend',label:'Trend'},{k:'mcap',label:'Mcap',r:1}],
        placeholder:'Search coins…'});
@@ -1997,6 +1997,24 @@ const DETAIL_ORDER = ['name','symbol','code','fund_house','category','type','bas
 /* ROE arrives as a ratio: HDFC Bank is 0.11, Apple is 1.4226. The page printed the raw value
    with a % sign, so HDFC Bank showed 0.11% where its actual return on equity is 11%. Anything
    at or below 3 is a ratio and gets multiplied; above that it is already a percentage. */
+/* Indian digit grouping on a dollar amount reads as a different number to anyone used to
+   millions - $42,15,03,23,242 is not a shape a US figure takes. Dollars get T/B/M. */
+/* Supply is a token count, not money - it wants plain thousands separators and no decimals. */
+function num0(v){
+  if (v == null || !isFinite(v)) return '-';
+  return Math.round(Number(v)).toLocaleString('en-IN');
+}
+
+function usd(v){
+  if (v == null || !isFinite(v)) return '-';
+  const n = Number(v);
+  if (Math.abs(n) >= 1e12) return '$' + (n / 1e12).toFixed(2) + ' T';
+  if (Math.abs(n) >= 1e9) return '$' + (n / 1e9).toFixed(2) + ' B';
+  if (Math.abs(n) >= 1e6) return '$' + (n / 1e6).toFixed(2) + ' M';
+  if (Math.abs(n) >= 1e3) return '$' + (n / 1e3).toFixed(1) + ' K';
+  return '$' + n.toFixed(2);
+}
+
 function roePct(v){
   if (v == null || !isFinite(v)) return '-';
   const pct = Math.abs(v) <= 3 ? v * 100 : v;
@@ -2086,6 +2104,198 @@ async function etfPages(){
   if (ETFPAGES !== null) return ETFPAGES;
   try { const d = await J('etf.json'); ETFPAGES = d.pages || {}; } catch (_) { ETFPAGES = {}; }
   return ETFPAGES;
+}
+
+/* =====================================================================================
+   CRYPTO DETAIL.
+   A coin opened the generic field dump - no chart, no rank context, no explanation of what the
+   numbers mean. crypto_history.json carries monthly history for the majors and long_history.json
+   carries BTC; both are used when present, and the window says so when neither is.
+   ===================================================================================== */
+let CRYPTOTH = null;
+async function cryptoHistory(){
+  if (CRYPTOTH !== null) return CRYPTOTH;
+  try { CRYPTOTH = await J('crypto_history.json'); } catch (_) { CRYPTOTH = {series:{}}; }
+  return CRYPTOTH;
+}
+
+let CRYPTOF = null;
+async function cryptoFundamentals(){
+  if (CRYPTOF !== null) return CRYPTOF;
+  try { CRYPTOF = await J('crypto_fundamentals.json'); } catch (_) { CRYPTOF = {coins:{}}; }
+  return CRYPTOF;
+}
+
+async function openCrypto(row){
+  const box = $('#sheet'), body = $('#sheetBody');
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  body.innerHTML = '<p class="loading">Loading ' + esc(row.name || row.symbol) + '\u2026</p>';
+
+  let all = [];
+  try { const d = await J('crypto.json'); all = d.rows || []; } catch (_) { all = [row]; }
+  const chg = row.chg_pct;
+
+  let out = '<h3>' + esc(row.name || row.symbol) + '</h3>'
+    + '<div class="sub">' + esc(row.symbol || '') +
+    (row.rank ? ' \u00b7 rank ' + row.rank + ' of ' + all.length : '') + '</div>';
+
+  if (row.close != null){
+    out += '<div class="px ' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '">' + num(row.close) + '</div>'
+      + '<div class="' + (chg > 0 ? 'up' : chg < 0 ? 'dn' : '') + '" style="font-size:13px">'
+      + (chg > 0 ? '+' : '') + (chg == null ? '-' : chg.toFixed(2)) + '% today</div>';
+  }
+
+  out += '<div id="chartSlot"></div>';
+
+  // technicals, using the same vocabulary as a stock so the two read alike
+  const tech = [
+    ['RSI 14', row.rsi_14 == null ? '-' : row.rsi_14.toFixed(1)],
+    ['Trend', esc(row.trend || '-')],
+    ['ATR %', row.atr_pct == null ? '-' : row.atr_pct.toFixed(2) + '%'],
+    ['Rank', row.rank == null ? '-' : '#' + row.rank]
+  ];
+  out += '<h5>Technicals</h5>' + rowKV(tech);
+
+  // size and turnover - the two numbers that decide whether a coin can be traded at all
+  const size = [];
+  if (row.mcap != null) size.push(['Market cap', usd(row.mcap)]);
+  if (row.volume_24h != null) size.push(['24h volume', usd(row.volume_24h)]);
+  if (row.mcap && row.volume_24h) size.push(['Turnover', (row.volume_24h / row.mcap * 100).toFixed(2) + '% of cap']);
+  if (size.length) out += '<h5>Size and liquidity</h5>' + rowKV(size);
+
+  // ---- supply and dilution - the crypto equivalent of a share count ----
+  await cryptoFundamentals();
+  const cf = (CRYPTOF.coins || {})[String(row.symbol || '').toUpperCase()];
+  if (cf){
+    const sup = [];
+    if (cf.circulatingSupply != null) sup.push(['Circulating', num0(cf.circulatingSupply)]);
+    if (cf.unlimited_supply){
+      sup.push(['Maximum supply', 'Uncapped']);
+      sup.push(['What that means', 'It can be minted without a ceiling']);
+    } else if (cf.maxSupply){
+      sup.push(['Maximum supply', num0(cf.maxSupply)]);
+      if (cf.pct_issued != null) sup.push(['Already issued', cf.pct_issued.toFixed(2) + '%']);
+    }
+    if (cf.totalSupply != null && cf.totalSupply !== cf.circulatingSupply)
+      sup.push(['Total supply', num0(cf.totalSupply)]);
+    if (sup.length) out += '<h5>Supply</h5>' + rowKV(sup);
+
+    // dilution: what it would be worth with every token issued
+    if (cf.fdv && cf.mcap_fdv_ratio != null){
+      out += '<h5>Dilution</h5>' + rowKV([
+        ['Fully diluted value', usd(cf.fdv)],
+        ['Market cap', usd(row.mcap)],
+        ['Cap as share of FDV', cf.mcap_fdv_ratio.toFixed(2) + '%']
+      ]);
+      out += '<p class="sub" style="margin-top:8px">Fully diluted value is the price times the '
+        + 'maximum supply - what it would be worth with every token that can exist. A low share '
+        + 'means a lot of supply is still to come, which dilutes holders who buy now.</p>';
+    }
+
+    // where it sits in its own year
+    if (cf.fiftyTwoWeekHigh && cf.fiftyTwoWeekLow && row.close != null){
+      const hi = cf.fiftyTwoWeekHigh, lo = cf.fiftyTwoWeekLow;
+      const pos = Math.max(0, Math.min(100, (row.close - lo) / ((hi - lo) || 1) * 100));
+      out += '<h5>Position in its 52-week range</h5>'
+        + '<div style="display:flex;height:9px;border-radius:5px;overflow:hidden;margin:2px 0 6px">'
+        + '<div style="width:' + pos.toFixed(1) + '%;background:#4ec9a0"></div>'
+        + '<div style="width:' + (100 - pos).toFixed(1) + '%;background:rgba(255,255,255,.12)"></div></div>'
+        + rowKV([['52-week high', usd(hi)], ['52-week low', usd(lo)],
+                 ['Now', pos.toFixed(0) + '% up from the low']]);
+    }
+
+    // turnover: how much of the coin changes hands in a day
+    if (cf.turnover_pct != null){
+      const t2 = [['Turnover', cf.turnover_pct.toFixed(2) + '% of cap a day']];
+      if (cf.volume_vs_avg != null) t2.push(['Volume vs 30-day average', cf.volume_vs_avg.toFixed(0) + '%']);
+      out += '<h5>How actively it trades</h5>' + rowKV(t2);
+      out += '<p class="sub" style="margin-top:8px">Turnover above about 10% a day means a large '
+        + 'share of the coin is changing hands - liquid, but also skittish. Below 2% and a large '
+        + 'order moves the price.</p>';
+    }
+  }
+
+  // where it sits in the pack
+  if (all.length > 1 && row.close != null){
+    const byMcap = all.filter(x => x.mcap != null).sort((a,b) => b.mcap - a.mcap);
+    const idx = byMcap.findIndex(x => x.symbol === row.symbol);
+    if (idx >= 0){
+      const share = row.mcap / byMcap.reduce((s,x) => s + x.mcap, 0) * 100;
+      out += '<h5>In the pack</h5>' + rowKV([
+        ['By market cap', '#' + (idx + 1) + ' of ' + byMcap.length],
+        ['Share of the tracked total', share.toFixed(2) + '%']
+      ]);
+    }
+  }
+
+  out += '<p class="sub" style="margin-top:14px">crypto.json \u00b7 free-source prices, delayed. '
+    + 'Crypto trades 24 hours and has no circuit limit, no closing price and no earnings - the '
+    + 'measures used on a share describe it far less well. Not a recommendation.</p>';
+
+  body.innerHTML = out;
+
+  const slot = body.querySelector('#chartSlot');
+  if (slot){
+    const bar = document.createElement('div');
+    bar.className = 'nchips';
+    bar.style.margin = '2px 0 8px';
+    bar.innerHTML = TF_LIST.map(x =>
+      '<button data-tf="' + x[0] + '"' + (x[0] === '1y' ? ' class="on"' : '') + '>' +
+      esc(x[1]) + '</button>').join('');
+    slot.append(bar);
+    const host = document.createElement('div');
+    slot.append(host);
+
+    const paint = async (tf) => {
+      host.innerHTML = '<p class="loading">Loading\u2026</p>';
+      let vals = null, unit = 'months', label = '';
+      // monthly history for the majors
+      if (tf === '1y' || tf === '5y' || tf === 'all'){
+        await cryptoHistory();
+        const s = (CRYPTOTH.series || {})[row.symbol];
+        if (s && s.length){
+          const pts = s.map(x => Number(x[1]));
+          const n = tf === '1y' ? 12 : tf === '5y' ? 60 : pts.length;
+          vals = pts.slice(-Math.min(n, pts.length)); label = tf;
+        }
+      }
+      // BTC and the majors are also in long_history
+      if (!vals){
+        await longHistory();
+        const L = longSeriesFor(row.symbol) || longSeriesFor(row.symbol + '-USD');
+        if (L && L.c){
+          const n = tf === '1m' ? 2 : tf === '1y' ? 12 : tf === '5y' ? 60 : L.c.length;
+          vals = L.c.slice(-Math.min(n, L.c.length)); unit = 'months'; label = tf;
+        }
+      }
+      // intraday, if we hold it for the pair
+      if (!vals && (tf === '5m' || tf === '15m' || tf === '30m' || tf === '1d')){
+        await intradayData();
+        const s = intradayFor(row.symbol + '-USD') || intradayFor(row.symbol);
+        if (s){
+          const r = resampleBars(s, tf === '15m' ? 3 : tf === '30m' ? 6 : 1);
+          vals = r.c; unit = 'bars of ' + tf.replace('m', ' min'); label = tf;
+        }
+      }
+      host.innerHTML = '';
+      if (!vals || vals.length < 2){
+        const e = document.createElement('p'); e.className = 'empty';
+        e.textContent = 'No ' + tf + ' history for ' + (row.symbol || 'this coin') +
+          '. Crypto history here covers the majors only.';
+        host.append(e); return;
+      }
+      const sp = sparkline(vals, {h: 96, unit});
+      if (sp) host.append(sp);
+    };
+
+    bar.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(bar.querySelectorAll('button'), x => x.classList.remove('on'));
+      b.classList.add('on'); paint(b.dataset.tf);
+    });
+    paint('1y');
+  }
+  box.scrollTop = 0;
 }
 
 async function openEtf(row){

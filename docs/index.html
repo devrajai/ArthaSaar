@@ -582,9 +582,6 @@ async function renderOverview(main){
   const nifty = F.nifty || {};
   const closes = (hist.rows || []).slice(-30).map(r => r.c);
 
-  // status first: open or closed is the first thing anyone wants to know
-  const ms = await marketStatusCard();
-  if (ms) main.append(ms);
   const tl = await todayLineCard();
   if (tl) main.append(tl);
 

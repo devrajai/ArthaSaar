@@ -1326,7 +1326,120 @@ async function renderDeals(main){
     'deals.json · value is quantity × price, not a recommendation.'));
 }
 
+/* =====================================================================================
+   WALK-FORWARD ACCURACY.
+   forecast.json was written every night and no card ever read it - the Forecast tab showed only
+   the TimesFM band. This is the part that says whether any model is worth looking at: each one
+   beside the naive baseline, with the hit rate and the band coverage, and the words "no clear
+   gain" when the gap is not real.
+   ===================================================================================== */
+async function walkForwardCard(){
+  let f;
+  try { f = await J('forecast.json'); } catch (_) { return null; }
+  const models = f.models || [];
+  if (!models.length) return null;
+
+  const naive = f.naive_mape;
+  const box = document.createElement('div');
+  box.append(makeTable(models.map(m => ({
+    model: m.model, mape: m.mape, hit: m.hit, cover80: m.cover80,
+    origins: m.origins, gap: m.beats_naive_pp,
+    verdict: m.model === 'naive' ? 'the baseline'
+      : (m.no_clear_gain ? 'no clear gain over naive' : 'ahead of naive')
+  })), [
+    {k:'model', label:'Model'},
+    {k:'mape', label:'MAPE', r:1, html:v => v == null ? '\u2014' : v.toFixed(2) + '%'},
+    {k:'hit', label:'Direction', r:1, html:v => v == null ? '\u2014' : v.toFixed(0) + '%'},
+    {k:'cover80', label:'80% band', r:1, html:v => v == null ? '\u2014' : v.toFixed(0) + '%'},
+    {k:'gap', label:'vs naive', r:1, html:v => v == null ? '\u2014'
+      : (v > 0 ? '+' : '') + v.toFixed(2) + ' pp'},
+    {k:'verdict', label:''}
+  ], {limit:12, noSearch:true}));
+
+  const note = document.createElement('div');
+  note.innerHTML =
+    '<p style="margin:10px 0 8px;line-height:1.55">Naive is "last close, unchanged"'
+    + (naive != null ? ' - it scores ' + naive.toFixed(2) + '% MAPE' : '')
+    + '. A model that does not beat it by at least 0.5 points is not showing anything extra, '
+    + 'whatever its MAPE looks like on its own.</p>'
+    + '<p style="margin:0;line-height:1.55">Direction is how often the sign of the 21-session '
+    + 'move was right. A model can be right on direction and wrong on size - the two rows often '
+    + 'disagree, which is why both are shown. The 80% band column is how often the outcome '
+    + 'actually landed inside the band; well below 80 means the band is too narrow to be honest.</p>';
+  box.append(note);
+
+  return card('Walk-forward accuracy', (models[0].origins || 0) + ' origins per symbol', box,
+    'Each model was chosen on the earlier origins and scored on the later ones, so it is not '
+    + 'judged on the numbers it was picked by.');
+}
+
+async function forecastPathsCard(){
+  let f;
+  try { f = await J('forecast.json'); } catch (_) { return null; }
+  const syms = Object.keys(f.symbols || {});
+  if (!syms.length) return null;
+
+  const host = document.createElement('div');
+  host.innerHTML = '<label class="sub" style="display:block;margin:0 0 6px">Pick a stock</label>';
+  const sel = document.createElement('select');
+  sel.id = 'fcSym';
+  sel.style.cssText = 'width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);'
+    + 'background:var(--card);color:inherit;font:inherit;font-size:13px';
+  sel.innerHTML = syms.map(s => '<option value="' + esc(s) + '">' + esc(s) +
+    (f.symbols[s].delisted ? ' (delisted)' : '') + '</option>').join('');
+  host.append(sel);
+  const out = document.createElement('div');
+  out.style.marginTop = '12px';
+  host.append(out);
+
+  const paint = (sym) => {
+    const b = f.symbols[sym] || {};
+    const path = b.path || [];
+    out.innerHTML = '';
+    const meta = [];
+    if (b.best_model) meta.push(['Model', esc(b.best_model)]);
+    if (b.best_mape != null) meta.push(['MAPE on the later origins', b.best_mape + '%']);
+    if (b.select_mape != null) meta.push(['Chosen on', b.select_mape + '% MAPE']);
+    if (b.hit != null) meta.push(['Direction', b.hit.toFixed(0) + '%']);
+    if (b.cover80 != null) meta.push(['Band coverage', b.cover80.toFixed(0) + '%']);
+    if (b.beats_naive_pp != null) meta.push(['vs naive', (b.beats_naive_pp > 0 ? '+' : '')
+      + b.beats_naive_pp.toFixed(2) + ' pp']);
+    if (b.delisted) meta.push(['Note', 'delisted - history is thin']);
+    if (meta.length){ const m = document.createElement('div'); m.innerHTML = rowKV(meta); out.append(m); }
+
+    if (path.length){
+      // four columns, not five - the band goes in one cell so the table fits a 360px phone
+      out.append(makeTable(path.map(x => ({
+        step: x.step, date: x.date || '\u2014', yhat: x.yhat,
+        band: (x.lo80 == null || x.hi80 == null) ? null : (num(x.lo80) + ' \u2013 ' + num(x.hi80))
+      })), [
+        {k:'step', label:'#', r:1},
+        {k:'date', label:'Date'},
+        {k:'yhat', label:'Forecast', r:1, html:v => v == null ? '\u2014' : num(v)},
+        {k:'band', label:'80% band', r:1, html:v => v == null ? '\u2014' : v}
+      ], {limit:25, noSearch:true}));
+    } else {
+      const e = document.createElement('p'); e.className = 'empty';
+      e.textContent = 'No path published for this symbol.';
+      out.append(e);
+    }
+  };
+
+  sel.addEventListener('change', () => paint(sel.value));
+  host.append(document.createElement('div'));
+  const c = card('Forecast paths', syms.length + ' symbols', host,
+    'Dates come from the exchange calendar, so weekends and holidays are skipped. A date left '
+    + 'blank could not be placed and was not guessed.');
+  setTimeout(() => paint(syms[0]), 0);
+  return c;
+}
+
 async function renderForecast(main){
+  const wf = await walkForwardCard();
+  if (wf) main.append(wf);
+  const fp = await forecastPathsCard();
+  if (fp) main.append(fp);
+
   const d = await J('data.json');
   const f = d.fm3;
   const n = f.nifty;

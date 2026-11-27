@@ -1,8 +1,8 @@
 # YouTube Brain - market-channel digest
 
-Generated 2026-11-27T01:07:52Z  |  10 channels, 613 videos, window 2026-05-15 to 2026-11-26.
+Generated 2026-11-27T04:41:18Z  |  10 channels, 616 videos, window 2026-05-15 to 2026-11-27.
 
-**Total views across the window:** 14,660,323  |  **net bull-bear keyword score:** 360
+**Total views across the window:** 14,663,808  |  **net bull-bear keyword score:** 358
 
 ## Most-talked-about symbols
 
@@ -24,11 +24,11 @@ Generated 2026-11-27T01:07:52Z  |  10 channels, 613 videos, window 2026-05-15 to
 | Theme | Videos |
 |---|---|
 | Beginner/Education | 167 |
-| MF/SIP | 150 |
-| Options/F&O | 135 |
-| Earnings/Results | 134 |
-| IPO | 124 |
-| Budget/Policy | 94 |
+| MF/SIP | 152 |
+| Options/F&O | 136 |
+| Earnings/Results | 135 |
+| IPO | 125 |
+| Budget/Policy | 95 |
 
 ## Channels by reach
 
@@ -41,8 +41,8 @@ Generated 2026-11-27T01:07:52Z  |  10 channels, 613 videos, window 2026-05-15 to
 | Ghanshyam Tech | 39 | 26,175 | 2026-11-25 |
 | Groww Edge | 87 | 20,454 | 2026-11-26 |
 | Groww | 70 | 13,296 | 2026-11-26 |
-| Markets by Zerodha | 63 | 12,798 | 2026-11-26 |
-| Markets by Zerodha Hindi | 51 | 11,891 | 2026-11-26 |
-| Upstox | 175 | 1,174 | 2026-11-26 |
+| Markets by Zerodha | 64 | 12,636 | 2026-11-27 |
+| Markets by Zerodha Hindi | 52 | 11,672 | 2026-11-27 |
+| Upstox | 176 | 1,171 | 2026-11-27 |
 
 _Keyword-based analysis. Not investment advice._

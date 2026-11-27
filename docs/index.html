@@ -1199,6 +1199,8 @@ async function renderSectors(main){
 }
 
 async function renderStocks(main){
+  const hc = await fundamentalsHealthCard();
+  if (hc) main.append(hc);
   const _rc = await circuitRadarCard(); if (_rc) main.append(_rc);
 
   const s = await J('screener.json');
@@ -2106,10 +2108,44 @@ function shortFund(n){
   return base.length > 30 ? base.slice(0, 29) + '\u2026' : base;
 }
 
+/* Data health for the reported-results file. 167 of 168 companies carry a Dec 2024 period, and
+   nothing on the page said so - a reader could reasonably assume the numbers were current. */
+async function fundamentalsHealthCard(){
+  let d;
+  try { d = await J('fundamentals.json'); } catch (_) { return null; }
+  const cs = d.companies || [];
+  if (!cs.length) return null;
+  const periods = cs.map(c => c.latest_period).filter(Boolean).sort();
+  const today = new Date();
+  const stale = cs.filter(c => {
+    const q = quartersOld(c.latest_period, today);
+    return q != null && q > 2;
+  }).length;
+  const box = document.createElement('div');
+  box.append(tiles([
+    ['Companies', String(cs.length), 'with reported results'],
+    ['Stale', String(stale), 'more than 2 quarters old'],
+    ['Newest period', periods.length ? periods[periods.length - 1] : '\u2014', 'in the file'],
+    ['Oldest period', periods.length ? periods[0] : '\u2014', 'in the file'],
+    ['Basis', esc(d.basis || 'standalone'), 'parent company only']
+  ]));
+  const p1 = document.createElement('p');
+  p1.className = 'sub'; p1.style.margin = '10px 0 0';
+  p1.textContent = 'These are filed quarterly results, and the filing date is not in the feed. '
+    + 'Where the latest period is more than two quarters old it is marked stale on the stock '
+    + 'card, because an old quarter presented as current is worse than no quarter at all.';
+  box.append(p1);
+  return card('Results data health', d.updated ? d.updated.slice(0, 10) : '', box,
+    'Standalone figures from the exchange filing - the parent company only, not the '
+    + 'consolidated group.');
+}
+
 async function renderFunds(main, file, title, opts){
   opts = opts || {};
   const d = await J(file);
   const rows = arrOf(d) || [];
+
+
 
   // How many of these actually beat the index? The feed carries the flag; the page never showed
   // it, so "best performer" was a column of numbers with nothing to measure them against.
@@ -2617,6 +2653,40 @@ function usd(v){
   return '$' + n.toFixed(2);
 }
 
+/* =====================================================================================
+   P/E IN CONTEXT.
+   A P/E of 45 is cheap or expensive only against something. The sector is what stocks.json
+   already gives us, so the percentile is computed from the peers we hold - and it says how many
+   stocks it looked at, because "the 30th percentile" from four names is not the same claim as
+   from forty.
+   ===================================================================================== */
+function pePercentile(pe, sector, all){
+  if (pe == null || !isFinite(pe) || pe <= 0 || !sector) return null;
+  const peers = [];
+  Object.keys(all || {}).forEach(k => {
+    const r = all[k];
+    if (!r || r.sector !== sector) return;
+    const p = r.fund && r.fund.pe;
+    if (p != null && isFinite(p) && p > 0) peers.push(Number(p));
+  });
+  if (peers.length < 3) return null;
+  const below = peers.filter(x => x < pe).length;
+  return { pct: Math.round(below / peers.length * 100), n: peers.length,
+           median: peers.slice().sort((a, b) => a - b)[Math.floor(peers.length / 2)] };
+}
+
+/* How old is a set of results, in quarters. A results block older than two quarters is not a
+   current picture of the company, and saying so is the point. */
+function quartersOld(periodIso, today){
+  if (!periodIso) return null;
+  const d = new Date(periodIso + 'T00:00:00');
+  if (isNaN(d)) return null;
+  const t = today || new Date();
+  const qd = (t.getFullYear() - d.getFullYear()) * 4 +
+             (Math.floor(t.getMonth() / 3) - Math.floor(d.getMonth() / 3));
+  return qd;
+}
+
 function roePct(v){
   if (v == null || !isFinite(v)) return '-';
   const pct = Math.abs(v) <= 3 ? v * 100 : v;
@@ -2681,6 +2751,20 @@ async function openDetail(row, title, subtitle){
   if (chartNode){
     const slot = body.querySelector('#chartSlot');
     if (slot) slot.append(chartNode);
+  }
+  if (f && Array.isArray(f.quarters) && f.quarters.length > 2){
+    const qs = body.querySelector('#qtrSlot');
+    if (qs){
+      qs.append(makeTable(f.quarters.map(q => ({
+        p: q.p, rev: q.rev, pat: q.pat,
+        margin: (q.rev && q.pat != null) ? +(q.pat / q.rev * 100).toFixed(2) : null
+      })), [
+        {k:'p', label:'Quarter'},
+        {k:'rev', label:'Revenue', r:1, html:v => v == null ? '\u2014' : '\u20b9' + num(v) + ' cr'},
+        {k:'pat', label:'Profit', r:1, html:v => v == null ? '\u2014' : '\u20b9' + num(v) + ' cr'},
+        {k:'margin', label:'Margin', r:1, html:v => v == null ? '\u2014' : v + '%'}
+      ], {limit:6, noSearch:true}));
+    }
   }
   box.scrollTop = 0;
 }
@@ -3146,12 +3230,31 @@ async function companyBlocks(sym){
     const row = (sh.rows || []).find(r => r.symbol === sym.split('.')[0]);
     if (row && (row.promoter_pct != null || row.public_pct != null)){
       const sb = document.createElement('div');
-      sb.innerHTML = rowKV([
+      const rows2 = [
         ['Promoter', row.promoter_pct == null ? '-' : row.promoter_pct.toFixed(2) + '%'],
         ['Public', row.public_pct == null ? '-' : row.public_pct.toFixed(2) + '%'],
-        ['Free float proxy', row.free_float_proxy_pct == null ? '-' : row.free_float_proxy_pct.toFixed(2) + '%'],
-        ['As of', esc(row.as_of || '-')]
-      ]);
+        ['Free float proxy', row.free_float_proxy_pct == null ? '-' : row.free_float_proxy_pct.toFixed(2) + '%']
+      ];
+      // the change since the previous quarter, now that the builder keeps two filings
+      if (row.promoter_pct != null && row.prev_promoter_pct != null){
+        const chg = row.promoter_pct - row.prev_promoter_pct;
+        rows2.push(['Change since ' + (row.prev_as_of || 'previous quarter'),
+          (chg > 0 ? '+' : '') + chg.toFixed(2) + ' pp']);
+        rows2.push(['Previous', row.prev_promoter_pct.toFixed(2) + '%']);
+      }
+      rows2.push(['As of', esc(row.as_of || '-')]);
+      sb.innerHTML = rowKV(rows2);
+      if (row.promoter_pct != null && row.prev_promoter_pct != null){
+        const chg = row.promoter_pct - row.prev_promoter_pct;
+        const p4 = document.createElement('p');
+        p4.className = 'sub'; p4.style.margin = '8px 0 0';
+        p4.textContent = Math.abs(chg) < 0.01
+          ? 'Promoter holding is unchanged from the previous quarter.'
+          : 'Promoter holding ' + (chg > 0 ? 'rose' : 'fell') + ' by ' + Math.abs(chg).toFixed(2)
+            + ' percentage points. A fall can be a sale, a dilution or a reclassification - the '
+            + 'filing shows the change, not the reason.';
+        sb.append(p4);
+      }
       out.push(['Who owns it', 'shareholding', sb]);
     }
   } catch (_) { /* no shareholding file - skip the block */ }
@@ -3330,6 +3433,24 @@ async function openStock(sym){
       ['Beta', fmt(fd.beta)], ['ROE', fd.roe == null ? '-' : roePct(fd.roe)],
       ['Market cap', mcapText(fd.mcap, sym)]
     ]);   // 52-week high and low live in the Technicals block; repeating them here wasted a row
+    // where the P/E sits against its own sector
+    if (fd.pe != null && s && s.sector){
+      const pct = pePercentile(fd.pe, s.sector, db.bySym);
+      if (pct){
+        out += '<h5>P/E in context</h5>' + rowKV([
+          ['This stock', fd.pe.toFixed(1)],
+          ['Sector median', pct.median.toFixed(1)],
+          ['Percentile', pct.pct + 'th of its sector'],
+          ['Peers measured', pct.n + ' stocks']
+        ]);
+        out += '<p class="sub" style="margin-top:8px">A P/E in the '
+          + pct.pct + 'th percentile of ' + esc(s.sector) + ' means it is priced '
+          + (pct.pct < 33 ? 'below' : pct.pct > 66 ? 'above' : 'around the middle of')
+          + ' most of its peers, from ' + pct.n + ' stocks that report a P/E. A low percentile '
+          + 'is not the same as cheap - it can mean the market expects profit to fall.</p>';
+      }
+    }
+
     // plain-English read of the two or three numbers that actually place the stock
     const notes = [];
     if (fd.pe != null) notes.push(fd.pe < 15 ? 'P/E under 15 - priced for modest growth, or for trouble.'
@@ -3370,7 +3491,23 @@ async function openStock(sym){
       ['Profit YoY', f.profit_yoy_pct == null ? '-' : fmt(f.profit_yoy_pct, 1) + '%'],
       ['Margin chg', f.margin_change_pp == null ? '-' : fmt(f.margin_change_pp, 2) + ' pp']
     ]);
-    out += '<p class="sub" style="margin-top:10px">Year-ago period ' + esc(f.year_ago_period || '-') + '.</p>';
+    // freshness first: an old results block presented as current is the worst kind of wrong
+    const qOld = quartersOld(f.latest_period);
+    const stale = qOld != null && qOld > 2;
+    out += '<p class="sub" style="margin-top:10px">'
+      + 'Period ended ' + esc(f.latest_period || '-')
+      + (f.filing_date ? ' \u00b7 filed ' + esc(f.filing_date) : ' \u00b7 filing date not in the feed')
+      + ' \u00b7 ' + esc(f.basis || 'standalone') + ' figures'
+      + ' \u00b7 year-ago period ' + esc(f.year_ago_period || '-')
+      + '</p>';
+    if (stale){
+      out += '<p class="sub" style="margin-top:4px"><b>Stale:</b> the latest period is '
+        + qOld + ' quarters old' + (f.filing_date ? '' : ' and no filing date is recorded')
+        + '. Treat these as history, not as the current picture.</p>';
+    }
+    if (Array.isArray(f.quarters) && f.quarters.length > 2){
+      out += '<h5>Five-quarter trend</h5><div id="qtrSlot"></div>';
+    }
   }
 
   body.innerHTML = out;

@@ -122,16 +122,92 @@ MODELS = {
 CHEAP = ["naive", "drift", "mean", "seasonal_naive"]
 
 
-def _err(actual: np.ndarray, pred: np.ndarray) -> dict:
+Z80 = 1.2816   # two-sided 80% normal quantile
+
+
+def _err(actual: np.ndarray, pred: np.ndarray, last_train: float | None = None,
+         sigma: float | None = None) -> dict:
+    """Error, direction hit rate and 80% band coverage.
+
+    hit     - did the model get the SIGN of the move right, against the last training close.
+              A model that is always slightly wrong in the right direction scores 100 here while
+              its MAPE stays poor; that is the point of reporting both.
+    cover80 - did the outcome land inside a band built from the training volatility. A band that
+              covers far less than 80% of outcomes is too narrow to be honest about.
+    """
     a, p = np.asarray(actual, float), np.asarray(pred, float)
     n = min(len(a), len(p))
     a, p = a[:n], p[:n]
+    if n == 0:
+        return {"mae": float("nan"), "rmse": float("nan"), "mape": float("nan"),
+                "hit": float("nan"), "cover80": float("nan")}
     mae = float(np.mean(np.abs(a - p)))
     rmse = float(np.sqrt(np.mean((a - p) ** 2)))
     denom = np.where(np.abs(a) < 1e-9, np.nan, np.abs(a))
     mape = float(np.nanmean(np.abs((a - p) / denom)) * 100) if np.isfinite(denom).any() else float("nan")
-    # direction hit-rate on step 1 vs the last training value
-    return {"mae": mae, "rmse": rmse, "mape": mape}
+
+    hit = float("nan")
+    if last_train is not None and np.isfinite(last_train) and n > 0:
+        want = np.sign(a[-1] - last_train)
+        got = np.sign(p[-1] - last_train)
+        if want != 0:
+            hit = 100.0 if want == got else 0.0
+
+    cover = float("nan")
+    if sigma is not None and np.isfinite(sigma) and sigma > 0:
+        steps = np.arange(1, n + 1)
+        # sigma is the standard deviation of LOG returns - a fraction, not rupees. The band has to
+        # be scaled by the predicted price or it is compared against the wrong units and covers
+        # nothing, which is what happened on the first run: cover80 read 0% for every model.
+        half = np.abs(p) * Z80 * sigma * np.sqrt(steps)
+        cover = float(np.mean(np.abs(a - p) <= half) * 100)
+
+    return {"mae": mae, "rmse": rmse, "mape": mape, "hit": hit, "cover80": cover}
+
+
+def walk_forward(y: np.ndarray, fn, horizon: int, season: int,
+                 origins: int = 6, min_train: int = 60) -> list[dict]:
+    """Rolling origins, oldest first.
+
+    One train/test split tells you how a model did on one particular week. Six origins spread
+    back through the series tell you whether it was luck. The returned list is what the caller
+    splits into an earlier half for choosing the model and a later half for reporting it.
+    """
+    n = len(y)
+    if n < min_train + horizon:
+        return []
+    span = n - horizon - min_train
+    if span <= 0:
+        return []
+    step = max(1, span // max(1, origins - 1))
+    cuts, o = [], n - horizon
+    while o >= min_train and len(cuts) < origins:
+        cuts.append(o)
+        o -= step
+    cuts.reverse()
+
+    out = []
+    for cut in cuts:
+        tr, te = y[:cut], y[cut:cut + horizon]
+        if len(tr) < min_train or len(te) < horizon:
+            continue
+        try:
+            pred = np.asarray(fn(tr, horizon, season), float)
+        except Exception:
+            continue
+        if not np.all(np.isfinite(pred)):
+            continue
+        # volatility of the training window, used for the band
+        r = np.diff(np.log(np.maximum(tr, 1e-9)))
+        sigma = float(np.std(r)) if len(r) > 2 else float("nan")
+        e = _err(te, pred, last_train=float(tr[-1]), sigma=sigma)
+        e["origin"] = int(cut)
+        e["n_train"] = int(len(tr))
+        e["sigma"] = sigma
+        e["pred"] = pred
+        e["actual"] = te
+        out.append(e)
+    return out
 
 
 def main() -> int:
@@ -142,6 +218,10 @@ def main() -> int:
     ap.add_argument("--horizon", type=int, default=21)
     ap.add_argument("--season", type=int, default=5)
     ap.add_argument("--min-history", type=int, default=120)
+    ap.add_argument("--origins", type=int, default=6,
+                    help="walk-forward origins per symbol (spec asks for at least 6)")
+    ap.add_argument("--min-train", type=int, default=60,
+                    help="shortest training window an origin may use")
     ap.add_argument("--out", default="data/forecast")
     args = ap.parse_args()
 
@@ -196,78 +276,66 @@ def main() -> int:
         y = pd.to_numeric(g["close"], errors="coerce").dropna().to_numpy(float)
         if len(y) < args.min_history:
             continue
-        tr, te = y[: -args.horizon], y[-args.horizon:]
 
+        per_model = {}
         for name in wanted:
             fn = MODELS[name]
-            try:
-                pred = np.asarray(fn(tr, args.horizon, args.season), float)
-            except Exception as e:  # noqa: BLE001 - a missing heavy dep must not kill the run
-                if name not in CHEAP:
-                    print(f"  {sym:12s} {name:15s} unavailable "
-                          f"({type(e).__name__}: {str(e)[:70]})")
-                gc.collect()   # a failed heavy fit can leave memory fragmented
-                continue
-            e = _err(te, pred)
+            runs = walk_forward(y, fn, args.horizon, args.season,
+                                origins=args.origins, min_train=args.min_train)
+            if runs:
+                per_model[name] = runs
             gc.collect()
-            acc_rows.append({"symbol": sym, "model": name, "n_train": len(tr), **e})
+        if not per_model:
+            continue
+
+        # Split the origins: choose on the earlier half, report on the later half. Picking a
+        # model on the same scores it is then presented with is how a backtest flatters itself.
+        for name, runs in per_model.items():
+            half = max(1, len(runs) // 2)
+            select_runs = runs[:half]
+            report_runs = runs[half:] or runs[-1:]
+
+            def agg(rs, key):
+                vals = [r[key] for r in rs if np.isfinite(r.get(key, np.nan))]
+                return float(np.mean(vals)) if vals else float("nan")
+
+            acc_rows.append({
+                "symbol": sym, "model": name,
+                "origins": len(report_runs),
+                "n_train": int(report_runs[-1]["n_train"]),
+                "mape": agg(report_runs, "mape"),
+                "mae": agg(report_runs, "mae"),
+                "rmse": agg(report_runs, "rmse"),
+                "hit": agg(report_runs, "hit"),
+                "cover80": agg(report_runs, "cover80"),
+                # what the model was chosen on - kept so the choice can be audited
+                "select_mape": agg(select_runs, "mape"),
+                "mape_spread": float(np.nanstd([r["mape"] for r in report_runs
+                                                if np.isfinite(r.get("mape", np.nan))]))
+                                  if report_runs else float("nan"),
+            })
+
             try:
-                fut = np.asarray(fn(y, args.horizon, args.season), float)
+                fut = np.asarray(MODELS[name](y, args.horizon, args.season), float)
+                sig = float(np.std(np.diff(np.log(np.maximum(y, 1e-9)))))
                 for step, val in enumerate(fut, 1):
-                    fc_rows.append({"symbol": sym, "model": name, "step": step, "yhat": float(val)})
+                    # scale by the price, same reason as in _err
+                    half_band = abs(float(val)) * Z80 * sig * float(np.sqrt(step))
+                    fc_rows.append({"symbol": sym, "model": name, "step": step,
+                                    "yhat": float(val),
+                                    "lo80": float(val - half_band),
+                                    "hi80": float(val + half_band)})
             except Exception:
                 pass
 
-    # FALLBACK ON AN EMPTY RESULT, NOT JUST A MISSING FILE.
-    # The candle archive is rebuilt from bhavcopy each run and holds only the recent window,
-    # so symbols often carry fewer rows than --min-history (120). The archive therefore exists
-    # and looks fine, while every symbol is skipped and nothing is forecast - which is why this
-    # step exited 0 night after night and the site kept a two-week-old forecast.json.
-    # docs/series.json holds 120 closes per symbol and is always committed, so retry from it.
-    if not acc_rows and src is not None:
-        sj = Path("docs/series.json")
-        if sj.exists():
-            print(f"nothing usable in {src} (rows per symbol below --min-history={args.min_history})"
-                  f" - retrying from {sj}")
-            raw = json.loads(sj.read_text())
-            ser = raw.get("series") or raw
-            rows = []
-            for sym, vals in ser.items():
-                if not isinstance(vals, list):
-                    continue
-                for i, v in enumerate(vals):
-                    if v is None:
-                        continue
-                    rows.append({"symbol": str(sym).split(".")[0], "close": float(v), "date": i})
-            if rows:
-                df = pd.DataFrame(rows)
-                sortcol = "date"
-                src = sj
-                print(f"forecast from {sj} | {len(ser)} symbols")
-                symbols = args.symbols or sorted(df["symbol"].unique())
-                for sym in symbols:
-                    g = df[df["symbol"] == sym].sort_values(sortcol)
-                    y = pd.to_numeric(g["close"], errors="coerce").dropna().to_numpy(float)
-                    if len(y) < args.min_history:
-                        continue
-                    tr, te = y[: -args.horizon], y[-args.horizon:]
-                    for name in wanted:
-                        fn = MODELS[name]
-                        try:
-                            pred = np.asarray(fn(tr, args.horizon, args.season), float)
-                        except Exception:
-                            gc.collect()
-                            continue
-                        e = _err(te, pred)
-                        gc.collect()
-                        acc_rows.append({"symbol": sym, "model": name, "n_train": len(tr), **e})
-                        try:
-                            fut = np.asarray(fn(y, args.horizon, args.season), float)
-                            for step, val in enumerate(fut, 1):
-                                fc_rows.append({"symbol": sym, "model": name, "step": step,
-                                                "yhat": float(val)})
-                        except Exception:
-                            pass
+    # naive is the baseline every other model has to beat
+    naive_by_sym = {}
+    for r in acc_rows:
+        if r["model"] == "naive" and np.isfinite(r["mape"]):
+            naive_by_sym[r["symbol"]] = r["mape"]
+    for r in acc_rows:
+        nv = naive_by_sym.get(r["symbol"])
+        r["beats_naive_pp"] = (float(nv) - r["mape"]) if (nv is not None and np.isfinite(r["mape"])) else float("nan")
 
     if not acc_rows:
         print("no model produced a forecast - see the errors above "
@@ -287,14 +355,19 @@ def main() -> int:
     if fc_rows:
         print(f"  + {out}/forecasts.parquet ({len(fc_rows)} forward points)")
 
-    print("\nmedian MAPE by model (lower is better):")
-    med = (acc.groupby("model")["mape"].median().sort_values())
-    base = med.get("naive", np.nan)
-    for m, v in med.items():
+    print("\nmedian by model over the reported origins (lower MAPE is better):")
+    med = acc.groupby("model")[["mape", "hit", "cover80", "origins"]].median().sort_values("mape")
+    base = med["mape"].get("naive", np.nan)
+    print(f"  {'model':16s} {'MAPE':>8s} {'hit':>7s} {'cover80':>8s} {'origins':>8s}  vs naive")
+    for m, row in med.iterrows():
+        gap = (base - row["mape"]) if (m != "naive" and np.isfinite(base)) else np.nan
         tag = ""
-        if m != "naive" and np.isfinite(base):
-            tag = f"  ({'better' if v < base else 'worse'} than naive)"
-        print(f"  {m:16s} {v:7.2f}%{tag}")
+        if np.isfinite(gap):
+            tag = f"{gap:+6.2f} pp" + ("" if gap >= 0.5 else "  no clear gain")
+        print(f"  {m:16s} {row['mape']:7.2f}% {row['hit']:6.0f}% {row['cover80']:7.0f}% "
+              f"{row['origins']:8.0f}  {tag}")
+    print("\nA hit rate near 50% means the sign of the move is a coin toss. Cover80 well below 80% "
+          "means the band is too narrow to be honest.")
     return 0
 
 

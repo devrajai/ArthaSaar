@@ -74,7 +74,18 @@ def parse(payload, symbol):
             profit = float(profit) if profit is not None else None
         except Exception:
             sale = profit = None
-        out.append({"symbol": symbol, "period_end": end,
+        # NSE's comparative-results payload sometimes carries when the result was broadcast.
+        # Field names differ between endpoints, so several are tried and a missing one stays
+        # null - a guessed filing date is worse than an absent one.
+        filed = None
+        for k in ("re_broadcast_timestamp", "re_filing_date", "broadcastDate", "filingDate",
+                  "re_intimation_date", "exchdisstime"):
+            v = r.get(k)
+            if v:
+                filed = to_date(str(v)) or str(v)[:10]
+                break
+        out.append({"symbol": symbol, "period_end": end, "filing_date": filed,
+                    "basis": "standalone",
                     "revenue_cr": round(sale * LAKH / CRORE, 1) if sale is not None else None,
                     "profit_cr": round(profit * LAKH / CRORE, 1) if profit is not None else None,
                     "margin_pct": (round(profit / sale * 100, 2)
@@ -91,8 +102,14 @@ def derive(rows):
         return None
     latest, year_ago = rows[-1], rows[-5]
     res = {"latest_period": latest["period_end"], "year_ago_period": year_ago["period_end"],
+           # the basis was only ever in the note; it belongs on the row so the card can label it
+           "basis": latest.get("basis") or "standalone",
+           "filing_date": latest.get("filing_date"),
            "revenue_cr": latest["revenue_cr"], "profit_cr": latest["profit_cr"],
-           "margin_pct": latest["margin_pct"]}
+           "margin_pct": latest["margin_pct"],
+           # five quarters, oldest first - enough to draw a trend without a second file
+           "quarters": [{"p": r["period_end"], "rev": r["revenue_cr"], "pat": r["profit_cr"]}
+                        for r in rows[-5:]]}
     if latest["revenue_cr"] and year_ago["revenue_cr"]:
         res["revenue_yoy_pct"] = round(
             (latest["revenue_cr"] / year_ago["revenue_cr"] - 1) * 100, 1)
@@ -169,6 +186,7 @@ def main():
     out["margin_squeezed"] = squeezed[:5]
     out["margin_expanded"] = squeezed[-5:][::-1]
 
+    out["basis"] = "standalone"
     out["note"] = ("Standalone quarterly results from NSE, five quarters per company. Figures "
                    "are the parent company only, not the consolidated group, and EPS and "
                    "debt/equity are often null in this feed - missing stays missing.")

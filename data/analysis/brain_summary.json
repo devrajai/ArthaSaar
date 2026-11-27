@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-11-27T14:36:17Z",
+  "generated_at": "2026-11-27T23:07:07Z",
   "channels": 10,
-  "videos": 623,
+  "videos": 624,
   "window_start": "2026-05-15",
   "window_end": "2026-11-27",
-  "total_views": 14681167,
+  "total_views": 14719613,
   "top_symbols": [
     {
       "symbol": "NIFTY50",
-      "mentions": 128,
+      "mentions": 129,
+      "channels": 5
+    },
+    {
+      "symbol": "SENSEX",
+      "mentions": 59,
       "channels": 5
     },
     {
       "symbol": "BANKNIFTY",
       "mentions": 58,
       "channels": 5
-    },
-    {
-      "symbol": "SENSEX",
-      "mentions": 58,
-      "channels": 4
     },
     {
       "symbol": "RELIANCE",
@@ -83,5 +83,5 @@
       "videos": 97
     }
   ],
-  "net_sentiment": 359
+  "net_sentiment": 352
 }

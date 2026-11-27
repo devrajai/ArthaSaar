@@ -102,8 +102,12 @@ def main():
         print("shareholding: nothing fetched")
         return 0
 
-    # keep the LATEST filing per symbol - the master returns several quarters
-    latest = {}
+    # keep the LATEST TWO filings per symbol.
+    #
+    # The master returns several quarters and this used to throw all but the newest away, so the
+    # stock window could show the promoter stake but never how it had moved. Two quarters is
+    # enough to state the change and small enough to keep the file the same shape.
+    by_sym = {}
     for r in records:
         sym = str(r.get("symbol") or "").strip().upper()
         if not sym:
@@ -114,11 +118,19 @@ def main():
             key = datetime.strptime(d, "%d-%b-%Y").date()
         except Exception:
             key = datetime.min.date()
-        if sym not in latest or key > latest[sym][0]:
-            latest[sym] = (key, r)
+        by_sym.setdefault(sym, []).append((key, r))
+
+    latest = {}
+    for sym, lst in by_sym.items():
+        lst.sort(key=lambda x: x[0], reverse=True)
+        latest[sym] = lst[0]                      # newest, as before
+        if len(lst) > 1:
+            latest[sym] = latest[sym] + (lst[1],)  # plus the one before it
 
     rows = []
-    for sym, (dt_, r) in latest.items():
+    for sym, tup in latest.items():
+        dt_, r = tup[0], tup[1]
+        prev = tup[2] if len(tup) > 2 else None
         try:
             prom = float(r.get("pr_and_prgrp"))
         except Exception:
@@ -138,6 +150,9 @@ def main():
             # close proxy, not NSE's exact factor, which also strips government stakes,
             # ADR/GDR and lock-ins.
             "free_float_proxy_pct": round(100 - prom, 2),
+            "prev_as_of": (str(prev.get("date")) if prev else None),
+            "prev_promoter_pct": (round(float(prev.get("pr_and_prgrp")), 2)
+                                  if prev and prev.get("pr_and_prgrp") not in (None, "") else None),
             "in_indices": member.get(sym, []),
         })
 

@@ -690,7 +690,133 @@ async function renderOverview(main){
   }
 }
 
+/* =====================================================================================
+   INDEX PERFORMANCE BETWEEN TWO DATES.
+   The site could say where an index is today. It could not answer the question a newspaper
+   table answers every week: which sectors rose and which fell between two dates, and by how
+   much. index_periods.json holds daily closes so any pair of dates can be compared here.
+   ===================================================================================== */
+function indexValueAt(rec, iso){
+  if (!rec || !rec.d || !rec.d.length) return null;
+  // the last close on or before the date, so a weekend or holiday picks the prior session
+  let best = null;
+  for (let i = 0; i < rec.d.length; i++){
+    if (rec.d[i] <= iso) best = rec.c[i];
+    else break;
+  }
+  return best;
+}
+
+async function indexPeriodCard(){
+  let d;
+  try { d = await J('index_periods.json'); } catch (_) { return null; }
+  const idx = d.indices || {};
+  const keys = Object.keys(idx);
+  if (!keys.length) return null;
+
+  // default window: the last ten sessions of the longest series
+  const any = idx[keys[0]];
+  const lastDate = any.d[any.d.length - 1];
+  const firstDate = any.d[Math.max(0, any.d.length - 11)];
+
+  const box = document.createElement('div');
+  const bar = document.createElement('div');
+  bar.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px';
+  bar.innerHTML =
+    '<label style="flex:1;min-width:120px"><span class="sub" style="display:block;margin-bottom:4px">From</span>' +
+    '<input id="ipFrom" type="date" value="' + firstDate + '" max="' + lastDate + '" ' +
+    'style="width:100%;box-sizing:border-box;padding:8px;border-radius:9px;border:1px solid var(--line);' +
+    'background:var(--card);color:inherit;font:inherit;font-size:12.5px"></label>' +
+    '<label style="flex:1;min-width:120px"><span class="sub" style="display:block;margin-bottom:4px">To</span>' +
+    '<input id="ipTo" type="date" value="' + lastDate + '" max="' + lastDate + '" ' +
+    'style="width:100%;box-sizing:border-box;padding:8px;border-radius:9px;border:1px solid var(--line);' +
+    'background:var(--card);color:inherit;font:inherit;font-size:12.5px"></label>';
+  box.append(bar);
+  const host = document.createElement('div');
+  box.append(host);
+
+  const paint = () => {
+    const from = ($('#ipFrom') && $('#ipFrom').value) || firstDate;
+    const to = ($('#ipTo') && $('#ipTo').value) || lastDate;
+    const rows = keys.map(k => {
+      const a = indexValueAt(idx[k], from), b = indexValueAt(idx[k], to);
+      const chg = (a && b) ? (b / a - 1) * 100 : null;
+      return { name: idx[k].name, kind: idx[k].kind, from: a, to: b, chg: chg };
+    }).filter(r => r.chg != null).sort((x, y) => y.chg - x.chg);
+    host.innerHTML = '';
+    if (!rows.length){
+      const e = document.createElement('p'); e.className = 'empty';
+      e.textContent = 'No sessions between those two dates.';
+      host.append(e); return;
+    }
+    host.append(makeTable(rows, [
+      {k:'name', label:'Index'},
+      {k:'from', label:'On ' + from, r:1, html:v => num(v)},
+      {k:'to', label:'On ' + to, r:1, html:v => num(v)},
+      {k:'chg', label:'Change', r:1, html:v => '<span class="' + (v > 0 ? 'up' : v < 0 ? 'dn' : '') +
+        '">' + (v > 0 ? '+' : '') + v.toFixed(2) + '%</span>'}
+    ], {limit:30, noSearch:true}));
+    const up = rows.filter(r => r.chg > 0).length;
+    const p2 = document.createElement('p');
+    p2.className = 'sub'; p2.style.margin = '10px 0 0';
+    p2.textContent = up + ' of ' + rows.length + ' indices rose between ' + from + ' and ' + to +
+      '. Sorted by change, best first.';
+    host.append(p2);
+  };
+
+  bar.addEventListener('change', paint);
+  setTimeout(paint, 0);
+
+  return card('Index performance', 'any two dates', box,
+    'Levels are index closes. A date that falls on a weekend or holiday uses the previous '
+    + 'session, so the comparison is always like for like.');
+}
+
+/* FII and DII net flows, one row per session, with the running total - the table a newspaper
+   prints every week. fii_dii.json accumulates a day at a time from the NSE endpoint. */
+async function flowTableCard(){
+  let f;
+  try { f = await J('fii_dii.json'); } catch (_) { return null; }
+  const hist = (f.history || []).slice();
+  if (!hist.length) return null;
+  hist.sort((a, b) => (a.date < b.date ? 1 : -1));   // newest first
+
+  const rows = hist.map(h => ({ date: h.date, fii: h.fii, dii: h.dii,
+    net: (h.fii || 0) + (h.dii || 0) }));
+  const tf = hist.reduce((s, h) => s + (h.fii || 0), 0);
+  const td = hist.reduce((s, h) => s + (h.dii || 0), 0);
+
+  const box = document.createElement('div');
+  box.append(tiles([
+    ['FII, all sessions', (tf > 0 ? '+' : '') + '\u20b9' + num(tf) + ' cr', hist.length + ' sessions'],
+    ['DII, all sessions', (td > 0 ? '+' : '') + '\u20b9' + num(td) + ' cr', 'domestic'],
+    ['Combined', ((tf + td) > 0 ? '+' : '') + '\u20b9' + num(tf + td) + ' cr', 'net into equities']
+  ]));
+  box.append(makeTable(rows, [
+    {k:'date', label:'Date'},
+    {k:'fii', label:'FII', r:1, html:v => v == null ? '\u2014'
+      : '<span class="' + (v > 0 ? 'up' : v < 0 ? 'dn' : '') + '">' + (v > 0 ? '+' : '') + num(v) + '</span>'},
+    {k:'dii', label:'DII', r:1, html:v => v == null ? '\u2014'
+      : '<span class="' + (v > 0 ? 'up' : v < 0 ? 'dn' : '') + '">' + (v > 0 ? '+' : '') + num(v) + '</span>'},
+    {k:'net', label:'Net', r:1, html:v => (v > 0 ? '+' : '') + num(v)}
+  ], {limit:60, noSearch:true}));
+
+  const p3 = document.createElement('p');
+  p3.className = 'sub'; p3.style.margin = '10px 0 0';
+  p3.textContent = 'Rupees crore, cash market. NSE\'s endpoint returns only the latest session, so '
+    + 'this table grows one row a day - ' + hist.length + ' so far. It is not backfilled history.';
+  box.append(p3);
+
+  return card('FII and DII flows', hist.length + ' sessions', box,
+    'Foreign and domestic institutional net buying. A negative FII figure means they sold more '
+    + 'than they bought.');
+}
+
 async function renderMarket(main){
+  const [ipCard, flCard] = await Promise.all([indexPeriodCard(), flowTableCard()]);
+  if (ipCard) main.append(ipCard);
+  if (flCard) main.append(flCard);
+
   const [idx, d, vix] = await Promise.all([J('indices.json'), J('data.json'), J('vix.json')]);
   const byId = {};
   idx.indices.forEach(i => { byId[i.id] = i; });

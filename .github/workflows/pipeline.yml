@@ -662,6 +662,10 @@ jobs:
       - name: "7ab. Economy (RBI releases)"
         run: python scripts/build_economy.py || true
 
+      # index closes for the two-date comparison table. Yahoo rate-limits, so || true.
+      - name: "7ac. Index periods (two-date comparison)"
+        run: python scripts/build_index_periods.py || true
+
       - name: Commit
         run: |
           git config user.name "data-bot"

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-27T23:48:01Z",
+  "generated_utc": "2026-11-28T01:18:50Z",
   "fno": {
     "date": "2026-11-27",
     "pcr": {
@@ -454,21 +454,21 @@
           "11.49"
         ],
         [
-          "ICICICONSU",
-          "2023-12-19",
-          "94.74",
-          "0.41",
-          "503747.0",
-          "44635.2",
-          "11.29"
-        ],
-        [
           "SELMC",
           "2026-09-09",
           "29.25",
           "1.53",
           "335077.0",
           "29672.05",
+          "11.29"
+        ],
+        [
+          "ICICICONSU",
+          "2023-12-19",
+          "94.74",
+          "0.41",
+          "503747.0",
+          "44635.2",
           "11.29"
         ],
         [
@@ -589,805 +589,6 @@
       "total": 1
     }
   },
-  "archive": {
-    "files": 61,
-    "dates": 32,
-    "symbols_max": 3777,
-    "first": "2019-06-14",
-    "last": "2026-11-27",
-    "recent": [
-      {
-        "date": "2026-11-19",
-        "segment": "cm",
-        "rows": "3719",
-        "symbols": "3718",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-19.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-19.csv"
-      },
-      {
-        "date": "2026-11-19",
-        "segment": "fo",
-        "rows": "44543",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-19.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-19.csv"
-      },
-      {
-        "date": "2026-11-20",
-        "segment": "cm",
-        "rows": "3742",
-        "symbols": "3740",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-20.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-20.csv"
-      },
-      {
-        "date": "2026-11-20",
-        "segment": "fo",
-        "rows": "45082",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-20.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-20.csv"
-      },
-      {
-        "date": "2026-11-23",
-        "segment": "cm",
-        "rows": "3755",
-        "symbols": "3754",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-23.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-23.csv"
-      },
-      {
-        "date": "2026-11-23",
-        "segment": "fo",
-        "rows": "45582",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-23.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-23.csv"
-      },
-      {
-        "date": "2026-11-25",
-        "segment": "cm",
-        "rows": "3741",
-        "symbols": "3738",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-25.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-25.csv"
-      },
-      {
-        "date": "2026-11-25",
-        "segment": "fo",
-        "rows": "38562",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-25.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-25.csv"
-      },
-      {
-        "date": "2026-11-26",
-        "segment": "cm",
-        "rows": "3729",
-        "symbols": "3726",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-26.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-26.csv"
-      },
-      {
-        "date": "2026-11-26",
-        "segment": "fo",
-        "rows": "34574",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-26.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-26.csv"
-      },
-      {
-        "date": "2026-11-27",
-        "segment": "cm",
-        "rows": "3756",
-        "symbols": "3752",
-        "era": "udiff",
-        "file_parquet": "data/parquet/cm/cm_2026-11-27.parquet",
-        "file_csv": "data/csv/cm/cm_2026-11-27.csv"
-      },
-      {
-        "date": "2026-11-27",
-        "segment": "fo",
-        "rows": "35425",
-        "symbols": "224",
-        "era": "udiff",
-        "file_parquet": "data/parquet/fo/fo_2026-11-27.parquet",
-        "file_csv": "data/csv/fo/fo_2026-11-27.csv"
-      }
-    ]
-  },
-  "brain": {
-    "channels": 10,
-    "videos": 624,
-    "window": [
-      "2026-05-15",
-      "2026-11-27"
-    ],
-    "total_views": 14719613,
-    "net_sentiment": 352,
-    "top_symbols": [
-      {
-        "symbol": "NIFTY50",
-        "mentions": 129,
-        "channels": 5
-      },
-      {
-        "symbol": "SENSEX",
-        "mentions": 59,
-        "channels": 5
-      },
-      {
-        "symbol": "BANKNIFTY",
-        "mentions": 58,
-        "channels": 5
-      },
-      {
-        "symbol": "RELIANCE",
-        "mentions": 27,
-        "channels": 8
-      },
-      {
-        "symbol": "ADANIENT",
-        "mentions": 18,
-        "channels": 4
-      },
-      {
-        "symbol": "TCS",
-        "mentions": 7,
-        "channels": 5
-      },
-      {
-        "symbol": "ITC",
-        "mentions": 5,
-        "channels": 4
-      },
-      {
-        "symbol": "WIPRO",
-        "mentions": 5,
-        "channels": 4
-      },
-      {
-        "symbol": "INDIGO",
-        "mentions": 5,
-        "channels": 4
-      },
-      {
-        "symbol": "INFY",
-        "mentions": 5,
-        "channels": 3
-      }
-    ],
-    "top_themes": [
-      {
-        "theme": "Beginner/Education",
-        "videos": 170
-      },
-      {
-        "theme": "MF/SIP",
-        "videos": 153
-      },
-      {
-        "theme": "Earnings/Results",
-        "videos": 138
-      },
-      {
-        "theme": "Options/F&O",
-        "videos": 136
-      },
-      {
-        "theme": "IPO",
-        "videos": 127
-      },
-      {
-        "theme": "Budget/Policy",
-        "videos": 97
-      }
-    ]
-  },
-  "channels": {
-    "columns": [
-      "channel_name",
-      "videos_in_feed",
-      "newest",
-      "oldest",
-      "avg_views",
-      "median_views",
-      "top_video",
-      "top_views"
-    ],
-    "rows": [
-      [
-        "POWER OF STOCKS",
-        "25",
-        "2026-11-22",
-        "2026-05-15",
-        "138937",
-        "148843",
-        "Market Analysis |  Price Action 27 - Sep",
-        "227337"
-      ],
-      [
-        "Abhishek Kar",
-        "45",
-        "2026-11-27",
-        "2026-09-29",
-        "82874",
-        "21029",
-        "Stock Market CRASH nifty sensex me kya kare?",
-        "474041"
-      ],
-      [
-        "Moneytalks by Groww",
-        "30",
-        "2026-11-26",
-        "2026-08-22",
-        "43253",
-        "6246",
-        "How I Built a \u20b935 Crore Portfolio & Retired at 29 | Small Cap Mastercl",
-        "483139"
-      ],
-      [
-        "WAY2LAABH",
-        "30",
-        "2026-11-27",
-        "2026-09-27",
-        "28721",
-        "20580",
-        "Volume Trading Strategy \ud83d\udd25 | \u092f\u0947 Secret \u0938\u092e\u091d \u0932\u093f\u092f\u093e \u0924\u094b Trading \u0906\u0938\u093e\u0928! #short",
-        "131929"
-      ],
-      [
-        "Ghanshyam Tech",
-        "39",
-        "2026-11-25",
-        "2026-09-29",
-        "26175",
-        "19830",
-        "NIFTY \u0928\u0947 \u092f\u0947 \u0915\u094d\u092f\u093e \u092c\u0928\u093e \u0926\u093f\u092f\u093e? | NIFTY \u0928\u0947 \u092c\u0928\u093e\u092f\u093e \u0916\u0924\u0930\u0928\u093e\u0915 Bearish Pattern! \u0915\u094d",
-        "68689"
-      ],
-      [
-        "Groww Edge",
-        "89",
-        "2026-11-27",
-        "2026-10-09",
-        "20023",
-        "3940",
-        "Is the Oil in Your Samosa the Same Oil Planes Want?",
-        "255474"
-      ],
-      [
-        "Groww",
-        "71",
-        "2026-11-27",
-        "2026-10-06",
-        "13118",
-        "6693",
-        "How to Buy US Stocks from India? Complete Guide",
-        "165710"
-      ],
-      [
-        "Markets by Zerodha",
-        "65",
-        "2026-11-27",
-        "2026-10-05",
-        "12444",
-        "7671",
-        "Inside Zetwerk\u2019s \u20b95,000 Crore IPO | Who pays when it\u2019s too hot to work",
-        "85869"
-      ],
-      [
-        "Markets by Zerodha Hindi",
-        "52",
-        "2026-11-27",
-        "2026-09-30",
-        "11672",
-        "5867",
-        "Can India Become a Global Semiconductor Hub? | Markets by Zerodha Hind",
-        "177939"
-      ],
-      [
-        "Upstox",
-        "178",
-        "2026-11-27",
-        "2026-10-15",
-        "1165",
-        "247",
-        "What Reliance\u2019s \u20b920 Flavoured Milk Actually Changes | Markets Today #3",
-        "10837"
-      ]
-    ],
-    "total": 10
-  },
-  "videos": {
-    "columns": [
-      "video_id",
-      "channel_name",
-      "channel_id",
-      "title",
-      "published",
-      "updated",
-      "url",
-      "thumbnail",
-      "views",
-      "description",
-      "first_seen"
-    ],
-    "rows": [
-      [
-        "fagj-ZyajwE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Market Crash Ka Asli Sach: Bechne Ki Galti Mat Karna!",
-        "2026-11-27T13:04:19+00:00",
-        "2026-11-27T13:48:53+00:00",
-        "https://www.youtube.com/watch?v=fagj-ZyajwE",
-        "https://i3.ytimg.com/vi/fagj-ZyajwE/hqdefault.jpg",
-        "12805",
-        "Sensex crashed 989 points in a single day, wiping out massive gains as the Indian Rupee hit 92.98 and Brent Crude surged past $96.61! Is this the beginning of a major bear market, or a classic institutional trap before Monday's opening?\n\nIn today's deep-dive analysis, Abhishek Kar breaks down the exact 3 triggers behind the stock market fall\u2014from IT sector profit booking in TCS, Infosys, and HCL Tech to geopolitical oil supply shocks and month-end dollar demand. More importantly, we uncover the ",
-        "2026-11-27T14:33:31Z"
-      ],
-      [
-        "MtAoO_25hYQ",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "648 Crore and Promoter buying stake at 21% premium",
-        "2026-11-25T14:31:03+00:00",
-        "2026-11-25T14:32:31+00:00",
-        "https://www.youtube.com/shorts/MtAoO_25hYQ",
-        "https://i2.ytimg.com/vi/MtAoO_25hYQ/hqdefault.jpg",
-        "34693",
-        "",
-        "2026-11-25T21:00:27Z"
-      ],
-      [
-        "Xd3RrckdH-0",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "124 Year Old Paint Company Ka Bada Game! Shalimar Paints & Infra.Market Merger Decoded",
-        "2026-11-25T10:24:39+00:00",
-        "2026-11-25T10:24:41+00:00",
-        "https://www.youtube.com/watch?v=Xd3RrckdH-0",
-        "https://i1.ytimg.com/vi/Xd3RrckdH-0/hqdefault.jpg",
-        "1189",
-        "124 saal purani paint company banne ja rahi hai ek \u20b920,000 crore ke construction group ka listed chehra! Is video mein hum detail mein decode kar rahe hain Shalimar Paints aur Infra.Market ke massive merger ko. TV ke 30-second news segments se aage badhkar, samjho is deal ka asli game\u2014foundation se lekar final coat tak.\n\nDiscover kaise Shalimar 2.0 ke turnaround ke baad, Tiger Global, Accel, aur NKSquared backed Infra.Market group is reverse-merge jaisi strategy ke zariye public market mein ente",
-        "2026-11-25T11:56:51Z"
-      ],
-      [
-        "lihLhFB6Pgo",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "\u20b979 Lakh Crore Ek Din Mein Wapas! Nifty IT Mein Dhamaka?",
-        "2026-11-24T06:40:41+00:00",
-        "2026-11-24T16:09:30+00:00",
-        "https://www.youtube.com/watch?v=lihLhFB6Pgo",
-        "https://i1.ytimg.com/vi/lihLhFB6Pgo/hqdefault.jpg",
-        "337339",
-        "\u20b979 \u0932\u093e\u0916 \u0915\u0930\u094b\u0921\u093c \u0915\u0940 \u0910\u0924\u093f\u0939\u093e\u0938\u093f\u0915 \u0924\u0947\u091c\u0940! IT \u0936\u0947\u092f\u0930\u094b\u0902 \u092e\u0947\u0902 \u092c\u0921\u093c\u093e \u092e\u094c\u0915\u093e?\nGet discount plus best FIU registered crypto exchange access\nDelta exchange FIU registered for crypto : Link : https://www.delta.exchange/?code=abhi26\n\nWe dont give any paid tips or services like PMS. Several fake accounts do that on our name on telegram,instagrammfacebook etc. Kindly dont pay scammers a single ruppee and prefer to see our announcements via official channels.\n\n\u20b979 \u0932\u093e\u0916 \u0915\u0930\u094b\u0921\u093c ($952 Billion) \u0915\u0940 \u092e\u093e\u0930\u094d\u0915\u0947\u091f \u0935\u0948\u0932\u094d\u092f\u0942 \u0938\u093f\u0930\u094d\u092b \u090f\u0915 \u0926\u093f\u0928 \u092e\u0947\u0902",
-        "2026-11-24T18:31:25Z"
-      ],
-      [
-        "Z6-4O2bhCvA",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "\u20b96.39 Lakh Crore WIPED OUT! Today's Market Crash EXPOSED",
-        "2026-11-23T12:32:00+00:00",
-        "2026-11-23T12:32:02+00:00",
-        "https://www.youtube.com/watch?v=Z6-4O2bhCvA",
-        "https://i3.ytimg.com/vi/Z6-4O2bhCvA/hqdefault.jpg",
-        "449546",
-        "\u20b96.39 lakh crore wiped out in a single trading session! Sensex opened 700 points higher today, only to crash 1,483 points by closing\u2014trapping lakhs of retail investors and F&O traders in a classic \"distribution at highs\" setup.\n\nIn this video, Abhishek Kar breaks down the exact numbers and the 3 major villains behind today's massive stock market fall:\n\n    Banking Sector Sell-off: Why Nifty Bank tumbled over 1,300 points from its all-time high of 65,000, dragging HDFC Bank, ICICI Bank, SBI, and ",
-        "2026-11-23T22:21:45Z"
-      ],
-      [
-        "7Vjo7-6DUfE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Silver CRASH! What do to?",
-        "2026-11-23T05:32:15+00:00",
-        "2026-11-23T05:33:36+00:00",
-        "https://www.youtube.com/shorts/7Vjo7-6DUfE",
-        "https://i4.ytimg.com/vi/7Vjo7-6DUfE/hqdefault.jpg",
-        "31302",
-        "",
-        "2026-11-23T10:04:01Z"
-      ],
-      [
-        "DdSrY0p9TTE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Loss in trading? #upstoxhaitohbetterhai #upstox",
-        "2026-11-21T05:40:11+00:00",
-        "2026-11-21T07:52:16+00:00",
-        "https://www.youtube.com/shorts/DdSrY0p9TTE",
-        "https://i1.ytimg.com/vi/DdSrY0p9TTE/hqdefault.jpg",
-        "2354",
-        "",
-        "2026-11-21T11:56:33Z"
-      ],
-      [
-        "1m71Jhk22tw",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Gold Price Crash: \u20b91,20,000 \u0924\u0915 \u0917\u093f\u0930\u0947\u0917\u093e \u0938\u094b\u0928\u093e? (Don't Buy Yet)",
-        "2026-11-20T14:14:00+00:00",
-        "2026-11-20T15:32:27+00:00",
-        "https://www.youtube.com/watch?v=1m71Jhk22tw",
-        "https://i2.ytimg.com/vi/1m71Jhk22tw/hqdefault.jpg",
-        "16351",
-        "Gold prices have crashed massively in November 2026! From the January all-time high of $5,625 on COMEX and \u20b91.93 lakh on MCX, gold has plunged to \u20b91,21,770 per 10 grams\u2014leaving Diwali buyers in a \u20b915,000+ loss. Meanwhile, MCX Silver has witnessed a brutal 28% bloodbath in just 30 days!\n\nIn this video, we do a complete postmortem of the 2026 Gold and Silver crash. We break down the 3 real macroeconomic reasons behind this sell-off: the US Federal Reserve's hawkish interest rate stance, US Treasur",
-        "2026-11-20T16:37:56Z"
-      ],
-      [
-        "TWKnKBjo-B0",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "3:20 PM Ki Ye Galti Aapka Account Khali Kar Degi!",
-        "2026-11-19T13:55:21+00:00",
-        "2026-11-19T16:05:01+00:00",
-        "https://www.youtube.com/watch?v=TWKnKBjo-B0",
-        "https://i1.ytimg.com/vi/TWKnKBjo-B0/hqdefault.jpg",
-        "6208",
-        "Stop Revenge Trading! 2 Features Every Trader Needs\nhttps://upstox.com/open-demat-account/?utm_source=youtube_influencer&utm_medium=influencer&utm_campaign=abhishek_kar\n\nWe dont give any paid tips or services like PMS. Several fake accounts do that on our name on telegram,instagrammfacebook etc. Kindly dont pay scammers a single ruppee and prefer to see our announcements via official channels.\n\n87.7% individual F&O traders lost money in FY26\u2014totaling a massive \u20b991,685 crore in just one year! Acc",
-        "2026-11-19T17:52:17Z"
-      ],
-      [
-        "Nb8_FqriEzE",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Banknifty ATH 62965 All time high",
-        "2026-11-19T12:15:31+00:00",
-        "2026-11-19T12:16:17+00:00",
-        "https://www.youtube.com/shorts/Nb8_FqriEzE",
-        "https://i3.ytimg.com/vi/Nb8_FqriEzE/hqdefault.jpg",
-        "24387",
-        "",
-        "2026-11-19T17:52:17Z"
-      ],
-      [
-        "WnVwVVk2tyg",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "My 10-Day Vipassana Meditation Experience: Everything You Need to Know (Cost, Rules & Secrets)",
-        "2026-11-16T14:30:10+00:00",
-        "2026-11-16T14:30:12+00:00",
-        "https://www.youtube.com/watch?v=WnVwVVk2tyg",
-        "https://i4.ytimg.com/vi/WnVwVVk2tyg/hqdefault.jpg",
-        "3556",
-        "In this solo podcast, I share my raw, honest, and complete experience of going through a 10-day Vipassana meditation silent retreat. From total disconnection from phones, family, and the outside world to strict rules, daily schedules, food, and how this ancient practice originated, this video covers everything you need to know before stepping into a Vipassana center.\n\nWhether you are planning to attend your first retreat, curious about the rules, or want to understand how silent meditation can r",
-        "2026-11-16T17:43:34Z"
-      ],
-      [
-        "mPrnlCAb6-0",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Is Seabuckthorn a Miracle Berry? Everything You Need to Know About Omega 7",
-        "2026-11-14T10:00:29+00:00",
-        "2026-11-14T10:31:34+00:00",
-        "https://www.youtube.com/watch?v=mPrnlCAb6-0",
-        "https://i2.ytimg.com/vi/mPrnlCAb6-0/hqdefault.jpg",
-        "5418",
-        "In this deep-dive podcast episode, health pioneer and Biosash founder **Arjun Khanna**\u2014who has spent over 22 years researching and promoting **Seabuckthorn**\u2014reveals the untold truths behind this \"miracle berry.\"\n\nVisit Www.biosash.com\nLinks of YouTube  - https://www.youtube.com/@biosashbusinessofficial\nInstagram - https://www.instagram.com/biosashofficialco\nFace book - https://www.facebook.com/biosashofficialco\nFrom busting major packaging myths (why transparent glass and normal plastic ruin Se",
-        "2026-11-14T16:16:38Z"
-      ],
-      [
-        "iAhajrQVQ3I",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "How nvidea stock can affect your mutual fund investments",
-        "2026-11-13T16:29:36+00:00",
-        "2026-11-13T16:29:38+00:00",
-        "https://www.youtube.com/shorts/iAhajrQVQ3I",
-        "https://i2.ytimg.com/vi/iAhajrQVQ3I/hqdefault.jpg",
-        "1970",
-        "",
-        "2026-11-13T16:55:37Z"
-      ],
-      [
-        "y_TWiD1ZZv8",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "Nvidea Jensen Huang new affai impact on AI stocks",
-        "2026-11-12T04:05:37+00:00",
-        "2026-11-12T04:06:41+00:00",
-        "https://www.youtube.com/shorts/y_TWiD1ZZv8",
-        "https://i2.ytimg.com/vi/y_TWiD1ZZv8/hqdefault.jpg",
-        "18021",
-        "",
-        "2026-11-12T12:00:46Z"
-      ],
-      [
-        "4Yr1J5tV9kI",
-        "Abhishek Kar",
-        "UCcanCrgSWVYW7ZFNKQZso0g",
-        "FIIs Ki Wapsi: $12 Billion Inflows & Nifty Outlook",
-        "2026-11-10T06:12:49+00:00",
-        "2026-11-10T07:21:37+00:00",
-        "https://www.youtube.com/watch?v=4Yr1J5tV9kI",
-        "https://i1.ytimg.com/vi/4Yr1J5tV9kI/hqdefault.jpg",
-        "65794",
-        "9 November 2026 ko ek hi din mein Citi aur HSBC ne India ko simultaneously upgrade kar diya \u2014 aur yeh koi coincidence nahi, ek bada signal hai! Is video mein hum decode kar rahe hain us 'Double Barrel Upgrade' ko jo Indian equity markets ki poori narrative badal sakta hai. Jaaniye Nifty 28,000 ke target ke peeche ka sach, $12 billion ke massive FII inflows, crude oil ka wildcard factor, aur global AI rotation se India ko milne wale fayde ke baare mein.\n\nKya yeh ek historic bull run ki shuruat ha",
-        "2026-11-10T11:51:30Z"
-      ]
-    ],
-    "total": 624
-  },
-  "fm3": {
-    "model": "TimesFM 2.5 200M (zero-shot)",
-    "updated": "2026-11-27T23:24:29Z",
-    "horizon_days": 21,
-    "nifty": {
-      "symbol": "^NSEI",
-      "name": "Nifty 50",
-      "last": 25884.5,
-      "median_chg_pct": 1.44,
-      "low10_chg_pct": -16.61,
-      "high90_chg_pct": 29.03,
-      "band_pct": 45.64,
-      "day1_median_chg_pct": 0.02,
-      "day1_low10_chg_pct": -1.0,
-      "day1_high90_chg_pct": 1.19,
-      "direction": "up"
-    },
-    "columns": [
-      "symbol",
-      "last",
-      "median_chg_pct",
-      "low10_chg_pct",
-      "high90_chg_pct",
-      "direction",
-      "confidence"
-    ],
-    "rows": [
-      [
-        "20MICRONS",
-        174.94,
-        -9.72,
-        -46.47,
-        92.99,
-        null,
-        null
-      ],
-      [
-        "360ONE",
-        997.1,
-        -1.93,
-        -39.99,
-        54.48,
-        null,
-        null
-      ],
-      [
-        "3IINFOLTD",
-        26.93,
-        8.36,
-        -32.95,
-        122.55,
-        null,
-        null
-      ],
-      [
-        "5PAISA",
-        321.35,
-        -7.4,
-        -42.75,
-        73.51,
-        null,
-        null
-      ],
-      [
-        "63MOONS",
-        859.95,
-        -4.15,
-        -51.74,
-        122.83,
-        null,
-        null
-      ],
-      [
-        "A2ZINFRA",
-        12.52,
-        -9.9,
-        -52.93,
-        119.24,
-        null,
-        null
-      ],
-      [
-        "AAATECH",
-        102.24,
-        -2.45,
-        -55.94,
-        130.86,
-        null,
-        null
-      ],
-      [
-        "AAKASH",
-        7.79,
-        -10.92,
-        -40.32,
-        56.55,
-        null,
-        null
-      ],
-      [
-        "AAREYDRUGS",
-        106.73,
-        3.0,
-        -52.59,
-        152.37,
-        null,
-        null
-      ],
-      [
-        "AARTIDRUGS",
-        374.9,
-        -7.17,
-        -39.84,
-        62.08,
-        null,
-        null
-      ],
-      [
-        "AARTIIND",
-        427.55,
-        -1.52,
-        -51.19,
-        71.04,
-        null,
-        null
-      ],
-      [
-        "AARTIPHARM",
-        820.85,
-        -0.78,
-        -48.31,
-        98.62,
-        null,
-        null
-      ],
-      [
-        "AARTISURF",
-        658.55,
-        10.96,
-        -46.93,
-        244.0,
-        null,
-        null
-      ],
-      [
-        "AARVEEDEN",
-        38.05,
-        1.07,
-        -51.85,
-        171.24,
-        null,
-        null
-      ],
-      [
-        "AAVAS",
-        1114.1,
-        -6.67,
-        -42.03,
-        63.68,
-        null,
-        null
-      ],
-      [
-        "ABAN",
-        44.96,
-        -9.44,
-        -48.33,
-        103.45,
-        null,
-        null
-      ],
-      [
-        "ABB",
-        6140.0,
-        -1.14,
-        -42.48,
-        50.85,
-        null,
-        null
-      ],
-      [
-        "ABCAPITAL",
-        347.25,
-        -2.97,
-        -42.78,
-        70.22,
-        null,
-        null
-      ],
-      [
-        "ABFRL",
-        39.77,
-        -14.98,
-        -51.57,
-        70.58,
-        null,
-        null
-      ],
-      [
-        "ABSLAMC",
-        889.05,
-        -2.35,
-        -44.51,
-        80.96,
-        null,
-        null
-      ],
-      [
-        "ABSLBANETF",
-        55.53,
-        -1.4,
-        -20.1,
-        20.92,
-        null,
-        null
-      ],
-      [
-        "ACC",
-        1159.4,
-        -2.87,
-        -31.99,
-        37.87,
-        null,
-        null
-      ],
-      [
-        "ACCURACY",
-        3.92,
-        -9.17,
-        -51.42,
-        65.53,
-        null,
-        null
-      ],
-      [
-        "ACE",
-        1000.1,
-        -7.41,
-        -47.9,
-        78.0,
-        null,
-        null
-      ],
-      [
-        "ACI",
-        478.45,
-        -2.04,
-        -42.76,
-        69.19,
-        null,
-        null
-      ]
-    ],
-    "total": 1432
-  },
-  "daily": {
-    "as_of": "2026-11-27T23:24:31Z",
-    "items": [
-      "Bhavcopy archive through 2026-11-27 (61 files, 32 days)",
-      "Nifty PCR 0.74 \u00b7 max pain 25650.0",
-      "25 OI spikes in stock futures",
-      "25 volume spikes vs their own average",
-      "Corporate actions: 2 splits, 1 bonus",
-      "624 videos across 10 channels"
-    ]
-  },
   "markets": {
     "columns": [
       "symbol",
@@ -1444,63 +645,63 @@
     "rows": [
       [
         "DOGE-USD",
-        0.0575,
-        1.94,
-        "2026-11-27"
+        0.0578,
+        2.55,
+        "2026-11-28"
       ],
       [
         "ETH-USD",
-        1657.0,
-        -1.82,
-        "2026-11-27"
-      ],
-      [
-        "BTC-USD",
-        59752.1016,
-        -1.23,
-        "2026-11-27"
-      ],
-      [
-        "TRX-USD",
-        0.3006,
-        -1.0,
-        "2026-11-27"
-      ],
-      [
-        "SOL-USD",
-        71.41,
-        0.67,
-        "2026-11-27"
+        1663.5601,
+        -1.43,
+        "2026-11-28"
       ],
       [
         "LINK-USD",
-        9.329,
-        0.63,
-        "2026-11-27"
+        9.372,
+        1.1,
+        "2026-11-28"
       ],
       [
-        "ADA-USD",
-        0.1477,
-        -0.48,
-        "2026-11-27"
+        "SOL-USD",
+        71.7,
+        1.08,
+        "2026-11-28"
+      ],
+      [
+        "TRX-USD",
+        0.3005,
+        -1.05,
+        "2026-11-28"
+      ],
+      [
+        "BTC-USD",
+        59917.7695,
+        -0.95,
+        "2026-11-28"
       ],
       [
         "XRP-USD",
-        0.9455,
-        0.28,
-        "2026-11-27"
+        0.95,
+        0.75,
+        "2026-11-28"
       ],
       [
         "AVAX-USD",
-        6.591,
-        0.11,
-        "2026-11-27"
+        6.624,
+        0.61,
+        "2026-11-28"
       ],
       [
         "BNB-USD",
-        553.23,
-        0.01,
-        "2026-11-27"
+        555.08,
+        0.35,
+        "2026-11-28"
+      ],
+      [
+        "ADA-USD",
+        0.1483,
+        -0.09,
+        "2026-11-28"
       ]
     ],
     "total": 10
@@ -1519,210 +720,210 @@
         "OPEC+ set to keep oil production targets steady: Report",
         "https://economictimes.indiatimes.com/markets/commodities/opec-set-to-keep-oil-production-targets-steady-report/articleshow/136232084.cms",
         "Sat, 28 Nov 2026 00:16:42 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Copper sweeps higher as China offers stock market support",
         "https://economictimes.indiatimes.com/markets/commodities/copper-sweeps-higher-as-china-offers-stock-market-support/articleshow/136232015.cms",
         "Sat, 28 Nov 2026 00:13:45 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Gold pares gains as Fed-hike risks linger, eyes first weekly rise in three weeks",
         "https://economictimes.indiatimes.com/markets/commodities/gold-pares-gains-as-fed-hike-risks-linger-eyes-first-weekly-rise-in-three-weeks/articleshow/136231951.cms",
         "Sat, 28 Nov 2026 00:09:27 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Blackstone sells 1.55% stake in IGI for Rs 280 crore to meet public shareholding norms",
         "https://economictimes.indiatimes.com/markets/stocks/news/blackstone-sells-1-55-stake-in-igi-for-rs-280-crore-to-meet-public-shareholding-norms/articleshow/136228297.cms",
         "Fri, 27 Nov 2026 22:03:18 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Capital market industry hopes for relief in capital gains taxation in Budget 2027-28: Axis Capital MD",
         "https://economictimes.indiatimes.com/markets/stocks/news/capital-market-industry-hopes-for-relief-in-capital-gains-taxation-in-budget-2027-28-axis-capital-md/articleshow/136224186.cms",
         "Fri, 27 Nov 2026 18:56:12 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Nasdaq jumps 2%, Dow gains 600 pts as US stocks log weekly gains: Stock Market Live Updates",
         "https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/stock-market-live-updates-dow-jones-nasdaq-sp-500-gold-silver-price-coreqeave-nebius-meta-nvidia-ai-stocks-fed-rate-hike-treasury-yield-news-27th-november-2026/liveblog/136223511.cms",
         "Fri, 27 Nov 2026 18:16:59 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "India bonds slump as oil spike adds to RBI hike bets",
         "https://economictimes.indiatimes.com/markets/bonds/india-bonds-slump-as-oil-spike-adds-to-rbi-hike-bets/articleshow/136221243.cms",
         "Fri, 27 Nov 2026 17:24:01 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Ion Exchange India among 6 stocks hitting 52-week low; shares slipped up to 20% in a month",
         "https://economictimes.indiatimes.com/markets/stocks/news/ion-exchange-india-among-6-stocks-hitting-52-week-low-shares-slipped-up-to-20-in-a-month/slideshow/136219516.cms",
         "Fri, 27 Nov 2026 16:31:59 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Eurozone bond yields rise as investors return to riskier assets, oil prices rebound",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/eurozone-bond-yields-rise-as-investors-return-to-riskier-assets-oil-prices-rebound/articleshow/136218279.cms",
         "Fri, 27 Nov 2026 15:56:25 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Rupee rally takes a hit as AI trade revival dents shares, currency sees weekly dip",
         "https://economictimes.indiatimes.com/markets/forex/rupee-rally-takes-a-hit-as-ai-trade-revival-dents-shares-currency-sees-weekly-dip/articleshow/136218142.cms",
         "Fri, 27 Nov 2026 15:53:05 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Can SpaceX's AI ambitions drive further upside in its stock?",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/can-spacexs-ai-ambitions-drive-further-upside-in-its-stock/slideshow/136213079.cms",
         "Fri, 27 Nov 2026 12:23:29 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "RIL Share Price Live Updates: RIL Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/ril-share-price-today-live-updates-27-nov-2026/liveblog/136212220.cms",
         "Fri, 27 Nov 2026 12:03:08 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "India bonds decline ahead of fresh debt sale as elevated oil prices fan inflation worries",
         "https://economictimes.indiatimes.com/markets/bonds/india-bonds-decline-ahead-of-fresh-debt-sale-as-elevated-oil-prices-fan-inflation-worries/articleshow/136211546.cms",
         "Fri, 27 Nov 2026 11:40:03 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Nvidia stock plunges 35% from record high: Is it a buying opportunity?",
         "https://economictimes.indiatimes.com/markets/us-stocks/news/nvidia-stock-plunges-35-from-record-high-is-it-a-buying-opportunity/slideshow/136209377.cms",
         "Fri, 27 Nov 2026 10:07:47 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "HDFC Bank Share Price Highlights: HDFC Bank Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hdfc-bank-share-price-today-live-27-nov-2026/liveblog/136209175.cms",
         "Fri, 27 Nov 2026 10:05:17 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "TCS Share Price Highlights: TCS Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tcs-share-price-live-updates-27-nov-2026/liveblog/136209164.cms",
         "Fri, 27 Nov 2026 10:05:03 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Nestle India Share Price Highlights: Nestle India Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/nestle-india-share-price-today-live-27-nov-2026/liveblog/136209163.cms",
         "Fri, 27 Nov 2026 10:05:03 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Tata Steel Share Price Highlights: Tata Steel Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-steel-stock-price-live-updates-27-nov-2026/liveblog/136209162.cms",
         "Fri, 27 Nov 2026 10:04:57 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Axis Bank Share Price Highlights: Axis Bank Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/axis-bank-share-price-live-27-nov-2026/liveblog/136209157.cms",
         "Fri, 27 Nov 2026 10:04:50 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Maruti Suzuki Share Price Highlights: Maruti Suzuki Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/maruti-suzuki-share-price-today-live-updates-27-nov-2026/liveblog/136209156.cms",
         "Fri, 27 Nov 2026 10:04:50 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Kotak Bank Share Price Highlights: Kotak Bank Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/kotak-bank-stock-price-today-live-27-nov-2026/liveblog/136209154.cms",
         "Fri, 27 Nov 2026 10:04:45 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Tata Motors PV Share Price Highlights: Tata Motors PV Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-motors-pv-stock-price-today-live-27-nov-2026/liveblog/136209148.cms",
         "Fri, 27 Nov 2026 10:04:35 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Hindalco Share Price Highlights: Hindalco Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hindalco-stock-price-livestock-price-today-live-updates-27-nov-2026/liveblog/136209144.cms",
         "Fri, 27 Nov 2026 10:04:34 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "M&amp;M Share Price Highlights: M&amp;M Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/mm-stock-price-today-live-27-nov-2026/liveblog/136209141.cms",
         "Fri, 27 Nov 2026 10:04:27 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Bajaj Auto Share Price Highlights: Bajaj Auto Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bajaj-auto-stock-price-livestock-price-today-live-updates-27-nov-2026/liveblog/136209140.cms",
         "Fri, 27 Nov 2026 10:04:22 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Tata Consumer Share Price Highlights: Tata Consumer Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/tata-consumer-share-price-live-updates-27-nov-2026/liveblog/136209138.cms",
         "Fri, 27 Nov 2026 10:04:21 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Bharti Airtel Share Price Highlights: Bharti Airtel Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/bharti-airtel-share-price-live-27-nov-2026/liveblog/136209136.cms",
         "Fri, 27 Nov 2026 10:04:14 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "Cipla Share Price Highlights: Cipla Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/cipla-stock-price-livestock-price-today-live-updates-27-nov-2026/liveblog/136209134.cms",
         "Fri, 27 Nov 2026 10:04:09 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "HCL Tech Share Price Highlights: HCL Tech Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hcl-tech-share-price-live-27-nov-2026/liveblog/136209131.cms",
         "Fri, 27 Nov 2026 10:04:08 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ],
       [
         "ET Markets",
         "HUL Share Price Highlights: HUL Stock Price History",
         "https://economictimes.indiatimes.com/markets/stocks/stock-liveblog/hul-share-price-live-27-nov-2026/liveblog/136209125.cms",
         "Fri, 27 Nov 2026 10:04:02 +0530",
-        "2026-11-27T23:12:31Z"
+        "2026-11-28T00:42:20Z"
       ]
     ],
     "total": 130
@@ -3078,6 +2279,261 @@
       "total": 584
     }
   },
+  "fm3": {
+    "model": "TimesFM 2.5 200M (zero-shot)",
+    "updated": "2026-11-27T23:24:29Z",
+    "horizon_days": 21,
+    "nifty": {
+      "symbol": "^NSEI",
+      "name": "Nifty 50",
+      "last": 25884.5,
+      "median_chg_pct": 1.44,
+      "low10_chg_pct": -16.61,
+      "high90_chg_pct": 29.03,
+      "band_pct": 45.64,
+      "day1_median_chg_pct": 0.02,
+      "day1_low10_chg_pct": -1.0,
+      "day1_high90_chg_pct": 1.19,
+      "direction": "up"
+    },
+    "columns": [
+      "symbol",
+      "last",
+      "median_chg_pct",
+      "low10_chg_pct",
+      "high90_chg_pct",
+      "direction",
+      "confidence"
+    ],
+    "rows": [
+      [
+        "20MICRONS",
+        174.94,
+        -9.72,
+        -46.47,
+        92.99,
+        null,
+        null
+      ],
+      [
+        "360ONE",
+        997.1,
+        -1.93,
+        -39.99,
+        54.48,
+        null,
+        null
+      ],
+      [
+        "3IINFOLTD",
+        26.93,
+        8.36,
+        -32.95,
+        122.55,
+        null,
+        null
+      ],
+      [
+        "5PAISA",
+        321.35,
+        -7.4,
+        -42.75,
+        73.51,
+        null,
+        null
+      ],
+      [
+        "63MOONS",
+        859.95,
+        -4.15,
+        -51.74,
+        122.83,
+        null,
+        null
+      ],
+      [
+        "A2ZINFRA",
+        12.52,
+        -9.9,
+        -52.93,
+        119.24,
+        null,
+        null
+      ],
+      [
+        "AAATECH",
+        102.24,
+        -2.45,
+        -55.94,
+        130.86,
+        null,
+        null
+      ],
+      [
+        "AAKASH",
+        7.79,
+        -10.92,
+        -40.32,
+        56.55,
+        null,
+        null
+      ],
+      [
+        "AAREYDRUGS",
+        106.73,
+        3.0,
+        -52.59,
+        152.37,
+        null,
+        null
+      ],
+      [
+        "AARTIDRUGS",
+        374.9,
+        -7.17,
+        -39.84,
+        62.08,
+        null,
+        null
+      ],
+      [
+        "AARTIIND",
+        427.55,
+        -1.52,
+        -51.19,
+        71.04,
+        null,
+        null
+      ],
+      [
+        "AARTIPHARM",
+        820.85,
+        -0.78,
+        -48.31,
+        98.62,
+        null,
+        null
+      ],
+      [
+        "AARTISURF",
+        658.55,
+        10.96,
+        -46.93,
+        244.0,
+        null,
+        null
+      ],
+      [
+        "AARVEEDEN",
+        38.05,
+        1.07,
+        -51.85,
+        171.24,
+        null,
+        null
+      ],
+      [
+        "AAVAS",
+        1114.1,
+        -6.67,
+        -42.03,
+        63.68,
+        null,
+        null
+      ],
+      [
+        "ABAN",
+        44.96,
+        -9.44,
+        -48.33,
+        103.45,
+        null,
+        null
+      ],
+      [
+        "ABB",
+        6140.0,
+        -1.14,
+        -42.48,
+        50.85,
+        null,
+        null
+      ],
+      [
+        "ABCAPITAL",
+        347.25,
+        -2.97,
+        -42.78,
+        70.22,
+        null,
+        null
+      ],
+      [
+        "ABFRL",
+        39.77,
+        -14.98,
+        -51.57,
+        70.58,
+        null,
+        null
+      ],
+      [
+        "ABSLAMC",
+        889.05,
+        -2.35,
+        -44.51,
+        80.96,
+        null,
+        null
+      ],
+      [
+        "ABSLBANETF",
+        55.53,
+        -1.4,
+        -20.1,
+        20.92,
+        null,
+        null
+      ],
+      [
+        "ACC",
+        1159.4,
+        -2.87,
+        -31.99,
+        37.87,
+        null,
+        null
+      ],
+      [
+        "ACCURACY",
+        3.92,
+        -9.17,
+        -51.42,
+        65.53,
+        null,
+        null
+      ],
+      [
+        "ACE",
+        1000.1,
+        -7.41,
+        -47.9,
+        78.0,
+        null,
+        null
+      ],
+      [
+        "ACI",
+        478.45,
+        -2.04,
+        -42.76,
+        69.19,
+        null,
+        null
+      ]
+    ],
+    "total": 1432
+  },
   "quality": {
     "rows": 116629,
     "symbols": 4999,
@@ -3145,7 +2601,7 @@
     "niftysmallcap50": 50
   },
   "daily": {
-    "as_of": "2026-11-27T23:48:01Z",
+    "as_of": "2026-11-28T01:18:50Z",
     "items": [
       "Bhavcopy archive through 2026-11-27 (61 files, 32 days)",
       "Nifty PCR 0.74 \u00b7 max pain 25650.0",
